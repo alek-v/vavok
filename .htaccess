@@ -1,0 +1,134 @@
+DirectoryIndex index.php index.html
+
+AddDefaultCharset UTF-8
+
+<Files ~ "include|used|lang">
+   Order allow,deny
+   Deny from all
+</Files>
+<Files ~ "(.dat|.tpl|error_log|.htaccess)$">
+   Order allow,deny
+   Deny from all
+</Files>
+
+#php_flag disable_functions passthru,system,shell_exec,popen
+#php_value register_globals Off
+#php_value session.use_trans_sid Off
+#php_value safe_mode_gid On
+#php_value safe_mode_include_dir On
+#php_value magic_quotes_gpc Off
+#php_value magic_quotes_runtime Off
+#php_value magic_quotes_sybase Off
+#php_value file_uploads On
+#php_value display_errors Off
+
+ErrorDocument 400 /pages/error.php?error=400
+ErrorDocument 401 /pages/error.php?error=401
+ErrorDocument 402 /pages/error.php?error=402
+ErrorDocument 403 /pages/error.php?error=403
+ErrorDocument 404 /pages/error.php?error=404
+ErrorDocument 406 /pages/error.php?error=406
+ErrorDocument 500 /pages/error.php?error=500
+ErrorDocument 502 /pages/error.php?error=502
+
+Options -Indexes
+
+RewriteEngine on
+# Include in the next line all folders to exclude
+RewriteCond %{REQUEST_URI} !(js|img|fls) [NC]
+
+# seo friendly home page language url. example.com/en/
+RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
+
+# deny adding www. or other subdomain to site address
+#RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+#RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+
+# Redirect to www.
+#RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+#RewriteCond %{HTTPS}s ^on(s)|
+#RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# site pages
+# get page
+RewriteRule ^page/([A-Za-z0-9-._]+)/?$ pages.php?pg=$1 [NC,L]
+
+# website content - tag search
+RewriteRule ^search/([^\s\/]+)/page=([0-9]*)$ search.php?item=$1&page=$2
+RewriteRule ^search/([^\s\/]*)\/?$ search.php?item=$1
+RewriteRule ^search$ search.php
+
+# ----------------------------------------------------------------------
+# Expires headers (for better cache control) (SEO and site performance improvements)
+# ----------------------------------------------------------------------
+#
+# These are pretty far-future expires headers
+# They assume you control versioning with cachebusting query params like:
+#   <script src="application.js?20100608">
+# Additionally, consider that outdated proxies may miscache
+#
+#   www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
+ 
+#
+# If you don`t use filenames to version, lower the css and js to something like "access plus 1 week"
+#
+ 
+<IfModule mod_expires.c>
+  ExpiresActive on
+ 
+# Perhaps better to whitelist expires rules? Perhaps.
+# ExpiresDefault                          "access plus 1 month"
+ 
+# cache.appcache needs re-requests in FF 3.6 (thx Remy ~Introducing HTML5)
+  ExpiresByType text/cache-manifest       "access plus 0 seconds"
+ 
+# Your document html
+# ExpiresByType text/html                 "access plus 0 seconds"
+   
+# Data
+# ExpiresByType text/xml                  "access plus 0 seconds"
+# ExpiresByType application/xml           "access plus 0 seconds"
+# ExpiresByType application/json          "access plus 0 seconds"
+ 
+# RSS feed
+# ExpiresByType application/rss+xml       "access plus 1 hour"
+ 
+# Favicon (cannot be renamed)
+  ExpiresByType image/x-icon              "access plus 1 week"
+ 
+# Media: images, video, audio
+  ExpiresByType image/gif                 "access plus 1 month"
+  ExpiresByType image/png                 "access plus 1 month"
+  ExpiresByType image/jpg                 "access plus 1 month"
+  ExpiresByType image/jpeg                "access plus 1 month"
+  ExpiresByType video/ogg                 "access plus 1 month"
+  ExpiresByType audio/ogg                 "access plus 1 month"
+  ExpiresByType video/mp4                 "access plus 1 month"
+  ExpiresByType video/webm                "access plus 1 month"
+   
+# HTC files  (css3pie)
+  ExpiresByType text/x-component          "access plus 1 month"
+   
+# Webfonts
+  ExpiresByType font/truetype             "access plus 1 month"
+  ExpiresByType font/opentype             "access plus 1 month"
+  ExpiresByType application/x-font-woff   "access plus 1 month"
+  ExpiresByType image/svg+xml             "access plus 1 month"
+  ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+     
+# CSS and JavaScript
+# ExpiresByType text/css                  "access plus 1 year"
+# ExpiresByType application/javascript    "access plus 1 year"
+# ExpiresByType text/javascript           "access plus 1 year"
+   
+# Force no caching for dynamic files
+# <FilesMatch "\.(php)$">
+# ExpiresActive Off
+# </FilesMatch>
+
+  <IfModule mod_headers.c>
+    Header append Cache-Control "public"
+  </IfModule>
+   
+</IfModule>
+

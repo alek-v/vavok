@@ -1,0 +1,29 @@
+<?php 
+// modified: 10.1.2016. 2:41:49
+// (c) vavok.net
+require_once"../include/strtup.php";
+$my_title = $lang_traffic['traffic'];
+include_once"../themes/$config_themes/index.php";
+
+$mediaLikeButton = 'off'; // dont show like buttons
+
+if ($config["gzip"] == "1") {
+    echo '<font color="#00FF00">' . $lang_traffic['gzipon'] . '</font><br><br>';
+} else {
+    echo '<font color="#FF0000">' . $lang_traffic['gzipoff'] . '</font><br><br>';
+}
+
+$time = time();
+$timeon = maketime(round($time - $_SESSION['currs']));
+
+echo $lang_traffic['visitedpages'] . ': <b>' . ($_SESSION['counton'] + 1) . '</b><br>';
+echo $lang_traffic['timeonsite'] . ': <b>' . $timeon . '</b><br><br>';
+
+
+echo '<br><img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+
+include_once"../themes/$config_themes/foot.php";
+
+?>
+
+

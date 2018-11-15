@@ -1,0 +1,1 @@
+{@status}} <font color="#FF0000">{@personalStatus}}</font><br />
