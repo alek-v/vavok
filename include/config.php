@@ -33,7 +33,7 @@ $config = array(
 "floodTime" => $con_data[29], // antiflood time in seconds
 "pvtLimit" => $con_data[30], // max no of msgs in inbox, 0 => unlimited
 "dataOnPage" => $con_data[31], // data on page (no. of users per page in online list etc)
-"cookieConsent" => 0, // cookie consent | "cookieConsent" => $con_data[32]
+"cookieConsent" => $con_data[32], // cookie consent
 "chatRew" => 30, // chat refresh time - deprecated! 12.5.2017. 22:31:21
 "photoList" => $con_data[37], // no. of photos per page in gallery
 "photoFileSize" => $con_data[38], // maximum photo filesize in bytes
