@@ -70,75 +70,77 @@ if (!empty($head_tag)) {
 }
 
 // cookie consent
-echo '
-<style type="text/css">
-.cookieConsentContainer {
-    z-index: 999;
-    width: 350px;
-    min-height: 20px;
-    box-sizing: border-box;
-    padding: 30px 30px 30px 30px;
-    background: #232323;
-    overflow: hidden;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    display: none;
-}
-.cookieConsentContainer .cookieTitle a {
-    font-family: OpenSans, arial, "sans-serif";
-    color: #FFFFFF;
-    font-size: 22px;
-    line-height: 20px;
-    display: block;
-}
-.cookieConsentContainer .cookieDesc p {
-    margin: 0;
-    padding: 0;
-    font-family: OpenSans, arial, "sans-serif";
-    color: #FFFFFF;
-    font-size: 13px;
-    line-height: 20px;
-    display: block;
-    margin-top: 10px;
-} .cookieConsentContainer .cookieDesc a {
-    font-family: OpenSans, arial, "sans-serif";
-    color: #FFFFFF;
-    text-decoration: underline;
-}
-.cookieConsentContainer .cookieButton a {
-    display: inline-block;
-    font-family: OpenSans, arial, "sans-serif";
-    color: #FFFFFF;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 14px;
-    background: #000000;
-    box-sizing: border-box; 
-    padding: 15px 24px;
-    text-align: center;
-    transition: background 0.3s;
-}
-.cookieConsentContainer .cookieButton a:hover { 
-    cursor: pointer;
-    background: #3E9B67;
-}
-
-@media (max-width: 980px) {
+if ($config['cookieConsent'] == 1) {
+    echo '
+    <style type="text/css">
     .cookieConsentContainer {
-        bottom: 0px !important;
-        left: 0px !important;
-        width: 100%  !important;
+        z-index: 999;
+        width: 350px;
+        min-height: 20px;
+        box-sizing: border-box;
+        padding: 30px 30px 30px 30px;
+        background: #232323;
+        overflow: hidden;
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: none;
     }
-}</style>
-';
-echo '<script>
-var purecookieTitle = "' . $lang_home['cookies'] . '"; // Title
-var purecookieDesc = "' . $lang_home['purecookieDesc']  . '"; // Description
-var purecookieLink = \'' . $lang_home['purecookieLink']  . '\'; // Cookie policy link
-var purecookieButton = "' . $lang_home['purecookieButton']  . '"; // Button text
-</script>';
-echo '<script src="' . $connectionProtocol . $config_srvhost . '/js/purecookie.js" async></script>';
+    .cookieConsentContainer .cookieTitle a {
+        font-family: OpenSans, arial, "sans-serif";
+        color: #FFFFFF;
+        font-size: 22px;
+        line-height: 20px;
+        display: block;
+    }
+    .cookieConsentContainer .cookieDesc p {
+        margin: 0;
+        padding: 0;
+        font-family: OpenSans, arial, "sans-serif";
+        color: #FFFFFF;
+        font-size: 13px;
+        line-height: 20px;
+        display: block;
+        margin-top: 10px;
+    } .cookieConsentContainer .cookieDesc a {
+        font-family: OpenSans, arial, "sans-serif";
+        color: #FFFFFF;
+        text-decoration: underline;
+    }
+    .cookieConsentContainer .cookieButton a {
+        display: inline-block;
+        font-family: OpenSans, arial, "sans-serif";
+        color: #FFFFFF;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 14px;
+        background: #000000;
+        box-sizing: border-box; 
+        padding: 15px 24px;
+        text-align: center;
+        transition: background 0.3s;
+    }
+    .cookieConsentContainer .cookieButton a:hover { 
+        cursor: pointer;
+        background: #3E9B67;
+    }
+
+    @media (max-width: 980px) {
+        .cookieConsentContainer {
+            bottom: 0px !important;
+            left: 0px !important;
+            width: 100%  !important;
+        }
+    }</style>
+    ';
+    echo '<script>
+    var purecookieTitle = "' . $lang_home['cookies'] . '"; // Title
+    var purecookieDesc = "' . $lang_home['purecookieDesc']  . '"; // Description
+    var purecookieLink = \'' . $lang_home['purecookieLink']  . '\'; // Cookie policy link
+    var purecookieButton = "' . $lang_home['purecookieButton']  . '"; // Button text
+    </script>';
+    echo '<script src="' . $connectionProtocol . $config_srvhost . '/js/purecookie.js" async></script>';
+}
 
 // tell bots what is our preferred page
 echo '<link rel="canonical" href="' . $connectionProtocol . $config_srvhost . $clean_requri . '" />';
