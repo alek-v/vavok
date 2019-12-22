@@ -143,6 +143,7 @@ if ($step == "regadmin") {
                             $udata[29] = 10;
                             $udata[30] = 0;
                             $udata[31] = 5;
+                            $udata[32] = 0; // cookie consent
                             $udata[33] = 4;
                             $udata[34] = 100;
                             $udata[35] = 0;
