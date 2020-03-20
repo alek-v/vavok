@@ -18,7 +18,7 @@ function update($file, $content) {
     $db->update('pages', $fields, $values, "`file`='" . $file . "'");
 
 	// update cached index page
-	if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file)) {
+	if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
 		$this->updateCached($file, $content);
 	}
 
