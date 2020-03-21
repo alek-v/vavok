@@ -90,7 +90,7 @@ if ($action == 'main') {
     $totalUsers = $totalUsers - 1; // do not count "System"
     echo '<a href="../pages/userlist.php" class="sitelink">' . $lang_admin['userlist'] . ' (' . $totalUsers . ')</a><br />';
 
-    if (is_moderator(103) || is_moderator(105) || is_administrator()) {
+    if (is_moderator(103) || is_moderator(105) || is_administrator() && file_exists('reports.php')) {
         echo '<a href="reports.php" class="sitelink">' . $lang_admin['usrcomp'] . '</a><br />';
     }
 
