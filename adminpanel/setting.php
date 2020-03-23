@@ -228,6 +228,7 @@ if ($action == "settwo") {
     } 
     echo $lang_apsetting['no'] . '</p>';
 
+
     echo '<p>' . $lang_apsetting['showonline'] . ': <br />' . $lang_apsetting['yes'] . '';
     if ($config['showOnline'] == "1") {
         echo '<input name="conf_set7" type="radio" value="1" checked>';
@@ -241,6 +242,22 @@ if ($action == "settwo") {
         echo '<input name="conf_set7" type="radio" value="0" />';
     } 
     echo $lang_apsetting['no'] . '</p>';
+
+	// cookie consent
+	echo '<p>Cookie consent: <br />' . $lang_apsetting['yes'] . '';
+    if ($config['cookieConsent'] == "1") {
+        echo '<input name="conf_set32" type="radio" value="1" checked>';
+    } else {
+        echo '<input name="conf_set32" type="radio" value="1" />';
+    } 
+    echo ' &nbsp; &nbsp; ';
+    if ($config['cookieConsent'] == "0") {
+        echo '<input name="conf_set32" type="radio" value="0" checked>';
+    } else {
+        echo '<input name="conf_set32" type="radio" value="0" />';
+    } 
+    echo $lang_apsetting['no'] . '</p>';
+
 
     echo '<p>' . $lang_apsetting['countlook'] . ':<br /><select name="conf_set74">';
 

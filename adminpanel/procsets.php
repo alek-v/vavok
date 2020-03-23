@@ -58,13 +58,14 @@ if ($action == "editone") {
 
 
 if ($action == "edittwo") {
-if ($_POST['conf_set4'] != "" && $_POST['conf_set5'] != "" && $_POST['conf_set7'] != "" && $_POST['conf_set74'] != "") {
+if ($_POST['conf_set4'] != "" && $_POST['conf_set5'] != "" && $_POST['conf_set7'] != "" && isset($_POST['conf_set32']) && $_POST['conf_set74'] != "") {
 $ufile = file(BASEDIR . "used/config.dat");
 $udata = explode("|", $ufile[0]);
 
 $udata[4] = (int)$_POST['conf_set4'];
 $udata[5] = (int)$_POST['conf_set5'];
 $udata[7] = (int)$_POST['conf_set7'];
+$udata[32] = (int)$_POST['conf_set32']; // cookie consent
 $udata[74] = (int)$_POST['conf_set74'];
 
 for ($u = 0; $u < $config["configKeys"]; $u++) {

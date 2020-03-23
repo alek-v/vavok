@@ -71,11 +71,8 @@ include_once"../themes/$config_themes/index.php";
 </ul>
 
 <h2>Contact Us</h2>
-<p>If you have any questions about this Cookies Policy, You can contact us:</p>
+<p>If you have any questions about this Cookies Policy, You can <a href="../mail/">contact us here</a></p>
 
-<ul>
-        <li>By email: <?php echo $config['adminEmail']; ?></li>
-        </ul>
 
 <?php
 echo '<p><a href="' . $connectionProtocol . $config_srvhost . '" class="homepage">' . $lang_home['home'] . '</a></p>';
