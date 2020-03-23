@@ -253,7 +253,7 @@ class db extends PDO {
         try {
             $result = $this->query("DESCRIBE " . getConfiguration('tablePrefix') . $table);
 
-            if ($result > 0) {
+            if (!empty($result)) {
                 return true;
             }
         } 

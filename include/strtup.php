@@ -9,7 +9,7 @@ $time = time();
 
 // vavok cms settings
 $config_debug = 0;
-$vavok_version = '1.2.6';
+$vavok_version = '1.2.7';
 
 // error reporting
 if ($config_debug == 0) {
@@ -62,7 +62,7 @@ require_once BASEDIR . "include/config.php"; // load website configuration
 
 // detect connection protocol HTTPS or HTTP
 if (empty($config['transferProtocol']) || $config['transferProtocol'] == 'auto') {
-    if (!empty($_SERVER['HTTPS']) || $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+    if (!empty($_SERVER['HTTPS'])) {
         $connectionProtocol = 'https://';
     } else {
         $connectionProtocol = 'http://';
@@ -183,7 +183,11 @@ if (!stristr($config_requri, 'error=db') && !stristr($phpself, 'install/install.
         require_once BASEDIR . "include/counters.php";
         require_once BASEDIR . "include/referer.php";
     } 
-} 
+}
+
+if (!file_exists(BASEDIR . "lang/" . $config["language"] . "/index.php")) {
+        $config["language"] = 'english';
+}
 include_once BASEDIR . "lang/" . $config["language"] . "/index.php";
 
 // this functions are not in functions.php because they require language files

@@ -25,6 +25,17 @@ $datex = date("d.m.y");
 $timex = date("H:i");
 
 if ($step == 'second') {
+	if ($db->table_exists('vavok_users') > 0) {
+		echo '<p>Data in selected database already exists, please select another database for this website.<br />
+		If you are configuring crossdomain website continue to third step of installation.</p>';
+		echo '<p>
+		<a href="finish.php?step=third">Continue to next step</a>
+		</p>';
+
+		require_once "footer.php";
+		exit;
+	}
+
     // import mysql data
     // Name of the file
     $filename = 'mysql/mysql_main.sql';
@@ -63,7 +74,14 @@ if ($step == 'second') {
 } 
 
 if ($step == 'third') {
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installinfo'] . '<br></p><hr />'; 
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installinfo'] . '<br></p>';
+        // check if website and admin already exists (crossdomain website)
+    if ($db->count_row('vavok_users') > 0) {
+		echo '<p>It seems that you are configuring crossdomain website.<br />
+		Please enter main website admin username and password</p>';
+    }
+
+    echo '<hr/>';
     // echo 'Please use only alphanumeric characters<br>';
     ?>
 
@@ -90,7 +108,13 @@ if ($step == 'third') {
 } 
 // instalation results
 if ($step == "regadmin") {
-    echo '<p><img src="../images/img/partners.gif" alt=""> ' . $lang_install['installresults'] . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installresults'] . '<br></p>';
+
+    // check if website and admin already exists (crossdomain website)
+    $crossDomainInstall = 0;
+    if ($db->count_row('vavok_users') > 0) {
+    	$crossDomainInstall = 1;
+    }
 
     $str1 = strlen($_POST['name']);
     $str2 = strlen($_POST['password']);
@@ -107,11 +131,28 @@ if ($step == "regadmin") {
                 if ($password == $password2) {
                     if (preg_match('#^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+(\.([a-z0-9])+)+$#', $email)) {
                         if (preg_match('#^http://([a-z0-9_\-\.])+(\.([a-z0-9\/])+)+$#', $osite)) {
-                            $osite_name = ucfirst(str_replace("http://", "", $osite));
-                            $osite_name = str_replace("https://", "", $osite_name);
 
-                            $passwords = md5($password);
+                        	// if this is crossdomain website
+                        	// check is everything ok
+                        	if ($crossDomainInstall == 1) {
+	                            $osite_name = ucfirst(str_replace("http://", "", $osite));
+	                            $osite_name = str_replace("https://", "", $osite_name);
 
+	                            $passwords = md5($password);
+
+	                        	$adminId = getidfromnick($name);
+
+	                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
+
+	                        	if (!is_administrator(101, $adminId) || $passwords !== $adminPass['pass']) {
+	                        		echo '<p>Please enter main website administrator username and password</p>';
+	                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+
+	                        		exit;
+	                        	}
+                        	}
+
+                        	// write data to config file
                             $ufile = file_get_contents(BASEDIR . "used/config.dat");
                             $udata = explode("|", $ufile);
 
@@ -200,13 +241,17 @@ if ($step == "regadmin") {
                                 flock($fp, LOCK_UN);
                                 fclose($fp);
                                 unset($utext);
-                            } 
+                            }
+
+                            // insert data to database if it is not crossdomain
+                            if ($crossDomainInstall == 0) {
                             // write to database
                             $registration_key = '';
                             $config["regConfirm"] = '0';
                             register($name, $passwords, $sitetime, $config["regConfirm"], $registration_key, 'default', $brow, $ip, $email); // register user
                             $user_id = getidfromnick($name);
                             $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+                        	}
 
                             echo '<p>' . $lang_install['installok'] . '.<br></p>';
 
