@@ -131,21 +131,20 @@ if ($step == "regadmin") {
                 if ($password == $password2) {
                     if (preg_match('#^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+(\.([a-z0-9])+)+$#', $email)) {
                         if (preg_match('#^http://([a-z0-9_\-\.])+(\.([a-z0-9\/])+)+$#', $osite)) {
+	                        $osite_name = ucfirst(str_replace("http://", "", $osite));
+	                        $osite_name = str_replace("https://", "", $osite_name);
 
-                        	// if this is crossdomain website
-                        	// check is everything ok
+	                        $passwords = md5($password);
+
+                        	// check is everything ok if this is crossdomain website
                         	if ($crossDomainInstall == 1) {
-	                            $osite_name = ucfirst(str_replace("http://", "", $osite));
-	                            $osite_name = str_replace("https://", "", $osite_name);
-
-	                            $passwords = md5($password);
-
 	                        	$adminId = getidfromnick($name);
 
 	                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
 
 	                        	if (!is_administrator(101, $adminId) || $passwords !== $adminPass['pass']) {
-	                        		echo '<p>Please enter main website administrator username and password</p>';
+	                        		echo '<p>You are configuring cross-domain website.<br />
+	                        		Please enter main website administrator username and password</p>';
 	                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
 
 	                        		exit;
