@@ -376,3 +376,20 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `email_queue` (
+  `id` bigint(20) NOT NULL,
+  `uad` mediumint(9) NOT NULL COMMENT 'user added email to queue',
+  `sender` varchar(255) NOT NULL,
+  `sender_mail` varchar(255) DEFAULT NULL,
+  `recipient` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `sent` tinyint(1) NOT NULL,
+  `timesent` datetime DEFAULT NULL,
+  `timeadded` datetime NOT NULL
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+ALTER TABLE `email_queue`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sent` (`sent`);

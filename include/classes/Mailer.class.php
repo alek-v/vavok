@@ -2,10 +2,6 @@
 // (c) vavok.net
 
 class Mailer {
-	public function __construct() {
-		$config = getConfiguration();
-	}
-
 	// send email
 	function send($usermail, $subject, $msg, $mail = "", $name = "") {
 	    global $config_srvhost;
@@ -19,7 +15,7 @@ class Mailer {
 	            $mail = substr($str, 4);
 	        }
 	        $mail = 'no_reply@' . $mail;
-	        $name = $config["title"];
+	        $name = getConfiguration('title');
 	    } 
 	    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
 
@@ -31,7 +27,25 @@ class Mailer {
 	    $adds .= "X-Mailer: PHP v." . phpversion();
 
 	    return mail($usermail, $subject, $msg, $adds);
-	} 
+	}
+
+	// add to queue
+	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "") {
+		global $db, $user_id;
+
+		$data = array(
+			'uad' => $user_id,
+			'sender' => $senderName,
+			'recipient' => $usermail,
+			'subject' => $subject,
+			'content' => $msg,
+			'sent' => 0,
+			'timeadded' => date("Y-m-d H:i:s")
+		);
+
+		$db->insert_data('email_queue', $data);
+
+	}
 
 }
 
