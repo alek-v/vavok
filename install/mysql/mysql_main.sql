@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 INSERT INTO `vavok_users` (`id`, `name`, `pass`, `perm`, `skin`, `browsers`, `ipadd`, `timezone`, `banned`, `newmsg`, `lang`) VALUES
 (0, 'System', '0', 999, 'default', 'Mozilla/5.0', '127.0.0.1', '0', '0', 0, 'english');
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `lastvst` varchar(30) NOT NULL default '',         -- last visit
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
   `phone` varchar(30) NOT NULL default '',
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `page_setting` (
   `privmes` int(3) NOT NULL default '5',             -- messages in inbox per page
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 -- inbox
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
   `reported` char(1) NOT NULL default '0',
   `deleted` int(11) NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `ignore` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `buddy` (
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `buddy` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 -- Moder log
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `mlog` (
   `details` TEXT NOT NULL,
   `actdt` int(100) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `subs` (
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `subs` (
   `date_subscribed` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `subscription_name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 
 -- users online
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `online` (
   `user` int(20),
   `usr_chck` varchar(60),
   `bot` text COMMENT 'bot'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 
 -- site pages
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `content` longtext NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
 
 INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstupdby`, `file`, `crtdby`, `headt`, `published`, `pubdate`, `content`) VALUES
 (1, 'My new website', 'index', '', 0, 0, 0, 'index.php', 0, NULL, 2, 0, '<div style="text-align:center;">Welcome to my Web site!</div>'),
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
   `lstinb` varchar(120) NOT NULL DEFAULT '' COMMENT 'last notification of received message',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 -- special permitions list
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `splist` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 -- special permitions
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `specperm` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 -- uploaded files
 CREATE TABLE IF NOT EXISTS `uplfiles` (
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `uplfiles` (
   `ext` varchar(5) NOT NULL COMMENT 'extension',
   `fulldir` varchar(200) NOT NULL COMMENT 'full file address',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
 CREATE TABLE IF NOT EXISTS `languages` (
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `lngeng` varchar(30) NOT NULL,
   `iso-2` varchar(35) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=137 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=137 ;
 
 
 INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
@@ -363,7 +363,7 @@ CREATE TABLE IF NOT EXISTS `counter` (
   `clicks_today` int(11) NOT NULL,
   `clicks_total` int(11) NOT NULL,
   UNIQUE KEY `day` (`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `counter` (`day`, `month`, `visits_today`, `visits_total`, `clicks_today`, `clicks_total`) VALUES
 (0, 0, 0, 0, 0, 0);
@@ -375,11 +375,11 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `datetime` datetime DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 
 CREATE TABLE `email_queue` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uad` mediumint(9) NOT NULL COMMENT 'user added email to queue',
   `sender` varchar(255) NOT NULL,
   `sender_mail` varchar(255) DEFAULT NULL,
@@ -389,7 +389,7 @@ CREATE TABLE `email_queue` (
   `sent` tinyint(1) NOT NULL,
   `timesent` datetime DEFAULT NULL,
   `timeadded` datetime NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 ALTER TABLE `email_queue`
   ADD PRIMARY KEY (`id`),
   ADD KEY `sent` (`sent`);

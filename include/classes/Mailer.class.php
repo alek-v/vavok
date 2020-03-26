@@ -21,7 +21,12 @@ class Mailer {
 
 	    $adds = "From: " . $name . " <" . $mail . ">\n";
 	    $adds .= "X-sender: " . $name . " <" . $mail . ">\n";
-	    $adds .= "Content-Type: text/plain; charset=utf-8\n";
+	    // is it html or plain text
+	    if (stristr($msg, '<html') == true) {
+	    	$adds .= "Content-Type: text/html; charset=utf-8\n";
+	    } else {
+	    	$adds .= "Content-Type: text/plain; charset=utf-8\n";
+		}
 	    $adds .= "MIME-Version: 1.0\n";
 	    $adds .= "Content-Transfer-Encoding: 8bit\n";
 	    $adds .= "X-Mailer: PHP v." . phpversion();
@@ -36,6 +41,7 @@ class Mailer {
 		$data = array(
 			'uad' => $user_id,
 			'sender' => $senderName,
+			'sender_mail' => $senderMail,
 			'recipient' => $usermail,
 			'subject' => $subject,
 			'content' => $msg,
