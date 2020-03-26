@@ -53,6 +53,13 @@ class Mailer {
 
 	}
 
+	// get subscription options
+	// while adding new subscription it can be added without option (blank) or with one from the list
+	function email_sub_options () {
+		$subs = file_get_contents(BASEDIR . 'used/subnames.dat');
+
+		return array_filter(explode('||', $subs));
+	}
 }
 
 
