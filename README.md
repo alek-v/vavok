@@ -4,3 +4,5 @@
 # Vavok CMS
 
 > Made to be fast, safe and easy to customize
+
+> Feel free to contribute
