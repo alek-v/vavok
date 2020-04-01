@@ -54,8 +54,8 @@ RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
 RewriteRule ^page/([A-Za-z0-9-._]+)/?$ pages.php?pg=$1 [NC,L]
 
 # website content - tag search
-RewriteRule ^search/([^\s\/]+)/page=([0-9]*)$ search.php?item=$1&page=$2
-RewriteRule ^search/([^\s\/]*)\/?$ search.php?item=$1
+RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2
+RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1
 RewriteRule ^search$ search.php
 
 # ----------------------------------------------------------------------

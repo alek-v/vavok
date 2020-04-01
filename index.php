@@ -4,6 +4,10 @@ require_once("include/strtup.php");
 
 if (!empty($_GET['ln'])) { $ln = check($_GET['ln']); } else { $ln = ''; }
 
+// get error code if it is in url
+$urlIsset = isset($_GET['isset']) == true ? '?isset=' . check($_GET['isset']) : '';
+
+// check is language set in url
 $isUrlLangSet = strlen($ln);
 if ($isUrlLangSet == 2) {
 	$isUrlLangSet = 1;
@@ -13,21 +17,18 @@ if ($isUrlLangSet == 2) {
 
 // redirect if user language is not site default language
 if ($config["siteDefaultLang"] != $config["language"] && $isUrlLangSet == 0) {
-	header("Location: /" . $ln_loc . "/" . $urlIsset);
-	exit;
+	redirect_to("/" . $ln_loc . "/" . $urlIsset);
 }
 // redirect if language is set in url and it is not current lang
 elseif ($ln != $ln_loc && $isUrlLangSet == 1) {
 	// get $language varialble
 	require "lang/" . $ln . "/index.php";
 	// redirect
-	header("Location: /pages/chlng.php?lang=" . $language);
-	exit;
+	redirect_to("/pages/chlng.php?lang=" . $language);
 }
 // redirect to root dir if visitor is using site default language and language is set in url
 elseif ($config["siteDefaultLang"] == $config["language"] && $isUrlLangSet == 1) {
-	header("Location: /" . $urlIsset);
-	exit;
+	redirect_to("/" . $urlIsset);
 }
 
 // get page title
