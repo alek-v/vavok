@@ -5,7 +5,7 @@ require_once"../include/strtup.php";
 require_once "../lang/" . $config["language"] . "/installinstall.php";
 
 $my_title = 'Install';
-require_once"header.php";
+require_once"include/header.php";
 
 if (isset($_GET['isset'])) {
     $isset = check($_GET['isset']);
@@ -76,7 +76,7 @@ if ($step == 'second') {
 if ($step == 'third') {
     echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installinfo'] . '<br></p>';
         // check if website and admin already exists (crossdomain website)
-    if ($db->count_row('vavok_users') > 0) {
+    if ($users->regmemcount() > 1) {
 		echo '<p>It seems that you are configuring crossdomain website.<br />
 		Please enter main website admin username and password</p>';
     }
@@ -112,7 +112,7 @@ if ($step == "regadmin") {
 
     // check if website and admin already exists (crossdomain website)
     $crossDomainInstall = 0;
-    if ($db->count_row('vavok_users') > 0) {
+    if ($users->regmemcount() > 1) {
     	$crossDomainInstall = 1;
     }
 
@@ -138,7 +138,7 @@ if ($step == "regadmin") {
 
                         	// check is everything ok if this is crossdomain website
                         	if ($crossDomainInstall == 1) {
-	                        	$adminId = getidfromnick($name);
+	                        	$adminId = $users->getidfromnick($name);
 
 	                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
 
@@ -152,95 +152,83 @@ if ($step == "regadmin") {
                         	}
 
                         	// write data to config file
-                            $ufile = file_get_contents(BASEDIR . "used/config.dat");
-                            $udata = explode("|", $ufile);
+                            // init class
+                            $myconfig = new Config;
 
-                            $udata[0] = 0;
-                            $udata[1] = generate_password();
-                            $udata[2] = 'default';
-                            $udata[3] = 0;
-                            $udata[4] = 0;
-                            $udata[5] = 0;
-                            $udata[6] = 0;
-                            $udata[7] = 0;
-                            $udata[8] = $name;
-                            $udata[9] = $email;
-                            $udata[10] = 0; // time zone
-                            $udata[11] = $osite_name;
-                            $udata[12] = 'default';
-                            $udata[14] = $osite;
-                            $udata[17] = 5;
-                            $udata[18] = 0;
-                            $udata[19] = 5;
-                            $udata[20] = 0;
-                            $udata[22] = 200;
-                            $udata[23] = 5;
-                            $udata[24] = 100;
-                            $udata[25] = 1000;
-                            $udata[26] = 5;
-                            $udata[27] = 5;
-                            $udata[28] = 100;
-                            $udata[29] = 10;
-                            $udata[30] = 0;
-                            $udata[31] = 5;
-                            $udata[32] = 0; // cookie consent
-                            $udata[33] = 4;
-                            $udata[34] = 100;
-                            $udata[35] = 0;
-                            $udata[36] = 0;
-                            $udata[37] = 5;
-                            $udata[38] = 40000;
-                            $udata[39] = 320;
-                            $udata[40] = 5;
-                            $udata[41] = 600;
-                            $udata[42] = 5;
-                            $udata[44] = 5;
-                            $udata[45] = 15;
-                            $udata[46] = 5;
-                            $udata[47] = 'english';
-                            $udata[48] = 'adminpanel';
-                            $udata[49] = 0;
-                            $udata[50] = 1;
-                            $udata[51] = 100;
-                            $udata[52] = 1;
-                            $udata[53] = 0;
-                            $udata[54] = 5;
-                            $udata[55] = 6;
-                            $udata[56] = 50;
-                            $udata[57] = 400;
-                            $udata[58] = 200;
-                            $udata[59] = 0;
-                            $udata[60] = 5;
-                            $udata[61] = 1;
-                            $udata[62] = 0;
-                            $udata[63] = 0;
-                            $udata[64] = 0;
-                            $udata[65] = 0;
-                            $udata[66] = 15;
-                            $udata[67] = 0;
-                            $udata[68] = 0;
-                            $udata[69] = 1;
-                            $udata[70] = 0;
-                            $udata[71] = 0;
-                            $udata[72] = 0;
-                            $udata[74] = 6;
-                            $udata[76] = 43200;
+                            $values = array(
+                            0 => 0,
+                            1 => generate_password(),
+                            2 => 'default',
+                            3 => 0,
+                            4 => 0,
+                            5 => 0,
+                            6 => 0,
+                            7 => 0,
+                            8 => $name,
+                            9 => $email,
+                            10 => 0, // time zone
+                            11 => $osite_name,
+                            12 => 'default',
+                            14 => $osite,
+                            17 => 5,
+                            18 => 0,
+                            19 => 5,
+                            20 => 0,
+                            22 => 200,
+                            23 => 5,
+                            24 => 100,
+                            25 => 1000,
+                            26 => 5,
+                            27 => 5,
+                            28 => 100,
+                            29 => 10,
+                            30 => 0,
+                            31 => 5,
+                            32 => 0, // cookie consent
+                            33 => 4,
+                            34 => 100,
+                            35 => 0,
+                            36 => 0,
+                            37 => 5,
+                            38 => 40000,
+                            39 => 320,
+                            40 => 5,
+                            41 => 600,
+                            42 => 5,
+                            44 => 5,
+                            45 => 15,
+                            46 => 5,
+                            47 => 'english',
+                            48 => 'adminpanel',
+                            49 => 0,
+                            50 => 1,
+                            51 => 100,
+                            52 => 1,
+                            53 => 0,
+                            54 => 5,
+                            55 => 6,
+                            56 => 50,
+                            57 => 400,
+                            58 => 200,
+                            59 => 0,
+                            60 => 5,
+                            61 => 1,
+                            62 => 0,
+                            63 => 0,
+                            64 => 0,
+                            65 => 0,
+                            66 => 15,
+                            67 => 0,
+                            68 => 0,
+                            69 => 1,
+                            70 => 0,
+                            71 => 0,
+                            72 => 0,
+                            74 => 6,
+                            76 => 43200
+                            );
+                            $myconfig->update($values);
 
-                            $utext = '';
-                            for ($u = 0; $u < $config["configKeys"]; $u++) {
-                                $utext .= $udata[$u] . '|';
-                            } 
-
-                            if (!empty($udata[8]) && !empty($udata[9])) {
-                                $fp = fopen(BASEDIR . "used/config.dat", "a+");
-                                flock($fp, LOCK_EX);
-                                ftruncate($fp, 0);
-                                fputs($fp, $utext);
-                                fflush($fp);
-                                flock($fp, LOCK_UN);
-                                fclose($fp);
-                                unset($utext);
-                            }
 
                             // insert data to database if it is not crossdomain
                             if ($crossDomainInstall == 0) {
@@ -248,7 +236,7 @@ if ($step == "regadmin") {
                             $registration_key = '';
                             $config["regConfirm"] = '0';
                             register($name, $passwords, $sitetime, $config["regConfirm"], $registration_key, 'default', $brow, $ip, $email); // register user
-                            $user_id = getidfromnick($name);
+                            $user_id = $users->getidfromnick($name);
                             $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                         	}
 
@@ -281,5 +269,5 @@ if ($step == "regadmin") {
     } 
 }
 
-require_once "footer.php";
+require_once "include/footer.php";
 ?>

@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
   `email` varchar(80) NOT NULL default '',			-- email
   `site` varchar(50) NOT NULL default '',			  -- site
   `city` varchar(100) NOT NULL default '',			-- location
-  `about` tinytext NOT NULL default '',					-- about yourself
+  `about` tinytext,				                      -- about yourself
   `rname` varchar(150) NOT NULL default '',			-- real name
   `surname` varchar(150) NOT NULL default '',		-- surname
   `photo` varchar(30) NOT NULL default '',			-- photo
@@ -388,8 +388,6 @@ CREATE TABLE `email_queue` (
   `content` text NOT NULL,
   `sent` tinyint(1) NOT NULL,
   `timesent` datetime DEFAULT NULL,
-  `timeadded` datetime NOT NULL
+  `timeadded` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-ALTER TABLE `email_queue`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sent` (`sent`);
