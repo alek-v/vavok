@@ -1,7 +1,7 @@
 <?php
 // (c) vavok.net
-$con_text = file(BASEDIR . "used/config.dat");
-$con_data = explode("|", $con_text[0]);
+$con_text = file_get_contents(BASEDIR . "used/config.dat");
+$con_data = explode("|", $con_text);
 
 $config = array(
 "redbrow" => $con_data[0], // redirection to www. or m.

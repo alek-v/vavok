@@ -68,7 +68,7 @@ class db extends PDO {
     } 
 
     public function delete($table, $where, $bind = "") {
-        $sql = "DELETE FROM " . getConfiguration("tablePrefix") . $table . " WHERE " . $where . ";";
+        $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
         $this->run($sql, $bind);
     } 
 
@@ -107,7 +107,7 @@ class db extends PDO {
     // deprecated!
     public function insert($table, $info) {
         $fields = $this->filter($table, $info);
-        $sql = "INSERT INTO " . getConfiguration('tablePrefix') . $table . " (" . implode($fields, ", ") . ") VALUES (:" . implode($fields, ", :") . ");";
+        $sql = "INSERT INTO " . $table . " (" . implode($fields, ", ") . ") VALUES (:" . implode($fields, ", :") . ");";
         $bind = array();
         foreach($fields as $field)
         $bind[":$field"] = $info[$field];
@@ -115,8 +115,6 @@ class db extends PDO {
     }
 
     function insert_data($table, $values = array()) {
-        $table = getConfiguration('tablePrefix') . $table;
-
         foreach ($values as $field => $v)
             $ins[] = ':' . $field;
 
@@ -154,7 +152,7 @@ class db extends PDO {
     }
     // get data
     public function get_data($table, $where = "", $fields = "*", $bind = "") {
-        $sql = "SELECT " . $fields . " FROM " . getConfiguration("tablePrefix") . $table;
+        $sql = "SELECT " . $fields . " FROM " . $table;
         if (!empty($where))
             $sql .= " WHERE " . $where;
         $sql .= ";";
@@ -172,7 +170,7 @@ class db extends PDO {
     // count number of rows
     public function count_row($table, $where = "") {
 
-        $sql = "SELECT count(*) FROM " . getConfiguration('tablePrefix') . $table;
+        $sql = "SELECT count(*) FROM " . $table;
         if (!empty($where))
             $sql .= " WHERE " . $where;
         $sql .= ";";
@@ -220,7 +218,7 @@ class db extends PDO {
     foreach($fields as $key => $field) :
     if ($key == 0) {
     //first item
-    $buildSQL .= getConfiguration('tablePrefix') . $field . ' = ?';
+    $buildSQL .= $field . ' = ?';
     } else {
     //every other item follows with a ","
     $buildSQL .= ', '.$field.' = ?';
@@ -232,7 +230,7 @@ class db extends PDO {
     $buildSQL .= $fields.' = :value';
     }
 
-    $prepareUpdate = $this->prepare('UPDATE ' . getConfiguration('tablePrefix') . $table . ' SET ' . $buildSQL . $where);
+    $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
 
     //execute the update for one or many values
     if (is_array($values)) {
@@ -251,7 +249,7 @@ class db extends PDO {
         // Try a select statement against the table
         // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
         try {
-            $result = $this->query("DESCRIBE " . getConfiguration('tablePrefix') . $table);
+            $result = $this->query("DESCRIBE " . $table);
 
             if (!empty($result)) {
                 return true;
