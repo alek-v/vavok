@@ -14,7 +14,7 @@ if (is_numeric($uz)) {
     $uz = getnickfromid($uz);
 } else {
     $users_id = $uz;
-    $uz = getidfromnick($uz);
+    $uz = $users->getidfromnick($uz);
     header("Location: user.php?uz=" . $uz . "");
     exit;
 } 
@@ -58,7 +58,7 @@ exit;
     }
 
     $showPage->set('profile-nick', $lang_user['profile'] . ' ' . $uz);
-    $showPage->set('user-online', user_online($uz));
+    $showPage->set('user-online', $users->user_online($uz));
 
     if ($user_profil['regche'] == "1") {
     	$showPage->set('regCheck', '<b><font color="#FF0000">' . $lang_user['notconfirmedreg'] . '!</font></b><br>');
@@ -156,7 +156,7 @@ if (is_reg() && (ismod() || isadmin())) {
 }
 
 
-    if ($uz != getnickfromid($user_id) && is_reg()) {
+    if ($uz != getnickfromid($user_id) && $users->is_reg()) {
     	$userMenu = new PageGen("pages/user-profile/user-menu.tpl");
         $userMenu->set('add-to', $lang_user['addto']);
         $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['contact'] . '</a>');
@@ -180,7 +180,7 @@ if (is_reg() && (ismod() || isadmin())) {
         $userMenu->set('updateProfile', '');
         }
         $showPage->set('userMenu', $userMenu->output());
-    } elseif (getnickfromid($user_id) == $uz && is_reg()) {
+    } elseif (getnickfromid($user_id) == $uz && $users->is_reg()) {
     	$adminMenu = new PageGen("pages/user-profile/admin-update-profile.tpl");
         $adminMenu->set('profileLink', '<a href="../pages/profil.php">' . $lang_user['updateprofile'] . '</a>');
        $showPage->set('userMenu', $adminMenu->output()); 

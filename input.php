@@ -81,7 +81,7 @@ if (empty($action) && !empty($log)) {
         $userx_id = $userx_about['uid'];
         $log = getnickfromid($userx_id);
     } else {
-        $userx_id = getidfromnick($log);
+        $userx_id = $users->getidfromnick($log);
     } 
 
     $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'name, pass, banned, perm');

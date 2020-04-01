@@ -204,7 +204,7 @@ if (empty($page) || $page == 'index') {
 } 
 if ($page == 'send') {
     if (!empty($logus) && !empty($mailsus)) {
-        $userx_id = getidfromnick($logus);
+        $userx_id = $users->getidfromnick($logus);
         $show_userx = $db->select('vavok_about', "uid='" . $userx_id . "'", '', 'email');
 
         $checkmail = trim($show_userx['email']);

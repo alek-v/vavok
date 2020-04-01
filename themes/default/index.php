@@ -43,7 +43,7 @@ if (!stristr($phpself, 'install/install.php')) {
 if (!empty($genHeadTag)) { $head_tag .= $genHeadTag; }
 
 // tell bots what is our preferred page
-if (stristr($head_tag, 'rel="canonical"') === false && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . $connectionProtocol . $config_srvhost . '/' . $pg . '/" />'; }
+if (stristr($head_tag, 'rel="canonical"') === false && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . $connectionProtocol . $config_srvhost . '/page/' . $pg . '/" />'; }
 
 
 // header
@@ -81,7 +81,7 @@ echo '<header><div class="c"><strong>' . $config["title"] . '</strong></div></he
 
 echo '<div id="container"><p>';
 if (is_reg()) {
-    echo '<a href="' . HOMEDIR . 'pages/inbox.php">' . $lang_home['inbox'] . '</a>(' . user_mail($user_id) . ')';
+    echo '<a href="' . HOMEDIR . 'pages/inbox.php">' . $lang_home['inbox'] . '</a>(' . $users->user_mail($user_id) . ')';
     echo ' <a href="' . HOMEDIR . 'pages/mymenu.php">' . $lang_home['mymenu'] . '</a>';
     if (isadmin()) {
         echo' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/">' . $lang_home['admpanel'] . '</a>';

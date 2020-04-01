@@ -14,7 +14,7 @@ if (isset($_GET['isset'])) {
 
 if (is_reg()) {
 	echo '
-	<a href="' . BASEDIR . 'pages/inbox.php" class="sitelink">' . $lang_home['inbox'] . ' (' . user_mail($user_id) . ')</a><br>
+	<a href="' . BASEDIR . 'pages/inbox.php" class="sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a><br>
 	<a href="' . BASEDIR . 'pages/ignor.php" class="sitelink">' . $lang_page['ignorlist'] . '</a><br>
 	<a href="' . BASEDIR . 'pages/buddy.php" class="sitelink">' . $lang_page['contacts'] . '</a><br>
 	<a href="' . BASEDIR . 'pages/profil.php" class="sitelink">' . $lang_page['updprof'] . '</a><br>

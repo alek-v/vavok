@@ -43,7 +43,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     if ($action == "edit") {
         if (!empty($users)) {
             if (ctype_digit($users) === false) {
-                $userx_id = getidfromnick($users);
+                $userx_id = $users->getidfromnick($users);
                 $users_nick = getnickfromid($userx_id);
             } else {
                 $userx_id = $users;
@@ -109,7 +109,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     if ($action == "banuser") {
         $bform = check($_POST['bform']);
         $udd38 = check($_POST['duration']);
-        $users_id = getidfromnick($users);
+        $users_id = $users->getidfromnick($users);
         $udd39 = check($_POST['udd39']);
 
         if ($users_id != "") {
@@ -162,7 +162,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     } 
 
     if ($action == "deleteban") {
-        $users_id = getidfromnick($users);
+        $users_id = $users->getidfromnick($users);
 
         if ($users_id != "") {
             // update changes
@@ -190,7 +190,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     // delete user
     if ($action == "deluser") {
         $users = check($users);
-        delete_users($users);
+        $users->delete_user($users);
 
         echo '' . $lang_admin['usrdeleted'] . '!<br />';
 

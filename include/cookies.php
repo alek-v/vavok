@@ -10,7 +10,7 @@
         // encode to md5
         $unparmd5 = md5($unpar);
         // search for username provided in cookie
-		$cookie_id = getidfromnick($unlog);
+		$cookie_id = $users->getidfromnick($unlog);
 		$cookie_check = $db->select('vavok_users', "id='" . $cookie_id . "'", '', 'name, pass');
 
         // if user exists

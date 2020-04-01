@@ -59,7 +59,7 @@ if (empty($action)) {
     for ($i = $start; $i < $end; $i++) {
         $data = explode("|", $file[$i]); 
         // ////////////////////////////////////////////////////////////
-        $statwho = user_online($data[1]); 
+        $statwho = $users->user_online($data[1]); 
         // /////////////////////////////////////////////////////////////
         $data_text = getbbcode($data[0]);
 

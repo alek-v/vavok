@@ -15,7 +15,7 @@ $pmtext = isset($_POST["pmtext"]) ? $pmtext = check($_POST["pmtext"]) : $pmtext 
 $pmtext = no_br($pmtext, '[br]');
 $who = isset($_GET["who"]) ? $who = check($_GET["who"]) : $who = '';
 $timex = time();
-$system_id = getidfromnick('System');
+$system_id = $users->getidfromnick('System');
 $config["floodTime"] = 1;
 
 if ($who == $system_id) {
@@ -47,7 +47,7 @@ if ($action == "sendpm") {
             if (empty($ajax)) {
                 echo "<img src=\"../images/img/open.gif\" alt=\"O\"/>";
                 echo $lang_page['msgsentto'] . " $whonick<br /><br />";
-                echo parsepm($pmtext);
+                echo $users->parsepm($pmtext);
             } 
 
             $user_profile = $db->select('vavok_profil', "uid='" . $who . "'", '', 'lastvst');
@@ -93,7 +93,7 @@ if ($action == "sendto") {
     $inbox_notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'active');
 
     $pmtou = check($_POST["who"]);
-    $who = getidfromnick($pmtou);
+    $who = $users->getidfromnick($pmtou);
     if ($who == 0) {
         echo "<img src=\"../images/img/close.gif\" alt=\"X\"/> " . $lang_home['usrnoexist'] . "<br />";
     } else {
@@ -112,7 +112,7 @@ if ($action == "sendto") {
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"O\"/> ";
                 echo $lang_page['msgsentto'] . " " . $whonick . "<br /><br />";
-                echo parsepm($pmtext);
+                echo $users->parsepm($pmtext);
 
                 $user_profile = $db->select('vavok_profil', "uid='" . $who . "'", '', 'lastvst');
                 $last_notif = $db->select('notif', "uid='" . $who . "' AND type='inbox'", '', 'lstinb, type'); 
@@ -213,7 +213,7 @@ if ($action == "proc") {
             echo "<img src=\"../images/img/close.gif\" alt=\"X\"/>This PM ain't yours";
         } 
     } else if ($pact == "dnl") {
-        if (getidfromnick($log) == $pminfo['touid'] || getidfromnick($log) == $pminfo['byuid']) {
+        if (getidfromnick($log) == $pminfo['touid'] || $users->getidfromnick($log) == $pminfo['byuid']) {
             echo "<img src=\"../images/img/open.gif\" alt=\"X\"/>request processed successfully<br /><br />";
             echo "<a href=\"rwdpm.php?action=dpm&amp;pmid=$pmid\">Download PM</a>";
         } else {
@@ -252,7 +252,7 @@ if ($action == "frdpm") {
 
     $pminfo = $db->select('inbox', "id='" . $pmid . "'", '', 'text, byuid, timesent, touid, reported');
 
-    if (($pminfo[3] == getidfromnick($log)) || ($pminfo[1] == getidfromnick($log))) {
+    if (($pminfo[3] == $users->getidfromnick($log)) || ($pminfo[1] == $users->getidfromnick($log))) {
         $from_head = "From: noreplay@system";
         $subject = "PM By " . getnickfromid($pminfo[1]) . " To " . getnickfromid($pminfo[3]) . " (www.vavok.net)";
         $content = "Date: " . date("l d/m/y H:i:s", $pminfo[2]) . "\n\n";

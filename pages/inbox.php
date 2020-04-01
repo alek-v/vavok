@@ -92,7 +92,7 @@ if ($action == "sendpm") {
     if ($page == "" || $page <= 0) $page = 1;
     $myid = $user_id;
     $doit = false;
-    $num_items = getpmcount($myid, $view); //changable
+    $num_items = $users->getpmcount($myid, $view); //changable
     $items_per_page = $page_set['privmes'];
     if ($userDevice == 'phone' && $items_per_page > 6) {
         $items_per_page = 6;
@@ -181,7 +181,7 @@ if ($action == "sendpm") {
     echo '<a href="inbox.php?action=sendto" class="sitelink">' . $lang_page['sendmsg'] . '</a><br />';
 } else if ($action == "readpm") {
     $pminfo = $db->select('inbox', "id='" . $pmid . "'", '', 'text, byuid, timesent, touid, reported, deleted');
-    $system_id = getidfromnick('System');
+    $system_id = $users->getidfromnick('System');
     if ($user_id == $pminfo['touid']) {
         $db->update('inbox', 'unread', 0, "id='" . $pmid . "'");
     } 
@@ -204,7 +204,7 @@ if ($action == "sendpm") {
         $tmstamp = $pminfo['timesent'];
         $tmdt = date_fixed($tmstamp, "d.m.Y. - H:i:s");
         echo "$tmdt<br /><br />";
-        $pmtext = parsepm($pminfo['text']);
+        $pmtext = $users->parsepm($pminfo['text']);
 
         echo $pmtext;
 
@@ -267,7 +267,7 @@ window.onload=function () {
             $tmopm = date("d m y - h:i:s", $pm['timesent']);
             echo "$tmopm<br />";
 
-            echo parsepm($pm['text']);
+            echo $users->parsepm($pm['text']);
 
             echo '<hr />';
         } 

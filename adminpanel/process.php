@@ -65,7 +65,7 @@ if ($action == "acdel") {
 
 if ($action == "delmail" && $accessr == 101) {
     $users_id = check($_GET['users']);
-    //$users_id = getidfromnick($users);
+    //$users_id = $users->getidfromnick($users);
     if ($users_id != "") {
 
             $fields = array('subscri', 'newscod');

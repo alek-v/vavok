@@ -13,7 +13,7 @@ if (!empty($_POST['users'])) {
     $users = check($_GET['users']);
 } else { $users = ''; }
 
-$users_id = getidfromnick($users);
+$users_id = $users->getidfromnick($users);
 
 if (is_reg()) {
     if ($accessr == 101 || $accessr == 102) {
@@ -36,7 +36,7 @@ if (is_reg()) {
                 $userexists = $db->select('vavok_users', "name='" . $users . "'", '', '*');
 
                 if (!empty($userexists['name'])) {
-                    $userx_id = getidfromnick($users);
+                    $userx_id = $users->getidfromnick($users);
                     $about_userx = $db->select('vavok_about', "uid='" . $userx_id . "'", '', 'city, about, email, site, rname');
                     $userx_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'perstat, regdate, subscri, regche, allban, lastvst');
                     $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm, browsers, banned, ipadd');
@@ -144,7 +144,7 @@ if (is_reg()) {
 
             if (isValidEmail($udd4)) {
                 if (empty($udd5) || validateURL($udd5) === true) {
-                    $users_id = getidfromnick($users);
+                    $users_id = $users->getidfromnick($users);
                     if (!empty($users_id)) {
                         list($uday, $umonth, $uyear) = explode(".", $udd6);
                         $usecond = mktime('0', '0', '0', $umonth, $uday, $uyear);
@@ -229,11 +229,11 @@ if (is_reg()) {
         // delete user
         if ($action == "deluser") {
             if ($users != $config["adminNick"]) {
-                $userx_id = getidfromnick($users);
+                $userx_id = $users->getidfromnick($users);
                 $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm');
 
                 if ($show_userx['perm'] < 101 || $show_userx['perm'] > 105) {
-                    delete_users($users);
+                    $users->delete_user($users);
                     echo $lang_admin['usrdeleted'] . '!<br>';
 
                     echo '<br><a href="users.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';

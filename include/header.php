@@ -1,10 +1,10 @@
 <?php 
 // (c) vavok.net
 if (!empty($_SESSION['log'])) {
-    $permissions = $db->select('vavok_users', "id='" .  getidfromnick(check($_SESSION['log'])) . "'", '', 'perm');
+    $permissions = $db->select('vavok_users', "id='" .  $users->getidfromnick(check($_SESSION['log'])) . "'", '', 'perm');
 
     $log = $_SESSION['log']; // username
-    $user_id = getidfromnick($log); // user id
+    $user_id = $users->getidfromnick($log); // user id
     $accessr = $permissions['perm']; // access rights
 
     $vavok_users = $db->select('vavok_users', "id='" . $user_id . "'", '', 'skin, banned, timezone, lang, mskin');

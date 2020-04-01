@@ -90,7 +90,7 @@ if ($action == 'main') {
     $totalUsers = $totalUsers - 1; // do not count "System"
     echo '<a href="../pages/userlist.php" class="sitelink">' . $lang_admin['userlist'] . ' (' . $totalUsers . ')</a><br />';
 
-    if (is_moderator(103) || is_moderator(105) || is_administrator() && file_exists('reports.php')) {
+    if (is_moderator(103) || $users->is_moderator(105) || $users->is_administrator() && file_exists('reports.php')) {
         echo '<a href="reports.php" class="sitelink">' . $lang_admin['usrcomp'] . '</a><br />';
     }
 
@@ -103,7 +103,7 @@ if ($action == 'main') {
         echo '<a href="banlist.php" class="sitelink">' . $lang_admin['banlist'] . '</a><br />';
     } 
 
-    if (is_administrator(101) || is_administrator(102)) {
+    if (is_administrator(101) || $users->is_administrator(102)) {
         echo '<hr>';
         if (file_exists('forumadmin.php')) {
         echo '<a href="forumadmin.php?action=fcats" class="sitelink">' . $lang_admin['forumcat'] . '</a><br />';
@@ -145,14 +145,14 @@ if ($action == 'main') {
         echo '<a href="files.php" class="sitelink">' . $lang_admin['mngpage'] . '</a><br />';
     } 
 } 
-if ($action == 'clear' && is_administrator(101)) {
+if ($action == 'clear' && $users->is_administrator(101)) {
     echo '<a href="delusers.php" class="sitelink">' . $lang_admin['cleanusers'] . '</a><br />';
     echo '<a href="./?action=clrmlog" class="sitelink">' . $lang_admin['cleanmodlog'] . '</a><br />';
 
     echo '<br /><br /><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
 } 
 
-if ($action == "clrmlog" && is_administrator(101)) {
+if ($action == "clrmlog" && $users->is_administrator(101)) {
     $sql = "DELETE FROM mlog";
     $db->query($sql);
 
@@ -161,7 +161,7 @@ if ($action == "clrmlog" && is_administrator(101)) {
     echo '<br /><br /><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
 } 
 
-if ($action == "sysmng" && is_administrator(101)) {
+if ($action == "sysmng" && $users->is_administrator(101)) {
     echo '<a href="systems.php" class="sitelink">' . $lang_admin['chksystem'] . '</a><br />';
     echo '<a href="./?action=clear" class="sitelink">' . $lang_admin['cleansys'] . '</a><br />';
     if (file_exists('backup.php')) {
@@ -173,7 +173,7 @@ if ($action == "sysmng" && is_administrator(101)) {
     echo '<br /><br /><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
 } 
 
-if ($action == "opttbl" && is_administrator(101)) {
+if ($action == "opttbl" && $users->is_administrator(101)) {
     $alltables = mysql_query("SHOW TABLES");
 
     while ($table = mysql_fetch_assoc($alltables)) {

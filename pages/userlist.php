@@ -38,7 +38,7 @@ if (empty($view)) {
 if (empty($page) || $page < 1) {
     $page = 1;
 } 
-$num_items = regmemcount() - 1; // no. reg. members minus system
+$num_items = $users->regmemcount() - 1; // no. reg. members minus system
 $items_per_page = 10;
 $num_pages = ceil($num_items / $items_per_page);
 if (($page > $num_pages) && $page != 1)$page = $num_pages;

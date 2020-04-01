@@ -82,7 +82,7 @@ if (is_reg()) {
                 $tnick = getnickfromid($item['target']);
 
                 $lnk = "<a href=\"../pages/user.php?uz=" . $item['target'] . "\"  class=\"sitelink\">" . $tnick . "</a>";
-                echo user_online($tnick) . " " . $lnk . ": ";
+                echo $users->user_online($tnick) . " " . $lnk . ": ";
                 echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"buddy.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $lang_home['delete'] . "</a><br>";
             } 
         } else {

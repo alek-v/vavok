@@ -4,32 +4,35 @@
 // website configuration
 function getConfiguration($data = '') {
     global $config;
+
     if (empty($data)) {
         return $config;
     } else {
         return $config[$data];
     }
 }
-// get user nick from user id number
+
+// get user nick from user id number - deprecated 31.03.2020. 5:48:28
 function getnickfromid($uid) {
     global $db;
     $unick = $db->select('vavok_users', "id='" . $uid . "'", '', 'name');
     return $unick['name'];
 } 
-// get vavok_users user id from nickname
-function getidfromnick($nick)
-{
+
+// get vavok_users user id from nickname - deprecated 31.03.2020. 5:48:36
+function getidfromnick($nick) {
     global $db;
     $uid = $db->select('vavok_users', "name='" . $nick . "'", '', 'id');
     return $uid['id'];
 } 
-// send pm
+
+// send automated private message by system (bot)
 function autopm($msg, $who, $sys = '') {
-    global $config, $db;
+    global $db, $users;
     if (!empty($sys)) {
         $sysid = $sys;
     } else {
-        $sysid = getidfromnick('System');
+        $sysid = $users->getidfromnick('System');
     }
  	$values = array(
  	'text' => $msg,
@@ -40,6 +43,7 @@ function autopm($msg, $who, $sys = '') {
 	);
 	$db->insert_data('inbox', $values);
 } 
+
 function maketime($string) {
     if ($string < 3600) {
         $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
@@ -48,6 +52,7 @@ function maketime($string) {
     } 
     return $string;
 } 
+
 // correct date
 function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     global $config; // time zone from config
@@ -74,8 +79,9 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     } 
 
     return $rdate;
-} 
-// delete user
+}
+
+// delete user - deprecated 31.03.2020. 5:49:27
 function delete_users($users) {
     global $db;
 
@@ -83,7 +89,7 @@ function delete_users($users) {
     if (preg_match ("/^([0-9]+)$/", $users)) {
         $users_id = $users;
     } else {
-        $users_id = getidfromnick($users);
+        $users_id = $users->getidfromnick($users);
     }
 
     $db->delete("vavok_users", "id = '" . $users_id . "'");
@@ -99,6 +105,7 @@ function delete_users($users) {
 
     return $users;
 }
+
 // clear file
 function clear_files($files) {
     $file = file($files);
@@ -136,7 +143,8 @@ function win_to_utf($str) {
         "\xF6" => "ц", "\xF7" => "ч", "\xF8" => "ш", "\xF9" => "щ", "\xFA" => "ъ", "\xFB" => "ы", "\xFC" => "ь", "\xFD" => "э", "\xFE" => "ю", "\xFF" => "я");
 
     return strtr($str, $win1251utf8);
-} 
+}
+
 // make safe url for urlrewriting - link generating
 // convert non-latin chars to latin and remove special
 function trans($str) {
@@ -199,7 +207,8 @@ function rus_utf_tolower($str) {
         "A" => "a", "B" => "b", "C" => "c", "D" => "d", "E" => "e", "I" => "i", "F" => "f", "G" => "g", "H" => "h", "J" => "j", "K" => "k", "L" => "l", "M" => "m", "N" => "n", "O" => "o", "P" => "p", "Q" => "q", "R" => "r", "S" => "s", "T" => "t", "U" => "u", "V" => "v", "W" => "w", "X" => "x", "Y" => "y", "Z" => "z");
 
     return strtr($str, $arraytolower);
-} 
+}
+
 // check input fields
 function check($str, $mysql = "") {
     if (get_magic_quotes_gpc()) {
@@ -287,7 +296,8 @@ function read_dir($dir) {
         } 
     } 
     return $size;
-} 
+}
+
 // file size
 function formatsize($file_size) {
     if ($file_size >= 1073741824) {
@@ -301,9 +311,9 @@ function formatsize($file_size) {
     } 
     return $file_size;
 }
+
 // badword / anti spam function
-function antiword($string)
-{
+function antiword($string) {
     $words = file_get_contents(BASEDIR . "used/antiword.dat");
     $wordlist = explode("|", $words);
 
@@ -313,7 +323,8 @@ function antiword($string)
         } 
     } 
     return $string;
-} 
+}
+
 // CHMOD function
 function permissions($filez) {
     $filez = decoct(fileperms("$filez")) % 1000;
@@ -326,15 +337,14 @@ function safe_encode($string) {
     return $data;
 } 
 
-function safe_decode($string)
-{
+function safe_decode($string) {
     $string = str_replace(array('_', '-'), array('+', '/'), $string);
     $data = base64_decode($string);
     return $data;
-} 
+}
+
 // encode using key
-function xoft_encode($string, $key)
-{
+function xoft_encode($string, $key) {
     $result = "";
     for($i = 1; $i <= strlen($string); $i++) {
         $char = substr($string, $i-1, 1);
@@ -344,9 +354,9 @@ function xoft_encode($string, $key)
     } 
     return safe_encode($result);
 } 
+
 // decode using key
-function xoft_decode($string, $key)
-{
+function xoft_decode($string, $key) {
     $string = safe_decode($string);
     $result = "";
     for($i = 1; $i <= strlen($string); $i++) {
@@ -357,6 +367,7 @@ function xoft_decode($string, $key)
     } 
     return $result;
 } 
+
 // generate password
 function generate_password() {
     $length = rand(10, 12);
@@ -368,6 +379,7 @@ function generate_password() {
     $makepass .= $salt[mt_rand(0, $len - 1)];
     return $makepass;
 } 
+
 // antiflood
 $phpself = $_SERVER['PHP_SELF'];
 function flooder($ip, $phpself) {
@@ -394,7 +406,8 @@ function flooder($ip, $phpself) {
     flock ($new_db, LOCK_UN);
     fclose($new_db);
     return $result;
-} 
+}
+
 // delete image links
 function erase_img($image) {
     $image = preg_replace('#<img src="\.\./images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
@@ -403,6 +416,7 @@ function erase_img($image) {
 
     return $image;
 }
+
 // user age
 function getage($strdate) {
     $dob = explode(".", $strdate);
@@ -437,9 +451,9 @@ function getage($strdate) {
     } 
     return $rage;
 } 
+
 // parse bb code
-function badlink($link, $prefix)
-{
+function badlink($link, $prefix) {
     if ($prefix == "mailto:") {
         if (strpos($link, "@") === false || strpos($link, ".", (strpos($link, "@") + 2)) === false || substr_count($link, "@") > 1 || strpos($link, "@") == 0) {
             return 1;
@@ -449,8 +463,7 @@ function badlink($link, $prefix)
         return 1;
     } 
 } ;
-function setlinks($r, $prefix)
-{
+function setlinks($r, $prefix) {
     $target = "";
     if (substr($r, 0, strlen($prefix)) == $prefix) {
         $r = "\n" . $r;
@@ -490,6 +503,7 @@ function setlinks($r, $prefix)
     } 
     return $r;
 }
+
 function getbbcode($r) {
     $r = str_replace("\r\n", "<br />", $r);
     $r = str_replace("[br]", "<br />", $r);
@@ -537,7 +551,8 @@ function getbbcode($r) {
     // //links
     $r = trim($r);
     return $r;
-} 
+}
+
 // are you moderator - deprecated! use is_moderator()
 function ismod($id = '', $num = '') {
     global $user_id, $db;
@@ -558,7 +573,9 @@ function ismod($id = '', $num = '') {
     } else {
         return false;
     } 
-} 
+}
+
+// deprecated 31.03.2020. 5:50:56
 function is_moderator($num = '', $id = '') {
     global $db, $user_id;
 
@@ -575,7 +592,8 @@ function is_moderator($num = '', $id = '') {
     } else {
         return false;
     } 
-} 
+}
+
 // are you admin? - deprecated! use is_administrator()
 function isadmin($id = '', $num = '') {
     global $user_id, $db;
@@ -594,6 +612,8 @@ function isadmin($id = '', $num = '') {
         return false;
     } 
 }
+
+// deprecated 31.03.2020. 5:52:58
 function is_administrator($num = '', $id = '') {
     global $db, $user_id;
 
@@ -611,19 +631,19 @@ function is_administrator($num = '', $id = '') {
         return false;
     } 
 } 
-// is ignored
-function isignored($tid, $uid)
-{
+
+// is ignored - deprecated 31.03.2020. 5:53:28
+function isignored($tid, $uid) {
     global $db;
     $ign = $db->count_row('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
     if ($ign > 0) {
         return true;
     } 
     return false;
-} 
-// ignore result
-function ignoreres($uid, $tid)
-{ 
+}
+
+// ignore result - deprecated 31.03.2020. 5:53:35
+function ignoreres($uid, $tid) { 
     // 0 user can't ignore the target
     // 1 yes can ignore
     // 2 already ignored
@@ -645,9 +665,9 @@ function ignoreres($uid, $tid)
     } 
     return 1;
 } 
-// is buddy
-function isbuddy($tid, $uid)
-{
+
+// is buddy - deprecated 31.03.2020. 5:54:11
+function isbuddy($tid, $uid) {
     global $db;
     $ign = $db->count_row('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
     if ($ign > 0) {
@@ -655,9 +675,9 @@ function isbuddy($tid, $uid)
     } 
     return false;
 }
+
 // count number of lines in file
-function counter_string($files)
-{
+function counter_string($files) {
     $count_lines = 0;
     if (file_exists($files)) {
         $lines = file($files);
@@ -665,10 +685,10 @@ function counter_string($files)
     } 
 
     return $count_lines;
-} 
-// private messages
-function getpmcount($uid, $view = "all")
-{
+}
+
+// private messages - deprecated 31.03.2020. 5:55:07
+function getpmcount($uid, $view = "all") {
     global $db, $user_id;
     if ($view == "all") {
         $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $user_id . "' OR deleted IS NULL)");
@@ -681,16 +701,16 @@ function getpmcount($uid, $view = "all")
     } 
     return $nopm;
 } 
-// get number of unread pms
-function getunreadpm($uid)
-{
+
+// get number of unread pms - deprecated 31.03.2020. 5:55:07
+function getunreadpm($uid) {
     global $db;
     $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
     return $nopm[0];
-} 
-// number of private msg's
-function user_mail($userid)
-{
+}
+
+// number of private msg's - deprecated 31.03.2020. 5:55:07
+function user_mail($userid) {
     $fcheck_all = getpmcount($userid);
     $new_privat = getunreadpm($userid);
 
@@ -698,12 +718,12 @@ function user_mail($userid)
 
     return $all_mail;
 } 
-// user online status
-function user_online($login)
-{
+
+// user online status - deprecated 31.03.2020. 5:55:07
+function user_online($login) {
     global $db;
 
-    $xuser = getidfromnick($login);
+    $xuser = $users->getidfromnick($login);
     $statwho = '<font color="#FF0000">[Off]</font>';
 
     $result = $db->count_row('online', 'user="' . $xuser . '"');
@@ -713,7 +733,8 @@ function user_online($login)
     } 
 
     return $statwho;
-} 
+}
+
 // get title for page
 function page_title($string) {
     global $db;
@@ -728,13 +749,15 @@ function page_title($string) {
 
     return $position;
 } 
-// number of registered members
+
+// number of registered members - deprecated 31.03.2020. 5:55:41
 function regmemcount() {
     global $db;
     $rmc = $db->count_row('vavok_users');
     return $rmc;
-} 
-// send email
+}
+
+// send email - deprecated 28.3.2020. 15:36:41
 function sendmail($usermail, $subject, $msg, $mail = "", $name = "") {
     global $config, $config_srvhost;
 
@@ -767,7 +790,8 @@ function compress_output_gzip($output) {
 
 function compress_output_deflate($output) {
     return gzdeflate($output, 3);
-} 
+}
+
 // generate meta tags "description" and "keywords"
 function create_metatags($story) {
     $keyword_count = 10;
@@ -811,6 +835,7 @@ function create_metatags($story) {
     return $headers;
 } 
 
+// deprecated 31.03.2020. 5:56:16
 function isstarred($pmid) {
     global $db;
     $strd = $db->select('inbox', "id='" . $pmid . "'", '', 'starred');
@@ -821,6 +846,7 @@ function isstarred($pmid) {
     } 
 } 
 
+// deprecated 31.03.2020. 5:56:16
 function parsepm($text) {
     $text = antiword($text);
     $text = smiles($text);
@@ -832,6 +858,7 @@ function parsepm($text) {
     return $text;
 } 
 
+// deprecated 31.03.2020. 5:56:16
 function is_reg() {
     global $db;
     if (!empty($_SESSION['log']) && !empty($_SESSION['pass'])) {
@@ -849,19 +876,23 @@ function is_reg() {
             return false;
         }
     }
-} 
+}
+
 // check URL
 function validateURL($URL) {
     $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
     return (bool)preg_match($v, $URL);
 } 
+
 function isValidEmail($email) {
     if (preg_match("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email) == true) {
         return true;
     } else {
         return false;
     } 
-} 
+}
+
+// is this really number - return integer
 function clean_int($i) {
     if (is_numeric($i)) {
         return (int)$i;
@@ -870,8 +901,9 @@ function clean_int($i) {
     else {
         return false;
     } 
-} 
-// get info about user
+}
+
+// get info about user - deprecated 31.03.2020. 5:56:51
 function get_user_info($xuser_id, $info) {
     global $db;
     if ($info == 'email') {
@@ -879,6 +911,7 @@ function get_user_info($xuser_id, $info) {
         return $uinfo['email'];
     } 
 }
+
 // deprecated 24.5.2017. 2:50:18 echo_isset is deprecated, use get_isset
 function echo_isset($msg = '') {
     global $config, $isset, $error;
@@ -891,6 +924,7 @@ function echo_isset($msg = '') {
     return $issetLang[$isset];
     }
 }
+
 function get_isset($msg = '') {
     global $config, $isset;
 
@@ -902,7 +936,8 @@ function get_isset($msg = '') {
     if (!empty($issetLang[$isset])) {
     return $issetLang[$isset];
     }
-} 
+}
+
 // show online
 function show_online() {
     global $config, $counter_reg, $counter_online;
@@ -910,7 +945,8 @@ function show_online() {
         $online = '<a href="/pages/online.php">[Online: ' . $counter_reg . '/' . $counter_online . ']</a>';
         return $online;
     } 
-} 
+}
+
 // show counter
 function show_counter() {
     global $config, $counter_host, $counter_all, $counter_hits, $counter_allhits;
@@ -933,7 +969,8 @@ function show_counter() {
         } 
         return $counter;
     } 
-} 
+}
+
 // get prefered language
 function getDefaultLanguage() {
     if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
@@ -941,6 +978,7 @@ function getDefaultLanguage() {
     else
         return parseDefaultLanguage(null);
 }
+
 function parseDefaultLanguage($http_accept, $deflang = "en") {
     if (isset($http_accept) && strlen($http_accept) > 1) {
         // Split possible languages into array
@@ -963,6 +1001,7 @@ function parseDefaultLanguage($http_accept, $deflang = "en") {
     } 
     return strtolower($deflang);
 }
+
 // check special permissions - deprecated! 02.07.2017. 09:45:18 use checkPermissions
 function chkcpecprm($permname, $needed) {
     global $user_id, $db;
@@ -989,7 +1028,9 @@ function chkcpecprm($permname, $needed) {
         return false;
     } 
 }
+
 // check permissions for admin panel
+// check if user have permitions to see, edit, delete, etc selected part of the website
 function checkPermissions($permname, $needed = 'show') {
     global $user_id, $db;
 
@@ -999,10 +1040,10 @@ function checkPermissions($permname, $needed = 'show') {
         return true;
     }
 
-    $check = $db->count_row('specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
+    $check = $db->count_row(getConfiguration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
 
     if ($check > 0) {
-        $check_data = $db->select('specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
+        $check_data = $db->select(getConfiguration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
         $perms = explode(',', $check_data['permacc']);
         if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
             return true;
@@ -1021,6 +1062,7 @@ function checkPermissions($permname, $needed = 'show') {
         return false;
     } 
 }
+
 // java script bb codes for text input
 function java_bbcode($inputName) {
 	
@@ -1051,5 +1093,15 @@ function java_bbcode($inputName) {
 <a href=# onClick="javascript:tag('[u]', '[/u]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/u.gif" alt="" /></a> 
 <a href=# onClick="javascript:tag('[youtube]', '[/youtube]'); return false;"><img src="<?php echo HOMEDIR; ?>images/socialmedia/youtube.png" width="16" height="16" alt="" /></a> 
 <?php
+}
+
+// redirect page
+function redirect_to($url) {
+    if (!headers_sent()) { // check headers - you can not send headers if they already sent
+        header('Location: ' . $url);
+        exit; // protects from code being executed after redirect request
+    } else {
+        throw new Exception('Cannot redirect, headers already sent');
+    }
 }
 ?>

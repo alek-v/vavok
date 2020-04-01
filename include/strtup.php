@@ -8,8 +8,7 @@ $start_time = microtime(true);
 $time = time();
 
 // vavok cms settings
-$config_debug = 0;
-$vavok_version = '1.2.7';
+$config_debug = 1;
 
 // error reporting
 if ($config_debug == 0) {
@@ -176,7 +175,11 @@ if (!stristr($config_requri, 'error=db') && !stristr($phpself, 'install/install.
     // and this will be PDO connection to base
     $db = new Db("mysql:host=" . $config["dbhost"] . ";dbname=" . $config["dbname"], $config["dbuser"], $config["dbpass"]);
 
+    // we are connected to database and we can load Users class
+    $users = new Users;
+
     if (!stristr($phpself, 'install/finish.php') && !stristr($phpself, '/cronjob/')) {
+
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 
         // require_once BASEDIR . "include/antidos.php";
