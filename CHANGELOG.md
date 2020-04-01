@@ -1,4 +1,4 @@
-> Vavok v1.3
+# Vavok v1.3
 
 - Updates and improvements to Page class
 - Updated installer
