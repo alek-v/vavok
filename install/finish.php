@@ -1,5 +1,5 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 // /install/install.php have disabled connection to db in strtup.php, so I manipulate with db in this page
 require_once"../include/strtup.php";
 require_once "../lang/" . $config["language"] . "/installinstall.php";
@@ -174,6 +174,7 @@ if ($step == "regadmin") {
                             18 => '0',
                             19 => 5,
                             20 => '0',
+                            21 => 'auto', // force HTTPS
                             22 => 200,
                             23 => 5,
                             24 => 100,

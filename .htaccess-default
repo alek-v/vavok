@@ -58,8 +58,8 @@ RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1
 RewriteRule ^search$ search.php
 
 # force https protocol
-RewriteCond %{HTTPS} !=on
-RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 # ----------------------------------------------------------------------
 # Expires headers (for better cache control) (SEO and site performance improvements)
