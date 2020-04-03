@@ -1,3 +1,9 @@
+# Vavok v1.3.1
+- Added option to block IP address
+- Security bugfix
+- Removed old plugin directory
+
+
 # Vavok v1.3
 
 - Updates and improvements to Page class
