@@ -1,5 +1,5 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 // class for managing website configuration
 
 class Config {
@@ -17,9 +17,9 @@ class Config {
 	    // owerwrite configuration value
 	    $i = 0;
 	    foreach ($udata as $key => $val) {
-	    	$udata[$key] = $val . '|';
+	    	$udata[$i] = $val . '|';
 
-	    	if (!empty($data[$i])) {
+	    	if (isset($data[$i])) {
 	    		$udata[$i] = $data[$i] . '|';
 	    	}
 
