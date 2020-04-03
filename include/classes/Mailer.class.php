@@ -1,5 +1,5 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 
 class Mailer {
 	// send email
@@ -31,7 +31,13 @@ class Mailer {
 	    $adds .= "Content-Transfer-Encoding: 8bit\n";
 	    $adds .= "X-Mailer: PHP v." . phpversion();
 
-	    return mail($usermail, $subject, $msg, $adds);
+	    $result = mail($usermail, $subject, $msg, $adds);
+	    
+	    if (!$result) {
+    		return false;
+		} else {
+			return true;
+		}
 	}
 
 	// add to queue
