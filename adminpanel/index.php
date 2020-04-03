@@ -1,5 +1,5 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 require_once"../include/strtup.php";
 
 if (!checkPermissions('adminpanel', 'show')) {
@@ -139,6 +139,9 @@ if ($action == 'main') {
         echo '<a href="index.php?action=sysmng" class="sitelink">' . $lang_admin['sysmng'] . '</a><br />';
         if (file_exists('logfiles.php')) {
             echo '<a href="logfiles.php" class="sitelink">' . $lang_admin['logcheck'] . '</a><br />';
+        }
+        if (file_exists('email-queue.php')) {
+            echo '<a href="email-queue.php" class="sitelink">Add to email queue</a><br />';
         } 
     } 
     if (file_exists('files.php') && (is_administrator() || checkPermissions('pageedit'))) {
@@ -210,7 +213,7 @@ $key = 'checkver'; // key to save cache with
     echo '<br /><br /><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
 }
 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 
