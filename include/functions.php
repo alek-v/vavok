@@ -1,5 +1,5 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 
 // website configuration
 function getConfiguration($data = '') {
@@ -1115,5 +1115,11 @@ function redirect_to($url) {
     } else {
         throw new Exception('Cannot redirect, headers already sent');
     }
+}
+
+// show error
+function fatal_error($error) {
+    echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
+    exit;
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
 require_once("include/strtup.php");
 
 if (!empty($_GET['ln'])) { $ln = check($_GET['ln']); } else { $ln = ''; }
@@ -19,13 +19,21 @@ if ($isUrlLangSet == 2) {
 if ($config["siteDefaultLang"] != $config["language"] && $isUrlLangSet == 0) {
 	redirect_to("/" . $ln_loc . "/" . $urlIsset);
 }
+
 // redirect if language is set in url and it is not current lang
 elseif ($ln != $ln_loc && $isUrlLangSet == 1) {
-	// get $language varialble
-	require "lang/" . $ln . "/index.php";
-	// redirect
-	redirect_to("/pages/chlng.php?lang=" . $language);
+	$check_lang = "lang/" . $ln . "/index.php";
+
+	if (file_exists($check_lang)) {
+		// get $language varialble
+		require $check_lang;
+		// redirect
+		redirect_to("/pages/chlng.php?lang=" . $language);
+	} else {
+		fatal_error('Language does not exist!');
+	}
 }
+
 // redirect to root dir if visitor is using site default language and language is set in url
 elseif ($config["siteDefaultLang"] == $config["language"] && $isUrlLangSet == 1) {
 	redirect_to("/" . $urlIsset);
