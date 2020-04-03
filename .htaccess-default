@@ -49,14 +49,17 @@ RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
 #RewriteCond %{HTTPS}s ^on(s)|
 #RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# site pages
-# get page
-RewriteRule ^page/([A-Za-z0-9-._]+)/?$ pages.php?pg=$1 [NC,L]
+# website pages
+RewriteRule ^page\/([^\/]+)\/?$ pages.php?pg=$1 [NC,L]
 
 # website content - tag search
 RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2
 RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1
 RewriteRule ^search$ search.php
+
+# force https protocol
+RewriteCond %{HTTPS} !=on
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 # ----------------------------------------------------------------------
 # Expires headers (for better cache control) (SEO and site performance improvements)

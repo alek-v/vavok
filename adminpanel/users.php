@@ -8,12 +8,12 @@ if (!empty($_GET['action'])) {
     $action = '';
 } 
 if (!empty($_POST['users'])) {
-    $users = check($_POST['users']);
+    $user = check($_POST['users']);
 } elseif (!empty($_GET['users'])) {
-    $users = check($_GET['users']);
-} else { $users = ''; }
+    $user = check($_GET['users']);
+} else { $user = ''; }
 
-$users_id = $users->getidfromnick($users);
+$users_id = $users->getidfromnick($user);
 
 if (is_reg()) {
     if ($accessr == 101 || $accessr == 102) {
@@ -32,34 +32,34 @@ if (is_reg()) {
         } 
         // change profile
         if ($action == "edit") {
-            if (!empty($users)) {
-                $userexists = $db->select('vavok_users', "name='" . $users . "'", '', '*');
+            if (!empty($user)) {
+                $userexists = $db->select('vavok_users', "name='" . $user . "'", '', '*');
 
                 if (!empty($userexists['name'])) {
-                    $userx_id = $users->getidfromnick($users);
+                    $userx_id = $users->getidfromnick($user);
                     $about_userx = $db->select('vavok_about', "uid='" . $userx_id . "'", '', 'city, about, email, site, rname');
                     $userx_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'perstat, regdate, subscri, regche, allban, lastvst');
                     $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm, browsers, banned, ipadd');
                     if ($userx_id != "") {
-                        echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $users . '<br>';
+                        echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
 
-                        if ($log != $config["adminNick"] && $users == $config["adminNick"]) {
+                        if ($log != $config["adminNick"] && $user == $config["adminNick"]) {
                             echo '<br>' . $lang_admin['noauthtoedit'] . '!<br>';
                             include_once"../themes/$config_themes/foot.php";
                             exit;
                         } 
 
-                        if (($log != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $log != $users) {
+                        if (($log != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $log != $user) {
                             echo '<br>' . $lang_admin['noauthtoban'] . '!<br>';
                             include_once"../themes/$config_themes/foot.php";
                             exit;
                         } 
-                        $casenick = strcasecmp($users, $log);
+                        $casenick = strcasecmp($user, $log);
                         if ($casenick == 0) {
                             echo '<b><font color="red">' . $lang_admin['myprofile'] . '!</font></b><br><br>';
                         } 
 
-                        echo '<form method="post" action="users.php?action=upgrade&amp;users=' . $users . '">';
+                        echo '<form method="post" action="users.php?action=upgrade&amp;users=' . $user . '">';
 
                         $userx_access = (int)$show_userx['perm'];
 
@@ -80,7 +80,10 @@ if (is_reg()) {
                             echo '</select><br>';
                         } 
 
+                        // website permitions for various sections
+                        if (file_exists('specperm.php')) {
                         echo '<a href="specperm.php?users=' . $userx_id . '" class="sitelink">Special permitions</a><br />';
+                        }
                         echo $lang_admin['newpassinfo'] . ':<br><input name="udd1" /><br>';
                         echo $lang_admin['city'] . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
                         echo $lang_admin['aboutyou'] . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
@@ -110,7 +113,7 @@ if (is_reg()) {
                         echo '<br><input value="' . $lang_home['save'] . '" type="submit" /></form><hr>';
 
                         if ($userx_access < 101 || $userx_access > 105) {
-                            echo '<b><a href="users.php?action=poddel&amp;users=' . $users . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
+                            echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
                         } 
                     } else {
                         echo $lang_admin['usrnoexist'] . '!';
@@ -126,29 +129,32 @@ if (is_reg()) {
         } 
         // update changes
         if ($action == "upgrade") {
-            $udd1 = check($_POST['udd1']);
-            $udd2 = check($_POST['udd2']);
-            $udd3 = check($_POST['udd3']);
-            $udd4 = check($_POST['udd4']);
-            $udd5 = check($_POST['udd5']);
-            $udd6 = check($_POST['udd6']);
-            $udd7 = check($_POST['udd7']); // access level
-            $udd8 = check($_POST['udd8']);
-            $udd9 = check($_POST['udd9']);
-            $udd10 = check($_POST['udd10']);
-            $udd11 = check($_POST['udd11']);
-            $udd12 = check($_POST['udd12']);
-            $udd13 = check($_POST['udd13']);
-            $udd29 = check($_POST['udd29']);
-            $udd43 = check($_POST['udd43']);
+            $udd1 = isset($_POST['udd1']) ? check($_POST['udd1']) : '';
+            $udd2 = isset($_POST['udd2']) ? check($_POST['udd2']) : '';
+            $udd3 = isset($_POST['udd3']) ? check($_POST['udd3']) : '';
+            $udd4 = isset($_POST['udd4']) ? check($_POST['udd4']) : '';
+            $udd5 = isset($_POST['udd5']) ? check($_POST['udd5']) : '';
+            $udd6 = isset($_POST['udd6']) ? check($_POST['udd6']) : '';
+            $udd7 = isset($_POST['udd7']) ? check($_POST['udd7']) : ''; // access level
+            $udd8 = isset($_POST['udd8']) ? check($_POST['udd8']) : '';
+            $udd9 = isset($_POST['udd9']) ? check($_POST['udd9']) : '';
+            $udd10 = isset($_POST['udd10']) ? check($_POST['udd10']) : '';
+            $udd11 = isset($_POST['udd11']) ? check($_POST['udd11']) : '';
+            $udd12 = isset($_POST['udd12']) ? check($_POST['udd12']) : '';
+            $udd13 = isset($_POST['udd13']) ? check($_POST['udd13']) : '';
+            $udd29 = isset($_POST['udd29']) ? check($_POST['udd29']) : '';
+            $udd40 = isset($_POST['udd40']) ? check($_POST['udd40']) : '';
+            $udd43 = isset($_POST['udd43']) ? check($_POST['udd43']) : '';
 
             if (isValidEmail($udd4)) {
                 if (empty($udd5) || validateURL($udd5) === true) {
-                    $users_id = $users->getidfromnick($users);
+                    $users_id = $users->getidfromnick($user);
                     if (!empty($users_id)) {
-                        list($uday, $umonth, $uyear) = explode(".", $udd6);
-                        $usecond = mktime('0', '0', '0', $umonth, $uday, $uyear);
-                        $udd6 = $usecond; 
+                        if (!empty($udd6)) {
+                            list($uday, $umonth, $uyear) = explode(".", $udd6);
+                            $udd6 = mktime('0', '0', '0', $umonth, $uday, $uyear);
+                        }
+
                         // update profil
                         $userx_pass = $db->select('vavok_users', "id='" . $users_id . "'", '', 'pass');
 
@@ -217,29 +223,29 @@ if (is_reg()) {
             } else {
                 echo $lang_admin['emailnotok'] . '<br>';
             } 
-            echo '<br><a href="users.php?action=edit&amp;users=' . $users . '" class="sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
         } 
         // confirm delete
         if ($action == "poddel") {
-            echo $lang_admin['confusrdel'] . ' <b>' . $users . '</b>?<br><br>';
-            echo '<b><a href="users.php?action=deluser&amp;users=' . $users . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
+            echo $lang_admin['confusrdel'] . ' <b>' . $user . '</b>?<br><br>';
+            echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
 
-            echo '<br><a href="users.php?action=edit&amp;users=' . $users . '" class="sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
         } 
         // delete user
         if ($action == "deluser") {
-            if ($users != $config["adminNick"]) {
-                $userx_id = $users->getidfromnick($users);
+            if ($user != $config["adminNick"]) {
+                $userx_id = $users->getidfromnick($user);
                 $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm');
 
                 if ($show_userx['perm'] < 101 || $show_userx['perm'] > 105) {
-                    $users->delete_user($users);
+                    $users->delete_user($user);
                     echo $lang_admin['usrdeleted'] . '!<br>';
 
                     echo '<br><a href="users.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
                 } else {
                     echo $lang_admin['noaccessdel'] . '<br>';
-                    echo '<br><a href="users.php?action=edit&amp;users=' . $users . '" class="sitelink">' . $lang_home['back'] . '</a>';
+                    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
                 } 
             } 
         } 

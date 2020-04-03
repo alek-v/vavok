@@ -1,10 +1,11 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
+// modified: 02.04.2020. 20:16:28
+
 require_once"../include/strtup.php";
 
 if (!is_reg() || !checkPermissions(basename(__FILE__))) {
-    header ("Location: ../input.php?action=exit");
-    exit;
+    redirect_to("../input.php?action=exit");
 }
 
 if (!empty($_GET['action'])) {
@@ -17,10 +18,10 @@ $rand = rand(100, 999);
 $dates = date("d.m.y");
 $times = date("H:i");
 
-
-
 $my_title = $lang_admin['adminchat'];
+
 include_once"../themes/$config_themes/index.php";
+
 if (isset($_GET['isset'])) {
     $isset = check($_GET['isset']);
     echo '<div align="center"><b><font color="#FF0000">';
@@ -36,10 +37,6 @@ if (empty($action)) {
 
     echo'<hr><form action="process.php?action=acadd" method="post"><b>' . $lang_home['message'] . '</b><br>';
     echo'<textarea cols="80" rows="5" name="msg"></textarea><br>';
-
-    if ($config_translit == "1") {
-        echo'Translit: <input name="trans" type="checkbox" value="y" /><br>';
-    } 
 
     echo'<input type="submit" value="' . $lang_home['save'] . '" /></form><hr>';
 

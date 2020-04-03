@@ -5,17 +5,16 @@
 class Users {
 
 	function __construct() {
-		global $db, $user_id;
+		global $db;
 
 		$this->db = $db;
-		$this->user_id = $user_id;
 	}
 
 	// get user nick from user id number
 	function getnickfromid($uid) {
 	    $unick = $this->db->get_data('vavok_users', "id='" . $uid . "'", 'name');
 	    return $unick['name'];
-	} 
+	}
 
 	// get vavok_users user id from nickname
 	function getidfromnick($nick) {
@@ -29,7 +28,7 @@ class Users {
 	    if (preg_match("/^([0-9]+)$/", $users)) {
 	        $users_id = $users;
 	    } else {
-	        $users_id = getidfromnick($users);
+	        $users_id = $this->getidfromnick($users);
 	    }
 
 	    $this->db->delete("vavok_users", "id = '" . $users_id . "'");
@@ -48,15 +47,16 @@ class Users {
 
 	// check if user is moderator
 	function is_moderator($num = '', $id = '') {
-	    if (empty($id) && !empty($this->user_id)) {
-	        $id = $this->user_id;
+	    if (empty($id) && !empty(current_user_id())) {
+	        $id = current_user_id();
 	    }
 
-	    $chk_adm = $this->db->select('vavok_users', "id='" . $id . "'", '', 'perm');
-	    $perm = trim($chk_adm['perm']);
-	    if ($perm == $num) {
+	    $chk_adm = $this->db->get_data('vavok_users', "id='" . $id . "'", 'perm');
+	    $perm = intval($chk_adm['perm']);
+	    
+	    if ($perm === $num) {
 	        return true;
-	    } elseif (empty($num) && ($perm == 103 || $perm == 105 || $perm == 106)) {
+	    } elseif (empty($num) && ($perm === 103 || $perm === 105 || $perm === 106)) {
 	        return true;
 	    } else {
 	        return false;
@@ -65,15 +65,16 @@ class Users {
 
 	// check if user is administrator
 	function is_administrator($num = '', $id = '') {
-	    if (empty($id) && !empty($this->user_id)) {
-	        $id = $this->user_id;
+	    if (empty($id) && !empty(current_user_id())) {
+	        $id = current_user_id();
 	    }
 
-	    $chk_adm = $this->db->select('vavok_users', "id='" . $id . "'", '', 'perm');
-	    $perm = trim($chk_adm['perm']);
-	    if ($perm == $num) {
+	    $chk_adm = $this->db->get_data('vavok_users', "id='" . $id . "'", 'perm');
+	    $perm = intval($chk_adm['perm']);
+
+	    if ($perm === $num) {
 	        return true;
-	    } elseif (empty($num) && ($perm == 101 || $perm == 102)) {
+	    } if (empty($num) && ($perm === 101 || $perm === 102)) {
 	        return true;
 	    } else {
 	        return false;
@@ -125,9 +126,9 @@ class Users {
 	// private messages
 	function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . current_user_id() . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
-	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . current_user_id() . "' OR deleted IS NULL)");
 	    } elseif ($view == "str") {
 	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
 	    } elseif ($view == "urd") {
@@ -138,14 +139,13 @@ class Users {
 
 	// get number of unread pms
 	function getunreadpm($uid) {
-	    $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
-	    return $nopm[0];
+	    return $this->db->count_row('inbox', "touid='" . $uid . "' AND unread='1'")[0];
 	}
 
 	// number of private msg's
 	function user_mail($userid) {
-	    $fcheck_all = getpmcount($userid);
-	    $new_privat = getunreadpm($userid);
+	    $fcheck_all = $this->getpmcount($userid);
+	    $new_privat = $this->getunreadpm($userid);
 
 	    $all_mail = $new_privat . '/' . $fcheck_all;
 
@@ -154,7 +154,7 @@ class Users {
 
 	// user online status
 	function user_online($login) {
-	    $xuser = getidfromnick($login);
+	    $xuser = $this->getidfromnick($login);
 	    $statwho = '<font color="#FF0000">[Off]</font>';
 
 	    $result = $this->db->count_row('online', 'user="' . $xuser . '"');
@@ -195,9 +195,9 @@ class Users {
 	// check current session if user is registered
 	function is_reg() {
 	    if (!empty($_SESSION['log']) && !empty($_SESSION['pass'])) {
-	        $isuser_check = getidfromnick(check($_SESSION['log']));
+	        $isuser_check = $this->getidfromnick(check($_SESSION['log']));
 	        if (!empty($isuser_check)) {
-	            $show_user = $this->db->select('vavok_users', "id='" . $isuser_check . "'", '', 'name, pass');
+	            $show_user = $this->db->get_data('vavok_users', "id='" . $isuser_check . "'", 'name, pass');
 	            if (check($_SESSION['log']) == $show_user['name'] && md5($_SESSION['pass']) == $show_user['pass']) {
 	                return true;
 	            } else {

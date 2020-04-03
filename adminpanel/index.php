@@ -90,7 +90,7 @@ if ($action == 'main') {
     $totalUsers = $totalUsers - 1; // do not count "System"
     echo '<a href="../pages/userlist.php" class="sitelink">' . $lang_admin['userlist'] . ' (' . $totalUsers . ')</a><br />';
 
-    if (is_moderator(103) || $users->is_moderator(105) || $users->is_administrator() && file_exists('reports.php')) {
+    if ($users->is_moderator(103) || $users->is_moderator(105) || $users->is_administrator() && file_exists('reports.php')) {
         echo '<a href="reports.php" class="sitelink">' . $lang_admin['usrcomp'] . '</a><br />';
     }
 
@@ -128,7 +128,7 @@ if ($action == 'main') {
         echo '<a href="news.php" class="sitelink">' . $lang_admin['sitenews'] . '</a><br />';
     } 
 
-    if (is_administrator(101)) {
+    if ($users->is_administrator(101, $user_id)) {
         echo '<hr>';
         echo '<a href="setting.php" class="sitelink">' . $lang_admin['syssets'] . '</a><br />';
         echo '<a href="users.php" class="sitelink">' . $lang_admin['mngprof'] . '</a><br />';
@@ -146,7 +146,9 @@ if ($action == 'main') {
     } 
 } 
 if ($action == 'clear' && $users->is_administrator(101)) {
-    echo '<a href="delusers.php" class="sitelink">' . $lang_admin['cleanusers'] . '</a><br />';
+	if (file_exists('delusers.php')) {
+    	echo '<a href="delusers.php" class="sitelink">' . $lang_admin['cleanusers'] . '</a><br />';
+	}
     echo '<a href="./?action=clrmlog" class="sitelink">' . $lang_admin['cleanmodlog'] . '</a><br />';
 
     echo '<br /><br /><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
@@ -191,20 +193,6 @@ if ($action == 'version') {
 $version = $vavok_version;
 $key = 'checkver'; // key to save cache with 
 // get cached data from file cache, also check if cached data is not old
-$data = CacheOS::get($key, 9000);
-
-if ($data === false) { // if data not found generate it
-    //$data = file_get_contents('http://www.vavok.net/cms/version.txt'); problem with getting data - fix 9.4.2014 14:10:33
-    
-    // problems with file_get_contents() on .php file
-    // $data = file_get_contents('http://www.vavok.net/cms/v.php?s=' . $my_license[1] . '&amp;ps=' . $my_license[2] . '&amp;i=' . $my_license[0] . '');
-    
-    if (!empty($data)) {
-    CacheOS::save($key, $data); // save data to cache file
-  	}
-} else {
-    $last_ver = $data;
-}
 
     echo'<div class="b">Vavok CMS ' . $lang_home['version'] . ': <b>' . $vavok_version . '</b>';
 

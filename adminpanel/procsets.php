@@ -13,8 +13,8 @@ if (isset($_GET['action'])) {$action = check($_GET['action']);}
 // main settings update
 if ($action == "editone") {
     if (isset($_POST['conf_set0']) && isset($_POST['conf_set1']) && $_POST['conf_set2'] != "" && $_POST['conf_set3'] != "" && $_POST['conf_set8'] != "" && $_POST['conf_set9'] != "" && $_POST['conf_set10'] != "" && $_POST['conf_set11'] != ""  && !empty($_POST['conf_set12']) && $_POST['conf_set14'] != "" && !empty($_POST['conf_set21']) && $_POST['conf_set29'] != "" && isset($_POST['conf_set61']) && isset($_POST['conf_set62']) && isset($_POST['conf_set63'])) {
-        $ufile = file(BASEDIR . "used/config.dat");
-        $udata = explode("|", $ufile[0]);
+        $ufile = file_get_contents(BASEDIR . "used/config.dat");
+        $udata = explode("|", $ufile);
 
     	$udata[0] = check($_POST['conf_set0']);
         $udata[1] = check($_POST['conf_set1']);
@@ -38,21 +38,52 @@ if ($action == "editone") {
             $utext .= $udata[$u] . '|';
         } 
 
+        // update configuration file
         if (!empty($udata[8]) && !empty($udata[9])) {
-            $fp = fopen(BASEDIR . "used/config.dat", "a+");
-            flock($fp, LOCK_EX);
-            ftruncate($fp, 0);
-            fputs($fp, $utext);
-            fflush($fp);
-            flock($fp, LOCK_UN);
-            fclose($fp);
-            unset($utext);
+            file_put_contents(BASEDIR . "used/config.dat", $utext);
         } 
-        header ("Location: setting.php?isset=mp_yesset");
-        exit;
+
+        // update .htaccess file
+        // dont force https
+$htaccess_tp_nos = '# force https protocol
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+        // force https
+$htaccess_tp_s = '# force https protocol
+RewriteCond %{HTTPS} !=on
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+        if (getConfiguration('transferProtocol') == 'HTTPS' && ($udata[21] == 'auto' || $udata[21] == 'HTTP')) {
+            // disable forcing HTTPS in .htaccess
+
+            $file = file_get_contents('../.htaccess');
+
+            $start = strpos($file, '# force https protocol');
+            $strlen = mb_strlen($htaccess_tp_s); // find string length
+
+
+            $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
+
+            file_put_contents('../.htaccess', $file);
+
+        } elseif ($udata[21] == 'HTTPS' && (getConfiguration('transferProtocol') == 'HTTP' || getConfiguration('transferProtocol') == 'auto')) {
+            // enable forcing HTTPS in .htaccess
+
+            $file = file_get_contents('../.htaccess');
+
+            $start = strpos($file, '# force https protocol');
+            $strlen = mb_strlen($htaccess_tp_nos); // find string length
+
+
+            $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
+
+            file_put_contents('../.htaccess', $file);
+        }
+
+        redirect_to("setting.php?isset=mp_yesset");
     } else {
-        header ("Location: setting.php?action=setone&isset=mp_nosset");
-        exit;
+        redirect_to("setting.php?action=setone&isset=mp_nosset");
     } 
 } 
 

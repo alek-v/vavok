@@ -182,7 +182,7 @@ if (!stristr($config_requri, 'error=db') && !stristr($phpself, 'install/install.
 
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 
-        // require_once BASEDIR . "include/antidos.php";
+        require_once BASEDIR . "include/antidos.php";
         require_once BASEDIR . "include/counters.php";
         require_once BASEDIR . "include/referer.php";
     } 

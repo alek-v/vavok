@@ -1,6 +1,7 @@
 <?php 
-// modified: 10.1.2016. 2:34:36
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranesevic
+// modified: 02.04.2020. 23:01:51
+
 if (isset($_SERVER['PHP_SELF'])) {
     $phpself = $_SERVER['PHP_SELF'];
 } 
@@ -15,7 +16,7 @@ if (isset($_SERVER['HTTP_REFERER'])) {
 if (isset($_SESSION['log'])) {
     $username = $_SESSION['log'];
 } else {
-    $username = $config_guestsuser;
+    $username = 'Guest';
 } 
 $hostname = gethostbyaddr($ip);
 
@@ -108,8 +109,8 @@ foreach($old_ips as $old_ip_line) {
     } 
 
     if ($ip_check_matches == 4) {
-        if (!stristr($config_requri, "banip")) {
-            header ("Location: " . BASEDIR . "pages/?getp=banip");
+        if ($users->is_administrator() == false) {
+            header ("Location: " . BASEDIR . "pages/banip.php");
             exit;
         } 
     } 

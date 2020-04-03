@@ -150,6 +150,7 @@ class db extends PDO {
             return false;
         } 
     }
+
     // get data
     public function get_data($table, $where = "", $fields = "*", $bind = "") {
         $sql = "SELECT " . $fields . " FROM " . $table;

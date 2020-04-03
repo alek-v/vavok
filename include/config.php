@@ -70,6 +70,7 @@ $config["siteTime"] = time() + ($config["timeZone"] * 3600);
 $config["homeBase"] = str_replace("http://", "", $config["homeUrl"]);
 $config["homeBase"] = str_replace("https://", "", $config["homeBase"]);
 $config["tablePrefix"] = ''; // database prefix
+$config["configFile"] = 'used/config.dat'; // configuration file
 
 // no. of fields in config file
 $config["configKeys"] = "100";

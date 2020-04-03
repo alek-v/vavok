@@ -2,6 +2,8 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+
 function prev_dir($string) {
     $d1 = strrpos($string, "/");
     $d2 = substr($string, $d1, 999);
@@ -20,7 +22,7 @@ if (is_reg()) {
 				echo '</font></b></div>';
 				}
 
-        switch ($_GET['action']) {
+        switch ($action) {
             default:
 
                 echo '<img src="../images/img/menu.gif" alt=""> ' . $lang_admin['checksys'] . '<hr>';
@@ -72,6 +74,7 @@ if (is_reg()) {
 
                         echo '' . $lang_admin['filecheck'] . ': <br>';
 
+                        $usedfiles = '';
                         foreach ($files as $value) {
                             echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="sitelink">[CHMOD - ' . permissions("../used" . "$value") . ']</a> - used' . $value . ' (' . formatsize(filesize("../used" . "$value")) . ') - ';
                             if (is_writeable("../used" . "$value")) {
@@ -96,7 +99,7 @@ if (is_reg()) {
                                 echo '<font color="#FF0000">' . $lang_admin['filenowrit'] . '</font><br>';
                             } 
 
-                            $useddires += read_dir("../used" . "$value");
+                            $useddires = read_dir("../used" . "$value");
                         } 
                         echo '<hr>' . $lang_admin['dirsize'] . ': ' . formatsize($useddires) . '<hr>';
                     } 

@@ -20,10 +20,8 @@ if (file_exists('../used')) {
 }
 
 // set write permissions on plugin directory
-if (file_exists('../plugin')) {
-    chmod("../plugin", 0777);
-} else {
-    mkdir('../plugin', 0777);
+if (file_exists('../include/plugins')) {
+    chmod("../include/plugins", 0777);
 }
 
 // create data directories

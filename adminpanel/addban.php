@@ -8,17 +8,14 @@ if (!empty($_GET['action'])) {
     $action = '';
 } 
 if (isset($_POST['users'])) {
-    $users = check($_POST['users']);
-} else {
-    $users = check($_GET['users']);
-} 
+    $user = check($_POST['users']);
+} elseif (isset($_GET['users'])) {
+    $user = check($_GET['users']);
+} else { $user = ''; }
 
 $time = time();
 
-if (!is_reg()) {
-    header ("Location: ../?error");
-    exit;
-} 
+if (!is_reg()) { redirect_to("../?error"); } 
 
 if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     $my_title = $lang_admin['banning'];
@@ -33,7 +30,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banunban'] . '</b><br /><br />';
 
     if (empty($action)) {
-        echo '' . $lang_admin['chooseuser'] . ':<br />';
+        echo $lang_admin['chooseuser'] . ':<br />';
 
         echo '<form method="post" action="addban.php?action=edit">';
         echo '<input name="users" maxlength="20" /><br /><br />';
@@ -41,19 +38,19 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     } 
     // edit profile
     if ($action == "edit") {
-        if (!empty($users)) {
-            if (ctype_digit($users) === false) {
-                $userx_id = $users->getidfromnick($users);
+        if (!empty($user)) {
+            if (ctype_digit($user) === false) {
+                $userx_id = $users->getidfromnick($user);
                 $users_nick = getnickfromid($userx_id);
             } else {
-                $userx_id = $users;
-                $users_nick = getnickfromid($users);
+                $userx_id = $user;
+                $users_nick = $users->getnickfromid($user);
             } 
 
             $show_user = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'banned, perm');
             $show_prof = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'bantime, bandesc, allban, lastban');
 
-            $users = check($users);
+            $user = check($user);
             if ($userx_id != "" && $users_nick != "") {
                 echo '<img src="../images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
                 echo 'Bans: <b>' . (int)$show_prof['allban'] . '</b><br />'; // update lang
@@ -63,10 +60,10 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
 
                 echo '<br />';
 
-                if ($show_user['perm'] >= 101 && $show_user['perm'] <= 105 && $users != $log) {
+                if ($show_user['perm'] >= 101 && $show_user['perm'] <= 105 && $user != $log) {
                     echo '' . $lang_admin['noauthtoban'] . '<br /><br />';
                 } else {
-                    if ($users == $log) {
+                    if ($user == $log) {
                         echo '<b><font color="#FF0000">' . $lang_admin['myprofile'] . '!</font></b><br /><br />';
                     } 
 
@@ -93,7 +90,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
                         echo '' . $lang_admin['banend'] . ' ' . formattime($ost_time) . '<br />';
                         echo '' . $lang_admin['bandesc'] . ': ' . check($show_prof['bandesc']) . '<br />'; 
                         // echo 'Kaznio: <a href="../pages/user.php?uz=' . check($udc[63]) . '&amp;' . SID . '">' . check($udc[63]) . '</a><br /><br />';
-                        echo '<a href="addban.php?action=deleteban&amp;users=' . $users . '" class="sitelink">' . $lang_admin['delban'] . '</a><hr>';
+                        echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="sitelink">' . $lang_admin['delban'] . '</a><hr>';
                     } 
                 } 
             } else {
@@ -109,7 +106,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     if ($action == "banuser") {
         $bform = check($_POST['bform']);
         $udd38 = check($_POST['duration']);
-        $users_id = $users->getidfromnick($users);
+        $users_id = $users->getidfromnick($user);
         $udd39 = check($_POST['udd39']);
 
         if ($users_id != "") {
@@ -132,9 +129,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
 
                         $vavok_profil = $db->select('vavok_users', "uid='" . $users_id . "'", '', 'allban');
                         $newallban = $vavok_profil['allban'];
-                        if ($ban_time > 180) {
-                            $newallban = $newallban + 1;
-                        } 
+                        $newallban = $newallban + 1;
 
                         $db->update('vavok_users', 'banned', 1, "id='" . $users_id . "'");
 
@@ -142,7 +137,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
                         $values = array($newbantime, $newbandesc, $newlastban, $newallban);
                         $db->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
 
-                        echo $lang_admin['usrdata'] . ' ' . $users . ' ' . $lang_admin['edited'] . '!<br />';
+                        echo $lang_admin['usrdata'] . ' ' . $user . ' ' . $lang_admin['edited'] . '!<br />';
                         echo '<b><font color="FF0000">' . $lang_admin['confban'] . '</font></b><br /><br />';
 
                         echo'<a href="addban.php" class="sitelink">' . $lang_home['back'] . '</a><br />';
@@ -158,11 +153,11 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
         } else {
             echo $lang_admin['usrnoexist'] . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $users . '" class="sitelink">' . $lang_home['back'] . '</a>';
+        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
     } 
 
     if ($action == "deleteban") {
-        $users_id = $users->getidfromnick($users);
+        $users_id = $users->getidfromnick($user);
 
         if ($users_id != "") {
             // update changes
@@ -178,19 +173,19 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
             $values = array(0, '', $newallban);
             $db->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
 
-            echo $lang_admin['usrdata'] . '  ' . $users . ' ' . $lang_admin['edited'] . '!<br />';
+            echo $lang_admin['usrdata'] . '  ' . $user . ' ' . $lang_admin['edited'] . '!<br />';
             echo '<b><font color="00FF00">' . $lang_admin['confUnBan'] . '</font></b><br /><br />';
 
             echo'<a href="addban.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br />';
         } else {
             echo'' . $lang_home['usrnoexist'] . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $users . '" class="sitelink">' . $lang_home['back'] . '</a>';
+        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
     } 
     // delete user
     if ($action == "deluser") {
-        $users = check($users);
-        $users->delete_user($users);
+        $user = check($user);
+        $users->delete_user($user);
 
         echo '' . $lang_admin['usrdeleted'] . '!<br />';
 
@@ -200,8 +195,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     echo '<br /><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
     echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a><br />';
 } else {
-    header ("Location: ../?error");
-    exit;
+    redirect_to("../?error");
 } 
 
 include_once"../themes/$config_themes/foot.php";

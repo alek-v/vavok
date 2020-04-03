@@ -12,6 +12,17 @@ function getConfiguration($data = '') {
     }
 }
 
+// current user id
+function current_user_id($user_id = '') {
+    global $user_id;
+
+    if (empty($user_id)) {
+        $user_id = 0;
+    }
+
+    return $user_id;
+}
+
 // get user nick from user id number - deprecated 31.03.2020. 5:48:28
 function getnickfromid($uid) {
     global $db;
@@ -290,8 +301,9 @@ function nosmiles($string) {
 
 function read_dir($dir) {
     if ($path = opendir($dir)) while ($file_name = readdir($path)) {
+        $size = 0;
         if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
-            if (is_dir($dir . "/" . $file_name)) $size += read_dir($dir . "/" . $file_name);
+            if (is_dir($dir . "/" . $file_name)) $size = read_dir($dir . "/" . $file_name);
             else $size += filesize($dir . "/" . $file_name);
         } 
     } 
