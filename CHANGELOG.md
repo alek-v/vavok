@@ -1,3 +1,10 @@
+# Vavok v1.3.2
+- Update to catch error if language file does not exist
+- Updated mailer class to catch errors
+- Bugfix cached pages not updated
+- Bugfix zero considered as empty string
+
+
 # Vavok v1.3.1
 - Added option to block IP address
 - Security bugfix
