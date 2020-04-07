@@ -124,17 +124,17 @@ class Page {
 
 	// update head tags
 	function head_data($id, $data) {
-		$sql = "UPDATE " . $this->table_prefix . "`pages` SET `headt`= :data WHERE `id`='" . $id . "'";
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(":data", trim($data), PDO::PARAM_INT);
-        $stmt->execute();
+        //$stmt = $this->db->prepare("UPDATE " . $this->table_prefix . "`pages` SET `headt`= :data WHERE `id`='" . $id . "'");
+        //$stmt->bindParam(":data", $data);
+        //$stmt->execute();
+        $this->db->update($this->table_prefix . "pages", 'headt', $data, "id='" . $id . "'");
 	}
 
 	function currentPage($total_pages = 1) {
 		$page = 1;
 		if (isset($_GET['page'])) {
-		if ($_GET['page'] == 'end') $page = intval($total_pages);
-		else if (is_numeric($_GET['page'])) $page = intval($_GET['page']);
+			if ($_GET['page'] == 'end') $page = intval($total_pages);
+			else if (is_numeric($_GET['page'])) $page = intval($_GET['page']);
 		}
 		if ($page < 1) $page = 1;
 		if ($page > $total_pages) $page = $total_pages;
