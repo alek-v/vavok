@@ -2,31 +2,8 @@
 // (c) vavok.net
 require_once"include/strtup.php";
 
-function login_attempt_count($seconds, $username, $ip, $db) {
-    try {
-        // First we delete old attempts from the table
-        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
-        $oldest = date("Y-m-d H:i:s", $oldest);
-        $db->delete('login_attempts', "`datetime` < '" . $oldest . "'");
-        
-        // Next we insert this attempt into the table
-        $values = array(
-        'address' => $ip,
-        'datetime' =>  date("Y-m-d H:i:s"),
-        'username' => $username
-        );
-        $db->insert_data('login_attempts', $values);
-        
-        // Finally we count the number of recent attempts from this ip address  
-        $attempts = $db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
-
-        return $attempts;
-    } catch (PDOEXCEPTION $e) {
-        echo "Error: ".$e;
-    }
-}
-
 if (!empty($_GET['action'])) { $action = check($_GET["action"]); } else { $action = ''; }
+
 if (isset($_POST['log'])) {
     $log = check($_POST['log']);
 } else if (isset($_GET['log'])) {
@@ -34,6 +11,7 @@ if (isset($_POST['log'])) {
 } else {
 	$log = '';
 }
+
 if (isset($_POST['pass'])) {
     $pass = check($_POST['pass']);
 } else if (isset($_GET['pass'])) {
@@ -41,6 +19,7 @@ if (isset($_POST['pass'])) {
 } else {
 	$pass = '';
 }
+
 if (isset($_POST['cookietrue'])) {
     $cookietrue = check($_POST['cookietrue']);
 } else if (isset($_GET['cookietrue'])) {
@@ -48,6 +27,7 @@ if (isset($_POST['cookietrue'])) {
 } else {
 	$cookietrue = '';
 }
+
 if (isset($_POST['ptl'])) {
     $pagetoload = check($_POST['ptl']);
 } else if (isset($_GET['ptl'])) {
@@ -55,8 +35,11 @@ if (isset($_POST['ptl'])) {
 } else {
 	$pagetoload = '';
 }
+
 $xtime = time();
+
 if ($log == 'System') {
+	// cannot login as a System
     unset($log);
 }
 

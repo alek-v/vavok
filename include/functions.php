@@ -1127,4 +1127,29 @@ function fatal_error($error) {
 function show_error($error) {
     echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 }
+
+// count login attempts
+function login_attempt_count($seconds, $username, $ip, $db) {
+    try {
+        // First we delete old attempts from the table
+        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
+        $oldest = date("Y-m-d H:i:s", $oldest);
+        $db->delete('login_attempts', "`datetime` < '" . $oldest . "'");
+        
+        // Next we insert this attempt into the table
+        $values = array(
+        'address' => $ip,
+        'datetime' =>  date("Y-m-d H:i:s"),
+        'username' => $username
+        );
+        $db->insert_data('login_attempts', $values);
+        
+        // Finally we count the number of recent attempts from this ip address  
+        $attempts = $db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
+
+        return $attempts;
+    } catch (PDOEXCEPTION $e) {
+        echo "Error: " . $e;
+    }
+}
 ?>
