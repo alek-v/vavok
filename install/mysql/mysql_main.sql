@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 INSERT INTO `vavok_users` (`id`, `name`, `pass`, `perm`, `skin`, `browsers`, `ipadd`, `timezone`, `banned`, `newmsg`, `lang`) VALUES
-(0, 'System', '0', 999, 'default', 'Mozilla/5.0', '127.0.0.1', '0', '0', 0, 'english');
+(0, 'System', '0', 10, 'default', 'Mozilla/5.0', '127.0.0.1', '0', '0', 0, 'english');
 
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `id` int(100) NOT NULL auto_increment,
