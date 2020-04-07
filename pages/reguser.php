@@ -71,7 +71,7 @@ if ($str1 > 20 || $str2 > 20) {
                              
                             // send email with reg. data
                             if ($config["regConfirm"] == "1") {
-                                $needkey = "\r\n\r\n" . $lang_reguser['emailpart5'] . "\r\n" . $lang_reguser['yourkey'] . ": " . $registration_key . "\r\n" . $lang_reguser['emailpart6'] . ":\r\n\r\n$config_srvhost/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_reguser['emailpart7'] . "\r\n\r\n";
+                                $needkey = "\r\n\r\n" . $lang_reguser['emailpart5'] . "\r\n" . $lang_reguser['yourkey'] . ": " . $registration_key . "\r\n" . $lang_reguser['emailpart6'] . ":\r\n\r\n" . $website_home_addr . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_reguser['emailpart7'] . "\r\n\r\n";
                             } else {
                                 $needkey = "\r\n\r\n";
                             } 
@@ -79,7 +79,10 @@ if ($str1 > 20 || $str2 > 20) {
                             $subject = $lang_reguser['regonsite'] . ' ' . $config["title"];
                             $regmail = "" . $lang_reguser['hello'] . " " . $log . "\r\n" . $lang_reguser['emailpart1'] . " " . $config["homeUrl"] . " \r\n" . $lang_reguser['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $lang_home['pass'] . ": " . $par . "" . $needkey . "" . $lang_reguser['emailpart3'] . "\r\n" . $lang_reguser['emailpart4'] . "";
 
-                            sendmail($mail, $subject, $regmail); 
+                            // send confirmation email
+                            $newMail = new Mailer;
+                            $newMail->send($mail, $subject, $regmail);
+
                             // reg. sucessful, show info
                             echo $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br />' . $lang_home['pass'] . ': <b>' . $par . '</b><br />' . $lang_reguser['loginnow'] . '<br />';
                             echo '<br /><img src="../images/img/reload.gif" alt=""> ';
@@ -93,9 +96,6 @@ if ($str1 > 20 || $str2 > 20) {
                                 echo '<b><font color="#FF0000">' . $lang_reguser['enterkeymessage'] . '</font></b><br /><br />';
                             } 
 
-                            echo $lang_reguser['autologinmsg'] . ':<br />';
-                            echo '<font color="#FF0000">' . $connectionProtocol . $config_srvhost . '/input.php?log=' . $log . '&amp;par=' . $par . '&amp;cookietrue=1</font><br />';
-                            echo $lang_reguser['copy'] . '<br /><input name="autologin" value="' . $connectionProtocol . $config_srvhost . '/input.php?log=' . $log . '&amp;pass=' . $par . '&amp;cookietrue=1"/><br />';
                         } else {
                             echo $lang_reguser['badcaptcha'] . '!<br />';
                         } 
