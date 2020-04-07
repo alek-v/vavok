@@ -208,41 +208,41 @@ class db extends PDO {
     $db->update('table', $fields, $values, 'something = "value"');
     */
     function update($table, $fields, $values, $where = '') {
-    if (!empty($where)) {
-        $where = ' WHERE ' . $where;
-    }
-    //build the field to value correlation
-    $buildSQL = '';
-    if (is_array($fields)) {
+        if (!empty($where)) {
+            $where = ' WHERE ' . $where;
+        }
+        //build the field to value correlation
+        $buildSQL = '';
+        if (is_array($fields)) {
 
-    //loop through all the fields and assign them to the correlating $values
-    foreach($fields as $key => $field) :
-    if ($key == 0) {
-    //first item
-    $buildSQL .= $field . ' = ?';
-    } else {
-    //every other item follows with a ","
-    $buildSQL .= ', '.$field.' = ?';
-    }
-    endforeach;
+            //loop through all the fields and assign them to the correlating $values
+            foreach($fields as $key => $field) :
+            if ($key == 0) {
+            //first item
+            $buildSQL .= $field . ' = ?';
+            } else {
+            //every other item follows with a ","
+            $buildSQL .= ', '.$field.' = ?';
+            }
+            endforeach;
 
-    } else {
-    //we are only updating one field
-    $buildSQL .= $fields.' = :value';
-    }
+        } else {
+        //we are only updating one field
+            $buildSQL .= $fields.' = :value';
+        }
 
-    $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
+        $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
 
-    //execute the update for one or many values
-    if (is_array($values)) {
-    $prepareUpdate->execute($values);
-    } else {
-    $prepareUpdate->execute(array(':value' => $values));
-    }
+        //execute the update for one or many values
+        if (is_array($values)) {
+            $prepareUpdate->execute($values);
+        } else {
+            $prepareUpdate->execute(array(':value' => $values));
+        }
 
-    //record and print any DB error that may be given
-    $error = $prepareUpdate->errorInfo();
-    if ($error[1]) print_r($error);
+        //record and print any DB error that may be given
+        $error = $prepareUpdate->errorInfo();
+        if ($error[1]) print_r($error);
 
     }
 
