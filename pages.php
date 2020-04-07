@@ -1,5 +1,5 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
 include_once"include/strtup.php";
 
 // page name
@@ -8,6 +8,13 @@ $pg = isset($_GET['pg']) ? check($_GET['pg']) : '';
 // redirect if it is index page or page is not set
 if ($pg == 'index' || empty($pg)) {
 	redirect_to(BASEDIR . "/");
+}
+
+// redirect to url_rewrite url
+// when user is redirected from http:// to https:// page
+// it redirect to non-rewriten url
+if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) {
+	redirect_to('page/' . $pg . '/');
 }
 
 // load page with language specified
