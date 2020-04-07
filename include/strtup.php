@@ -1,5 +1,6 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
+// updated: 05.04.2020. 17:56:06
 
 // time when execution of the script has started
 $start_time = microtime(true);
@@ -71,6 +72,9 @@ if (empty($config['transferProtocol']) || $config['transferProtocol'] == 'auto')
 } else {
     $connectionProtocol = 'http://';
 }
+
+// full website main address
+$website_home_addr = $connectionProtocol . $config_srvhost;
 
 // media page url (fb, g+, etc..) to avoid duplicated pages
 // remove number of page (forums, news, etc..)
