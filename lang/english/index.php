@@ -1,6 +1,8 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
+// modified: 05.04.2020. 17:55:28
 
+$language = 'english';
 $ln_loc = 'en';
 $ln_charset = 'UTF-8';
 $ln_allow_recoding = true;

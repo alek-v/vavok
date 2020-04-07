@@ -12,6 +12,9 @@ $lang_mail['passgen'] = "Password succesfully generated!<br />New password has b
 $lang_mail['wrongcaptcha'] = "Captcha solution incorrect";
 $lang_mail['wrongmail'] = "You have written wrong email address";
 $lang_mail['noneededdata'] = "You didn't complete all of the required data ";
+$lang_mail['delsubok'] = "You have been successfully unsubscribed from site news"; // site news subscription
+$lang_mail['unsubcodefail'] = "Unsubscription code invalid";
+$lang_mail['unsubfail'] = "Unsubscribing failed";
 
 
 $lang_home = array_merge($lang_home, $lang_mail);
