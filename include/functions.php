@@ -1117,9 +1117,14 @@ function redirect_to($url) {
     }
 }
 
-// show error
+// show fatal error
 function fatal_error($error) {
     echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
     exit;
+}
+
+// show error
+function show_error($error) {
+    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 }
 ?>
