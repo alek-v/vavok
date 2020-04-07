@@ -8,11 +8,11 @@ class Mailer {
 
 	    if (empty($mail)) {
 	        $mail = $config_srvhost;
-	        if (substr($mail, 0, 2) == 'm.') {
-	            $mail = substr($str, 2);
+	        if (substr($mail, 2) == 'm.') {
+	            $mail = substr($mail, 2);
 	        } 
-	        if (substr($mail, 0, 4) == 'www.') {
-	            $mail = substr($str, 4);
+	        if (substr($mail, 4) == 'www.') {
+	            $mail = substr($mail, 4);
 	        }
 	        $mail = 'no_reply@' . $mail;
 	        $name = getConfiguration('title');
