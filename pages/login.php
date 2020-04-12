@@ -1,6 +1,10 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
+
 require_once"../include/strtup.php";
+
+// meta tag for this page
+$genHeadTag = '<meta name="robots" content="noindex">';
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
@@ -165,7 +169,7 @@ background-color: transparent;
 echo '
 
 				<div id="form_wrapper" class="form_wrapper">
-					<form class="login active" method="post" action="../input.php">
+					<form class="login active" method="post" action="../pages/input.php">
 						<h3>Login</h3>
 						<div>
 							<label>' . $lang_page['mailoruser'] . ':</label>
@@ -190,7 +194,7 @@ echo '
 </div>
 ';
 
-echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/foot.php";
 ?>

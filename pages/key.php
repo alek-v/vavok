@@ -61,7 +61,7 @@ $time = time();
             echo '<br><img src="../images/img/back.gif" alt="" /> <a href="key.php">' . $lang_home['back'] . '</a>';
         }
 
-echo '<br><img src="../images/img/homepage.gif" alt="" /> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<br><img src="../images/img/homepage.gif" alt="" /> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

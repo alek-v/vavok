@@ -49,7 +49,7 @@ for ($i = $limit_start; $i < $end; $i++) {
 echo Navigation::siteNavigation('smiles.php?', $smilesPerPage, $page, $total);
 
 echo '<br><br>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b><br><br>';
-echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 
 include_once"../themes/$config_themes/foot.php";

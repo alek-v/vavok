@@ -50,7 +50,7 @@ if (is_reg()) {
 
                 if ($did == "") {
                     if (file_exists("../used/.htaccess")) {
-                        echo '<a href="systems.php?action=pod_chmod&amp;file=/.htaccess" class="sitelink">[Chmod - ' . permissions("../used/.htaccess") . ']</a> - <font color="#00FF00">' . $lang_admin['file'] . ' .htaccess ' . $lang_admin['exist'] . '</font><br>';
+                        echo '<a href="systems.php?action=pod_chmod&amp;file=/.htaccess" class="btn btn-outline-primary sitelink">[Chmod - ' . permissions("../used/.htaccess") . ']</a> - <font color="#00FF00">' . $lang_admin['file'] . ' .htaccess ' . $lang_admin['exist'] . '</font><br>';
 
                         if (is_writeable("../used/.htaccess")) {
                             echo'<font color="#FF0000">' . $lang_admin['wrhtacc'] . '</font><br>';
@@ -64,7 +64,7 @@ if (is_reg()) {
                     if (count($files) > 0) {
                         if ($did != "") {
                             if (file_exists("../used" . "$did/.htaccess")) {
-                                echo '<a href="systems.php?action=pod_chmod&amp;file=' . $did . '/.htaccess" class="sitelink">[CHMOD - ' . permissions("../used" . "$did/.htaccess") . ']</a> - <font color="#00FF00">' . $lang_admin['file'] . ' .htaccess ' . $lang_admin['exist'] . '</font><br>';
+                                echo '<a href="systems.php?action=pod_chmod&amp;file=' . $did . '/.htaccess" class="btn btn-outline-primary sitelink">[CHMOD - ' . permissions("../used" . "$did/.htaccess") . ']</a> - <font color="#00FF00">' . $lang_admin['file'] . ' .htaccess ' . $lang_admin['exist'] . '</font><br>';
 
                                 if (is_writeable("../used" . "$did/.htaccess")) {
                                     echo '<font color="#FF0000">' . $lang_admin['wrhtacc'] . '</font><br>';
@@ -76,7 +76,7 @@ if (is_reg()) {
 
                         $usedfiles = '';
                         foreach ($files as $value) {
-                            echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="sitelink">[CHMOD - ' . permissions("../used" . "$value") . ']</a> - used' . $value . ' (' . formatsize(filesize("../used" . "$value")) . ') - ';
+                            echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="btn btn-outline-primary sitelink">[CHMOD - ' . permissions("../used" . "$value") . ']</a> - used' . $value . ' (' . formatsize(filesize("../used" . "$value")) . ') - ';
                             if (is_writeable("../used" . "$value")) {
                                 echo '<font color="#00FF00">' . $lang_admin['filewrit'] . '</font><br>';
                             } else {
@@ -92,7 +92,7 @@ if (is_reg()) {
                         echo '' . $lang_admin['checkdirs'] . ': <br>';
 
                         foreach ($dires as $value) {
-                            echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="sitelink">[CHMOD - ' . permissions("../used" . "$value") . ']</a> - <a href="systems.php?did=' . $value . '" class="sitelink">used' . $value . '</a> (' . formatsize(read_dir("../used" . "$value")) . ') - ';
+                            echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="btn btn-outline-primary sitelink">[CHMOD - ' . permissions("../used" . "$value") . ']</a> - <a href="systems.php?did=' . $value . '" class="btn btn-outline-primary sitelink">used' . $value . '</a> (' . formatsize(read_dir("../used" . "$value")) . ') - ';
                             if (is_writeable("../used" . "$value")) {
                                 echo '<font color="#00FF00">' . $lang_admin['filewrit'] . '</font><br>';
                             } else {
@@ -109,9 +109,9 @@ if (is_reg()) {
 
                 if ($did != "") {
                     if (prev_dir($did) != "") {
-                        echo '<img src="../images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="sitelink">' . $lang_home['back'] . '</a><br>';
+                        echo '<img src="../images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
                     } 
-                    echo '<a href="systems.php" class="sitelink">' . $lang_admin['checksys'] . '</a><br>';
+                    echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
                 } 
 
                 break; 
@@ -136,9 +136,9 @@ if (is_reg()) {
                 } 
 
                 if (prev_dir($_GET['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_GET['file']) . '" class="sitelink">' . $lang_home['back'] . '</a><br>';
+                    echo '<a href="systems.php?did=' . prev_dir($_GET['file']) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
                 } 
-                echo '<a href="systems.php" class="sitelink">' . $lang_admin['checksys'] . '</a><br>';
+                echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
 
                 break;
 
@@ -156,15 +156,15 @@ if (is_reg()) {
                 } 
 
                 if (prev_dir($_POST['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_POST['file']) . '" class="sitelink">' . $lang_home['back'] . '</a><br>';
+                    echo '<a href="systems.php?did=' . prev_dir($_POST['file']) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
                 } 
-                echo '<a href="systems.php" class="sitelink">' . $lang_admin['checksys'] . '</a><br>';
+                echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
 
                 break;
         } 
 
-        echo '<a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br>
-		<a href="../" class="homepage">' . $lang_home['home'] . '</a><br>';
+        echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>
+		<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
     } else {
         header("Location: ../index.php?error");
         exit;

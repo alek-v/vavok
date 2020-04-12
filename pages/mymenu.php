@@ -14,18 +14,18 @@ if (isset($_GET['isset'])) {
 
 if (is_reg()) {
 	echo '
-	<a href="' . BASEDIR . 'pages/inbox.php" class="sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a><br>
-	<a href="' . BASEDIR . 'pages/ignor.php" class="sitelink">' . $lang_page['ignorlist'] . '</a><br>
-	<a href="' . BASEDIR . 'pages/buddy.php" class="sitelink">' . $lang_page['contacts'] . '</a><br>
-	<a href="' . BASEDIR . 'pages/profil.php" class="sitelink">' . $lang_page['updprof'] . '</a><br>
-	<a href="' . BASEDIR . 'pages/setting.php" class="sitelink">' . $lang_page['settings'] . '</a><br> 
-	<a href="' . BASEDIR . 'input.php?action=exit" class="sitelink">' . $lang_home['logout'] . '</a><br>
+	<a href="' . BASEDIR . 'pages/inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a><br>
+	<a href="' . BASEDIR . 'pages/ignor.php" class="btn btn-outline-primary sitelink">' . $lang_page['ignorlist'] . '</a><br>
+	<a href="' . BASEDIR . 'pages/buddy.php" class="btn btn-outline-primary sitelink">' . $lang_page['contacts'] . '</a><br>
+	<a href="' . BASEDIR . 'pages/profil.php" class="btn btn-outline-primary sitelink">' . $lang_page['updprof'] . '</a><br>
+	<a href="' . BASEDIR . 'pages/setting.php" class="btn btn-outline-primary sitelink">' . $lang_page['settings'] . '</a><br> 
+	<a href="' . BASEDIR . 'pages/input.php?action=exit" class="btn btn-outline-primary sitelink">' . $lang_home['logout'] . '</a><br>
 	';
 } else {
-    echo $lang_page['notloged'] . '<br />';
+    echo $lang_home['notloged'] . '<br />';
 } 
 
-echo '<br><a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<br><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 
 include_once"../themes/" . $config_themes . "/foot.php";

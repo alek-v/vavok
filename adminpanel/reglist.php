@@ -74,7 +74,7 @@ if (empty($action)) {
             $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
             if ($item['regche'] == "1") {
                 $bt = "" . $lang_admin['notconfirmed'] . "!";
-                $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="sitelink">' . $lang_admin['confirms'] . '</a>';
+                $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $lang_admin['confirms'] . '</a>';
             } else {
                 $bt = "Confirmed";
             } 
@@ -92,8 +92,8 @@ if (empty($action)) {
 	echo '<div class="break"></div>';
 }
 
-echo '<br><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 ?>

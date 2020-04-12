@@ -112,13 +112,13 @@ if (is_reg()) {
         echo '<a href="profil.php">' . $lang_home['back'] . '</a><br />';
     } 
 } else {
-    echo '<br>' . $lang_page['notloged'] . '<br><br><br>';
+    echo '<br>' . $lang_home['notloged'] . '<br><br><br>';
 } 
 
 if (empty($action)) {
     echo '<a href="../pages/profil.php">' . $lang_home['back'] . '</a><br />';
 } 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 

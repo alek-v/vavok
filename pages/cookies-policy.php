@@ -75,7 +75,7 @@ include_once"../themes/$config_themes/index.php";
 
 
 <?php
-echo '<p><a href="' . $connectionProtocol . $config_srvhost . '" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="' . $connectionProtocol . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/index.php";
 ?>

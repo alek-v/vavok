@@ -64,8 +64,8 @@ echo '</div>';
 <div class="break"></div>
 
 <?php
-echo '<a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a><br>';
+echo '<a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
 
 
 include'../themes/' . $config_themes . '/foot.php';

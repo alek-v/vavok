@@ -53,19 +53,19 @@ if ($securimage->check($_POST['captcha_code']) == true) {
                 echo '<b>Activation key has been sent!</b><br><br>'; // update lang
             } else {
                 echo $lang_mail['wrongcaptcha'] . '!<br><br>';
-                echo '<a href="resend.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+                echo '<a href="resend.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
             } 
         } else {
             echo $lang_mail['wrongmail'] . '!<br><br>';
-            echo '<a href="resend.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+            echo '<a href="resend.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
         } 
     } else {
         echo $lang_mail['noneededdata'] . '!<br><br>';
-        echo '<a href="resend.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+        echo '<a href="resend.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
     } 
 } 
 
-echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 include_once"../themes/" . $config_themes . "/foot.php";
 
 ?>

@@ -114,7 +114,7 @@ if ($action == "count24") {
         echo $lang_count['statnotformed'] . '<br />';
     } 
 
-    echo'<br /><a href="counter.php" class="sitelink">' . $lang_home['back'] . '</a>';
+    echo'<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 } 
 // statistics for a month
 if ($action == "count31") {
@@ -160,10 +160,10 @@ if ($action == "count31") {
         echo $lang_count['statnotformed'] . '<br />';
     } 
 
-    echo '<br /><a href="counter.php" class="sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 } 
 
-echo '<br /><a href="../" class="homepage">' . $lang_home['home'] . '</a><br />';
+echo '<br /><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

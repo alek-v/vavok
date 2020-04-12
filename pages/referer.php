@@ -39,7 +39,7 @@ if ($config["showRefPage"] == "1" || isadmin()) {
     echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_page['pgviewoff'] . '<br></p>';
 } 
 
-echo '<p><br><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><br><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

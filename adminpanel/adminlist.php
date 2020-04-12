@@ -3,7 +3,7 @@
 require_once"../include/strtup.php";
 
 if (!is_reg() || !checkPermissions(basename(__FILE__))) {
-    header ("Location: ../input.php?action=exit");
+    header ("Location: ../pages/input.php?action=exit");
     exit;
 }
 
@@ -58,8 +58,8 @@ if (empty($action)) {
     page_navigation('adminlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
     page_numbnavig('adminlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
 } 
-echo '<p><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/foot.php";
 

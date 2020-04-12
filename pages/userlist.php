@@ -72,7 +72,7 @@ page_numbnavig("userlist.php?view=$view&amp;", $items_per_page, $page, $num_item
 
 echo '<br /><div class="break"></div>';
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
-echo '<img src="../images/img/homepage.gif" alt="" /> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/homepage.gif" alt="" /> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 

@@ -20,7 +20,7 @@ echo $lang_traffic['visitedpages'] . ': <b>' . ($_SESSION['counton'] + 1) . '</b
 echo $lang_traffic['timeonsite'] . ': <b>' . $timeon . '</b><br><br>';
 
 
-echo '<br><img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<br><img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 

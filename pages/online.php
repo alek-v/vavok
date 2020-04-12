@@ -112,12 +112,12 @@ page_navigation('online.php?list=' . $list . '&amp;', $config["dataOnPage"], $pa
 page_numbnavig('online.php?list=' . $list . '&amp;', $config["dataOnPage"], $page, $total);
 
 if ($list != "full") {
-    echo'<p><a href="online.php?list=full" class="sitelink">' . $lang_page['showguest'] . '</a></p>';
+    echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $lang_page['showguest'] . '</a></p>';
 } else {
-    echo'<p><a href="online.php?list=reg" class="sitelink">' . $lang_page['hideguest'] . '</a></p>';
+    echo'<p><a href="online.php?list=reg" class="btn btn-outline-primary sitelink">' . $lang_page['hideguest'] . '</a></p>';
 } 
 
-echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once "../themes/" . $config_themes . "/foot.php";
 

@@ -220,7 +220,7 @@ if ($securimage->check($_POST['captcha_code']) == true) {
 
                 $subject = $lang_mail['newpassfromsite'] . ' ' . $config["title"];
                 $mail = "" . $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n
-								" . $config["homeUrl"] . "/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1
+								" . $config["homeUrl"] . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1
 								\r\n" . $lang_mail['ycchngpass']  . "\r\n";
 
                 sendmail($mailsus, $subject, $mail); 
@@ -230,19 +230,19 @@ if ($securimage->check($_POST['captcha_code']) == true) {
                 echo '<b>' . $lang_mail['passgen'] . '<br></b><br>';
             } else {
                 echo $lang_mail['wrongcaptcha'] . '!<br><br>';
-                echo '<a href="lostpassword.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+                echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
             } 
         } else {
             echo $lang_mail['wrongmail'] . '!<br><br>';
-            echo '<a href="lostpassword.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+            echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
         } 
     } else {
         echo $lang_mail['noneededdata'] . '!<br><br>';
-        echo '<a href="lostpassword.php" class="sitelink">' . $lang_home['back'] . '</a><br>';;
+        echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;
     } 
 } 
 
-echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 include_once"../themes/" . $config_themes . "/foot.php";
 
 ?>

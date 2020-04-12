@@ -35,7 +35,7 @@ if (is_reg()) {
 
                 $num = $total - $i-1;
 
-                echo $i2 . '. ' . $data[1] . ' <br><a href="process.php?action=razban&amp;start=' . $start . '&amp;id=' . $num . '" class="sitelink">' . $lang_admin['delban'] . '</a><hr>';
+                echo $i2 . '. ' . $data[1] . ' <br><a href="process.php?action=razban&amp;start=' . $start . '&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $lang_admin['delban'] . '</a><hr>';
             } 
 
             if ($total < 1) {
@@ -43,13 +43,13 @@ if (is_reg()) {
             } 
 
             if ($start != 0) {
-                echo '<a href="ban.php?start=' . ($start - 10) . '" class="sitelink">&lt; ' . $lang_home['back'] . '</a> ';
+                echo '<a href="ban.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $lang_home['back'] . '</a> ';
             } else {
                 echo'&lt; ' . $lang_home['back'] . ' ';
             } 
             echo'|';
             if ($total > $start + 10) {
-                echo ' <a href="ban.php?start=' . ($start + 10) . '" class="sitelink">' . $lang_home['forw'] . ' &gt;</a>';
+                echo ' <a href="ban.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $lang_home['forw'] . ' &gt;</a>';
             } else {
                 echo' ' . $lang_home['forw'] . ' &gt;';
             } 
@@ -62,12 +62,12 @@ if (is_reg()) {
             echo '' . $lang_admin['ipbanexam'] . '<br><br>';
             echo '<br>' . $lang_admin['allbanips'] . ': ' . $total . '<br><br><br>';
             if ($total > 1) {
-                echo'<br><a href="process.php?action=delallip" class="sitelink">' . $lang_admin['dellist'] . '</a>';
+                echo'<br><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $lang_admin['dellist'] . '</a>';
             } 
         } 
 
-        echo'<br><a href="./" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-        echo'<a href="../" class="homepage">' . $lang_home['home'] . '</a><br>';
+        echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+        echo'<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
     } else {
         header ("Location: ../index.php?error");
         exit;

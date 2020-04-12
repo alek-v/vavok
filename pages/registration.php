@@ -1,6 +1,10 @@
 <?php
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
+
 require_once"../include/strtup.php";
+
+// meta tag for this page
+$genHeadTag = '<meta name="robots" content="noindex">';
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
@@ -227,13 +231,13 @@ if ($config["openReg"] == "1") {
 		if ($config["quarantine"] > 0) {
 		echo '<font color="#FF0000">' . $lang_reg['quarantine1'] . ' ' . round($config["quarantine"] / 3600) . ' ' . $lang_reg['quarantine2'] . '</font><br>';
 		}
-		echo '<br><a href="siterules.php" class="sitelink">' . $lang_reg['siterules'] . '</a><br>';
+		echo '<br><a href="siterules.php" class="btn btn-outline-primary sitelink">' . $lang_reg['siterules'] . '</a><br>';
 		}
 } else {
 	echo '<img src="../images/img/error.gif" alt=""> ' . $lang_reg['regstoped'] . '!<br><br>';
 } 
 
-echo '<p><a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

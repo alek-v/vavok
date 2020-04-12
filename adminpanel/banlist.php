@@ -69,8 +69,8 @@ if ($noi > 0) {
 page_navigation('banlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
 page_numbnavig('banlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
 
-echo '<p><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/foot.php";
 

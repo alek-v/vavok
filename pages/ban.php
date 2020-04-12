@@ -49,7 +49,7 @@ if (is_reg()) {
             } 
 
 
-            echo $lang_ban['endbanadvice'] . ' <b><a href="siterules.php" class="sitelink">' . $lang_ban['siterules'] . '</a></b><br>';
+            echo $lang_ban['endbanadvice'] . ' <b><a href="siterules.php" class="btn btn-outline-primary sitelink">' . $lang_ban['siterules'] . '</a></b><br>';
 
             $db->update('vavok_users', 'banned', 0, "id='" . $user_id . "'");
             $db->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='" . $user_id . "'");
@@ -60,7 +60,7 @@ if (is_reg()) {
     exit;
 } 
 
-echo '<br><a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<br><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 

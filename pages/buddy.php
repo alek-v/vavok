@@ -93,11 +93,11 @@ if (is_reg()) {
         page_numbnavig("buddy.php?", $items_per_page, $page, $num_items);
     } 
 } else {
-    echo $lang_page['notloged'] . '<br><br>';
+    echo $lang_home['notloged'] . '<br><br>';
 } 
 
-echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="sitelink">' . $lang_home['inbox'] . '</a><br>';
-echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br>';
+echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

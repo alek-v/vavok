@@ -62,7 +62,7 @@ if (is_reg()) {
                 $iml = "<img src=\"images/ofl.gif\" alt=\"-\"/>";
             }
             */
-                $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '" class="sitelink">' . $tnick . '</a>';
+                $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '" class="btn btn-outline-primary sitelink">' . $tnick . '</a>';
                 echo "$lnk: ";
                 echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $lang_home['delete'] . "</a><br>";
             } 
@@ -95,14 +95,14 @@ if (is_reg()) {
             } 
         } 
 
-        echo '<br><a href="ignor.php" class="sitelink">' . $lang_page['ignorlist'] . '</a><br>';
+        echo '<br><a href="ignor.php" class="btn btn-outline-primary sitelink">' . $lang_page['ignorlist'] . '</a><br>';
     } 
 } else {
-    echo $lang_page['notloged'] . '<br><br>';
+    echo $lang_home['notloged'] . '<br><br>';
 } 
 
-echo '<a href="inbox.php" class="sitelink">' . $lang_home['inbox'] . '</a><br>';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 

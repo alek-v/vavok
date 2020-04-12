@@ -42,7 +42,7 @@ if ($checkIfExist < 1 || $users_id == 0) {
     echo '<div class="break"></div>';
 echo '<div class="clear"></div>';
 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 exit;
@@ -199,7 +199,7 @@ if (is_reg() && (ismod() || isadmin())) {
     $showPage->set('userPhoto', '');
     }
 
-$showPage->set('homepage', '<a href="../" class="homepage">' . $lang_home['home'] . '</a>');
+$showPage->set('homepage', '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>');
 
 echo $showPage->output(); 
 

@@ -270,7 +270,7 @@ if (empty($action)) {
     echo "I don't know how you got into here, but there's nothing to show <br /><br />";
 } 
 
-echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include("../themes/$config_themes/foot.php");
 

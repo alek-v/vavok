@@ -60,7 +60,7 @@ $tot = $u[0] + $u[1] + $u[2] + $u[3] + $u[4] + $u[5];
 // $u[3]=komentara u novostima
 // $u[4]=novosti
 // $u[5]=komentara u downloadu
-echo '<br><img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a><br>';
+echo '<br><img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
 
 
 include"../themes/$config_themes/foot.php";

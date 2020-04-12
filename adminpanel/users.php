@@ -82,7 +82,7 @@ if (is_reg()) {
 
                         // website permitions for various sections
                         if (file_exists('specperm.php')) {
-                        echo '<a href="specperm.php?users=' . $userx_id . '" class="sitelink">Special permitions</a><br />';
+                        echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Special permitions</a><br />';
                         }
                         echo $lang_admin['newpassinfo'] . ':<br><input name="udd1" /><br>';
                         echo $lang_admin['city'] . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
@@ -113,7 +113,7 @@ if (is_reg()) {
                         echo '<br><input value="' . $lang_home['save'] . '" type="submit" /></form><hr>';
 
                         if ($userx_access < 101 || $userx_access > 105) {
-                            echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
+                            echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
                         } 
                     } else {
                         echo $lang_admin['usrnoexist'] . '!';
@@ -125,7 +125,7 @@ if (is_reg()) {
                 echo $lang_admin['usrnoexist'] . '!';
             } 
 
-            echo '<br><a href="users.php" class="sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
         } 
         // update changes
         if ($action == "upgrade") {
@@ -213,7 +213,7 @@ if (is_reg()) {
                         if (!empty($udd1)) {
                             echo '<font color=red>' . $lang_admin['passchanged'] . ': ' . $udd1 . '</font> <br>';
                         } 
-                        echo '<a href="users.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
+                        echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
                     } else {
                         echo $lang_admin['usrnoexist'] . '!<br>';
                     }
@@ -223,14 +223,14 @@ if (is_reg()) {
             } else {
                 echo $lang_admin['emailnotok'] . '<br>';
             } 
-            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
         } 
         // confirm delete
         if ($action == "poddel") {
             echo $lang_admin['confusrdel'] . ' <b>' . $user . '</b>?<br><br>';
-            echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="sitelink">' . $lang_admin['deluser'] . '</a></b>';
+            echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
 
-            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
         } 
         // delete user
         if ($action == "deluser") {
@@ -242,16 +242,16 @@ if (is_reg()) {
                     $users->delete_user($user);
                     echo $lang_admin['usrdeleted'] . '!<br>';
 
-                    echo '<br><a href="users.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
+                    echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
                 } else {
                     echo $lang_admin['noaccessdel'] . '<br>';
-                    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
+                    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
                 } 
             } 
         } 
 
-        echo '<p><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br>';
-        echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+        echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
+        echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
     } else {
         header ("Location: ../?error");
         exit;

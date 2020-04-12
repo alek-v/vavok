@@ -31,7 +31,7 @@ if (!empty($code)) {
     echo '<p>' . $lang_mail['unsubfail'] . '!</p>'; // code 
 } 
 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/$config_themes/foot.php";
 

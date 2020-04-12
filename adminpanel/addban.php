@@ -67,30 +67,32 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
                         echo '<b><font color="#FF0000">' . $lang_admin['myprofile'] . '!</font></b><br /><br />';
                     } 
 
+                    if ($show_prof['bantime'] > 0) {
                     $ost_time = round($show_prof['bantime'] - $time);
+                	} else { $ost_time = $time; }
 
                     if ($show_user['banned'] < 1 || $show_prof['bantime'] < $time) {
                         echo '<form method="post" action="addban.php?action=banuser&amp;users=' . $users_nick . '">';
-                        echo '' . $lang_admin['banduration'] . ':<br /><input name="duration" /><br />';
+                        echo $lang_admin['banduration'] . ':<br /><input name="duration" /><br />';
 
                         echo '<input name="bform" type="radio" value="min" checked> ' . $lang_admin['minutes'] . '<br />';
                         echo '<input name="bform" type="radio" value="chas"> ' . $lang_admin['hours'] . '<br />';
                         echo '<input name="bform" type="radio" value="sut"> ' . $lang_admin['days'] . '<br />';
 
-                        echo '' . $lang_admin['bandesc'] . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
+                        echo $lang_admin['bandesc'] . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
                         echo '<input value="' . $lang_home['confirm'] . '" type="submit"></form><hr>';
 
-                        echo '' . $lang_admin['maxbantime'] . ' ' . formattime(round($config["maxBanTime"] * 60)) . '<br />';
-                        echo '' . $lang_admin['bandesc1'] . '<br />';
+                        echo $lang_admin['maxbantime'] . ' ' . formattime(round($config["maxBanTime"] * 60)) . '<br />';
+                        echo $lang_admin['bandesc1'] . '<br />';
                     } else {
                         echo '<b><font color="#FF0000">' . $lang_admin['confban'] . '</font></b><br />';
                         if (ctype_digit($show_prof['lastban'])) {
                             echo '' . $lang_admin['bandate'] . ': ' . date_fixed($show_prof['lastban']) . '<br />';
                         } 
-                        echo '' . $lang_admin['banend'] . ' ' . formattime($ost_time) . '<br />';
-                        echo '' . $lang_admin['bandesc'] . ': ' . check($show_prof['bandesc']) . '<br />'; 
+                        echo $lang_admin['banend'] . ' ' . formattime($ost_time) . '<br />';
+                        echo $lang_admin['bandesc'] . ': ' . check($show_prof['bandesc']) . '<br />'; 
                         // echo 'Kaznio: <a href="../pages/user.php?uz=' . check($udc[63]) . '&amp;' . SID . '">' . check($udc[63]) . '</a><br /><br />';
-                        echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="sitelink">' . $lang_admin['delban'] . '</a><hr>';
+                        echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['delban'] . '</a><hr>';
                     } 
                 } 
             } else {
@@ -100,7 +102,6 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
             echo '' . $lang_admin['nousername'] . '!<br />';
         } 
 
-        echo '<br /><a href="addban.php" class="sitelink">' . $lang_home['back'] . '</a>';
     } 
 
     if ($action == "banuser") {
@@ -140,7 +141,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
                         echo $lang_admin['usrdata'] . ' ' . $user . ' ' . $lang_admin['edited'] . '!<br />';
                         echo '<b><font color="FF0000">' . $lang_admin['confban'] . '</font></b><br /><br />';
 
-                        echo'<a href="addban.php" class="sitelink">' . $lang_home['back'] . '</a><br />';
+                        echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
                     } else {
                         echo '' . $lang_admin['noreason'] . '!<br />';
                     } 
@@ -153,7 +154,7 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
         } else {
             echo $lang_admin['usrnoexist'] . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
+        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
     } 
 
     if ($action == "deleteban") {
@@ -176,11 +177,11 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
             echo $lang_admin['usrdata'] . '  ' . $user . ' ' . $lang_admin['edited'] . '!<br />';
             echo '<b><font color="00FF00">' . $lang_admin['confUnBan'] . '</font></b><br /><br />';
 
-            echo'<a href="addban.php" class="sitelink">' . $lang_admin['changeotheruser'] . '</a><br />';
+            echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br />';
         } else {
             echo'' . $lang_home['usrnoexist'] . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="sitelink">' . $lang_home['back'] . '</a>';
+        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
     } 
     // delete user
     if ($action == "deluser") {
@@ -189,11 +190,11 @@ if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
 
         echo '' . $lang_admin['usrdeleted'] . '!<br />';
 
-        echo '<br /><a href="addban.php" class="sitelink">' . $lang_home['back'] . '</a>';
+        echo '<br /><a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
     } 
 
-    echo '<br /><a href="index.php" class="sitelink">' . $lang_home['admpanel'] . '</a><br />';
-    echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a><br />';
+    echo '<br /><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
+    echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
 } else {
     redirect_to("../?error");
 } 

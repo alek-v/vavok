@@ -96,10 +96,10 @@ if (is_reg()) {
 
     echo '<div class="clear"></div>';
 } else {
-    echo $lang_page['notloged'] . '<br />';
+    echo $lang_home['notloged'] . '<br />';
 } 
 
-echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 
