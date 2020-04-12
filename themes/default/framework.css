@@ -1,20 +1,46 @@
 @charset "utf-8";
 
+html, body {
+	height: 100%;
+}
+
+html, body {
+	font-family: arial, helvetica, sans-serif;
+	background: #fffff;
+	color: #666666;
+	width: 100%;
+}
+
+iframe {
+    width: 100%;
+}
+
+
+/* inputs and textarea */
+label {
+	display: inline-block;
+	margin-right: 10px;
+	min-width: 170px; 
+}
+
+textarea {
+	width: 100%;
+	min-height: 100px;
+}
+
+
 /* links */
-a:link, a:visited {
-	color:#446488; text-decoration:none;
-}
-a:hover {
-	color:#00004f; text-decoration:none;
-}
-a:active {
-	color:#00004f; text-decoration:none;
-}
+
 
 /* homepage link */
 .homepage {}
+
+
 /* site navigation link */
-.sitelink {}
+.sitelink {
+	margin: 5px;
+}
+
 
 /* navigation */
 #v_pagination {
@@ -28,6 +54,7 @@ a:active {
 	font-size:18px;
 	font-weight:normal;
 }
+
 #v_pagination a:link, #v_pagination a:visited {
 	padding:7px;
 	padding-top:2px;
@@ -41,6 +68,7 @@ a:active {
 	font-weight:normal;
 	font-size:18px;
 }
+
 #v_pagination .active_tnt_link {
 	padding:7px;
 	padding-top:2px;
@@ -52,6 +80,7 @@ a:active {
 	color:#0072BC;
 	cursor:default;
 }
+
 #v_pagination .next_v_pagination {
 	padding:7px;
 	padding-top:2px;
@@ -63,6 +92,7 @@ a:active {
 	color:#D7D7D7;
 	cursor:default;
 }
+
 #v_pagination .prev_v_pagination {
 	padding:7px;
 	padding-top:2px;
@@ -75,7 +105,12 @@ a:active {
 	cursor:default;
 }
 
+
 /* other elements */
 .clear {
-	clear:both;
+	clear: both;
+}
+
+.text-center {
+	text-align: center;
 }
