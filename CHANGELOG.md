@@ -7,6 +7,8 @@
 - Update security imrovements
 - Moved pages.php to pages/pages.php
 - Moved input.php to pages/input.php
+- Added include/load_header.php to remove code from theme file
+- Added include/prepare_header.php to remove code from theme file
 
 
 
