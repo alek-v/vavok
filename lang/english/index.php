@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 05.04.2020. 17:55:28
+// modified: 10.04.2020. 22:05:00
 
 $language = 'english';
 $ln_loc = 'en';
@@ -84,6 +84,8 @@ $lang_home['search'] = "Search";
 $lang_home['notloged'] = "You are not logged in, in order to see this page you must <a href=\"" . BASEDIR. "pages/login.php\">log in</a><br>or <a href=\"" . BASEDIR. "pages/registration.php\">register</a>";
 $lang_home['next'] = "Next";
 $lang_home['prev'] = "Prev";
+$lang_home['contact'] = "Contact";
+
 // cookie consent
 $lang_home['cookies'] = "Cookies."; // Title
 $lang_home['purecookieDesc'] = "By using this website, you automatically accept that we use cookies."; // Description
