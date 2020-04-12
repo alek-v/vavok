@@ -6,3 +6,11 @@
 > Made to be fast, safe and easy to customize
 
 > Feel free to contribute
+
+>
+
+> Required extensions:
+
+> PHP: pdo, pdo_mysql, mbstring
+
+> Apache: mod_rewrite
