@@ -1,5 +1,5 @@
 
-<a href="https://vavok.net"><img src="https://www.vavok.net/themes/vavok3/images/logo.png" alt="" /></a>
+<a href="https://vavok.net"><img src="https://www.vavok.net/themes/vavok3/images/logo.png" height="60" alt="" /></a>
 
 # Vavok CMS
 
