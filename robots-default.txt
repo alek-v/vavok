@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /input.php
+Disallow: /pages/input.php
 Disallow: /pages/login.php
 Disallow: /pages/registration.php
