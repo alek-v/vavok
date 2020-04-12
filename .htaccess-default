@@ -50,7 +50,7 @@ RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
 #RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 # website pages
-RewriteRule ^page\/([^\/]+)\/?$ pages.php?pg=$1 [NC,L]
+RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
 
 # website content - tag search
 RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2
@@ -135,3 +135,7 @@ RewriteRule ^search$ search.php
    
 </IfModule>
 
+# pagespeed module
+<IfModule pagespeed_module>
+ModPagespeed off
+</IfModule>
