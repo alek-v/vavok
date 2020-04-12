@@ -47,7 +47,7 @@ if ($action == "sendpm") {
     echo'<textarea cols="25" rows="3" name="pmtext"></textarea><br />';
     echo'<input value="Send" name="do" type="submit" /></form><hr>'; // update lang
     
-    echo '<br /><br /><a href="inbox.php?action=main" class="sitelink">Inbox</a><br />';
+    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">Inbox</a><br />';
 } elseif ($action == "sendto") {
     // $whonick = getnickfromid($who);
     echo $lang_page['sendpmto'] . ':<br /><br />';
@@ -56,7 +56,7 @@ if ($action == "sendpm") {
     echo $lang_home['message'] . '<br /><textarea cols="25" rows="3" name="pmtext"></textarea><br />';
     echo '<input value="' . $lang_home['send'] . '" name="do" type="submit" /></form><hr><br />';
 
-    echo '<br /><br /><a href="inbox.php?action=main" class="sitelink">' . $lang_home['inbox'] . '</a><br />';
+    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 } elseif ($action == "main" or empty($action)) {
     echo'<form method="post" action="inbox.php?action=main">';
     echo $lang_page['view'] . ": <select name=\"view\">";
@@ -94,7 +94,7 @@ if ($action == "sendpm") {
     $doit = false;
     $num_items = $users->getpmcount($myid, $view); //changable
     $items_per_page = $page_set['privmes'];
-    if ($userDevice == 'phone' && $items_per_page > 6) {
+    if ($users->user_device() == 'phone' && $items_per_page > 6) {
         $items_per_page = 6;
     } 
     $num_pages = ceil($num_items / $items_per_page);
@@ -178,7 +178,7 @@ if ($action == "sendpm") {
         echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nopmsgs'] . '<br /><br />';
     } 
     // //// UNTILL HERE >>
-    echo '<a href="inbox.php?action=sendto" class="sitelink">' . $lang_page['sendmsg'] . '</a><br />';
+    echo '<a href="inbox.php?action=sendto" class="btn btn-outline-primary sitelink">' . $lang_page['sendmsg'] . '</a><br />';
 } else if ($action == "readpm") {
     $pminfo = $db->select('inbox', "id='" . $pmid . "'", '', 'text, byuid, timesent, touid, reported, deleted');
     $system_id = $users->getidfromnick('System');
@@ -229,11 +229,11 @@ if ($action == "sendpm") {
         } else {
             $whouser = $pminfo['byuid'];
         } 
-        echo '<a href="inbox.php?action=dialog&amp;who=' . $whouser . '" class="sitelink">Dialog</a>'; // update lang
+        echo '<a href="inbox.php?action=dialog&amp;who=' . $whouser . '" class="btn btn-outline-primary sitelink">Dialog</a>'; // update lang
     } else {
         echo "<img src=\"../images/img/close.gif\" alt=\"X\"/>This PM ain't yours";
     } 
-    echo '<br /><br /><a href="inbox.php?action=main" class="sitelink">' . $lang_home['inbox'] . '</a><br />';
+    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 } else if ($action == "dialog") {
     echo '
 <script type="text/javascript">
@@ -281,12 +281,12 @@ window.onload=function () {
         echo '<img src="../images/img/reload.gif" alt="" /> Inbox is empty!'; // update lang
     } 
     // echo "<br /><br /><a href=\"rwdpm.php?action=dlg&amp;sid=$sid&amp;who=$who\">Download</a><br /><small>only first 50 messages</small><br />";
-    echo '<br /><br /><a href="inbox.php?action=main" class="sitelink">' . $lang_home['inbox'] . '</a><br />';
+    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 } else {
     echo "I don't know how you got into here, but there's nothing to show<br /><br />";
 } 
 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
 require_once"../themes/" . $config_themes . "/foot.php";
 

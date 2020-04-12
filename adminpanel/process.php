@@ -1,5 +1,6 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/strtup.php";
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
 
@@ -16,11 +17,11 @@ $times = date_fixed($time, "H:i");
 // add to admin chat
 if ($action == "acadd") {
     if (!is_reg() || !checkPermissions('adminchat')) {
-        header ("Location: ../input.php?action=exit");
+        header ("Location: ../pages/input.php?action=exit");
         exit;
     }
 
-    $brow = check($brow);
+    $brow = check($users->user_browser());
     $msg = check(wordwrap($_POST['msg'], 150, ' ', 1));
     $msg = substr($msg, 0, 1200);
     $msg = check($msg);

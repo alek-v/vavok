@@ -46,34 +46,34 @@ $log = str_replace(":|:", "|", $log);
 if ($error == '401') {
     echo $lang_error['err401'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error401.dat";
-    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '402') {
     echo $lang_error['err402'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error402.dat";
-    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '403') {
     echo $lang_error['err403'] . '.<br>';
 
-    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
     echo $lang_error['err404youtrytoop'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . '<br>' . $lang_error['filenotfound'] . '.<br>';
 
-    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
     echo $lang_error['err406descr'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . ' ' . $lang_error['notfonserver'] . '.<br>';
 
-    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
 } elseif ($error == '500') {
     echo $lang_error['err500'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error500.dat";
-    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '502') {
     echo $lang_error['err502'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error502.dat";
-    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == "db") {
     $line = 0;
     $file = file(BASEDIR . "used/datalog/dberror.dat");
@@ -120,7 +120,7 @@ if ($error == '401') {
 	echo '</font></b></div>';
 }
     $logdat = BASEDIR . "used/datalog/error.dat";
-    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $brow . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } 
 
 if (isset($write) && !empty($logdat)) {
@@ -145,7 +145,7 @@ if (isset($write) && !empty($logdat)) {
 } 
 
 echo '<div class="break"></div>';
-echo '<p><img src="' . HOMEDIR . 'images/img/homepage.gif" alt="" /> <a href="/" class="homepage">' . $lang_home['home'] . '</a><p>';
+echo '<p><img src="' . HOMEDIR . 'images/img/homepage.gif" alt="" /> <a href="/" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><p>';
 
 include_once BASEDIR . "themes/" . $config_themes . "/foot.php";
 

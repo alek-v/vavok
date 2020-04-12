@@ -219,6 +219,25 @@ class Users {
 	    } 
 	}
 
+	function user_device() {
+    	return BrowserDetection::userDevice();
+	}
+
+
+	// visitor's browser
+	function user_browser() {
+
+		if(ini_get("browscap")) {
+			$userBrowser = get_browser(null, true);
+		} else {
+			$detectBrowser = new BrowserDetection();
+			$userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
+		}
+		if (empty($userBrowser)) { $userBrowser = 'Not detected'; }
+
+		return $userBrowser;
+	}
+
 }
 
 ?>

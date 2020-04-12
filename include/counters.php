@@ -27,7 +27,7 @@ if (!is_reg()) {
     $user_id = 0;
 } 
 $bz_ip = $ip;
-$xmatch = $user_id . '-' . $ip . '-' . $brow;
+$xmatch = $user_id . '-' . $ip . '-' . $users->user_browser();
 
 // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
 $db->delete(getConfiguration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);

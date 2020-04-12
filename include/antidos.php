@@ -42,7 +42,7 @@ if (file_exists($logfiles)) {
     } 
 } 
 
-$write = '|' . $config["siteTime"] . '|Time: ' . date("Y-m-d / H:i:s", $config["siteTime"]) . '|Browser: ' . $brow . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
+$write = '|' . $config["siteTime"] . '|Time: ' . date("Y-m-d / H:i:s", $config["siteTime"]) . '|Browser: ' . $userBrowser . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
 $fp = fopen($logfiles, "a+");
 flock ($fp, LOCK_EX);
 fputs($fp, "$write\r\n");
@@ -71,7 +71,7 @@ if (count(file($logfiles)) > $config["dosLimit"] && $config["dosLimit"] > 0) {
         $logdat = BASEDIR . "used/datalog/ban.dat";
         $hostname = gethostbyaddr($ip);
 
-        $write = '|Blocked access for IP|' . $phpself . $request_uri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $brow . '|' . $http_referer . '|' . $username . '|';
+        $write = '|Blocked access for IP|' . $phpself . $request_uri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $users->user_browser() . '|' . $http_referer . '|' . $username . '|';
 
         $fp = fopen($logdat, "a+");
         flock ($fp, LOCK_EX);

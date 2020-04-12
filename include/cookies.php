@@ -26,7 +26,7 @@
                 $_SESSION['log'] = $unlog;
                 $_SESSION['pass'] = $unpar;
                 $_SESSION['my_ip'] = $my_ip;
-                $_SESSION['my_brow'] = $brow;
+                $_SESSION['my_brow'] = $users->user_browser();
                 
                 // update ip address and last visit time
                 $db->update('vavok_users', 'ipadd', $ip, "id = '" . $cookie_id . "'");

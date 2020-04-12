@@ -1,5 +1,8 @@
 <?php 
-// (c) vavok.net
+// (c) vavok.net - Aleksandar Vranešević
+// updated: 12.04.2020. 22:45:09
+
+
 if (!empty($_SESSION['log'])) {
     $permissions = $db->select('vavok_users', "id='" .  $users->getidfromnick(check($_SESSION['log'])) . "'", '', 'perm');
 
@@ -11,7 +14,7 @@ if (!empty($_SESSION['log'])) {
     $user_profil = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'regche');
     $db->update('vavok_profil', 'lastvst', $time, "uid='" . $user_id . "'");
 
-    if (!empty($vavok_users['mskin']) && $userDevice == 'phone') {
+    if (!empty($vavok_users['mskin']) && $users->user_device() == 'phone') {
         $config_themes = check($vavok_users['mskin']);
     } elseif (!empty($vavok_users['skin'])) {
         $config_themes = check($vavok_users['skin']);
@@ -54,15 +57,15 @@ if (!empty($_SESSION['log'])) {
     } 
     // else
     else {
-        if ($userDevice == 'phone' && $config["redbrow"] == 1) {
+        if ($users->user_device() == 'phone' && $config["redbrow"] == 1) {
             header("Location: " . $connectionProtocol . "m." . $config["homeBase"] . $request_uri); 
             // header("Location: http://m.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
             exit;
-        } elseif ($userDevice == 'computer' && $config["redbrow"] == 1) {
+        } elseif ($users->user_device() == 'computer' && $config["redbrow"] == 1) {
             header("Location: " . $connectionProtocol . "www." . $config["homeBase"] . $request_uri); 
             // header("Location: http://www.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
             exit;
-        } elseif ($userDevice == 'phone') {
+        } elseif ($users->user_device() == 'phone') {
             $config_themes = $config["mTheme"];
         } else {
             $config_themes = $config["webtheme"];

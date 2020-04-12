@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 05.04.2020. 17:56:06
+// updated: 12.04.2020. 22:38:43
 
 // time when execution of the script has started
 $start_time = microtime(true);
@@ -104,7 +104,7 @@ spl_autoload_register(function ($class) {
     include BASEDIR . "include/classes/" . $class . ".class.php";
 });
 
-// visitor's browser
+// visitor's browser - deprecated 12.04.2020. 22:30:30
 if(ini_get("browscap")) {
 	$userBrowser = get_browser(null, true);
 } else {
@@ -112,25 +112,6 @@ if(ini_get("browscap")) {
 	$userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
 }
 if (empty($userBrowser)) { $userBrowser = 'Not detected'; }
-
-$brow = $userBrowser; // deprecated! 14.5.2017. 15:57:31 $brow var is deprecated
-
-// did visitor use computer or phone?
-$userDevice = BrowserDetection::userDevice();
-
-// deprecated! 14.5.2017. 16:39:13 use var $userDevice
-function browser_vtype() {
-    $user_agents = $_SERVER["HTTP_USER_AGENT"];
-    if (stristr($user_agents, "symbian") == true || stristr($user_agents, "midp") == true || stristr($user_agents, "android") == true || stristr($user_agents, "mobi") == true) {
-        return 'phone';
-    } elseif (stristr($user_agents, "unix") == true || stristr($user_agents, "msie") == true || stristr($user_agents, "windows") == true || stristr($user_agents, "macintosh") == true || stristr($user_agents, "macos") == true || stristr($user_agents, "bsd") == true) {
-        return 'computer';
-    } elseif (stristr($user_agents, "mozilla") == true) {
-        return 'computer';
-    } else {
-        return 'computer';
-    } 
-}
 
 // time zone
 date_default_timezone_set('UTC');
@@ -189,6 +170,7 @@ if (!stristr($config_requri, 'error=db') && !stristr($phpself, 'install/install.
         require_once BASEDIR . "include/antidos.php";
         require_once BASEDIR . "include/counters.php";
         require_once BASEDIR . "include/referer.php";
+
     } 
 }
 
@@ -207,7 +189,8 @@ function user_status($message) {
     $message = str_replace('106', $lang_home['access106'], $message);
     $message = str_replace('107', $lang_home['access107'], $message);
     return $message;
-} 
+}
+
 // register user
 function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $mail) {
     global $lang_home, $config, $db;
@@ -456,9 +439,9 @@ function siteNavigation($link, $posts, $page, $total, $lnks = 3) {
 
     return $navigation;
 } 
+
 // format time into days and minutes
-function formattime($file_time)
-{
+function formattime($file_time) {
     global $lang_home;
     if ($file_time >= 86400) {
         $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $lang_home['days'];
@@ -470,10 +453,10 @@ function formattime($file_time)
         $file_time = round($file_time) . ' ' . $lang_home['secs'];
     } 
     return $file_time;
-} 
+}
+
 // show page generation time
-function show_gentime()
-{
+function show_gentime() {
     global $config, $start_time, $lang_home;
     if ($config["pageGenTime"] == '1') {
         $end_time = microtime(true);
@@ -485,7 +468,8 @@ function show_gentime()
 
 if (empty($_SESSION['currs'])) {
     $_SESSION['currs'] = $time;
-} 
+}
+
 if (empty($_SESSION['counton'])) {
     $_SESSION['counton'] = 0;
 } 

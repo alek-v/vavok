@@ -30,17 +30,24 @@ if ($str1 > 20 || $str2 > 20) {
     header ("Location: registration.php?isset=nopassword");
     exit;
 } elseif ($log != "" && $par != "" && $meil != "") {
-    include_once"../themes/$config_themes/index.php"; 
+    // meta tag for this page
+    $genHeadTag = '<meta name="robots" content="noindex">';
+
+    // load theme header
+    include_once"../themes/$config_themes/index.php";
+
     // check email
     $check_mail = $db->count_row('vavok_about', "email='" . $meil . "'");
     if ($check_mail > 0) {
         $check_mail = "no";
-    } 
+    }
+
     // check nick
     $check_users = $db->count_row('vavok_users', "name='" . $log . "'");
     if ($check_users > 0) {
         $check_users = "no";
-    } 
+    }
+
     // check for '-'
     $substr_log = substr_count($log, "-");
 
@@ -57,7 +64,7 @@ if ($str1 > 20 || $str2 > 20) {
                             $passwords = md5($par);
 
                             $mail = htmlspecialchars(stripslashes(strtolower($meil)));
-                            $brow = check($brow);
+                            $brow = check($users->user_browser());
                             $config_themes = check($config_themes);
                             $config["regConfirm"] = (int)$config["regConfirm"];
                             if ($config["regConfirm"] == "1") {
@@ -65,7 +72,7 @@ if ($str1 > 20 || $str2 > 20) {
                             } else {
                                 $registration_key = '';
                             }
-                            // /////////////
+                            // register user
                             $regdate = time();
                             register($log, $passwords, $regdate, $config["regConfirm"], $registration_key, $config_themes, $brow, $ip, $mail); // register user
                              
@@ -87,7 +94,7 @@ if ($str1 > 20 || $str2 > 20) {
                             echo $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br />' . $lang_home['pass'] . ': <b>' . $par . '</b><br />' . $lang_reguser['loginnow'] . '<br />';
                             echo '<br /><img src="../images/img/reload.gif" alt=""> ';
                             if (empty($pagetoload)) {
-                            echo '<b><a href="' . $connectionProtocol . $config_srvhost . '/input.php?log=' . $log . '&amp;pass=' . $par . '&amp;cookietrue=1">' . $lang_reguser['entersite'] . '</a></b><br /><br />';
+                            echo '<b><a href="' . $connectionProtocol . $config_srvhost . '/pages/input.php?log=' . $log . '&amp;pass=' . $par . '&amp;cookietrue=1">' . $lang_reguser['entersite'] . '</a></b><br /><br />';
                           } else {
                           	echo '<b><a href="' . $pagetoload . '">Continue</a></b><br /><br />'; // update lang
 
@@ -117,8 +124,8 @@ if ($str1 > 20 || $str2 > 20) {
     echo $lang_reguser['missingdata'] . "!<br />";
 } 
 
-echo '<p><a href="registration.php" class="sitelink">' . $lang_home['back'] . '</a><br />';
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/" . $config_themes . "/foot.php";
 ?>

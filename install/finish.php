@@ -70,7 +70,7 @@ if ($step == 'second') {
     echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['secondstep'] . ' - ' . $lang_install['inserttint'] . '<br></p>';
 
     echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_install['dataadded'] . '!<br /></p>';
-    echo '<p><a href="finish.php?step=third" class="sitelink">' . $lang_install['thirdstep'] . '</a></p>';
+    echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">' . $lang_install['thirdstep'] . '</a></p>';
 } 
 
 if ($step == 'third') {
@@ -236,14 +236,14 @@ if ($step == "regadmin") {
                             // write to database
                             $registration_key = '';
                             $config["regConfirm"] = '0';
-                            register($name, $passwords, $sitetime, $config["regConfirm"], $registration_key, 'default', $brow, $ip, $email); // register user
+                            register($name, $passwords, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $ip, $email); // register user
                             $user_id = $users->getidfromnick($name);
                             $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                         	}
 
                             echo '<p>' . $lang_install['installok'] . '.<br></p>';
 
-                            echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
+                            echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
                         } else {
                             echo '<p><b>' . $lang_install['siteaddressbad'] . '</b></p>';
                             echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';

@@ -30,7 +30,7 @@ if ($action == "go") {
                 if ($securimage->check($_POST['captcha_code']) == true) {
 
                 	$mail = new Mailer();
-                    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $brow . "\nIP: " . $ip . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
+                    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $ip . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
 
                     header("Location: ./?isset=mail");
                     exit;
