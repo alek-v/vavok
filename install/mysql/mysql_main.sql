@@ -157,6 +157,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `published` int(11) NULL,
   `pubdate` int(11) NULL,
   `content` longtext NULL,
+  `type` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
