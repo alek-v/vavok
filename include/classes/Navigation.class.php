@@ -1,25 +1,53 @@
 <?php
-// (c) vavok.net
+// (c) Aleksandar Vranešević - vavok.net
+// updated 13.04.2020. 5:03:19
+
 class Navigation {
 	public $itemsPerPage;
 	public $totalItems;
+	public $page;
 
-	public function __construct($itemsPerPage, $totalItems) {
-		global $_GET, $limit_start, $page;
+	public function __construct($itemsPerPage, $totalItems, $page) {
+		
+		$this->items_per_page = $itemsPerPage; // items per page
+		$this->total_items = $totalItems; // total items
+		$this->current_page = $page; // number of current page
 
-		if (isset($_GET['page'])) {
-		    $page = check($_GET['page']);
-		} 
-		if ($page == "" || $page <= 0)$page = 1;
+	}
 
-		$num_pages = ceil($totalItems / $itemsPerPage);
+	// current page
+	function current_page($total_pages = 1, $page) {
 
-		if (($page > $num_pages) && $page != 1)$page = $num_pages;
+		if ($page == 'end') $page = intval($total_pages);
+		else if (is_numeric($page)) $page = intval($page);
 
-	    $limit_start = ($page-1) * $itemsPerPage;
-	    if ($limit_start < 0) {
-	        $limit_start = 0;
-	    } 
+		if ($page < 1) $page = 1;
+
+		if ($page > $total_pages) $page = $total_pages;
+
+		return $page;
+	}
+
+	function total_pages($total = 0, $limit = 10) {
+		if ($total != 0) {
+		$v_pages = ceil($total / $limit);
+		return $v_pages;
+		}
+		else return 1;
+	}
+
+	// start counting numbers required for navigation
+	function start() {
+
+		$total_pages = $this->total_pages($this->total_items, $this->items_per_page);
+		$page = $this->current_page($total_pages, $this->current_page);
+		$limit_start = $this->items_per_page * $page - $this->items_per_page;
+
+		return array('total_pages' => $total_pages,
+					 'page' => $page,
+					 'start' => $limit_start
+				);
+
 	}
 
 	// page navigation - prev | next
@@ -51,19 +79,29 @@ class Navigation {
 	}
 
 	// numerical navigaton
-	public static function numbNavigation($link, $posts, $page, $total, $lnks = 3) {
-	    global $lang_home;
-	    $navigation = '<div id="v_pagination">'; 
+	public static function numbNavigation($link, $items_per_page, $page, $total, $lnks = 3) {
+		global $lang_home;
+
+
+	    $navigation = '<div id="v_pagination">';
+
+	    // prev link
+	    if ($total < ($items_per_page * $page)) {
+	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $lang_home['prev'] . '</a>';
+	    } else {
+	        $navigation .= '<span class="next_v_pagination">' . $lang_home['prev'] . '</span>';
+	    } 
+
 
 	    if ($total > 0) {
-	        $ba = ceil($total / $posts);
+	        $ba = ceil($total / $items_per_page);
 
-	        $start = $posts * ($page - 1);
-	        $min = $start - $posts * ($lnks - 1);
-	        $max = $start + $posts * $lnks;
+	        $start = $items_per_page * ($page - 1);
+	        $min = $start - $items_per_page * ($lnks - 1);
+	        $max = $start + $items_per_page * $lnks;
 
 	        if ($min < $total && $min > 0) {
-	            if ($min - $posts > 0) {
+	            if ($min - $items_per_page > 0) {
 	                $linkx = rtrim($link, '&amp;');
 	                $linkx = rtrim($linkx, '?');
 	                $navigation .= '<a href="' . $linkx . '">1</a> <span class="prev_v_pagination">...</span>';
@@ -75,7 +113,7 @@ class Navigation {
 
 	        for($i = $min; $i < $max;) {
 	            if ($i < $total && $i >= 0) {
-	                $ii = floor(1 + $i / $posts);
+	                $ii = floor(1 + $i / $items_per_page);
 
 	                if ($start == $i) {
 	                    $navigation .= '<span class="prev_v_pagination">' . $ii . '</span>';
@@ -88,11 +126,11 @@ class Navigation {
 	                } 
 	            } 
 
-	            $i = $i + $posts;
+	            $i = $i + $items_per_page;
 	        } 
 
 	        if ($max < $total) {
-	            if ($max + $posts < $total) {
+	            if ($max + $items_per_page < $total) {
 	                $navigation .= '<span class="prev_v_pagination">...</span> <a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
 	            } else {
 	                $navigation .= '<a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
@@ -100,7 +138,7 @@ class Navigation {
 	        } 
 	    } 
 	    // forward link
-	    if ($total > ($posts * $page)) {
+	    if ($total > ($items_per_page * $page)) {
 	        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $lang_home['next'] . '</a>';
 	    } else {
 	        $navigation .= '<span class="next_v_pagination">' . $lang_home['next'] . '</span>';

@@ -1,6 +1,8 @@
 <?php
-// (c) vavok.net - Aleksandar Vranesevic
+// (c) Aleksandar Vranešević - vavok.net
 // class for managing pages
+// updated 13.04.2020. 5:03:50
+
 
 class Page {
 
@@ -130,32 +132,6 @@ class Page {
         $this->db->update($this->table_prefix . "pages", 'headt', $data, "id='" . $id . "'");
 	}
 
-	function currentPage($total_pages = 1) {
-		$page = 1;
-		if (isset($_GET['page'])) {
-			if ($_GET['page'] == 'end') $page = intval($total_pages);
-			else if (is_numeric($_GET['page'])) $page = intval($_GET['page']);
-		}
-		if ($page < 1) $page = 1;
-		if ($page > $total_pages) $page = $total_pages;
-		return $page;
-	}
-
-	function totalPages($total = 0, $limit = 10) {
-		if ($total != 0) {
-		$v_pages = ceil($total / $limit);
-		return $v_pages;
-		}
-		else return 1;
-	}
-
-	function navStart($total, $limit) {
-		global $total_pages, $page, $limit_start;
-
-		$total_pages = $this->totalPages($total, $limit);
-		$page = $this->currentPage($total_pages);
-		$limit_start = $limit * $page - $limit;
-	}
 
 	// load page editor program
 	function loadPageEditor () {
