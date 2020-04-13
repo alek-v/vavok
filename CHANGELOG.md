@@ -1,4 +1,11 @@
+# Vavok v1.4.1
+
+- Update improved navigation
+
+
+
 # Vavok v1.4
+
 - Added Bootstrap support
 - Update default theme use Bootstrap
 - Update from now use browser's preferred browser language/script if there are two scripts or more
@@ -13,6 +20,7 @@
 
 
 # Vavok v1.3.2
+
 - Update to catch error if language file does not exist
 - Updated mailer class to catch errors
 - Bugfix cached pages not updated
@@ -21,6 +29,7 @@
 
 
 # Vavok v1.3.1
+
 - Added option to block IP address
 - Security bugfix
 - Removed old plugin directory
