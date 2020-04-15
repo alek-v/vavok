@@ -78,7 +78,17 @@ class Page {
 
 	// select page - get page data
 	function select_page($id , $fields = '*') {
-		return $this->db->get_data($this->table_prefix . 'pages', "id='" . $id . "'", $fields);
+
+		// update visitor counter if page is vewed by visitor
+		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
+
+			$this->db->query("UPDATE pages SET views = views + 1 WHERE id = '{$id}'");
+		}
+
+		// return page data
+		return $this->db->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
+
+
 	}
 
 	// check if page exists
