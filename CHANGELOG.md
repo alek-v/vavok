@@ -1,6 +1,12 @@
 # Vavok v1.4.1
-
+- Added option to show page as a blog post
+- Added page pages/blog.php
+- Added view counter for pages
+- Added page's default image
+- Update .htaccess file updated to show blog pages
 - Update improved navigation
+- Update function page_exists() in Page.class return page id if page exists
+- Update pages/pages.php with new functions
 
 
 
