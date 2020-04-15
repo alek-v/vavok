@@ -13,7 +13,7 @@ if (!$users->is_reg() || (!$users->is_administrator(101) && chkcpecprm('pageedit
 $table_prefix = getConfiguration('tablePrefix');
 
 // check if user can edit only pages that are made by themself and have no permitions to edit all pages
-if (!chkcpecprm('pageedit', 'edit') && $users->is_administrator(101)) {
+if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101)) {
     $editOnlyOwnPages = 'yes';
 } else {
     $editOnlyOwnPages = '';
@@ -88,9 +88,7 @@ if (empty($action)) {
 
     echo '<img src="../images/img/edit.gif" alt="" /> ' . $lang_apfiles['filelist'] . '<br /><br />';
 
-    $total = $pageEditor->total_pages();
-
-    $total_pages = $total;
+    $total_pages = $pageEditor->total_pages();
 
     if ($editOnlyOwnPages == 'yes') {
         $total_pages = $pageEditor->total_pages($user_id);
@@ -106,8 +104,8 @@ if (empty($action)) {
         $start = $config_editfiles * ($page - 1);
     } 
 
-    if ($total < $start + $config_editfiles) {
-        $end = $total;
+    if ($total_pages < $start + $config_editfiles) {
+        $end = $total_pages;
     } else {
         $end = $start + $config_editfiles;
     } 
