@@ -158,6 +158,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `pubdate` int(11) NULL,
   `content` longtext NULL,
   `type` varchar(20) DEFAULT NULL,
+  `views` int(11) NOT NULL DEFAULT 0,
+  `default_img` varchar(120) DEFAULT NULL COMMENT 'default image to show for bot''s and article headers',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
