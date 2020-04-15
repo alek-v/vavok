@@ -1,7 +1,7 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
 // class for managing pages
-// updated 13.04.2020. 5:03:50
+// updated 15.04.2020. 21:24:06
 
 
 class Page {
@@ -84,9 +84,9 @@ class Page {
 	// check if page exists
 	function page_exists($file = '', $where = '') {
 		if (!empty($file) && $this->db->count_row($this->table_prefix . 'pages', "file='" . $file . "'") > 0) {
-			return true;
+			return $this->get_page_id("file='" . $file . "'");
 		} elseif (!empty($where) && ($this->db->count_row($this->table_prefix . 'pages', $where) > 0)) {
-			return true;
+			return $this->get_page_id($where);
 		} else {
 			return false;
 		}
