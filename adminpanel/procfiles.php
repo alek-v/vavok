@@ -1,5 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
+// modified: 15.04.2020. 23:50:28
 
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
@@ -79,48 +80,54 @@ if ($action == "editfile") {
 
     header("Location: files.php?action=edit&file=$file&isset=mp_editfiles");
     exit;
-} 
+}
+
 // update head tags on all pages
 if ($action == 'editmainhead') {
-    if (!is_administrator(101)) {
-        header("Location: ../?isset=ap_noaccess");
-        exit;
+    if (!$users->is_administrator(101)) {
+        redirect_to("../?isset=ap_noaccess");
     } 
 
-    $fp = fopen("../used/headmeta.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $text_files);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
+    // update header data
+    file_put_contents("../used/headmeta.dat", $text_files);
 
-    header("Location: files.php?action=mainmeta&isset=mp_editfiles");
-    exit;
-} 
+    redirect_to("files.php?action=mainmeta&isset=mp_editfiles");
+}
+
 // update head tags on specific page
 if ($action == "editheadtag") {
+    // get default image link
+    $image = !empty($_POST['image']) ? check($_POST['image']) : '';
+
+    // update header tags
     if (!empty($file)) {
+
+        // who created page
         $page_info = $pageEditor->select_page($page_id, 'crtdby');
 
-        if (!chkcpecprm('pageedit', 'show') && !is_administrator(101)) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
-        } 
-        if (!chkcpecprm('pageedit', 'edit') && !is_administrator(101) && $page_info['crtdby'] != $user_id) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
+        // check can user see page
+        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
+            redirect_to("Location: index.php?isset=ap_noaccess");
+        }
+
+        // check can user edit page
+        if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
+            redirect_to("Location: index.php?isset=ap_noaccess");
         } 
 
         // update db data
-        $pageEditor->head_data($page_id, $text_files);
+        $data = array(
+            'headt' => $text_files,
+            'default_img' => $image
+        );
+        $pageEditor->head_data($page_id, $data);
 
-        header("Location: files.php?action=headtag&file=$file&isset=mp_editfiles");
-        exit;
+        // redirect
+        redirect_to("files.php?action=headtag&file=$file&isset=mp_editfiles");
+
     } 
     // fields must not be empty
-    header("Location: files.php?action=headtag&file=$file&isset=mp_noeditfiles");
-    exit;
+    redirect_to("files.php?action=headtag&file=$file&isset=mp_noeditfiles");
 }
 
 // rename page

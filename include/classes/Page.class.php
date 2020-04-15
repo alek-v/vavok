@@ -136,10 +136,15 @@ class Page {
 
 	// update head tags
 	function head_data($id, $data) {
-        //$stmt = $this->db->prepare("UPDATE " . $this->table_prefix . "`pages` SET `headt`= :data WHERE `id`='" . $id . "'");
-        //$stmt->bindParam(":data", $data);
-        //$stmt->execute();
-        $this->db->update($this->table_prefix . "pages", 'headt', $data, "id='" . $id . "'");
+
+		// get database fields
+        $fields = array_keys($data);
+
+        // get data for fields
+        $values = array_values($data);
+
+        // update page data
+        $this->db->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
 	}
 
 

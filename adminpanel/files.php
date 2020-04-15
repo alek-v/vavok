@@ -4,15 +4,14 @@ require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 
 // checking access permitions
-if (!is_reg() || (!isadmin('', 101) && !chkcpecprm('pageedit', 'show'))) {
-    header("Location: ../");
-    exit;
+if (!$users->is_reg() || (!$users->is_administrator(101) && chkcpecprm('pageedit', 'show'))) {
+    redirect_to("../");
 } 
 
 $table_prefix = getConfiguration('tablePrefix');
 
 // check if user can edit only pages that are made by themself and have no permitions to edit all pages
-if (!chkcpecprm('pageedit', 'edit') && !isadmin('', 101)) {
+if (!chkcpecprm('pageedit', 'edit') && $users->is_administrator(101)) {
     $editOnlyOwnPages = 'yes';
 } else {
     $editOnlyOwnPages = '';
@@ -140,22 +139,22 @@ if (empty($action)) {
         // permitions to edit home page of the site
         if ($page_info['file'] === "index.php" && empty($editOnlyOwnPages)) {
             echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
-            if (chkcpecprm('pageedit', 'edit') || isadmin('', 101)) {
+            if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a><hr>';
             } 
         } else {
             if (empty($editOnlyOwnPages) || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                 echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
-                if (chkcpecprm('pageedit', 'edit') || isadmin('', 101) || $page_info['crtdby'] == $user_id || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+                if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101) || $page_info['crtdby'] == $user_id || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                     echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 } 
-                if (chkcpecprm('pageedit', 'del') || isadmin('', 101)) {
+                if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
                     echo ' | <a href="files.php?action=poddel&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
                 } 
-                if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || isadmin('', 101))) {
+                if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
                     echo ' | <a href="procfiles.php?action=publish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
                 } 
-                if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || isadmin('', 101))) {
+                if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
                     echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
                 } 
                 echo '<hr />';
@@ -185,12 +184,12 @@ if ($action == "show") {
         $pageData = new Page;
         $page_info = $pageData->select_page($page_id);
 
-        if (!chkcpecprm('pageedit', 'show') && !isadmin('', 101)) {
+        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
 
-        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !isadmin('', 101)) {
+        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -217,10 +216,10 @@ if ($action == "show") {
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
         echo ' | Page type: ' . $post_type;
 
-        if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || isadmin('', 101))) {
+        if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
             echo ' | <a href="procfiles.php?action=publish&amp;file=' . $file . '">[Publish]</a>';
         } 
-        if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || isadmin('', 101))) {
+        if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
             echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $file . '">[Unpublish]</a>';
         }
         echo '</p>';
@@ -249,7 +248,7 @@ if ($action == "show") {
         */
 
         echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['edit'] . '</a><br />';
-        if (chkcpecprm('pageedit', 'del') || isadmin('', 101)) {
+        if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
         echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a><br />';
         }
     } 
@@ -274,12 +273,12 @@ if ($action == "edit") {
     if ($checkPage == true) {
         $page_info = $pageEditor->select_page($page_id);
 
-        if (!chkcpecprm('pageedit', 'show') && !isadmin('', 101)) {
+        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
 
-        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !isadmin('', 101)) {
+        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -335,11 +334,10 @@ if ($action == "edit") {
         echo '<br /><br />';
 
         echo '<br /><button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button></form><hr>';
-        echo '<br /><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a><br />';
-        if (empty($editOnlyOwnPages)) {
-            echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['pagetitle'] . '</a><br />';
-        } 
-        echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a><br />'; // update lang
+        echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
+
+        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['pagetitle'] . '</a>';
+        echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
         
     } else {
         include_once"../themes/$config_themes/index.php";
@@ -349,14 +347,14 @@ if ($action == "edit") {
 } 
 // edit meta tags
 if ($action == "headtag") {
-    if (!chkcpecprm('pageedit', 'show') && !isadmin('', 101)) {
-        header("Location: index.php?isset=ap_noaccess");
-        exit;
+
+    if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
+        redirect_to("index.php?isset=ap_noaccess");
     }
 
     $page_info = $pageEditor->select_page($page_id);
 
-    if (!chkcpecprm('pageedit', 'edit') && !isadmin('', 101) && $page_info['crtdby'] != $user_id) {
+    if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -432,7 +430,7 @@ if ($action == "headtag") {
         $show_up_file = $file;
     } 
 
-    echo '<p>Updating file ' . $show_up_file . '</p>'; // update lang 
+    echo '<legend>Updating file ' . $show_up_file . '</legend>'; // update lang 
 
     echo '<form action="procfiles.php?action=editheadtag&amp;file=' . $file . '" name="form" method="POST">';
 
@@ -468,15 +466,22 @@ if ($action == "headtag") {
             </p>
 
 <?php
-    echo '<textarea cols="80" rows="30" name="text_files">';
+	echo '<label for="text"></label>';
+    echo '<textarea cols="80" rows="30" name="text_files" id="text">';
     echo $page_info['headt'];
     echo '</textarea>';
+
+	echo '<label for="image">Default image:</label>';
+    echo '<input type=text" name="image" id="image" value="' . $page_info['default_img'] . '">';
+
     echo '<br />
-            <input type="submit" value="' . $lang_home['save'] . '"></form><hr />';
+            <button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button>
+
+            </form><hr />';
 } 
 
 if ($action == 'mainmeta') {
-    if (!isadmin('', 101)) {
+    if (!$users->is_administrator(101)) {
         header("Location: ../?isset=ap_noaccess");
         exit;
     } 
@@ -503,7 +508,7 @@ if ($action == 'mainmeta') {
 } 
 
 if ($action == 'renamepg') {
-    if (!isadmin('', 101)) {
+    if (!$users->is_administrator(101)) {
         header("Location: ../?isset=ap_noaccess");
         exit;
     }
@@ -530,7 +535,7 @@ if ($action == 'renamepg') {
 } 
 
 if ($action == "new") {
-    if (!chkcpecprm('pageedit', 'insert') && !isadmin('', 101)) {
+    if (!chkcpecprm('pageedit', 'insert') && !$users->is_administrator(101)) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -620,7 +625,7 @@ if ($action == "new") {
 
 // confirm that you want to delete a page
 if ($action == "poddel") {
-    if (!chkcpecprm('pageedit', 'del') && !isadmin('', 101)) {
+    if (!chkcpecprm('pageedit', 'del') && !$users->is_administrator(101)) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -641,9 +646,8 @@ if ($action == "poddel") {
 } 
 
 if ($action == "pagelang") {
-    if (!isadmin('', 101)) {
-        header("Location: index.php?isset=ap_noaccess");
-        exit;
+    if (!$users->is_administrator(101)) {
+        redirect_to("index.php?isset=ap_noaccess");
     } 
 
     $id = check($_GET['id']);
@@ -671,26 +675,26 @@ if ($action == "pagelang") {
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
 } 
 
-if ($action != "new" && (chkcpecprm('pageedit', 'insert') || isadmin('', 101))) {
-    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_apfiles['newpage'] . '</a><br />';
+if ($action != "new" && (chkcpecprm('pageedit', 'insert') || $users->is_administrator(101))) {
+    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_apfiles['newpage'] . '</a>';
 } 
-if (isadmin('', 101) && ($action == 'edit' || $action == 'show')) {
-    echo '<a href="files.php?action=pagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a><br />';
+if ($users->is_administrator(101) && ($action == 'edit' || $action == 'show')) {
+    echo '<a href="files.php?action=pagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
 } 
-if (isadmin('', 101)) {
-    echo '<a href="files.php?action=mainmeta" class="btn btn-outline-primary sitelink">Head (meta) tags on all pages</a><br />';
+if ($users->is_administrator(101)) {
+    echo '<a href="files.php?action=mainmeta" class="btn btn-outline-primary sitelink">Head (meta) tags on all pages</a>';
 } // update lang
-if (isadmin()) {
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">Search</a><br />';
+if ($users->is_administrator()) {
+    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">Search</a>';
 } 
 if (!empty($action)) {
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a><br />';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a>';
 } 
 if ($action != "faq") {
     // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $lang_apfiles['faq'] . '</a>';
-} 
-echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
+}
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/foot.php";
 
