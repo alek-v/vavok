@@ -1,5 +1,7 @@
 <?php 
 // (c) vavok.net
+// todo: rewrite whole page
+
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 

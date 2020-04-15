@@ -1,6 +1,7 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
 // modified: 15.04.2020. 23:50:28
+// todo: rewrite whole page
 
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
