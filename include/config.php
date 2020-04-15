@@ -1,5 +1,8 @@
 <?php
-// (c) vavok.net
+// Aleksandar Vranešević - (c) vavok.net
+// modified: 16.04.2020. 0:34:14
+
+
 $con_text = file_get_contents(BASEDIR . "used/config.dat");
 $con_data = explode("|", $con_text);
 
@@ -66,6 +69,7 @@ $config = array(
 
 // advanced manual settings
 $config["rssIcon"] = 0; // RSS icon
+$config["timeZone"] = empty($config["timeZone"]) ? $config["timeZone"] = 0 : $config["timeZone"]; // check is there timezone number set
 $config["siteTime"] = time() + ($config["timeZone"] * 3600); 
 $config["homeBase"] = str_replace("http://", "", $config["homeUrl"]);
 $config["homeBase"] = str_replace("https://", "", $config["homeBase"]);
