@@ -6,6 +6,7 @@
 - Update .htaccess file updated to show blog pages
 - Update improved navigation
 - Update function page_exists() in Page.class return page id if page exists
+- Update function select_page() in Page.class update page views
 - Update pages/pages.php with new functions
 
 
