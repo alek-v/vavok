@@ -1,5 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
+// updated: 15.04.2020. 21:24:17
 
 include_once"../include/strtup.php";
 
@@ -23,10 +24,13 @@ $loadPage = new Page;
 
 // check of there is current page with user's language
 if ($loadPage->page_exists('', "pname='" . $pg . "' AND lang='" . $ln_loc . "'")) {
-	$page_data = $db->get_data('pages', "pname='" . $pg . "' AND lang='" . $ln_loc . "'", '*');
-} elseif ($loadPage->page_exists('', "pname='" . $pg . "'")) {
-	// get page if there is no user's language page
-	$page_data = $db->get_data('pages', "pname='" . $pg . "'", '*');
+
+	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='" . $pg . "' AND lang='" . $ln_loc . "'"));
+
+} elseif ($loadPage->page_exists('', "pname='" . $pg . "'")) { // get page if there is no user's language page
+	
+	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='" . $pg . "'"));
+
 } else {
 // error 404
 // todo: fix error reporting
