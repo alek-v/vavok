@@ -1,4 +1,5 @@
 # Vavok v1.4.1
+- Added files for creating new pages
 - Added option to show page as a blog post
 - Added page pages/blog.php
 - Added view counter for pages
