@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 15.04.2020. 21:24:17
+// updated: 16.04.2020. 20:38:46
 
 include_once"../include/strtup.php";
 
@@ -16,7 +16,7 @@ if ($pg == 'index' || empty($pg)) {
 // when user is redirected from http:// to https:// page
 // it redirect to non-rewriten url
 if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) {
-	redirect_to('page/' . $pg . '/');
+	redirect_to(BASEDIR . 'page/' . $pg . '/');
 }
 
 // load page with language specified
