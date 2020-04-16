@@ -1,3 +1,10 @@
+# Vavok v1.4.1.1
+- Update add missing open graph tags
+- Update page for changing language updated
+- Bugfix when page is redirected
+
+
+
 # Vavok v1.4.1
 - Added files for creating new pages
 - Added option to show page as a blog post
