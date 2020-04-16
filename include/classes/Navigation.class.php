@@ -1,6 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
-// updated 13.04.2020. 5:03:19
+// updated 16.04.2020. 1:32:13
 
 class Navigation {
 	public $itemsPerPage;
@@ -8,7 +8,12 @@ class Navigation {
 	public $page;
 
 	public function __construct($itemsPerPage, $totalItems, $page) {
-		
+
+		// check page nuber
+		if (empty($page) || $page < 1) {
+			$page = 1;
+		}
+
 		$this->items_per_page = $itemsPerPage; // items per page
 		$this->total_items = $totalItems; // total items
 		$this->current_page = $page; // number of current page
@@ -86,7 +91,7 @@ class Navigation {
 	    $navigation = '<div id="v_pagination">';
 
 	    // prev link
-	    if ($total < ($items_per_page * $page)) {
+	    if ($page > 1 && $items_per_page > $total) {
 	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $lang_home['prev'] . '</a>';
 	    } else {
 	        $navigation .= '<span class="next_v_pagination">' . $lang_home['prev'] . '</span>';
