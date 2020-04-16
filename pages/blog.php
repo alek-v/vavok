@@ -1,5 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
+// updated: 16.04.2020. 2:48:29
 
 include"../include/strtup.php";
 
@@ -60,6 +61,19 @@ switch ($pg) {
 
 		// page navigation
 		$total_posts = $db->count_row('pages', "type='post'");
+
+
+		// if there is no posts
+		if ($total_posts < 1) {
+
+			echo '<p><img src="../images/img/reload.gif" alt="" /> There is nothing here</p>';
+
+			// page footer
+			include"../themes/" . $config_themes . "/foot.php";
+
+			break;
+
+		}
 
 		// start navigation
 		$navi = new Navigation($items_per_page, $total_posts, $page);
