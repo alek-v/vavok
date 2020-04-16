@@ -1,18 +1,17 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 05.04.2020. 17:52:07
+// modified: 16.04.2020. 20:46:02
 
 require_once"../include/strtup.php";
 
-$lang = $_GET['lang'];
-if (empty($lang)) {
-	$lang = $_POST['lang'];
-}
-if (isset($_GET['ptl']) && !empty($_GET['ptl'])) {
-	$ptl = urldecode($_GET['ptl']);
-}
+$language = isset($_GET['lang']) ? check($_GET['lang']) : ''; // get language
 
-$language = check($lang);
+if (empty($language)) { $language = $_POST['lang']; }
+
+
+// page to load after changing language
+$ptl = isset($_GET['ptl']) && !empty($_GET['ptl']) ? urldecode($_GET['ptl']) : ''; 
+
 
 if (!file_exists("../lang/" . $language . "/index.php")) {
 	redirect_to("../index.php?error=no_lang");
@@ -21,21 +20,24 @@ if (!file_exists("../lang/" . $language . "/index.php")) {
 }
 
 if (!empty($language)) {
+
+	// unset current language
 	$_SESSION['lang'] = "";
 	unset($_SESSION['lang']);
+
+	// set new language
 	$_SESSION['lang'] = $language;
-	}
+
+}
 
 // ignore language url's, /index.php will do the work
-if ($ptl == '/en/' || $ptl == '/sr/' || $ptl == '/fr/' || $ptl == '/de/' || $ptl == '/ru/' || $ptl == '/js/' || $ptl == '/cms/') {
-$ptl = '';
+if ($ptl == '/en/' || $ptl == '/sr/' || $ptl == '/fr/' || $ptl == '/de/' || $ptl == '/ru/' || $ptl == '/js/') {
+	$ptl = '';
 }
 
 if (!empty($ptl)) {
-header ("Location: " . $ptl);
-exit;
+	redirect_to($ptl);
 } else {
-header ("Location: ../");
-exit;
+	redirect_to("../");
 }
 ?>
