@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 10.04.2020. 22:05:00
+// modified: 17.04.2020. 0:56:31
 
 $language = 'english';
 $ln_loc = 'en';
@@ -85,6 +85,7 @@ $lang_home['notloged'] = "You are not logged in, in order to see this page you m
 $lang_home['next'] = "Next";
 $lang_home['prev'] = "Prev";
 $lang_home['contact'] = "Contact";
+$lang_home['readmore'] = "Read more";
 
 // cookie consent
 $lang_home['cookies'] = "Cookies."; // Title
