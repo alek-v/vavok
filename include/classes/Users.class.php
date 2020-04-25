@@ -155,7 +155,7 @@ class Users {
 	// user online status
 	function user_online($login) {
 	    $xuser = $this->getidfromnick($login);
-	    $statwho = '<font color="#FF0000">[Off]</font>';
+	    $statwho = '<font color="#CCCCCC">[Off]</font>';
 
 	    $result = $this->db->count_row('online', 'user="' . $xuser . '"');
 
