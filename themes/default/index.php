@@ -1,5 +1,5 @@
 <?php 
-// (c) vavok.net
+// (c) Aleksandar Vranešević - vavok.net
 
 // custom page tempates directory for this theme
 // if you want to use custom template dir
@@ -35,34 +35,36 @@ include BASEDIR . "include/load_header.php";
 ?>
 </head>
 <body class="d-flex flex-column">
-  <nav class="navbar navbar-expand-lg" id="mainNav">
-    <div class="container">
-      <a class="navbar-brand js-scroll-trigger" style="text-transform: lowercase;" href="/"><img src="/themes/default/images/logo.png" height="48" alt="logo" /></a>
+		<nav class="navbar">
+			<div class="container">
+				<div class="my_navigation row">
+					<div class="col-8">
+      					<a class="navbar-brand js-scroll-trigger" style="text-transform: lowercase;" href="/"><img src="/themes/default/images/logo.png" height="48" alt="logo" /></a>
 
-    <?php
+					    <?php
 
-    if ($users->is_reg()) {
-        echo '<a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a>';
-        echo ' <a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a>';
-        if ($users->is_administrator()) {
-            echo' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a>';
-        } 
-        if ($users->is_moderator()) {
-            echo ' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a>';
-        } 
-    } else {
-        echo '<a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a>';
-        echo '<a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $lang_home['register'] . '</a>';
-        echo '<a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $lang_home['lostpass'] . '</a>';
-    } 
+					    if ($users->is_reg()) {
+					        echo '<a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a>';
+					        echo ' <a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a>';
+					        if ($users->is_administrator()) {
+					            echo' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a>';
+					        } 
+					        if ($users->is_moderator()) {
+					            echo ' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a>';
+					        } 
+					    } else {
+					        echo '<a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a>';
+					        echo '<a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $lang_home['register'] . '</a>';
+					        echo '<a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $lang_home['lostpass'] . '</a>';
+					    } 
 
-    ?>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <div class="navbar-nav ml-auto">
-            <a class="btn btn-primary sitelink" href="/mail/"><?php echo $lang_home['contact']; ?></a>
-        </div>
-      </div>
-    </div>
-  </nav>
+					    ?>
+					</div>
+				    <div class="col-4 text-right">
+            			<a class="btn btn-primary sitelink" href="/mail/"><?php echo $lang_home['contact']; ?></a>
+				    </div>
+			    </div>
+			</div>
+		</nav>
 
 <div class="container">

@@ -1,11 +1,8 @@
 @charset "utf-8";
 
-/* blog index <h1>, <h2>, <h3> */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
-
 html, body {
 	font-family: arial, helvetica, sans-serif;
-	background: #fffff;
+	background: #ffffff;
 	color: #666666;
 	width: 100%;
 	height: 100%;
@@ -31,10 +28,8 @@ textarea {
 
 /* links */
 
-
 /* homepage link */
 .homepage {}
-
 
 /* site navigation link */
 .sitelink {
@@ -42,7 +37,13 @@ textarea {
 }
 
 
-/* navigation */
+/* site navigation */
+.my_navigation {
+  width: 100%;
+}
+
+
+/* page navigation */
 #v_pagination {
 	display:block;
 	text-align:left;
@@ -122,11 +123,30 @@ textarea {
 	text-align: justify;
 }
 
-.blog-index {
+.blog-index, .blog-page {
 	box-shadow: 0px 0px 6px #ccc;
 	margin-bottom: 80px;
+}
+
+.blog-index p {
+	max-width: 850px;
 	text-align: justify;
 }
+
+.blog-page p {
+	max-width: 850px;
+	text-align: justify;
+}
+
+.blog-page img {
+	float: left;
+	padding: 10px 15px;
+}
+
+.blog-index img {
+	display: none;
+}
+
 
 .index-blog-post, .blog-page {
 	background-color: rgba(241, 241, 243, 0.3);
@@ -213,12 +233,23 @@ textarea {
 	padding: 20px 20px 0px 20px;
 }
 
+.blog-index h1, h2, h3, h4, h5, h6 {
+	font-size: 1.3em;
+}
+
 .blog-date {
 	margin: 10px -10px 30px 0px;
 }
 
-.blog-title h1, h2, h3 {
+.blog-title h1, h2, h3, h4, h5, h5 {
 	font-size: 1.8em;
 }
+
+.blog-navigation {
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+
 
 }
