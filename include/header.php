@@ -58,11 +58,11 @@ if (!empty($_SESSION['log'])) {
     // else
     else {
         if ($users->user_device() == 'phone' && $config["redbrow"] == 1) {
-            header("Location: " . $connectionProtocol . "m." . $config["homeBase"] . $request_uri); 
+            header("Location: " . transfer_protocol() . "m." . $config["homeBase"] . $request_uri); 
             // header("Location: http://m.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
             exit;
         } elseif ($users->user_device() == 'computer' && $config["redbrow"] == 1) {
-            header("Location: " . $connectionProtocol . "www." . $config["homeBase"] . $request_uri); 
+            header("Location: " . transfer_protocol() . "www." . $config["homeBase"] . $request_uri); 
             // header("Location: http://www.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
             exit;
         } elseif ($users->user_device() == 'phone') {

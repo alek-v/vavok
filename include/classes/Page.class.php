@@ -1,7 +1,7 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
 // class for managing pages
-// updated 15.04.2020. 21:24:06
+// updated 25.04.2020. 20:08:30
 
 
 class Page {
@@ -11,7 +11,8 @@ class Page {
 		global $db, $user_id;
 
 		$this->table_prefix = getConfiguration('tablePrefix'); // table prefix
-		$this->db = $db;
+		$this->transfer_protocol = transfer_protocol(); // transfer protocol
+		$this->db = $db; // database
 		$this->user_id = $user_id; // user id with active login
 	}
 
@@ -157,6 +158,22 @@ class Page {
 		$pageEditor = str_replace('{@BASEDIR}', BASEDIR, $pageEditor);
 
 		return $pageEditor;
+	}
+
+	// return url for facebook share, twitter etc
+	function media_page_url($host, $request) {
+		$r = preg_replace('/&page=(\d+)/', '', $request);
+		$r = preg_replace('/page=(\d+)/', '', $r);
+		$r = str_replace('&page=last', '', $r);
+		$r = str_replace('page=last', '', $r);
+		// remove language dir from main page
+		$r = str_replace('/en/', '', $r);
+		$r = str_replace('/sr/', '', $r);
+		// remove index.php from urls to remove double content
+		$r = str_replace('/index.php', '/', $r);
+
+		// return url
+		return $this->transfer_protocol . $host . $r;
 	}
 
 }

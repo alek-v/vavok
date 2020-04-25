@@ -98,7 +98,7 @@ if ($step == 'third') {
     <label for="email">Email:</label><br />
     <input name="email" id="email" maxlength="100" /><br />
     <label for="osite">Site address:</label><br />
-    <input name="osite" id="osite" value="<?php echo $connectionProtocol . $config_srvhost; ?>" maxlength="100" /><br />
+    <input name="osite" id="osite" value="<?php echo transfer_protocol() . $config_srvhost; ?>" maxlength="100" /><br />
     <input value="Continue..." type="submit" />
     </fieldset>
     </form>

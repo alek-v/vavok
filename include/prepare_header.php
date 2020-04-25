@@ -1,6 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - https://vavok.net
-// modified: 16.04.2020. 20:41:05
+// modified: 19.04.2020. 1:21:06
 // prepare headers for page
 
 // get page title
@@ -43,6 +43,8 @@ if (!stristr($phpself, 'install/install.php')) {
         // first we check is there a page with language we use
         $vk_page = $db->get_data('pages', "pname='index' AND lang='" . $ln_loc . "'");
 
+        $head_tag .= $vk_page['headt'];
+
         if (empty($vk_page['headt'])) {
             // load default index page title
             $vk_page = $db->get_data('pages', "pname='index'");
@@ -61,7 +63,7 @@ if (!empty($genHeadTag)) { $head_tag .= $genHeadTag; }
 // check for missing tags
 
 // tell bots what is our preferred page
-if (!stristr($head_tag, 'rel="canonical"') && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . $connectionProtocol . $config_srvhost . '/page/' . $pg . '/" />'; }
+if (!stristr($head_tag, 'rel="canonical"') && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . transfer_protocol() . $config_srvhost . '/page/' . $pg . '/" />'; }
 
 // add missing open graph tags
 if (!strstr($head_tag, 'og:type')) { $head_tag .= "\n" . '<meta property="og:type" content="website" />'; }

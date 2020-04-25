@@ -31,7 +31,7 @@ if (is_reg()) {
             setcookie(session_name(), '');
             session_destroy();
 
-            header("Location: " . $connectionProtocol . $config_srvhost . "/input.php?log=" . getnickfromid($user_id) . "&pass=" . $newpar . "&isset=editpass");
+            header("Location: " . transfer_protocol() . $config_srvhost . "/input.php?log=" . getnickfromid($user_id) . "&pass=" . $newpar . "&isset=editpass");
             exit;
         } else {
             header ("Location: profil.php?isset=nopass");

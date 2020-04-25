@@ -1,6 +1,6 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranesevic
-// modified: 02.04.2020. 23:01:51
+// (c) Aleksandar Vranešević - vavok.net
+// modified: 25.04.2020. 20:32:01
 
 if (isset($_SERVER['PHP_SELF'])) {
     $phpself = $_SERVER['PHP_SELF'];
@@ -25,7 +25,9 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
         if ($doslog != "." and $doslog != "..") {
             $file_array_filemtime = filemtime(BASEDIR . "used/datados/$doslog");
             if ($file_array_filemtime < ($time-60)) {
-                unlink(BASEDIR . "used/datados/$doslog");
+                if (file_exists(BASEDIR . "used/datados/$doslog")) {
+                    unlink(BASEDIR . "used/datados/$doslog");
+                }
             } 
         } 
     } 
@@ -42,7 +44,7 @@ if (file_exists($logfiles)) {
     } 
 } 
 
-$write = '|' . $config["siteTime"] . '|Time: ' . date("Y-m-d / H:i:s", $config["siteTime"]) . '|Browser: ' . $userBrowser . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
+$write = '|' . $config["siteTime"] . '|Time: ' . date("Y-m-d / H:i:s", $config["siteTime"]) . '|Browser: ' . $users->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
 $fp = fopen($logfiles, "a+");
 flock ($fp, LOCK_EX);
 fputs($fp, "$write\r\n");

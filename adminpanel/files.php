@@ -231,19 +231,19 @@ if ($action == "show") {
         if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
         	if (!empty($page_info['lang'])) { $url_lang = strtolower($page_info['lang']) . '/'; } else { $url_lang = ''; }
 
-        	echo '<a href="' . $connectionProtocol . $config_srvhost . '/' . $url_lang . '" target="_blank">' . $connectionProtocol . $config_srvhost . '/' . $url_lang . '</a>';
+        	echo '<a href="' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '" target="_blank">' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '</a>';
         	$is_index = 'true';
  		} else {
-	        echo '<br /><a href="' . $connectionProtocol . $config_srvhost . '/page/' . $showname . '/" target="_blank">' . $connectionProtocol . $config_srvhost . '/page/' . $showname . '/</a><br />';
+	        echo '<br /><a href="' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/" target="_blank">' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/</a><br />';
         }
 
         echo '</p>';
 
         /* show page
         if ($is_index == 'true') {
-        	echo '<iframe src="' . $connectionProtocol . $config_srvhost . '/"></iframe>';
+        	echo '<iframe src="' . transfer_protocol() . $config_srvhost . '/"></iframe>';
         } else {
-        echo '<iframe src="' . $connectionProtocol . $config_srvhost . '/page/' . $showname . '"></iframe>';
+        echo '<iframe src="' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '"></iframe>';
     	}
         */
 

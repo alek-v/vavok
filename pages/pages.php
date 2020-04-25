@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 16.04.2020. 20:38:46
+// updated: 25.04.2020. 20:32:14
 
 include_once"../include/strtup.php";
 
@@ -64,7 +64,7 @@ include"../themes/" . $config_themes . "/index.php";
 if ($page_data['published'] == 1 && !$users->is_administrator()) {
 	echo '<p>Requested page is not published.</p>'; // update lang
 	echo '<p><br /><br />';
-	echo '<a href="' . $connectionProtocol . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+	echo '<a href="' . transfer_protocol() . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include"../themes/$config_themes/foot.php";
 exit;
@@ -75,10 +75,11 @@ echo $page_data['content'];
 
 // facebook comments
 if ($config["pgFbComm"] == 1) {
-    echo '<div class="fb-comments" data-href="' . $media_page_url . '" data-width="470" data-num-posts="10"></div>';
+	$pages = new Page;
+    echo '<div class="fb-comments" data-href="' . $pages->media_page_url($config_srvhost, $clean_requri) . '" data-width="470" data-num-posts="10"></div>';
 }
 
-echo '<p><a href="' . $connectionProtocol . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="' . transfer_protocol() . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 // load footer
 include"../themes/$config_themes/foot.php";

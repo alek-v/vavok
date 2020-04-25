@@ -1,12 +1,13 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 12.04.2020. 22:38:43
+// updated: 25.04.2020. 19:42:58
 
 // time when execution of the script has started
 $start_time = microtime(true);
 
-// current time
-$time = time();
+// session
+session_name("sid");
+session_start();
 
 // vavok cms settings
 $config_debug = 1;
@@ -19,14 +20,11 @@ if ($config_debug == 0) {
     ini_set('display_errors', '1');
 }
 
-// session
-session_name("sid");
-session_start();
 
+$time = time(); // current time
 $config_srvhost = $_SERVER['HTTP_HOST'];
 $config_requri = urldecode($_SERVER['REQUEST_URI']);
 $phpself = $_SERVER['PHP_SELF'];
-
 $subself = substr($phpself, 1);
 
 // clean URL (REQUEST_URI)
@@ -60,58 +58,10 @@ if (!defined('HOMEDIR')) {
 
 require_once BASEDIR . "include/config.php"; // load website configuration
 
-// detect connection protocol HTTPS or HTTP
-if (empty($config['transferProtocol']) || $config['transferProtocol'] == 'auto') {
-    if (!empty($_SERVER['HTTPS'])) {
-        $connectionProtocol = 'https://';
-    } else {
-        $connectionProtocol = 'http://';
-    }
-} elseif ($config['transferProtocol'] == 'HTTPS') {
-    $connectionProtocol = 'https://';
-} else {
-    $connectionProtocol = 'http://';
-}
-
-// full website main address
-$website_home_addr = $connectionProtocol . $config_srvhost;
-
-// media page url (fb, g+, etc..) to avoid duplicated pages
-// remove number of page (forums, news, etc..)
-function mediaPageUrl($host, $request) {
-$r = preg_replace('/&page=(\d+)/', '', $request);
-$r = preg_replace('/page=(\d+)/', '', $r);
-$r = str_replace('&page=last', '', $r);
-$r = str_replace('page=last', '', $r);
-// remove language dir from main page
-$r = str_replace('/en/', '', $r);
-$r = str_replace('/sr/', '', $r);
-// remove index.php from urls to remove double content
-$r = str_replace('/index.php', '/', $r);
-
-// keep HTTP protocol to count old likes
-$media_page_url = 'http://' . $host . $r;
-
-return $media_page_url;
-}
-
-// keep HTTP protocol to count old likes
-$media_page_url = mediaPageUrl($config_srvhost, $clean_requri);
-$media_like_url = $media_page_url; // deprecated - 10.5.2017. 22:24:59
-
 // autoload classes
 spl_autoload_register(function ($class) {
     include BASEDIR . "include/classes/" . $class . ".class.php";
 });
-
-// visitor's browser - deprecated 12.04.2020. 22:30:30
-if(ini_get("browscap")) {
-	$userBrowser = get_browser(null, true);
-} else {
-	$detectBrowser = new BrowserDetection();
-	$userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
-}
-if (empty($userBrowser)) { $userBrowser = 'Not detected'; }
 
 // time zone
 date_default_timezone_set('UTC');
@@ -120,7 +70,10 @@ date_default_timezone_set('UTC');
 @ini_set('session.use_trans_sid', false);
 
 // detect bots and spiders
-$user_agents = $_SERVER['HTTP_USER_AGENT'];
+$user_agents = '';
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agents = $_SERVER['HTTP_USER_AGENT'];
+}
 if (stristr($user_agents, 'Yandex')) {
     $searchbot = 'Yandex';
 } elseif (stristr($user_agents, 'Slurp')) {

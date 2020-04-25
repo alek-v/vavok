@@ -1152,4 +1152,26 @@ function login_attempt_count($seconds, $username, $ip, $db) {
         echo "Error: " . $e;
     }
 }
+
+// get transfer protocol https or http
+function transfer_protocol() {
+
+    if (empty(getConfiguration('transferProtocol')) || getConfiguration('transferProtocol') == 'auto') {
+        if (!empty($_SERVER['HTTPS'])) {
+            $connectionProtocol = 'https://';
+        } else {
+            $connectionProtocol = 'http://';
+        }
+    } elseif (getConfiguration('transferProtocol') == 'HTTPS') {
+        $connectionProtocol = 'https://';
+    } else {
+        $connectionProtocol = 'http://';
+    }
+
+    return $connectionProtocol;
+}
+
+function website_home_address() {
+    return transfer_protocol() . $_SERVER['HTTP_HOST'];
+}
 ?>

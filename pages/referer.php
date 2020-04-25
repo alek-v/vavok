@@ -30,7 +30,7 @@ if ($config["showRefPage"] == "1" || isadmin()) {
     for ($i = $start; $i < $end; $i++) {
         $data = explode("|", $file[$i]);
         $datime = date("H:i:s", $data[1]);
-        echo '<b><a href="' $connectionProtocol . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $lang_page['visits'] . ': ' . $data[3] . '<br /><hr />';
+        echo '<b><a href="' transfer_protocol() . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $lang_page['visits'] . ': ' . $data[3] . '<br /><hr />';
     } 
 
     page_navigation('referer.php?', $config["dataOnPage"], $page, $total);

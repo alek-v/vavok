@@ -94,7 +94,7 @@ if ($str1 > 20 || $str2 > 20) {
                             echo $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br />' . $lang_home['pass'] . ': <b>' . $par . '</b><br />' . $lang_reguser['loginnow'] . '<br />';
                             echo '<br /><img src="../images/img/reload.gif" alt=""> ';
                             if (empty($pagetoload)) {
-                            echo '<b><a href="' . $connectionProtocol . $config_srvhost . '/pages/input.php?log=' . $log . '&amp;pass=' . $par . '&amp;cookietrue=1">' . $lang_reguser['entersite'] . '</a></b><br /><br />';
+                            echo '<b><a href="' . transfer_protocol() . $config_srvhost . '/pages/input.php?log=' . $log . '&amp;pass=' . $par . '&amp;cookietrue=1">' . $lang_reguser['entersite'] . '</a></b><br /><br />';
                           } else {
                           	echo '<b><a href="' . $pagetoload . '">Continue</a></b><br /><br />'; // update lang
 
