@@ -1,6 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
-// updated: 16.04.2020. 2:48:29
+// updated: 18.04.2020. 19:54:14
 
 include"../include/strtup.php";
 
@@ -28,14 +28,17 @@ switch ($pg) {
 		// generate page
 		$post = new PageGen('pages/blog/post.tpl');
 
-		// set page header (title)
-		$post->set('title', $post_data['tname']);
-
 		// content
 		$post->set('content', getbbcode($post_data['content']));
 
 		// back link
 		$post->set('back', getbbcode($lang_home['back']));
+
+		// day created
+		$post->set('date-created-day', date('d', $post_data['created']));
+
+		// month created
+		$post->set('date-created-month', mb_substr($ln_all_month[date('n', $post_data['created']) - 1], 0, 3));
 
 		// page title
 		$my_title = $post_data['tname'];
@@ -52,6 +55,9 @@ switch ($pg) {
 		break;
 	
 	default:
+
+		// page title
+		$my_title = 'Blog';
 		
 		// page header
 		include"../themes/" . $config_themes . "/index.php";
@@ -97,9 +103,18 @@ switch ($pg) {
 				$content = getbbcode(implode(' ', array_slice(explode(' ', $key['content']), 0, 120))) . '...';
 			}
 
+			// replace html headings
+			$content = preg_replace("/<h[1-2]>(.*)<\/h[1-2]>/i", '<h3>$1</h3>', $content);
+
+			// day created
+			$page_posts->set('date-created-day', date('d', $key['created']));
+
+			// month created
+			$page_posts->set('date-created-month', mb_substr($ln_all_month[date('n', $key['created']) - 1], 0, 3));
+
 			$page_posts->set('post_text', $content);
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
-			$page_posts->set('read_more_title', 'Read more');
+			$page_posts->set('read_more_title', $lang_home['readmore']);
 
 
 			// blog post objects

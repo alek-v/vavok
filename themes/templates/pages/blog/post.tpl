@@ -1,18 +1,13 @@
 <div class="blog-page">
-	<div class="row blog-title">
-		<div class="col-10">
-			<h1>{@title}}</h1>
-		</div>
-		<div class="col-2">
+	<div class="row">
+		<div class="col">
 			<div class="rounded-circle blog-date">
-				26<br />Jun
+				{@date-created-day}}<br />{@date-created-month}}
 			</div>
 		</div>
 	</div>
 	<div class="blog-content">
-		<p>
-			{@content}}
-		</p>
+		{@content}}
 	</div>
 	<div>
 		<p>

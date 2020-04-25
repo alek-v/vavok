@@ -6,15 +6,13 @@
 		</div>
 		<div class="col-2">
 			<div class="rounded-circle blog-date">
-				26<br />Jun
+				{@date-created-day}}<br />{@date-created-month}}
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
-		<p>
-			{@post_text}}
-		</p>
+		{@post_text}}
 	</div>
 	<div class="row readmore">
 		<p>
