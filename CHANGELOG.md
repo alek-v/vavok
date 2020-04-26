@@ -8,6 +8,7 @@
 - Update connection protocol and browser functions
 
 
+
 # Vavok v1.4.1
 - Added files for creating new pages
 - Added option to show page as a blog post
