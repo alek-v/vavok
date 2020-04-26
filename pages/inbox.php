@@ -2,9 +2,8 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if (!is_reg()) {
-    header ("Location: ../");
-    exit;
+if (!$users->is_reg()) {
+    redirect_to("Location: ../");
 } 
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -14,6 +13,8 @@ $last_notif = $db->count_row('notif', "uid='" . $user_id . "' AND type='inbox'")
 if ($last_notif > 0) {
     $db->update('notif', 'lstinb', 0, "uid='" . $user_id . "' AND type='inbox'");
 } 
+
+$genHeadTag = '<meta name="robots" content="noindex">'; // dont index this
 
 $my_title = $lang_home['inbox'];
 require_once"../themes/$config_themes/index.php";
