@@ -2,7 +2,8 @@
 - Update add missing open graph tags
 - Update page for changing language updated
 - Update blog page view
-- Update default theme
+- Update default theme, new navigation
+- Update navigation improved
 - Bugfix when page is redirected
 - Update connection protocol and browser functions
 
