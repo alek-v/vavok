@@ -7,6 +7,12 @@
 
 > Feel free to contribute
 
+# Install
+
+> Go to your_site.com/install/ and follow instructions.
+
+>
+
 #
 
 > <strong>Required extensions:</strong>
