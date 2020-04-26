@@ -1,17 +1,13 @@
 <?php
-// (c) v a v o k . n e t
+// (c) Aleksandar Vranešević - vavok.net
+// updated 26.04.2020. 22:35:59
 
 require_once"../include/strtup.php";
 
+$page = isset($_GET['page']) ? check($_GET['page']) : 1;
+
 $my_title = $lang_home['smile'];
 include_once"../themes/$config_themes/index.php";
-
-if (isset($_GET['isset'])) {
-	$isset = check($_GET['isset']);
-	echo '<div align="center"><b><font color="#FF0000">';
-	echo get_isset();
-	echo '</font></b></div>';
-}
 
 
 $dir = opendir (BASEDIR . "images/smiles");
@@ -26,7 +22,7 @@ sort($a);
 $smilesPerPage = 15;
 $total = count($a);
 
-new Navigation($smilesPerPage, $total);
+$limit_start = ($page - 1) * $smilesPerPage;
 
 if ($total < $limit_start + $smilesPerPage) {
     $end = $total;
@@ -45,11 +41,14 @@ for ($i = $limit_start; $i < $end; $i++) {
 } 
 
 
+$navigation = new Navigation($smilesPerPage, $total, $page, 'smiles.php?');
 
-echo Navigation::siteNavigation('smiles.php?', $smilesPerPage, $page, $total);
+echo '<p>';
+echo $navigation->get_navigation();
+echo '</p>';
 
-echo '<br><br>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b><br><br>';
-echo '<img src="../images/img/homepage.gif" alt=""> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<p><br>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b><br><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 
 include_once"../themes/$config_themes/foot.php";

@@ -233,19 +233,16 @@ if ($action == "show") {
 
         	echo '<a href="' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '" target="_blank">' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '</a>';
         	$is_index = 'true';
- 		} else {
+ 		} elseif ($post_type == 'post') {
+
+            echo '<br /><a href="' . transfer_protocol() . $config_srvhost . '/blog/' . $showname . '/" target="_blank">' . transfer_protocol() . $config_srvhost . '/blog/' . $showname . '/</a><br />';
+
+        } else {
 	        echo '<br /><a href="' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/" target="_blank">' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/</a><br />';
         }
 
         echo '</p>';
 
-        /* show page
-        if ($is_index == 'true') {
-        	echo '<iframe src="' . transfer_protocol() . $config_srvhost . '/"></iframe>';
-        } else {
-        echo '<iframe src="' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '"></iframe>';
-    	}
-        */
 
         echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['edit'] . '</a><br />';
         if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
