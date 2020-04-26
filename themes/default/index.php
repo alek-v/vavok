@@ -35,36 +35,47 @@ include BASEDIR . "include/load_header.php";
 ?>
 </head>
 <body class="d-flex flex-column">
-		<nav class="navbar">
-			<div class="container">
-				<div class="my_navigation row">
-					<div class="col-8">
-      					<a class="navbar-brand js-scroll-trigger" style="text-transform: lowercase;" href="/"><img src="/themes/default/images/logo.png" height="48" alt="logo" /></a>
 
-					    <?php
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container container-header">
+	    	<a class="navbar-brand" href="<?php echo HOMEDIR; ?>">
+	    		<img src="/themes/default/images/logo.png" height="30" alt="Logo">
+	  		</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-					    if ($users->is_reg()) {
-					        echo '<a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a>';
-					        echo ' <a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a>';
-					        if ($users->is_administrator()) {
-					            echo' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a>';
-					        } 
-					        if ($users->is_moderator()) {
-					            echo ' <a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a>';
-					        } 
-					    } else {
-					        echo '<a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a>';
-					        echo '<a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $lang_home['register'] . '</a>';
-					        echo '<a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $lang_home['lostpass'] . '</a>';
-					    } 
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+				<?php
 
-					    ?>
-					</div>
-				    <div class="col-4 text-right">
-            			<a class="btn btn-primary sitelink" href="/mail/"><?php echo $lang_home['contact']; ?></a>
-				    </div>
-			    </div>
+				if ($users->is_reg()) {
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a></li>';
+				    if ($users->is_administrator()) {
+				        echo'<li class="nav-item"><a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
+				    } 
+				    if ($users->is_moderator()) {
+				        echo '<li class="nav-item"><a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
+				    } 
+				} else {
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $lang_home['register'] . '</a></li>';
+				    //echo '<li class="nav-item"><a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $lang_home['lostpass'] . '</a></li>';
+				} 
+
+				?>
+
+				</ul>
+				<div class="collapse navbar-collapse nav-contact" id="navbarSupportedContent">
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
+						</li>
+					</ul>
+				</div>
 			</div>
-		</nav>
+		</div>
+	</nav>
 
 <div class="container">
