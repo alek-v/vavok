@@ -23,7 +23,7 @@ if (!empty($_GET['action'])) {
     $action = '';
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if (empty($action)) {
         $chk_photo = $db->select('vavok_about', "uid='" . $user_id . "'", '', 'photo');
 

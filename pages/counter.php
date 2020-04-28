@@ -2,7 +2,7 @@
 // modified: 10.1.2016. 1:35:25
 require_once"../include/strtup.php";
 
-if ($config["showCounter"] == 6 && !isadmin()) {
+if ($config["showCounter"] == 6 && !$users->is_administrator()) {
     header("Location: ../");
     exit;
 }

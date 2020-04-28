@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if ($config["showOnline"] == 0 && (!is_reg() && !isadmin())) {
+if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrator())) {
     header("Location: ../");
     exit;
 } 

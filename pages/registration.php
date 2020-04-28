@@ -167,7 +167,7 @@ background-color: transparent;
 $log = isset($log) ? $log = check($log) : $log = '';
 
 if ($config["openReg"] == "1") {
-	if (is_reg()) {
+	if ($users->is_reg()) {
 		echo '<br>' . $log . ', ' . $lang_reg['againreg'] . '<br>';
 	} else {
 		if (isset($_GET['isset'])) {

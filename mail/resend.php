@@ -33,13 +33,14 @@ if ($page == 'send') {
         $show_profilx = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'regkey');
 
         $checkmail = trim($show_userx['email']);
-				$reg_keyold = trim($show_profilx['regkey']);
+		$reg_keyold = trim($show_profilx['regkey']);
 
         if ($mailsus == $checkmail && !empty($reg_keyold)) {
-require_once '../include/plugins/securimage/securimage.php';
-$securimage = new Securimage();
+            
+            require_once '../include/plugins/securimage/securimage.php';
+            $securimage = new Securimage();
 
-if ($securimage->check($_POST['captcha_code']) == true) {
+            if ($securimage->check($_POST['captcha_code']) == true) {
 
                 $reg_key = time() + 24 * 60 * 60;
 

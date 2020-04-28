@@ -64,7 +64,7 @@ if (empty($action)) {
     // generate page
     $showPage = new PageGen("mail/mail_index.tpl");
 
-    if (!is_reg()) {
+    if (!$users->is_reg()) {
         $usernameAndMail = new PageGen("mail/usernameAndMail_guest.tpl");
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     } else {

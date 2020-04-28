@@ -15,7 +15,7 @@ $inbox_notification = no_br(check($_POST['inbnotif']));
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
-if (!is_reg()) {
+if (!$users->is_reg()) {
 	header("Location: ../index.php?isset=inputoff");
     exit;
 }

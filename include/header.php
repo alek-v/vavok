@@ -71,11 +71,13 @@ if (!empty($_SESSION['log'])) {
             $config_themes = $config["webtheme"];
         } 
     } 
-} 
+}
+
 // if skin not found
 if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
     $config_themes = 'default';
 } 
+
 // language settings
 // use language from session
 if (!empty($_SESSION['lang'])) {
@@ -85,9 +87,9 @@ if (!empty($_SESSION['lang'])) {
 // use browser language
 if (empty($_SESSION['lang']) && empty($user_id)) {
     if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-    $v_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $v_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
     } else {
-    $v_lang = '';
+        $v_lang = '';
     }
 
     switch ($v_lang) {
@@ -126,7 +128,7 @@ if ($config["noCache"] == "0") {
     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 } 
 
-if ($config["siteOff"] == 1 && !strstr($phpself, 'pages/maintenance.php') && !strstr($phpself, 'input.php') && !isadmin() && !strstr($phpself, 'pages/login.php')) {
+if ($config["siteOff"] == 1 && !strstr($phpself, 'pages/maintenance.php') && !strstr($phpself, 'input.php') && !$users->is_administrator() && !strstr($phpself, 'pages/login.php')) {
     header ("Location: " . $config["homeUrl"] . "/pages/maintenance.php");
     exit;
 } 

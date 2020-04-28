@@ -21,7 +21,7 @@ if (!isset($config_kontaktlist)) {
     $config_kontaktlist = '10';
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if ($action == "ign") {
         $todo = check($_GET["todo"]);
         $who = check($_GET["who"]); 

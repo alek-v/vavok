@@ -23,7 +23,7 @@ $session_del = time() + $bz_seconds;
 
 $bz_date = time();
 
-if (!is_reg()) {
+if (!$users->is_reg()) {
     $user_id = 0;
 } 
 $bz_ip = $ip;

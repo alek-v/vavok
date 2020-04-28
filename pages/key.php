@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if (!is_reg()) {
+if (!$users->is_reg()) {
     header ("Location: ../");
     exit;
 }

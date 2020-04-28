@@ -6,7 +6,7 @@ $my_title = $lang_ban['banned'];
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
-if (is_reg()) {
+if ($users->is_reg()) {
     $vavok_userx = $db->select('vavok_users', "id='" . $user_id . "'", '', 'banned');
     $show_prof = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'bantime, bandesc, allban');
 

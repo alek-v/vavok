@@ -37,7 +37,7 @@ if (isset($_GET['isset'])) {
     echo '</font></b></div>';
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     $about_user = $db->select('vavok_about', "uid='" . $user_id . "'", '', '*');
     $user_profil = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'subscri');
     $show_user = $db->select('vavok_users', "id='" . $user_id . "'", '', 'skin, banned, browsers');

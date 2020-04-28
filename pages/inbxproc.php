@@ -2,7 +2,7 @@
 // (c) vavok.net
 include("../include/strtup.php");
 
-if (!is_reg()) {
+if (!$users->is_reg()) {
     header ("Location: ../pages/error.php?isset=nologin");
     exit;
 } 

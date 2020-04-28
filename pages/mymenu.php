@@ -12,7 +12,7 @@ if (isset($_GET['isset'])) {
 	echo '</font></b></div>';
 }
 
-if (is_reg()) {
+if ($users->is_reg()) {
 	echo '
 	<a href="' . BASEDIR . 'pages/inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a><br>
 	<a href="' . BASEDIR . 'pages/ignor.php" class="btn btn-outline-primary sitelink">' . $lang_page['ignorlist'] . '</a><br>

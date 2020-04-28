@@ -30,7 +30,7 @@ if (!isset($config_ignorlist)) {
     $config_ignorlist = 10;
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if (empty($action)) {
         if ($page == "" || $page <= 0)$page = 1;
         $num_items = $db->count_row('`ignore`', "name='" . $user_id . "'");

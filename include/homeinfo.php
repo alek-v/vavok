@@ -9,7 +9,7 @@ function greet_user()
 	
 	$greet = '';
 	
-if (is_reg()) {
+if ($users->is_reg()) {
     $user_time = $config["timeZone"] * 3600;
     $curr_hour = date("H", time() + $user_time);
     if ($curr_hour > 24) {
