@@ -210,24 +210,26 @@ if ($page == 'send') {
         $checkmail = trim($show_userx['email']);
 
         if ($mailsus == $checkmail) {
-require_once '../include/plugins/securimage/securimage.php';
-$securimage = new Securimage();
+			require_once '../include/plugins/securimage/securimage.php';
+			$securimage = new Securimage();
 
-if ($securimage->check($_POST['captcha_code']) == true) {
+			if ($securimage->check($_POST['captcha_code']) == true) {
 
                 $newpas = generate_password();
-                $new = md5($newpas);
+                $new = $users->password_encrypt($newpas);
 
                 $subject = $lang_mail['newpassfromsite'] . ' ' . $config["title"];
-                $mail = "" . $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n
+                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n
 								" . $config["homeUrl"] . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1
 								\r\n" . $lang_mail['ycchngpass']  . "\r\n";
 
-                sendmail($mailsus, $subject, $mail); 
-                // update user's profile
-                mysql_query("UPDATE vavok_users SET pass='" . $new . "' WHERE id='" . $userx_id . "'");
+				$send_mail = new Mailer();
+				$send_mail->send($mailsus, $subject, $mail);
 
-                echo '<b>' . $lang_mail['passgen'] . '<br></b><br>';
+                // update user's profile
+                $db->update('vavok_users', 'pass', $new, "id='{$userx_id}'");
+
+                echo '<b>' . $lang_mail['passgen'] . '</b><br><br>';
             } else {
                 echo $lang_mail['wrongcaptcha'] . '!<br><br>';
                 echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';;

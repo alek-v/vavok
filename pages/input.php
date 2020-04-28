@@ -37,8 +37,7 @@ if (isset($_POST['ptl'])) {
 	$pagetoload = '';
 }
 
-if ($log == 'System') {
-	// cannot login as a System
+if ($log == 'System') { // cannot login as a System
     unset($log);
 }
 
@@ -64,23 +63,27 @@ if (empty($action) && !empty($log)) {
 	}
 
 
-    if (isValidEmail($log)) {
+    if ($users->validate_email($log)) {
         $userx_about = $db->select('vavok_about', "email='" . $log . "'", '', 'uid');
         $userx_id = $userx_about['uid'];
-        $log = getnickfromid($userx_id);
+        $log = $users->getnickfromid($userx_id);
     } else {
         $userx_id = $users->getidfromnick($log);
     } 
 
     $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'name, pass, banned, perm');
     $user_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'regche');
-    if (!empty($log) && !empty($pass) && md5($pass) == $show_userx['pass'] && $log == $show_userx['name']) {
+
+    if (!empty($log) && !empty($pass) && $users->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
+
         if ($cookietrue == 1) {
+
             $cookiePass = xoft_encode($pass, $config["keypass"]);
             $cookieUsername = xoft_encode($show_userx['name'], $config["keypass"]);
 
             SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365);
             SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365);
+        
         } 
 
         $log = $show_userx['name'];

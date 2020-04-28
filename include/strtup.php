@@ -150,7 +150,7 @@ function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $
     
     $values = array(
         'name' => $name,
-        'pass' => $pass,
+        'pass' => $users->password_encrypt($pass),
         'perm' => '107',
         'skin' => $theme,
         'browsers' => $brow,

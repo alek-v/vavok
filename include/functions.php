@@ -877,7 +877,7 @@ function is_reg() {
         $isuser_check = getidfromnick(check($_SESSION['log']));
         if (!empty($isuser_check)) {
             $show_user = $db->select('vavok_users', "id='" . $isuser_check . "'", '', 'name, pass');
-            if (check($_SESSION['log']) == $show_user['name'] && md5($_SESSION['pass']) == $show_user['pass']) {
+            if (check($_SESSION['log']) == $show_user['name'] && password_verify($_SESSION['pass'], $show_user['pass'])) {
                 return true;
             } else {
                 session_destroy();
@@ -896,7 +896,7 @@ function validateURL($URL) {
     return (bool)preg_match($v, $URL);
 } 
 
-function isValidEmail($email) {
+function isValidEmail($email) { // deprecated 28.04.2020. 2:33:28
     if (preg_match("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email) == true) {
         return true;
     } else {

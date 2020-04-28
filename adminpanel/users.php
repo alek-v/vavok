@@ -15,7 +15,7 @@ if (!empty($_POST['users'])) {
 
 $users_id = $users->getidfromnick($user);
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if ($accessr == 101 || $accessr == 102) {
         include_once"../themes/$config_themes/index.php";
         if (isset($_GET['isset'])) {
@@ -159,7 +159,7 @@ if (is_reg()) {
                         $userx_pass = $db->select('vavok_users', "id='" . $users_id . "'", '', 'pass');
 
                         if ($udd1 != "") {
-                            $newpass = md5($udd1);
+                            $newpass = $users->password_encrypt($udd1);
                         } 
 
                         if (!empty($newpass)) {

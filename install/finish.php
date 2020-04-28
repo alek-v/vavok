@@ -1,6 +1,8 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranesevic
+
 // /install/install.php have disabled connection to db in strtup.php, so I manipulate with db in this page
+
 require_once"../include/strtup.php";
 require_once "../lang/" . $config["language"] . "/installinstall.php";
 
@@ -129,12 +131,12 @@ if ($step == "regadmin") {
         if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
             if (!preg_match('/[^0-9A-Za-z.\_\-]/', $name) && !preg_match('/[^0-9A-Za-z.\_\-]/', $password)) {
                 if ($password == $password2) {
-                    if (preg_match('#^([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+(\.([a-z0-9])+)+$#', $email)) {
-                        if (preg_match('#^http://([a-z0-9_\-\.])+(\.([a-z0-9\/])+)+$#', $osite)) {
+                    if ($users->validate_email($email)) {
+                        if (validateURL($osite)) {
 	                        $osite_name = ucfirst(str_replace("http://", "", $osite));
 	                        $osite_name = str_replace("https://", "", $osite_name);
 
-	                        $passwords = md5($password);
+	                        $passwords = $users->password_encrypt($password);
 
                         	// check is everything ok if this is crossdomain website
                         	if ($crossDomainInstall == 1) {

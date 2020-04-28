@@ -198,7 +198,7 @@ class Users {
 	        $isuser_check = $this->getidfromnick(check($_SESSION['log']));
 	        if (!empty($isuser_check)) {
 	            $show_user = $this->db->get_data('vavok_users', "id='" . $isuser_check . "'", 'name, pass');
-	            if (check($_SESSION['log']) == $show_user['name'] && md5($_SESSION['pass']) == $show_user['pass']) {
+	            if (check($_SESSION['log']) == $show_user['name'] && $this->password_check($_SESSION['pass'], $show_user['pass'])) {
 	                return true;
 	            } else {
 	                session_destroy();
@@ -237,6 +237,41 @@ class Users {
 
 		return $userBrowser;
 	}
+
+	// username validation
+	function validate_username($username) {
+
+		if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) {
+			return true;
+		} else { return false; }
+
+	}
+
+	// user's password encription
+	function password_encrypt($password) {
+
+		return password_hash($password, PASSWORD_BCRYPT);
+
+	}
+
+	function password_check($password, $hash) {
+
+		return password_verify($password, $hash);
+
+	}
+
+	function validate_email($email) {
+
+	    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	        return true;
+	    } else {
+	        return false;
+	    } 
+
+	}
+
+
+
 
 }
 
