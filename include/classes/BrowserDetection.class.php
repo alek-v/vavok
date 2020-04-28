@@ -84,7 +84,7 @@ class BrowserDetection {
 
   function __construct($ua = '') {
       if(empty($ua)) {
-         $this->_user_agent = (!empty($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT'));
+         $this->_user_agent = (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : getenv('HTTP_USER_AGENT'));
       }
       else {
          $this->_user_agent = $ua;
