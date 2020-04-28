@@ -23,13 +23,17 @@ elseif ($ln != $ln_loc && !empty($ln)) {
 	$check_lang = "lang/" . $ln . "/index.php";
 
 	if (file_exists($check_lang)) {
-		// redirect to requested language
-		redirect_to("/pages/chlng.php?lang=" . $ln);
+
+		// requested language
+		include $check_lang; // get language variable
+		include "lang/" . $language . "/index.php";
+
 	} else {
 		fatal_error('Language does not exist!');
 	}
 
 }
+
 
 // redirect to root dir if visitor is using site default language and language is set in url
 // when default website language is english it should be at www.example.com instead of www.example.com/en/
