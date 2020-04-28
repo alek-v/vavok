@@ -3,6 +3,7 @@
 - Updated functions
 - Update new password hashing
 - Update removed redirection from main page
+- Update installer improvements
 
 
 
