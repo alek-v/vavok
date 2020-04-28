@@ -76,6 +76,7 @@ if ($step == 'second') {
 } 
 
 if ($step == 'third') {
+
     echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installinfo'] . '<br></p>';
         // check if website and admin already exists (crossdomain website)
     if ($users->regmemcount() > 1) {
@@ -110,6 +111,7 @@ if ($step == 'third') {
 } 
 // instalation results
 if ($step == "regadmin") {
+
     echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installresults'] . '<br></p>';
 
     // check if website and admin already exists (crossdomain website)
@@ -123,145 +125,140 @@ if ($step == "regadmin") {
 
     $name = $_POST['name'];
     $password = $_POST['password'];
+    $password2 = $_POST['password2'];    
     $email = $_POST['email'];
     $osite = $_POST['osite'];
-    $password2 = $_POST['password2'];
+
 
     if ($name != "" && $password != "" && $email != "" && $osite != "") {
         if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $name) && !preg_match('/[^0-9A-Za-z.\_\-]/', $password)) {
-                if ($password == $password2) {
-                    if ($users->validate_email($email)) {
-                        if (validateURL($osite)) {
-	                        $osite_name = ucfirst(str_replace("http://", "", $osite));
-	                        $osite_name = str_replace("https://", "", $osite_name);
+            if ($password == $password2) {
+                if ($users->validate_email($email)) {
+                    if (validateURL($osite)) {
+                        $osite_name = ucfirst(str_replace("http://", "", $osite));
+                        $osite_name = str_replace("https://", "", $osite_name);
 
-	                        $passwords = $users->password_encrypt($password);
+                    	// check is everything ok if this is crossdomain website
+                    	if ($crossDomainInstall == 1) {
+                        	$adminId = $users->getidfromnick($name);
 
-                        	// check is everything ok if this is crossdomain website
-                        	if ($crossDomainInstall == 1) {
-	                        	$adminId = $users->getidfromnick($name);
+                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
 
-	                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
+                        	if (!$users->is_administrator(101, $adminId) || !$users->password_check($password, $adminPass['pass'])) {
+                        		echo '<p>You are configuring cross-domain website.<br />
+                        		Please enter main website administrator username and password</p>';
+                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
 
-	                        	if (!is_administrator(101, $adminId) || $passwords !== $adminPass['pass']) {
-	                        		echo '<p>You are configuring cross-domain website.<br />
-	                        		Please enter main website administrator username and password</p>';
-	                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
-
-	                        		exit;
-	                        	}
+                        		exit;
                         	}
+                    	}
 
-                        	// write data to config file
-                            // init class
-                            $myconfig = new Config;
+                    	// write data to config file
+                        // init class
+                        $myconfig = new Config;
 
-                            $values = array(
-                            0 => '0',
-                            1 => generate_password(),
-                            2 => 'default',
-                            3 => '0',
-                            4 => '0',
-                            5 => '0',
-                            6 => '0',
-                            7 => '0',
-                            8 => $name,
-                            9 => $email,
-                            10 => '0', // time zone
-                            11 => $osite_name,
-                            12 => 'default',
-                            14 => $osite,
-                            17 => 5,
-                            18 => '0',
-                            19 => 5,
-                            20 => '0',
-                            21 => 'auto', // force HTTPS
-                            22 => 200,
-                            23 => 5,
-                            24 => 100,
-                            25 => 1000,
-                            26 => 5,
-                            27 => 5,
-                            28 => 100,
-                            29 => 10,
-                            30 => '0',
-                            31 => 5,
-                            32 => '0', // cookie consent
-                            33 => 4,
-                            34 => 100,
-                            35 => '0',
-                            36 => '0',
-                            37 => 5,
-                            38 => 40000,
-                            39 => 320,
-                            40 => 5,
-                            41 => 600,
-                            42 => 5,
-                            44 => 5,
-                            45 => 15,
-                            46 => 5,
-                            47 => 'english',
-                            48 => 'adminpanel',
-                            49 => '0',
-                            50 => 1,
-                            51 => 100,
-                            52 => 1,
-                            53 => '0',
-                            54 => 5,
-                            55 => 6,
-                            56 => 50,
-                            57 => 400,
-                            58 => 200,
-                            59 => '0',
-                            60 => 5,
-                            61 => 1,
-                            62 => '0',
-                            63 => '0',
-                            64 => '0',
-                            65 => '0',
-                            66 => 15,
-                            67 => '0',
-                            68 => '0',
-                            69 => 1,
-                            70 => '0',
-                            71 => '0',
-                            72 => '0',
-                            74 => 6,
-                            76 => 43200
-                            );
-                            $myconfig->update($values);
+                        $values = array(
+                        0 => '0',
+                        1 => generate_password(),
+                        2 => 'default',
+                        3 => '0',
+                        4 => '0',
+                        5 => '0',
+                        6 => '0',
+                        7 => '0',
+                        8 => $name,
+                        9 => $email,
+                        10 => '0', // time zone
+                        11 => $osite_name,
+                        12 => 'default',
+                        14 => $osite,
+                        17 => 5,
+                        18 => '0',
+                        19 => 5,
+                        20 => '0',
+                        21 => 'auto', // force HTTPS
+                        22 => 200,
+                        23 => 5,
+                        24 => 100,
+                        25 => 1000,
+                        26 => 5,
+                        27 => 5,
+                        28 => 100,
+                        29 => 10,
+                        30 => '0',
+                        31 => 5,
+                        32 => '0', // cookie consent
+                        33 => 4,
+                        34 => 100,
+                        35 => '0',
+                        36 => '0',
+                        37 => 5,
+                        38 => 40000,
+                        39 => 320,
+                        40 => 5,
+                        41 => 600,
+                        42 => 5,
+                        44 => 5,
+                        45 => 15,
+                        46 => 5,
+                        47 => 'english',
+                        48 => 'adminpanel',
+                        49 => '0',
+                        50 => 1,
+                        51 => 100,
+                        52 => 1,
+                        53 => '0',
+                        54 => 5,
+                        55 => 6,
+                        56 => 50,
+                        57 => 400,
+                        58 => 200,
+                        59 => '0',
+                        60 => 5,
+                        61 => 1,
+                        62 => '0',
+                        63 => '0',
+                        64 => '0',
+                        65 => '0',
+                        66 => 15,
+                        67 => '0',
+                        68 => '0',
+                        69 => 1,
+                        70 => '0',
+                        71 => '0',
+                        72 => '0',
+                        74 => 6,
+                        76 => 43200
+                        );
+                        $myconfig->update($values);
 
 
-                            // insert data to database if it is not crossdomain
-                            if ($crossDomainInstall == 0) {
-                            // write to database
-                            $registration_key = '';
-                            $config["regConfirm"] = '0';
-                            register($name, $passwords, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $ip, $email); // register user
-                            $user_id = $users->getidfromnick($name);
-                            $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
-                        	}
+                        // insert data to database if it is not crossdomain
+                        if ($crossDomainInstall == 0) {
+                        // write to database
+                        $registration_key = '';
+                        $config["regConfirm"] = '0';
+                        register($name, $password, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $ip, $email); // register user
+                        $user_id = $users->getidfromnick($name);
+                        $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+                    	}
 
-                            echo '<p>' . $lang_install['installok'] . '.<br></p>';
+                        echo '<p>' . $lang_install['installok'] . '.<br></p>';
 
-                            echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
-                        } else {
-                            echo '<p><b>' . $lang_install['siteaddressbad'] . '</b></p>';
-                            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
-                        } 
+                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
                     } else {
-                        echo '<p><b>' . $lang_install['bademail'] . '</b></p>';
+                        echo '<p><b>' . $lang_install['siteaddressbad'] . '</b></p>';
                         echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
                     } 
                 } else {
-                    echo '<p><b>' . $lang_install['badagainbass'] . '.</b></p>';
+                    echo '<p><b>' . $lang_install['bademail'] . '</b></p>';
                     echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
                 } 
             } else {
-                echo '<p><b>' . $lang_install['onlylatin'] . '!</b></p>';
+                echo '<p><b>' . $lang_install['badagainbass'] . '.</b></p>';
                 echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
             } 
+ 
         } else {
             echo '<p><b>' . $lang_install['shortuserpass'] . '</b></p>';
             echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';

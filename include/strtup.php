@@ -109,14 +109,17 @@ if (stristr($user_agents, 'Yandex')) {
 require_once BASEDIR . "include/functions.php";
 
 // connect to database
-if (!stristr($config_requri, 'error=db') && !stristr($phpself, 'install/install.php')) {
+if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
+
     // and this will be PDO connection to base
     $db = new Db("mysql:host=" . $config["dbhost"] . ";dbname=" . $config["dbname"], $config["dbuser"], $config["dbpass"]);
+
 
     // we are connected to database and we can load Users class
     $users = new Users;
 
-    if (!stristr($phpself, 'install/finish.php') && !stristr($phpself, '/cronjob/')) {
+    // we don't need this data if this is system request or we are installing cms
+    if (!strstr($phpself, '/cronjob/') && !strstr($phpself, '/install/finish.php')) {
 
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 
@@ -146,7 +149,7 @@ function user_status($message) {
 
 // register user
 function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $mail) {
-    global $lang_home, $config, $db;
+    global $lang_home, $config, $db, $users;
     
     $values = array(
         'name' => $name,
