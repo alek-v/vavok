@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if (!is_reg() || !checkPermissions(basename(__FILE__))) {
+if (!$users->is_reg() || !checkPermissions(basename(__FILE__))) {
     header ("Location: ../pages/input.php?action=exit");
     exit;
 }

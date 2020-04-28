@@ -3,7 +3,7 @@
 require_once"../include/strtup.php";
 $my_title = "Settings";
 
-if (!is_reg() || !is_administrator(101)) {
+if (!$users->is_reg() || !is_administrator(101)) {
     header ("Location: ../pages/error.php?error=401");
     exit;
 }

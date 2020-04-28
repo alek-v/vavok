@@ -6,7 +6,7 @@ if (isset($_GET['action'])) {
     $action = check($_GET['action']);
 }
 
-if (!is_reg() || !isadmin()) {
+if (!$users->is_reg() || !$users->is_administrator()) {
     header("Location: ../");
     exit;
 } 

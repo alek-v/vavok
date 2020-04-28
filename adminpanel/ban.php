@@ -10,7 +10,7 @@ if (isset($_GET['start'])) {
     $start = check($_GET['start']);
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if ($accessr == 101 || $accessr == 102) {
         $my_title = "IP ban";
         include_once"../themes/$config_themes/index.php";

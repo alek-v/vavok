@@ -4,7 +4,7 @@
 require_once"../include/strtup.php";
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
 
-if (!is_reg()) {
+if (!$users->is_reg()) {
     header ("Location: ../pages/error.php?isset=nologin");
     exit;
 }
@@ -16,7 +16,7 @@ $times = date_fixed($time, "H:i");
 
 // add to admin chat
 if ($action == "acadd") {
-    if (!is_reg() || !checkPermissions('adminchat')) {
+    if (!$users->is_reg() || !checkPermissions('adminchat')) {
         header ("Location: ../pages/input.php?action=exit");
         exit;
     }

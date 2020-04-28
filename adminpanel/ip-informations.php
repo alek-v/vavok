@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if (!is_reg() || (!ismod() && !isadmin())) {
+if (!$users->is_reg() || (!$users->is_moderator() && !$users->is_administrator())) {
 header("Location: ../input.php?action=exit");
 exit;
 }

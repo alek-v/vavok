@@ -12,7 +12,7 @@ function prev_dir($string) {
     return $string;
 } 
 
-if (is_reg()) {
+if ($users->is_reg()) {
     if ($accessr == 101) {
         include_once"../themes/$config_themes/index.php";
         if (isset($_GET['isset'])) {

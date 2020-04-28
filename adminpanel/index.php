@@ -124,7 +124,7 @@ if ($action == 'main') {
         }
         echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $lang_home['statistic'] . '</a>';
     } 
-    if (file_exists('news.php') && (is_administrator()) || (is_reg() && chkcpecprm('news', 'show'))) {
+    if (file_exists('news.php') && (is_administrator()) || ($users->is_reg() && chkcpecprm('news', 'show'))) {
         echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
     } 
 

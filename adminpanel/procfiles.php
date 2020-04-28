@@ -6,7 +6,7 @@
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 
-if (!is_reg() || (!is_administrator(101) && !chkcpecprm('pageedit', 'show'))) {
+if (!$users->is_reg() || (!is_administrator(101) && !chkcpecprm('pageedit', 'show'))) {
     header("Location: ../?isset=ap_noaccess");
     exit;
 }

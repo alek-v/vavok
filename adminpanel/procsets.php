@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-if (!is_reg() || !isadmin('', 101)) {
+if (!$users->is_reg() || !$users->is_administrator('', 101)) {
     header("Location: ../?error");
     exit;
 }

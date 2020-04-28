@@ -15,7 +15,7 @@ if (isset($_POST['users'])) {
 
 $time = time();
 
-if (!is_reg()) { redirect_to("../?error"); } 
+if (!$users->is_reg()) { redirect_to("../?error"); } 
 
 if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
     $my_title = $lang_admin['banning'];

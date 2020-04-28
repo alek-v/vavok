@@ -9,7 +9,7 @@ if (isset($_GET['act'])) {
 	$act = check($_POST['act']);
 }
 
-if (!isadmin() || !is_reg()) {
+if (!$users->is_administrator() || !$users->is_reg()) {
     header ("Location: ../?error");
     exit;
 } 

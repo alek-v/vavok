@@ -3,7 +3,7 @@
 require_once"../include/strtup.php";
 $my_title = $lang_admin['uncomfreg'];
 
-if (!is_reg() || !checkPermissions(basename(__FILE__))) {
+if (!$users->is_reg() || !checkPermissions(basename(__FILE__))) {
     header ("Location: ../index.php?error");
     exit;
 } 

@@ -24,7 +24,7 @@ if (!isset($config_banlist)) {
 
 $time = time();
 
-if (!is_reg() || (!isadmin() && !ismod('', '103'))) {
+if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator('', '103'))) {
     header ("Location: ../index.php?error");
     exit;
 } 
