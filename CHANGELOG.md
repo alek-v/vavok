@@ -1,3 +1,11 @@
+# Vavok v1.5
+- Updated caching
+- Updated functions
+- Update new password hashing
+- Update removed redirection from main page
+
+
+
 # Vavok v1.4.1.1
 - Update add missing open graph tags
 - Update page for changing language updated
