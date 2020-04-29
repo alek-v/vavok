@@ -219,6 +219,40 @@ class Users {
 	    } 
 	}
 
+	function get_age($strdate) {
+	    $dob = explode(".", $strdate);
+	    if (count($dob) != 3) {
+	        return 0;
+	    } 
+	    $y = $dob[2];
+	    $m = $dob[1];
+	    $d = $dob[0];
+	    if (strlen($y) != 4) {
+	        return 0;
+	    } 
+	    if (strlen($m) != 2) {
+	        return 0;
+	    } 
+	    if (strlen($d) != 2) {
+	        return 0;
+	    } 
+
+	    $y += 0;
+	    $m += 0;
+	    $d += 0;
+
+	    if ($y == 0) return 0;
+	    $rage = date("Y") - $y;
+	    if (date("m") < $m) {
+	        $rage -= 1;
+	    } else {
+	        if ((date("m") == $m) && (date("d") < $d)) {
+	            $rage -= 1;
+	        } 
+	    } 
+	    return $rage;
+	} 
+
 	function user_device() {
     	return BrowserDetection::userDevice();
 	}
