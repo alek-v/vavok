@@ -25,34 +25,34 @@ $notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'em
 $email = $getinfo['email'];
 
 if (preg_match("/[^a-zA-Z0-9_+-]/", $skins) || empty($skins)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (empty($lang)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (preg_match("/[^0-9]/", $news) || $news > 50 || empty($news)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (preg_match("/[^0-9]/", $forumpost) || $forumpost > 50 || empty($forumpost)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (preg_match("/[^0-9]/", $forumtem) || $forumtem > 50 || empty($forumtem)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 }
 if (preg_match("/[^0-9]/", $prrivs) || $prrivs > 50 || empty($prrivs)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (!isset($sdvig) or $sdvig == "") {
     $sdvig = '0';
 } 
 if (preg_match("/[^0-9+-]/", $sdvig)) {
-    header ("Location: setting.php?isset=incorrect");
+    header ("Location: settings.php?isset=incorrect");
     exit;
 } 
 if (!file_exists(BASEDIR . "themes/$skins/index.php")) {
@@ -166,6 +166,6 @@ if ($check_inb > 0) {
 }
 
 // redirect
-header("Location: ./setting.php?isset=editsetting");
+header("Location: ./settings.php?isset=editsetting");
 exit;
 ?>
