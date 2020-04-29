@@ -67,12 +67,14 @@ include BASEDIR . "include/load_header.php";
 				?>
 
 				</ul>
-				<div class="collapse navbar-collapse nav-contact" id="navbarSupportedContent">
-					<ul class="navbar-nav">
-						<li class="nav-item">
-							<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
-						</li>
-					</ul>
+				<div class="nav-contact">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
+							</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
