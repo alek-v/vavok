@@ -1,13 +1,11 @@
 <?php
 // (c) vavok.net
 require_once"../include/strtup.php";
+
 $my_title = $lang_home['lostpass'];
-include_once"../themes/$config_themes/index.php";
-?>
 
+$genHeadTag = '
 <style type="text/css">
-
-
 .form_wrapper{
 background-color: transparent;
 	width:100%;
@@ -155,9 +153,10 @@ background-color: transparent;
 
 
 </style>
+';
 
+include_once"../themes/$config_themes/index.php";
 
-<?php
 if (isset($_GET['page'])) {$page = check($_GET['page']);} else {$page = '';}
 if (isset($_POST['logus'])) {$logus = check($_POST['logus']);}
 if (isset($_POST['mailsus'])) {$mailsus = check($_POST['mailsus']);}
@@ -166,35 +165,35 @@ if (empty($page) || $page == 'index') {
 	
 	echo '
 
-				<div id="form_wrapper" class="form_wrapper">
-					<form class="login active" method="post" action="lostpassword.php?page=send">
-						<h3>' . $lang_mail['howtolostpass'] . '</h3>
-						<div>
-							<label>' . $lang_home['username'] . ':</label>
-							<input type="text" name="logus" maxlength="40" />
-							<span class="error">This is an error</span>
-						</div>
-						
-												<div>
-							<label>Email:</label>
-							<input  type="text" value="@" name="mailsus" maxlength="50" />
-							<span class="error">This is an error</span>
-						</div>
-						
-							<div>
-							
-							<label>' . $lang_home['captcha'] . '<img id="captcha" src="../include/plugins/securimage/securimage_show.php" alt="CAPTCHA Image" /><br /><a href="#" onclick="document.getElementById(\'captcha\').src = \'../include/plugins/securimage/securimage_show.php?\' + Math.random(); return false">[ Different Image ]</a></label>
-							
-							<input name="captcha_code" type="text" maxlength="6" size="10" />
-							<span class="error">This is an error</span>
-						</div>
-						
-						
-						<div class="bottom">
-							<input type="submit" value="' . $lang_home['send'] . '"></input>';
-							echo '<div class="clear"></div>
-						</div>
-					</form>
+<div id="form_wrapper" class="form_wrapper">
+	<form class="login active" method="post" action="lostpassword.php?page=send">
+		<h3>' . $lang_mail['howtolostpass'] . '</h3>
+		<div>
+			<label>' . $lang_home['username'] . ':</label>
+			<input type="text" name="logus" maxlength="40" />
+			<span class="error">This is an error</span>
+		</div>
+		
+								<div>
+			<label>Email:</label>
+			<input  type="text" value="@" name="mailsus" maxlength="50" />
+			<span class="error">This is an error</span>
+		</div>
+		
+			<div>
+			
+			<label>' . $lang_home['captcha'] . '<img id="captcha" src="../include/plugins/securimage/securimage_show.php" alt="CAPTCHA Image" /><br /><a href="#" onclick="document.getElementById(\'captcha\').src = \'../include/plugins/securimage/securimage_show.php?\' + Math.random(); return false">[ Different Image ]</a></label>
+			
+			<input name="captcha_code" type="text" maxlength="6" size="10" />
+			<span class="error">This is an error</span>
+		</div>
+		
+		
+		<div class="bottom">
+			<input type="submit" value="' . $lang_home['send'] . '"></input>';
+			echo '<div class="clear"></div>
+		</div>
+	</form>
 </div>
 <div style="clear: left; overflow: hidden; width: 100%; "></div>
 
@@ -219,9 +218,7 @@ if ($page == 'send') {
                 $new = $users->password_encrypt($newpas);
 
                 $subject = $lang_mail['newpassfromsite'] . ' ' . $config["title"];
-                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n
-								" . $config["homeUrl"] . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1
-								\r\n" . $lang_mail['ycchngpass']  . "\r\n";
+                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n" . $config["homeUrl"] . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $lang_mail['ycchngpass']  . "\r\n";
 
 				$send_mail = new Mailer();
 				$send_mail->send($mailsus, $subject, $mail);
