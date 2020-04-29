@@ -165,8 +165,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
 
 INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstupdby`, `file`, `crtdby`, `headt`, `published`, `pubdate`, `content`) VALUES
-(1, 'My new website', 'index', '', 0, 0, 1, 'index.php', 0, NULL, 2, 0, '<div style="text-align:center;">Welcome to my Web site!</div>'),
-(2, 'BB Codes', 'bb-codes', '', 1452540347, 1452540352, 1, 'bb-codes.php', 0, NULL, 2, 0, '<p><img src="/images/img/partners.gif" alt="" /> <b>BB codes</b></p><br />\r<br />\r<span style="font-weight:bold;">Text</span> - &#91;b&#93;Text&#91;/b&#93;<br />\r<span style="font-style:italic;">Text</span> - &#91;i&#93;Text&#91;/i&#93;<br />\r<span style="text-decoration:underline;">Text</span> - &#91;u&#93;Text&#91;/u&#93;<br />\r<span style="font-size:0.8em;">Text</span> - &#91;small&#93;Text&#91;/small&#93;<br />\r<br />\r<span style="color:red">Text</span> - &#91;red&#93;Text&#91;/red&#93;<br />\r<span style="color:green">Text</span> - &#91;green&#93;Text&#91;/green&#93;<br />\r<span style="color:blue">Text</span> - &#91;blue&#93;Text&#91;/blue&#93;<br />\r<br />\r<a href="http://vavok.net/">link</a> - &#91;url=http://vavok.net&#93;link&#91;/url&#93;');
+(1, 'Hello World', 'index', '', 0, 0, 1, 'index.php', 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/images/img/hello-world.png\" alt=\"Hello World\" width=\"626\" height=\"626\" /></p>\r\n<p>&nbsp;</p>');
 
 
 -- notifications
