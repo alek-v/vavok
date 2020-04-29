@@ -1,6 +1,10 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranešević
-// updated: 25.04.2020. 19:42:58
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   29.04.2020. 5:26:39
+*/
 
 // time when execution of the script has started
 $start_time = microtime(true);

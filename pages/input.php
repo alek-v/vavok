@@ -62,31 +62,36 @@ if (empty($action) && !empty($log)) {
 	    exit;
 	}
 
-
+    // user is logging in with email
     if ($users->validate_email($log)) {
-        $userx_about = $db->select('vavok_about', "email='" . $log . "'", '', 'uid');
+
+        $userx_about = $db->get_data('vavok_about', "email='" . $log . "'", 'uid');
         $userx_id = $userx_about['uid'];
         $log = $users->getnickfromid($userx_id);
+
     } else {
+        // user is logging in with username
         $userx_id = $users->getidfromnick($log);
     } 
 
     $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'name, pass, banned, perm');
     $user_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'regche');
 
-    if (!empty($log) && !empty($pass) && $users->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
+    // compare sent data and data from database
+    if ($users->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
 
+        // user want to remember login
         if ($cookietrue == 1) {
 
+            // encrypt data to save in cookie
             $cookiePass = xoft_encode($pass, $config["keypass"]);
             $cookieUsername = xoft_encode($show_userx['name'], $config["keypass"]);
 
-            SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365);
-            SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365);
+            // save cookie
+            SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/"); // one year
+            SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365, "/"); // one year
         
         } 
-
-        $log = $show_userx['name'];
 
         $ip = preg_replace("/[^0-9.]/", "", $ip);
         $pr_ip = explode(".", $ip);
@@ -97,26 +102,30 @@ if (empty($action) && !empty($log)) {
         $_SESSION['permissions'] = $show_userx['perm'];
         $_SESSION['my_ip'] = $my_ip;
         $_SESSION['my_brow'] = $users->user_browser();
-        unset($_SESSION['lang']); // use language settings from profile
 
-        // get new session id to prevent session fixation
-        session_regenerate_id();
+        unset($_SESSION['lang']); // use language settings from profile
+        
+        session_regenerate_id(); // get new session id to prevent session fixation
 
         // update data in profile
-        $db->update('vavok_users', 'ipadd', check($ip), "id='" . $userx_id . "'");
+        $db->update('vavok_users', 'ipadd', check($ip), "id='{$userx_id}'");
 
         if ($user_profil['regche'] == "1") {
             redirect_to(BASEDIR . "pages/key.php?log=$log");
-        } 
+        }
+
         if ($show_userx['banned'] == '1') {
             redirect_to(BASEDIR . "pages/ban.php?log=$log");
-        } 
+        }
+
         if (!empty($pagetoload)) {
             redirect_to(BASEDIR . $pagetoload);
         } else {
             redirect_to(BASEDIR);
         } 
+
     }
+
 }
  
 // logout

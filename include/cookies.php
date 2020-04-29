@@ -1,40 +1,47 @@
 <?php
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   29.04.2020. 5:26:45
+*/
 
-    // set cookie
-    if (empty($_SESSION['log']) && empty($_SESSION['pass']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog'])) {
+// set cookie
+if (empty($_SESSION['log']) && empty($_SESSION['pass']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog'])) {
 
-        // decode username from cookie
-        $unlog = xoft_decode($_COOKIE['cooklog'], $config["keypass"]);
+    // decode username from cookie
+    $unlog = xoft_decode($_COOKIE['cooklog'], $config["keypass"]);
 
-        // decode password from cookie
-        $unpar = xoft_decode($_COOKIE['cookpass'], $config["keypass"]);
-        
-        // search for username provided in cookie
-		$cookie_id = $users->getidfromnick($unlog);
-		$cookie_check = $db->select('vavok_users', "id='" . $cookie_id . "'", '', 'name, pass');
+    // decode password from cookie
+    $unpar = xoft_decode($_COOKIE['cookpass'], $config["keypass"]);
+    
+    // search for username provided in cookie
+	$cookie_id = $users->getidfromnick($unlog);
 
-        // if user exists
-        if (!empty($cookie_check['name'])) {
+    // get user's data
+	$cookie_check = $db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass');
 
-            // check is password correct
-            if ($users->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name'] && !empty($unlog) && !empty($unpar)) {
+    // if user exists
+    if (!empty($cookie_check['name'])) {
 
-                $pr_ip = explode(".", $ip);
-                $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
+        // check is password correct
+        if ($users->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name']) {
+
+            $pr_ip = explode(".", $ip);
+            $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
 
 
-                // write current session data
-                $_SESSION['log'] = $unlog;
-                $_SESSION['pass'] = $unpar;
-                $_SESSION['my_ip'] = $my_ip;
-                $_SESSION['my_brow'] = $users->user_browser();
-                
-                // update ip address and last visit time
-                $db->update('vavok_users', 'ipadd', $ip, "id = '" . $cookie_id . "'");
-                $db->update('vavok_profil', 'lastvst', time(), "uid = '" . $cookie_id . "'");
-            }
-        } 
-    }
+            // write current session data
+            $_SESSION['log'] = $unlog;
+            $_SESSION['pass'] = $unpar;
+            $_SESSION['my_ip'] = $my_ip;
+            $_SESSION['my_brow'] = $users->user_browser();
+            
+            // update ip address and last visit time
+            $db->update('vavok_users', 'ipadd', $ip, "id = '" . $cookie_id . "'");
+            $db->update('vavok_profil', 'lastvst', time(), "uid = '" . $cookie_id . "'");
+        }
+    } 
+}
 
 ?>

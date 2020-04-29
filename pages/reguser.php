@@ -1,5 +1,12 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   29.04.2020. 5:33:33
+*/
+
+
 require_once"../include/strtup.php";
 
 $my_title = $lang_reguser['registration'];
@@ -54,6 +61,7 @@ if ($substr_log < 3) {
                     $securimage = new Securimage();
 
                     if ($securimage->check($_POST['captcha_code']) == true) {
+
                         $log = check($log);
                         $password = check($pass);
 
@@ -61,40 +69,36 @@ if ($substr_log < 3) {
                         $brow = check($users->user_browser());
                         $config_themes = check($config_themes);
                         $config["regConfirm"] = (int)$config["regConfirm"];
+
                         if ($config["regConfirm"] == "1") {
                             $registration_key = time() + 24 * 60 * 60;
                         } else {
                             $registration_key = '';
                         }
+
                         // register user
                         $regdate = time();
                         register($log, $password, $regdate, $config["regConfirm"], $registration_key, $config_themes, $brow, $ip, $mail); // register user
                          
                         // send email with reg. data
                         if ($config["regConfirm"] == "1") {
-                            $needkey = "\r\n\r\n" . $lang_reguser['emailpart5'] . "\r\n" . $lang_reguser['yourkey'] . ": " . $registration_key . "\r\n" . $lang_reguser['emailpart6'] . ":\r\n\r\n" . $website_home_addr . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_reguser['emailpart7'] . "\r\n\r\n";
+                            $needkey = "\r\n\r\n" . $lang_reguser['emailpart5'] . "\r\n" . $lang_reguser['yourkey'] . ": " . $registration_key . "\r\n" . $lang_reguser['emailpart6'] . ":\r\n\r\n" . website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_reguser['emailpart7'] . "\r\n\r\n";
                         } else {
                             $needkey = "\r\n\r\n";
                         } 
 
                         $subject = $lang_reguser['regonsite'] . ' ' . $config["title"];
-                        $regmail = "" . $lang_reguser['hello'] . " " . $log . "\r\n" . $lang_reguser['emailpart1'] . " " . $config["homeUrl"] . " \r\n" . $lang_reguser['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $lang_home['pass'] . ": " . $pass . "" . $needkey . "" . $lang_reguser['emailpart3'] . "\r\n" . $lang_reguser['emailpart4'] . "";
+                        $regmail = $lang_reguser['hello'] . " " . $log . "\r\n" . $lang_reguser['emailpart1'] . " " . $config["homeUrl"] . " \r\n" . $lang_reguser['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $needkey . "" . $lang_reguser['emailpart3'] . "\r\n" . $lang_reguser['emailpart4'] . "";
 
                         // send confirmation email
                         $newMail = new Mailer;
                         $newMail->send($mail, $subject, $regmail);
 
                         // reg. sucessful, show info
-                        echo $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br />' . $lang_home['pass'] . ': <b>' . $pass . '</b><br />' . $lang_reguser['loginnow'] . '<br />';
-                        echo '<br /><img src="../images/img/reload.gif" alt=""> ';
-                        if (empty($pagetoload)) {
-                        echo '<b><a href="' . transfer_protocol() . $config_srvhost . '/pages/input.php?log=' . $log . '&amp;pass=' . $pass . '&amp;cookietrue=1">' . $lang_reguser['entersite'] . '</a></b><br /><br />';
-                      } else {
-                      	echo '<b><a href="' . $pagetoload . '">Continue</a></b><br /><br />'; // update lang
+                        echo '<p>' . $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p><p>' . $lang_reguser['loginnow'] . '<br /></p>';
 
-                      }
                         if ($config["regConfirm"] == "1") {
-                            echo '<b><font color="#FF0000">' . $lang_reguser['enterkeymessage'] . '</font></b><br /><br />';
+                            echo '<p><b>' . $lang_reguser['enterkeymessage'] . '</b></p>';
                         } 
 
                     } else {
