@@ -10,14 +10,14 @@ if (!$users->is_reg() || (!$users->is_administrator(101) && chkcpecprm('pageedit
     redirect_to("../");
 } 
 
-$table_prefix = getConfiguration('tablePrefix');
+$table_prefix = get_configuration('tablePrefix');
 
 // check if user can edit only pages that are made by themself and have no permitions to edit all pages
 if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101)) {
     $editOnlyOwnPages = 'yes';
 } else {
     $editOnlyOwnPages = '';
-} 
+}
 
 if (isset($_GET['action'])) {
     $action = check($_GET['action']);
@@ -36,7 +36,7 @@ if (!empty($_GET['file'])) {
 }
 
 // init class
-$pageEditor = new Page;
+$pageEditor = new Page();
 
 // get page id we work with
 $page_id = $pageEditor->get_page_id("file='" . $file . "'");
@@ -178,10 +178,11 @@ if (empty($action)) {
 } 
 
 if ($action == "show") {
+
     if (!empty($page_id)) {
         $base_file = $file;
 
-        $pageData = new Page;
+        $pageData = new Page();
         $page_info = $pageData->select_page($page_id);
 
         if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
@@ -532,16 +533,13 @@ if ($action == 'renamepg') {
 } 
 
 if ($action == "new") {
+
     if (!chkcpecprm('pageedit', 'insert') && !$users->is_administrator(101)) {
-        header("Location: index.php?isset=ap_noaccess");
-        exit;
-    } 
+        redirect_to("index.php?isset=ap_noaccess");
+    }
 
-    include_once"../themes/$config_themes/index.php";
-
-    ?>
- 
- <style type="text/css">
+    $genHeadTag = '
+	<style type="text/css">
 		.tooltip {
 			border-bottom: 1px dotted #000000; color: #000000; outline: none;
 			cursor: help; text-decoration: none;
@@ -574,9 +572,11 @@ if ($action == "new") {
 		.help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
 		.info { background: #9FDAEE; border: 1px solid #2BB0D7;	padding: 20px;}
 		.warning { background: #FFFFAA; border: 1px solid #FFAD33; }
-		</style>
-		
-    <?php
+	</style>
+    ';
+
+    include_once"../themes/$config_themes/index.php";
+
     if (isset($_GET['isset'])) {
         $isset = check($_GET['isset']);
         echo '<div align="center"><b><font color="#FF0000">';
@@ -584,13 +584,14 @@ if ($action == "new") {
         echo '</font></b></div>';
     } 
 
-    echo '<div><p><img src="../images/img/edit.gif" alt="" /> ' . $lang_apfiles['newfile'] . '</p></div>';
+    echo '<div>
+    <h1><img src="../images/img/edit.gif" alt="" /> ' . $lang_apfiles['newfile'] . '</h1></div>';
 
-    echo '<form method="post" action="procfiles.php?action=addnew">';
     echo '<div class="form-group">
-    <label for="newfile">' . $lang_apfiles['pagename'] . ':</label>';
-    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
-    <div>'; 
+    		<form method="post" action="procfiles.php?action=addnew">';
+    echo '<label for="newfile">' . $lang_apfiles['pagename'] . ':</label>';
+	    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
+    </div>'; 
 
 
     // language

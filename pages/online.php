@@ -3,8 +3,7 @@
 require_once"../include/strtup.php";
 
 if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrator())) {
-    header("Location: ../");
-    exit;
+    redirect_to("Location: ../");
 } 
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -20,8 +19,8 @@ if (isset($_GET['isset'])) {
 
 echo '<img src="../images/img/online.gif" alt=""> <b>' . $lang_page['whoisonline'] . '</b><br /><br />';
 
-$total = $db->count_row('online');
-$totalreg = $db->count_row('online', "user > 0");
+$total = $db->count_row(get_configuration('tablePrefix') . 'online');
+$totalreg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
 
 if (!empty($_GET['list'])) {
     $list = check($_GET['list']);
@@ -54,26 +53,26 @@ if ($list == "full") {
         $start = 0;
     } 
 
-    $full_query = "SELECT * FROM online ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
+    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
 
         if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
             echo '<b>' . $lang_home['guest'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || isadmin()) {
+            if (ismod() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
             echo '<b>' . $item['bot'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || isadmin()) {
+            if (ismod() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } else {
             echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || isadmin()) {
+            if (ismod() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
@@ -95,13 +94,13 @@ if ($list == "full") {
     $start = 0;
     } 
 
-    $full_query = "SELECT * FROM online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
+    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
 
         echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-        if (ismod() || isadmin()) {
+        if (ismod() || $users->is_administrator()) {
             echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
         } 
         echo '<hr />';

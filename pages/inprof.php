@@ -10,16 +10,16 @@ if (!$users->is_reg()) {
 $mediaLikeButton = 'off'; // dont show like buttons
 
 if (!empty($_POST['site']) && !validateURL($_POST['site'])) {
-    header ("Location: profil.php?isset=insite");
+    header ("Location: profile.php?isset=insite");
     exit;
 } 
 // check email
-if (!empty($_POST['email']) && !isValidEmail($_POST['email'])) {
-    header ("Location: profil.php?isset=noemail");
+if (!empty($_POST['email']) && !$users->validate_email($_POST['email'])) {
+    header ("Location: profile.php?isset=noemail");
     exit;
 } 
 // check birthday
-// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profil.php?isset=inhappy"); exit;}
+// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
 
 
 $my_name = no_br(check($_POST['my_name']));
@@ -60,7 +60,7 @@ $values[] = $zip;
 
 $db->update('vavok_about', $fields, $values, "uid='" . $user_id . "'");
 
-header ("Location: ./profil.php?isset=editprofil");
+header ("Location: ./profile.php?isset=editprofil");
 exit;
 
 ?>

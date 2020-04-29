@@ -146,7 +146,7 @@ exit;
 
     $showPage->set('lastVisit', $lang_user['lastvisit'] . ': ' . date_fixed($user_profil['lastvst'], 'd.m.Y. / H:i'));
 
-if ($users->is_reg() && (ismod() || isadmin())) {
+if ($users->is_reg() && (ismod() || $users->is_administrator())) {
     $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
     $ipAddress->set('ip-address', 'IP address: <a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
 
@@ -169,7 +169,7 @@ if ($users->is_reg() && (ismod() || isadmin())) {
             $userMenu->set('sendMessage', '');
         } 
 
-        if ($users->is_reg() && (ismod() || isadmin())) {
+        if ($users->is_reg() && (ismod() || $users->is_administrator())) {
             $userMenu->set('banUser', '<a href="../' . $config["mPanel"] . '/addban.php?action=edit&amp;users=' . $uz . '">' . $lang_user['bandelban'] . '</a><br>');
         } else {
         $userMenu->set('banUser', '');
@@ -182,7 +182,7 @@ if ($users->is_reg() && (ismod() || isadmin())) {
         $showPage->set('userMenu', $userMenu->output());
     } elseif (getnickfromid($user_id) == $uz && $users->is_reg()) {
     	$adminMenu = new PageGen("pages/user-profile/admin-update-profile.tpl");
-        $adminMenu->set('profileLink', '<a href="../pages/profil.php">' . $lang_user['updateprofile'] . '</a>');
+        $adminMenu->set('profileLink', '<a href="../pages/profile.php">' . $lang_user['updateprofile'] . '</a>');
        $showPage->set('userMenu', $adminMenu->output()); 
     } else {
     $showPage->set('userMenu', ''); 

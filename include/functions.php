@@ -2,7 +2,17 @@
 // (c) vavok.net - Aleksandar Vranesevic
 
 // website configuration
-function getConfiguration($data = '') {
+function get_configuration($data = '') {
+    global $config;
+
+    if (empty($data)) {
+        return $config;
+    } else {
+        return $config[$data];
+    }
+}
+
+function getConfiguration($data = '') { // deprecated 29.04.2020. 0:49:26
     global $config;
 
     if (empty($data)) {
@@ -244,7 +254,8 @@ function check($str, $mysql = "") {
     $str = preg_replace("/&#58;/", ":", $str, 3);
     $str = str_replace("\\r\\n", "\r\n", $str); // we want new lines
     return $str;
-} 
+}
+
 // no new line
 function no_br($msg, $replace = "") { 
     // convert to unix new lines
@@ -430,7 +441,7 @@ function erase_img($image) {
 }
 
 // user age
-function getage($strdate) {
+function getage($strdate) { // deprecated 29.04.2020. 0:53:47 use $users->get_age()
     $dob = explode(".", $strdate);
     if (count($dob) != 3) {
         return 0;
@@ -1052,10 +1063,10 @@ function checkPermissions($permname, $needed = 'show') {
         return true;
     }
 
-    $check = $db->count_row(getConfiguration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
+    $check = $db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
 
     if ($check > 0) {
-        $check_data = $db->select(getConfiguration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
+        $check_data = $db->select(get_configuration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
         $perms = explode(',', $check_data['permacc']);
         if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
             return true;
@@ -1156,13 +1167,13 @@ function login_attempt_count($seconds, $username, $ip, $db) {
 // get transfer protocol https or http
 function transfer_protocol() {
 
-    if (empty(getConfiguration('transferProtocol')) || getConfiguration('transferProtocol') == 'auto') {
+    if (empty(get_configuration('transferProtocol')) || get_configuration('transferProtocol') == 'auto') {
         if (!empty($_SERVER['HTTPS'])) {
             $connectionProtocol = 'https://';
         } else {
             $connectionProtocol = 'http://';
         }
-    } elseif (getConfiguration('transferProtocol') == 'HTTPS') {
+    } elseif (get_configuration('transferProtocol') == 'HTTPS') {
         $connectionProtocol = 'https://';
     } else {
         $connectionProtocol = 'http://';

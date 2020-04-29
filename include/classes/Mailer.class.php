@@ -15,7 +15,7 @@ class Mailer {
 	            $mail = substr($mail, 4);
 	        }
 	        $mail = 'no_reply@' . $mail;
-	        $name = getConfiguration('title');
+	        $name = get_configuration('title');
 	    } 
 	    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
 

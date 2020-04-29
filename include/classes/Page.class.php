@@ -10,7 +10,7 @@ class Page {
 	function __construct() {
 		global $db, $user_id;
 
-		$this->table_prefix = getConfiguration('tablePrefix'); // table prefix
+		$this->table_prefix = get_configuration('tablePrefix'); // table prefix
 		$this->transfer_protocol = transfer_protocol(); // transfer protocol
 		$this->db = $db; // database
 		$this->user_id = $user_id; // user id with active login

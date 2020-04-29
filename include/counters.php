@@ -30,12 +30,12 @@ $bz_ip = $ip;
 $xmatch = $user_id . '-' . $ip . '-' . $users->user_browser();
 
 // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
-$db->delete(getConfiguration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
+$db->delete(get_configuration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
 
 if (!isset($searchbot)) { $searchbot = ''; }
 
-if ($db->count_row(getConfiguration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
-    while ($bz_row = $db->get_data(getConfiguration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'")) {
+if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
+    while ($bz_row = $db->get_data(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'")) {
         if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
             $fields[] = 'date';
             $fields[] = 'page';
@@ -43,7 +43,7 @@ if ($db->count_row(getConfiguration('tablePrefix') . 'online', "usr_chck = '" . 
             $values[] = $bz_date;
             $values[] = $phpself;
              
-            $db->update(getConfiguration('tablePrefix') . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
+            $db->update(get_configuration('tablePrefix') . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
             unset($fields, $values);
             
             $found = 1;
@@ -57,7 +57,7 @@ if ($db->count_row(getConfiguration('tablePrefix') . 'online', "usr_chck = '" . 
             'usr_chck' => $xmatch,
             'bot' => $searchbot
             );
-            $db->insert_data(getConfiguration('tablePrefix') . 'online', $values);
+            $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
             unset($values);
         } 
     } 
@@ -70,12 +70,12 @@ if ($db->count_row(getConfiguration('tablePrefix') . 'online', "usr_chck = '" . 
     'usr_chck' => $xmatch,
     'bot' => $searchbot
     );
-    $db->insert_data(getConfiguration('tablePrefix') . 'online', $values);
+    $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
     unset($values);
 } 
 
     // counter
-    $counts = $db->get_data(getConfiguration('tablePrefix') . 'counter');
+    $counts = $db->get_data(get_configuration('tablePrefix') . 'counter');
 
     $current_day = $counts['day'];
     $clicks_today = $counts['clicks_today'];
@@ -118,12 +118,12 @@ $values[] = $new_total_clicks;
 $values[] = $new_visits_today;
 $values[] = $new_total_visits;
 
-$db->update(getConfiguration('tablePrefix') . 'counter', $fields, $values);
+$db->update(get_configuration('tablePrefix') . 'counter', $fields, $values);
 unset($fields, $values);
 
 // show stats
-$counter_online = $db->count_row(getConfiguration('tablePrefix') . 'online');
-$counter_reg = $db->count_row(getConfiguration('tablePrefix') . 'online', "user > 0");
+$counter_online = $db->count_row(get_configuration('tablePrefix') . 'online');
+$counter_reg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
 
 $counter_host = $new_visits_today;
 $counter_all = $new_total_visits;

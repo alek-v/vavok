@@ -15,7 +15,7 @@ if (empty($_GET['page']) || $_GET['page'] < 1) {
 
 $start = $config["dataOnPage"] * ($page - 1);
 
-if ($config["showRefPage"] == "1" || isadmin()) {
+if ($config["showRefPage"] == "1" || $users->is_administrator()) {
     $file = file("../used/referer.dat");
     $file = array_reverse($file);
     $total = count($file);
