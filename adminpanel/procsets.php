@@ -1,10 +1,10 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/strtup.php";
 
-if (!$users->is_reg() || !$users->is_administrator('', 101)) {
-    header("Location: ../?error");
-    exit;
+if (!$users->is_reg() || !$users->is_administrator(101)) {
+    redirect_to("../?auth_error");
 }
 
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
@@ -54,7 +54,7 @@ $htaccess_tp_s = '# force https protocol
 RewriteCond %{HTTPS} !=on
 RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 
-        if (getConfiguration('transferProtocol') == 'HTTPS' && ($udata[21] == 'auto' || $udata[21] == 'HTTP')) {
+        if (get_configuration('transferProtocol') == 'HTTPS' && ($udata[21] == 'auto' || $udata[21] == 'HTTP')) {
             // disable forcing HTTPS in .htaccess
 
             $file = file_get_contents('../.htaccess');
@@ -67,7 +67,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 
             file_put_contents('../.htaccess', $file);
 
-        } elseif ($udata[21] == 'HTTPS' && (getConfiguration('transferProtocol') == 'HTTP' || getConfiguration('transferProtocol') == 'auto')) {
+        } elseif ($udata[21] == 'HTTPS' && (get_configuration('transferProtocol') == 'HTTP' || get_configuration('transferProtocol') == 'auto')) {
             // enable forcing HTTPS in .htaccess
 
             $file = file_get_contents('../.htaccess');
@@ -81,44 +81,47 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
             file_put_contents('../.htaccess', $file);
         }
 
-        redirect_to("setting.php?isset=mp_yesset");
+        redirect_to("settings.php?isset=mp_yesset");
     } else {
-        redirect_to("setting.php?action=setone&isset=mp_nosset");
+        redirect_to("settings.php?action=setone&isset=mp_nosset");
     } 
 } 
 
 
 if ($action == "edittwo") {
-if ($_POST['conf_set4'] != "" && $_POST['conf_set5'] != "" && $_POST['conf_set7'] != "" && isset($_POST['conf_set32']) && $_POST['conf_set74'] != "") {
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
 
-$udata[4] = (int)$_POST['conf_set4'];
-$udata[5] = (int)$_POST['conf_set5'];
-$udata[7] = (int)$_POST['conf_set7'];
-$udata[32] = (int)$_POST['conf_set32']; // cookie consent
-$udata[74] = (int)$_POST['conf_set74'];
+	if ($_POST['conf_set4'] != "" && $_POST['conf_set5'] != "" && $_POST['conf_set7'] != "" && isset($_POST['conf_set32']) && $_POST['conf_set74'] != "") {
+	
+	$ufile = file(BASEDIR . "used/config.dat");
+	$udata = explode("|", $ufile[0]);
 
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
+	$udata[4] = (int)$_POST['conf_set4'];
+	$udata[5] = (int)$_POST['conf_set5'];
+	$udata[7] = (int)$_POST['conf_set7'];
+	$udata[32] = (int)$_POST['conf_set32']; // cookie consent
+	$udata[74] = (int)$_POST['conf_set74'];
 
-if (!empty($udata[8]) && !empty($udata[9])) {
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-} 
-header ("Location: setting.php?isset=mp_yesset");
-exit;
-} else {
-header ("Location: setting.php?action=settwo&isset=mp_nosset");
-exit;
-} 
+	for ($u = 0; $u < $config["configKeys"]; $u++) {
+	    $utext .= $udata[$u] . '|';
+	} 
+
+	if (!empty($udata[8]) && !empty($udata[9])) {
+	    $fp = fopen(BASEDIR . "used/config.dat", "a+");
+	    flock($fp, LOCK_EX);
+	    ftruncate($fp, 0);
+	    fputs($fp, $utext);
+	    fflush($fp);
+	    flock($fp, LOCK_UN);
+	    fclose($fp);
+	    unset($utext);
+	} 
+	header ("Location: settings.php?isset=mp_yesset");
+	exit;
+	} else {
+	header ("Location: settings.php?action=settwo&isset=mp_nosset");
+	exit;
+	} 
+	
 } 
 
 if ($action == "editthree") {
@@ -153,10 +156,10 @@ if (!empty($udata[8]) && !empty($udata[9])) {
     fclose($fp);
     unset($utext);
 } 
-header ("Location: setting.php?isset=mp_yesset");
+header ("Location: settings.php?isset=mp_yesset");
 exit;
 } else {
-header ("Location: setting.php?action=setthree&isset=mp_nosset");
+header ("Location: settings.php?action=setthree&isset=mp_nosset");
 exit;
 } 
 } 
@@ -222,10 +225,10 @@ if ($gallery_file) {
     }
 }
 
-header ("Location: setting.php?isset=mp_yesset");
+header ("Location: settings.php?isset=mp_yesset");
 exit;
 } else {
-header ("Location: setting.php?action=setfour&isset=mp_nosset");
+header ("Location: settings.php?action=setfour&isset=mp_nosset");
 exit;
 } 
 } 
@@ -251,10 +254,10 @@ if (!empty($udata[8]) && !empty($udata[9])) {
     fclose($fp);
     unset($utext);
 } 
-header ("Location: setting.php?isset=mp_yesset");
+header ("Location: settings.php?isset=mp_yesset");
 exit;
 } else {
-header ("Location: setting.php?action=setfive&isset=mp_nosset");
+header ("Location: settings.php?action=setfive&isset=mp_nosset");
 exit;
 } 
 }
@@ -283,74 +286,85 @@ if (!empty($udata[8]) && !empty($udata[9])) {
     fclose($fp);
     unset($utext);
 } 
-header ("Location: setting.php?isset=mp_yesset");
+header ("Location: settings.php?isset=mp_yesset");
 exit;
 } else {
-header ("Location: setting.php?action=setseven&isset=mp_nosset");
+header ("Location: settings.php?action=setseven&isset=mp_nosset");
 exit;
 } 
 } 
 
 if ($action == "editeight") {
-if ($_POST['conf_set58'] != "" && $_POST['conf_set76'] != "") {
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
 
-$udata[58] = (int)$_POST['conf_set58'];
-$udata[76] = round($_POST['conf_set76'] * 1440);
+    if ($_POST['conf_set58'] != "" && $_POST['conf_set76'] != "") {
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
 
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
+    $udata[58] = (int)$_POST['conf_set58'];
+    $udata[76] = round($_POST['conf_set76'] * 1440);
 
-if (!empty($udata[8]) && !empty($udata[9])) {
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-} 
-header ("Location: setting.php?isset=mp_yesset");
-exit;
-} else {
-header ("Location: setting.php?action=seteight&isset=mp_nosset");
-exit;
-} 
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    if (!empty($udata[8]) && !empty($udata[9])) {
+        $fp = fopen(BASEDIR . "used/config.dat", "a+");
+        flock($fp, LOCK_EX);
+        ftruncate($fp, 0);
+        fputs($fp, $utext);
+        fflush($fp);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        unset($utext);
+    }
+
+    redirect_to ("settings.php?isset=mp_yesset");
+
+    } else {
+    redirect_to ("settings.php?action=seteight&isset=mp_nosset");
+    } 
+
 } 
 // edit database settings
 if ($action == "editnine") {
-if ($_POST['conf_set77'] != "" && $_POST['conf_set78'] != "" && $_POST['conf_set79'] != "" && $_POST['conf_set80'] != "") {
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
 
-$udata[77] = $_POST['conf_set77'];
-$udata[78] = $_POST['conf_set78'];
-$udata[79] = $_POST['conf_set79'];
-$udata[80] = $_POST['conf_set80'];
+    if ($_POST['conf_set77'] != "" && $_POST['conf_set78'] != "" && $_POST['conf_set79'] != "" && $_POST['conf_set80'] != "") {
 
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
+        // check for tables
+        if (!$db->table_exists($_POST['conf_set71'] . 'pages')) { $db->copy_table('pages', $_POST['conf_set71']); } // pages for this site
+        if (!$db->table_exists($_POST['conf_set71'] . 'online')) { $db->copy_table('online', $_POST['conf_set71']); } // visitor counter for this site
+        if (!$db->table_exists($_POST['conf_set71'] . 'specperm')) { $db->copy_table('specperm', $_POST['conf_set71']); } // permittions for this site
 
-if (!empty($udata[8]) && !empty($udata[9])) {
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-} 
-header ("Location: setting.php?isset=mp_yesset&amp;" . SID);
-exit;
-} else {
-header ("Location: setting.php?action=setnine&isset=mp_nosset&amp;" . SID);
-exit;
-} 
+        if (!$db->table_exists($_POST['conf_set71'] . 'counter')) {
+
+            $db->copy_table('counter', $_POST['conf_set71']);
+
+            // set default values
+            $db->query("INSERT INTO " . $_POST['conf_set71'] . "counter (`day`, `month`, `visits_today`, `visits_total`, `clicks_today`, `clicks_total`) VALUES (0, 0, 0, 0, 0, 0)");
+
+        } // visitor counter for this site
+
+
+
+        $data = array(
+            71 => $_POST['conf_set71'], // crossdomain table prefix 'tablePrefix'
+            77 => $_POST['conf_set77'],
+            78 => $_POST['conf_set78'],
+            79 => $_POST['conf_set79'],
+            80 => $_POST['conf_set80']
+        );
+
+        $config_update = new Config();
+        $config_update->update($data);
+
+        redirect_to("settings.php?isset=mp_yesset");
+
+    } else {
+
+    redirect_to("settings.php?action=setnine&isset=mp_nosset");
+
+    }
+
 }
 
 

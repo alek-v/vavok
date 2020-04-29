@@ -1,6 +1,6 @@
 <?php
 // Aleksandar Vranešević - (c) vavok.net
-// modified: 16.04.2020. 0:34:14
+// modified: 29.04.2020. 0:11:17
 
 
 $con_text = file_get_contents(BASEDIR . "used/config.dat");
@@ -56,6 +56,7 @@ $config = array(
 "forumChLang" => $con_data[68], // choose language in forum
 "gzip" => $con_data[69], // turn on gzip
 "showRefPage" => $con_data[70], // show referer page
+"tablePrefix" => $con_data[71], // table prefix for crossdomain functionalities. This will separate counter, special permittions and pages
 "showCounter" => $con_data[74], // show counter on page in which mode (visits, clicks, total or graphic)
 "sessionLife" => $con_data[75], // session lifetime
 "maxBanTime" => $con_data[76], // maximum ban time
@@ -73,7 +74,6 @@ $config["timeZone"] = empty($config["timeZone"]) ? $config["timeZone"] = 0 : $co
 $config["siteTime"] = time() + ($config["timeZone"] * 3600); 
 $config["homeBase"] = str_replace("http://", "", $config["homeUrl"]);
 $config["homeBase"] = str_replace("https://", "", $config["homeBase"]);
-$config["tablePrefix"] = ''; // database prefix
 $config["configFile"] = 'used/config.dat'; // configuration file
 
 // no. of fields in config file

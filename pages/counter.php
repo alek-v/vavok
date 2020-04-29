@@ -1,10 +1,10 @@
 <?php 
-// modified: 10.1.2016. 1:35:25
+// modified: 
+
 require_once"../include/strtup.php";
 
 if ($config["showCounter"] == 6 && !$users->is_administrator()) {
-    header("Location: ../");
-    exit;
+    redirect_to("../");
 }
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -20,15 +20,15 @@ if (!empty($_GET['action'])) {
 
 $hour = (int)date("H", $time);
 $hday = date("j", $time)-1;
-// 
-if (empty($action)) {
-    $pcounter_guest = $db->count_row('online', "user='0'");
 
-    $pcounter_online = $db->count_row('online');
+if (empty($action)) {
+    $pcounter_guest = $db->count_row(get_configuration('tablePrefix') . 'online', "user='0'");
+
+    $pcounter_online = $db->count_row(get_configuration('tablePrefix') . 'online');
 
     $pcounter_reg = $pcounter_online - $pcounter_guest;
 
-    $counts = $db->select('counter', '', '*');
+    $counts = $db->get_data(get_configuration('tablePrefix') . 'counter');
 
     $clicks_today = $counts['clicks_today'];
     $total_clicks = $counts['clicks_total'];
@@ -36,11 +36,12 @@ if (empty($action)) {
     $total_visits = $counts['visits_total']; // total visits
 
     echo $lang_count['temponline'] . ': ';
-    if ($config["showOnline"] == 1 || isadmin()) {
+    if ($config["showOnline"] == 1 || $users->is_administrator()) {
         echo '<a href="online.php">' . (int)$pcounter_online . '</a><br />';
     } else {
         echo '<b>' . (int)$pcounter_online . '</b><br />';
-    } 
+    }
+
     echo $lang_count['registered'] . ': <b>' . (int)$pcounter_reg . '</b><br />';
     echo $lang_count['guests'] . ': <b>' . (int)$pcounter_guest . '</b><br /><br />';
 
@@ -52,25 +53,8 @@ if (empty($action)) {
     //echo $lang_count['vstinhour'] . ': <b>' . (int)$pcounter_hourhost . '</b><br />';
     //echo $lang_count['vstpagesinhour'] . ': <b>' . (int)$pcounter_hourhits . '</b><br /><br />';
 
-    /*
+}
 
-    echo $lang_count['vstin24h'] . ': <b>' . (int)($p24_allhost + $pcounter_hourhost) . '</b><br />';
-    echo $lang_count['vstpgsin24h'] . ': <b>' . (int)($p24_allhits + $pcounter_hourhits) . '</b><br /><br />';
-
-    echo $lang_count['vstsinmonth'] . ': <b>' . (int)($p31_allhost + $pcounter_host) . '</b><br />';
-    echo $lang_count['vstpagesinmonth'] . ': <b>' . (int)($p31_allhits + $pcounter_hits) . '</b><br /><br />';
-
-
-    echo $lang_count['vstin24hgraph'] . '<br />';
-    echo '<img src="' . BASEDIR . 'gallery/count24.php" alt=""><br /><br />';
-
-    echo $lang_count['vstsinmontgraph'] . '<br />';
-    echo '<img src="' . BASEDIR . 'gallery/count31.php" alt=""><br /><br />';
-
-    echo '<a href="counter.php?action=count24&amp;' . SID . '">' . $lang_count['statbyhour'] . '</a><br />';
-    echo '<a href="counter.php?action=count31&amp;' . SID . '">' . $lang_count['statbyday'] . '</a><br />';
-*/
-} 
 // last 24 hours
 if ($action == "count24") {
     exit;

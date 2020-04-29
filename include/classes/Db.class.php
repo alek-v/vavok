@@ -246,7 +246,8 @@ class db extends PDO {
 
     }
 
-    function table_exists($table) { 
+    function table_exists($table) {
+
         // Try a select statement against the table
         // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
         try {
@@ -262,7 +263,17 @@ class db extends PDO {
         } 
         // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
         return $result !== false;
-    } 
+
+    }
+
+
+    function copy_table($table, $prefix) {
+
+        $this->query("CREATE TABLE " . $prefix . $table . " LIKE " . $table);
+
+    }
+
+
 } 
 
 
