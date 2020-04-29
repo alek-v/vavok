@@ -1,6 +1,12 @@
 <?php
-// (c) vavok.net
-// class for user management
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Package:   Class for user management
+* Updated:   29.04.2020. 9:15:50
+*/
+
 
 class Users {
 
@@ -8,6 +14,24 @@ class Users {
 		global $db;
 
 		$this->db = $db;
+	}
+
+	function logout($user_id) {
+
+	    $this->db->delete('online', "user = '{$user_id}'");
+
+	    // destroy cookies
+	    setcookie('cooklog', "", time() - 3600);
+	    setcookie('cookpass', "", time() - 3600);
+	    setcookie(session_name(), "", time() - 3600);
+
+	    // if user is logged in from root dir
+	    setcookie("cooklog", '', 1, '/');
+	    setcookie("cookpass", '', 1, '/');
+
+	    // destoy session
+	    session_destroy();
+
 	}
 
 	// get user nick from user id number
@@ -194,21 +218,33 @@ class Users {
 
 	// check current session if user is registered
 	function is_reg() {
-	    if (!empty($_SESSION['log']) && !empty($_SESSION['pass'])) {
+
+	    if (!empty($_SESSION['log']) && !empty($_SESSION['permissions'])) {
+
 	        $isuser_check = $this->getidfromnick(check($_SESSION['log']));
+
 	        if (!empty($isuser_check)) {
-	            $show_user = $this->db->get_data('vavok_users', "id='" . $isuser_check . "'", 'name, pass');
-	            if (check($_SESSION['log']) == $show_user['name'] && $this->password_check($_SESSION['pass'], $show_user['pass'])) {
+
+	            $show_user = $this->db->get_data('vavok_users', "id='" . $isuser_check . "'", 'name, perm');
+
+	            if (check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
+	            	// everything is ok
 	                return true;
 	            } else {
 	                session_destroy();
 	                return false;
 	            }
+
 	        } else {
 	            session_destroy();
 	            return false;
 	        }
+
+	    } else {
+	    	return false;
 	    }
+
+
 	}
 
 	// get info about user

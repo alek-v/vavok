@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranesevic
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   29.04.2020. 9:14:39
+*/
+
 
 // website configuration
 function get_configuration($data = '') {

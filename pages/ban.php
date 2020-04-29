@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   29.04.2020. 9:15:57
+*/
+
 require_once"../include/strtup.php";
 
 $my_title = $lang_ban['banned'];
@@ -7,8 +13,9 @@ $my_title = $lang_ban['banned'];
 $mediaLikeButton = 'off'; // dont show like buttons
 
 if ($users->is_reg()) {
-    $vavok_userx = $db->select('vavok_users', "id='" . $user_id . "'", '', 'banned');
-    $show_prof = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'bantime, bandesc, allban');
+
+    $vavok_userx = $db->get_data('vavok_users', "id='" . $user_id . "'", 'banned');
+    $show_prof = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'bantime, bandesc, allban');
 
     $banned = $vavok_userx['banned'];
     $bantime = $show_prof['bantime'];
@@ -19,14 +26,9 @@ if ($users->is_reg()) {
     $time_ban = round($bantime - $time);
 
         if ($time_ban > 0) {
+
             // remove session - logout user
-            unset($_SESSION['log']);
-            unset($_SESSION['pass']);
-            setcookie('cookpass', "", time() - 3600);
-            setcookie('cooklog', "", time() - 3600);
-            setcookie(session_name(), "", time() - 3600);
-            session_unset();
-            session_destroy();
+            $users->logout($user_id);
 
             // headers could not be send before cookies, so we load it here
             include_once"../themes/$config_themes/index.php";
@@ -41,6 +43,7 @@ if ($users->is_reg()) {
             echo $lang_ban['becarefnr'] . '<br /><br />';
 
         } else {
+
             include_once"../themes/$config_themes/index.php";
 
             echo '<img src="../images/img/open.gif" alt=""> ' . $lang_ban['wasbanned'] . '<br /><br />';
@@ -53,11 +56,11 @@ if ($users->is_reg()) {
 
             $db->update('vavok_users', 'banned', 0, "id='" . $user_id . "'");
             $db->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='" . $user_id . "'");
+
         } 
  
 } else {
-    header ("Location: ../");
-    exit;
+    redirect_to("../");
 } 
 
 echo '<br><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';

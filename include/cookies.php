@@ -2,12 +2,12 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
-* Updated:   29.04.2020. 5:26:45
+* URI:       http://vavok.net
+* Updated:   29.04.2020. 9:03:54
 */
 
 // set cookie
-if (empty($_SESSION['log']) && empty($_SESSION['pass']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog'])) {
+if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog'])) {
 
     // decode username from cookie
     $unlog = xoft_decode($_COOKIE['cooklog'], $config["keypass"]);
@@ -19,7 +19,7 @@ if (empty($_SESSION['log']) && empty($_SESSION['pass']) && !empty($_COOKIE['cook
 	$cookie_id = $users->getidfromnick($unlog);
 
     // get user's data
-	$cookie_check = $db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass');
+	$cookie_check = $db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass, perm');
 
     // if user exists
     if (!empty($cookie_check['name'])) {
@@ -33,13 +33,13 @@ if (empty($_SESSION['log']) && empty($_SESSION['pass']) && !empty($_COOKIE['cook
 
             // write current session data
             $_SESSION['log'] = $unlog;
-            $_SESSION['pass'] = $unpar;
+            $_SESSION['permissions'] = $cookie_check['perm'];
             $_SESSION['my_ip'] = $my_ip;
             $_SESSION['my_brow'] = $users->user_browser();
             
             // update ip address and last visit time
-            $db->update('vavok_users', 'ipadd', $ip, "id = '" . $cookie_id . "'");
-            $db->update('vavok_profil', 'lastvst', time(), "uid = '" . $cookie_id . "'");
+            $db->update('vavok_users', 'ipadd', $ip, "id = '{$cookie_id}'");
+            $db->update('vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
         }
     } 
 }

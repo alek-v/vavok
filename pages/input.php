@@ -1,5 +1,10 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranešević
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   29.04.2020. 9:16:06
+*/
 
 require_once"../include/strtup.php";
 
@@ -98,7 +103,6 @@ if (empty($action) && !empty($log)) {
         $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
 
         $_SESSION['log'] = $log;
-        $_SESSION['pass'] = $pass;
         $_SESSION['permissions'] = $show_userx['perm'];
         $_SESSION['my_ip'] = $my_ip;
         $_SESSION['my_brow'] = $users->user_browser();
@@ -130,19 +134,9 @@ if (empty($action) && !empty($log)) {
  
 // logout
 if ($users->is_reg() && $action == "exit") {
-    $db->delete('online', "user = '" . $user_id . "'");
 
-    // destroy cookies
-    setcookie('cooklog', "", time() - 3600);
-    setcookie('cookpass', "", time() - 3600);
-    setcookie(session_name(), "", time() - 3600);
-
-    // if user is logged in from root dir
-    setcookie("cooklog", '', 1, '/');
-    setcookie("cookpass", '', 1, '/');
-
-    // destoy session
-    session_destroy();
+    // log out
+    $users->logout($user_id);
 
     redirect_to("../?isset=exit");
 }
