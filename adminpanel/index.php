@@ -130,7 +130,7 @@ if ($action == 'main') {
 
     if ($users->is_administrator(101, $user_id)) {
         echo '<hr>';
-        echo '<a href="setting.php" class="btn btn-outline-primary sitelink">' . $lang_admin['syssets'] . '</a>';
+        echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_admin['syssets'] . '</a>';
         echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngprof'] . '</a>';
         echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $lang_admin['ipbanp'] . ' (' . counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
         if (file_exists('subscribe.php')) {
@@ -167,6 +167,7 @@ if ($action == "clrmlog" && $users->is_administrator(101)) {
 } 
 
 if ($action == "sysmng" && $users->is_administrator(101)) {
+    echo '<p>';
     echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['chksystem'] . '</a>';
     echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $lang_admin['cleansys'] . '</a>';
     if (file_exists('backup.php')) {
@@ -175,7 +176,9 @@ if ($action == "sysmng" && $users->is_administrator(101)) {
     echo '<a href="serverbenchmark.php" class="btn btn-outline-primary sitelink">Server benchmark</a>';
     // update
     // echo '<a href="index.php?action=opttbl">Optimize tables</a>'; // update lang
-    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a>';
+    echo '</p>';
+    
+    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 } 
 
 if ($action == "opttbl" && $users->is_administrator(101)) {
@@ -189,7 +192,7 @@ if ($action == "opttbl" && $users->is_administrator(101)) {
     } 
 
     echo '<p><img src="../images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
-    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a>';
+    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 }
 // check vavok cms version
 if ($action == 'version') {
