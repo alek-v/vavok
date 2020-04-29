@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   29.04.2020. 5:33:33
+* Updated:   29.04.2020. 6:39:14
 */
 
 
@@ -94,12 +94,31 @@ if ($substr_log < 3) {
                         $newMail = new Mailer;
                         $newMail->send($mail, $subject, $regmail);
 
-                        // reg. sucessful, show info
-                        echo '<p>' . $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p><p>' . $lang_reguser['loginnow'] . '<br /></p>';
+                        // registration successfully, show info
+                        echo '<p>' . $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p>';
 
+                        // confirm registration
                         if ($config["regConfirm"] == "1") {
+
+                        	echo '
+							<form method="post" action="key.php?action=inkey">
+
+								<div class="form-group">
+									<label for="key">' . $lang_home['yourkey'] . '</label>
+									<input type="text" class="form-control" id="key" name="key" placeholder="">
+								</div>
+								<button type="submit" class="btn btn-primary">' . $lang_home['confirm'] . '</button>
+
+							</form>
+                        	';
+
                             echo '<p><b>' . $lang_reguser['enterkeymessage'] . '</b></p>';
-                        } 
+
+                        } else {
+
+                        	echo '<p>' . $lang_reguser['loginnow'] . '<br /></p>';
+
+                        }
 
                     } else {
                         echo $lang_reguser['badcaptcha'] . '!<br />';
