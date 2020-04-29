@@ -1,9 +1,15 @@
 # Vavok v1.5
-- Updated caching
-- Updated functions
 - Update new password hashing
 - Update removed redirection from main page
 - Update installer improvements
+- Update user can create separate tables for cross domain website
+- Updated caching
+- Updated functions
+- Added function get_age() in Users.class.php
+- Renamed pages/setting.php to pages/settings.php
+- Renamed pages/profil.php to pages/profile.php
+- Renamed adminpanel/setting.php to adminpanel/settings.php
+- Renamed include/functions1.php to include/functions_extra.php
 
 
 
