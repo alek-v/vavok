@@ -4,6 +4,7 @@
 - Update installer improvements
 - Update user can create separate tables for cross domain website
 - Updated caching
+- Updated default theme
 - Updated functions
 - Added function get_age() in Users.class.php
 - Renamed pages/setting.php to pages/settings.php
