@@ -1,4 +1,12 @@
 <?php
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   29.04.2020. 7:40:07
+*/
+
+
 // database class
 class db extends PDO {
     private $error;
@@ -227,8 +235,10 @@ class db extends PDO {
             endforeach;
 
         } else {
-        //we are only updating one field
+
+            //we are only updating one field
             $buildSQL .= $fields.' = :value';
+            
         }
 
         $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
@@ -242,7 +252,7 @@ class db extends PDO {
 
         //record and print any DB error that may be given
         $error = $prepareUpdate->errorInfo();
-        if ($error[1]) print_r($error);
+        if ($error[1]) { print_r($error); } else { return $prepareUpdate->rowCount(); }
 
     }
 
