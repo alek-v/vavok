@@ -1,6 +1,7 @@
 <?php
 // (c) vavok.net
-// modified: 31.3.2013 17:26:38
+// 29.04.2020. 0:26:24
+
 function downloadFile($fullPath, $newname = '') {
 
   // Must be fresh start
@@ -53,6 +54,7 @@ function downloadFile($fullPath, $newname = '') {
   } else
     die('File Not Found');
 
-} 
+}
+
 
 ?>
