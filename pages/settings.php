@@ -1,7 +1,7 @@
 <?php
 // (c) vavok.net
 require_once"../include/strtup.php";
-require_once"../lang/" . $config["language"] . "/pagesprofil.php"; // lang file
+require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
@@ -20,7 +20,7 @@ $page_set = $db->select('page_setting', "uid='" . $user_id . "'", '', '*');
 $user_profil = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'subscri');
 $inbox_notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'active');
 
-echo '<br><form method="post" action="insetting.php">';
+echo '<br><form method="post" action="insettings.php">';
     
 echo $lang_home['lang'] . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
 
