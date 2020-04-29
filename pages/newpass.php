@@ -9,12 +9,16 @@ if (isset($_POST['oldpar'])) {$oldpar = check($_POST['oldpar']);}
 $mediaLikeButton = 'off'; // dont show like buttons
 
 if ($users->is_reg()) {
+    
     $check_pass = $db->select('vavok_users', "id='" . $user_id . "'", '', 'pass');
 		
     $newpar = check($newpar);
     $oldpar = check($oldpar);
+
     if ($newpar == $newpar2) {
-        if ($users->password_encrypt($oldpar) == $check_pass['pass']) {
+
+        if ($users->password_check($oldpar, $check_pass['pass'])) {
+
             // write changes
             $newpass = $users->password_encrypt($newpar);
 
@@ -26,19 +30,16 @@ if ($users->is_reg()) {
             setcookie(session_name(), '');
             session_destroy();
 
-            header("Location: " . website_home_address() . "/input.php?log=" . $users->getnickfromid($user_id) . "&pass=" . $newpar . "&isset=editpass");
-            exit;
+            redirect_to(website_home_address() . "/pages/input.php?log=" . $users->getnickfromid($user_id) . "&pass=" . $newpar . "&isset=editpass");
+
         } else {
-            header ("Location: profil.php?isset=nopass");
-            exit;
+            redirect_to("profile.php?isset=nopass");
         } 
     } else {
-        header ("Location: profil.php?isset=nonewpass");
-        exit;
+        redirect_to("profile.php?isset=nonewpass");
     } 
 } else {
-    header ("Location: ../index.php?isset=inputoff");
-    exit;
+    redirect_to("../index.php?isset=inputoff");
 } 
 
 ?>

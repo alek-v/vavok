@@ -109,14 +109,14 @@ if ($users->is_reg()) {
 
         echo '<p>Your photography successfully deleted!</p><br />'; // update lang
 
-        echo '<a href="profil.php">' . $lang_home['back'] . '</a><br />';
+        echo '<a href="profile.php">' . $lang_home['back'] . '</a><br />';
     } 
 } else {
     echo '<br>' . $lang_home['notloged'] . '<br><br><br>';
 } 
 
 if (empty($action)) {
-    echo '<a href="../pages/profil.php">' . $lang_home['back'] . '</a><br />';
+    echo '<a href="../pages/profile.php">' . $lang_home['back'] . '</a><br />';
 } 
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
