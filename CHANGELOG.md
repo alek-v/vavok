@@ -1,3 +1,12 @@
+# Vavok v1.5.1
+- Update session and cookie improvements
+- Update function update in Db.class.php return update result
+- Updated registration key improvements
+- Updated private message system
+- Added new languages
+
+
+
 # Vavok v1.5
 - Update new password hashing
 - Update removed redirection from main page
