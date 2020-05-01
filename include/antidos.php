@@ -26,7 +26,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
             $file_array_filemtime = filemtime(BASEDIR . "used/datados/$doslog");
             if ($file_array_filemtime < ($time-60)) {
                 if (file_exists(BASEDIR . "used/datados/$doslog")) {
-                    unlink(BASEDIR . "used/datados/$doslog");
+                    unlink(realpath(BASEDIR . "used/datados/$doslog"));
                 }
             } 
         } 
