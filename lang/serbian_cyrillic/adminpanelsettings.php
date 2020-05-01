@@ -1,0 +1,89 @@
+<?php
+// (c) vavok.net
+// modified: 10.3.2013 0:58:54
+
+$lang_apsetting['mainset'] = "Основна подешавања";
+$lang_apsetting['database'] = "база података";
+$lang_apsetting['shwinfo'] = "Приказивање информација"; // clock, counter, visitors online, page generation time...
+$lang_apsetting['bookchatnews'] = "Књига гостију / Чат / Вести";
+$lang_apsetting['forumgallery'] = "Форум / Галерија";
+$lang_apsetting['downvoteinbx'] = "Преузимање / Анкета / Сандуче";
+$lang_apsetting['advert'] = "Реклама";
+$lang_apsetting['pagemanage'] = "Управљање страницама";
+$lang_apsetting['other'] = "Друго";
+$lang_apsetting['language'] = "Језик";
+$lang_apsetting['webskin'] = "WEB тема";
+$lang_apsetting['adminusername'] = "Корисничко име администратора";
+$lang_apsetting['adminemail'] = "Адреса е-поште администратора";
+$lang_apsetting['timezone'] = "Временска зона";
+$lang_apsetting['pagetitle'] = "Наслов свих страница";
+$lang_apsetting['siteurl'] = "URL адреса сајта";
+$lang_apsetting['logourl'] = "Адреса лого-а";
+$lang_apsetting['floodtime'] = "Време antiflood-a (сек)";
+$lang_apsetting['rootdir'] = "Назив root-a на хосту";
+$lang_apsetting['apfolder'] = "Фолдер са управљачким панелом";
+$lang_apsetting['passkey'] = "Кључ за шифре";
+$lang_apsetting['quarantinetime'] = "Трајање карантина";
+$lang_apsetting['disabled'] = "Искључено";
+$lang_apsetting['hours'] = "часова";
+$lang_apsetting['openreg'] = "Регистрација отворена";
+$lang_apsetting['yes'] = "Да";
+$lang_apsetting['no'] = "Не";
+$lang_apsetting['confregs'] = "Потврђивање регистрације";
+$lang_apsetting['gzip'] = "GZIP компресија страница";
+$lang_apsetting['greeting'] = "Приказивање поздрава";
+$lang_apsetting['showclock'] = "Покажи сат";
+$lang_apsetting['pagegen'] = "Прикажи време извршавања странице";
+$lang_apsetting['oncounter'] = "Прикажи бројач";
+$lang_apsetting['showonline'] = "Прикажи тренутне посетиоце";
+$lang_apsetting['countlook'] = "Вид бројача";
+$lang_apsetting['dontshow'] = "Не приказуј";
+$lang_apsetting['vsttotalvst'] = "Посете / Укупно посета";
+$lang_apsetting['clicktotalclick'] = "Кликови / Укупно кликова";
+$lang_apsetting['clickvisits'] = "Кликови / Посете";
+$lang_apsetting['totclicktotvst'] = "Укупно кликова / Укупно посета";
+$lang_apsetting['graphic'] = "Графички";
+$lang_apsetting['gbnewschatset'] = "Подешавање књиге гостију, вести сајта и чата";
+$lang_apsetting['newsonpg'] = "Вести на страници";
+$lang_apsetting['newsonhome'] = "Број вести на главној";
+$lang_apsetting['msgsinbookonpg'] = "Порука у књизи на страни";
+$lang_apsetting['allowguestingb'] = "Дозволи нерегистрованим посетиоцима да пишу у књизи";
+$lang_apsetting['guest'] = "Неауторизовани посетилац";
+$lang_apsetting['maxinchat'] = "Колико порука чувати на чату";
+$lang_apsetting['msgsinchat'] = "Порука на страници у чату";
+$lang_apsetting['maxnews'] = "Колико вести чувати";
+$lang_apsetting['maxgbmsgs'] = "Колико порука у књизи чувати";
+$lang_apsetting['onepassmail'] = "Колико писама у пакету";
+$lang_apsetting['forumandgalset'] = "Подешавања форума / Фото фалерије";
+$lang_apsetting['forumon'] = "Дозволи свима приступ форуму";
+$lang_apsetting['fmmsgspp'] = "Порука на страници у форуму";
+$lang_apsetting['fmtpcpp'] = "Тема на страници у форуму";
+$lang_apsetting['fmfaxtopics'] = "Колико тема у форуму чувати";
+$lang_apsetting['photosperpg'] = "Број фотографија на страници";
+$lang_apsetting['photomaxkb'] = "Максимална величина фотографије у килобајтима (KB)";
+$lang_apsetting['photopx'] = "Максимална величина у пикселима";
+$lang_apsetting['downandinbxsets'] = "Подешавања преузимања, сандучета";
+$lang_apsetting['maxinbxmsgs'] = "Максималан број порука у сандучету";
+$lang_apsetting['msgsininbx'] = "Порука у сандучету на страници";
+$lang_apsetting['commindown'] = "Коментара на страници у секцији за преузимање";
+$lang_apsetting['filesindownpp'] = "Фајлова на страници у преузимању";
+$lang_apsetting['votesonp'] = "Анкета на страници";
+$lang_apsetting['advertconfs'] = "ПОдешавања реклама";
+$lang_apsetting['adsontop'] = "Укључути рекламу на врху";
+$lang_apsetting['adsonbottom'] = "Укључити рекламу на дну";
+$lang_apsetting['pagessets'] = "Подешавања страница";
+$lang_apsetting['dataonpage'] = "Података на страници";
+$lang_apsetting['maxwherelist'] = "Чувати у истојији ко је где";
+$lang_apsetting['maxrefererdata'] = "Чувати у истојији ко је одакле";
+$lang_apsetting['smilesonpage'] = "Смешака на страници";
+$lang_apsetting['showrefpage'] = "Прикажи ко је одакле страницу";
+$lang_apsetting['maxcommssave'] = "Колико коментара чувати";
+$lang_apsetting['maxlogfile'] = "Сачувати информација о грешкама у лог фајлу";
+$lang_apsetting['maxbantime'] = "Максимално трајање казне (дана)";
+$lang_apsetting['username'] = "Корисничко име";
+$lang_apsetting['password'] = "Шифра";
+$lang_apsetting['dbname'] = "Име базе";
+
+
+
+?>

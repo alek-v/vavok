@@ -1,6 +1,10 @@
 <?php
-// (c) vavok.net
-// modified: 07.04.2020. 18:13:35
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   29.04.2020. 6:38:37
+*/
 
 
 $lang_reguser['registration'] = "Registration";
@@ -18,9 +22,8 @@ $lang_reguser['hello'] = "Hello";
 $lang_reguser['regoknick'] = "You have been successfully registered!<br> Your nickname";
 $lang_reguser['loginnow'] = "You can now login";
 $lang_reguser['entersite'] = "Enter website";
-$lang_reguser['enterkeymessage'] = "After you login into the website you need to enter keycode that has been sent to your email address.<br />
-If you do not receive the confirmation message in next few minutes, <br />
-please check your spam folder just in case email got delivered there.<br />
+$lang_reguser['enterkeymessage'] = "Enter keycode that has been sent to your email address.<br />
+If you do not receive the confirmation message in next few minutes, please check your spam folder just in case email got delivered there.<br />
 If email is selected as spam, please confirm that it is not spam, which should allow future messages to be delivered successfully.";
 $lang_reguser['autologinmsg'] = "You can save the link for automatical logging in, which looks like";
 $lang_reguser['copy'] = "Copy";
@@ -30,5 +33,8 @@ $lang_reguser['userexists'] = "You cannot register with that username because it
 $lang_reguser['emailexists'] = "Email address you used already exists in the database! Please use another email address";
 $lang_reguser['toomuchslashes'] = "You have used too many slashes in your username!<br>Try again";
 $lang_reguser['missingdata'] = "You didn't write data which is important for registration!<br>You have to complete all the fields";
+
+
+$lang_home = array_merge($lang_home, $lang_reguser);
 
 ?>

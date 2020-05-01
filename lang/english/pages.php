@@ -60,14 +60,14 @@ $lang_page['msgreportok'] = "Message successfully reported to moderators";
 $lang_page['msgalreareptd'] = "Message has already been reported to moderators";
 $lang_page['allmsginarunr'] = "All messages except archived and unread messages have been deleted";
 $lang_page['allmsgiunandard'] = "All messages except unread messages, but including archived messages, have been deleted";
-$lang_page['allmsgeunrarcd'] = "All messages except reported messages,but including unread and archived messages have been deleted";
+$lang_page['allmsgeunrarcd'] = "All messages except reported messages, but including unread and archived messages have been deleted";
 $lang_page['confreg'] = "Confirm registration";
 $lang_page['wellcome'] = "Welcome";
 $lang_page['confinfo'] = "To confirm your registration, you need to write the key code that has been sent to your email address";
 $lang_page['key'] = "Key code";
-$lang_page['actinfodel'] = "You cannot log into the site until you confirm your registration<br>You can activate your profile in 24 hours,when that time expires your profile will automatically be deleted ";
-$lang_page['keyok'] = "Key code successfully confirmed,you can log into the site now";
-$lang_page['keynotok'] = "Key code incorrect,please check the key you entered";
+$lang_page['actinfodel'] = "You cannot log into the site until you confirm your registration<br>You can activate your profile in 24 hours, when that time expires your profile will automatically be deleted ";
+$lang_page['keyok'] = "Key code successfully confirmed, you can log into the site now";
+$lang_page['keynotok'] = "Key code incorrect, please check the key you entered";
 $lang_page['nokey'] = "You didn't write any key code";
 $lang_page['ycsavelink'] = "You can save link for automatic loging in, which looks like";
 $lang_page['usernamebig'] = "USERNAME";
@@ -107,5 +107,6 @@ $lang_page['settings'] = "Settings";
 $lang_page['mailoruser'] = "E-mail or username";
 
 
+$lang_home = array_merge($lang_home, $lang_page);
 
 ?>

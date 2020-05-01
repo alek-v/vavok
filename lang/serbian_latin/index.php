@@ -1,0 +1,121 @@
+<?php
+// (c) vavok.net
+
+$language = 'serbian_latin';
+$ln_loc = 'sr';
+$ln_charset = 'UTF-8';
+$ln_allow_recoding = true;
+$ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
+$number_thousands_separator = ',';
+$number_decimal_separator = '.';
+// current date
+$currDate = str_replace("January", "Januar", $currDate);
+$currDate = str_replace("February", "Februar", $currDate);
+$currDate = str_replace("March", "Mart", $currDate);
+$currDate = str_replace("April", "April", $currDate);
+$currDate = str_replace("May", "Maj", $currDate);
+$currDate = str_replace("June", "Jun", $currDate);
+$currDate = str_replace("July", "Jul", $currDate);
+$currDate = str_replace("August", "Avgust", $currDate);
+$currDate = str_replace("September", "Septembar", $currDate);
+$currDate = str_replace("October", "Oktobar", $currDate);
+$currDate = str_replace("November", "Novembar", $currDate);
+$currDate = str_replace("December", "Decembar", $currDate); 
+// shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
+$ln_byteUnits = array('bajtova', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
+
+$ln_day_of_week = array('Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota','Nedelja');
+$ln_all_month = array('januar', 'februar', 'mart', 'april', 'maj', 'jun', 'jul', 'avgust', 'septembar', 'oktobar', 'novembar', 'decembar');
+
+// See http://www.php.net/manual/en/function.strftime.php to define the
+// variable below
+$ln_datefmt = '%d. %B %Y.';
+$ln_timefmt = '%H:%M';
+$ln_timespanfmt = '%s dana, %s sati, %s minuta i %s sekundi';
+
+// glavno
+$lang_home['home'] = "Na glavnu";
+$lang_home['login'] = "Prijavite se";
+$lang_home['register'] = "Registracija";
+$lang_home['lostpass'] = "Zaboravljena šifra";
+$lang_home['forum'] = "Forum";
+$lang_home['statistic'] = "Statistika";
+$lang_home['sitelife'] = "Život sajta";
+$lang_home['guestbook'] = "Knjiga gostiju";
+$lang_home['sitenews'] = "Novosti sajta";
+$lang_home['qpool'] = "Anketa";
+$lang_home['mymenu'] = "Moj meni";
+$lang_home['admpanel'] = "Admin panel";
+$lang_home['modpanel'] = "Moder panel";
+$lang_home['newmess'] = "Nova poruka!";
+$lang_home['inbox'] = "Sanduče";
+$lang_home['refresh'] = "Osveži";
+$lang_home['message'] = "Poruka";
+$lang_home['save'] = "Sačuvaj";
+$lang_home['nomsgs'] = "Nema poruka, budite prvi!";
+$lang_home['forw'] = "Napred";
+$lang_home['back'] = "Nazad";
+$lang_home['smile'] = "Smešci";
+$lang_home['bbcode'] = "BB kodovi";
+$lang_home['etoa'] = "Pošaljite email administratoru";
+$lang_home['msgfrmst'] = "Pismo sa sajta";
+$lang_home['datesent'] = "Datum slanja";
+$lang_home['yname'] = "Vaše ime";
+$lang_home['yemail'] = "Vaš email";
+$lang_home['send'] = "Pošaljite";
+$lang_home['captcha'] = "Kod za proveru";
+$lang_home['version'] = "verzija";
+$lang_home['confirm'] = "Potvrdi";
+$lang_home['usrnoexist'] = "Korisnik ne postoji";
+$lang_home['today'] = "Danas";
+$lang_home['delete'] = "Obriši";
+$lang_home['all'] = "sve";
+$lang_home['comment'] = "Komentar";
+$lang_home['time'] = "Vreme";
+$lang_home['user'] = "Član";
+$lang_home['access101'] = "Glavni administrator";
+$lang_home['access102'] = "Administrator";
+$lang_home['access103'] = "Glavni moderator";
+$lang_home['access105'] = "Viši moderator";
+$lang_home['access106'] = "Moderator";
+$lang_home['access107'] = "Član";
+$lang_home['username'] = "Korisničko ime";
+$lang_home['pass'] = "Šifra";
+$lang_home['logout'] = "Odjavite se";
+$lang_home['rembme'] = "Zapamti me";
+$lang_home['page'] = "Stranica";
+$lang_home['autopmreg'] = "Zdravo![br][br]Nadamo se da ćete nastaviti da nas posećujete![br][br]S poštovanjem, administracija sajta";
+$lang_home['lang'] = "Jezik";
+$lang_home['pggen'] = "Stranica generisana za";
+$lang_home['minutes'] = "minuta";
+$lang_home['hours'] = "sati";
+$lang_home['days'] = "dana";
+$lang_home['secs'] = "sekundi";
+$lang_home['guest'] = "Gost";
+$lang_home['search'] = "Pretraga";
+$lang_home['notloged'] = "Niste prijavljeni, da bi videli stranicu morate se <a href=\"" . BASEDIR. "pages/login.php\">prijaviti</a><br>ili najpre <a href=\"" . BASEDIR. "pages/registration.php\">registrovati</a>";
+$lang_home['next'] = "Napred";
+$lang_home['prev'] = "Nazad";
+$lang_home['contact'] = "Kontakt";
+$lang_home['readmore'] = "Opširnije";
+
+// cookie consent
+$lang_home['cookies'] = "Kolačići."; // Title
+$lang_home['purecookieDesc'] = "Korišćenjem ovog sajta prihvatate da koristite kolačiće."; // Description
+$lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_blank">Zbog čega?</a>'; // Cookiepolicy link
+$lang_home['purecookieButton'] = "Prihvatam"; // Button text
+
+// load additional language files
+$langdir = explode("/", $config_requri);
+$langdir = $langdir[1];
+
+$phpselflang = str_replace(".php", '', $subself);
+$phpselflang = str_replace("/", '', $phpselflang);
+
+if(file_exists(BASEDIR."lang/serbian_latin/" . $langdir . ".php")) {
+include_once BASEDIR."lang/serbian_latin/" . $langdir . ".php"; }
+if(file_exists(BASEDIR."lang/serbian_latin/" . $phpselflang . ".php")) {
+include_once BASEDIR."lang/serbian_latin/" . $phpselflang . ".php"; }
+
+// ob_start("cyr_to_lat_skiptags");
+?>
