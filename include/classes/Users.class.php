@@ -206,14 +206,66 @@ class Users {
 	} 
 
 	function parsepm($text) {
-	    $text = antiword($text);
-	    $text = smiles($text);
-	    $text = getbbcode($text);
+		
+		// decode
+		$text = base64_decode($text);
+
+		// format message
+	    $text = getbbcode(smiles(antiword($text)));
+
+	    // strip slashes
 	    if (get_magic_quotes_gpc()) {
 	        $text = stripslashes($text);
 	    } 
 
 	    return $text;
+	} 
+
+	// send private message
+	function send_pm($pmtext, $user_id, $who) {
+
+		$pmtext = base64_encode($pmtext);
+
+		$time = time();
+
+        $this->db->insert_data('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
+
+        $user_profile = $this->db->get_data('vavok_profil', "uid='{$who}'", 'lastvst');
+        $last_notif = $this->db->get_data('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
+        // no data in database, insert data
+        if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
+            $this->db->insert_data('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
+        } 
+        $notif_expired = $last_notif['lstinb'] + 864000;
+
+        if (($user_profile['lastvst'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
+            $user_mail = $this->db->get_data('vavok_about', "uid='{$who}'", 'email');
+
+            $send_mail = new Mailer();
+            $send_mail->send($user_mail['email'], "Message on " . $config["homeUrl"], "Hello " . $users->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $config["homeUrl"]); // update lang
+
+            $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
+        }
+
+	}
+
+	function autopm($msg, $who, $sys = '') {
+
+	    if (!empty($sys)) {
+	        $sysid = $sys;
+	    } else {
+	        $sysid = $this->getidfromnick('System');
+	    }
+
+	 	$values = array(
+	 	'text' => base64_encode($msg),
+	 	'byuid' => $sysid,
+	 	'touid' => $who,
+	 	'unread' => '1',
+	 	'timesent' => time()
+		);
+
+		$this->db->insert_data('inbox', $values);
 	} 
 
 	// check current session if user is registered
