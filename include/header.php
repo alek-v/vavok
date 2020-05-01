@@ -101,7 +101,13 @@ if (!empty($_SESSION['log'])) {
 // if skin not found
 if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
     $config_themes = 'default';
-} 
+}
+
+// current theme
+function my_theme($config_themes = '') {
+    global $config_themes;
+    return $config_themes;
+}
 
 // language settings
 // use language from session
