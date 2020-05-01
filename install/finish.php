@@ -34,7 +34,7 @@ if ($step == 'second') {
 		<a href="finish.php?step=third">Continue to next step</a>
 		</p>';
 
-		require_once "footer.php";
+		require_once "include/footer.php";
 		exit;
 	}
 
