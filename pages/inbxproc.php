@@ -3,8 +3,7 @@
 include("../include/strtup.php");
 
 if (!$users->is_reg()) {
-    header ("Location: ../pages/error.php?isset=nologin");
-    exit;
+    redirect_to("../pages/error.php?isset=nologin");
 } 
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -19,7 +18,7 @@ $system_id = $users->getidfromnick('System');
 $config["floodTime"] = 1;
 
 if ($who == $system_id) {
-    header("Location: inbox.php");
+    redirect_to("inbox.php");
 } 
 
 $my_title = $lang_home['inbox'];
@@ -28,64 +27,47 @@ if (empty($ajax)) {
 } 
 
 if ($action == "sendpm") {
-    $inbox_notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'active');
+    $inbox_notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'active');
 
-    $whonick = getnickfromid($who);
+    $whonick = $users->getnickfromid($who);
     $byuid = $user_id;
     $tm = time();
 
-    $stmt = $db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='" . $byuid . "'");
+    $stmt = $db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");
     $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
     $stmt->closeCursor();
 
     $pmfl = $lastpm + $config["floodTime"]; 
     // if ($byuid == 1)$pmfl = 0;
     if ($pmfl < $tm) {
-        if ((!isignored($byuid, $who))) {
-            $db->insert_data('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => $tm));
+        if (!isignored($byuid, $who)) {
+
+            $users->send_pm($pmtext, $user_id, $who);
 
             if (empty($ajax)) {
+
                 echo "<img src=\"../images/img/open.gif\" alt=\"O\"/>";
                 echo $lang_page['msgsentto'] . " $whonick<br /><br />";
                 echo $users->parsepm($pmtext);
-            } 
 
-            $user_profile = $db->select('vavok_profil', "uid='" . $who . "'", '', 'lastvst');
-            $last_notif = $db->select('notif', "uid='" . $who . "' AND type='inbox'", '', 'lstinb, type'); 
-            // no data in database, insert data
-            if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
-                $db->insert_data('notif', array('uid' => $who, 'lstinb' => $timex, 'type' => 'inbox'));
-            } 
-            $notif_expired = $last_notif['lstinb'] + 864000;
-
-            if (($user_profile['lastvst'] + 3600) < $timex && $timex > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
-                $user_mail = $db->select('vavok_about', "uid='" . $who . "'", '', 'email');
-
-                sendmail($user_mail['email'], "Message on " . $config["homeUrl"] . "", "Hello " . getnickfromid($who) . "\r\n\r\nYou have new message on site " . $config["homeUrl"] . ""); // update lang
-
-                $db->update('notif', 'lstinb', $timex, "uid='" . $who . "' AND type='inbox'");
-            } 
-            if ($ajax == '1') {
-                header("Location: inbox.php?action=dialog&who=" . $who . "");
+            } else {
+                header("Location: inbox.php?action=dialog&who=" . $who);
                 exit;
-            } 
+            }
+
         } else {
-            if ($ajax == 1) {
-                header("Location: inbox.php");
-                exit;
-            } 
+
             echo "<img src=\"../images/img/close.gif\" alt=\"X\"/> ";
             echo $lang_page['msgnotsent'] . "<br /><br />";
         } 
     } else {
-        if ($ajax == 1) {
-            header("Location: inbox.php");
-            exit;
-        } 
+
         $rema = $pmfl - $tm;
         echo "<img src=\"../images/img/close.gif\" alt=\"X\"/> ";
         echo "Flood control: $rema Seconds<br /><br />";
-    } 
+
+    }
+    
     echo '<br /><br /><img src="../images/img/mail.gif" alt=""> <a href="inbox.php?action=main">' . $lang_home['inbox'] . '</a><br />';
 } 
 
@@ -97,7 +79,7 @@ if ($action == "sendto") {
     if ($who == 0) {
         echo "<img src=\"../images/img/close.gif\" alt=\"X\"/> " . $lang_home['usrnoexist'] . "<br />";
     } else {
-        $whonick = getnickfromid($who);
+        $whonick = $users->getnickfromid($who);
         $byuid = $user_id;
         $tm = time();
 
@@ -106,13 +88,15 @@ if ($action == "sendto") {
         $stmt->closeCursor();
 
         $pmfl = $lastpm + $config["floodTime"];
+
         if ($pmfl < $tm) {
             if ((!isignored($byuid, $who))) {
-                $db->insert_data('inbox', array('text' => $pmtext, 'byuid' => $byuid, 'touid' => $who, 'timesent' => $tm));
+
+                $users->send_pm($pmtext, $byuid, $who);
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"O\"/> ";
                 echo $lang_page['msgsentto'] . " " . $whonick . "<br /><br />";
-                echo $users->parsepm($pmtext);
+                echo $pmtext;
 
                 $user_profile = $db->select('vavok_profil', "uid='" . $who . "'", '', 'lastvst');
                 $last_notif = $db->select('notif', "uid='" . $who . "' AND type='inbox'", '', 'lstinb, type'); 
