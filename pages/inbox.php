@@ -3,65 +3,32 @@
 require_once"../include/strtup.php";
 
 if (!$users->is_reg()) {
-    redirect_to("Location: ../");
+    redirect_to("Location: ../pages/login.php");
 } 
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
-$last_notif = $db->count_row('notif', "uid='" . $user_id . "' AND type='inbox'");
+$last_notif = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
 // update notification data
 if ($last_notif > 0) {
-    $db->update('notif', 'lstinb', 0, "uid='" . $user_id . "' AND type='inbox'");
+    $db->update('notif', 'lstinb', 0, "uid='{$user_id}' AND type='inbox'");
 } 
 
 $genHeadTag = '<meta name="robots" content="noindex">
 <script src="/js/inbox.js"></script>
 <script src="/js/ajax.js"></script>
-'; // dont index this
+'; // header data
 
 $my_title = $lang_home['inbox'];
 require_once"../themes/$config_themes/index.php";
 
-if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
-} else {
-    $action = '';
-} 
-if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
-} else {
-    $page = '';
-} 
-if (!empty($_GET['who'])) {
-    $who = check($_GET["who"]);
-} else {
-    $who = '';
-} 
-if (!empty($_GET['pmid'])) {
-    $pmid = check($_GET["pmid"]);
-} else {
-    $pmid = '';
-}
-$iml = '';
+$action = !isset($_GET['action']) check($_GET["action"] : '';
+$page = !isset($_GET['page']) check($_GET["page"] : '';
+$who = !isset($_GET['who']) check($_GET["who"] : '';
+$pmid = !isset($_GET['pmid']) check($_GET["pmid"] : '';
 
-if ($action == "sendpm") {
-    $whonick = $users->getnickfromid($who);
-    echo '<img src="../images/img/mail.gif" alt=""> Send PM to ' . $whonick . '<br /><br />'; // update lang
-    echo'<form method="post" action="inbxproc.php?action=sendpm&amp;who=' . $who . '">';
-    echo'<textarea cols="25" rows="3" name="pmtext"></textarea><br />';
-    echo'<input value="Send" name="do" type="submit" /></form><hr>'; // update lang
-    
-    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">Inbox</a><br />';
-} elseif ($action == "sendto") {
-    // $whonick = getnickfromid($who);
-    echo $lang_page['sendpmto'] . ':<br /><br />';
-    echo '<form method="post" action="inbxproc.php?action=sendto">';
-    echo $lang_home['username'] . ':<br /><input type="text" name="who" maxlength="20" /><br />';
-    echo $lang_home['message'] . '<br /><textarea cols="25" rows="3" name="pmtext"></textarea><br />';
-    echo '<input value="' . $lang_home['send'] . '" name="do" type="submit" /></form><hr><br />';
 
-    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
-} elseif ($action == "main" or empty($action)) {
+if ($action == "main" or empty($action)) {
 
     $page_set = $db->get_data('page_setting', "uid='" . $user_id . "'");
 
@@ -102,82 +69,27 @@ if ($action == "sendpm") {
 
             if ($item['unread'] == "1") {
                 $iml = '<img src="../images/img/new.gif" alt="New message" />';
-            }
+            } else { $iml = ''; }
 
             $lnk = '<a href="inbox.php?action=dialog&amp;who=' . $item['byuid'] . '" class="btn btn-outline-primary sitelink">' . $iml . ' ' . $item['name'] . '</a>';
             echo $lnk . "<br />";
         }
     }
 
-        echo '<br /><br/>';
+    echo '<br /><br/>';
 
-        echo Navigation::numbNavigation('inbox.php?action=main&amp;', $items_per_page, $page, $i);
+    // navigation
+    echo Navigation::numbNavigation('inbox.php?action=main&amp;', $items_per_page, $page, $i);
 
     } else {
         echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nopmsgs'] . '<br /><br />';
     } 
-    // //// UNTILL HERE >>
+
     echo '<a href="inbox.php?action=sendto" class="btn btn-primary sitelink">' . $lang_page['sendmsg'] . '</a><br />';
-} else if ($action == "readpm") {
 
-    $pminfo = $db->get_data('inbox', "id='{$pmid}'", 'text, byuid, timesent, touid, reported, deleted');
-    $system_id = $users->getidfromnick('System');
-
-    if ($user_id == $pminfo['touid']) {
-        $db->update('inbox', 'unread', 0, "id='" . $pmid . "'");
-    } 
-
-    if ($pminfo['deleted'] != $user_id && (($pminfo['touid'] == $user_id) || ($pminfo['byuid'] == $user_id))) {
-        if ($user_id == $pminfo['touid']) {
-            $ptxt = $lang_page['msgfrom'] . ": ";
-            if ($pminfo['byuid'] == $system_id) {
-                $bylnk = 'System';
-            } else {
-                $bylnk = "<a href=\"../pages/user.php?uz=" . $pminfo['byuid'] . "\" class=\"sitelink\">" . $iml . "" . getnickfromid($pminfo['byuid']) . "</a>";
-            } 
-        } else {
-            $ptxt = $lang_page['msgfor'] . ": ";
-
-            $bylnk = "<a href=\"../pages/user.php?uz=" . $pminfo['touid'] . "\" class=\"sitelink\">" . $iml . "" . getnickfromid($pminfo['touid']) . "</a>";
-        } 
-
-        echo "$ptxt $bylnk<br />";
-        $tmstamp = $pminfo['timesent'];
-        $tmdt = date_fixed($tmstamp, "d.m.Y. - H:i:s");
-        echo "$tmdt<br /><br />";
-        $pmtext = $users->parsepm($pminfo['text']);
-
-        echo $pmtext;
-
-        echo '<br /><br /><form method="post" action="inbxproc.php?action=proc">';
-        echo $lang_page['choose'] . ": <select name=\"pmact\">";
-        if ($pminfo['byuid'] != $system_id) {
-            echo "<option value=\"rep-$pmid\">" . $lang_page['replymsg'] . "</option>";
-        } 
-        echo "<option value=\"del-$pmid\">" . $lang_home['delete'] . "</option>";
-        if (isstarred($pmid)) {
-            echo "<option value=\"ust-$pmid\">" . $lang_page['unarchive'] . "</option>";
-        } else {
-            echo "<option value=\"str-$pmid\">" . $lang_page['archive'] . "</option>";
-        } 
-        echo "<option value=\"rpt-$pmid\">" . $lang_page['report'] . "</option>"; 
-        // echo "<option value=\"frd-$pmid\">Email To</option>";
-        // echo "<option value=\"dnl-$pmid\">Download</option>";
-        echo "</select>";
-        echo '<input value="[' . $lang_home['confirm'] . ']" type="submit" /></form><br />';
-        if ((int)$pminfo['byuid'] == (int)$user_id) {
-            $whouser = $pminfo['touid'];
-        } else {
-            $whouser = $pminfo['byuid'];
-        } 
-        echo '<a href="inbox.php?action=dialog&amp;who=' . $whouser . '" class="btn btn-outline-primary sitelink">Dialog</a>'; // update lang
-    } else {
-        echo "<img src=\"../images/img/close.gif\" alt=\"X\"/>This PM ain't yours";
-    } 
-    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 } else if ($action == "dialog") {
 
-    if (empty($page) || $page <= 0) {
+    if (empty($page) || $page < 1) {
         $page = 1;
     } 
 
@@ -212,7 +124,7 @@ if ($action == "sendpm") {
         echo '<p id="outputList" class="outputList"></p>'; // ajax messages
 
 
-        $pms = "SELECT * FROM inbox WHERE (byuid = '" . $user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent LIMIT $limit_start, $items_per_page";
+        $pms = "SELECT * FROM inbox WHERE (byuid = '" . $user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
         foreach ($db->query($pms) as $pm) {
             $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $users->getnickfromid($pm['byuid']) . "</a> ";
             echo $bylnk;
@@ -229,15 +141,18 @@ if ($action == "sendpm") {
 
 
     } else {
-        echo '<img src="../images/img/reload.gif" alt="" /> Inbox is empty!'; // update lang
+
+        echo '<p><img src="../images/img/reload.gif" alt="Inbox is empty" /> Inbox is empty!</p>'; // update lang
+
     } 
-    // echo "<br /><br /><a href=\"rwdpm.php?action=dlg&amp;sid=$sid&amp;who=$who\">Download</a><br /><small>only first 50 messages</small><br />";
+
     echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
+
 } else {
-    echo "I don't know how you got into here, but there's nothing to show<br /><br />";
+    echo "<p>I don't know how you got into here, but there's nothing to show</p>";
 } 
 
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 require_once"../themes/" . $config_themes . "/foot.php";
 
