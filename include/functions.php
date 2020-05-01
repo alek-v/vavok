@@ -53,7 +53,7 @@ function getidfromnick($nick) {
     return $uid['id'];
 } 
 
-// send automated private message by system (bot)
+// send automated private message by system (bot) // deprecated 30.04.2020. 20:39:11
 function autopm($msg, $who, $sys = '') {
     global $db, $users;
     if (!empty($sys)) {
