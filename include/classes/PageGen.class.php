@@ -1,28 +1,34 @@
 <?php
 // (c) vavok.net
 // generate page from template
+
+
 class PageGen {
-    // The filename of the template to load.
+    // the filename of the template to load.
     protected $file;
 
-    // An array of values for replacing each tag on the template (the key for each value is its corresponding tag).
+    // an array of values for replacing each tag on the template (the key for each value is its corresponding tag).
     protected $values = array();
 
-    // Creates a new Template object and sets its associated file.
+    // creates a new template object and sets its associated file.
     public function __construct($file) {
-        // global variables
-        global $themeCustomTpl;
 
-        $this->file = BASEDIR . "themes/" . $themeCustomTpl . "templates/" . $file;
+        // get template
+        if (file_exists(BASEDIR . 'themes/' . my_theme() . '/templates/' . $file)) {
+        	$this->file = BASEDIR . 'themes/' . my_theme() . '/templates/' . $file;
+        } else {
+        	$this->file = BASEDIR . "themes/templates/" . $file;
+    	}
     } 
 
-    // Sets a value for replacing a specific tag.
+    // sets a value for replacing a specific tag.
     public function set($key, $value) {
         $this->values{$key} = $value;
     } 
 
     // parse language variables from .tpl files
     public function parse_language($content) {
+
         // load language data
         global $lang_home;
 
@@ -34,9 +40,10 @@ class PageGen {
     $content = str_replace($search, $lang_home, $content);
 
     return $content;
+
     }
 
-    // Outputs the content of the template, replacing the keys for its respective values.
+    // outputs the content of the template, replacing the keys for its respective values.
     public function output() {
         /*
         * Tries to verify if the file exists.

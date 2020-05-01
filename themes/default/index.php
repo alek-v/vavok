@@ -5,7 +5,6 @@
 // if you want to use custom template dir
 // set here template dir for this theme
 // dir must be under template main folder
-$themeCustomTpl = '';
 
 include BASEDIR . "include/prepare_header.php";
 
