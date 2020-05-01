@@ -179,7 +179,7 @@ function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $
 
     // send private message
     $msg = $lang_home['autopmreg'];
-    autopm($msg, $user_id);
+    $users->autopm($msg, $user_id);
 } 
 // page navigation - old version (deprecated)
 function page_navigation($link, $posts, $page, $total)
