@@ -4,6 +4,7 @@
 - Updated registration key improvements
 - Updated private message system
 - Added new languages
+- Fixed when user agent is empty
 
 
 
