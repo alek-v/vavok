@@ -1,6 +1,10 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranešević
-// updated: 25.04.2020. 20:32:14
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   04.05.2020. 6:26:43
+*/
 
 include_once"../include/strtup.php";
 
@@ -23,19 +27,19 @@ if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) {
 $loadPage = new Page;
 
 // check of there is current page with user's language
-if ($loadPage->page_exists('', "pname='" . $pg . "' AND lang='" . $ln_loc . "'")) {
+if ($loadPage->page_exists('', "pname='{$pg}' AND lang='{$ln_loc}'")) {
 
-	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='" . $pg . "' AND lang='" . $ln_loc . "'"));
+	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='{$pg}' AND lang='{$ln_loc}'"));
 
-} elseif ($loadPage->page_exists('', "pname='" . $pg . "'")) { // get page if there is no user's language page
+} elseif ($loadPage->page_exists('', "pname='{$pg}'")) { // get page if there is no user's language page
 	
-	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='" . $pg . "'"));
+	$page_data = $loadPage->select_page($loadPage->page_exists('', "pname='{$pg}'"));
 
 } else {
 // error 404
 // todo: fix error reporting
 // header("Status: 404 Not Found");
-header(check($_SERVER["SERVER_PROTOCOL"]) . " 404 Not Found");
+header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 
 include"../themes/$config_themes/index.php";
 
@@ -43,7 +47,7 @@ include"../themes/$config_themes/index.php";
 
 <p>Error 404 - Page not found<br /></p>
 <div class="break"></div>
-<p><a href="/" class="btn btn-primary homepage">Home page</a></p>
+<p><a href="<?php echo website_home_address(); ?>" class="btn btn-primary homepage"><?php echo $lang_home['home']; ?></a></p>
 <div class="break"></div>
 
 <?php
@@ -51,6 +55,11 @@ include"../themes/$config_themes/index.php";
 include"../themes/$config_themes/foot.php";
 exit;
 }
+
+// page exist in database, show it
+
+// load template
+$this_page = new PageGen('pages/page/page.tpl');
 
 // get page title
 if (!empty($page_data['tname'])) {
@@ -64,22 +73,25 @@ include"../themes/" . $config_themes . "/index.php";
 if ($page_data['published'] == 1 && !$users->is_administrator()) {
 	echo '<p>Requested page is not published.</p>'; // update lang
 	echo '<p><br /><br />';
-	echo '<a href="' . transfer_protocol() . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+	echo '<a href="' . website_home_address() . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include"../themes/$config_themes/foot.php";
-exit;
+	include"../themes/$config_themes/foot.php";
+	exit;
 }
 
 // page content
-echo $page_data['content'];
+$this_page->set('content', $page_data['content']);
 
 // facebook comments
 if ($config["pgFbComm"] == 1) {
-	$pages = new Page;
-    echo '<div class="fb-comments" data-href="' . $pages->media_page_url($config_srvhost, $clean_requri) . '" data-width="470" data-num-posts="10"></div>';
+	$this_page->set('facebook_comments', $this_page->facebook_comments($config_srvhost, $clean_requri));
 }
 
-echo '<p><a href="' . transfer_protocol() . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+// homepage address
+$this_page->set('homepage_url', website_home_address()); // homepage url
+
+// show page
+echo $this_page->output();
 
 // load footer
 include"../themes/$config_themes/foot.php";

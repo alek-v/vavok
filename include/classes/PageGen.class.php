@@ -33,18 +33,20 @@ class PageGen {
         global $lang_home;
 
         $search = array();
-        foreach($lang_home as $key => $val){
-        array_push($search, '{@$lang_home[\'' . $key . '\']}}');
-    }
+        foreach($lang_home as $key => $val) {
+        array_push($search, '{@$lang_home[\'' . $key . '\']}}'); // deprecated 04.05.2020. 6:42:42
+        array_push($search, '{@website_language[' . $key . ']}}');
+        }
 
-    $content = str_replace($search, $lang_home, $content);
+        $content = str_replace($search, $lang_home, $content);
 
-    return $content;
+        return $content;
 
     }
 
     // outputs the content of the template, replacing the keys for its respective values.
     public function output() {
+
         /*
         * Tries to verify if the file exists.
         * If it doesn't return with an error message.
@@ -52,7 +54,8 @@ class PageGen {
         */
         if (!file_exists($this->file)) {
             return "Error loading template file ($this->file).<br />";
-        } 
+        }
+
         $output = file_get_contents($this->file);
 
         foreach ($this->values as $key => $value) {
@@ -60,7 +63,9 @@ class PageGen {
             $output = str_replace($tagToReplace, $value, $output);
         }
 
+        // parse language
         $output = $this->parse_language($output);
+
         // remove keys that are not set
         $output = preg_replace('/{@(.*)}}/' , '', $output);
 
@@ -89,7 +94,17 @@ class PageGen {
         } 
 
         return $output;
-    } 
+    }
+
+
+    function facebook_comments($config_srvhost, $clean_requri) {
+
+    $pages = new Page();
+    return '<div class="fb-comments" data-href="' . $pages->media_page_url($config_srvhost, $clean_requri) . '" data-width="470" data-num-posts="10"></div>';
+
+    }
+
+
 } 
 
 
