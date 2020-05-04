@@ -1,6 +1,7 @@
 # Vavok v1.5.1
 - Update session and cookie improvements
 - Update function update in Db.class.php return update result
+- Update navigation improvements
 - Updated registration key improvements
 - Updated private message system
 - Added new languages
