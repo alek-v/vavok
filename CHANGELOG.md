@@ -2,6 +2,7 @@
 - Update session and cookie improvements
 - Update function update in Db.class.php return update result
 - Update navigation improvements
+- Update page generation improvements
 - Updated registration key improvements
 - Updated private message system
 - Added new languages
