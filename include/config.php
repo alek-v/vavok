@@ -35,7 +35,6 @@ $config = array(
 "forumTopics" => $con_data[27], // threads per page in forum - deprecated! 09.04.2018. 1:04:28
 "floodTime" => $con_data[29], // antiflood time in seconds
 "pvtLimit" => $con_data[30], // max no of msgs in inbox, 0 => unlimited
-"dataOnPage" => $con_data[31], // data on page (no. of users per page in online list etc)
 "cookieConsent" => $con_data[32], // cookie consent
 "chatRew" => 30, // chat refresh time - deprecated! 12.5.2017. 22:31:21
 "photoList" => $con_data[37], // no. of photos per page in gallery

@@ -1,5 +1,7 @@
 <?php
 // (c) vavok.net
+
+
 // set main website data
 
 // check is there any data
@@ -7,10 +9,6 @@ if (file_exists('../used')) {
     // don't overwrite existing data
     return;
 }
-
-// rename necessary files
-@rename('../.htaccess-default', '../.htaccess');
-@rename('../robots-default.txt', '../robots.txt');
 
 // set write permissions on data directory
 if (file_exists('../used')) {

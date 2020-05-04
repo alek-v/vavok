@@ -295,6 +295,7 @@ $currTime2 = date("$currHour:i", time());
 
 // add smiles
 function smiles($string) {
+    
     $dir = opendir (BASEDIR . "images/smiles");
     while ($file = readdir ($dir)) {
         if (preg_match ("/.gif/", $file)) {
@@ -305,10 +306,17 @@ function smiles($string) {
     rsort($smfile);
 
     foreach($smfile as $smval) {
-        $string = str_replace(":$smval", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . '" />', $string);
+        $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
     } 
+
     $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/;).gif" alt=";)" />', $string);
-    return $string;
+    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/:).gif" alt=":)" />', $string);
+    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/:(.gif" alt=":(" />', $string);
+    $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'images/smiles/D.gif" alt=":D" />', $string);
+    $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'images/smiles/E.gif" alt=":E" />', $string);
+    $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
+
+   return $string;
 } 
 
 function nosmiles($string) {

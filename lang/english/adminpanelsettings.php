@@ -1,13 +1,13 @@
 <?php
 // (c) vavok.net
-// modified: 23.4.2013 15:58:36
+// modified: 04.05.2020. 4:17:33
 
 $lang_apsetting['mainset'] = "Main settings";
 $lang_apsetting['database'] = "database";
 $lang_apsetting['shwinfo'] = "Show info"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Guestbook/chat/news";
-$lang_apsetting['forumgallery'] = "Forum/gallery";
-$lang_apsetting['downvoteinbx'] = "Download/vote/inbox";
+$lang_apsetting['bookchatnews'] = "Guestbook - chat - news";
+$lang_apsetting['forumgallery'] = "Forum - gallery";
+$lang_apsetting['downvoteinbx'] = "Download - vote - inbox";
 $lang_apsetting['advert'] = "Advert";
 $lang_apsetting['pagemanage'] = "Page management";
 $lang_apsetting['other'] = "Other";
@@ -38,10 +38,10 @@ $lang_apsetting['oncounter'] = "Start the counter";
 $lang_apsetting['showonline'] = "Show online";
 $lang_apsetting['countlook'] = "Counter look";
 $lang_apsetting['dontshow'] = "Don't show";
-$lang_apsetting['vsttotalvst'] = "Visits / Total visits";
-$lang_apsetting['clicktotalclick'] = "Clicks / Total clicks";
-$lang_apsetting['clickvisits'] = "Clicks / visits";
-$lang_apsetting['totclicktotvst'] = "Total clicks / Total visits";
+$lang_apsetting['vsttotalvst'] = "Visits - Total visits";
+$lang_apsetting['clicktotalclick'] = "Clicks - Total clicks";
+$lang_apsetting['clickvisits'] = "Clicks - visits";
+$lang_apsetting['totclicktotvst'] = "Total clicks - Total visits";
 $lang_apsetting['graphic'] = "Graphic";
 $lang_apsetting['gbnewschatset'] = "Guestbook settings, site and chat news";
 $lang_apsetting['newsonpg'] = "News on page";
@@ -74,9 +74,9 @@ $lang_apsetting['adsonbottom'] = "Enable adverts on bottom";
 $lang_apsetting['pagessets'] = "Page settings";
 $lang_apsetting['dataonpage'] = "Data on page";
 $lang_apsetting['maxwherelist'] = "Keep in history who is where";
-$lang_apsetting['maxrefererdata'] = "Keep in history who is coming from where";
+$lang_apsetting['maxrefererdata'] = "Referals to keep in history";
 $lang_apsetting['smilesonpage'] = "Smiles on page";
-$lang_apsetting['showrefpage'] = "Show refpage";
+$lang_apsetting['showrefpage'] = "Show referal page";
 $lang_apsetting['maxcommssave'] = "Maximum number of comments to be saved";
 $lang_apsetting['maxlogfile'] = "Number of informations of latest errors in log file";
 $lang_apsetting['maxbantime'] = "Maximum ban time (days)";

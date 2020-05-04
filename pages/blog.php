@@ -129,7 +129,9 @@ switch ($pg) {
 		$showPage->set('posts', $merge_all);
 
 		// page navigation
-		$showPage->set('navigation', Navigation::numbNavigation('./?', $items_per_page, $page, $total_posts));
+		$navigation = new Navigation($items_per_page, $total_posts, $page, './?');
+		
+		$showPage->set('navigation', $navigation->get_navigation());
 
 
 		echo $showPage->output();

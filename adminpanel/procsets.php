@@ -263,35 +263,24 @@ exit;
 }
 
 if ($action == "editseven") {
-if (empty($_POST['conf_set6']) || empty($_POST['conf_set31']) || empty($_POST['conf_set51']) || empty($_POST['conf_set70'])) {
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
 
-$udata[6] = (int)$_POST['conf_set6'];
-$udata[31] = (int)$_POST['conf_set31'];
-$udata[51] = (int)$_POST['conf_set51'];
-$udata[70] = (int)$_POST['conf_set70'];
+    if (empty($_POST['conf_set6']) || empty($_POST['conf_set51']) || empty($_POST['conf_set70'])) {
 
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
+        $data = array(
+            6 => $_POST['conf_set6'],
+            51 => $_POST['conf_set51'],
+            70 => $_POST['conf_set70']
+        );
 
-if (!empty($udata[8]) && !empty($udata[9])) {
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-} 
-header ("Location: settings.php?isset=mp_yesset");
-exit;
-} else {
-header ("Location: settings.php?action=setseven&isset=mp_nosset");
-exit;
-} 
+        $config_update = new Config();
+        $config_update->update($data);
+
+        redirect_to("settings.php?isset=mp_yesset");
+
+    } else {
+        redirect_to("settings.php?action=setseven&isset=mp_nosset");
+    } 
+    
 } 
 
 if ($action == "editeight") {

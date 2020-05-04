@@ -1,17 +1,18 @@
 <?php
 // (c) Aleksandar Vranešević - vavok.net
-// updated 26.04.2020. 22:35:59
+// updated 04.05.2020. 5:09:30
 
 class Navigation {
-	public $itemsPerPage;
-	public $totalItems;
+	
+	public $items_per_page;
+	public $total_items;
 	public $page;
 	public $link;
 
-	public function __construct($itemsPerPage, $totalItems, $page, $link = '') {
+	public function __construct($items_per_page, $total_items, $page, $link = '') {
 
-		$this->items_per_page = $itemsPerPage; // items per page
-		$this->total_items = $totalItems; // total items
+		$this->items_per_page = $items_per_page; // items per page
+		$this->total_items = $total_items; // total items
 		$this->total_pages = $this->total_pages($this->total_items, $this->items_per_page); // total pages
 
 		// get page
@@ -43,9 +44,16 @@ class Navigation {
 		$page = $this->current_page;
 		$limit_start = $this->items_per_page * $page - $this->items_per_page;
 
+		if ($this->total_items < $limit_start + $this->items_per_page) {
+		    $end = $this->total_items;
+		} else {
+		    $end = $limit_start + $this->items_per_page;
+		}
+
 		return array('total_pages' => $total_pages,
 					 'page' => $page,
-					 'start' => $limit_start
+					 'start' => $limit_start,
+					 'end' => $end
 				);
 
 	}

@@ -6,6 +6,8 @@ if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrato
     redirect_to("Location: ../");
 } 
 
+// page settings
+$data_on_page = 10; // online users per page
 $mediaLikeButton = 'off'; // dont show like buttons
 
 $my_title = 'Online';
@@ -48,12 +50,12 @@ if ($list == "full") {
         $page = 1;
     } 
 
-    $start = $config["dataOnPage"] * ($page - 1);
+    $start = $data_on_page * ($page - 1);
     if ($start < 0) {
         $start = 0;
     } 
 
-    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
+    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
@@ -89,12 +91,12 @@ if ($list == "full") {
         $page = 1;
     } 
 
-    $start = $config["dataOnPage"] * ($page - 1);
+    $start = $data_on_page * ($page - 1);
     if ($start < 0) {
     $start = 0;
     } 
 
-    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $config["dataOnPage"];
+    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
@@ -107,8 +109,8 @@ if ($list == "full") {
     } 
 } 
 
-page_navigation('online.php?list=' . $list . '&amp;', $config["dataOnPage"], $page, $total);
-page_numbnavig('online.php?list=' . $list . '&amp;', $config["dataOnPage"], $page, $total);
+page_navigation('online.php?list=' . $list . '&amp;', $data_on_page, $page, $total);
+page_numbnavig('online.php?list=' . $list . '&amp;', $data_on_page, $page, $total);
 
 if ($list != "full") {
     echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $lang_page['showguest'] . '</a></p>';

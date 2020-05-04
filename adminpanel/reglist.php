@@ -1,11 +1,12 @@
 <?php 
 // (c) vavok.net
+
+
 require_once"../include/strtup.php";
 $my_title = $lang_admin['uncomfreg'];
 
 if (!$users->is_reg() || !checkPermissions(basename(__FILE__))) {
-    header ("Location: ../index.php?error");
-    exit;
+    redirect_to("Location: ../index.php?error");
 } 
 
 $act = isset($_GET['act']) ? check($_GET['act']) : '';
@@ -85,11 +86,11 @@ if (empty($action)) {
         echo '<img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['emptyunconf'] . '!<br><br>';
     } 
 
-    echo '<div class="break"></div>';
-    echo pageNavigation("reglist.php?", $items_per_page, $page, $num_items);
-    echo '<div class="break"></div>';
-	echo numbNavigation("reglist.php?", $items_per_page, $page, $num_items);
-	echo '<div class="break"></div>';
+    $navigation = new Navigation($items_per_page, $num_items, $page, 'reglist.php?');
+
+    echo '<p>';
+        echo $navigation->get_navigation();
+    echo '</p>';
 }
 
 echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';

@@ -114,10 +114,8 @@ if (empty($action)) {
     } 
 
     echo '<br><br>';
-    echo '<a href="#up"><img src="../images/img/ups.gif" alt=""></a> ';
 
-    echo '<a href="../pages/smiles.php" class="btn btn-outline-primary sitelink">' . $lang_home['smile'] . '</a> | ';
-    echo '<a href="../page/bb-codes" class="btn btn-outline-primary sitelink">' . $lang_home['bbcode'] . '</a><br>';
+    echo '<a href="../pages/smiles.php" class="btn btn-outline-primary sitelink">' . $lang_home['smile'] . '</a>';
 } 
 
 if ($action == "prodel") {

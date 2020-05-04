@@ -22,10 +22,10 @@ $genHeadTag = '<meta name="robots" content="noindex">
 $my_title = $lang_home['inbox'];
 require_once"../themes/$config_themes/index.php";
 
-$action = !isset($_GET['action']) check($_GET["action"] : '';
-$page = !isset($_GET['page']) check($_GET["page"] : '';
-$who = !isset($_GET['who']) check($_GET["who"] : '';
-$pmid = !isset($_GET['pmid']) check($_GET["pmid"] : '';
+$action = isset($_GET['action']) ? check($_GET["action"]) : '';
+$page = isset($_GET['page']) ? check($_GET["page"]) : '';
+$who = isset($_GET['who']) ? check($_GET["who"]) : '';
+$pmid = isset($_GET['pmid']) ? check($_GET["pmid"]) : '';
 
 
 if ($action == "main" or empty($action)) {
@@ -78,8 +78,10 @@ if ($action == "main" or empty($action)) {
 
     echo '<br /><br/>';
 
-    // navigation
-    echo Navigation::numbNavigation('inbox.php?action=main&amp;', $items_per_page, $page, $i);
+    // navigation    
+    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?action=main&amp;');
+    echo $navigation->get_navigation();
+
 
     } else {
         echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nopmsgs'] . '<br /><br />';

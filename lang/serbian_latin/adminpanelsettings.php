@@ -1,12 +1,12 @@
 <?php
-// modified: 23.4.2013 15:57:47
+// modified: 04.05.2020. 4:17:43
 
 $lang_apsetting['mainset'] = "Osnovna podešavanja";
 $lang_apsetting['database'] = "baza podataka";
 $lang_apsetting['shwinfo'] = "Prikaz informacija"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Knjiga gostiju/chat/novosti";
+$lang_apsetting['bookchatnews'] = "Knjiga gostiju - chat - novosti";
 $lang_apsetting['forumgallery'] = "Forum/galerija";
-$lang_apsetting['downvoteinbx'] = "Preuzimanje/anketa/sanduče";
+$lang_apsetting['downvoteinbx'] = "Preuzimanje - anketa - sanduče";
 $lang_apsetting['advert'] = "Reklama";
 $lang_apsetting['pagemanage'] = "Upravljanje stranicama";
 $lang_apsetting['other'] = "Drugo";
@@ -37,10 +37,10 @@ $lang_apsetting['oncounter'] = "Uključi brojač";
 $lang_apsetting['showonline'] = "Prikaži online";
 $lang_apsetting['countlook'] = "Vid brojača";
 $lang_apsetting['dontshow'] = "Ne prikazuj";
-$lang_apsetting['vsttotalvst'] = "Posete / Ukupno poseta";
-$lang_apsetting['clicktotalclick'] = "Klikovi / Ukupno klikova";
-$lang_apsetting['clickvisits'] = "Klikovi / Posete";
-$lang_apsetting['totclicktotvst'] = "Ukupno klikova / Ukupno poseta";
+$lang_apsetting['vsttotalvst'] = "Posete - Ukupno poseta";
+$lang_apsetting['clicktotalclick'] = "Klikovi - Ukupno klikova";
+$lang_apsetting['clickvisits'] = "Klikovi - Posete";
+$lang_apsetting['totclicktotvst'] = "Ukupno klikova - Ukupno poseta";
 $lang_apsetting['graphic'] = "Grafički";
 $lang_apsetting['gbnewschatset'] = "Podešavanja knjige gostiju, novosti sajta i chata";
 $lang_apsetting['newsonpg'] = "Vesti na stranici";
@@ -73,9 +73,9 @@ $lang_apsetting['adsonbottom'] = "Uključiti reklamu na dnu";
 $lang_apsetting['pagessets'] = "Podešavanja stranica";
 $lang_apsetting['dataonpage'] = "Podataka na stranici";
 $lang_apsetting['maxwherelist'] = "Čuvati u istoriji ko je gde";
-$lang_apsetting['maxrefererdata'] = "Čuvati u istoriji ko je odakle";
+$lang_apsetting['maxrefererdata'] = "Koliko referala čuvati u istoriji";
 $lang_apsetting['smilesonpage'] = "Smešaka na stranici";
-$lang_apsetting['showrefpage'] = "Prikaži ko je odakle stranicu";
+$lang_apsetting['showrefpage'] = "Prikaži javno stranicu sa referalima";
 $lang_apsetting['maxcommssave'] = "Koliko komentara čuvati";
 $lang_apsetting['maxlogfile'] = "Sačuvaj informacija o greškama u log fajlu";
 $lang_apsetting['maxbantime'] = "Maksimalno trajanje kazne (dana)";

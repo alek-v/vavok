@@ -1,13 +1,13 @@
 <?php
 // (c) vavok.net
-// modified: 10.3.2013 0:58:54
+// modified: 04.05.2020. 4:17:25
 
 $lang_apsetting['mainset'] = "Основна подешавања";
 $lang_apsetting['database'] = "база података";
 $lang_apsetting['shwinfo'] = "Приказивање информација"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Књига гостију / Чат / Вести";
-$lang_apsetting['forumgallery'] = "Форум / Галерија";
-$lang_apsetting['downvoteinbx'] = "Преузимање / Анкета / Сандуче";
+$lang_apsetting['bookchatnews'] = "Књига гостију - Ћаскање - Вести";
+$lang_apsetting['forumgallery'] = "Форум - Галерија";
+$lang_apsetting['downvoteinbx'] = "Преузимање - Анкета - Сандуче";
 $lang_apsetting['advert'] = "Реклама";
 $lang_apsetting['pagemanage'] = "Управљање страницама";
 $lang_apsetting['other'] = "Друго";
@@ -40,8 +40,8 @@ $lang_apsetting['countlook'] = "Вид бројача";
 $lang_apsetting['dontshow'] = "Не приказуј";
 $lang_apsetting['vsttotalvst'] = "Посете / Укупно посета";
 $lang_apsetting['clicktotalclick'] = "Кликови / Укупно кликова";
-$lang_apsetting['clickvisits'] = "Кликови / Посете";
-$lang_apsetting['totclicktotvst'] = "Укупно кликова / Укупно посета";
+$lang_apsetting['clickvisits'] = "Кликови - Посете";
+$lang_apsetting['totclicktotvst'] = "Укупно кликова - Укупно посета";
 $lang_apsetting['graphic'] = "Графички";
 $lang_apsetting['gbnewschatset'] = "Подешавање књиге гостију, вести сајта и чата";
 $lang_apsetting['newsonpg'] = "Вести на страници";
@@ -74,9 +74,9 @@ $lang_apsetting['adsonbottom'] = "Укључити рекламу на дну";
 $lang_apsetting['pagessets'] = "Подешавања страница";
 $lang_apsetting['dataonpage'] = "Података на страници";
 $lang_apsetting['maxwherelist'] = "Чувати у истојији ко је где";
-$lang_apsetting['maxrefererdata'] = "Чувати у истојији ко је одакле";
+$lang_apsetting['maxrefererdata'] = "Колико \"реферала\" чувати у историји";
 $lang_apsetting['smilesonpage'] = "Смешака на страници";
-$lang_apsetting['showrefpage'] = "Прикажи ко је одакле страницу";
+$lang_apsetting['showrefpage'] = "Прикажи јавно страницу са рефералима";
 $lang_apsetting['maxcommssave'] = "Колико коментара чувати";
 $lang_apsetting['maxlogfile'] = "Сачувати информација о грешкама у лог фајлу";
 $lang_apsetting['maxbantime'] = "Максимално трајање казне (дана)";

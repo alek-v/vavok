@@ -22,6 +22,10 @@ AddDefaultCharset UTF-8
 #php_value file_uploads On
 #php_value display_errors Off
 
+# force https protocol
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+
 ErrorDocument 400 /pages/error.php?error=400
 ErrorDocument 401 /pages/error.php?error=401
 ErrorDocument 402 /pages/error.php?error=402
@@ -31,51 +35,9 @@ ErrorDocument 406 /pages/error.php?error=406
 ErrorDocument 500 /pages/error.php?error=500
 ErrorDocument 502 /pages/error.php?error=502
 
-Options -Indexes
-
-RewriteEngine on
-# Include in the next line all folders to exclude
-RewriteCond %{REQUEST_URI} !(js|img|fls) [NC]
-
-# seo friendly home page language url. example.com/en/
-RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
-
-# deny adding www. or other subdomain to site address
-#RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-#RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
-
-# Redirect to www.
-#RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
-#RewriteCond %{HTTPS}s ^on(s)|
-#RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# website pages
-RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
-
-# website blog pages
-RewriteRule ^blog\/?$ pages/blog.php
-RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1
-
-# website content - tag search
-RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2
-RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1
-RewriteRule ^search$ search.php
-
-# force https protocol
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
-
 # ----------------------------------------------------------------------
 # Expires headers (for better cache control) (SEO and site performance improvements)
 # ----------------------------------------------------------------------
-#
-# These are pretty far-future expires headers
-# They assume you control versioning with cachebusting query params like:
-#   <script src="application.js?20100608">
-# Additionally, consider that outdated proxies may miscache
-#
-#   www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
- 
 #
 # If you don`t use filenames to version, lower the css and js to something like "access plus 1 week"
 #
@@ -140,7 +102,7 @@ RewriteRule ^search$ search.php
 
 # pagespeed module
 <IfModule pagespeed_module>
-ModPagespeed off
+	ModPagespeed off
 </IfModule>
 
 # commpression mod_deflate
@@ -174,3 +136,38 @@ ModPagespeed off
   BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
   Header append Vary User-Agent
 </IfModule>
+
+RewriteEngine on
+# Include in the next line all folders to exclude
+# The [NC] flag here stands for No Case, so you don't have to worry about case sensitivity.
+RewriteCond %{REQUEST_URI} !(js|img|fls) [NC]
+
+# seo friendly home page language url. example.com/en/
+# QSA - This rule appends the GET query string which results from the ReWrite rule to the initial GET query string sent by the browser.
+RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
+
+# deny adding www. or other subdomain to site address
+# The [L] flag stands for "Last", meaning that if this condition is true, execute the RewriteRule and do not attempt to match other RewriteConds or perform other operations on the request.
+# The [R] flag stands for "Redirect". You can pass in an option to R to set the HTTP status code of the redirect. Example [R=302] or [R=404].
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
+
+# Redirect to www.
+# RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+# RewriteCond %{HTTPS}s ^on(s)|
+# RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# website pages
+RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
+
+# website blog pages
+RewriteRule ^blog\/$ pages/blog.php
+RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1 [NC,L]
+
+# website content - tag search
+RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2 [NC,L]
+RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1 [NC,L]
+RewriteRule ^search$ search.php [NC,L]
+
+# website custom pages
+# end of website custom pages

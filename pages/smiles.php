@@ -1,6 +1,10 @@
 <?php
-// (c) Aleksandar Vranešević - vavok.net
-// updated 26.04.2020. 22:35:59
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   04.05.2020. 5:10:55
+*/
 
 require_once"../include/strtup.php";
 
@@ -22,33 +26,36 @@ sort($a);
 $smilesPerPage = 15;
 $total = count($a);
 
-$limit_start = ($page - 1) * $smilesPerPage;
+$navigation = new Navigation($smilesPerPage, $total, $page, 'smiles.php?'); // start navigation
 
-if ($total < $limit_start + $smilesPerPage) {
-    $end = $total;
-} else {
-    $end = $limit_start + $smilesPerPage;
-} 
-for ($i = $limit_start; $i < $end; $i++) {
-    $smkod = str_replace(".gif", "", $a[$i]);
-
-    echo '<img src="' . BASEDIR . 'images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" />';
-    if ($smkod != ';)') {
-    echo '- :' . $smkod . '<br>';
-  } else {
-  	echo '- ' . $smkod . '<br>';
-  }
-} 
-
-
-$navigation = new Navigation($smilesPerPage, $total, $page, 'smiles.php?');
+$limit_start = $navigation->start()['start']; // starting point
+$end = $navigation->start()['end']; // ending point
 
 echo '<p>';
-echo $navigation->get_navigation();
+
+for ($i = $limit_start; $i < $end; $i++) {
+
+    $smkod = str_replace(".gif", "", $a[$i]);
+
+    echo '<img src="' . BASEDIR . 'images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" /> ';
+
+    if ($smkod == ')' || $smkod == '(' || $smkod == 'D' || $smkod == 'E' || $smkod == 'P') {
+      echo '- :' . $smkod . '<br>';
+    }
+    elseif ($smkod == ';)') {
+      echo '- ' . $smkod . '<br>';
+    } else {
+      echo '- :' . $smkod . ':<br>';
+    }
+
+}
+
 echo '</p>';
 
-echo '<p><br>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b><br><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo $navigation->get_navigation();
+
+echo '<p>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 
 include_once"../themes/$config_themes/foot.php";
