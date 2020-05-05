@@ -34,11 +34,19 @@ class PageGen {
 
         $search = array();
         foreach($lang_home as $key => $val) {
-        array_push($search, '{@$lang_home[\'' . $key . '\']}}'); // deprecated 04.05.2020. 6:42:42
         array_push($search, '{@website_language[' . $key . ']}}');
         }
 
         $content = str_replace($search, $lang_home, $content);
+
+
+        // deprecated 04.05.2020. 6:42:42
+        $searchx = array(); 
+        foreach($lang_home as $key => $val) {
+        array_push($searchx, '{@$lang_home[\'' . $key . '\']}}');
+        }
+
+        $content = str_replace($searchx, $lang_home, $content);
 
         return $content;
 
