@@ -19,34 +19,20 @@ if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101)) {
     $editOnlyOwnPages = '';
 }
 
-if (isset($_GET['action'])) {
-    $action = check($_GET['action']);
-} else {
-    $action = '';
-} 
-if (!empty($_GET['page'])) {
-    $page = check($_GET['page']);
-} else {
-    $page = '';
-} 
-if (!empty($_GET['file'])) {
-    $file = check($_GET['file']);
-} else {
-    $file = '';
-}
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$page = isset($_GET['page']) ? check($_GET['page']) : '';
+$file = isset($_GET['file']) ? check($_GET['file']) : '';
 
 // init class
 $pageEditor = new Page();
 
 // get page id we work with
-$page_id = $pageEditor->get_page_id("file='" . $file . "'");
+$page_id = $pageEditor->get_page_id("file='{$file}'");
 
 
 $config_editfiles = 20;
-$time = time();
-$my_title = 'Files';
+$my_title = 'Files'; // current page title
 
-$is_index = '';
 
 // editing mode
 // use visual mode as default
@@ -86,7 +72,7 @@ if (empty($action)) {
         echo '</font></b></div>';
     } 
 
-    echo '<img src="../images/img/edit.gif" alt="" /> ' . $lang_apfiles['filelist'] . '<br /><br />';
+    echo '<h1>' . $lang_apfiles['filelist'] . '</h1>';
 
     $total_pages = $pageEditor->total_pages();
 
@@ -94,31 +80,14 @@ if (empty($action)) {
         $total_pages = $pageEditor->total_pages($user_id);
     } 
 
-    if (empty($page) || $page < 1) {
-        $page = 1;
-    } 
+    // start navigation
+    $navi = new Navigation($config_editfiles, $total_pages, $page);
 
-    if (empty($page)) {
-        $start = 0;
-    } else {
-        $start = $config_editfiles * ($page - 1);
-    } 
-
-    if ($total_pages < $start + $config_editfiles) {
-        $end = $total_pages;
-    } else {
-        $end = $start + $config_editfiles;
-    } 
-
-    page_navigation('files.php?', $config_editfiles, $page, $total_pages);
-    page_numbnavig('files.php?', $config_editfiles, $page, $total_pages);
-
-    echo '<div class="break"></div>';
 
     if ($editOnlyOwnPages == 'yes') {
-        $sql = "SELECT * FROM " . $table_prefix . "pages WHERE crtdby='" . $user_id . "' ORDER BY pname LIMIT $start, $config_editfiles";
+        $sql = "SELECT * FROM {$table_prefix}pages WHERE crtdby='{$user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } else {
-        $sql = "SELECT * FROM " . $table_prefix . "pages ORDER BY pname LIMIT $start, $config_editfiles";
+        $sql = "SELECT * FROM {$table_prefix}pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } 
     foreach ($db->query($sql) as $page_info) {
         if (empty($page_info['file'][0]) || $page_info['file'][0] == '/') {
@@ -167,8 +136,9 @@ if (empty($action)) {
         unset($page_info);
     } 
 
-    page_navigation('files.php?', $config_editfiles, $page, $total_pages);
-    page_numbnavig('files.php?', $config_editfiles, $page, $total_pages);
+    // navigation
+    $navigation = new Navigation($config_editfiles, $total_pages, $page, 'files.php?');
+    echo $navigation->get_navigation();
 
     echo '<br />' . $lang_apfiles['totpages'] . ': <b>' . (int)$total_pages . '</b><br />';
     echo '<div>&nbsp;</div>';
@@ -186,19 +156,14 @@ if ($action == "show") {
         $page_info = $pageData->select_page($page_id);
 
         if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
+            redirect_to("index.php?isset=ap_noaccess");
         } 
 
         if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
+            redirect_to("index.php?isset=ap_noaccess");
         } 
 
-        $showname = str_replace(".php", "", $base_file);
-        if (stristr($showname, '!.')) {
-            $showname = preg_replace("/(.*)!.(.*)!/", "$1", $showname);
-        }
+        $showname = $page_info['pname'];
 
         include_once"../themes/$config_themes/index.php";
 
@@ -230,16 +195,21 @@ if ($action == "show") {
 
         // if it is index doesnt show this page like other pages
         if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
+            // this is index page
         	if (!empty($page_info['lang'])) { $url_lang = strtolower($page_info['lang']) . '/'; } else { $url_lang = ''; }
 
-        	echo '<a href="' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '" target="_blank">' . transfer_protocol() . $config_srvhost . '/' . $url_lang . '</a>';
-        	$is_index = 'true';
+        	echo '<a href="' . website_home_address() . '/' . $url_lang . '" target="_blank">' . website_home_address() . '/' . $url_lang . '</a>';
+
  		} elseif ($post_type == 'post') {
+            // this is blog post
+            echo '<br /><a href="' . website_home_address() . '/blog/' . $showname . '/" target="_blank">' . website_home_address() . '/blog/' . $showname . '/</a><br />';
 
-            echo '<br /><a href="' . transfer_protocol() . $config_srvhost . '/blog/' . $showname . '/" target="_blank">' . transfer_protocol() . $config_srvhost . '/blog/' . $showname . '/</a><br />';
-
+        } elseif ($post_type == 'page' || empty($post_type)) {
+            // this is page
+	        echo '<br /><a href="' . website_home_address() . '/page/' . $showname . '/" target="_blank">' . website_home_address() . '/page/' . $showname . '/</a><br />';
         } else {
-	        echo '<br /><a href="' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/" target="_blank">' . transfer_protocol() . $config_srvhost . '/page/' . $showname . '/</a><br />';
+            // this is custom page structure
+            echo '<br /><a href="' . website_home_address() . '/' . $post_type . '/' . $showname . '/" target="_blank">' . website_home_address() . '/' . $post_type . '/' . $showname . '/</a><br />';
         }
 
         echo '</p>';
@@ -598,8 +568,8 @@ if ($action == "new") {
     $languages = "SELECT * FROM languages ORDER BY lngeng";
 
     echo '<div class="form-group">
-    <label for="exampleFormControlSelect1">' . $lang_apfiles['language'] . ' (optional):</label>';
-    echo '<select class="form-control" id="exampleFormControlSelect1" name="lang">';
+    <label for="language">' . $lang_apfiles['language'] . ' (optional):</label>';
+    echo '<select class="form-control" id="language" name="lang">';
 
     echo '<option value="">Don\'t set</option>';
     foreach ($db->query($languages) as $lang) {
@@ -607,14 +577,38 @@ if ($action == "new") {
     } 
     echo "</select>
     </div>";
+    ?>
 
-    echo '<div class="form-group">
-    <label for="type" id="exampleFormControlSelect1">Post type:</label>
-    <select class="form-control" id="exampleFormControlSelect1" name="type">
+    <div class="form-group">
+    <label for="type">Post type:</label>
+    <select class="form-control" id="type" name="type">
         <option value="page">Page</option>
         <option value="post">Post</option>
     </select>
+    </div>
+
+    <?php
+    if (!empty(get_configuration('customPages'))) {
+
+    echo '<div class="form-group">
+    <label for="page_structure">Page structure:</label>
+    <select class="form-control" id="page_structure" name="page_structure">
+        <option value="">/page/new-page/</option>
+        <option value="' . get_configuration('customPages') . '">/' . get_configuration('customPages') . '/' . $lang_home['new-page'] . '/</option>
+    </select>
     </div>';
+
+    }
+    ?>
+
+    <div class="form-group form-check">
+      <input class="form-check-input" type="checkbox" value="" name="allow_unicode" id="allow-unicode">
+      <label class="form-check-label" for="allow-unicode">
+        <?php echo $lang_home['allowUnicodeUrl']; ?>
+      </label>
+    </div>
+
+    <?php
     echo '<div class="form-group">
     <button class="btn btn-primary" type="submit" />' . $lang_apfiles['newpage'] . '</button>
     </div>

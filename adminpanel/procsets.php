@@ -7,7 +7,7 @@ if (!$users->is_reg() || !$users->is_administrator(101)) {
     redirect_to("../?auth_error");
 }
 
-if (isset($_GET['action'])) {$action = check($_GET['action']);}
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
 
 
 // main settings update
@@ -125,16 +125,12 @@ if ($action == "edittwo") {
 } 
 
 if ($action == "editthree") {
-if ($_POST['conf_set17'] != "" && $_POST['conf_set18'] != "" && $_POST['conf_set19'] != "" && $_POST['conf_set20'] != "" && $_POST['conf_set22'] != "" && $_POST['conf_set23'] != "" && $_POST['conf_set24'] != "" && $_POST['conf_set25'] != "" && $_POST['conf_set56'] != "") {
+if ($_POST['conf_set20'] != "" && $_POST['conf_set22'] != "" && $_POST['conf_set24'] != "" && $_POST['conf_set25'] != "" && $_POST['conf_set56'] != "") {
 $ufile = file(BASEDIR . "used/config.dat");
 $udata = explode("|", $ufile[0]);
 
-$udata[17] = (int)$_POST['conf_set17'];
-$udata[18] = (int)$_POST['conf_set18'];
-$udata[19] = (int)$_POST['conf_set19'];
 $udata[20] = (int)$_POST['conf_set20'];
 $udata[22] = (int)$_POST['conf_set22'];
-$udata[23] = (int)$_POST['conf_set23'];
 $udata[24] = (int)$_POST['conf_set24'];
 $udata[25] = (int)$_POST['conf_set25'];
 $udata[56] = (int)$_POST['conf_set56'];
@@ -165,13 +161,11 @@ exit;
 } 
 
 if ($action == "editfour") {
-if ($_POST['conf_set26'] != "" && $_POST['conf_set27'] != "" && $_POST['conf_set38'] != "" && $_POST['conf_set39'] != "" && $_POST['conf_set49'] != "") {
+if ($_POST['conf_set38'] != "" && $_POST['conf_set39'] != "" && $_POST['conf_set49'] != "") {
 // update main config
 $ufile = file(BASEDIR . "used/config.dat");
 $udata = explode("|", $ufile[0]);
 
-$udata[26] = (int)$_POST['conf_set26'];
-$udata[27] = (int)$_POST['conf_set27'];
 if (!empty($_POST['conf_set28'])) {
 $udata[28] = (int)$_POST['conf_set28'];
 }
@@ -264,10 +258,36 @@ exit;
 
 if ($action == "editseven") {
 
-    if (empty($_POST['conf_set6']) || empty($_POST['conf_set51']) || empty($_POST['conf_set70'])) {
+    if (!empty($_POST['conf_set6']) || !empty($_POST['conf_set51']) || !empty($_POST['conf_set70'])) {
+
+        // url of custom pages
+        $htaccess = file_get_contents('../.htaccess'); // load .htaccess file
+
+        // replace custom link
+        $chars = strlen('# website custom pages');
+        $start = strpos($htaccess, '# website custom pages') + $chars;
+        $end = strpos($htaccess, '# end of website custom pages');
+
+        $replace = '';
+        for ($i=$start; $i < $end; $i++) {
+            $replace .= $htaccess[$i];
+        }
+
+        // do replacement
+        if (!empty($_POST['conf_set28'])) {
+            $_POST['conf_set28'] = str_replace(' ', '', $_POST['conf_set28']);
+
+            $replacement = "\r\n" . 'RewriteRule ^' . $_POST['conf_set28'] . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
+        } else { $replacement = "\r\n# custom_link - don't remove\r\n"; }
+
+        $new_htaccess = str_replace($replace, $replacement, $htaccess);
+
+        // save changes
+        file_put_contents('../.htaccess', $new_htaccess);
 
         $data = array(
             6 => $_POST['conf_set6'],
+            28 => $_POST['conf_set28'],
             51 => $_POST['conf_set51'],
             70 => $_POST['conf_set70']
         );

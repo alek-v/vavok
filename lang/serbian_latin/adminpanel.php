@@ -181,7 +181,11 @@ $lang_admin = array(
 'userlist' => "Lista članova",
 'uplFiles' => "Otpremljeni fajlovi",
 'onlyFullVerFile' => "Ovaj fajl je dostupan samo u punoj verziji", // file content/functions are avaliable only in full version
-'confUnBan' => "Zabrana je uspešno uklonjena!"
+'confUnBan' => "Zabrana je uspešno uklonjena!",
+'customPageUrl' => "Tvoja prilagođena adresa stranice. Primer: <em>https://{<strong>tvoja_adresa_stranice</strong>}/nova-stranica/</em>",
+'allowUnicodeUrl' => "Dozvoli Unikod znakove u adresi stranice",
+'pageStructure' => "Struktura stranice",
+'new-page' => "nova-stranica"
 );
 
 $lang_home = array_merge($lang_home, $lang_admin);

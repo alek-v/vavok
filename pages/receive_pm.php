@@ -9,7 +9,7 @@ $who = isset($_GET["who"]) ? check($_GET["who"]) : '';
 $last_id = isset($_GET["lastid"]) ? check($_GET["lastid"]) : '';
 
 // if there is last message id set
-if (isset($last_id) && !empty($last_id) && $last_id != 1) {
+if (isset($last_id) && !empty($last_id)) {
 
 	$sql = "SELECT * FROM inbox WHERE id > {$last_id} AND ((byuid = {$who} OR touid = {$user_id}) or (byuid = {$user_id} OR touid = {$who})) ORDER BY id DESC LIMIT 1";
 

@@ -48,10 +48,10 @@ if (empty($action)) {
     } 
     if (empty($_GET['start'])) $start = 0;
     else $start = $_GET['start'];
-    if ($total < $start + $config["bookPost"]) {
+    if ($total < $start + 10) {
         $end = $total;
     } else {
-        $end = $start + $config["bookPost"];
+        $end = $start + 10;
     } 
     for ($i = $start; $i < $end; $i++) {
         $data = explode("|", $file[$i]); 
@@ -72,24 +72,24 @@ if (empty($action)) {
 
     echo'<hr>';
     if ($start != 0) {
-        echo '<a href="adminchat.php?start=' . ($start - $config["bookPost"]) . '" class="btn btn-outline-primary sitelink">&lt; ' . $lang_home['back'] . '</a> ';
+        echo '<a href="adminchat.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $lang_home['back'] . '</a> ';
     } else {
         echo'&lt; ' . $lang_home['back'] . '';
     } 
     echo'|';
-    if ($total > $start + $config["bookPost"]) {
-        echo ' <a href="adminchat.php?start=' . ($start + $config["bookPost"]) . '" class="btn btn-outline-primary sitelink">' . $lang_home['forw'] . ' &gt;</a>';
+    if ($total > $start + 10) {
+        echo ' <a href="adminchat.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $lang_home['forw'] . ' &gt;</a>';
     } else {
         echo'' . $lang_home['forw'] . ' &gt;';
     } 
 
     if ($total > 0) {
-        $ba = ceil($total / $config["bookPost"]);
-        $ba2 = $ba * $config["bookPost"] - $config["bookPost"];
+        $ba = ceil($total / 10);
+        $ba2 = $ba * 10 - 10;
 
         echo '<br><hr>Page:';
-        $asd = $start - ($config["bookPost"] * 3);
-        $asd2 = $start + ($config["bookPost"] * 4);
+        $asd = $start - (10 * 3);
+        $asd2 = $start + (10 * 4);
 
         if ($asd < $total && $asd > 0) {
             echo ' <a href="adminchat.php?start=0" class="btn btn-outline-primary sitelink">1</a> ... ';
@@ -97,7 +97,7 @@ if (empty($action)) {
 
         for($i = $asd; $i < $asd2;) {
             if ($i < $total && $i >= 0) {
-                $ii = floor(1 + $i / $config["bookPost"]);
+                $ii = floor(1 + $i / 10);
 
                 if ($start == $i) {
                     echo ' <b>(' . $ii . ')</b>';
@@ -106,7 +106,7 @@ if (empty($action)) {
                 } 
             } 
 
-            $i = $i + $config["bookPost"];
+            $i = $i + 10;
         } 
         if ($asd2 < $total) {
             echo ' ... <a href="adminchat.php?start=' . $ba2 . '" class="btn btn-outline-primary sitelink">' . $ba . '</a>';

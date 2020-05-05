@@ -14,27 +14,24 @@ if (!$users->is_reg() || (!is_administrator(101) && !chkcpecprm('pageedit', 'sho
 // init page editor
 $pageEditor = new Page;
 
-if (isset($_GET['action'])) {
-    $action = check($_GET['action']);
-}
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
 
 if (isset($_GET['file'])) {
     $file = check($_GET['file']);
 
     // get page id we work with
-    $page_id = $pageEditor->get_page_id("file='" . $file . "'");
+    $page_id = $pageEditor->get_page_id("file='{$file}'");
 } elseif (isset($_POST['file'])) {
     $file = check($_POST['file']);
 
     // get page id we work with
-    $page_id = $pageEditor->get_page_id("file='" . $file . "'");
+    $page_id = $pageEditor->get_page_id("file='{$file}'");
 } else {
     $file = '';
 }
 
-if (isset($_POST['text_files'])) {
-    $text_files = $_POST['text_files'];
-} 
+$text_files = isset($_GET['text_files']) ? check($_GET['text_files']) : '';
+
 
 $config_editfiles = 10;
 $time = time();
@@ -159,81 +156,107 @@ if ($action == "renamepg") {
 
 if ($action == "addnew") {
 
-if (!chkcpecprm('pageedit', 'insert') && !is_administrator(101)) {
+    if (!chkcpecprm('pageedit', 'insert') && !is_administrator(101)) {
 
-redirect_to("index.php?isset=ap_noaccess");
+        redirect_to("index.php?isset=ap_noaccess");
 
-}
+    }
 
-$newfile = isset($_POST['newfile']) ? check($_POST['newfile']) : '';
-$type = isset($_POST['type']) ? check($_POST['type']) : '';
+    $newfile = isset($_POST['newfile']) ? check($_POST['newfile']) : '';
+    $type = isset($_POST['type']) ? check($_POST['type']) : '';
+    $page_structure = isset($_POST['page_structure']) ? check($_POST['page_structure']) : '';
+    $allow_unicode = isset($_POST['allow_unicode']) ? true : false;
 
-$page_title = $newfile;
-$newfile = strtolower(trans($newfile));
+    // page title
+    $page_title = $newfile;
 
-if (isset($_POST['lang']) && !empty($_POST['lang'])) {
+    // page name in url
+    if ($allow_unicode === false) {
+        // remove unicode chars
+        $newfile = trans($newfile);
+    } else {
+        $newfile = trans_unicode($newfile);
+    }
 
-$pagelang = check($_POST['lang']);
+    // if page structure is set
+    if (!empty($page_structure)) {
+        $type = $page_structure;
+    }
 
-$pagelang_file = '!.' . $pagelang . '!';
+    // page language
+    if (isset($_POST['lang']) && !empty($_POST['lang'])) {
 
-} else {
+        $pagelang = check($_POST['lang']);
 
-$pagelang = '';
+        $pagelang_file = '!.' . $pagelang . '!';
 
-}
+    } else {
 
-if (!empty($newfile)) {
+        $pagelang = '';
 
-$newfiles = $newfile . '' . $pagelang_file . '.php';
+    }
 
-// check if page exists
-$includePageLang = !empty($pagelang) ? " AND lang='" . $pagelang . "'" : '';
+    if (!empty($newfile)) {
+        // page filename
+        $newfiles = $newfile . $pagelang_file . '.php';
 
-if ($pageEditor->page_exists('', "pname='" . $newfile . "'" . $includePageLang)) {
-    header ("Location: files.php?action=new&isset=mp_pageexists");
-    exit;
-}
+        // check if page exists
+        $includePageLang = !empty($pagelang) ? " AND lang='{$pagelang}'" : '';
 
-// insert db data
-$values = array(
-'pname' => $newfile,
-'lang' => $pagelang,
-'created' => time(),
-'lastupd' => time(),
-'lstupdby' => $user_id,
-'file' => $newfiles,
-'crtdby' => $user_id,
-'published' => '1',
-'pubdate' => '0',
-'tname' => $page_title,
-'headt' => '<meta property="og:title" content="' . $page_title . '" />',
-'type' => $type
-);
+        if ($pageEditor->page_exists('', "pname='{$newfile}'" . $includePageLang)) {
+            redirect_to("files.php?action=new&isset=mp_pageexists");
+        }
 
-// insert data
-$pageEditor->insert($values);
+        // full page address
+        if (!empty($page_structure)) {
+            // user's custom page structure
+            $page_url = website_home_address() . '/' . $page_structure . '/' . $newfile . '/';
+        } elseif ($type = 'post') {
+            // blog post
+            $page_url = website_home_address() . '/blog/' . $newfile . '/';
+        } else {
+            // page
+            $page_url = website_home_address() . '/page/' . $newfile . '/';
+        }
 
-// file successfully created
-header ("Location: files.php?action=edit&file=$newfiles&isset=mp_newfiles");
-exit;
-} else {
-header ("Location: files.php?action=new&isset=mp_noyesfiles");
-exit;
-} 
+        // insert db data
+        $values = array(
+        'pname' => $newfile,
+        'lang' => $pagelang,
+        'created' => time(),
+        'lastupd' => time(),
+        'lstupdby' => $user_id,
+        'file' => $newfiles,
+        'crtdby' => $user_id,
+        'published' => '1',
+        'pubdate' => '0',
+        'tname' => $page_title,
+        'headt' => '<meta property="og:title" content="' . $page_title . '" />'. "\r\n" . '<meta property="og:url" content="' . $page_url . '" />' . "\r\n" . '<link rel="canonical" href="' . $page_url . '" />',
+        'type' => $type
+        );
+
+        // insert data
+        $pageEditor->insert($values);
+
+        // file successfully created
+        redirect_to("files.php?action=edit&file=$newfiles&isset=mp_newfiles");
+
+    } else {
+        redirect_to("files.php?action=new&isset=mp_noyesfiles");
+    }
+
 }
 
 if ($action == "del") {
+
     if (!chkcpecprm('pageedit', 'del') && !is_administrator(101)) {
-        header("Location: index.php?isset=ap_noaccess");
-        exit;
+        redirect_to("index.php?isset=ap_noaccess");
     }
 
     // delete page
     $pageEditor->delete($page_id);
  
-    header("Location: files.php?isset=mp_delfiles");
-    exit;
+    redirect_to("files.php?isset=mp_delfiles");
 }
 
 // publish page; page will be avaliable for visitors
@@ -249,8 +272,7 @@ if ($action == "publish") {
         $pageEditor->visibility($page_id, 2);
     } 
 
-    header("Location: files.php?action=show&file=" . $file . "&isset=mp_editfiles");
-    exit;
+    redirect_to("files.php?action=show&file=" . $file . "&isset=mp_editfiles");
 } 
 // unpublish page
 if ($action == "unpublish") {

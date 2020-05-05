@@ -180,7 +180,11 @@ $lang_admin = array(
 'userlist' => "User List",
 'uplFiles' => "Uploaded Files", // list of uploaded files
 'onlyFullVerFile' => "This file is available only in full version", // file content/functions are available only in full version
-'confUnBan' => "Ban has been removed!"
+'confUnBan' => "Ban has been removed!",
+'customPageUrl' => "Your custom page address. Example: <em>https://{<strong>your_custom_page_directory</strong>}/new-page/</em>",
+'allowUnicodeUrl' => "Allow Unicode characters in URL",
+'pageStructure' => "Page structure",
+'new-page' => "new-page"
 );
 
 

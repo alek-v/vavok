@@ -280,10 +280,6 @@ if ($action == "setthree") {
 
     echo '<form method="post" action="procsets.php?action=editthree">';
 
-    echo '<p>' . $lang_apsetting['newsonpg'] . ':<br /><input name="conf_set17" maxlength="2" value="' . $config['postNews'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['newsonhome'] . ':<br /><input name="conf_set18" maxlength="2" value="' . $config['lastNews'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['msgsinbookonpg'] . ':<br /><input name="conf_set19" maxlength="2" value="' . $config['bookPost'] . '" /></p>';
-
     echo '<p>' . $lang_apsetting['allowguestingb'] . ': <br />' . $lang_apsetting['yes'];
     if ($config['bookGuestAdd'] == "1") {
         echo '<input name="conf_set20" type="radio" value="1" checked>';
@@ -299,7 +295,6 @@ if ($action == "setthree") {
     echo $lang_apsetting['no'] . '</p>';
 
     echo '<p>' . $lang_apsetting['maxinchat'] . ':<br /><input name="conf_set22" maxlength="4" value="' . $config['maxPostChat'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['msgsinchat'] . ':<br /><input name="conf_set23" maxlength="2" value="' . $config['chatPost'] . '" /></p>';
     echo '<p>' . $lang_apsetting['maxnews'] . ':<br /><input name="conf_set24" maxlength="5" value="' . $config['maxPostNews'] . '" /></p>';
     echo '<p>' . $lang_apsetting['maxgbmsgs'] . ':<br /><input name="conf_set25" maxlength="5" value="' . $config['maxPostBook'] . '" /></p>';
     echo '<p>' . $lang_apsetting['onepassmail'] . ':<br /><input name="conf_set56" maxlength="3" value="' . $config['subMailPacket'] . '" /></p>';
@@ -330,10 +325,6 @@ if ($action == "setfour") {
         echo '<input name="conf_set49" type="radio" value="0" />';
     } 
     echo $lang_apsetting['no'] . '</p>';
-
-    echo '<p>' . $lang_apsetting['fmmsgspp'] . ':<br /><input name="conf_set26" maxlength="2" value="' . $config['forumPost'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['fmtpcpp'] . ':<br /><input name="conf_set27" maxlength="2" value="' . $config['forumTopics'] . '" /></p>'; 
-    // echo $lang_apsetting['fmfaxtopics'] . ':<br /><input name="conf_set28" maxlength="4" value="' . $con_data[28] . '" /><br />';
     
         echo '<p>Show language dropdown: <br />' . $lang_apsetting['yes'];
     if ($config['forumChLang'] == "1") {
@@ -412,37 +403,60 @@ if ($action == "setseven") {
 
     echo '<form method="post" action="procsets.php?action=editseven">';
 
-    echo '<p>' . $lang_apsetting['maxrefererdata'] . ':<br /><input name="conf_set51" maxlength="3" value="' . $config['refererLog'] . '" /></p>'; 
+    echo '<div class="form-group">';
+        echo '<label for="custom-pages">' . $lang_home['customPageUrl'] . '</label>';
+        echo '<input class="form-control" name="conf_set28" id="custom-pages" value="' . $config['customPages'] . '" />';
+    echo '</div>';
 
-    echo '<p>' . $lang_apsetting['showrefpage'] . ': <br />' . $lang_apsetting['yes'] . '';
-    if ($config['showRefPage'] == "1") {
-        echo '<input name="conf_set70" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set70" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($config['showRefPage'] == "0") {
-        echo '<input name="conf_set70" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set70" type="radio" value="0" />';
-    } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo '<div class="form-group">';
+        echo '<label for="referals">' . $lang_apsetting['maxrefererdata'] . '</label>';
+        echo '<input class="form-control" name="conf_set51" id="referals" maxlength="3" value="' . $config['refererLog'] . '" />';
+    echo '</div>';
 
-    echo '<p>Facebook comments on pages: <br />' . $lang_apsetting['yes'] . ''; // update lang
-    if ($config['pgFbComm'] == "1") {
-        echo '<input name="conf_set6" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set6" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($config['pgFbComm'] == "0") {
-        echo '<input name="conf_set6" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set6" type="radio" value="0" />';
-    } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo '<p>' . $lang_apsetting['showrefpage'] . ': </p>';
+    echo '<div class="form-group form-check form-check-inline">';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
+       if ($config['showRefPage'] == "1") {
+            echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" checked>';
+        } else {
+            echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" />';
+        } 
+        echo '<label class="form-check-label" for="referal-yes">' . $lang_apsetting['yes'] . '</label>';
+
+    echo '</div>';
+
+    echo '<div class="form-check form-check-inline">';
+        if ($config['showRefPage'] == "0") {
+            echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" checked>';
+        } else {
+            echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" />';
+        } 
+        echo '<label class="form-check-label" for="referal-no">' . $lang_apsetting['no'] . '</label>';
+    echo '</div>';
+
+    echo '<p>Facebook comments on pages:</p>'; // update lang
+    echo '<div class="form-group form-check form-check-inline">';
+
+        if ($config['pgFbComm'] == "1") {
+            echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" checked>';
+        } else {
+            echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" />';
+        } 
+        echo '<label class="form-check-label" for="referal-yes">' . $lang_apsetting['yes'] . '</label>';
+    echo '</div>';
+
+    echo '<div class="form-check form-check-inline">';
+        if ($config['pgFbComm'] == "0") {
+            echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" checked>';
+        } else {
+            echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" />';
+        } 
+        echo '<label class="form-check-label" for="referal-no">' . $lang_apsetting['no'] . '</label>';
+    echo '</div>';
+
+    echo '<div class="col-sm-10">';
+    echo '<button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></div>
+    </form>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 } 
 if ($action == "seteight") {

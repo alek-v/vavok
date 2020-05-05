@@ -2,6 +2,7 @@
 
 html, body {
 	font-family: arial, helvetica, sans-serif;
+	font-display: swap;
 	background: #ffffff;
 	color: #666666;
 	width: 100%;

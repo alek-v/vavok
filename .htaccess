@@ -159,15 +159,19 @@ RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
 
 # website pages
 RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
+# end of website pages
 
 # website blog pages
 RewriteRule ^blog\/$ pages/blog.php
 RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1 [NC,L]
+# end of website blog pages
 
 # website content - tag search
 RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2 [NC,L]
 RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1 [NC,L]
 RewriteRule ^search$ search.php [NC,L]
+# end of website content - tag search
 
 # website custom pages
+# custom_link - don't remove
 # end of website custom pages
