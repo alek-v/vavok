@@ -5,7 +5,9 @@
 - Update page generation improvements
 - Updated registration key improvements
 - Updated private message system
+- Updated language parsing
 - Added new languages
+- Added custom page structure option
 - Fixed when user agent is empty
 
 
