@@ -1,10 +1,8 @@
 <?php 
 // (c) Aleksandar Vranešević - vavok.net
 
-// custom page tempates directory for this theme
-// if you want to use custom template dir
-// set here template dir for this theme
-// dir must be under template main folder
+// custom page templates directory is named "templates" and it must be under template main folder
+// default page templates directory is /themes/templates/
 
 include BASEDIR . "include/prepare_header.php";
 
@@ -16,21 +14,13 @@ header("Content-type:text/html; charset=utf-8");
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/framework.css?v=<?php echo filemtime(BASEDIR . 'themes/default/framework.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/style.css?v=<?php echo filemtime(BASEDIR . 'themes/default/style.css'); ?>" />
 
 <?php
-
-// head tags <head></head>
-
-// head tags for current theme
-echo '<link rel="stylesheet" type="text/css" href="' . HOMEDIR . 'themes/default/bootstrap/css/bootstrap.min.css" />';
-echo '<link rel="stylesheet" type="text/css" href="' . HOMEDIR . 'themes/default/framework.css?v=' . filemtime(BASEDIR . 'themes/default/style.css') . '" />';
-echo '<link rel="stylesheet" type="text/css" href="' . HOMEDIR . 'themes/default/style.css?v=' . filemtime(BASEDIR . 'themes/default/style.css') . '" />';
-
-
 // load data for header
 include BASEDIR . "include/load_header.php";
-
-// site body
 ?>
 </head>
 <body class="d-flex flex-column">
@@ -52,10 +42,10 @@ include BASEDIR . "include/load_header.php";
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a></li>';
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a></li>';
 				    if ($users->is_administrator()) {
-				        echo'<li class="nav-item"><a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
+				        echo'<li class="nav-item"><a href="' . HOMEDIR . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
 				    } 
 				    if ($users->is_moderator()) {
-				        echo '<li class="nav-item"><a href="' . HOMEDIR . '' . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
+				        echo '<li class="nav-item"><a href="' . HOMEDIR . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
 				    } 
 				} else {
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a></li>';
@@ -64,7 +54,6 @@ include BASEDIR . "include/load_header.php";
 				} 
 
 				?>
-
 				</ul>
 				<div class="nav-contact">
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
