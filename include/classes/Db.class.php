@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   29.04.2020. 7:40:07
+* Updated:   06.05.2020. 20:27:17
 */
 
 
@@ -16,7 +16,7 @@ class db extends PDO {
     private $errorMsgFormat;
    	private $config;
 
-    public function __construct($dsn, $user = "", $passwd = "") {
+    public function __construct($server, $db_name, $user = "", $passwd = "") {
         $options = array(
             PDO::ATTR_PERSISTENT => false,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -24,7 +24,7 @@ class db extends PDO {
             );
 
         try {
-            parent::__construct($dsn, $user, $passwd, $options);
+            parent::__construct("mysql:host=$server;dbname=$db_name", $user, $passwd, $options);
         } 
         catch (PDOException $e) {
             global $config_debug;
