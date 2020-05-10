@@ -43,10 +43,10 @@ elseif ($config["siteDefaultLang"] == $config["language"] && !empty($ln)) {
 
 // get page title
 // first we check is there a page with language we use
-$my_title = $db->get_data('pages', "pname='index' AND lang='" . $ln_loc . "'", 'tname');
+$my_title = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index' AND lang='{$ln_loc}'", 'tname');
 if (empty($my_title['tname'])) {
 	// load default index page title
-	$my_title = $db->get_data('pages', "pname='index'", 'tname');
+	$my_title = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'", 'tname');
 }
 
 $my_title = !empty($my_title['tname']) ? $my_title['tname'] : '';
@@ -66,20 +66,29 @@ if (isset($_GET['isset'])) {
 // check for chached page
 // first we check is there a page with language we use
 if (file_exists(BASEDIR . "used/datamain/index!." . $ln_loc . "!.php")) {
+
 	include BASEDIR . "used/datamain/index!." . $ln_loc . "!.php";
+
 } elseif (file_exists(BASEDIR . "used/datamain/index.php")) {
+
 	// load default index page title
 	include("used/datamain/index.php");
+
 } else {
+
 	// load from database if there is no cached page
-	$open_page_lng = $db->get_data('pages', "pname='index' AND lang='" . $ln_loc . "'", 'content');
+	$open_page_lng = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index' AND lang='" . $ln_loc . "'", 'content');
 
 	if (!empty($open_page_lng)) {
+
 		echo $open_page_lng['content'];
+
 	} else {
-		$open_page = $db->select('pages', "pname='index'", '', '*');
+
+		$open_page = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'");
 
 		echo $open_page['content'];
+
 	}
 }
 
