@@ -10,7 +10,7 @@
 - Updated language parsing
 - Added new languages
 - Added custom page structure option
-- Added function select_page_name() to Db.class.php
+- Added function select_page_name() in Db.class.php
 - Fixed when user agent is empty
 
 
