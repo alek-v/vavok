@@ -1,8 +1,11 @@
 <?php
-// (c) Aleksandar Vranešević - vavok.net
-// class for managing pages
-// updated 25.04.2020. 20:08:30
-
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* class for managing pages
+* Updated:   06.05.2020. 18:22:11
+*/
 
 class Page {
 
@@ -30,7 +33,7 @@ class Page {
 
 		// update cached index and menu pages
 		// this pages must be cached other pages are not cached
-		$file = $this->db->get_data('pages', "id = '" . $id . "'", 'file')['file'];
+		$file = $this->db->get_data($this->table_prefix . 'pages', "id = '{$id}'", 'file')['file'];
 		if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
 			$this->updateCached($file, $content);
 		}
@@ -63,7 +66,7 @@ class Page {
 	    $values[] = $pageName;
 	    $values[] = $newName;
 
-	    $this->db->update($this->table_prefix . 'pages', $fields, $values, "`id`='" . $id . "'");
+	    $this->db->update($this->table_prefix . 'pages', $fields, $values, "`id`='{$id}'");
 	}
 
 	// return total number of pages
@@ -71,30 +74,43 @@ class Page {
 		$where = '';
 
 		if (!empty($creator)) {
-			$where = " WHERE crtdby = '" . $creator . "'";
+			$where = " WHERE crtdby = '{$creator}'";
 		}
 
 		return $this->db->count_row($this->table_prefix . "pages" . $where);
 	}
 
-	// select page - get page data
+	// select page by id - get page data
 	function select_page($id , $fields = '*') {
 
 		// update visitor counter if page is vewed by visitor
 		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
 
-			$this->db->query("UPDATE pages SET views = views + 1 WHERE id = '{$id}'");
+			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE id = '{$id}'");
 		}
 
 		// return page data
 		return $this->db->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
 
+	}
+
+	// select page by name - get page data
+	function select_page_name($name, $fields = '*') {
+
+		// update visitor counter if page is vewed by visitor
+		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
+
+			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '{$name}'");
+		}
+
+		// return page data
+		return $this->db->get_data($this->table_prefix . 'pages', "pname='{$name}'", $fields);
 
 	}
 
 	// check if page exists
 	function page_exists($file = '', $where = '') {
-		if (!empty($file) && $this->db->count_row($this->table_prefix . 'pages', "file='" . $file . "'") > 0) {
+		if (!empty($file) && $this->db->count_row($this->table_prefix . 'pages', "file='{$file}'") > 0) {
 			return $this->get_page_id("file='" . $file . "'");
 		} elseif (!empty($where) && ($this->db->count_row($this->table_prefix . 'pages', $where) > 0)) {
 			return $this->get_page_id($where);
@@ -115,7 +131,7 @@ class Page {
 
 	// delete page
 	function delete($id) {
-		$this->db->delete('pages', "id='" . $id . "'");
+		$this->db->delete($this->table_prefix . 'pages', "id='{$id}'");
 	}
 
 	// page visibility. publish or unpubilsh for visitors
@@ -132,7 +148,7 @@ class Page {
 	function language($id, $lang) {
 		$pageData = $this->select_page($id);
 	    // update database data
-	    $this->db->query("UPDATE " . $this->table_prefix . "`pages` SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
+	    $this->db->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
 	}
 
 	// update head tags
