@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 15.04.2020. 23:50:28
+// modified: 05.05.2020. 12:43:38
 // todo: rewrite whole page
 
 require_once"../include/strtup.php";
@@ -30,12 +30,9 @@ if (isset($_GET['file'])) {
     $file = '';
 }
 
-$text_files = isset($_GET['text_files']) ? check($_GET['text_files']) : '';
-
+$text_files = isset($_POST['text_files']) ? $_POST['text_files'] : ''; // keep data as received so html codes will be ok
 
 $config_editfiles = 10;
-$time = time();
-
 
 if ($action == "editfile") {
     // get edit mode
