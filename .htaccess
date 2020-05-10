@@ -22,10 +22,6 @@ AddDefaultCharset UTF-8
 #php_value file_uploads On
 #php_value display_errors Off
 
-# force https protocol
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
-
 ErrorDocument 400 /pages/error.php?error=400
 ErrorDocument 401 /pages/error.php?error=401
 ErrorDocument 402 /pages/error.php?error=402
@@ -141,6 +137,10 @@ RewriteEngine on
 # Include in the next line all folders to exclude
 # The [NC] flag here stands for No Case, so you don't have to worry about case sensitivity.
 RewriteCond %{REQUEST_URI} !(js|img|fls) [NC]
+
+# force https protocol
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 # seo friendly home page language url. example.com/en/
 # QSA - This rule appends the GET query string which results from the ReWrite rule to the initial GET query string sent by the browser.
