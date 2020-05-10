@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   29.04.2020. 5:26:39
+* Updated:   06.05.2020. 20:27:25
 */
 
 // time when execution of the script has started
@@ -116,7 +116,7 @@ require_once BASEDIR . "include/functions.php";
 if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
 
     // and this will be PDO connection to base
-    $db = new Db("mysql:host=" . $config["dbhost"] . ";dbname=" . $config["dbname"], $config["dbuser"], $config["dbpass"]);
+    $db = new Db($config["dbhost"], $config["dbname"], $config["dbuser"], $config["dbpass"]);
 
 
     // we are connected to database and we can load Users class
