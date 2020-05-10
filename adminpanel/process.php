@@ -56,7 +56,7 @@ if ($action == "acadd") {
 } 
 // empty admin chat
 if ($action == "acdel") {
-    if ($accessr == 101 || $accessr == 102) {
+    if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
         clear_files("../used/adminchat.dat");
 
         header ("Location: adminchat.php?isset=mp_admindelchat");
@@ -64,7 +64,7 @@ if ($action == "acdel") {
     } 
 } 
 
-if ($action == "delmail" && $accessr == 101) {
+if ($action == "delmail" && $_SESSION['permissions'] == 101) {
     $users_id = check($_GET['users']);
     //$users_id = $users->getidfromnick($users);
     if ($users_id != "") {
@@ -83,7 +83,7 @@ if ($action == "delmail" && $accessr == 101) {
     } 
 } 
 
-if ($action == "delallsub" && $accessr == 101) {
+if ($action == "delallsub" && $_SESSION['permissions'] == 101) {
     $sql = "TRUNCATE TABLE subs";
     $db->query($sql);
     header ("Location: subscribe.php?isset=mp_delsuball");
@@ -91,7 +91,7 @@ if ($action == "delallsub" && $accessr == 101) {
 } 
 
 
-if ($action == "zaban" && ($accessr == 101 or $accessr == 102)) {
+if ($action == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 	$ips = check($_POST['ips']);
     if (!empty($ips)) {
 
@@ -106,7 +106,7 @@ if ($action == "zaban" && ($accessr == 101 or $accessr == 102)) {
     exit;
 } 
 
-if ($action == "razban" && ($accessr == 101 or $accessr == 102)) {
+if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 	if (isset($_POST['id'])) {$id = check($_POST['id']);} else {$id = check($_GET['id']);}
 
     if ($id != "") {
@@ -126,7 +126,7 @@ if ($action == "razban" && ($accessr == 101 or $accessr == 102)) {
     exit;
 } 
 
-if ($action == "delallip" && ($accessr == 101 or $accessr == 102)) {
+if ($action == "delallip" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
     $fp = fopen("../used/ban.dat", "a+");
     flock ($fp, LOCK_EX);
     ftruncate ($fp, 0);
@@ -136,7 +136,7 @@ if ($action == "delallip" && ($accessr == 101 or $accessr == 102)) {
     exit;
 } 
 
-if ($action == "delbw" && $accessr == 101) {
+if ($action == "delbw" && $_SESSION['permissions'] == 101) {
 	$stroka = check($_GET['stroka']);
     $file = file('../used/antiword.dat');
     $filestr = explode("|", $file[0]);
@@ -148,7 +148,7 @@ if ($action == "delbw" && $accessr == 101) {
     header ("Location: antiword.php?isset=delok");
     exit;
 } 
-if ($action == "addbw" && $accessr == 101 && $_POST['slovo'] != '') {
+if ($action == "addbw" && $_SESSION['permissions'] == 101 && $_POST['slovo'] != '') {
 	$slovo = check($_POST['slovo']);
     $fp = fopen(BASEDIR . "used/antiword.dat", "a+");
     $text = preg_replace ("|[\r\n]+|si", "", $slovo);
@@ -158,7 +158,7 @@ if ($action == "addbw" && $accessr == 101 && $_POST['slovo'] != '') {
     exit;
 } 
 
-if ($action == "delerlog" && ($accessr == 101 or $accessr == 102)) {
+if ($action == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
     clear_files("../used/datalog/error401.dat");
     clear_files("../used/datalog/error402.dat");
     clear_files("../used/datalog/error403.dat");
@@ -170,11 +170,10 @@ if ($action == "delerlog" && ($accessr == 101 or $accessr == 102)) {
     clear_files("../used/datalog/error.dat");
     clear_files("../used/datalog/ban.dat");
 
-    header ("Location: logfiles.php?isset=mp_dellogs&" . SID);
-    exit;
+    redirect_to("logfiles.php?isset=mp_dellogs");
 } 
 
-if ($action == "delerid" && !empty($_GET['err']) && ($accessr == 101 or $accessr == 102)) {
+if ($action == "delerid" && !empty($_GET['err']) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 	$err = check($_GET['err']);
     clear_files("../used/datalog/" . $err . ".dat");
 

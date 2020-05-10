@@ -17,7 +17,7 @@ $time = time();
 
 if (!$users->is_reg()) { redirect_to("../?error"); } 
 
-if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
+if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $my_title = $lang_admin['banning'];
     include_once"../themes/$config_themes/index.php";
     if (isset($_GET['isset'])) {

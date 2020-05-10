@@ -125,7 +125,7 @@ if ($action == "prodel") {
     echo '<br><a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 } 
 
-if ($total > 0 && ($accessr == 101 || $accessr == 102)) {
+if ($total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
     echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanchat'] . '</a>';
 } 
 

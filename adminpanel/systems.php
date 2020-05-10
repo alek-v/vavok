@@ -13,7 +13,7 @@ function prev_dir($string) {
 } 
 
 if ($users->is_reg()) {
-    if ($accessr == 101) {
+    if ($_SESSION['permissions'] == 101) {
         include_once"../themes/$config_themes/index.php";
         if (isset($_GET['isset'])) {
 				$isset = check($_GET['isset']);

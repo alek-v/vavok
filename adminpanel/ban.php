@@ -11,7 +11,7 @@ if (isset($_GET['start'])) {
 } 
 
 if ($users->is_reg()) {
-    if ($accessr == 101 || $accessr == 102) {
+    if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
         $my_title = "IP ban";
         include_once"../themes/$config_themes/index.php";
 

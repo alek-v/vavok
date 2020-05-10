@@ -6,7 +6,7 @@ require_once"../include/strtup.php";
 $my_title = "CHMOD";
 include_once"../themes/$config_themes/index.php";
 
-if (isadmin() == true && $accessr == 101) {
+if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
     $mode = 777;
     echo "<br><div class='b'>Change CHMOD:</div>";
 

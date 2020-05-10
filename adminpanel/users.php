@@ -16,7 +16,7 @@ if (!empty($_POST['users'])) {
 $users_id = $users->getidfromnick($user);
 
 if ($users->is_reg()) {
-    if ($accessr == 101 || $accessr == 102) {
+    if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
         include_once"../themes/$config_themes/index.php";
         if (isset($_GET['isset'])) {
             $isset = check($_GET['isset']);
@@ -63,7 +63,7 @@ if ($users->is_reg()) {
 
                         $userx_access = (int)$show_userx['perm'];
 
-                        if ($accessr == 101 && $log == $config["adminNick"]) {
+                        if ($_SESSION['permissions'] == 101 && $log == $config["adminNick"]) {
                             $array_dostup = array(101 => "" . $lang_home['access101'] . "", 102 => "" . $lang_home['access102'] . "", 103 => "" . $lang_home['access103'] . "", 105 => "" . $lang_home['access105'] . "", 106 => "" . $lang_home['access106'] . "", 107 => "" . $lang_home['access107'] . "");
                             if ($userx_access == "0" || empty($userx_access)) {
                                 $userx_access = "107";

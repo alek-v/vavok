@@ -34,7 +34,7 @@ if (empty($action)) {
     echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $lang_apsetting['other'] . '</a>';
 } 
 
-if ($accessr == 101 && $users->is_administrator()) {
+if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
     // main settings
     if ($action == "setone") {
         echo '<h1>' . $lang_apsetting['mainset'] . '</h1>';
@@ -94,9 +94,7 @@ if ($accessr == 101 && $users->is_administrator()) {
         echo '<p>' . $lang_apsetting['timezone'] . ':<br /><input name="conf_set10" maxlength="3" value="' . $config['timeZone'] . '" /></p>';
         echo '<p>' . $lang_apsetting['pagetitle'] . ':<br /><input name="conf_set11" maxlength="100" value="' . $config['title'] . '" /></p>';
         echo '<p>' . $lang_apsetting['siteurl'] . ':<br /><input name="conf_set14" maxlength="50" value="' . $config['homeUrl'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['floodtime'] . ':<br /><input name="conf_set29" maxlength="3" value="' . $config['chatPost'] . '" /></p>';
-        // echo $lang_apsetting['apfolder'] . ':<br /><input name="conf_set48" maxlength="30" value="' . $con_data[48] . '" /><br />';
-        // echo 'Limit requests per IP:<br /><input name="conf_set57" maxlength="3" value="' . $con_data[57] . '" /><br />';
+        echo '<p>' . $lang_apsetting['floodtime'] . ':<br /><input name="conf_set29" maxlength="3" value="' . $config['floodTime'] . '" /></p>';
         echo '<p>' . $lang_apsetting['passkey'] . ':<br /><input name="conf_set1" maxlength="25" value="' . $config['keypass'] . '" /></p>';
 
         // quarantine time

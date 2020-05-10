@@ -94,7 +94,7 @@ if ($action == 'main') {
         echo '<a href="reports.php" class="btn btn-outline-primary sitelink">' . $lang_admin['usrcomp'] . '</a>';
     }
 
-    if ($accessr == 101 || $accessr == 102 || $accessr == 103) {
+    if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
         echo '<hr>';
         if (file_exists('upload.php')) {
         echo '<a href="upload.php" class="btn btn-outline-primary sitelink">' . $lang_admin['upload'] . '</a>';
