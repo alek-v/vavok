@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   29.04.2020. 9:14:39
+* Updated:   07.05.2020. 2:46:31
 */
 
 
@@ -323,9 +323,9 @@ function smiles($string) {
         $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
     } 
 
-    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/;).gif" alt=";)" />', $string);
-    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/:).gif" alt=":)" />', $string);
-    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/:(.gif" alt=":(" />', $string);
+    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=";)" />', $string);
+    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=":)" />', $string);
+    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/(.gif" alt=":(" />', $string);
     $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'images/smiles/D.gif" alt=":D" />', $string);
     $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'images/smiles/E.gif" alt=":E" />', $string);
     $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
@@ -334,7 +334,7 @@ function smiles($string) {
 } 
 
 function nosmiles($string) {
-    $string = preg_replace('#<img src="\.\./images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
+    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
     return $string;
 } 
 
@@ -1210,7 +1210,15 @@ function transfer_protocol() {
     return $connectionProtocol;
 }
 
+// complete dynamic website address
 function website_home_address() {
     return transfer_protocol() . $_SERVER['HTTP_HOST'];
 }
+
+// multibyte ucfirst by plemieux
+function my_mb_ucfirst($str) {
+    $fc = mb_strtoupper(mb_substr($str, 0, 1));
+    return $fc.mb_substr($str, 1);
+}
+
 ?>
