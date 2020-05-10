@@ -3,11 +3,14 @@
 - Update function update in Db.class.php return update result
 - Update navigation improvements
 - Update page generation improvements
+- Update use access rights from session
+- Update to default theme
 - Updated registration key improvements
 - Updated private message system
 - Updated language parsing
 - Added new languages
 - Added custom page structure option
+- Added function select_page_name() to Db.class.php
 - Fixed when user agent is empty
 
 
