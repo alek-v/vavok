@@ -1,6 +1,11 @@
 <?php 
-// (c) vavok.net
-// online, hit & click counter
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* online, hit & click counter
+* Updated:   06.05.2020. 18:22:05
+*/
 
 // don't count visits it this is cron job
 if (stristr($_SERVER['PHP_SELF'], '/cronjob/') == true) { exit; }
@@ -37,9 +42,11 @@ if (!isset($searchbot)) { $searchbot = ''; }
 if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
     while ($bz_row = $db->get_data(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'")) {
         if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
+            $fields = array();
             $fields[] = 'date';
             $fields[] = 'page';
              
+            $values = array();
             $values[] = $bz_date;
             $values[] = $phpself;
              
@@ -104,6 +111,7 @@ $new_total_visits = $counts['visits_total'] + 1; // total visits
 }
 
 // update data
+$fields = array();
 $fields[] = 'day';
 $fields[] = 'month';
 $fields[] = 'clicks_today';
@@ -111,6 +119,7 @@ $fields[] = 'clicks_total';
 $fields[] = 'visits_today';
 $fields[] = 'visits_total';
 
+$values = array();
 $values[] = $day;
 $values[] = date("m");
 $values[] = $new_clicks_today;
