@@ -3,41 +3,40 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   29.04.2020. 5:20:52
+* Updated:   07.05.2020. 4:45:14
 */
 
 
 if (!empty($_SESSION['log'])) {
 
-    $vavok_users = $db->get_data('vavok_users', "id='" . $users->getidfromnick(check($_SESSION['log'])) . "'");
+    $vavok_users = $db->get_data('vavok_users', "id='{$users->getidfromnick($_SESSION['log'])}'");
 
     $user_id = $vavok_users['id']; // user id
-    $accessr = $vavok_users['perm']; // access rights
     $log = $_SESSION['log'];
 
-    $user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'regche');
+    $user_profil = $db->get_data('vavok_profil', "uid='{$user_id}'", 'regche');
 
-    $db->update('vavok_profil', 'lastvst', $time, "uid='" . $user_id . "'");
+    $db->update('vavok_profil', 'lastvst', $time, "uid='{$user_id}'");
 
     if (!empty($vavok_users['mskin']) && $users->user_device() == 'phone') {
 
-        $config_themes = check($vavok_users['mskin']);
+        $config_themes = $vavok_users['mskin'];
 
     } elseif (!empty($vavok_users['skin'])) { // skin
 
-        $config_themes = check($vavok_users['skin']);
+        $config_themes = $vavok_users['skin'];
 
     }
 
     if (!empty($vavok_users['timezone'])) { // time zone
 
-        $config["timeZone"] = check($vavok_users['timezone']);
+        $config["timeZone"] = $vavok_users['timezone'];
 
     } 
 
     if (!empty($vavok_users['lang'])) { // language
 
-        $config["language"] = check($vavok_users['lang']);
+        $config["language"] = $vavok_users['lang'];
 
     } 
 
@@ -83,13 +82,11 @@ if (!empty($_SESSION['log'])) {
     // else
     else {
         if ($users->user_device() == 'phone' && $config["redbrow"] == 1) {
-            header("Location: " . transfer_protocol() . "m." . $config["homeBase"] . $request_uri); 
+            redirect_to(transfer_protocol() . "m." . $config["homeBase"] . $request_uri); 
             // header("Location: http://m.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
-            exit;
         } elseif ($users->user_device() == 'computer' && $config["redbrow"] == 1) {
-            header("Location: " . transfer_protocol() . "www." . $config["homeBase"] . $request_uri); 
+            redirect_to(transfer_protocol() . "www." . $config["homeBase"] . $request_uri); 
             // header("Location: http://www.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
-            exit;
         } elseif ($users->user_device() == 'phone') {
             $config_themes = $config["mTheme"];
         } else {
@@ -111,18 +108,29 @@ function my_theme($config_themes = '') {
 
 // language settings
 // use language from session
-if (!empty($_SESSION['lang'])) {
-    $config["language"] = $_SESSION['lang'];
-} 
+if (!empty($_SESSION['lang'])) { $config["language"] = $_SESSION['lang']; } 
+
 // if there is no language chosen by user
-// use browser language
-if (empty($_SESSION['lang']) && empty($user_id)) {
 
-    if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+if (empty($user_id)) {
 
-        $v_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+	// use page language
+	if (!empty($_GET['pg'])) {
+		$this_page = new Page();
+		$v_lang = $this_page->select_page_name($_GET['pg'], $fields = 'lang')['lang'];
+	}
+
+	elseif (!empty($_SESSION['lang'])) {
+		$v_lang = $_SESSION['lang'];
+	}
+
+	elseif (!isset($v_lang) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) { // use browser language
+
+        $v_lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
     } else { $v_lang = ''; }
+
+    $v_lang = substr($v_lang, 0, 2);
 
     switch ($v_lang) {
 
