@@ -2,16 +2,16 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-$skins = check($_POST['skins']);
-$mskin = check($_POST['mskin']);
-$lang = check($_POST['lang']);
-$news = check($_POST['news']);
-$forumpost = check($_POST['forumpost']);
-$forumtem = check($_POST['forumtem']);
-$prrivs = check($_POST['prrivs']);
-$sdvig = check($_POST['timezone']);
-$subnews = no_br(check($_POST['subnews']));
-$inbox_notification = no_br(check($_POST['inbnotif']));
+$skins = isset($_POST['skins']) ? check($_POST['skins']) : '';
+$mskin = isset($_POST['mskin']) ? check($_POST['mskin']) : '';
+$lang = isset($_POST['lang']) ? check($_POST['lang']) : '';
+$news = isset($_POST['news']) ? check($_POST['news']) : '';
+$forumpost = isset($_POST['forumpost']) ? check($_POST['forumpost']) : '';
+$forumtem = isset($_POST['forumtem']) ? check($_POST['forumtem']) : '';
+$prrivs = isset($_POST['prrivs']) ? check($_POST['prrivs']) : '';
+$user_timezone = isset($_POST['timezone']) ? check($_POST['timezone']) : 0;
+$subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
+$inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
@@ -20,8 +20,8 @@ if (!$users->is_reg()) {
     exit;
 }
 	
-$getinfo = $db->select('vavok_about', "uid='" . $user_id . "'", '', 'email');
-$notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'email');
+$getinfo = $db->get_data('vavok_about', "uid='{$user_id}'", 'email');
+$notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'email');
 $email = $getinfo['email'];
 
 if (preg_match("/[^a-zA-Z0-9_+-]/", $skins) || empty($skins)) {
@@ -48,10 +48,10 @@ if (preg_match("/[^0-9]/", $prrivs) || $prrivs > 50 || empty($prrivs)) {
     header ("Location: settings.php?isset=incorrect");
     exit;
 } 
-if (!isset($sdvig) or $sdvig == "") {
-    $sdvig = '0';
+if (!isset($user_timezone)) {
+    $user_timezone = '0';
 } 
-if (preg_match("/[^0-9+-]/", $sdvig)) {
+if (preg_match("/[^0-9+-]/", $user_timezone)) {
     header ("Location: settings.php?isset=incorrect");
     exit;
 } 
@@ -65,7 +65,7 @@ unset($_SESSION['my_themes']);
 
 // site news
 if ($subnews == "yes") {
-    $email_check = $db->select('subs', "user_mail='" . $getinfo['email'] . "'", '', 'user_mail');
+    $email_check = $db->get_data('subs', "user_mail='{$getinfo['email']}'", 'user_mail');
     
 
     if (!empty($email_check['user_mail'])) {
@@ -90,7 +90,7 @@ if ($subnews == "yes") {
     } 
 }
 if ($subnews == "no") {
-    $email_check = $db->select('subs', "user_id='" . $user_id . "'", '', 'user_mail');
+    $email_check = $db->get_data('subs', "user_id='{$user_id}'", 'user_mail');
 
 
     if ($email_check['user_mail'] == "") {
@@ -99,7 +99,7 @@ if ($subnews == "no") {
         $randkey = "";
     } else {
     	// unsub
-        $db->delete('subs', "user_id='" . $user_id . "'");
+        $db->delete('subs', "user_id='{$user_id}'");
     	
         $result = 'no';
         $subnewss = 0;
@@ -113,44 +113,50 @@ if (empty($subnews) || $subnews == '') {
 
 
 // update changes
+$fields = array();
 $fields[] = 'skin';
 $fields[] = 'ipadd';
 $fields[] = 'timezone';
 $fields[] = 'lang';
 $fields[] = 'mskin';
- 
+
+$values = array();
 $values[] = $skins;
 $values[] = $ip;
-$values[] = $sdvig;
+$values[] = $user_timezone;
 $values[] = $lang;
 $values[] = $mskin;
  
-$db->update('vavok_users', $fields, $values, "id='" . $user_id . "'");
+$db->update('vavok_users', $fields, $values, "id='{$user_id}'");
 unset($fields, $values);
 
+$fields = array();
 $fields[] = 'newsmes';
 $fields[] = 'forummes';
 $fields[] = 'forumtem';
 $fields[] = 'privmes';
  
+$values = array();
 $values[] = $news;
 $values[] = $forumpost;
 $values[] = $forumtem;
 $values[] = $prrivs;
  
-$db->update('page_setting', $fields, $values, "uid='" . $user_id . "'");
+$db->update('page_setting', $fields, $values, "uid='{$user_id}'");
 unset($fields, $values);
 
 // update email notificatoins
+$fields = array();
 $fields[] = 'subscri';
 $fields[] = 'newscod';
 $fields[] = 'lastvst';
  
+$values = array();
 $values[] = $subnewss;
 $values[] = $randkey;
 $values[] = time();
  
-$db->update('vavok_profil', $fields, $values, "uid='" . $user_id . "'");
+$db->update('vavok_profil', $fields, $values, "uid='{$user_id}'");
 unset($fields, $values);
 
 // notification settings
@@ -158,14 +164,14 @@ if (!isset($inbox_notification)) {
 	$inbox_notification = 1;
 }
 
-$check_inb = $db->count_row('notif', "uid='" . $user_id . "' AND type='inbox'");
+$check_inb = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
 if ($check_inb > 0) {
-    $db->update('notif', 'active', $inbox_notification, "uid='" . $user_id . "' AND type='inbox'");
+    $db->update('notif', 'active', $inbox_notification, "uid='{$user_id}' AND type='inbox'");
 } else {
 	$db->insert_data('notif', array('active' => $inbox_notification, 'uid' => $user_id, 'type' => 'inbox'));
 }
 
 // redirect
-header("Location: ./settings.php?isset=editsetting");
-exit;
+redirect_to("./settings.php?isset=editsetting");
+
 ?>
