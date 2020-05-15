@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   07.05.2020. 4:45:14
+* Updated:   10.05.2020. 18:37:31
 */
 
 
@@ -101,10 +101,7 @@ if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
 }
 
 // current theme
-function my_theme($config_themes = '') {
-    global $config_themes;
-    return $config_themes;
-}
+define("MY_THEME", $config_themes);
 
 // language settings
 // use language from session

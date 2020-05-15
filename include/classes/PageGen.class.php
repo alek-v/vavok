@@ -14,8 +14,8 @@ class PageGen {
     public function __construct($file) {
 
         // get template
-        if (file_exists(BASEDIR . 'themes/' . my_theme() . '/templates/' . $file)) {
-        	$this->file = BASEDIR . 'themes/' . my_theme() . '/templates/' . $file;
+        if (file_exists(BASEDIR . 'themes/' . MY_THEME . '/templates/' . $file)) {
+        	$this->file = BASEDIR . 'themes/' . MY_THEME . '/templates/' . $file;
         } else {
         	$this->file = BASEDIR . "themes/templates/" . $file;
     	}
