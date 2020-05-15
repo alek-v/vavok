@@ -104,6 +104,11 @@ if ($action == "main" or empty($action)) {
         $limit_start = 0;
     }
 
+    $read_only = '';
+    if ($who == 1) {
+        $read_only = 'readonly';
+    }
+
     if ($num_items > 0) {
         $db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $user_id . "'");
 
@@ -111,7 +116,7 @@ if ($action == "main" or empty($action)) {
         echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
         echo '<div class="form-group">';
         echo '<label for="chatbarText"></label>';
-        echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $lang_home['message'] . '..." />';
+        echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $lang_home['message'] . '..." ' . $read_only . ' />';
         echo '</div>';
         echo '<input type="hidden" name="who" id="who" value="' . $who . '" class="send_pm" />';
 
