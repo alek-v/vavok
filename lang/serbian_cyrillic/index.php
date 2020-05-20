@@ -98,6 +98,7 @@ $lang_home['next'] = "Напред";
 $lang_home['prev'] = "Назад";
 $lang_home['contact'] = "Контакт";
 $lang_home['readmore'] = "Опширније";
+$lang_home['resend'] = "Пошаљи поново";
 
 // cookie consent
 $lang_home['cookies'] = "Колачићи."; // Title

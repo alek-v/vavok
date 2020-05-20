@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   07.05.2020. 2:46:31
+* Updated:   20.05.2020. 19:56:01
 */
 
 
@@ -1220,5 +1220,18 @@ function my_mb_ucfirst($str) {
     $fc = mb_strtoupper(mb_substr($str, 0, 1));
     return $fc.mb_substr($str, 1);
 }
+
+
+// check if sting contain unicode characters
+function is_unicode($data) {
+
+    if (strlen($data) !== strlen(utf8_decode($data))) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
 
 ?>

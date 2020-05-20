@@ -1,13 +1,20 @@
 <?php
-// (c) vavok.net - Aleksandar Vranesevic
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       http://vavok.net
+* Updated:   20.05.2020. 19:55:44
+*/
+
 
 class Mailer {
+
 	// send email
 	function send($usermail, $subject, $msg, $mail = "", $name = "") {
-	    global $config_srvhost;
 
 	    if (empty($mail)) {
-	        $mail = $config_srvhost;
+
+	        $mail = $_SERVER['HTTP_HOST'];
 	        if (substr($mail, 2) == 'm.') {
 	            $mail = substr($mail, 2);
 	        } 
@@ -16,7 +23,15 @@ class Mailer {
 	        }
 	        $mail = 'no_reply@' . $mail;
 	        $name = get_configuration('title');
-	    } 
+
+	    }
+
+	    // support for unicode emails
+	    if (is_unicode($usermail) && function_exists('idn_to_ascii')) {
+	    	// convert to ascii
+	    	$usermail = idn_to_ascii($usermail);
+	    }
+
 	    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
 
 	    $adds = "From: " . $name . " <" . $mail . ">\n";
@@ -38,6 +53,7 @@ class Mailer {
 		} else {
 			return true;
 		}
+
 	}
 
 	// add to queue
@@ -66,6 +82,9 @@ class Mailer {
 
 		return array_filter(explode('||', $subs));
 	}
+
+
+
 }
 
 

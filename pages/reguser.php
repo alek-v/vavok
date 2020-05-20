@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   29.04.2020. 6:39:14
+* Updated:   20.05.2020. 23:51:32
 */
 
 
@@ -90,9 +90,22 @@ if ($substr_log < 3) {
                         $subject = $lang_reguser['regonsite'] . ' ' . $config["title"];
                         $regmail = $lang_reguser['hello'] . " " . $log . "\r\n" . $lang_reguser['emailpart1'] . " " . $config["homeUrl"] . " \r\n" . $lang_reguser['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $needkey . "" . $lang_reguser['emailpart3'] . "\r\n" . $lang_reguser['emailpart4'] . "";
 
-                        // send confirmation email
+                        // Send confirmation email
                         $newMail = new Mailer;
                         $newMail->send($mail, $subject, $regmail);
+
+                        // Add to email queue and mark as send. Use it to resend email if requested
+                        $values = array(
+                        	'uad' => 1,
+                        	'recipient' => $mail,
+                        	'subject' => $subject,
+                        	'content' => $regmail,
+                        	'sent' => 1,
+                        	'timesent' => date("Y-m-d H:i:s"),
+                        	'timeadded' => date("Y-m-d H:i:s")
+
+                        );
+                        $db->insert_data('email_queue', $values);
 
                         // registration successfully, show info
                         echo '<p>' . $lang_reguser['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p>';
@@ -108,6 +121,14 @@ if ($substr_log < 3) {
 									<input type="text" class="form-control" id="key" name="key" placeholder="">
 								</div>
 								<button type="submit" class="btn btn-primary">' . $lang_home['confirm'] . '</button>
+
+							</form>
+							<form method="post" action="key.php?action=resendkey">
+
+								<div class="form-group">
+									<input type="hidden" class="form-control" id="recipient" name="recipient" value="' . $mail . '">
+								</div>
+								<button type="submit" class="btn btn-primary">' . $lang_home['resend'] . '</button>
 
 							</form>
                         	';
