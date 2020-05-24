@@ -19,7 +19,7 @@ if ($act == "addedit") {
     $msg = no_br($_POST['msg']);
 
     // get page data
-    $pageData = $db->select('pages', "file='" . $tfile . "'", '', 'file, headt');
+    $pageData = $db->get_data('pages', "file='{$tfile}'", 'file, headt');
 
     $headData = $pageData['headt'];
 
@@ -55,7 +55,7 @@ if ($act == "savenew") {
 
     $msg = no_br($_POST['msg']);
 
-    $last_notif = $db->select('pages', "pname='" . $tpage . "'", '', '`tname`, `pname`, `file`, `headt`');
+    $last_notif = $db->get_data('pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
     $headData = $last_notif['headt'];
 
@@ -128,17 +128,15 @@ if (!isset($act) || empty($act)) {
         $page = check($_GET['page']);
     } 
 
-    if (empty($page) || $page <= 0) $page = 1;
     $nitems = $db->count_row('pages', 'tname is not null');
     $num_items = $nitems;
 
     $items_per_page = 30;
-    $num_pages = ceil($num_items / $items_per_page);
-    if (($page > $num_pages) && $page != 1)$page = $num_pages;
-    $limit_start = ($page-1) * $items_per_page;
-    if ($limit_start < 0) {
-        $limit_start = 0;
-    } 
+
+
+    $navigation = new Navigation($items_per_page, $num_items, $page, 'pgtitle.php?'); // start navigation
+
+    $limit_start = $navigation->start()['start']; // starting point
 
     $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
@@ -150,8 +148,7 @@ if (!isset($act) || empty($act)) {
         } 
     } 
 
-    page_navigation("pgtitle.php?", $items_per_page, $page, $num_items);
-    page_numbnavig("pgtitle.php?", $items_per_page, $page, $num_items);
+    echo $navigation->get_navigation();
 
     echo '<br /><br /><a href="pgtitle.php?act=addnew" class="btn btn-outline-primary sitelink">Add new title</a><br /><br />'; // update lang
 } 
@@ -159,7 +156,7 @@ if (!isset($act) || empty($act)) {
 if ($act == "edit") {
     $pgfile = check($_GET['pgfile']);
 
-    $page_title = $db->select('pages', "file='" . $pgfile . "'", '', 'tname, pname');
+    $page_title = $db->get_data('pages', "file='" . $pgfile . "'", 'tname, pname');
 
     echo '<form action="pgtitle.php?act=addedit" method="POST">';
     echo '<input type="hidden" name="tfile" value="' . $pgfile . '"><br />';

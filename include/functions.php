@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   20.05.2020. 19:56:01
+* Updated:   24.05.2020. 15:32:46
 */
 
 
@@ -790,7 +790,7 @@ function user_online($login) {
 function page_title($string) {
     global $db;
 
-    $page_title = $db->select('pages', "pname='" . $string . "'", '', '*');
+    $page_title = $db->get_data('pages', "pname='" . $string . "'", 'tname');
 
     if (!empty($page_title['tname'])) {
         $position = $page_title['tname'];
@@ -1087,14 +1087,14 @@ function checkPermissions($permname, $needed = 'show') {
 
     $permname = str_replace('.php', '', $permname);
 
-    if (is_administrator(101)) {
+    if ($users->is_administrator(101)) {
         return true;
     }
 
     $check = $db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
 
     if ($check > 0) {
-        $check_data = $db->select(get_configuration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
+        $check_data = $db->get_data(get_configuration('tablePrefix') . 'specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", 'permacc');
         $perms = explode(',', $check_data['permacc']);
         if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
             return true;

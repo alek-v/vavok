@@ -28,9 +28,9 @@ if (isset($_GET['isset'])) {
 
 if ($users->is_reg()) {
 
-    $about_user = $db->select('vavok_about', "uid='" . $user_id . "'", '', '*');
-    $user_profil = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'subscri');
-    $show_user = $db->select('vavok_users', "id='" . $user_id . "'", '', 'skin, banned, browsers');
+    $about_user = $db->get_data('vavok_about', "uid='" . $user_id . "'",);
+    $user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'subscri');
+    $show_user = $db->get_data('vavok_users', "id='" . $user_id . "'", 'skin, banned, browsers');
 
     echo '<div class="col-sm">';
 

@@ -22,13 +22,15 @@ if (!isset($config_kontaktlist)) {
 } 
 
 if ($users->is_reg()) {
+
     if ($action == "ign") {
+
         $todo = check($_GET["todo"]);
         $who = check($_GET["who"]); 
-        // $uid = getuid_sid($sid);
         $tnick = getnickfromid($who);
+
         if ($todo == "add") {
-            if (ignoreres($user_id, $who) == 1 && !isbuddy($who, $user_id)) {
+            if ($users->ignoreres($user_id, $who) == 1 && !isbuddy($who, $user_id)) {
                 $db->insert_data('buddy', array('name' => $user_id, 'target' => $who));
 
                 header ("Location: buddy.php?isset=kontakt_add");
@@ -46,8 +48,10 @@ if ($users->is_reg()) {
     } 
 
     if (empty($action)) {
+
         $my_title = $lang_page['contacts'];
         include_once"../themes/$config_themes/index.php";
+
         if (isset($_GET['isset'])) {
             $isset = check($_GET['isset']);
             echo '<div align="center"><b><font color="#FF0000">';
@@ -57,40 +61,35 @@ if ($users->is_reg()) {
 
         if ($page == "" || $page <= 0) {
             $page = 1;
-        } 
+        }
+
         $num_items = $db->count_row('buddy', "name='" . $user_id . "'");
         $items_per_page = 10;
-        $num_pages = ceil($num_items / $items_per_page);
-        if (($page > $num_pages) && $page != 1) $page = $num_pages;
-        $limit_start = ($page - 1) * $items_per_page;
-        if ($limit_start < 0) {
-            $limit_start = 0;
-        } 
-        // changable sql
-        /*
-				$sql = "SELECT
-            a.name, b.place, b.userid FROM vk_users a
-            INNER JOIN vk_online b ON a.id = b.userid
-            GROUP BY 1,2
-            LIMIT $limit_start, $items_per_page
-    		";
-				*/
+
+        $navigation = new Navigation($items_per_page, $num_items, $page, 'buddy.php?'); // start navigation
+
+        $limit_start = $navigation->start()['start']; // starting point
+
         $sql = "SELECT target FROM buddy WHERE name='" . $user_id . "' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
+
             foreach ($db->query($sql) as $item) {
+
                 $tnick = getnickfromid($item['target']);
 
                 $lnk = "<a href=\"../pages/user.php?uz=" . $item['target'] . "\"  class=\"sitelink\">" . $tnick . "</a>";
                 echo $users->user_online($tnick) . " " . $lnk . ": ";
                 echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"buddy.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $lang_home['delete'] . "</a><br>";
+
             } 
+
         } else {
             echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nobuddy'] . '<br><br>';
         } 
 
-        page_navigation("buddy.php?", $items_per_page, $page, $num_items);
-        page_numbnavig("buddy.php?", $items_per_page, $page, $num_items);
+        echo $navigation->get_navigation();
+
     } 
 } else {
     echo $lang_home['notloged'] . '<br><br>';

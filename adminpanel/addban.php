@@ -47,8 +47,8 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                 $users_nick = $users->getnickfromid($user);
             } 
 
-            $show_user = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'banned, perm');
-            $show_prof = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'bantime, bandesc, allban, lastban');
+            $show_user = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'banned, perm');
+            $show_prof = $db->get_data('vavok_profil', "uid='" . $userx_id . "'", 'bantime, bandesc, allban, lastban');
 
             $user = check($user);
             if ($userx_id != "" && $users_nick != "") {
@@ -128,7 +128,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         $newbandesc = no_br(check($udd39), ' ');
                         $newlastban = $time;
 
-                        $vavok_profil = $db->select('vavok_users', "uid='" . $users_id . "'", '', 'allban');
+                        $vavok_profil = $db->get_data('vavok_users', "uid='" . $users_id . "'", 'allban');
                         $newallban = $vavok_profil['allban'];
                         $newallban = $newallban + 1;
 
@@ -162,7 +162,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
         if ($users_id != "") {
             // update changes
-            $vavok_binfo = $db->select('vavok_profil', "uid='" . $users_id . "'", '', 'allban');
+            $vavok_binfo = $db->get_data('vavok_profil', "uid='" . $users_id . "'", 'allban');
             $newallban = $vavok_binfo['allban'];
             if ($newallban > 0) {
                 $newallban = $newallban--;

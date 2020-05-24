@@ -24,7 +24,7 @@ if (file_exists('../include/plugins')) {
 
 // create data directories
 $directories = array(
-	'databck', 'datacache', 'dataconfig', 'datados', 'datagallery', 'datalang', 'datalog', 'dataphoto', 'datasessions', 'datatmp', 'datamain', 'dataadmin'
+	'databck', 'datacache', 'dataconfig', 'datados', 'datagallery', 'datalang', 'datalog', 'dataphoto', 'datasessions', 'datatmp', 'datamain', 'dataadmin', 'fls'
 );
 
 foreach ($directories as $dir) {
@@ -33,13 +33,16 @@ foreach ($directories as $dir) {
 	}
 }
 
-// create data files
+// Create data files in 'used' directory
 $dataFiles = array(
 	'.htaccess', 'adminchat.dat', 'antiflood.dat', 'antiword.dat', 'ban.dat', 'config.dat', 'countries.txt', 
 	'flood.dat', 'headmeta.dat', 'index.php', 'local.dat', 'logfiles.dat', 'referer.dat', 'subnames.dat', 'email_queue_sent.dat',
 	'dataconfig/gallery.dat', 'datagallery/fotobase.dat', 
 	'datalog/ban.dat', 'datalog/dberror.dat', 'datalog/error.dat', 'datalog/error401.dat', 'datalog/error402.dat', 'datalog/error403.dat', 'datalog/error404.dat', 'datalog/error406.dat', 'datalog/error500.dat', 'datalog/error502.dat'
 );
+
+// Create index.php in upload directory
+fopen('../fls/index.php', "w");
 
 foreach ($dataFiles as $file) {
 	if (!file_exists('../used/' . $file)) {

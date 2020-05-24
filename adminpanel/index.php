@@ -3,8 +3,7 @@
 require_once"../include/strtup.php";
 
 if (!checkPermissions('adminpanel', 'show')) {
-    header("Location: ../");
-    exit;
+    redirect_to("Location: ../");
 }
 
 if (!empty($_GET['action'])) {
@@ -103,7 +102,7 @@ if ($action == 'main') {
         echo '<a href="banlist.php" class="btn btn-outline-primary sitelink">' . $lang_admin['banlist'] . '</a>';
     } 
 
-    if (is_administrator(101) || $users->is_administrator(102)) {
+    if ($users->is_administrator(101) || $users->is_administrator(102)) {
         echo '<hr>';
         if (file_exists('forumadmin.php')) {
         echo '<a href="forumadmin.php?action=fcats" class="btn btn-outline-primary sitelink">' . $lang_admin['forumcat'] . '</a>';
@@ -124,7 +123,7 @@ if ($action == 'main') {
         }
         echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $lang_home['statistic'] . '</a>';
     } 
-    if (file_exists('news.php') && (is_administrator()) || ($users->is_reg() && chkcpecprm('news', 'show'))) {
+    if (file_exists('news.php') && ($users->is_administrator()) || ($users->is_reg() && chkcpecprm('news', 'show'))) {
         echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
     } 
 
@@ -144,7 +143,7 @@ if ($action == 'main') {
             echo '<a href="email-queue.php" class="btn btn-outline-primary sitelink">Add to email queue</a>';
         } 
     } 
-    if (file_exists('files.php') && (is_administrator() || checkPermissions('pageedit'))) {
+    if (file_exists('files.php') && ($users->is_administrator() || checkPermissions('pageedit'))) {
         echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a>';
     } 
 } 

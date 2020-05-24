@@ -10,7 +10,7 @@ $mediaLikeButton = 'off'; // dont show like buttons
 
 if ($users->is_reg()) {
     
-    $check_pass = $db->select('vavok_users', "id='" . $user_id . "'", '', 'pass');
+    $check_pass = $db->get_data('vavok_users', "id='" . $user_id . "'", 'pass');
 		
     $newpar = check($newpar);
     $oldpar = check($oldpar);

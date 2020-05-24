@@ -79,8 +79,8 @@ if (empty($action) && !empty($log)) {
         $userx_id = $users->getidfromnick($log);
     } 
 
-    $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'name, pass, banned, perm');
-    $user_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'regche');
+    $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'name, pass, banned, perm');
+    $user_profil = $db->get_data('vavok_profil', "uid='" . $userx_id . "'", 'regche');
 
     // compare sent data and data from database
     if ($users->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {

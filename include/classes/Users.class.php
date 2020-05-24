@@ -130,7 +130,7 @@ class Users {
 	        return 0;
 	    } 
 	    /*
-	  if (ismod($tid)) {
+	  if ($users->is_moderator($tid)) {
 	    //you cant ignore staff members
 	    return 0;
 	  }
@@ -204,7 +204,7 @@ class Users {
 	}
 
 	function isstarred($pmid) {
-	    $strd = $this->db->select('inbox', "id='" . $pmid . "'", '', 'starred');
+	    $strd = $this->db->get_data('inbox', "id='" . $pmid . "'", 'starred');
 	    if ($strd['starred'] == "1") {
 	        return true;
 	    } else {

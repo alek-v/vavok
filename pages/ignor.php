@@ -26,30 +26,17 @@ if (!empty($_GET['page'])) {
 } 
 if (!empty($_POST['uz'])) { $uz = check($_POST['uz']); }
 
-if (!isset($config_ignorlist)) {
-    $config_ignorlist = 10;
-} 
-
 if ($users->is_reg()) {
+
     if (empty($action)) {
-        if ($page == "" || $page <= 0)$page = 1;
-        $num_items = $db->count_row('`ignore`', "name='" . $user_id . "'");
+
+        $num_items = $db->count_row('`ignore`', "name='{$user_id}'");
         $items_per_page = 10;
-        $num_pages = ceil($num_items / $items_per_page);
-        if (($page > $num_pages) && $page != 1) $page = $num_pages;
-        $limit_start = ($page - 1) * $items_per_page;
-        if ($limit_start < 0) {
-            $limit_start = 0;
-        } 
-        // changable sql
-        /*
-				$sql = "SELECT
-            a.name, b.place, b.userid FROM vk_users a
-            INNER JOIN vk_online b ON a.id = b.userid
-            GROUP BY 1,2
-            LIMIT $limit_start, $items_per_page
-    		";
-				*/
+
+        $navigation = new Navigation($items_per_page, $num_items, $page, 'ignor.php?'); // start navigation
+
+        $limit_start = $navigation->start()['start']; // starting point
+
         $sql = "SELECT target FROM `ignore` WHERE name='" . $user_id . "' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
@@ -70,15 +57,15 @@ if ($users->is_reg()) {
             echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['ignorempty'] . '<br><br>';
         } 
 
-        page_navigation("ignor.php?", $items_per_page, $page, $num_items);
-        page_numbnavig("ignor.php?", $items_per_page, $page, $num_items);
+        echo $navigation->get_navigation();
+
     } elseif ($action == "ign") {
         $todo = $_GET["todo"];
         $who = $_GET["who"]; 
         // $uid = getuid_sid($sid);
         $tnick = getnickfromid($who);
         if ($todo == "add") {
-            if (ignoreres($user_id, $who) == 1) {
+            if ($users->ignoreres($user_id, $who) == 1) {
                 $db->insert_data('`ignore`', array('name' => $user_id, 'target' => $who));
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $lang_home['user'] . " $tnick " . $lang_page['sucadded'] . "<br>";
@@ -86,7 +73,7 @@ if ($users->is_reg()) {
                 echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $lang_page['cantadd'] . " " . $tnick . " " . $lang_page['inignor'] . "<br>";
             } 
         } elseif ($todo = "del") {
-            if (ignoreres($user_id, $who) == 2) {
+            if ($users->ignoreres($user_id, $who) == 2) {
                 $db->delete('`ignore`', "name='" . $user_id . "' AND target='" . $who . "'");
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> $tnick " . $lang_page['deltdfrmignor'] . "<br>";

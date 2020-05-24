@@ -35,8 +35,8 @@ $vk_topic = "ok";
 */
 
 if ($config["forumAccess"] == '1') {
-    $notc = $db->select('vk_topics', "", '', 'COUNT(*)');
-    $nops = $db->select('vk_posts', "", '', 'COUNT(*)');
+    $notc = $db->count_row('vk_topics');
+    $nops = $db->count_row('vk_posts');
 
     echo $lang_page['comminforum'] . ': <b>' . $nops[0] . '</b><br>';
     echo $lang_page['topicinforum'] . ': <b>' . $notc[0] . '</b><br>';

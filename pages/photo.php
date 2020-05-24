@@ -25,7 +25,7 @@ if (!empty($_GET['action'])) {
 
 if ($users->is_reg()) {
     if (empty($action)) {
-        $chk_photo = $db->select('vavok_about', "uid='" . $user_id . "'", '', 'photo');
+        $chk_photo = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'photo');
 
         if (!empty($chk_photo['photo'])) {
             echo '<div class="photo">';

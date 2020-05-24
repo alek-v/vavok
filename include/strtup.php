@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   06.05.2020. 20:27:25
+* Updated:   24.05.2020. 0:28:59
 */
 
 // time when execution of the script has started
@@ -169,8 +169,7 @@ function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $
     );
     $db->insert_data('vavok_users', $values);
 
-    $user_id = $db->select('vavok_users', "name='" . $name . "'", '', 'id');
-    $user_id = $user_id['id'];
+    $user_id = $db->get_data('vavok_users', "name='{$name}'", 'id')['id'];
 
     $db->insert_data('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => $regdate, 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => $regdate, 'forummes' => 0, 'chat' => 0));
     $db->insert_data('page_setting', array('uid' => $user_id, 'newsmes' => 5, 'forummes' => 5, 'forumtem' => 10, 'privmes' => 5));
@@ -180,7 +179,9 @@ function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $
     // send private message
     $msg = $lang_home['autopmreg'];
     $users->autopm($msg, $user_id);
-} 
+
+}
+
 // page navigation - old version (deprecated)
 function page_navigation($link, $posts, $page, $total)
 {
@@ -202,7 +203,8 @@ function page_navigation($link, $posts, $page, $total)
         echo $lang_home['forw'] . ' &gt;';
         echo '<br />';
     } 
-} 
+}
+
 // page navigation (deprecated)
 function pageNavigation($link, $posts, $page, $total) {
     global $lang_home;
@@ -224,7 +226,8 @@ function pageNavigation($link, $posts, $page, $total) {
         $navigation .= $lang_home['forw'] . ' &gt;';
     } 
     return $navigation;
-} 
+}
+
 // numerical navigaton - old version (deprecated)
 function page_numbnavig($link, $posts, $page, $total, $lnks = 3)
 {
@@ -276,129 +279,6 @@ function page_numbnavig($link, $posts, $page, $total, $lnks = 3)
         echo '<br />';
     } 
 }
-// numerical navigaton (deprecated)
-function numbNavigation($link, $posts, $page, $total, $lnks = 3) {
-    global $lang_home;
-    if ($total > 0) {
-        $ba = ceil($total / $posts);
-
-        $navigation = $lang_home['page'] . ': ';
-        $start = $posts * ($page - 1);
-        $min = $start - $posts * ($lnks - 1);
-        $max = $start + $posts * $lnks;
-
-        if ($min < $total && $min > 0) {
-            if ($min - $posts > 0) {
-                $linkx = rtrim($link, '&amp;');
-                $linkx = rtrim($linkx, '?');
-                $navigation .= '<a href="' . $linkx . '">1</a> ... ';
-            } else {
-                $linkx = rtrim($link, '&amp;');
-                $navigation .= '<a href="' . $linkx . '">1</a> ';
-            } 
-        } 
-
-        for($i = $min; $i < $max;) {
-            if ($i < $total && $i >= 0) {
-                $ii = floor(1 + $i / $posts);
-
-                if ($start == $i) {
-                    $navigation .= ' <b>(' . $ii . ')</b> ';
-                } elseif ($ii == 1) {
-                    $linkx = rtrim($link, '&amp;');
-                    $linkx = rtrim($linkx, '?');
-                    $navigation .= ' <a href="' . $linkx . '">' . $ii . '</a> ';
-                } else {
-                    $navigation .= ' <a href="' . $link . 'page=' . $ii . '">' . $ii . '</a> ';
-                } 
-            } 
-
-            $i = $i + $posts;
-        } 
-
-        if ($max < $total) {
-            if ($max + $posts < $total) {
-                $navigation .= ' ... <a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
-            } else {
-                $navigation .= ' <a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
-            } 
-        } 
-    } else {
-        $navigation = '';
-    }
-    return $navigation;
-} 
-// page navigation combined - prev, next and page number (deprecated)
-function siteNavigation($link, $posts, $page, $total, $lnks = 3) {
-    global $lang_home;
-
-    $navigation = '<div id="v_pagination">'; 
-    // back link
-    if ($page > 2) {
-        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $lang_home['prev'] . '</a>';
-    } elseif ($page == 2) {
-        $linkx = rtrim($link, '&amp;');
-        $linkx = rtrim($linkx, '?');
-        $navigation .= '<a href="' . $linkx . '">' . $lang_home['prev'] . '</a>';
-    } else {
-        $navigation .= '<span class="prev_v_pagination">' . $lang_home['prev'] . '</span>';
-    } 
-    // page number navigation
-    if ($total > 0) {
-        $ba = ceil($total / $posts);
-
-        $start = $posts * ($page - 1);
-        $min = $start - $posts * ($lnks - 1);
-        $max = $start + $posts * $lnks;
-
-        if ($min < $total && $min > 0) {
-            if ($min - $posts > 0) {
-                $linkx = rtrim($link, '&amp;');
-                $linkx = rtrim($linkx, '?');
-                $navigation .= '<a href="' . $linkx . '">1</a> <span class="prev_v_pagination">...</span>';
-            } else {
-                $linkx = rtrim($link, '&amp;');
-                $navigation .= '<a href="' . $linkx . '">1</a> ';
-            } 
-        } 
-
-        for($i = $min; $i < $max;) {
-            if ($i < $total && $i >= 0) {
-                $ii = floor(1 + $i / $posts);
-
-                if ($start == $i) {
-                    $navigation .= '<span class="prev_v_pagination">' . $ii . '</span>';
-                } elseif ($ii == 1) {
-                    $linkx = rtrim($link, '&amp;');
-                    $linkx = rtrim($linkx, '?');
-                    $navigation .= '<a href="' . $linkx . '">' . $ii . '</a>';
-                } else {
-                    $navigation .= '<a href="' . $link . 'page=' . $ii . '">' . $ii . '</a>';
-                } 
-            } 
-
-            $i = $i + $posts;
-        } 
-
-        if ($max < $total) {
-            if ($max + $posts < $total) {
-                $navigation .= '<span class="prev_v_pagination">...</span> <a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
-            } else {
-                $navigation .= '<a href="' . $link . 'page=' . $ba . '">' . $ba . '</a>';
-            } 
-        } 
-    } 
-    // forward link
-    if ($total > ($posts * $page)) {
-        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $lang_home['next'] . '</a>';
-    } else {
-        $navigation .= '<span class="next_v_pagination">' . $lang_home['next'] . '</span>';
-    } 
-
-    $navigation .= '</div>';
-
-    return $navigation;
-} 
 
 // format time into days and minutes
 function formattime($file_time) {

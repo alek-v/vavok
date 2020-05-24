@@ -26,6 +26,7 @@ if (!empty($_GET['view'])) {
 $my_title = $lang_admin['modlist'];
 
 include_once"../themes/$config_themes/index.php";
+
 if (isset($_GET['isset'])) {
     $isset = check($_GET['isset']);
     echo '<div align="center"><b><font color="#FF0000">';
@@ -34,17 +35,16 @@ if (isset($_GET['isset'])) {
 } 
 
 if (empty($action)) {
+
     echo '<img src="../images/img/user.gif" alt=""> <b>' . $lang_admin['adminlistl'] . '</b><br><br>'; 
-    // /////////////
-    if ($page == "" || $page <= 0)$page = 1;
+
     $num_items = $db->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
     $items_per_page = 10;
-    $num_pages = ceil($num_items / $items_per_page);
-    if (($page > $num_pages) && $page != 1)$page = $num_pages;
-    $limit_start = ($page-1) * $items_per_page;
-    if ($limit_start < 0) {
-        $limit_start = 0;
-    } 
+
+    $navigation = new Navigation($items_per_page, $num_items, $page, 'adminlist.php?'); // start navigation
+
+    $limit_start = $navigation->start()['start']; // starting point
+    $end = $navigation->start()['end']; // ending point
 
     if ($num_items > 0) {
         foreach ($db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
@@ -55,8 +55,8 @@ if (empty($action)) {
         } 
     } 
 
-    page_navigation('adminlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
-    page_numbnavig('adminlist.php?view=' . $view . '&amp;', $items_per_page, $page, $num_items);
+    echo $navigation->get_navigation();
+
 } 
 echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';

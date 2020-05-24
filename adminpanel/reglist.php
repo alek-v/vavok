@@ -36,10 +36,10 @@ if ($act == 'conf' && !empty($usr)) {
     $values = array('', '');
     $db->update('vavok_profil', $fields, $values, "uid='" . $usr . "'");
 
-    $about_user = $db->select('vavok_about', "uid='" . $usr . "'", '', 'email');
+    $about_user = $db->get_data('vavok_about', "uid='" . $usr . "'", 'email');
     $vav_name = getnickfromid($usr);
 
-    $message = "" . $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . $config["homeBase"] . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . getnickfromid($user_id) . "\r\n" . ucfirst($config["homeBase"]) . "";
+    $message = "" . $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . $config["homeBase"] . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($user_id) . "\r\n" . ucfirst($config["homeBase"]) . "";
     sendmail($about_user['email'], "" . $lang_home['msgfrmst'] . " " . $config["title"], $message);
 
     header("Location: reglist.php?isset=mp_ydelconf");
@@ -71,7 +71,7 @@ if (empty($action)) {
 
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {
-            $show_userx = $db->select('vavok_users', "id='" . $item['uid'] . "'", '', 'browsers, ipadd');
+            $show_userx = $db->get_data('vavok_users', "id='" . $item['uid'] . "'", 'browsers, ipadd');
             $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
             if ($item['regche'] == "1") {
                 $bt = "" . $lang_admin['notconfirmed'] . "!";

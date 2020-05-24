@@ -68,7 +68,7 @@ if (empty($action)) {
         $usernameAndMail = new PageGen("mail/usernameAndMail_guest.tpl");
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     } else {
-        $user_email = $db->select('vavok_about', "uid='" . $user_id . "'", '', 'email');
+        $user_email = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'email');
 
         $usernameAndMail = new PageGen("mail/usernameAndMail_registered.tpl");
         $usernameAndMail->set('log', $log);

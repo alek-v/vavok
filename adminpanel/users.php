@@ -33,13 +33,13 @@ if ($users->is_reg()) {
         // change profile
         if ($action == "edit") {
             if (!empty($user)) {
-                $userexists = $db->select('vavok_users', "name='" . $user . "'", '', '*');
+                $userexists = $db->get_data('vavok_users', "name='" . $user . "'",);
 
                 if (!empty($userexists['name'])) {
                     $userx_id = $users->getidfromnick($user);
-                    $about_userx = $db->select('vavok_about', "uid='" . $userx_id . "'", '', 'city, about, email, site, rname');
-                    $userx_profil = $db->select('vavok_profil', "uid='" . $userx_id . "'", '', 'perstat, regdate, subscri, regche, allban, lastvst');
-                    $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm, browsers, banned, ipadd');
+                    $about_userx = $db->get_data('vavok_about', "uid='" . $userx_id . "'", 'city, about, email, site, rname');
+                    $userx_profil = $db->get_data('vavok_profil', "uid='" . $userx_id . "'", 'perstat, regdate, subscri, regche, allban, lastvst');
+                    $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'perm, browsers, banned, ipadd');
                     if ($userx_id != "") {
                         echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
 
@@ -156,7 +156,7 @@ if ($users->is_reg()) {
                         }
 
                         // update profil
-                        $userx_pass = $db->select('vavok_users', "id='" . $users_id . "'", '', 'pass');
+                        $userx_pass = $db->get_data('vavok_users', "id='" . $users_id . "'", 'pass');
 
                         if ($udd1 != "") {
                             $newpass = $users->password_encrypt($udd1);
@@ -236,7 +236,7 @@ if ($users->is_reg()) {
         if ($action == "deluser") {
             if ($user != $config["adminNick"]) {
                 $userx_id = $users->getidfromnick($user);
-                $show_userx = $db->select('vavok_users', "id='" . $userx_id . "'", '', 'perm');
+                $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'perm');
 
                 if ($show_userx['perm'] < 101 || $show_userx['perm'] > 105) {
                     $users->delete_user($user);

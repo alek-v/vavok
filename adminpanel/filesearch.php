@@ -44,9 +44,6 @@ if ($action == "tpc") {
         echo "<br>Please fill all fields";
     } else {
         // begin search
-        if (empty($page) || $page < 1) {
-            $page = 1;
-        } 
 
         $where_table = "pages";
         $cond = "pname";
@@ -54,14 +51,11 @@ if ($action == "tpc") {
         $ord_fields = "pubdate DESC";
 
         $noi = $db->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
-        $num_items = $noi;
         $items_per_page = 10;
-        $num_pages = ceil($num_items / $items_per_page);
-        if (($page > $num_pages) && $page != 1)$page = $num_pages;
-        $limit_start = ($page-1) * $items_per_page;
-        if ($limit_start < 0) {
-            $limit_start = 0;
-        } 
+
+        $navigation = new Navigation($items_per_page, $noi, $page, 'filesearch.php?'); // start navigation
+
+        $limit_start = $navigation->start()['start']; // starting point
 
         $sql = "SELECT " . $select_fields . " FROM " . $where_table . " WHERE pname LIKE '%" . $stext . "%' OR tname LIKE '%" . $stext . "%' ORDER BY " . $ord_fields . " LIMIT $limit_start, $items_per_page";
 
@@ -84,8 +78,8 @@ if ($action == "tpc") {
             echo $tlink;
         } 
 
-        page_navigation('filesearch.php?action=stpc&amp;', $items_per_page, $page, $num_items);
-        page_numbnavig('filesearch.php?action=stpc&amp;', $items_per_page, $page, $num_items);
+        echo $navigation->get_navigation();
+
     } 
 
     echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';

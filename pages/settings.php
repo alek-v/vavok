@@ -15,10 +15,10 @@ if (isset($_GET['isset'])) {
 }
 
 if ($users->is_reg()) {
-$show_user = $db->select('vavok_users', "id='" . $user_id . "'", '', 'lang, mskin, skin');
-$page_set = $db->select('page_setting', "uid='" . $user_id . "'", '', '*');
-$user_profil = $db->select('vavok_profil', "uid='" . $user_id . "'", '', 'subscri');
-$inbox_notif = $db->select('notif', "uid='" . $user_id . "' AND type='inbox'", '', 'active');
+$show_user = $db->get_data('vavok_users', "id='" . $user_id . "'", 'lang, mskin, skin');
+$page_set = $db->get_data('page_setting', "uid='" . $user_id . "'");
+$user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'subscri');
+$inbox_notif = $db->get_data('notif', "uid='" . $user_id . "' AND type='inbox'", 'active');
 
 echo '<br><form method="post" action="insettings.php">';
     

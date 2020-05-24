@@ -28,9 +28,9 @@ include_once"../themes/" . $config_themes . "/index.php";
 
 
 $checkIfExist = $db->count_row('vavok_users', "id='" . $users_id . "'");
-$about_user = $db->select('vavok_about', "uid='" . $users_id . "'", '', 'sex, photo, city, about, birthday, site');
-$user_profil = $db->select('vavok_profil', "uid='" . $users_id . "'", '', 'regche, bantime, bandesc, perstat, forummes, chat, commadd, subscri, regdate, lastvst');
-$show_user = $db->select('vavok_users', "id='" . $users_id . "'", '', '*');
+$about_user = $db->get_data('vavok_about', "uid='" . $users_id . "'", 'sex, photo, city, about, birthday, site');
+$user_profil = $db->get_data('vavok_profil', "uid='" . $users_id . "'", 'regche, bantime, bandesc, perstat, forummes, chat, commadd, subscri, regdate, lastvst');
+$show_user = $db->get_data('vavok_users', "id='" . $users_id . "'");
 
 $showPage = new PageGen("pages/user-profile/user-profile.tpl");
 
@@ -146,7 +146,7 @@ exit;
 
     $showPage->set('lastVisit', $lang_user['lastvisit'] . ': ' . date_fixed($user_profil['lastvst'], 'd.m.Y. / H:i'));
 
-if ($users->is_reg() && (ismod() || $users->is_administrator())) {
+if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
     $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
     $ipAddress->set('ip-address', 'IP address: <a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
 
@@ -156,7 +156,7 @@ if ($users->is_reg() && (ismod() || $users->is_administrator())) {
 }
 
 
-    if ($uz != getnickfromid($user_id) && $users->is_reg()) {
+    if ($uz != $users->getnickfromid($user_id) && $users->is_reg()) {
     	$userMenu = new PageGen("pages/user-profile/user-menu.tpl");
         $userMenu->set('add-to', $lang_user['addto']);
         $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['contact'] . '</a>');
@@ -169,21 +169,24 @@ if ($users->is_reg() && (ismod() || $users->is_administrator())) {
             $userMenu->set('sendMessage', '');
         } 
 
-        if ($users->is_reg() && (ismod() || $users->is_administrator())) {
+        if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
             $userMenu->set('banUser', '<a href="../' . $config["mPanel"] . '/addban.php?action=edit&amp;users=' . $uz . '">' . $lang_user['bandelban'] . '</a><br>');
         } else {
         $userMenu->set('banUser', '');
         }
-        if ($users->is_reg() && isadmin('', 101)) {
+        if ($users->is_reg() && $users->is_administrator(101)) {
         $userMenu->set('updateProfile', '<a href="../' . $config["mPanel"] . '/users.php?action=edit&amp;users=' . $uz . '">' . $lang_user['update'] . '</a><br>');
         } else {
         $userMenu->set('updateProfile', '');
         }
         $showPage->set('userMenu', $userMenu->output());
-    } elseif (getnickfromid($user_id) == $uz && $users->is_reg()) {
+        
+    } elseif ($users->getnickfromid($user_id) == $uz && $users->is_reg()) {
+
     	$adminMenu = new PageGen("pages/user-profile/admin-update-profile.tpl");
         $adminMenu->set('profileLink', '<a href="../pages/profile.php">' . $lang_user['updateprofile'] . '</a>');
-       $showPage->set('userMenu', $adminMenu->output()); 
+        $showPage->set('userMenu', $adminMenu->output());
+
     } else {
     $showPage->set('userMenu', ''); 
     }

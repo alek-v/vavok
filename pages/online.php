@@ -12,6 +12,7 @@ $mediaLikeButton = 'off'; // dont show like buttons
 
 $my_title = 'Online';
 include_once"../themes/$config_themes/index.php";
+
 if (isset($_GET['isset'])) {
     $isset = check($_GET['isset']);
     echo '<div align="center"><b><font color="#FF0000">';
@@ -35,10 +36,10 @@ if (!empty($_GET['list'])) {
 } 
 if ($list != 'full' && $list != 'reg') {
     $list = 'full';
-} 
-if (isset($_GET['page'])) {
-    $page = check($_GET['page']);
-} 
+}
+
+$page = isset($_GET['page']) ? check($_GET['page']) : 1;
+
 if (isset($_GET['start'])) {
     $start = check($_GET['start']);
 } 
@@ -46,14 +47,10 @@ if (isset($_GET['start'])) {
 echo $lang_page['totonsite'] . ': <b>' . (int)$total . '</b><br />' . $lang_page['registered'] . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
 
 if ($list == "full") {
-    if (empty($page) || $page < 1) {
-        $page = 1;
-    } 
 
-    $start = $data_on_page * ($page - 1);
-    if ($start < 0) {
-        $start = 0;
-    } 
+    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
+
+    $start = $navigation->start()['start']; // starting point 
 
     $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
@@ -62,19 +59,19 @@ if ($list == "full") {
 
         if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
             echo '<b>' . $lang_home['guest'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || $users->is_administrator()) {
+            if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
             echo '<b>' . $item['bot'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || $users->is_administrator()) {
+            if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } else {
             echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-            if (ismod() || $users->is_administrator()) {
+            if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
@@ -87,14 +84,9 @@ if ($list == "full") {
         echo '<br /><img src="../images/img/reload.gif" alt=""> <b>' . $lang_page['noregd'] . '!</b><br />';
     } 
 
-    if (empty($page) || $page < 1) {
-        $page = 1;
-    } 
+    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
 
-    $start = $data_on_page * ($page - 1);
-    if ($start < 0) {
-    $start = 0;
-    } 
+    $start = $navigation->start()['start']; // starting point  
 
     $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
@@ -102,15 +94,14 @@ if ($list == "full") {
         $time = date_fixed($item['date'], 'H:i');
 
         echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
-        if (ismod() || $users->is_administrator()) {
+        if ($users->is_moderator() || $users->is_administrator()) {
             echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
         } 
         echo '<hr />';
     } 
 } 
 
-page_navigation('online.php?list=' . $list . '&amp;', $data_on_page, $page, $total);
-page_numbnavig('online.php?list=' . $list . '&amp;', $data_on_page, $page, $total);
+echo $navigation->get_navigation();
 
 if ($list != "full") {
     echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $lang_page['showguest'] . '</a></p>';
