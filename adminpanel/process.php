@@ -16,7 +16,7 @@ $times = date_fixed($time, "H:i");
 
 // add to admin chat
 if ($action == "acadd") {
-    if (!$users->is_reg() || !checkPermissions('adminchat')) {
+    if (!$users->is_reg() || !$users->check_permissions('adminchat')) {
         header ("Location: ../pages/input.php?action=exit");
         exit;
     }

@@ -4,7 +4,7 @@
 
 require_once"../include/strtup.php";
 
-if (!$users->is_reg() || !checkPermissions(basename(__FILE__))) {
+if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
     redirect_to("../pages/input.php?action=exit");
 }
 

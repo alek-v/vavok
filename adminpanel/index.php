@@ -2,7 +2,7 @@
 // (c) vavok.net - Aleksandar Vranesevic
 require_once"../include/strtup.php";
 
-if (!checkPermissions('adminpanel', 'show')) {
+if (!$users->check_permissions('adminpanel', 'show')) {
     redirect_to("Location: ../");
 }
 
@@ -13,7 +13,7 @@ if (!empty($_GET['action'])) {
 }
 
 function getAdminLinks($file) {
-	global $lang_home;
+	global $lang_home, $users;
 
 	$handle = fopen("../used/dataadmin/" . $file, "r");
 	if ($handle) {
@@ -24,7 +24,7 @@ function getAdminLinks($file) {
 	        $linkNameArray = array(trim($fileData[1]) => 'zero');
 	        $linkNames = array_replace($linkNameArray, $lang_home);
 
-	        if (file_exists($fileData[0]) && checkPermissions(trim($fileData[2]), 'show')) {
+	        if (file_exists($fileData[0]) && $users->check_permissions(trim($fileData[2]), 'show')) {
 	        	echo '<a href="' . $fileData[0] . '" class="btn btn-outline-primary sitelink">' . $lang_home[$linkName] . '</a>' . "\n";
 	    	}
 	    }
@@ -143,7 +143,7 @@ if ($action == 'main') {
             echo '<a href="email-queue.php" class="btn btn-outline-primary sitelink">Add to email queue</a>';
         } 
     } 
-    if (file_exists('files.php') && ($users->is_administrator() || checkPermissions('pageedit'))) {
+    if (file_exists('files.php') && ($users->is_administrator() || $users->check_permissions('pageedit'))) {
         echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a>';
     } 
 } 

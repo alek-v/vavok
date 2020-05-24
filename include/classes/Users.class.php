@@ -350,6 +350,44 @@ class Users {
 	    return $rage;
 	} 
 
+
+	// check permissions for admin panel
+	// check if user have permitions to see, edit, delete, etc selected part of the website
+	function check_permissions($permname, $needed = 'show') {
+	    global $user_id;
+
+	    $permname = str_replace('.php', '', $permname);
+
+	    if ($this->is_administrator(101)) {
+	        return true;
+	    }
+
+	    $check = $this->db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='{$user_id}' AND permname='{$permname}'");
+
+	    if ($check > 0) {
+	    	
+	        $check_data = $this->db->get_data(get_configuration('tablePrefix') . 'specperm', "uid='{$user_id}' AND permname='{$permname}'", 'permacc');
+	        $perms = explode(',', $check_data['permacc']);
+
+	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
+	            return true;
+	        } elseif ($needed == 'edit' && (in_array(2, $perms) || in_array('edit', $perms))) {
+	            return true;
+	        } elseif ($needed == 'del' && (in_array(3, $perms) || in_array('del', $perms))) {
+	            return true;
+	        } elseif ($needed == 'insert' && (in_array(4, $perms) || in_array('insert', $perms))) {
+	            return true;
+	        } elseif ($needed == 'editunpub' && (in_array(5, $perms) || in_array('editunpub', $perms))) {
+	            return true;
+	        } else {
+	            return false;
+	        }
+
+	    } else {
+	        return false;
+	    } 
+	}
+
 	function user_device() {
     	return BrowserDetection::userDevice();
 	}
