@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 INSERT INTO `vavok_users` (`id`, `name`, `pass`, `perm`, `skin`, `browsers`, `ipadd`, `timezone`, `banned`, `newmsg`, `lang`) VALUES
 (0, 'System', '0', 10, 'default', 'Mozilla/5.0', '127.0.0.1', '0', '0', 0, 'english');
 
+
+
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `id` int(100) NOT NULL auto_increment,
   `uid` int(100) NOT NULL default '0',               -- user unique id from vavok_users table
@@ -65,18 +67,6 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
 
 
 
-CREATE TABLE IF NOT EXISTS `page_setting` (
-  `id` int(100) NOT NULL auto_increment,
-  `uid` int(100) NOT NULL default '0',
-  `newsmes` int(3) NOT NULL default '5',             -- posts on page in site news
-  `forummes` int(3) NOT NULL default '5',            -- posts on page in forum
-  `forumtem` int(3) NOT NULL default '10',           -- topics on page in forum
-  `privmes` int(3) NOT NULL default '5',             -- messages in inbox per page
- PRIMARY KEY  (`id`),
- UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
-
-
 -- inbox
 CREATE TABLE IF NOT EXISTS `inbox` (
   `id` int(100) NOT NULL auto_increment,
@@ -101,12 +91,14 @@ CREATE TABLE IF NOT EXISTS `ignore` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
+
 CREATE TABLE IF NOT EXISTS `buddy` (
   `id` int(10) NOT NULL auto_increment,
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+
 
 
 -- Moder log
@@ -117,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `mlog` (
   `actdt` int(100) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `subs` (
@@ -130,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `subs` (
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
 
+
 -- users online
 CREATE TABLE IF NOT EXISTS `online` (
   `b_id` int unsigned primary key NOT NULL auto_increment,
@@ -140,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `online` (
   `usr_chck` varchar(60),
   `bot` text COMMENT 'bot'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
 
 
 -- site pages
@@ -168,6 +163,7 @@ INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstu
 (1, 'Hello World', 'index', '', 0, 0, 1, 'index.php', 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/images/img/hello-world.png\" alt=\"Hello World\" width=\"626\" height=\"626\" /></p>\r\n<p>&nbsp;</p>');
 
 
+
 -- notifications
 CREATE TABLE IF NOT EXISTS `notif` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -180,6 +176,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
 
+
 -- special permitions list
 CREATE TABLE IF NOT EXISTS `splist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -188,6 +185,7 @@ CREATE TABLE IF NOT EXISTS `splist` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+
 
 
 -- special permitions
@@ -200,6 +198,8 @@ CREATE TABLE IF NOT EXISTS `specperm` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
 
+
+
 -- uploaded files
 CREATE TABLE IF NOT EXISTS `uplfiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS `uplfiles` (
   `fulldir` varchar(200) NOT NULL COMMENT 'full file address',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `languages` (
@@ -357,6 +358,7 @@ INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
 (136, 'Zulu', 'ZU');
 
 
+
 CREATE TABLE IF NOT EXISTS `counter` (
   `day` int(11) NOT NULL,
   `month` int(11) NOT NULL,
@@ -371,6 +373,7 @@ INSERT INTO `counter` (`day`, `month`, `visits_today`, `visits_total`, `clicks_t
 (0, 0, 0, 0, 0, 0);
 
 
+
 CREATE TABLE IF NOT EXISTS `login_attempts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `address` varchar(45) DEFAULT NULL,
@@ -378,6 +381,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 
 
 CREATE TABLE `email_queue` (

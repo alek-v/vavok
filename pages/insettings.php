@@ -5,10 +5,6 @@ require_once"../include/strtup.php";
 $skins = isset($_POST['skins']) ? check($_POST['skins']) : '';
 $mskin = isset($_POST['mskin']) ? check($_POST['mskin']) : '';
 $lang = isset($_POST['lang']) ? check($_POST['lang']) : '';
-$news = isset($_POST['news']) ? check($_POST['news']) : '';
-$forumpost = isset($_POST['forumpost']) ? check($_POST['forumpost']) : '';
-$forumtem = isset($_POST['forumtem']) ? check($_POST['forumtem']) : '';
-$prrivs = isset($_POST['prrivs']) ? check($_POST['prrivs']) : '';
 $user_timezone = isset($_POST['timezone']) ? check($_POST['timezone']) : 0;
 $subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
 $inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
@@ -16,8 +12,7 @@ $inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : ''
 $mediaLikeButton = 'off'; // dont show like buttons
 
 if (!$users->is_reg()) {
-	header("Location: ../index.php?isset=inputoff");
-    exit;
+	redirect_to("../index.php?isset=inputoff");
 }
 	
 $getinfo = $db->get_data('vavok_about', "uid='{$user_id}'", 'email');
@@ -27,34 +22,21 @@ $email = $getinfo['email'];
 if (preg_match("/[^a-zA-Z0-9_+-]/", $skins) || empty($skins)) {
     header ("Location: settings.php?isset=incorrect");
     exit;
-} 
+}
+
 if (empty($lang)) {
     header ("Location: settings.php?isset=incorrect");
     exit;
 } 
-if (preg_match("/[^0-9]/", $news) || $news > 50 || empty($news)) {
-    header ("Location: settings.php?isset=incorrect");
-    exit;
-} 
-if (preg_match("/[^0-9]/", $forumpost) || $forumpost > 50 || empty($forumpost)) {
-    header ("Location: settings.php?isset=incorrect");
-    exit;
-} 
-if (preg_match("/[^0-9]/", $forumtem) || $forumtem > 50 || empty($forumtem)) {
-    header ("Location: settings.php?isset=incorrect");
-    exit;
-}
-if (preg_match("/[^0-9]/", $prrivs) || $prrivs > 50 || empty($prrivs)) {
-    header ("Location: settings.php?isset=incorrect");
-    exit;
-} 
+
 if (!isset($user_timezone)) {
     $user_timezone = '0';
-} 
+}
 if (preg_match("/[^0-9+-]/", $user_timezone)) {
     header ("Location: settings.php?isset=incorrect");
     exit;
 } 
+
 if (!file_exists(BASEDIR . "themes/$skins/index.php")) {
     $skins = "default";
 } 
@@ -128,21 +110,6 @@ $values[] = $lang;
 $values[] = $mskin;
  
 $db->update('vavok_users', $fields, $values, "id='{$user_id}'");
-unset($fields, $values);
-
-$fields = array();
-$fields[] = 'newsmes';
-$fields[] = 'forummes';
-$fields[] = 'forumtem';
-$fields[] = 'privmes';
- 
-$values = array();
-$values[] = $news;
-$values[] = $forumpost;
-$values[] = $forumtem;
-$values[] = $prrivs;
- 
-$db->update('page_setting', $fields, $values, "uid='{$user_id}'");
 unset($fields, $values);
 
 // update email notificatoins
