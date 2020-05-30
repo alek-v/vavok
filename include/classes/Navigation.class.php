@@ -19,7 +19,7 @@ class Navigation {
 		if ($page == 'end') $page = intval($this->total_pages);
 		else if (is_numeric($page)) $page = intval($page);
 
-		if ($page < 1) $page = 1;
+		if ($page < 2) $page = 1;
 
 		if ($page > $this->total_pages) $page = $this->total_pages;
 
