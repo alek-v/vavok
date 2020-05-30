@@ -12,6 +12,7 @@
 - Added custom page structure option
 - Added function select_page_name() in Db.class.php
 - Fixed when user agent is empty
+- Removed page settings
 
 
 
