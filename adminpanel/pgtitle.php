@@ -10,16 +10,16 @@ if (isset($_GET['act'])) {
 }
 
 if (!$users->is_administrator() || !$users->is_reg()) {
-    header ("Location: ../?error");
-    exit;
+    redirect_to("../?error");
 } 
 
 if ($act == "addedit") {
+
     $tfile = check($_POST['tfile']);
     $msg = no_br($_POST['msg']);
 
     // get page data
-    $pageData = $db->get_data('pages', "file='{$tfile}'", 'file, headt');
+    $pageData = $db->get_data(get_configuration('tablePrefix') . 'pages', "file='{$tfile}'", 'file, headt');
 
     $headData = $pageData['headt'];
 
@@ -41,11 +41,11 @@ if ($act == "addedit") {
 
     $fields = array('tname', 'headt');
     $values = array($msg, $headData);
-    $db->update('pages', $fields, $values, "file='" . $tfile . "'");
+    $db->update(get_configuration('tablePrefix') . 'pages', $fields, $values, "file='{$tfile}'");
 
 
-    header("Location: files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
-    exit;
+    redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
+
 } 
 
 if ($act == "savenew") {
@@ -55,7 +55,7 @@ if ($act == "savenew") {
 
     $msg = no_br($_POST['msg']);
 
-    $last_notif = $db->get_data('pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
+    $last_notif = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
     $headData = $last_notif['headt'];
 
@@ -82,28 +82,27 @@ if ($act == "savenew") {
             'tname' => $msg,
             'file' => $tpage
         );
-        $db->insert_data('pages', $values);
+        $db->insert_data(get_configuration('tablePrefix'). 'pages', $values);
 
         $PBPage = false;
     } else {
         $fields = array('tname', 'headt');
         $values = array($msg, $headData);
-        $db->insert_data('pages', $fields, $values, "pname='" . $tpage . "'");
+        $db->insert_data(get_configuration('tablePrefix') . 'pages', $fields, $values, "pname='" . $tpage . "'");
 
         $PBPage = true;
     } 
 
-    header("Location: pgtitle.php?isset=savedok");
-    exit;
+    redirect_to("pgtitle.php?isset=savedok");
+
 } 
 
 if ($act == "del") {
     $tid = check($_GET['tid']);
 
-    $db->delete('pages', "pname = '" . $tid . "'");
+    $db->delete(get_configuration('tablePrefix') . 'pages', "pname = '" . $tid . "'");
 
-    header ("Location: pgtitle.php");
-    exit;
+    redirect_to("pgtitle.php");
 } 
 
 include_once"../themes/" . $config_themes . "/index.php";
@@ -116,7 +115,8 @@ if (isset($_GET['isset'])) {
 } 
 
 if (!isset($act) || empty($act)) {
-    $nitems = $db->count_row('pages');
+
+    $nitems = $db->count_row(get_configuration('tablePrefix') . 'pages');
     $total = $nitems;
 
     if ($total < 1) {
@@ -126,9 +126,9 @@ if (!isset($act) || empty($act)) {
     $time = time();
     if (isset($_GET['page'])) {
         $page = check($_GET['page']);
-    } 
+    } else { $page = ''; }
 
-    $nitems = $db->count_row('pages', 'tname is not null');
+    $nitems = $db->count_row(get_configuration('tablePrefix') . 'pages', 'tname is not null');
     $num_items = $nitems;
 
     $items_per_page = 30;
@@ -138,7 +138,7 @@ if (!isset($act) || empty($act)) {
 
     $limit_start = $navigation->start()['start']; // starting point
 
-    $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+    $sql = "SELECT id, pname, tname, file FROM {get_configuration('tablePrefix')}pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {
@@ -156,7 +156,7 @@ if (!isset($act) || empty($act)) {
 if ($act == "edit") {
     $pgfile = check($_GET['pgfile']);
 
-    $page_title = $db->get_data('pages', "file='" . $pgfile . "'", 'tname, pname');
+    $page_title = $db->get_data(get_configuration('tablePrefix') . 'pages', "file='" . $pgfile . "'", 'tname, pname');
 
     echo '<form action="pgtitle.php?act=addedit" method="POST">';
     echo '<input type="hidden" name="tfile" value="' . $pgfile . '"><br />';
