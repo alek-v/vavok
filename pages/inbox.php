@@ -3,7 +3,7 @@
 require_once"../include/strtup.php";
 
 if (!$users->is_reg()) {
-    redirect_to("Location: ../pages/login.php");
+    redirect_to("../pages/login.php?ptl=pages/inbox.php");
 } 
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -30,21 +30,12 @@ $pmid = isset($_GET['pmid']) ? check($_GET["pmid"]) : '';
 
 if ($action == "main" or empty($action)) {
 
-    $page_set = $db->get_data('page_setting', "uid='" . $user_id . "'");
+    $num_items = $users->getpmcount($user_id);
+    $items_per_page = 10;
 
-    if ($page == "" || $page <= 0) $page = 1;
-
-    $num_items = $users->getpmcount($user_id); //changable
-    $items_per_page = $page_set['privmes'];
-    if ($users->user_device() == 'phone' && $items_per_page > 6) {
-        $items_per_page = 6;
-    } 
-    $num_pages = ceil($num_items / $items_per_page);
-    if ($page > $num_pages) $page = $num_pages;
-    $limit_start = ($page-1) * $items_per_page;
-    if ($limit_start < 0) {
-        $limit_start = 0;
-    } 
+    // navigation
+    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?action=main&amp;');
+	$limit_start = $navigation->start()['start']; // starting point
 
     if ($num_items > 0) {
 
@@ -65,6 +56,7 @@ if ($action == "main" or empty($action)) {
 
             $i = $i++;
 
+            // add user to list
             array_push($senders, $item['name']);
 
             if ($item['unread'] == "1") {
@@ -79,7 +71,6 @@ if ($action == "main" or empty($action)) {
     echo '<br /><br/>';
 
     // navigation    
-    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?action=main&amp;');
     echo $navigation->get_navigation();
 
 
@@ -90,10 +81,6 @@ if ($action == "main" or empty($action)) {
     echo '<a href="inbox.php?action=sendto" class="btn btn-primary sitelink">' . $lang_page['sendmsg'] . '</a><br />';
 
 } else if ($action == "dialog") {
-
-    if (empty($page) || $page < 1) {
-        $page = 1;
-    } 
 
     $pms = $db->count_row('inbox', "(byuid=$user_id AND touid=$who) OR (byuid=$who AND touid=$user_id) AND (deleted IS NULL OR deleted = $who) ORDER BY timesent");
 
@@ -110,7 +97,8 @@ if ($action == "main" or empty($action)) {
     }
 
     if ($num_items > 0) {
-        $db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $user_id . "'");
+
+        $db->update('inbox', 'unread', 0, "byuid='{$who}' AND touid='{$user_id}'");
 
 
         echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
@@ -133,6 +121,7 @@ if ($action == "main" or empty($action)) {
 
         $pms = "SELECT * FROM inbox WHERE (byuid = '" . $user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
         foreach ($db->query($pms) as $pm) {
+
             $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $users->getnickfromid($pm['byuid']) . "</a> ";
             echo $bylnk;
             $tmopm = date("d m y - h:i:s", $pm['timesent']);
@@ -141,6 +130,7 @@ if ($action == "main" or empty($action)) {
             echo $users->parsepm($pm['text']);
 
             echo '<hr />';
+
         } 
           
 
@@ -155,9 +145,7 @@ if ($action == "main" or empty($action)) {
 
     echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 
-} else {
-    echo "<p>I don't know how you got into here, but there's nothing to show</p>";
-} 
+}
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 

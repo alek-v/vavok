@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   20.05.2020. 23:51:32
+* Updated:   02.06.2020. 19:59:26
 */
 
 
@@ -23,13 +23,13 @@ $str1 = mb_strlen($log);
 $str2 = mb_strlen($pass);
 
 if ($str1 > 20 || $str2 > 20) {
-    redirect_to ("Location: registration.php?isset=biginfo");
+    redirect_to("registration.php?isset=biginfo");
 } elseif ($str1 < 3 || $str2 < 3) {
-    redirect_to ("Location: registration.php?isset=smallinfo");
+    redirect_to("registration.php?isset=smallinfo");
 } elseif (!$users->validate_username($log)) {
-    redirect_to("Location: registration.php?isset=useletter");
+    redirect_to("registration.php?isset=useletter");
 } elseif ($pass !== $pass2) {
-    redirect_to ("Location: registration.php?isset=nopassword");
+    redirect_to("registration.php?isset=nopassword");
 }
 
 // meta tag for this page
