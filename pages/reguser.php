@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   02.06.2020. 19:59:26
+* Updated:   05.06.2020. 20:51:05
 */
 
 
@@ -13,11 +13,11 @@ $my_title = $lang_reguser['registration'];
 
 $mediaLikeButton = 'off'; // dont show like buttons
 
-$log = check($_POST['log']);
-$pass = check($_POST['par']);
-$pass2 = check($_POST['pars']);
-$meil = check($_POST['meil']);
-$pagetoload = !empty($_POST['ptl']) ? check($_POST['ptl']) : '';
+$log = isset($_POST['log'] ? check($_POST['log']) : '';
+$pass = isset($_POST['par'] ? check($_POST['par']) : '';
+$pass2 = isset($_POST['pars'] ? check($_POST['pars']) : '';
+$meil = isset($_POST['meil'] ? check($_POST['meil']) : '';
+$pagetoload = isset($_POST['ptl']) ? check($_POST['ptl']) : '';
 
 $str1 = mb_strlen($log);
 $str2 = mb_strlen($pass);
@@ -54,9 +54,13 @@ if ($check_users > 0) {
 $substr_log = substr_count($log, "-");
 
 if ($substr_log < 3) {
+
     if ($check_mail != "no") {
+
         if ($check_users != "no") {
+
                 if ($users->validate_email($meil)) {
+
                     require_once '../include/plugins/securimage/securimage.php';
                     $securimage = new Securimage();
 
@@ -142,19 +146,33 @@ if ($substr_log < 3) {
                         }
 
                     } else {
+
                         echo $lang_reguser['badcaptcha'] . '!<br />';
+                        
                     } 
+
                 } else {
+
                     echo $lang_reguser['badmail'] . "<br />";
+
                 }
+
         } else {
+
             echo $lang_reguser['userexists'] . "<br />";
+
         } 
+
     } else {
+
         echo $lang_reguser['emailexists'] . '<br />';
+
     } 
+
 } else {
+
     echo $lang_reguser['toomuchslashes'] . '<br />';
+
 } 
  
 
