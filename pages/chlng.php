@@ -1,12 +1,16 @@
 <?php
-// (c) vavok.net - Aleksandar Vranešević
-// modified: 16.04.2020. 20:46:02
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   05.06.2020. 18:12:13
+*/
 
 require_once"../include/strtup.php";
 
 $language = isset($_GET['lang']) ? check($_GET['lang']) : ''; // get language
 
-if (empty($language)) { $language = $_POST['lang']; }
+if (empty($language) && !empty($_POST['lang'])) { $language = check($_POST['lang']); }
 
 
 // page to load after changing language
