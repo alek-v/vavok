@@ -87,6 +87,7 @@ $lang_home['prev'] = "Prev";
 $lang_home['contact'] = "Contact";
 $lang_home['readmore'] = "Read more";
 $lang_home['resend'] = "Resend";
+$lang_home['differentImage'] = "Different image";
 
 // cookie consent
 $lang_home['cookies'] = "Cookies."; // Title

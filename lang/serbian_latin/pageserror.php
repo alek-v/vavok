@@ -1,5 +1,5 @@
 <?php
-// modified: 16.10.2011 16:05:07
+// modified: 05.06.2020. 20:15:14
 
 $lang_error['err401'] = "Greška 401 - Nedovoljna prava za pregled traženog dokumenta.";
 $lang_error['err402'] = "Greška 402 - Nerealizovani kod zahteva.";
@@ -16,6 +16,7 @@ $lang_error['dbdownmail'] = "Baza podataka je nedostupna više od 5 minuta.\nBez
 $lang_error['dberrmsg'] = "Bezuspešno povezivanje sa bazom.<br>Ovaj problem se često javlja kada se pravi rezervna kopija baze.<br>Verovatno će se stabilizovati za par minuta.<br><i>Hvala na razumevanju!</i>";
 $lang_error['unknownerror'] = "Nepoznata greška";
 
+$lang_home = array_merge($lang_home, $lang_error);
 
 
 ?>

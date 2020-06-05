@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net
-// modified: 04.05.2020. 4:17:25
+// modified: 05.06.2020. 20:05:26
 
 $lang_apsetting['mainset'] = "Основна подешавања";
 $lang_apsetting['database'] = "база података";
@@ -85,5 +85,6 @@ $lang_apsetting['password'] = "Шифра";
 $lang_apsetting['dbname'] = "Име базе";
 
 
+$lang_home = array_merge($lang_home, $lang_apsetting);
 
 ?>

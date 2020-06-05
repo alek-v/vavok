@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net
-// modified: 9.11.2013 22:32:10
+// modified: 05.06.2020. 20:12:16
 
 $lang_apfiles['rows'] = "Redova";
 $lang_apfiles['filelist'] = "Spisak fajlova";
@@ -28,5 +28,6 @@ $lang_apfiles['with'] = 'sa';
 $lang_apfiles['or'] = 'ili';
 $lang_apfiles['pagetitle'] = 'Naslov stranice';
 
+$lang_home = array_merge($lang_home, $lang_apfiles);
 
 ?>

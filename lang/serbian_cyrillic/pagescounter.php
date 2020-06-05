@@ -1,5 +1,5 @@
 <?php
-// modified: 12.10.2013 17:14:29
+// modified: 05.06.2020. 20:07:43
 
 $lang_count['temponline'] = "Тренутно посетилаца на сајту";
 $lang_count['registered'] = "Пријављених";
@@ -25,6 +25,7 @@ $lang_count['visitss'] = "посета";
 $lang_count['statnotformed'] = "Статистика није сачињена";
 
 
+$lang_home = array_merge($lang_home, $lang_count);
 
 
 

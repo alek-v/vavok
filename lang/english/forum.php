@@ -1,5 +1,5 @@
 <?php
-// modified: 13.7.2014 20:20:11
+// modified: 05.06.2020. 19:59:50
 // (c) vavok.net
 
 $lang_forum['topusers'] = 'Top users';
@@ -28,5 +28,6 @@ $lang_forum['delUpper'] = 'DELETE';
 
 
 
+$lang_home = array_merge($lang_home, $lang_forum);
 
 ?>

@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net
-// modified: 9.11.2013 22:31:57
+// modified: 05.06.2020. 20:05:10
 
 $lang_apfiles['rows'] = "Редова";
 $lang_apfiles['filelist'] = "Списак фајлова";
@@ -29,5 +29,6 @@ $lang_apfiles['or'] = 'или';
 $lang_apfiles['pagetitle'] = 'Наслов странице';
 
 
+$lang_home = array_merge($lang_home, $lang_apfiles);
 
 ?>

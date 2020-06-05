@@ -1,5 +1,5 @@
 <?php
-// modified: 18.4.2013 0:08:03
+// modified: 05.06.2020. 20:09:41
 $sajtx = $_SERVER['HTTP_HOST'];
 
 $lang_siterules['siterules'] = "Правила сајта";
@@ -28,9 +28,5 @@ $lang_siterules['mainrules'] = "
 
 
 
-
-
-
-
-
+$lang_home = array_merge($lang_home, $lang_siterules);
 ?>

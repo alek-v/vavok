@@ -31,4 +31,6 @@ $lang_install = array(
 "inserttint" => "Postavljanje podataka u bazu podataka"
 );
 
+$lang_home = array_merge($lang_home, $lang_install);
+
 ?>

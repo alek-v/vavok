@@ -1,5 +1,5 @@
 <?php
-// modified: 7.9.2012 14:44:55
+// modified: 05.06.2020. 20:02:52
 // (c) vavok.net
 
 $lang_reg['registration'] = "Registration";
@@ -14,5 +14,6 @@ $lang_reg['siterules'] = "Site rules";
 $lang_reg['regstoped'] = "Registration temporarily suspended, come back later";
 
 
+$lang_home = array_merge($lang_home, $lang_reg);
 
 ?>

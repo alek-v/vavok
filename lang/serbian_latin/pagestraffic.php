@@ -1,5 +1,5 @@
 <?php
-// modified: 17.10.2011 20:22:47
+// modified: 05.06.2020. 20:16:43
 
 $lang_traffic['gzipon'] = "Kompresija GZIP uključena";
 $lang_traffic['gzipoff'] = "Kompresija GZIP isključena";
@@ -13,5 +13,6 @@ Ovde nije prikazan protok koji ste potrošili na preuzimanje slika i sl.<br>
 Ako pretraživač koristi svoj algoritam kompresije ili koristite neki proksi ovi rezultati se ne moraju poklapati sa realnim podacima<br>
 ";
 
+$lang_home = array_merge($lang_home, $lang_traffic);
 
 ?>

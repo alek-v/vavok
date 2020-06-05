@@ -1,5 +1,5 @@
 <?php
-// modified: 18.4.2013 0:05:34
+// modified: 05.06.2020. 20:09:56
 
 $lang_traffic['gzipon'] = "Компресија GZIP укључена";
 $lang_traffic['gzipoff'] = "Компресија GZIP искључена";
@@ -13,5 +13,6 @@ $lang_traffic['trafficinfo'] = "
 Ако ваш претраживач користи свој алгоритам компресије или користите прокси ови резултати се не морају поклапати са реалним подацима<br />
 ";
 
+$lang_home = array_merge($lang_home, $lang_traffic);
 
 ?>

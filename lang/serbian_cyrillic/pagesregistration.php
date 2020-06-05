@@ -13,5 +13,7 @@ $lang_reg['siterules'] = "Правила сајта";
 $lang_reg['regstoped'] = "Регистрација привремено стопирана, свратите касније";
 
 
+$lang_home = array_merge($lang_home, $lang_reg);
+
 
 ?>

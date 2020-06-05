@@ -1,5 +1,5 @@
 <?php
-// modified: 7.9.2012 14:49:56
+// modified: 05.06.2020. 20:03:50
 // (c) vavok.net
 $sajtx = $_SERVER['HTTP_HOST'];
 
@@ -28,10 +28,6 @@ Rules for site users " . $sajtx . "<br><br>
 ";
 
 
-
-
-
-
-
+$lang_home = array_merge($lang_home, $lang_siterules);
 
 ?>

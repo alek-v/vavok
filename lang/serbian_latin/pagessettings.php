@@ -1,5 +1,5 @@
 <?php
-// modified: 16.10.2011 1:52:29
+// modified: 05.06.2020. 20:16:03
 
 $lang_setting['settings'] = "Podešavanja";
 $lang_setting['siteskin'] = "Tema sajta";
@@ -8,5 +8,6 @@ $lang_setting['msginforumtopic'] = "Poruka u forumu";
 $lang_setting['topicsinforumpp'] = "Tema u forumu";
 $lang_setting['msgsininboxpp'] = "Poruka u sandučetu na str.";
 
+$lang_home = array_merge($lang_home, $lang_setting);
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// modified: 17.10.2011 2:23:41
+// modified: 05.06.2020. 20:15:51
 
 $lang_reg['registration'] = "Registracija";
 $lang_reg['againreg'] = "registrovani ste, ne možete registrovati više od jednog naloga";
@@ -13,5 +13,6 @@ $lang_reg['siterules'] = "Pravila sajta";
 $lang_reg['regstoped'] = "Registracija privremeno stopirana, svratite kasnije";
 
 
+$lang_home = array_merge($lang_home, $lang_reg);
 
 ?>

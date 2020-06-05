@@ -1,5 +1,5 @@
 <?php
-// modified: 18.4.2013 0:05:28
+// modified: 05.06.2020. 20:10:17
 
 $lang_user['profile'] = "Профил";
 $lang_user['online'] = "Online";
@@ -34,7 +34,6 @@ $lang_user['update'] = "Измени";
 $lang_user['updateprofile'] = "Измени профил";
 $lang_user['site'] = "Сајт";
 
-
-
+$lang_home = array_merge($lang_home, $lang_user);
 
 ?>

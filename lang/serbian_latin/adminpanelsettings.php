@@ -1,5 +1,5 @@
 <?php
-// modified: 04.05.2020. 4:17:43
+// modified: 05.06.2020. 20:13:06
 
 $lang_apsetting['mainset'] = "Osnovna podešavanja";
 $lang_apsetting['database'] = "baza podataka";
@@ -84,5 +84,6 @@ $lang_apsetting['password'] = "Šifra";
 $lang_apsetting['dbname'] = "Ime baze";
 
 
+$lang_home = array_merge($lang_home, $lang_apsetting);
 
 ?>

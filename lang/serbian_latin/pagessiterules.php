@@ -1,5 +1,5 @@
 <?php
-// modified: 17.10.2011 3:28:23
+// modified: 05.06.2020. 20:16:25
 $sajtx = $_SERVER['HTTP_HOST'];
 
 $lang_siterules['siterules'] = "Pravila sajta";
@@ -27,10 +27,7 @@ Pravila za korisnike sajta " . $sajtx . "<br><br>
 ";
 
 
-
-
-
-
+$lang_home = array_merge($lang_home, $lang_siterules);
 
 
 ?>

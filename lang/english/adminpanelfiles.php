@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net
-// modified: 9.11.2013 22:31:41
+// modified: 05.06.2020. 19:59:07
 
 $lang_apfiles['rows'] = "Rows";
 $lang_apfiles['filelist'] = "File list";
@@ -28,5 +28,6 @@ $lang_apfiles['with'] = 'with';
 $lang_apfiles['or'] = 'or';
 $lang_apfiles['pagetitle'] = 'Page title';
 
+$lang_home = array_merge($lang_home, $lang_apfiles);
 
 ?>

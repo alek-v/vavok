@@ -85,5 +85,5 @@ $lang_apsetting['password'] = "Password";
 $lang_apsetting['dbname'] = "Database name";
 
 
-
+$lang_home = array_merge($lang_home, $lang_apsetting);
 ?>

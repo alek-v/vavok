@@ -1,5 +1,5 @@
 <?php
-// modified: 16.10.2011 1:52:29
+// modified: 05.06.2020. 20:14:42
 
 $lang_ban['banned'] = "Kazna";
 $lang_ban['banned1'] = "Kažnjeni ste";
@@ -12,9 +12,6 @@ $lang_ban['endbanadvice'] = "Kazna vam je istekla, pokušajte da ne kršite prav
 $lang_ban['siterules'] = "Pravila sajta";
 
 
-
-
-
-
+$lang_home = array_merge($lang_home, $lang_ban);
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// modified: 16.7.2014 23:45:37
+// modified: 05.06.2020. 20:06:45
 // (c) vavok.net
 
 $lang_news['source'] = "Извор";
@@ -10,5 +10,6 @@ $lang_news['latestNews'] = "Последње вести";
 $lang_news['newsCategory'] = "Категорија вести";
 
 
+$lang_home = array_merge($lang_home, $lang_news);
 
 ?>

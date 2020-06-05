@@ -1,5 +1,5 @@
 <?php
-// modified: 16.10.2011 15:37:03
+// modified: 05.06.2020. 20:01:59
 // (c) vavok.net
 
 $lang_count['temponline'] = "Total site visitors online";
@@ -26,7 +26,6 @@ $lang_count['visitss'] = "visits";
 $lang_count['statnotformed'] = "Statistic not formed";
 
 
-
-
+$lang_home = array_merge($lang_home, $lang_count);
 
 ?>

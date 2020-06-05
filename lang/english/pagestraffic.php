@@ -1,5 +1,5 @@
 <?php
-// modified: 7.9.2012 14:51:36
+// modified: 05.06.2020. 20:04:02
 // (c) vavok.net
 
 $lang_traffic['gzipon'] = "GZIP compression ON";
@@ -14,5 +14,6 @@ Here you do not see the traffic that you used for downloading pictures etc.<br>
 If your browser uses its own algorithm for compression, or if you are using any proxy, these results don't have to match the real data<br>
 ";
 
+$lang_home = array_merge($lang_home, $lang_traffic);
 
 ?>

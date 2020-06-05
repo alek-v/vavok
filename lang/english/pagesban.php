@@ -1,5 +1,5 @@
 <?php
-// modified: 7.9.2012 14:37:19
+// modified: 05.06.2020. 20:01:42
 // (c) vavok.net
 
 $lang_ban['banned'] = "Ban";
@@ -13,9 +13,6 @@ $lang_ban['endbanadvice'] = "Your ban has expired,please try not to violate the 
 $lang_ban['siterules'] = "Site rules";
 
 
-
-
-
-
+$lang_home = array_merge($lang_home, $lang_ban);
 
 ?>

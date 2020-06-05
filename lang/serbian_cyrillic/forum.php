@@ -1,5 +1,5 @@
 <?php
-// modified: 13.7.2014 20:25:17
+// modified: 05.06.2020. 20:05:43
 // (c) vavok.net
 
 $lang_forum['topusers'] = 'Топ чланови';
@@ -27,6 +27,7 @@ $lang_forum['update'] = 'Измени'; // update topic text
 $lang_forum['delUpper'] = 'ОБРИШИ';
 
 
+$lang_home = array_merge($lang_home, $lang_forum);
 
 
 ?>

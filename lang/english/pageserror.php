@@ -1,5 +1,5 @@
 <?php
-// modified: 16.10.2011 16:05:07
+// modified: 05.06.2020. 20:02:10
 // (c) vavok.net
 
 $lang_error['err401'] = "Error 401 - You don't have enough permissions to view selected document.";
@@ -18,5 +18,6 @@ $lang_error['dberrmsg'] = "Unsuccessfull connection with database.<br>This probl
 $lang_error['unknownerror'] = "Unknown error";
 
 
+$lang_home = array_merge($lang_home, $lang_error);
 
 ?>

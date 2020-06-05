@@ -1,6 +1,6 @@
 <?php
 // (c) vavok . net
-// modified: 21.9.2013 22:13:14
+// modified: 05.06.2020. 20:08:46
 
 $lang_profil['profsettings'] = "Подешавања профила";
 $lang_profil['city'] = "Град";
@@ -28,5 +28,6 @@ $lang_profil['oldpass'] = "Стара шифра";
 $lang_profil['street'] = "Улица и број";
 $lang_profil['postal'] = "Поштански број";
 
+$lang_home = array_merge($lang_home, $lang_profil);
 
 ?>
