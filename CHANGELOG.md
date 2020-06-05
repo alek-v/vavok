@@ -1,3 +1,10 @@
+# Vavok v1.5.2
+- Updated navigation
+- Update use page template
+- Update use new API for IP informations
+
+
+
 # Vavok v1.5.1
 - Update session and cookie improvements
 - Update function update in Db.class.php return update result
