@@ -16,31 +16,41 @@ if (!empty($_POST['users'])) {
 $users_id = $users->getidfromnick($user);
 
 if ($users->is_reg()) {
+
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
+
         include_once"../themes/$config_themes/index.php";
+
         if (isset($_GET['isset'])) {
             $isset = check($_GET['isset']);
             echo '<div align="center"><b><font color="#FF0000">';
             echo get_isset();
             echo '</font></b></div>';
         } 
+
         if (empty($action)) {
             echo '<form method="post" action="users.php?action=edit">';
             echo '' . $lang_admin['chooseuser'] . ':<br>';
             echo '<input type="text" name="users" maxlength="20" /><br><br>';
             echo '<input value="' . $lang_admin['showdata'] . '" type="submit" /></form><hr>';
-        } 
+        }
+
         // change profile
         if ($action == "edit") {
+
             if (!empty($user)) {
-                $userexists = $db->get_data('vavok_users', "name='" . $user . "'",);
+
+                $userexists = $db->get_data('vavok_users', "name='{$user}'");
 
                 if (!empty($userexists['name'])) {
+
                     $userx_id = $users->getidfromnick($user);
                     $about_userx = $db->get_data('vavok_about', "uid='" . $userx_id . "'", 'city, about, email, site, rname');
                     $userx_profil = $db->get_data('vavok_profil', "uid='" . $userx_id . "'", 'perstat, regdate, subscri, regche, allban, lastvst');
                     $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'perm, browsers, banned, ipadd');
-                    if ($userx_id != "") {
+                    
+                    if (!empty($userx_id)) {
+
                         echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
 
                         if ($log != $config["adminNick"] && $user == $config["adminNick"]) {
@@ -84,6 +94,7 @@ if ($users->is_reg()) {
                         if (file_exists('specperm.php')) {
                         echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Special permitions</a><br />';
                         }
+
                         echo $lang_admin['newpassinfo'] . ':<br><input name="udd1" /><br>';
                         echo $lang_admin['city'] . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
                         echo $lang_admin['aboutyou'] . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
@@ -126,9 +137,11 @@ if ($users->is_reg()) {
             } 
 
             echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-        } 
+        }
+
         // update changes
         if ($action == "upgrade") {
+
             $udd1 = isset($_POST['udd1']) ? check($_POST['udd1']) : '';
             $udd2 = isset($_POST['udd2']) ? check($_POST['udd2']) : '';
             $udd3 = isset($_POST['udd3']) ? check($_POST['udd3']) : '';
@@ -146,9 +159,12 @@ if ($users->is_reg()) {
             $udd40 = isset($_POST['udd40']) ? check($_POST['udd40']) : '';
             $udd43 = isset($_POST['udd43']) ? check($_POST['udd43']) : '';
 
-            if (isValidEmail($udd4)) {
+            if ($users->validate_email($udd4)) {
+
                 if (empty($udd5) || validateURL($udd5) === true) {
+
                     $users_id = $users->getidfromnick($user);
+
                     if (!empty($users_id)) {
                         if (!empty($udd6)) {
                             list($uday, $umonth, $uyear) = explode(".", $udd6);
@@ -225,6 +241,7 @@ if ($users->is_reg()) {
             } 
             echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
         } 
+        
         // confirm delete
         if ($action == "poddel") {
             echo $lang_admin['confusrdel'] . ' <b>' . $user . '</b>?<br><br>';
@@ -232,6 +249,7 @@ if ($users->is_reg()) {
 
             echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
         } 
+
         // delete user
         if ($action == "deluser") {
             if ($user != $config["adminNick"]) {
@@ -253,12 +271,10 @@ if ($users->is_reg()) {
         echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
         echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
     } else {
-        header ("Location: ../?error");
-        exit;
+        redirect_to("../?error");
     } 
 } else {
-    header ("Location: ../?error");
-    exit;
+    redirect_to("../?error");
 } 
 
 include_once"../themes/" . $config_themes . "/foot.php";
