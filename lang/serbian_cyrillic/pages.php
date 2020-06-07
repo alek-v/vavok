@@ -105,6 +105,9 @@ $lang_page['vstdpages'] = "Посећених страница";
 $lang_page['updprof'] = "Измени профил";
 $lang_page['settings'] = "Подешавања";
 $lang_page['mailoruser'] = "Адреса е-поште или корисничко име";
+$lang_page['registerHere'] = 'Још увек немате налог? Региструјте се овде';
+
+
 
 $lang_home = array_merge($lang_home, $lang_page);
 

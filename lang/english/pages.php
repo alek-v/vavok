@@ -105,6 +105,7 @@ $lang_page['vstdpages'] = "Visited pages";
 $lang_page['updprof'] = "Update profile";
 $lang_page['settings'] = "Settings";
 $lang_page['mailoruser'] = "E-mail or username";
+$lang_page['registerHere'] = 'You don\'t have an account yet? Register here';
 
 
 $lang_home = array_merge($lang_home, $lang_page);
