@@ -23,7 +23,7 @@
 								<img id="captcha" src="../include/plugins/securimage/securimage_show.php" alt="CAPTCHA Image" />
 								<br />
 								<input type="text" name="captcha_code" id="captcha_code" class="form-control" size="10" maxlength="6">
-								<a href="#" onclick="document.getElementById('captcha').src = '../include/plugins/securimage/securimage_show.php?' + Math.random(); return false">[ Different Image ]</a>
+								<a href="#" onclick="document.getElementById('captcha').src = '../include/plugins/securimage/securimage_show.php?' + Math.random(); return false">[ {@website_language[differentImage]}} ]</a>
 							</div>
 						</div>
 
