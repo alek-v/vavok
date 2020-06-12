@@ -1,7 +1,9 @@
 # Vavok v1.5.2
 - Updated navigation
-- Update use page template
+- Updated language files
 - Update use new API for IP informations
+- Updated login and register pages to use page templates
+- Updated page templates
 
 
 
