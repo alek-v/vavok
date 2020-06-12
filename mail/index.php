@@ -2,58 +2,46 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-$my_title = "Contact";
+$my_title = $lang_home['contact'];
 
-if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
-} else {
-    $action = '';
-} 
-if (isset($_POST['name'])) {
-    $name = check($_POST['name']);
-} 
-if (isset($_POST['body'])) {
-    $body = check($_POST['body']);
-} 
-if (isset($_POST['umail'])) {
-    $umail = check($_POST['umail']);
-} 
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$name = isset($_POST['name']) ? check($_POST['name']) : '';
+$body = isset($_POST['body']) ? check($_POST['body']) : '';
+$umail = isset($_POST['umail']) ? check($_POST['umail']) : '';
 
 if ($action == "go") {
-    if (!empty($name)) {
-        if (!empty($body)) {
-            if (preg_match("/^[a-z0-9\._-]+@[a-z0-9\._-]+\.[a-z]{2,4}\$/", $umail)) {
-            	require_once '../lang/' . $config['siteDefaultLang'] . '/index.php';
-                require_once '../include/plugins/securimage/securimage.php';
-                $securimage = new Securimage();
 
-                if ($securimage->check($_POST['captcha_code']) == true) {
+    // Check name
+    if (empty($name)) { redirect_to("./?isset=noname"); }
 
-                	$mail = new Mailer();
-                    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $ip . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
+    // Check email body
+    if (empty($body)) { redirect_to("./?isset=nobody"); }
 
-                    header("Location: ./?isset=mail");
-                    exit;
-                } else {
-                    header("Location: ./?isset=vrcode");
-                    exit;
-                } 
-            } else {
-                header("Location: ./?isset=noemail");
-                exit;
-            } 
-        } else {
-            header("Location: ./?isset=nobody");
-            exit;
-        } 
-    } else {
-        header ("Location: ./?isset=noname");
-        exit;
-    } 
-} 
+    // Validate email address
+    if (!$users->validate_email($umail)) { redirect_to("./?isset=noemail"); }
+
+    require_once '../lang/' . $config['siteDefaultLang'] . '/index.php';
+
+    // Captcha code
+    require_once '../include/plugins/securimage/securimage.php';
+    $securimage = new Securimage();
+
+    // Check captcha code
+    if ($securimage->check($_POST['captcha_code']) != true) { redirect_to("./?isset=vrcode"); }
+
+    // Send email
+    $mail = new Mailer();
+    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $ip . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
+
+    // Email sent
+    redirect_to("./?isset=mail");
+
+}
 
 if (empty($action)) {
+
     include_once"../themes/$config_themes/index.php";
+
     if (isset($_GET['isset'])) {
         $isset = check($_GET['isset']);
         echo '<div align="center"><b><font color="#FF0000">';
@@ -65,9 +53,12 @@ if (empty($action)) {
     $showPage = new PageGen("mail/mail_index.tpl");
 
     if (!$users->is_reg()) {
+
         $usernameAndMail = new PageGen("mail/usernameAndMail_guest.tpl");
         $showPage->set('usernameAndMail', $usernameAndMail->output());
+
     } else {
+
         $user_email = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'email');
 
         $usernameAndMail = new PageGen("mail/usernameAndMail_registered.tpl");
@@ -76,6 +67,7 @@ if (empty($action)) {
 
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     }
+
 } 
 
 // show page
