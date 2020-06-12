@@ -12,7 +12,9 @@ $action = isset($_GET['action']) ? check($_GET['action']) : '';
 
 // main settings update
 if ($action == "editone") {
+
     if (isset($_POST['conf_set0']) && isset($_POST['conf_set1']) && $_POST['conf_set2'] != "" && $_POST['conf_set3'] != "" && $_POST['conf_set8'] != "" && $_POST['conf_set9'] != "" && $_POST['conf_set10'] != "" && $_POST['conf_set11'] != ""  && !empty($_POST['conf_set12']) && $_POST['conf_set14'] != "" && !empty($_POST['conf_set21']) && $_POST['conf_set29'] != "" && isset($_POST['conf_set61']) && isset($_POST['conf_set62']) && isset($_POST['conf_set63'])) {
+        
         $ufile = file_get_contents(BASEDIR . "used/config.dat");
         $udata = explode("|", $ufile);
 
@@ -33,6 +35,8 @@ if ($action == "editone") {
         $udata[62] = (int)$_POST['conf_set62'];
         $udata[63] = (int)$_POST['conf_set63'];
 
+
+        $utext = '';
 
         for ($u = 0; $u < $config["configKeys"]; $u++) {
             $utext .= $udata[$u] . '|';
@@ -55,7 +59,8 @@ RewriteCond %{HTTPS} !=on
 RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 
         if (get_configuration('transferProtocol') == 'HTTPS' && ($udata[21] == 'auto' || $udata[21] == 'HTTP')) {
-            // disable forcing HTTPS in .htaccess
+
+            // Disable forcing HTTPS in .htaccess
 
             $file = file_get_contents('../.htaccess');
 
@@ -68,7 +73,8 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
             file_put_contents('../.htaccess', $file);
 
         } elseif ($udata[21] == 'HTTPS' && (get_configuration('transferProtocol') == 'HTTP' || get_configuration('transferProtocol') == 'auto')) {
-            // enable forcing HTTPS in .htaccess
+            
+            // Enable forcing HTTPS in .htaccess
 
             $file = file_get_contents('../.htaccess');
 
@@ -82,6 +88,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
         }
 
         redirect_to("settings.php?isset=mp_yesset");
+
     } else {
         redirect_to("settings.php?action=setone&isset=mp_nosset");
     } 
@@ -106,17 +113,12 @@ if ($action == "edittwo") {
 	} 
 
 	if (!empty($udata[8]) && !empty($udata[9])) {
-	    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-	    flock($fp, LOCK_EX);
-	    ftruncate($fp, 0);
-	    fputs($fp, $utext);
-	    fflush($fp);
-	    flock($fp, LOCK_UN);
-	    fclose($fp);
-	    unset($utext);
+        // Save data
+        file_put_contents(BASEDIR . "used/config.dat", $utext);
 	} 
-	header ("Location: settings.php?isset=mp_yesset");
-	exit;
+
+	redirect_to ("settings.php?isset=mp_yesset");
+
 	} else {
 	header ("Location: settings.php?action=settwo&isset=mp_nosset");
 	exit;
@@ -125,106 +127,109 @@ if ($action == "edittwo") {
 } 
 
 if ($action == "editthree") {
-if ($_POST['conf_set20'] != "" && $_POST['conf_set22'] != "" && $_POST['conf_set24'] != "" && $_POST['conf_set25'] != "" && $_POST['conf_set56'] != "") {
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
 
-$udata[20] = (int)$_POST['conf_set20'];
-$udata[22] = (int)$_POST['conf_set22'];
-$udata[24] = (int)$_POST['conf_set24'];
-$udata[25] = (int)$_POST['conf_set25'];
-$udata[56] = (int)$_POST['conf_set56'];
-$udata[63] = (int)$_POST['conf_set63'];
-$udata[64] = (int)$_POST['conf_set64'];
-$udata[65] = (int)$_POST['conf_set65'];
+    if ($_POST['conf_set20'] != "" && $_POST['conf_set22'] != "" && $_POST['conf_set24'] != "" && $_POST['conf_set25'] != "" && $_POST['conf_set56'] != "") {
 
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
 
-if (!empty($udata[8]) && !empty($udata[9])) {
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-} 
-header ("Location: settings.php?isset=mp_yesset");
-exit;
-} else {
-header ("Location: settings.php?action=setthree&isset=mp_nosset");
-exit;
-} 
-} 
-
-if ($action == "editfour") {
-if ($_POST['conf_set38'] != "" && $_POST['conf_set39'] != "" && $_POST['conf_set49'] != "") {
-// update main config
-$ufile = file(BASEDIR . "used/config.dat");
-$udata = explode("|", $ufile[0]);
-
-if (!empty($_POST['conf_set28'])) {
-$udata[28] = (int)$_POST['conf_set28'];
-}
-$udata[37] = (int)$_POST['conf_set37'];
-$udata[38] = (int)$_POST['conf_set38'];
-$udata[38] = $udata[38] * 1024;
-$udata[38] = (int)$udata[38];
-$udata[39] = (int)$_POST['conf_set39'];
-$udata[49] = (int)$_POST['conf_set49'];
-$udata[68] = (int)$_POST['conf_set68'];
-
-for ($u = 0; $u < $config["configKeys"]; $u++) {
-    $utext .= $udata[$u] . '|';
-} 
-
-    $fp = fopen(BASEDIR . "used/config.dat", "a+");
-    flock($fp, LOCK_EX);
-    ftruncate($fp, 0);
-    fputs($fp, $utext);
-    fflush($fp);
-    flock($fp, LOCK_UN);
-    fclose($fp);
-    unset($utext);
-
-
-// update gallery settings
-$gallery_file = file(BASEDIR . "used/dataconfig/gallery.dat");
-if ($gallery_file) {
-    $gallery_data = explode("|", $gallery_file[0]);
-
-    $gallery_data[0] = (int)$_POST['gallery_set0'];
-    $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
-    $gallery_data[5] = (int)$_POST['screen_width'];
-    $gallery_data[6] = (int)$_POST['screen_height'];
-    $gallery_data[7] = (int)$_POST['media_buttons'];
-
+    $udata[20] = (int)$_POST['conf_set20'];
+    $udata[22] = (int)$_POST['conf_set22'];
+    $udata[24] = (int)$_POST['conf_set24'];
+    $udata[25] = (int)$_POST['conf_set25'];
+    $udata[56] = (int)$_POST['conf_set56'];
+    $udata[63] = (int)$_POST['conf_set63'];
+    $udata[64] = (int)$_POST['conf_set64'];
+    $udata[65] = (int)$_POST['conf_set65'];
 
     for ($u = 0; $u < $config["configKeys"]; $u++) {
-        $gallery_text .= $gallery_data[$u] . '|';
+        $utext .= $udata[$u] . '|';
     } 
 
-    if (isset($gallery_data[0])) {
-        $fp = fopen(BASEDIR . "used/dataconfig/gallery.dat", "a+");
+    if (!empty($udata[8]) && !empty($udata[9])) {
+        $fp = fopen(BASEDIR . "used/config.dat", "a+");
         flock($fp, LOCK_EX);
         ftruncate($fp, 0);
-        fputs($fp, $gallery_text);
+        fputs($fp, $utext);
         fflush($fp);
         flock($fp, LOCK_UN);
         fclose($fp);
-        unset($gallery_text);
-    }
-}
-
-header ("Location: settings.php?isset=mp_yesset");
-exit;
-} else {
-header ("Location: settings.php?action=setfour&isset=mp_nosset");
-exit;
+        unset($utext);
+    } 
+    header ("Location: settings.php?isset=mp_yesset");
+    exit;
+    } else {
+    header ("Location: settings.php?action=setthree&isset=mp_nosset");
+    exit;
+    } 
 } 
+
+if ($action == "editfour") {
+
+    if ($_POST['conf_set38'] != "" && $_POST['conf_set39'] != "" && $_POST['conf_set49'] != "") {
+    // update main config
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
+
+    if (!empty($_POST['conf_set28'])) {
+    $udata[28] = (int)$_POST['conf_set28'];
+    }
+    $udata[37] = (int)$_POST['conf_set37'];
+    $udata[38] = (int)$_POST['conf_set38'];
+    $udata[38] = $udata[38] * 1024;
+    $udata[38] = (int)$udata[38];
+    $udata[39] = (int)$_POST['conf_set39'];
+    $udata[49] = (int)$_POST['conf_set49'];
+    $udata[68] = (int)$_POST['conf_set68'];
+
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    $fp = fopen(BASEDIR . "used/config.dat", "a+");
+    flock($fp, LOCK_EX);
+    ftruncate($fp, 0);
+    fputs($fp, $utext);
+    fflush($fp);
+    flock($fp, LOCK_UN);
+    fclose($fp);
+    unset($utext);
+
+
+    // update gallery settings
+    $gallery_file = file(BASEDIR . "used/dataconfig/gallery.dat");
+    if ($gallery_file) {
+        $gallery_data = explode("|", $gallery_file[0]);
+
+        $gallery_data[0] = (int)$_POST['gallery_set0'];
+        $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
+        $gallery_data[5] = (int)$_POST['screen_width'];
+        $gallery_data[6] = (int)$_POST['screen_height'];
+        $gallery_data[7] = (int)$_POST['media_buttons'];
+
+
+        for ($u = 0; $u < $config["configKeys"]; $u++) {
+            $gallery_text .= $gallery_data[$u] . '|';
+        } 
+
+        if (isset($gallery_data[0])) {
+            $fp = fopen(BASEDIR . "used/dataconfig/gallery.dat", "a+");
+            flock($fp, LOCK_EX);
+            ftruncate($fp, 0);
+            fputs($fp, $gallery_text);
+            fflush($fp);
+            flock($fp, LOCK_UN);
+            fclose($fp);
+            unset($gallery_text);
+        }
+    }
+
+    header ("Location: settings.php?isset=mp_yesset");
+    exit;
+    } else {
+    header ("Location: settings.php?action=setfour&isset=mp_nosset");
+    exit;
+    } 
 } 
 
 if ($action == "editfive") {
