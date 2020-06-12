@@ -24,7 +24,7 @@ if ($config["showRefPage"] == "1" || $users->is_administrator()) {
 
     $navigation = new Navigation($data_on_page, $total, $page, 'referer.php?'); // start navigation
 
-    $limit_start = $navigation->start()['start']; // starting point
+    $start = $navigation->start()['start']; // starting point
     $end = $navigation->start()['end']; // ending point
 
     for ($i = $start; $i < $end; $i++) {
