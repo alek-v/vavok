@@ -1,6 +1,6 @@
 <?php 
 // (c) Aleksandar Vranešević - vavok.net
-// modified: 16.05.2020. 0:52:45
+// modified: 13.06.2020. 23:15:37
 
 if (isset($_SERVER['PHP_SELF'])) {
     $phpself = $_SERVER['PHP_SELF'];
@@ -27,7 +27,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
 
         if ($doslog != "." and $doslog != "..") {
 
-            $file_array_filemtime = filemtime(BASEDIR . "used/datados/$doslog");
+            $file_array_filemtime = @filemtime(BASEDIR . "used/datados/$doslog");
 
             if ($file_array_filemtime < ($time-60)) {
 
@@ -64,9 +64,12 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
     @chmod ($logfiles, 0666);
 
     if (count(file($logfiles)) > $config["dosLimit"] && $config["dosLimit"] > 0) {
+        
         unlink($logfiles);
 
         $banlines = file(BASEDIR . "used/ban.dat");
+        $banarray = '';
+
         foreach($banlines as $banvalue) {
             $bancell = explode("|", $banvalue);
             $banarray[] = $bancell[1];
@@ -83,7 +86,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
             $logdat = BASEDIR . "used/datalog/ban.dat";
             $hostname = gethostbyaddr($ip);
 
-            $write = '|Blocked access for IP|' . $phpself . $request_uri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $users->user_browser() . '|' . $http_referer . '|' . $username . '|';
+            $write = '|Blocked access for IP|' . $phpself . $config_requri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $users->user_browser() . '|' . $http_referer . '|' . $username . '|';
 
             $fp = fopen($logdat, "a+");
             flock ($fp, LOCK_EX);
