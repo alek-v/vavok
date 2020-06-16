@@ -1,6 +1,150 @@
 <?php
 // (c) vavok.net
+
 require_once"../include/strtup.php";
+
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+
+// Save settings
+if ($action == 'save') {
+
+	$skins = isset($_POST['skins']) ? check($_POST['skins']) : '';
+	$mskin = isset($_POST['mskin']) ? check($_POST['mskin']) : '';
+	$lang = isset($_POST['lang']) ? check($_POST['lang']) : '';
+	$user_timezone = isset($_POST['timezone']) ? check($_POST['timezone']) : 0;
+	$subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
+	$inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
+
+	$mediaLikeButton = 'off'; // dont show like buttons
+
+	if (!$users->is_reg()) {
+		redirect_to("../index.php?isset=inputoff");
+	}
+		
+	$getinfo = $db->get_data('vavok_about', "uid='{$user_id}'", 'email');
+	$notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'email');
+	$email = $getinfo['email'];
+
+	if (empty($lang)) {
+	    header ("Location: settings.php?isset=incorrect");
+	    exit;
+	} 
+
+	if (!isset($user_timezone)) {
+	    $user_timezone = '0';
+	}
+	if (preg_match("/[^0-9+-]/", $user_timezone)) {
+	    header ("Location: settings.php?isset=incorrect");
+	    exit;
+	} 
+
+	if (!file_exists(BASEDIR . "themes/$skins/index.php")) {
+	    $skins = "default";
+	} 
+
+	$_SESSION['my_themes'] = "";
+	unset($_SESSION['my_themes']); 
+
+
+	// site news
+	if ($subnews == "yes") {
+	    $email_check = $db->get_data('subs', "user_mail='{$getinfo['email']}'", 'user_mail');
+	    
+
+	    if (!empty($email_check['user_mail'])) {
+	        $result = 'error2'; // Error! Email already exist in database!
+	        
+	        $subnewss = "1";
+	        $randkey = generate_password();
+	    } 
+
+
+	    if ($result == "") {
+	        if ($email == "") {
+	            $email = $getinfo['email'];
+	        }
+
+	        $randkey = generate_password();
+	        
+	        $db->insert_data('subs', array('user_id' => $user_id, 'user_mail' => $email, 'user_pass' => $randkey));
+
+	        $result = 'ok'; // sucessfully subscribed to site news!
+	        $subnewss = "1";
+	    } 
+	}
+	if ($subnews == "no") {
+	    $email_check = $db->get_data('subs', "user_id='{$user_id}'", 'user_mail');
+
+
+	    if ($email_check['user_mail'] == "") {
+	        $result = 'error';
+	        $subnewss = 0;
+	        $randkey = "";
+	    } else {
+	    	// unsub
+	        $db->delete('subs', "user_id='{$user_id}'");
+	    	
+	        $result = 'no';
+	        $subnewss = 0;
+	        $randkey = "";
+	    } 
+	} 
+	if (empty($subnews) || $subnews == '') {
+		$subnewss = $get_profilx['subscri'];
+		$randkey = generate_password();
+	}
+
+
+	// update changes
+	$fields = array();
+	$fields[] = 'skin';
+	$fields[] = 'ipadd';
+	$fields[] = 'timezone';
+	$fields[] = 'lang';
+	$fields[] = 'mskin';
+
+	$values = array();
+	$values[] = $skins;
+	$values[] = $ip;
+	$values[] = $user_timezone;
+	$values[] = $lang;
+	$values[] = $mskin;
+	 
+	$db->update('vavok_users', $fields, $values, "id='{$user_id}'");
+	unset($fields, $values);
+
+	// update email notificatoins
+	$fields = array();
+	$fields[] = 'subscri';
+	$fields[] = 'newscod';
+	$fields[] = 'lastvst';
+	 
+	$values = array();
+	$values[] = $subnewss;
+	$values[] = $randkey;
+	$values[] = time();
+	 
+	$db->update('vavok_profil', $fields, $values, "uid='{$user_id}'");
+	unset($fields, $values);
+
+	// notification settings
+	if (!isset($inbox_notification)) {
+		$inbox_notification = 1;
+	}
+
+	$check_inb = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
+	if ($check_inb > 0) {
+	    $db->update('notif', 'active', $inbox_notification, "uid='{$user_id}' AND type='inbox'");
+	} else {
+		$db->insert_data('notif', array('active' => $inbox_notification, 'uid' => $user_id, 'type' => 'inbox'));
+	}
+
+	// redirect
+	redirect_to("./settings.php?isset=editsetting");
+
+}
+
+
 require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
 
 $mediaLikeButton = 'off'; // dont show like buttons
@@ -22,7 +166,7 @@ if ($users->is_reg()) {
 	$user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'subscri');
 	$inbox_notif = $db->get_data('notif', "uid='" . $user_id . "' AND type='inbox'", 'active');
 
-	echo '<br><form method="post" action="insettings.php">';
+	echo '<br><form method="post" action="settings.php?action=save">';
     
 	echo $lang_home['lang'] . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
 
@@ -40,7 +184,7 @@ if ($users->is_reg()) {
 	$config_themes_show = str_replace("wap_", "", $config_themes_show);
 	$config_themes_show = ucfirst($config_themes_show);
 		
-		
+	/*	
     echo $lang_setting['siteskin'] . ':<br><select name="skins"><option value="' . $show_user['skin'] . '">' . $config_themes_show . '</option>';
 
     $dir = opendir ("../themes");
@@ -78,10 +222,11 @@ if ($users->is_reg()) {
     } 
     echo'</select><br />';
     closedir ($dir);
+	*/
+	echo '<input name="skins" type="hidden" value="' . $show_user['skin'] . '" />';
+
 
     // echo 'Time zone (+1 -1):<br><input name="sdvig" value="'.$udata[30].'" /><br />';
-    
-
     
     echo $lang_profil['subscribe'] . ': <br />Yes';
     if ($user_profil['subscri'] == "1") {

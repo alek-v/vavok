@@ -3,7 +3,7 @@
 
 	<h1>{@website_language[registration]}}</h1>
 
-	<form class="login active" method="post" action="reguser.php">
+	<form class="login active" method="post" action="registration.php?action=reguser">
 
 		<div>
 			<label>{@website_language[username]}}:</label>

@@ -4,6 +4,7 @@
 - Update use new API for IP informations
 - Updated login and register pages to use page templates
 - Updated page templates
+- Updated registration
 
 
 
