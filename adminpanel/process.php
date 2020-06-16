@@ -2,6 +2,7 @@
 // (c) vavok.net
 
 require_once"../include/strtup.php";
+
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
 
 if (!$users->is_reg()) {
@@ -16,9 +17,9 @@ $times = date_fixed($time, "H:i");
 
 // add to admin chat
 if ($action == "acadd") {
+
     if (!$users->is_reg() || !$users->check_permissions('adminchat')) {
-        header ("Location: ../pages/input.php?action=exit");
-        exit;
+        redirect_to("../pages/input.php?action=exit");
     }
 
     $brow = check($users->user_browser());
@@ -102,14 +103,16 @@ if ($action == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permiss
         flock ($fp, LOCK_UN);
         fclose($fp);
     } 
-    header ("Location: ban.php?start=$start");
+    header ("Location: ban.php");
     exit;
 } 
 
 if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+
 	if (isset($_POST['id'])) {$id = check($_POST['id']);} else {$id = check($_GET['id']);}
 
-    if ($id != "") {
+    if (!empty($id)) {
+
         $file = file("../used/ban.dat");
         $fp = fopen("../used/ban.dat", "w");
         flock ($fp, LOCK_EX);
@@ -121,19 +124,19 @@ if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permis
         fputs($fp, implode("", $file));
         flock ($fp, LOCK_UN);
         fclose($fp);
-    } 
-    header ("Location: ban.php?start=$start");
-    exit;
+
+    }
+
+    redirect_to("ban.php");
+
 } 
 
 if ($action == "delallip" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-    $fp = fopen("../used/ban.dat", "a+");
-    flock ($fp, LOCK_EX);
-    ftruncate ($fp, 0);
-    fflush ($fp);
-    flock ($fp, LOCK_UN);
-    header ("Location: ban.php?start=$start");
-    exit;
+
+    clear_files("../used/ban.dat");
+
+    redirect_to("ban.php");
+
 } 
 
 if ($action == "delbw" && $_SESSION['permissions'] == 101) {
@@ -174,6 +177,7 @@ if ($action == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['perm
 } 
 
 if ($action == "delerid" && !empty($_GET['err']) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+
 	$err = check($_GET['err']);
     clear_files("../used/datalog/" . $err . ".dat");
 
