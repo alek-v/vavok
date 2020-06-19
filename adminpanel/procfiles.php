@@ -1,12 +1,12 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 05.05.2020. 12:43:38
+// modified: 19.06.2020. 20:25:33
 // todo: rewrite whole page
 
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 
-if (!$users->is_reg() || (!is_administrator(101) && !chkcpecprm('pageedit', 'show'))) {
+if (!$users->is_reg() || (!$users->is_administrator(101) && !chkcpecprm('pageedit', 'show'))) {
     header("Location: ../?isset=ap_noaccess");
     exit;
 }
@@ -46,12 +46,12 @@ if ($action == "editfile") {
     if (!empty($file) && !empty($text_files)) {
         $page_info = $pageEditor->select_page($page_id, 'crtdby, published');
 
-        if (!chkcpecprm('pageedit', 'show') && !is_administrator(101)) {
+        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
 
-        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !is_administrator(101)) {
+        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -132,11 +132,11 @@ if ($action == "renamepg") {
     if (!empty($pg) && !empty($file)) {
         $page_info = $pageEditor->select_page($page_id, 'crtdby');
 
-        if (!chkcpecprm('pageedit', 'show') && !is_administrator(101)) {
+        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
-        if (!chkcpecprm('pageedit', 'edit') && !is_administrator(101) && $page_info['crtdby'] != $user_id) {
+        if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -153,7 +153,7 @@ if ($action == "renamepg") {
 
 if ($action == "addnew") {
 
-    if (!chkcpecprm('pageedit', 'insert') && !is_administrator(101)) {
+    if (!chkcpecprm('pageedit', 'insert') && !$users->is_administrator(101)) {
 
         redirect_to("index.php?isset=ap_noaccess");
 
@@ -246,7 +246,7 @@ if ($action == "addnew") {
 
 if ($action == "del") {
 
-    if (!chkcpecprm('pageedit', 'del') && !is_administrator(101)) {
+    if (!chkcpecprm('pageedit', 'del') && !$users->is_administrator(101)) {
         redirect_to("index.php?isset=ap_noaccess");
     }
 
@@ -260,7 +260,7 @@ if ($action == "del") {
 if ($action == "publish") {
     if (!empty($page_id)) {
 
-        if (!chkcpecprm('pageedit', 'publish') && !is_administrator(101)) {
+        if (!chkcpecprm('pageedit', 'publish') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -275,7 +275,7 @@ if ($action == "publish") {
 if ($action == "unpublish") {
     if (!empty($page_id)) {
 
-        if (!chkcpecprm('pageedit', 'publish') && !is_administrator(101)) {
+        if (!chkcpecprm('pageedit', 'publish') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -288,7 +288,7 @@ if ($action == "unpublish") {
 } 
 // update page language
 if ($action == 'pagelang') {
-    if (!is_administrator(101)) {
+    if (!$users->is_administrator(101)) {
         header("Location: ../?isset=ap_noaccess");
         exit;
     }
