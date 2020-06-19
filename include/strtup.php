@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   31.05.2020. 17:26:44
+* Updated:   19.06.2020. 20:01:43
 */
 
 // time when execution of the script has started
@@ -36,6 +36,8 @@ $clean_requri = preg_replace(array('#(\?|&)' . session_name() . '=([^=&\s]*)#', 
 $clean_requri = explode('&fb_action_ids', $clean_requri);
 $clean_requri = $clean_requri[0];
 $clean_requri = explode('?fb_action_ids', $clean_requri);
+$clean_requri = $clean_requri[0];
+$clean_requri = explode('?isset', $clean_requri);
 $clean_requri = $clean_requri[0];
 
 // root dir for including system files

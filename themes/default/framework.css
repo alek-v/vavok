@@ -13,6 +13,9 @@ iframe {
     width: 100%;
 }
 
+h1, h2, h3, h4, h5, h6 {
+	width: 100%;
+}
 
 /* inputs and textarea */
 label {
@@ -37,12 +40,10 @@ textarea {
 	margin: 5px;
 }
 
-
 /* site navigation */
 .my_navigation {
   width: 100%;
 }
-
 
 /* page navigation */
 #v_pagination {
@@ -109,7 +110,6 @@ textarea {
 
 /* BLOG */
 
-
 .blog-title {
 	padding-bottom: 20px;
 	border-bottom: 2px solid #cfcfcf;
@@ -148,7 +148,6 @@ textarea {
 	display: none;
 }
 
-
 .index-blog-post, .blog-page {
 	background-color: rgba(241, 241, 243, 0.3);
 	margin-top: 40px;
@@ -179,7 +178,7 @@ textarea {
 	margin-bottom: 80px;
 }
 
-.blog-posts h1, h2, h3, h5, h6, h6 {
+.blog-posts h1, h2, h3, h4, h5, h6 {
 	padding-bottom: 20px;
 }
 
@@ -200,6 +199,16 @@ textarea {
 	float: right;
 	text-align: center;
 	box-shadow: 0px 0px 6px #ccc;
+}
+
+/* blog comments */
+
+#comment_area {
+	margin: 60px 0px;
+}
+
+#comments {
+	margin: 60px 0px;
 }
 
 /* other elements */
@@ -226,7 +235,7 @@ textarea {
 */
 @media (min-width: 320px) and (max-width: 480px) {
 
-h1, h2, h3, h4, h5, h5, h6 {
+h1, h2, h3, h4, h5, h6 {
 	text-align: left;
 }
 

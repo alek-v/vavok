@@ -71,3 +71,5 @@ include BASEDIR . "include/load_header.php";
 	</nav>
 
 <div class="container">
+
+<?php echo get_isset(); /* get message from url */ ?>

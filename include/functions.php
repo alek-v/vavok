@@ -18,16 +18,6 @@ function get_configuration($data = '') {
     }
 }
 
-function getConfiguration($data = '') { // deprecated 29.04.2020. 0:49:26
-    global $config;
-
-    if (empty($data)) {
-        return $config;
-    } else {
-        return $config[$data];
-    }
-}
-
 // current user id
 function current_user_id($user_id = '') {
     global $user_id;
@@ -907,26 +897,6 @@ function parsepm($text) {
     } 
 
     return $text;
-} 
-
-// deprecated 31.03.2020. 5:56:16
-function is_reg() {
-    global $db;
-    if (!empty($_SESSION['log']) && !empty($_SESSION['pass'])) {
-        $isuser_check = getidfromnick(check($_SESSION['log']));
-        if (!empty($isuser_check)) {
-            $show_user = $db->select('vavok_users', "id='" . $isuser_check . "'", '', 'name, pass');
-            if (check($_SESSION['log']) == $show_user['name'] && password_verify($_SESSION['pass'], $show_user['pass'])) {
-                return true;
-            } else {
-                session_destroy();
-                return false;
-            }
-        } else {
-            session_destroy();
-            return false;
-        }
-    }
 }
 
 // check URL
@@ -963,30 +933,26 @@ function get_user_info($xuser_id, $info) {
     } 
 }
 
-// deprecated 24.5.2017. 2:50:18 echo_isset is deprecated, use get_isset
-function echo_isset($msg = '') {
-    global $config, $isset, $error;
-
-    if (!empty($msg)) {
-        $isset = $msg;
-    } 
-    include_once BASEDIR . "lang/" . $config["language"] . "/isset.php";
-    if (!empty($issetLang[$isset])) {
-    return $issetLang[$isset];
-    }
-}
-
+// Get message from url
 function get_isset($msg = '') {
-    global $config, $isset;
 
     if (!empty($msg)) {
         $isset = $msg;
-    } 
-    include_once BASEDIR . "lang/" . $config["language"] . "/isset.php";
-
-    if (!empty($issetLang[$isset])) {
-    return $issetLang[$isset];
+    } elseif (isset($_GET['isset'])) {
+        $isset = check($_GET['isset']);
     }
+
+    include_once BASEDIR . "lang/" . get_configuration("language") . "/isset.php";
+
+    if (isset($isset) && !empty($issetLang[$isset])) {
+
+        $isset_msg = new PageGen('pages/isset.tpl');
+        $isset_msg->set('message', $issetLang[$isset]);
+        
+        return $isset_msg->output();
+        
+    }
+
 }
 
 // show online

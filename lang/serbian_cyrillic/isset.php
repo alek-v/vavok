@@ -66,7 +66,7 @@ $issetLang = array(
 "ap_noaccess" => 'Немате потребне дозволе да приступите страници!',
 
 // user isset
-"quarantine" => 'Укључен је карантин! Нови чланови не могу писати поруке и коментаре тачно ' . round($config["quarantine"] / 3600) . ' часова после регистрације',
+"quarantine" => 'Укључен је карантин! Нови чланови не могу писати поруке и коментаре тачно ' . round(get_configuration("quarantine") / 3600) . ' часова после регистрације',
 "addfoto" => 'Фотографија успешно додата!',
 "delfoto" => 'Фотографија успешно избрисана!',
 "editfoto" => 'Фотографија успешно измењена!',
@@ -93,7 +93,7 @@ $issetLang = array(
 
 // forms
 $formsArray = array(
-"antiflood" =>  'Antiflood! Следећу поруку можете уписати за ' . (int)$config["floodTime"] . ' секунди!',
+"antiflood" =>  'Antiflood! Следећу поруку можете уписати за ' . (int)get_configuration("floodTime") . ' секунди!',
 "nobody" => 'Нисте уписали текст поруке!',
 "addon" =>  'Порука успешно уписана!',
 "noadduzer" => 'Наведени члан не постоји!',

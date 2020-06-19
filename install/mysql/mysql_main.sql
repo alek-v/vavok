@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 
 
-CREATE TABLE `email_queue` (
+CREATE TABLE IF NOT EXISTS `email_queue` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uad` mediumint(9) NOT NULL COMMENT 'user added email to queue',
   `sender` varchar(255) NOT NULL,
@@ -395,5 +395,16 @@ CREATE TABLE `email_queue` (
   `sent` tinyint(1) NOT NULL,
   `timesent` datetime DEFAULT NULL,
   `timeadded` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `date` datetime NOT NULL,
+  `pid` int(11) NOT NULL COMMENT 'page id where comment will be shown',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;

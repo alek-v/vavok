@@ -1,6 +1,10 @@
 <?php
-// (c) Aleksandar Vranešević - vavok.net
-// updated: 18.04.2020. 19:54:14
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   19.06.2020. 23:57:06
+*/
 
 include"../include/strtup.php";
 
@@ -10,6 +14,7 @@ $pg = isset($_GET['pg']) ? check($_GET['pg']) : ''; // blog page
 $page = isset($_GET['page']) ? check($_GET['page']) : 1; // page number
 
 $items_per_page = 5; // how many blog posts to show per page
+$comments_per_page = 100; // how many comments to show per page
 
 
 
@@ -17,7 +22,7 @@ switch ($pg) {
 	case isset($pg):
 		
 		// page data management
-		$blog = new Page;
+		$blog = new Page();
 
 		// get page id
 		$page_id = $blog->get_page_id("pname = '{$pg}'");
@@ -31,14 +36,40 @@ switch ($pg) {
 		// content
 		$post->set('content', getbbcode($post_data['content']));
 
-		// back link
-		$post->set('back', getbbcode($lang_home['back']));
-
 		// day created
 		$post->set('date-created-day', date('d', $post_data['created']));
 
 		// month created
 		$post->set('date-created-month', mb_substr($ln_all_month[date('n', $post_data['created']) - 1], 0, 3));
+
+		// comments
+		$comments = new Comments();
+
+		// Number of comments
+		$total_comments = $comments->count_comments($page_id);
+
+		// Start navigation
+		$navi = new Navigation($items_per_page, $total_comments, $page);
+
+		$all_comments = $comments->load_comments($page_id, $navi->start()['start'], $comments_per_page);
+
+		// merge blog comments and output from object
+		$merge_all = PageGen::merge($all_comments);
+
+		$show_comments = new PageGen('pages/blog/all_comments.tpl');
+
+		if ($users->is_reg()) {
+
+			$add_comment = new PageGen('pages/blog/add_comment.tpl');
+			$add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $page_id . '&amp;ptl=' . $clean_requri);
+
+			$post->set('add_comment', $add_comment->output());
+
+		}
+
+		$show_comments->set('all_comments', $merge_all);
+
+		$post->set('comments', $show_comments->output());
 
 		// page title
 		$my_title = $post_data['tname'];
@@ -100,11 +131,11 @@ switch ($pg) {
 			// if there is more then 120 words
 			if (count(explode(' ', $key['content'])) > 120) {
 				// show first 120 words
-				$content = getbbcode(implode(' ', array_slice(explode(' ', $key['content']), 0, 120))) . '...';
+				$content = getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 120))) . '...';
 			}
 
 			// replace html headings
-			$content = preg_replace("/<h[1-2]>(.*)<\/h[1-2]>/i", '<h3>$1</h3>', $content);
+			$content = preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '<h3>${2}</h3>', $content);
 
 			// day created
 			$page_posts->set('date-created-day', date('d', $key['created']));
