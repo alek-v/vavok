@@ -31,12 +31,7 @@ if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(1
 $my_title = $lang_admin['banlist'];
 include_once"../themes/$config_themes/index.php";
 
-if (isset($_GET['isset'])) {
-    $isset = check($_GET['isset']);
-    echo '<div align="center"><b><font color="#FF0000">';
-    echo get_isset();
-    echo '</font></b></div>';
-} 
+ 
 
 echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banlist'] . '</b><br><br>'; 
 

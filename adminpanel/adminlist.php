@@ -27,12 +27,7 @@ $my_title = $lang_admin['modlist'];
 
 include_once"../themes/$config_themes/index.php";
 
-if (isset($_GET['isset'])) {
-    $isset = check($_GET['isset']);
-    echo '<div align="center"><b><font color="#FF0000">';
-    echo get_isset();
-    echo '</font></b></div>';
-} 
+ 
 
 if (empty($action)) {
 
