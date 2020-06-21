@@ -1,6 +1,6 @@
 		<form method="post" action="{@add_comment_page}}">
 			<div class="form-group">
-				<label for="comment">Comment</label>
+				<label for="comment">{@website_language[comment]}}</label>
 				<textarea id="comment" name="comment" class="form-control"></textarea>
 			</div>
 

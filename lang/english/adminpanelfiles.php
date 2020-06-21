@@ -1,33 +1,32 @@
 <?php
 // (c) vavok.net
-// modified: 05.06.2020. 19:59:07
+// modified: 21.06.2020. 20:17:58
 
-$lang_apfiles['rows'] = "Rows";
-$lang_apfiles['filelist'] = "File list";
-$lang_apfiles['totpages'] = "Total files";
-$lang_apfiles['shwingpage'] = "Showing page";
-$lang_apfiles['edit'] = "Edit";
-$lang_apfiles['newfile'] = "New file";
-$lang_apfiles['folderchmod'] = "Folder access rights (CHMOD)";
-$lang_apfiles['folderwritable'] = "Folder can be edited";
-$lang_apfiles['foldernotwritable'] = "Folder cannot be edited";
-$lang_apfiles['setchmoddm'] = "Set access rights used/datamain (CHMOD-777)";
-$lang_apfiles['confdelfile'] = "Are you sure you want to delete file";
-$lang_apfiles['indexnodel'] = "File index.php cannot be deleted, it is the main page";
-$lang_apfiles['nofiletodel'] = "You haven't selected the file you wish to delete";
-$lang_apfiles['newpage'] = "New page";
-$lang_apfiles['faq'] = "Help";
-$lang_apfiles['filename'] = "File name";
-$lang_apfiles['pagename'] = "Page name";
-$lang_apfiles['language'] = "Language";
-$lang_apfiles['created'] = "Created";
-$lang_apfiles['lastupdate'] = "Last update";
-$lang_apfiles['by'] = "by";
-$lang_apfiles['pgaddress'] = "Page address";
-$lang_apfiles['with'] = 'with';
-$lang_apfiles['or'] = 'or';
-$lang_apfiles['pagetitle'] = 'Page title';
+$lang_home['rows'] = "Rows";
+$lang_home['filelist'] = "File list";
+$lang_home['totpages'] = "Total files";
+$lang_home['shwingpage'] = "Showing page";
+$lang_home['edit'] = "Edit";
+$lang_home['newfile'] = "New file";
+$lang_home['folderchmod'] = "Folder access rights (CHMOD)";
+$lang_home['folderwritable'] = "Folder can be edited";
+$lang_home['foldernotwritable'] = "Folder cannot be edited";
+$lang_home['setchmoddm'] = "Set access rights used/datamain (CHMOD-777)";
+$lang_home['confdelfile'] = "Are you sure you want to delete file";
+$lang_home['indexnodel'] = "File index.php cannot be deleted, it is the main page";
+$lang_home['nofiletodel'] = "You haven't selected the file you wish to delete";
+$lang_home['newpage'] = "New page";
+$lang_home['faq'] = "Help";
+$lang_home['filename'] = "File name";
+$lang_home['pagename'] = "Page name";
+$lang_home['language'] = "Language";
+$lang_home['created'] = "Created";
+$lang_home['lastupdate'] = "Last update";
+$lang_home['by'] = "by";
+$lang_home['pgaddress'] = "Page address";
+$lang_home['with'] = 'with';
+$lang_home['or'] = 'or';
+$lang_home['pagetitle'] = 'Page title';
 
-$lang_home = array_merge($lang_home, $lang_apfiles);
 
 ?>

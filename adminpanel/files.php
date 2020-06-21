@@ -72,7 +72,7 @@ if (empty($action)) {
         echo '</font></b></div>';
     } 
 
-    echo '<h1>' . $lang_apfiles['filelist'] . '</h1>';
+    echo '<h1>' . $lang_home['filelist'] . '</h1>';
 
     $total_pages = $pageEditor->total_pages();
 
@@ -107,13 +107,13 @@ if (empty($action)) {
 
         // permitions to edit home page of the site
         if ($page_info['file'] === "index.php" && empty($editOnlyOwnPages)) {
-            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
             if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a><hr>';
             } 
         } else {
             if (empty($editOnlyOwnPages) || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
-                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
                 if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101) || $page_info['crtdby'] == $user_id || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                     echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 } 
@@ -128,7 +128,7 @@ if (empty($action)) {
                 } 
                 echo '<hr />';
             } elseif ($editOnlyOwnPages == 'yes' && $page_info['crtdby'] == $user_id) {
-                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 echo '<hr />';
             } 
@@ -140,10 +140,10 @@ if (empty($action)) {
     $navigation = new Navigation($config_editfiles, $total_pages, $page, 'files.php?');
     echo $navigation->get_navigation();
 
-    echo '<br />' . $lang_apfiles['totpages'] . ': <b>' . (int)$total_pages . '</b><br />';
+    echo '<br />' . $lang_home['totpages'] . ': <b>' . (int)$total_pages . '</b><br />';
     echo '<div>&nbsp;</div>';
     if (empty($editOnlyOwnPages)) {
-        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $lang_apfiles['pagetitle'] . '</a><br />';
+        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a><br />';
     } 
 } 
 
@@ -174,9 +174,9 @@ if ($action == "show") {
             echo '</font></b></div>';
         } 
 
-        echo '<p>' . $lang_apfiles['shwingpage'] . ' <b>' . $showname . '</b></p>';
-        echo '<p>' . $lang_apfiles['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['crtdby']);
-        echo ' | ' . $lang_apfiles['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_apfiles['by'] . ' ' . getnickfromid($page_info['lstupdby']);
+        echo '<p>' . $lang_home['shwingpage'] . ' <b>' . $showname . '</b></p>';
+        echo '<p>' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']);
+        echo ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']);
         
         // post type
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
@@ -191,7 +191,7 @@ if ($action == "show") {
         echo '</p>';
 
         echo '<p>';
-        echo $lang_apfiles['pgaddress'] . ': ';
+        echo $lang_home['pgaddress'] . ': ';
 
         // if it is index doesnt show this page like other pages
         if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
@@ -215,14 +215,14 @@ if ($action == "show") {
         echo '</p>';
 
 
-        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['edit'] . '</a><br />';
+        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['edit'] . '</a><br />';
         if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
         echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a><br />';
         }
     } 
 
 if (empty($editOnlyOwnPages)) {
-echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['pagetitle'] . '</a><br />';
+echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a><br />';
 } 
 } 
 
@@ -304,7 +304,7 @@ if ($action == "edit") {
         echo '<br /><button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button></form><hr>';
         echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
 
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_apfiles['pagetitle'] . '</a>';
+        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a>';
         echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
         
     } else {
@@ -555,11 +555,11 @@ if ($action == "new") {
     } 
 
     echo '<div>
-    <h1><img src="../images/img/edit.gif" alt="" /> ' . $lang_apfiles['newfile'] . '</h1></div>';
+    <h1><img src="../images/img/edit.gif" alt="" /> ' . $lang_home['newfile'] . '</h1></div>';
 
     echo '<div class="form-group">
     		<form method="post" action="procfiles.php?action=addnew">';
-    echo '<label for="newfile">' . $lang_apfiles['pagename'] . ':</label>';
+    echo '<label for="newfile">' . $lang_home['pagename'] . ':</label>';
 	    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
     </div>'; 
 
@@ -568,7 +568,7 @@ if ($action == "new") {
     $languages = "SELECT * FROM languages ORDER BY lngeng";
 
     echo '<div class="form-group">
-    <label for="language">' . $lang_apfiles['language'] . ' (optional):</label>';
+    <label for="language">' . $lang_home['language'] . ' (optional):</label>';
     echo '<select class="form-control" id="language" name="lang">';
 
     echo '<option value="">Don\'t set</option>';
@@ -610,7 +610,7 @@ if ($action == "new") {
 
     <?php
     echo '<div class="form-group">
-    <button class="btn btn-primary" type="submit" />' . $lang_apfiles['newpage'] . '</button>
+    <button class="btn btn-primary" type="submit" />' . $lang_home['newpage'] . '</button>
     </div>
     </form>';
 } 
@@ -626,13 +626,13 @@ if ($action == "poddel") {
 
     if (!empty($file)) {
         if ($file != "index.php") {
-            echo $lang_apfiles['confdelfile'] . ' <b>' . $file . '</b><br />';
+            echo $lang_home['confdelfile'] . ' <b>' . $file . '</b><br />';
             echo '<b><a href="procfiles.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a></b><br />';
         } else {
-            echo $lang_apfiles['indexnodel'] . '!<br />';
+            echo $lang_home['indexnodel'] . '!<br />';
         } 
     } else {
-        echo $lang_apfiles['nofiletodel'] . '<br />';
+        echo $lang_home['nofiletodel'] . '<br />';
     } 
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
 } 
@@ -649,26 +649,43 @@ if ($action == "pagelang") {
 
     include_once"../themes/$config_themes/index.php";
 
-    echo '<form method="post" action="procfiles.php?action=pagelang&amp;id=' . $pageData['id'] . '">'; 
-    // language
-    echo '<div class="break"></div>';
-    $languages = "SELECT * FROM languages ORDER BY lngeng";
-    echo $lang_apfiles['language'] . ':<br />';
-    echo "<select name=\"lang\">";
-    echo '<option value="">Leave empty</option>';
-    foreach ($db->query($languages) as $lang) {
-        echo "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
-    } 
-    echo "</select>";
-    echo '<br /><br />';
-    echo '<input value="' . $lang_home['save'] . '" type="submit" /></form>';
+    echo '<div class="form-group">';
 
-    echo '<div class="break"></div>';
+	    echo '<form method="post" action="procfiles.php?action=pagelang&amp;id=' . $pageData['id'] . '">'; 
+
+		    echo '<label for="lang">' . $lang_home['language'] . '</label>';
+
+		    echo '<select name="lang" id="lang" class="custom-select custom-select-lg mb-3">';
+
+		    if (!empty($pageData['lang'])) {
+
+		    	echo '<option value="' . $pageData['lang'] . '">' . $pageData['lang'] . '</option>';
+
+		    } else {
+
+		    	echo '<option value="">Leave empty</option>'; // update language
+
+			}
+
+		    $languages = "SELECT * FROM languages ORDER BY lngeng";
+
+		    foreach ($db->query($languages) as $lang) {
+		        echo '<option value="' . strtolower($lang['iso-2']) . '">' . $lang['lngeng'] . '</option>';
+		    }
+
+		    echo '</select>';
+
+		    echo '<button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button>
+
+	    </form>';
+
+    echo '</div>';
+
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
 } 
 
 if ($action != "new" && (chkcpecprm('pageedit', 'insert') || $users->is_administrator(101))) {
-    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_apfiles['newpage'] . '</a>';
+    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_home['newpage'] . '</a>';
 } 
 if ($users->is_administrator(101) && ($action == 'edit' || $action == 'show')) {
     echo '<a href="files.php?action=pagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
@@ -680,10 +697,10 @@ if ($users->is_administrator()) {
     echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">Search</a>';
 } 
 if (!empty($action)) {
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a>';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['mngpage'] . '</a>';
 } 
 if ($action != "faq") {
-    // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $lang_apfiles['faq'] . '</a>';
+    // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $lang_home['faq'] . '</a>';
 }
 echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
