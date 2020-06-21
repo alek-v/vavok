@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   04.05.2020. 6:26:43
+* Updated:   21.06.2020. 12:50:31
 */
 
 include_once"../include/strtup.php";
@@ -64,6 +64,12 @@ $this_page = new PageGen('pages/page/page.tpl');
 // get page title
 if (!empty($page_data['tname'])) {
     $my_title = $page_data['tname'];
+}
+
+// Show page language
+// <html lang="(lang)">
+if (!empty($page_data['lang'])) {
+	define("PAGE_LANGUAGE", ' lang="' . $page_data['lang'] . '"');
 }
 
 // load theme

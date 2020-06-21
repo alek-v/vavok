@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   19.06.2020. 23:57:06
+* Updated:   21.06.2020. 12:55:00
 */
 
 include"../include/strtup.php";
@@ -13,8 +13,8 @@ $pg = isset($_GET['pg']) ? check($_GET['pg']) : ''; // blog page
 
 $page = isset($_GET['page']) ? check($_GET['page']) : 1; // page number
 
-$items_per_page = 5; // how many blog posts to show per page
-$comments_per_page = 100; // how many comments to show per page
+$items_per_page = 5; // How many blog posts to show per page
+$comments_per_page = 0; // How many comments to show per page
 
 
 
@@ -48,6 +48,9 @@ switch ($pg) {
 		// Number of comments
 		$total_comments = $comments->count_comments($page_id);
 
+		// Show all comments
+		if ($comments_per_page == 0) { $comments_per_page = $total_comments; }
+
 		// Start navigation
 		$navi = new Navigation($items_per_page, $total_comments, $page);
 
@@ -71,8 +74,14 @@ switch ($pg) {
 
 		$post->set('comments', $show_comments->output());
 
-		// page title
+		// Page title
 		$my_title = $post_data['tname'];
+
+		// Show page language
+		// <html lang="(lang)">
+		if (!empty($post_data['lang'])) {
+			define("PAGE_LANGUAGE", ' lang="' . $post_data['lang'] . '"');
+		}
 
 		// page header
 		include"../themes/" . $config_themes . "/index.php";

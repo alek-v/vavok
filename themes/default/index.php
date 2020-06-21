@@ -1,5 +1,10 @@
 <?php 
-// (c) Aleksandar Vranešević - vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   21.06.2020. 12:50:54
+*/
 
 // custom page templates directory is named "templates" and it must be under template main folder
 // default page templates directory is /themes/templates/
@@ -10,7 +15,7 @@ include BASEDIR . "include/prepare_header.php";
 header("Content-type:text/html; charset=utf-8");
 ?>
 <!DOCTYPE html>
-<html>
+<html<?php if (defined('PAGE_LANGUAGE')) echo PAGE_LANGUAGE; ?>>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
