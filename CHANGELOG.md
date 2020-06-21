@@ -5,7 +5,8 @@
 - Updated login and register pages to use page templates
 - Updated page templates
 - Updated registration
-
+- Added comments
+- Added support for page language attribute <html lang="(lang)">
 
 
 # Vavok v1.5.1
