@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   21.06.2020. 12:55:00
+* Updated:   13.07.2020. 20:29:09
 */
 
 include"../include/strtup.php";
@@ -24,8 +24,9 @@ switch ($pg) {
 		// page data management
 		$blog = new Page();
 
-		// get page id
-		$page_id = $blog->get_page_id("pname = '{$pg}'");
+		// Get page id
+		// Redirect to blog main page if page dows not exist
+		$page_id = $blog->get_page_id("pname = '{$pg}'") or redirect_to(HOMEDIR . 'blog/');
 
 		// select page from id
 		$post_data = $blog->select_page($page_id);

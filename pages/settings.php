@@ -3,6 +3,10 @@
 
 require_once"../include/strtup.php";
 
+if (!$users->is_reg()) {
+	redirect_to("../index.php?isset=inputoff");
+}
+
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
 
 // Save settings
@@ -14,12 +18,6 @@ if ($action == 'save') {
 	$user_timezone = isset($_POST['timezone']) ? check($_POST['timezone']) : 0;
 	$subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
 	$inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
-
-	$mediaLikeButton = 'off'; // dont show like buttons
-
-	if (!$users->is_reg()) {
-		redirect_to("../index.php?isset=inputoff");
-	}
 		
 	$getinfo = $db->get_data('vavok_about', "uid='{$user_id}'", 'email');
 	$notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'email');
@@ -100,18 +98,19 @@ if ($action == 'save') {
 	$fields[] = 'skin';
 	$fields[] = 'ipadd';
 	$fields[] = 'timezone';
-	$fields[] = 'lang';
 	$fields[] = 'mskin';
 
 	$values = array();
 	$values[] = $skins;
 	$values[] = $ip;
 	$values[] = $user_timezone;
-	$values[] = $lang;
 	$values[] = $mskin;
 	 
 	$db->update('vavok_users', $fields, $values, "id='{$user_id}'");
 	unset($fields, $values);
+
+	// Update language
+	$users->change_language($lang);
 
 	// update email notificatoins
 	$fields = array();
@@ -184,45 +183,7 @@ if ($users->is_reg()) {
 	$config_themes_show = str_replace("wap_", "", $config_themes_show);
 	$config_themes_show = ucfirst($config_themes_show);
 		
-	/*	
-    echo $lang_setting['siteskin'] . ':<br><select name="skins"><option value="' . $show_user['skin'] . '">' . $config_themes_show . '</option>';
 
-    $dir = opendir ("../themes");
-    while ($file = readdir ($dir)) {
-        if (!preg_match("/[^a-zA-Z0-9_-]/", $file) && $file != "$config_themes" && $file != 'templates') {
-        	$nfile = str_replace("web_", "", $file);
-        	$nfile = str_replace("wap_", "", $nfile);
-        	$nfile = ucfirst($nfile);
-            echo'<option value="' . $file . '">' . $nfile . '</option>';
-        } 
-    } 
-    echo'</select><br />';
-    closedir ($dir); 
-
-
-	$current_mtheme = $show_user['mskin'];
-	
-	if (empty($current_mtheme)) {
-		$current_mtheme = $show_user['skin'];
-	} // update lang
-	
-	$mobile_theme = str_replace("web_", "", $current_mtheme);
-	$mobile_theme = str_replace("wap_", "", $mobile_theme);
-	$mobile_theme = ucfirst($mobile_theme);
-
-    echo 'Mobile skin:<br><select name="mskin"><option value="' . $current_mtheme . '">' . $mobile_theme . '</option>';
-    $dir = opendir ("../themes");
-    while ($file = readdir ($dir)) {
-        if (!preg_match("/[^a-zA-Z0-9_-]/", $file) && $file != $current_mtheme && $file != 'templates') {
-        	$nfile = str_replace("web_", "", $file);
-        	$nfile = str_replace("wap_", "", $nfile);
-        	$nfile = ucfirst($nfile);
-            echo'<option value="' . $file . '">' . $nfile . '</option>';
-        } 
-    } 
-    echo'</select><br />';
-    closedir ($dir);
-	*/
 	echo '<input name="skins" type="hidden" value="' . $show_user['skin'] . '" />';
 
 

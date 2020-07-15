@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 05.04.2020. 17:56:29
+// updated: 15.07.2020. 1:59:04
 
 $language = 'english';
 
@@ -10,8 +10,7 @@ if (!file_exists(BASEDIR . "lang/english/index.php")) {
 }
 
 
-unset($_SESSION['lang']);
-$_SESSION['lang'] = $language;
+$users->change_language($language);
 
 
 $ln_loc = 'en';

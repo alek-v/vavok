@@ -2,9 +2,9 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
+* URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   20.05.2020. 19:55:51
+* Updated:   15.07.2020. 1:59:17
 */
 
 
@@ -18,7 +18,7 @@ class Users {
 
 	function logout($user_id) {
 
-	    $this->db->delete('online', "user = '{$user_id}'");
+	    $this->db->delete('online', "user = '{$this->getidfromnick($_SESSION['log'])}'");
 
 	    // destroy cookies
 	    setcookie('cooklog', "", time() - 3600);
@@ -36,19 +36,19 @@ class Users {
 
 	// get user nick from user id number
 	function getnickfromid($uid) {
-	    $unick = $this->db->get_data('vavok_users', "id='" . $uid . "'", 'name');
+	    $unick = $this->db->get_data('vavok_users', "id='{$uid}'", 'name');
 	    return $unick['name'];
 	}
 
 	// get vavok_users user id from nickname
 	function getidfromnick($nick) {
-	    $uid = $this->db->get_data('vavok_users', "name='" . $nick . "'", 'id');
+	    $uid = $this->db->get_data('vavok_users', "name='{$nick}'", 'id');
 	    return $uid['id'];
 	}
 
 	// get vavok_users user id from email
 	function get_id_from_mail($mail) {
-	    $uid = $this->db->get_data('vavok_about', "email='" . $mail . "'", 'uid');
+	    $uid = $this->db->get_data('vavok_about', "email='{$mail}'", 'uid');
 	    return $uid['uid'];
 	}
 
@@ -64,7 +64,6 @@ class Users {
 
 	    $this->db->delete("vavok_users", "id = '{$users_id}'");
 	    $this->db->delete("vavok_profil", "uid = '{$users_id}'");
-	    $this->db->delete("page_setting", "uid = '{$users_id}'");
 	    $this->db->delete("vavok_about", "uid = '{$users_id}'");
 	    $this->db->delete("inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
 	    $this->db->delete("ignore", "target = '{$users_id}' OR name = '{$users_id}'");
@@ -74,6 +73,7 @@ class Users {
 	    $this->db->delete("specperm", "uid = '{$users_id}'");
 
 	    return $users;
+
 	}
 
 	// check if user is moderator
@@ -276,7 +276,7 @@ class Users {
 	} 
 
 	// check current session if user is registered
-	function is_reg() {
+	public function is_reg() {
 
 	    if (!empty($_SESSION['log']) && !empty($_SESSION['permissions'])) {
 
@@ -307,7 +307,7 @@ class Users {
 	}
 
 	// get info about user
-	function get_user_info($users_id, $info) {
+	public function get_user_info($users_id, $info) {
 
 	    if ($info == 'email') {
 	        $uinfo = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'email');
@@ -354,7 +354,7 @@ class Users {
 	// check permissions for admin panel
 	// check if user have permitions to see, edit, delete, etc selected part of the website
 	function check_permissions($permname, $needed = 'show') {
-	    global $user_id;
+	    $user_id = $this->getidfromnick($_SESSION['log']);
 
 	    $permname = str_replace('.php', '', $permname);
 
@@ -453,7 +453,20 @@ class Users {
 
 	}
 
+	// Change user's language
+	public function change_language($language) {
 
+		// unset current language
+		$_SESSION['lang'] = "";
+		unset($_SESSION['lang']);
+
+		// set new language
+		$_SESSION['lang'] = $language;
+
+		// Update language if user is registered
+		if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->getidfromnick($_SESSION['log'])}'"); }
+
+	}
 
 
 }

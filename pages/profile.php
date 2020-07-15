@@ -23,9 +23,9 @@ echo '<div class="row">';
 
 if ($users->is_reg()) {
 
-    $about_user = $db->get_data('vavok_about', "uid='" . $user_id . "'",);
-    $user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'subscri');
-    $show_user = $db->get_data('vavok_users', "id='" . $user_id . "'", 'skin, banned, browsers');
+    $about_user = $db->get_data('vavok_about', "uid='{$user_id}'");
+    $user_profil = $db->get_data('vavok_profil', "uid='{$user_id}'", 'subscri');
+    $show_user = $db->get_data('vavok_users', "id='{$user_id}'", 'skin, banned, browsers');
 
     echo '<div class="col-sm">';
 
@@ -36,7 +36,7 @@ if ($users->is_reg()) {
         echo $lang_profil['street'] . ':<br /><input name="street" value="' . $about_user['address'] . '" /><br />';
         echo $lang_profil['postal'] . ':<br /><input name="zip" value="' . $about_user['zip'] . '" /><br />';
         echo $lang_profil['aboutyou'] . ':<br /><input name="infa" value="' . $about_user['about'] . '" /><br />';
-        echo 'Email:<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
+        echo $lang_home['yemail'] . ':<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
         echo $lang_profil['site'] . ':<br /><input name="site" value="' . $about_user['site'] . '" /><br />'; 
         echo $lang_profil['birthday'] . ' (dd.mm.yyyy):<br /><input name="happy" value="' . $about_user['birthday'] . '" /><br />';
         echo $lang_profil['sex'] . ':<br />';

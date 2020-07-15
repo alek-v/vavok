@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   05.06.2020. 18:12:13
+* Updated:   15.07.2020. 1:59:31
 */
 
 require_once"../include/strtup.php";
@@ -25,12 +25,8 @@ if (!file_exists("../lang/" . $language . "/index.php")) {
 
 if (!empty($language)) {
 
-	// unset current language
-	$_SESSION['lang'] = "";
-	unset($_SESSION['lang']);
-
-	// set new language
-	$_SESSION['lang'] = $language;
+	// Set new language
+	$users->change_language($language);
 
 }
 

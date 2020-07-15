@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 01.05.2020. 23:14:09
+// modified: 15.07.2020. 1:59:09
 
 // get browser preferred language
 $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
@@ -22,8 +22,7 @@ if ($language == 'serbian_latin' && file_exists(BASEDIR . "lang/serbian_latin/in
 }
 
 if (!empty($language) && isset($_SESSION['lang'])) {
-	unset($_SESSION['lang']);
-	$_SESSION['lang'] = $language;
+	$users->change_language($language);
 }
 
 $ln_loc = 'sr';
