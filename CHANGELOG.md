@@ -2,11 +2,13 @@
 - Updated navigation
 - Updated language files
 - Update use new API for IP informations
+- Update main page optimisations
 - Updated login and register pages to use page templates
 - Updated page templates
 - Updated registration
 - Added comments
 - Added support for page language attribute &lt;html lang="(lang)"&gt;
+
 
 
 # Vavok v1.5.1
