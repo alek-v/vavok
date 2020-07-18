@@ -133,7 +133,7 @@ if (!isset($act) || empty($act)) {
 
     $limit_start = $navigation->start()['start']; // starting point
 
-    $sql = "SELECT id, pname, tname, file FROM " . get_configuration('tablePrefix') . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+    $sql = "SELECT id, pname, tname, file FROM " . get_configuration("tablePrefix") . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {

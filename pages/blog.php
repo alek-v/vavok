@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   13.07.2020. 20:29:09
+* Updated:   18.07.2020. 19:25:06
 */
 
 include"../include/strtup.php";
@@ -33,6 +33,17 @@ switch ($pg) {
 
 		// generate page
 		$post = new PageGen('pages/blog/post.tpl');
+
+		// Author
+		// Author link
+		$author_full_name = $users->get_user_info($post_data['crtdby'], 'full_name');
+		$author_name = !empty($author_full_name) ? $author_full_name : $users->getnickfromid($post_data['crtdby']);
+
+		$author_link = '<a href="' . HOMEDIR . 'pages/user.php?uz=' . $post_data['crtdby'] . '">' . $author_name . '</a>';
+		$post->set('author_link', $author_link);
+
+		// Time created
+		$post->set('created_date', date_fixed($post_data['created'], 'd.m.Y.'));
 
 		// content
 		$post->set('content', getbbcode($post_data['content']));

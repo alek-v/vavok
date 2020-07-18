@@ -120,6 +120,10 @@ textarea {
 	color: #636262;
 }
 
+.blog-author {
+	margin: 40px;
+}
+
 .blog-content {
 	text-align: justify;
 }

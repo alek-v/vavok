@@ -25,7 +25,7 @@ $my_title = $lang_user['profile'] . " " . $uz;
 include_once"../themes/" . $config_themes . "/index.php";
 
 
-$checkIfExist = $db->count_row('vavok_users', "id={$users_i}'");
+$checkIfExist = $db->count_row('vavok_users', "id='{$users_id}'");
 $about_user = $db->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site');
 $user_profil = $db->get_data('vavok_profil', "uid='{$users_id}'", 'regche, bantime, bandesc, perstat, forummes, chat, commadd, subscri, regdate, lastvst');
 $show_user = $db->get_data('vavok_users', "id='{$users_id}'");

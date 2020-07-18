@@ -100,6 +100,8 @@ $lang_home['contact'] = "Контакт";
 $lang_home['readmore'] = "Опширније";
 $lang_home['resend'] = "Пошаљи поново";
 $lang_home['differentImage'] = "Промени слику";
+$lang_home['author'] = "Аутор";
+$lang_home['published'] = "Објављено";
 
 // cookie consent
 $lang_home['cookies'] = "Колачићи."; // Title

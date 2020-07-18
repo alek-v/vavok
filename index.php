@@ -47,7 +47,7 @@ if ($config["siteDefaultLang"] == $config["language"] && !empty($requested_langu
   and page with users's language exists
 */
 if (get_configuration("siteDefaultLang") != $config["language"] && empty($requested_language) && $page->load_main_page($ln_loc)) {
-	redirect_to("/" . $ln_loc . "/" . $urlIsset);
+	redirect_to("/" . $ln_loc . "/" . $url_isset);
 }
 
 // Page title

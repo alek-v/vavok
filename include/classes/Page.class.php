@@ -192,12 +192,16 @@ class Page {
 		return $this->transfer_protocol . $host . $r;
 	}
 
+	// Load main page
 	public function load_main_page($language = '') {
+		// Load page with requested language
 		if (!empty($language)) { $language = " AND lang='{$language}'"; }
 
+		// get data
 		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'{$language}", 'tname, content');
 
-		if (empty($page_data['tname']) || empty($page_data['content'])) {
+		// return false if there is no data
+		if (empty($page_data['tname']) && empty($page_data['content'])) {
 			return false;
 		} else { return $page_data; }
 	}
