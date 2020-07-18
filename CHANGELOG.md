@@ -8,6 +8,7 @@
 - Updated registration
 - Added comments
 - Added support for page language attribute &lt;html lang="(lang)"&gt;
+- Added blog author and post creation date preview
 
 
 
