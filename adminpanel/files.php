@@ -102,13 +102,13 @@ if (empty($action)) {
 
         // permitions to edit home page of the site
         if ($page_info['file'] === "index.php" && empty($editOnlyOwnPages)) {
-            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']) . '<br />';
             if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator(101)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a><hr>';
             } 
         } else {
             if (empty($editOnlyOwnPages) || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
-                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']) . '<br />';
                 if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator(101) || $page_info['crtdby'] == $user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                     echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 } 
@@ -123,7 +123,7 @@ if (empty($action)) {
                 } 
                 echo '<hr />';
             } elseif ($editOnlyOwnPages == 'yes' && $page_info['crtdby'] == $user_id) {
-                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
+                echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']) . '<br />';
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 echo '<hr />';
             } 
@@ -170,8 +170,8 @@ if ($action == "show") {
         } 
 
         echo '<p>' . $lang_home['shwingpage'] . ' <b>' . $showname . '</b></p>';
-        echo '<p>' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']);
-        echo ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']);
+        echo '<p>' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']);
+        echo ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']);
         
         // post type
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';

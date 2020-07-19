@@ -35,7 +35,6 @@ class Users {
 	            }
 
 	        } else {
-	            session_destroy();
 	            return false;
 	        }
 

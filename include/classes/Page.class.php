@@ -4,19 +4,19 @@
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
 * class for managing pages
-* Updated:   06.05.2020. 18:22:11
+* Updated:   19.07.2020. 22:11:25
 */
 
 class Page {
 
 	// class constructor
 	function __construct() {
-		global $db, $user_id;
+		global $db, $users;
 
 		$this->table_prefix = get_configuration('tablePrefix'); // table prefix
 		$this->transfer_protocol = transfer_protocol(); // transfer protocol
 		$this->db = $db; // database
-		$this->user_id = $user_id; // user id with active login
+		$this->user_id = $users->current_user_id(); // user id with active login
 	}
 
 	// update page
@@ -176,20 +176,26 @@ class Page {
 		return $pageEditor;
 	}
 
-	// return url for facebook share, twitter etc
-	function media_page_url($host, $request) {
+	// url for facebook share, twitter etc to prevent duplicated url's
+	function media_page_url($request, $website = '') {
+
+		// Clean up request
 		$r = preg_replace('/&page=(\d+)/', '', $request);
 		$r = preg_replace('/page=(\d+)/', '', $r);
 		$r = str_replace('&page=last', '', $r);
 		$r = str_replace('page=last', '', $r);
+
 		// remove language dir from main page
 		$r = str_replace('/en/', '', $r);
 		$r = str_replace('/sr/', '', $r);
+
 		// remove index.php from urls to remove double content
 		$r = str_replace('/index.php', '/', $r);
 
+		if (empty($website)) { $website = website_home_address(); }
+
 		// return url
-		return $this->transfer_protocol . $host . $r;
+		return $website . $r;
 	}
 
 	// Load main page

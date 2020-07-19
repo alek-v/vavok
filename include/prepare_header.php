@@ -37,8 +37,8 @@ if (!stristr($phpself, 'install/install.php')) {
     } 
 
 
-    // if it is index page
-    if (stristr($_SERVER['PHP_SELF'], '/index.php') && empty($head_tag)) {
+    // if it is main page
+    if ($_SERVER['PHP_SELF'] == '/index.php' && empty($head_tag)) {
 
         // first we check is there a page with language we use
         $vk_page = $db->get_data('pages', "pname='index' AND lang='" . $ln_loc . "'");
@@ -68,7 +68,7 @@ if (!stristr($head_tag, 'rel="canonical"') && isset($pg)) { $head_tag .= "\n" . 
 // add missing open graph tags
 if (!strstr($head_tag, 'og:type')) { $head_tag .= "\n" . '<meta property="og:type" content="website" />'; }
 
-if (!strstr($head_tag, 'og:title')) { $head_tag .= "\n" . '<meta property="og:title" content="' . $vk_page['tname'] . '" />'; }
+if (!strstr($head_tag, 'og:title') && !empty($vk_page['tname'])) { $head_tag .= "\n" . '<meta property="og:title" content="' . $vk_page['tname'] . '" />'; }
 
 
 
