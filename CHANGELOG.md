@@ -6,6 +6,7 @@
 - Updated login and register pages to use page templates
 - Updated page templates
 - Updated registration
+- Updated functions
 - Added comments
 - Added support for page language attribute &lt;html lang="(lang)"&gt;
 - Added blog author and post creation date preview
