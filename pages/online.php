@@ -65,7 +65,7 @@ if ($list == "full") {
             } 
             echo '<hr />';
         } else {
-            echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+            echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
@@ -88,7 +88,7 @@ if ($list == "full") {
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
 
-        echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+        echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
         if ($users->is_moderator() || $users->is_administrator()) {
             echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
         } 

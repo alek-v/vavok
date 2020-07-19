@@ -36,7 +36,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         if (!empty($user)) {
             if (ctype_digit($user) === false) {
                 $userx_id = $users->getidfromnick($user);
-                $users_nick = getnickfromid($userx_id);
+                $users_nick = $users->getnickfromid($userx_id);
             } else {
                 $userx_id = $user;
                 $users_nick = $users->getnickfromid($user);

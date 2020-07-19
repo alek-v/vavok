@@ -34,7 +34,7 @@ if ($users->is_reg()) {
 
         if ($num_items > 0) {
             foreach ($db->query($sql) as $item) {
-                $tnick = getnickfromid($item['target']);
+                $tnick = $users->getnickfromid($item['target']);
                 /*
             if (isonline($item[0])) {
                 $iml = "<img src=\"images/onl.gif\" alt=\"+\"/>";
@@ -56,7 +56,7 @@ if ($users->is_reg()) {
         $todo = $_GET["todo"];
         $who = $_GET["who"]; 
         // $uid = getuid_sid($sid);
-        $tnick = getnickfromid($who);
+        $tnick = $users->getnickfromid($who);
         if ($todo == "add") {
             if ($users->ignoreres($user_id, $who) == 1) {
                 $db->insert_data('`ignore`', array('name' => $user_id, 'target' => $who));

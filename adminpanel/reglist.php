@@ -37,10 +37,12 @@ if ($act == 'conf' && !empty($usr)) {
     $db->update('vavok_profil', $fields, $values, "uid='" . $usr . "'");
 
     $about_user = $db->get_data('vavok_about', "uid='" . $usr . "'", 'email');
-    $vav_name = getnickfromid($usr);
+    $vav_name = $users->getnickfromid($usr);
 
-    $message = "" . $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . $config["homeBase"] . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($user_id) . "\r\n" . ucfirst($config["homeBase"]) . "";
-    sendmail($about_user['email'], "" . $lang_home['msgfrmst'] . " " . $config["title"], $message);
+    $message = $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . $config["homeBase"] . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($user_id) . "\r\n" . ucfirst($config["homeBase"]);
+    $newMail = new Mailer;
+    $newMail->send($about_user['email'], $lang_home['msgfrmst'] . " " . $config["title"], $message);
+
 
     header("Location: reglist.php?isset=mp_ydelconf");
     exit;
@@ -67,7 +69,7 @@ if (empty($action)) {
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {
             $show_userx = $db->get_data('vavok_users', "id='" . $item['uid'] . "'", 'browsers, ipadd');
-            $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
+            $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $users->getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
             if ($item['regche'] == "1") {
                 $bt = "" . $lang_admin['notconfirmed'] . "!";
                 $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $lang_admin['confirms'] . '</a>';

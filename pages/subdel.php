@@ -13,7 +13,7 @@ if (!empty($code)) {
         $email_check = $db->get_data('subs', "user_pass='" . $code . "'");
         if ($code == $email_check['user_pass'] && (empty($email_check['subscripton_name']) || $email_check['subscripton_name'] == $subscriptionName)) {
             if ($email_check['user_id'] > 0 && ($subscriptionName == 'sitenews' || empty($subscriptionName))) {
-                $uz_log = getnickfromid($email_check['user_id']);
+                $uz_log = $users->getnickfromid($email_check['user_id']);
                 $db->update('vavok_profil', array('subscri', 'newscod'), array(0, ''), "uid='" . $email_check['user_id'] . "'");
             } 
 

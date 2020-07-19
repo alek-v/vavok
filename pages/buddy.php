@@ -27,7 +27,7 @@ if ($users->is_reg()) {
 
         $todo = check($_GET["todo"]);
         $who = check($_GET["who"]); 
-        $tnick = getnickfromid($who);
+        $tnick = $users->getnickfromid($who);
 
         if ($todo == "add") {
             if ($users->ignoreres($user_id, $who) == 1 && !isbuddy($who, $user_id)) {
@@ -76,7 +76,7 @@ if ($users->is_reg()) {
 
             foreach ($db->query($sql) as $item) {
 
-                $tnick = getnickfromid($item['target']);
+                $tnick = $users->getnickfromid($item['target']);
 
                 $lnk = "<a href=\"../pages/user.php?uz=" . $item['target'] . "\"  class=\"sitelink\">" . $tnick . "</a>";
                 echo $users->user_online($tnick) . " " . $lnk . ": ";
