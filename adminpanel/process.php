@@ -6,20 +6,14 @@ require_once"../include/strtup.php";
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
 
 if (!$users->is_reg()) {
-    header ("Location: ../pages/error.php?isset=nologin");
-    exit;
+    redirect_to(BASEDIR . "pages/error.php?isset=nologin");
 }
-
-$time = time();
-$rand = rand(100, 999);
-$dates = date_fixed($time, "d.m.y");
-$times = date_fixed($time, "H:i");
 
 // add to admin chat
 if ($action == "acadd") {
 
     if (!$users->is_reg() || !$users->check_permissions('adminchat')) {
-        redirect_to("../pages/input.php?action=exit");
+        redirect_to(BASEDIR . "pages/input.php?action=exit");
     }
 
     $brow = check($users->user_browser());
@@ -32,7 +26,7 @@ if ($action == "acadd") {
     $msg = smiles($msg);
     $msg = no_br($msg, '<br />');
 
-    $text = $msg . '|' . $log . '|' . $dates . '|' . $times . '|' . $brow . '|' . $ip . '|';
+    $text = $msg . '|' . $log . '|' . date_fixed($time, "d.m.y") . '|' . date_fixed($time, "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
     $text = no_br($text);
 
     $fp = fopen("../used/adminchat.dat", "a+");

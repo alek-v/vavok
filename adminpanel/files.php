@@ -6,14 +6,14 @@ require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 
 // checking access permitions
-if (!$users->is_reg() || (!$users->is_administrator(101) && chkcpecprm('pageedit', 'show'))) {
+if (!$users->is_reg() || (!$users->is_administrator(101) && $users->check_permissions('pageedit', 'show'))) {
     redirect_to("../");
 } 
 
 $table_prefix = get_configuration('tablePrefix');
 
 // check if user can edit only pages that are made by themself and have no permitions to edit all pages
-if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101)) {
+if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(101)) {
     $editOnlyOwnPages = 'yes';
 } else {
     $editOnlyOwnPages = '';
@@ -65,12 +65,7 @@ if ($edmode == 'visual') {
 if (empty($action)) {
     include_once"../themes/$config_themes/index.php";
 
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
+ 
 
     echo '<h1>' . $lang_home['filelist'] . '</h1>';
 
@@ -108,22 +103,22 @@ if (empty($action)) {
         // permitions to edit home page of the site
         if ($page_info['file'] === "index.php" && empty($editOnlyOwnPages)) {
             echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink"><font color="#FF0000">' . $filename . '</font></a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
-            if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101)) {
+            if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator(101)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a><hr>';
             } 
         } else {
-            if (empty($editOnlyOwnPages) || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+            if (empty($editOnlyOwnPages) || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                 echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b> ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . getnickfromid($page_info['lstupdby']) . '<br />';
-                if (chkcpecprm('pageedit', 'edit') || $users->is_administrator(101) || $page_info['crtdby'] == $user_id || (chkcpecprm('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+                if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator(101) || $page_info['crtdby'] == $user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                     echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 } 
-                if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
+                if ($users->check_permissions('pageedit', 'del') || $users->is_administrator(101)) {
                     echo ' | <a href="files.php?action=poddel&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
                 } 
-                if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
+                if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'publish') || $users->is_administrator(101))) {
                     echo ' | <a href="procfiles.php?action=publish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
                 } 
-                if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
+                if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'publish') || $users->is_administrator(101))) {
                     echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
                 } 
                 echo '<hr />';
@@ -155,11 +150,11 @@ if ($action == "show") {
         $pageData = new Page();
         $page_info = $pageData->select_page($page_id);
 
-        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
             redirect_to("index.php?isset=ap_noaccess");
         } 
 
-        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
+        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
             redirect_to("index.php?isset=ap_noaccess");
         } 
 
@@ -182,10 +177,10 @@ if ($action == "show") {
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
         echo ' | Page type: ' . $post_type;
 
-        if ($page_info['published'] == 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
+        if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'publish') || $users->is_administrator(101))) {
             echo ' | <a href="procfiles.php?action=publish&amp;file=' . $file . '">[Publish]</a>';
         } 
-        if ($page_info['published'] != 1 && (chkcpecprm('pageedit', 'publish') || $users->is_administrator(101))) {
+        if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'publish') || $users->is_administrator(101))) {
             echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $file . '">[Unpublish]</a>';
         }
         echo '</p>';
@@ -216,7 +211,7 @@ if ($action == "show") {
 
 
         echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['edit'] . '</a><br />';
-        if (chkcpecprm('pageedit', 'del') || $users->is_administrator(101)) {
+        if ($users->check_permissions('pageedit', 'del') || $users->is_administrator(101)) {
         echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a><br />';
         }
     } 
@@ -241,12 +236,12 @@ if ($action == "edit") {
     if ($checkPage == true) {
         $page_info = $pageEditor->select_page($page_id);
 
-        if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
 
-        if ($page_info['crtdby'] != $user_id && !chkcpecprm('pageedit', 'edit') && (!chkcpecprm('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
+        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -316,13 +311,13 @@ if ($action == "edit") {
 // edit meta tags
 if ($action == "headtag") {
 
-    if (!chkcpecprm('pageedit', 'show') && !$users->is_administrator(101)) {
+    if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
         redirect_to("index.php?isset=ap_noaccess");
     }
 
     $page_info = $pageEditor->select_page($page_id);
 
-    if (!chkcpecprm('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
+    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -382,12 +377,7 @@ if ($action == "headtag") {
 
 <?php
 
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
+ 
     // show page name
     if (!stristr($file, '/')) {
         $show_up_file = str_replace('.php', '', $file);
@@ -454,12 +444,7 @@ if ($action == 'mainmeta') {
         exit;
     } 
     include_once"../themes/$config_themes/index.php";
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
+ 
 
     echo '<img src="/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
     $headtags = file_get_contents('../used/headmeta.dat');
@@ -504,7 +489,7 @@ if ($action == 'renamepg') {
 
 if ($action == "new") {
 
-    if (!chkcpecprm('pageedit', 'insert') && !$users->is_administrator(101)) {
+    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator(101)) {
         redirect_to("index.php?isset=ap_noaccess");
     }
 
@@ -547,12 +532,7 @@ if ($action == "new") {
 
     include_once"../themes/$config_themes/index.php";
 
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
+ 
 
     echo '<div>
     <h1><img src="../images/img/edit.gif" alt="" /> ' . $lang_home['newfile'] . '</h1></div>';
@@ -617,7 +597,7 @@ if ($action == "new") {
 
 // confirm that you want to delete a page
 if ($action == "poddel") {
-    if (!chkcpecprm('pageedit', 'del') && !$users->is_administrator(101)) {
+    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator(101)) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -684,7 +664,7 @@ if ($action == "pagelang") {
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
 } 
 
-if ($action != "new" && (chkcpecprm('pageedit', 'insert') || $users->is_administrator(101))) {
+if ($action != "new" && ($users->check_permissions('pageedit', 'insert') || $users->is_administrator(101))) {
     echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_home['newpage'] . '</a>';
 } 
 if ($users->is_administrator(101) && ($action == 'edit' || $action == 'show')) {

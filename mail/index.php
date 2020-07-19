@@ -2,8 +2,6 @@
 // (c) vavok.net
 require_once"../include/strtup.php";
 
-$my_title = $lang_home['contact'];
-
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
 $name = isset($_POST['name']) ? check($_POST['name']) : '';
 $body = isset($_POST['body']) ? check($_POST['body']) : '';
@@ -31,7 +29,7 @@ if ($action == "go") {
 
     // Send email
     $mail = new Mailer();
-    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $ip . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
+    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
 
     // Email sent
     redirect_to("./?isset=mail");
@@ -40,14 +38,9 @@ if ($action == "go") {
 
 if (empty($action)) {
 
-    include_once"../themes/$config_themes/index.php";
+    $my_title = $lang_home['contact'];
 
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    }
+    include_once"../themes/$config_themes/index.php";
 
     // generate page
     $showPage = new PageGen("mail/mail_index.tpl");

@@ -12,27 +12,6 @@ if (!empty($_GET['action'])) {
     $action = 'main';
 }
 
-function getAdminLinks($file) {
-	global $lang_home, $users;
-
-	$handle = fopen("../used/dataadmin/" . $file, "r");
-	if ($handle) {
-	    while (($line = fgets($handle)) !== false) {
-	    	$fileData = explode('||', $line);
-
-	        $linkName = trim($fileData[1]);
-	        $linkNameArray = array(trim($fileData[1]) => 'zero');
-	        $linkNames = array_replace($linkNameArray, $lang_home);
-
-	        if (file_exists($fileData[0]) && $users->check_permissions(trim($fileData[2]), 'show')) {
-	        	echo '<a href="' . $fileData[0] . '" class="btn btn-outline-primary sitelink">' . $lang_home[$linkName] . '</a>' . "\n";
-	    	}
-	    }
-
-	    fclose($handle);
-	}
-}
-
 if ($action == 'refver') {
     $vavokStableVersionURL = "http://www.vavok.net/cms/version.txt";
     $key = 'stableversion'; // key to save cache with    
@@ -78,7 +57,7 @@ include_once"../themes/" . $config_themes . "/index.php";
  
 if ($action == 'main') {
 	// moderator links
-	getAdminLinks("moderator_pages.dat");
+	get_admin_links("moderator_pages.dat");
 
     $totalUsers = $db->count_row('vavok_users');
     $totalUsers = $totalUsers - 1; // do not count "System"
@@ -118,7 +97,7 @@ if ($action == 'main') {
         }
         echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $lang_home['statistic'] . '</a>';
     } 
-    if (file_exists('news.php') && ($users->is_administrator()) || ($users->is_reg() && chkcpecprm('news', 'show'))) {
+    if (file_exists('news.php') && ($users->is_administrator()) || ($users->is_reg() && $users->check_permissions('news', 'show'))) {
         echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
     } 
 

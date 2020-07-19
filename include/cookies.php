@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   29.04.2020. 9:03:54
+* Updated:   19.07.2020. 20:58:55
 */
 
 // set cookie
@@ -27,7 +27,7 @@ if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['
         // check is password correct
         if ($users->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name']) {
 
-            $pr_ip = explode(".", $ip);
+            $pr_ip = explode(".", $users->find_ip());
             $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
 
 
@@ -38,7 +38,7 @@ if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['
             $_SESSION['my_brow'] = $users->user_browser();
             
             // update ip address and last visit time
-            $db->update('vavok_users', 'ipadd', $ip, "id = '{$cookie_id}'");
+            $db->update('vavok_users', 'ipadd', $users->find_ip(), "id = '{$cookie_id}'");
             $db->update('vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
         }
     } 

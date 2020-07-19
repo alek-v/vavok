@@ -153,37 +153,6 @@ function user_status($message) {
     return $message;
 }
 
-// register user
-function register($name, $pass, $regdate, $regkeys, $rkey, $theme, $brow, $ip, $mail) {
-    global $lang_home, $config, $db, $users;
-    
-    $values = array(
-        'name' => $name,
-        'pass' => $users->password_encrypt($pass),
-        'perm' => '107',
-        'skin' => $theme,
-        'browsers' => $brow,
-        'ipadd' => $ip,
-        'timezone' => 0,
-        'banned' => 0,
-        'newmsg' => 0,
-        'lang' => $config["language"]
-    );
-    $db->insert_data('vavok_users', $values);
-
-    $user_id = $db->get_data('vavok_users', "name='{$name}'", 'id')['id'];
-
-    $db->insert_data('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => $regdate, 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => $regdate, 'forummes' => 0, 'chat' => 0));
-    $db->insert_data('page_setting', array('uid' => $user_id, 'newsmes' => 5, 'forummes' => 5, 'forumtem' => 10, 'privmes' => 5));
-    $db->insert_data('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
-    $db->insert_data('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
-
-    // send private message
-    $msg = $lang_home['autopmreg'];
-    $users->autopm($msg, $user_id);
-
-}
-
 // format time into days and minutes
 function formattime($file_time) {
     global $lang_home;

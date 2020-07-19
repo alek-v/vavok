@@ -10,7 +10,7 @@ if (!defined('BASEDIR')) {
 
 require_once BASEDIR . "include/strtup.php";
 
-$mediaLikeButton = 'off'; // dont show like buttons
+$ip = $users->find_ip();
 
 if (isset($_GET['error'])) {
     $error = check($_GET['error']);

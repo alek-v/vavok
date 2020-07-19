@@ -1,5 +1,5 @@
 <?php
-// modified: 19.3.2016. 16:26:06
+// modified: 19.07.2020. 21:00:00
 // (c) vavok.net
 if (!empty($_SERVER['HTTP_REFERER'])) { $ref_from = $_SERVER['HTTP_REFERER']; }
 
@@ -25,7 +25,7 @@ if (!empty($ref_from) && preg_match("/http/", $ref_from)) {
             if (isset($rlinn) && $rlinn > 0) {
                 $ref_count = $ref_count + 1;
                 $time = time();
-                $t = $ref_from . '|' . $time . '|' . $ip . '|' . $ref_count . '|';
+                $t = $ref_from . '|' . $time . '|' . $users->find_ip() . '|' . $ref_count . '|';
 
                 $reffile = file(BASEDIR . "used/referer.dat");
                 $fp = fopen(BASEDIR . "used/referer.dat", "a+");
@@ -44,7 +44,7 @@ if (!empty($ref_from) && preg_match("/http/", $ref_from)) {
             } else {
                 $time = time();
 
-                $t = $ref_from . '|' . $time . '|' . $ip . '|1|';
+                $t = $ref_from . '|' . $time . '|' . $users->find_ip() . '|1|';
                 $fp = fopen(BASEDIR . "used/referer.dat", "a+");
                 flock ($fp, LOCK_EX);
                 fputs($fp, "$t\r\n");

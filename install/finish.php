@@ -223,7 +223,7 @@ if ($step == "regadmin") {
                         // write to database
                         $registration_key = '';
                         $config["regConfirm"] = '0';
-                        register($name, $password, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $ip, $email); // register user
+                        register($name, $password, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $users->find_ip(), $email); // register user
                         $user_id = $users->getidfromnick($name);
                         $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}

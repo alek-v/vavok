@@ -3,72 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   24.05.2020. 15:32:46
+* Updated:   19.07.2020. 21:17:59
 */
 
+/*
 
-// website configuration
-function get_configuration($data = '') {
-    global $config;
+Date and time
 
-    if (empty($data)) {
-        return $config;
-    } else {
-        return $config[$data];
-    }
-}
-
-// current user id
-function current_user_id($user_id = '') {
-    global $user_id;
-
-    if (empty($user_id)) {
-        $user_id = 0;
-    }
-
-    return $user_id;
-}
-
-// get user nick from user id number - deprecated 31.03.2020. 5:48:28
-function getnickfromid($uid) {
-    global $db;
-    $unick = $db->select('vavok_users', "id='" . $uid . "'", '', 'name');
-    return $unick['name'];
-} 
-
-// get vavok_users user id from nickname - deprecated 31.03.2020. 5:48:36
-function getidfromnick($nick) {
-    global $db;
-    $uid = $db->select('vavok_users', "name='" . $nick . "'", '', 'id');
-    return $uid['id'];
-} 
-
-// send automated private message by system (bot) // deprecated 30.04.2020. 20:39:11
-function autopm($msg, $who, $sys = '') {
-    global $db, $users;
-    if (!empty($sys)) {
-        $sysid = $sys;
-    } else {
-        $sysid = $users->getidfromnick('System');
-    }
- 	$values = array(
- 	'text' => $msg,
- 	'byuid' => $sysid,
- 	'touid' => $who,
- 	'unread' => '1',
- 	'timesent' => time()
-	);
-	$db->insert_data('inbox', $values);
-} 
-
-function maketime($string) {
-    if ($string < 3600) {
-        $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
-    } else {
-        $string = sprintf("%02d:%02d:%02d", (int)($string / 3600) % 24, (int)($string / 60) % 60, $string % 60);
-    } 
-    return $string;
-} 
+*/
 
 // correct date
 function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
@@ -98,30 +40,29 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     return $rdate;
 }
 
-// delete user - deprecated 31.03.2020. 5:49:27
-function delete_users($users) {
-    global $db;
+// function for current time
+$user_time = $config["timeZone"] * 3600;
+$currHour = date("H", time() + $user_time);
+$currHour = round($currHour);
+$currDate = date("d F Y", time() + $user_time);
+$curr = date("i:s", time() + $user_time);
+$currTime = date("$currHour:i:s", time() + $user_time);
+$currTime2 = date("$currHour:i", time());
 
-    // check is it user's id
-    if (preg_match ("/^([0-9]+)$/", $users)) {
-        $users_id = $users;
+function maketime($string) {
+    if ($string < 3600) {
+        $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
     } else {
-        $users_id = $users->getidfromnick($users);
-    }
-
-    $db->delete("vavok_users", "id = '" . $users_id . "'");
-    $db->delete("vavok_profil", "uid = '" . $users_id . "'");
-    $db->delete("page_setting", "uid = '" . $users_id . "'");
-    $db->delete("vavok_about", "uid = ''" . $users_id . "'");
-    $db->delete("inbox", "byuid = " . $users_id . "' OR touid` = '" . $users_id . "'");
-    $db->delete("ignore", "target = ''" . $users_id . " OR name = '" . $users_id . "'");
-    $db->delete("buddy", "target = '" . $users_id . "' OR name = '" . $users_id . "'");
-    $db->delete("subs", "user_id = '" . $users_id . "'");
-    $db->delete("notif", "uid = '" . $users_id . "'");
-    $db->delete("specperm", "uid = '" . $users_id . "'");
-
-    return $users;
+        $string = sprintf("%02d:%02d:%02d", (int)($string / 3600) % 24, (int)($string / 60) % 60, $string % 60);
+    } 
+    return $string;
 }
+
+/*
+
+File manipulation
+
+*/
 
 // clear file
 function clear_files($files) {
@@ -134,7 +75,42 @@ function clear_files($files) {
     fclose($fp);
 
     return $files;
-} 
+}
+
+// Read directory
+function read_dir($dir) {
+    if ($path = opendir($dir)) while ($file_name = readdir($path)) {
+        $size = 0;
+        if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
+            if (is_dir($dir . "/" . $file_name)) $size = read_dir($dir . "/" . $file_name);
+            else $size += filesize($dir . "/" . $file_name);
+        } 
+    } 
+    return $size;
+}
+
+// count number of lines in file
+function counter_string($files) {
+    $count_lines = 0;
+    if (file_exists($files)) {
+        $lines = file($files);
+        $count_lines = count($lines);
+    } 
+
+    return $count_lines;
+}
+
+/*
+
+String and text manipulation
+
+*/
+
+// Multibyte ucfirst by plemieux
+function my_mb_ucfirst($str) {
+    $fc = mb_strtoupper(mb_substr($str, 0, 1));
+    return $fc.mb_substr($str, 1);
+}
 
 function utf_to_win($str) {
     if (function_exists('mb_convert_encoding')) return mb_convert_encoding($str, 'windows-1251', 'utf-8');
@@ -240,32 +216,6 @@ function trans_unicode($text) {
     return $text;
 }
 
-// check input fields
-function check($str, $mysql = "") {
-    if (get_magic_quotes_gpc()) {
-        // strip all slashes
-        $str = stripslashes($str);
-    } 
-    $str = str_replace("|", "&#124;", $str);
-    $str = htmlspecialchars($str);
-    $str = str_replace("'", "&#39;", $str);
-    $str = str_replace("\"", "&#34;", $str);
-    $str = str_replace("/\\\$/", "&#36;", $str);
-    $str = str_replace('\\', "&#92;", $str);
-    $str = str_replace("`", "", $str);
-    $str = str_replace("^", "&#94;", $str);
-    $str = str_replace("%", "&#37;", $str);
-    $str = str_replace("№", "&#8470;", $str);
-    $str = str_replace("™", "&#153;", $str);
-    $str = str_replace("”", "&#8221;", $str);
-    $str = str_replace("“", "&#8220;", $str);
-    $str = str_replace("…", "&#8230;", $str);
-    $str = str_replace("°", "&#176;", $str);
-    $str = preg_replace("/&#58;/", ":", $str, 3);
-    $str = str_replace("\\r\\n", "\r\n", $str); // we want new lines
-    return $str;
-}
-
 // no new line
 function no_br($msg, $replace = "") { 
     // convert to unix new lines
@@ -273,70 +223,6 @@ function no_br($msg, $replace = "") {
     // remove extra new lines
     $msg = preg_replace("/\n/", $replace, $msg);
     return $msg;
-}
-
-// real IP
-if (isset($_SERVER['HTTP_X_REAL_IP']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_REAL_IP'])) {
-    $ip = $_SERVER['HTTP_X_REAL_IP'];
-} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-} elseif (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_CLIENT_IP'])) {
-    $ip = $_SERVER['HTTP_CLIENT_IP'];
-} else {
-    $ip = preg_replace("/[^0-9.]/", "", $_SERVER['REMOTE_ADDR']);
-} 
-$userip = htmlspecialchars(stripslashes($ip));
-$ip = $userip; // deprecated! 14.7.2017. 8:41:36
-
-// function for current time
-$user_time = $config["timeZone"] * 3600;
-$currHour = date("H", time() + $user_time);
-$currHour = round($currHour);
-$currDate = date("d F Y", time() + $user_time);
-$curr = date("i:s", time() + $user_time);
-$currTime = date("$currHour:i:s", time() + $user_time);
-$currTime2 = date("$currHour:i", time());
-
-// add smiles
-function smiles($string) {
-    
-    $dir = opendir (BASEDIR . "images/smiles");
-    while ($file = readdir ($dir)) {
-        if (preg_match ("/.gif/", $file)) {
-            $smfile[] = str_replace(".gif", "", $file);
-        } 
-    } 
-    closedir ($dir);
-    rsort($smfile);
-
-    foreach($smfile as $smval) {
-        $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
-    } 
-
-    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=";)" />', $string);
-    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=":)" />', $string);
-    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/(.gif" alt=":(" />', $string);
-    $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'images/smiles/D.gif" alt=":D" />', $string);
-    $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'images/smiles/E.gif" alt=":E" />', $string);
-    $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
-
-   return $string;
-} 
-
-function nosmiles($string) {
-    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
-    return $string;
-} 
-
-function read_dir($dir) {
-    if ($path = opendir($dir)) while ($file_name = readdir($path)) {
-        $size = 0;
-        if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
-            if (is_dir($dir . "/" . $file_name)) $size = read_dir($dir . "/" . $file_name);
-            else $size += filesize($dir . "/" . $file_name);
-        } 
-    } 
-    return $size;
 }
 
 // file size
@@ -366,89 +252,6 @@ function antiword($string) {
     return $string;
 }
 
-// CHMOD function
-function permissions($filez) {
-    $filez = decoct(fileperms("$filez")) % 1000;
-    return $filez;
-} 
-
-function safe_encode($string) {
-    $data = base64_encode($string);
-    $data = str_replace(array('+', '/', '='), array('_', '-', ''), $data);
-    return $data;
-} 
-
-function safe_decode($string) {
-    $string = str_replace(array('_', '-'), array('+', '/'), $string);
-    $data = base64_decode($string);
-    return $data;
-}
-
-// encode using key
-function xoft_encode($string, $key) {
-    $result = "";
-    for($i = 1; $i <= strlen($string); $i++) {
-        $char = substr($string, $i-1, 1);
-        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-        $char = chr(ord($char) + ord($keychar));
-        $result .= $char;
-    } 
-    return safe_encode($result);
-} 
-
-// decode using key
-function xoft_decode($string, $key) {
-    $string = safe_decode($string);
-    $result = "";
-    for($i = 1; $i <= strlen($string); $i++) {
-        $char = substr($string, $i - 1, 1);
-        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-        $char = chr(ord($char) - ord($keychar));
-        $result .= $char;
-    } 
-    return $result;
-} 
-
-// generate password
-function generate_password() {
-    $length = rand(10, 12);
-    $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
-    $len = strlen($salt);
-    $makepass = '';
-    mt_srand(10000000 * (double)microtime());
-    for ($i = 0; $i < $length; $i++)
-    $makepass .= $salt[mt_rand(0, $len - 1)];
-    return $makepass;
-} 
-
-// antiflood
-$phpself = $_SERVER['PHP_SELF'];
-function flooder($ip, $phpself) {
-    global $config;
-
-    $old_db = file(BASEDIR . "used/flood.dat");
-    $new_db = fopen(BASEDIR . "used/flood.dat", "w");
-    flock ($new_db, LOCK_EX);
-    $result = false;
-
-    foreach($old_db as $old_db_line) {
-        $old_db_arr = explode("|", $old_db_line);
-
-        if (($old_db_arr[0] + $config["floodTime"]) > time()) {
-            fputs ($new_db, $old_db_line);
-
-            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $phpself) {
-                $result = true;
-            } 
-        } 
-    } 
-
-    fflush($new_db);
-    flock ($new_db, LOCK_UN);
-    fclose($new_db);
-    return $result;
-}
-
 // delete image links
 function erase_img($image) {
     $image = preg_replace('#<img src="\.\./images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
@@ -457,41 +260,6 @@ function erase_img($image) {
 
     return $image;
 }
-
-// user age
-function getage($strdate) { // deprecated 29.04.2020. 0:53:47 use $users->get_age()
-    $dob = explode(".", $strdate);
-    if (count($dob) != 3) {
-        return 0;
-    } 
-    $y = $dob[2];
-    $m = $dob[1];
-    $d = $dob[0];
-    if (strlen($y) != 4) {
-        return 0;
-    } 
-    if (strlen($m) != 2) {
-        return 0;
-    } 
-    if (strlen($d) != 2) {
-        return 0;
-    } 
-
-    $y += 0;
-    $m += 0;
-    $d += 0;
-
-    if ($y == 0) return 0;
-    $rage = date("Y") - $y;
-    if (date("m") < $m) {
-        $rage -= 1;
-    } else {
-        if ((date("m") == $m) && (date("d") < $d)) {
-            $rage -= 1;
-        } 
-    } 
-    return $rage;
-} 
 
 // parse bb code
 function badlink($link, $prefix) {
@@ -594,186 +362,201 @@ function getbbcode($r) {
     return $r;
 }
 
-// are you moderator - deprecated! use is_moderator()
-function ismod($id = '', $num = '') {
-    global $user_id, $db;
+/* 
 
-    if (empty($id) && !empty($user_id)) {
-        $id = $user_id;
-    } else {
-        return false;
+Security
+
+*/
+
+// check input fields
+function check($str, $mysql = "") {
+    if (get_magic_quotes_gpc()) {
+        // strip all slashes
+        $str = stripslashes($str);
     } 
-    $chk_mod = $db->select('vavok_users', "id='" . $id . "'", '', 'perm');
+    $str = str_replace("|", "&#124;", $str);
+    $str = htmlspecialchars($str);
+    $str = str_replace("'", "&#39;", $str);
+    $str = str_replace("\"", "&#34;", $str);
+    $str = str_replace("/\\\$/", "&#36;", $str);
+    $str = str_replace('\\', "&#92;", $str);
+    $str = str_replace("`", "", $str);
+    $str = str_replace("^", "&#94;", $str);
+    $str = str_replace("%", "&#37;", $str);
+    $str = str_replace("№", "&#8470;", $str);
+    $str = str_replace("™", "&#153;", $str);
+    $str = str_replace("”", "&#8221;", $str);
+    $str = str_replace("“", "&#8220;", $str);
+    $str = str_replace("…", "&#8230;", $str);
+    $str = str_replace("°", "&#176;", $str);
+    $str = preg_replace("/&#58;/", ":", $str, 3);
+    $str = str_replace("\\r\\n", "\r\n", $str); // we want new lines
+    return $str;
+}
 
-    $perm = $chk_mod['perm'];
+// CHMOD function
+function permissions($filez) {
+    $filez = decoct(fileperms("$filez")) % 1000;
+    return $filez;
+} 
 
-    if ($perm == "103" || $perm == "105" || $perm == "106" && empty($num)) {
-        return true;
-    } elseif ($num == $perm) {
-        return true;
-    } else {
+function safe_encode($string) {
+    $data = base64_encode($string);
+    $data = str_replace(array('+', '/', '='), array('_', '-', ''), $data);
+    return $data;
+} 
+
+function safe_decode($string) {
+    $string = str_replace(array('_', '-'), array('+', '/'), $string);
+    $data = base64_decode($string);
+    return $data;
+}
+
+// encode using key
+function xoft_encode($string, $key) {
+    $result = "";
+    for($i = 1; $i <= strlen($string); $i++) {
+        $char = substr($string, $i-1, 1);
+        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+        $char = chr(ord($char) + ord($keychar));
+        $result .= $char;
+    } 
+    return safe_encode($result);
+} 
+
+// decode using key
+function xoft_decode($string, $key) {
+    $string = safe_decode($string);
+    $result = "";
+    for($i = 1; $i <= strlen($string); $i++) {
+        $char = substr($string, $i - 1, 1);
+        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
+        $char = chr(ord($char) - ord($keychar));
+        $result .= $char;
+    } 
+    return $result;
+} 
+
+// generate password
+function generate_password() {
+    $length = rand(10, 12);
+    $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
+    $len = strlen($salt);
+    $makepass = '';
+    mt_srand(10000000 * (double)microtime());
+    for ($i = 0; $i < $length; $i++)
+    $makepass .= $salt[mt_rand(0, $len - 1)];
+    return $makepass;
+} 
+
+// antiflood
+$phpself = $_SERVER['PHP_SELF'];
+function flooder($ip, $phpself) {
+    global $config;
+
+    $old_db = file(BASEDIR . "used/flood.dat");
+    $new_db = fopen(BASEDIR . "used/flood.dat", "w");
+    flock ($new_db, LOCK_EX);
+    $result = false;
+
+    foreach($old_db as $old_db_line) {
+        $old_db_arr = explode("|", $old_db_line);
+
+        if (($old_db_arr[0] + $config["floodTime"]) > time()) {
+            fputs ($new_db, $old_db_line);
+
+            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $phpself) {
+                $result = true;
+            } 
+        } 
+    } 
+
+    fflush($new_db);
+    flock ($new_db, LOCK_UN);
+    fclose($new_db);
+    return $result;
+}
+
+/*
+
+Validations
+
+*/
+
+// check URL
+function validateURL($URL) {
+    $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+    return (bool)preg_match($v, $URL);
+}
+
+// is this really number - return integer
+function clean_int($i) {
+    if (is_numeric($i)) {
+        return (int)$i;
+    } 
+    // return False if we don't get a number
+    else {
         return false;
     } 
 }
 
-// deprecated 31.03.2020. 5:50:56
-function is_moderator($num = '', $id = '') {
-    global $db, $user_id;
+// check if sting contain unicode characters
+function is_unicode($data) {
 
-    if (empty($id) && !empty($user_id)) {
-        $id = $user_id;
+    if (strlen($data) !== strlen(utf8_decode($data))) {
+        return true;
+    } else {
+        return false;
     }
 
-    $chk_adm = $db->select('vavok_users', "id='" . $id . "'", '', 'perm');
-    $perm = trim($chk_adm['perm']);
-    if ($perm == $num) {
-        return true;
-    } elseif (empty($num) && ($perm == 103 || $perm == 105 || $perm == 106)) {
-        return true;
-    } else {
-        return false;
-    } 
 }
 
-// are you admin? - deprecated! use is_administrator()
-function isadmin($id = '', $num = '') {
-    global $user_id, $db;
-    if (empty($id) && !empty($user_id)) {
-        $id = $user_id;
-    } else {
-        return false;
-    } 
-    $chk_adm = $db->select('vavok_users', "id='" . $id . "'", '', 'perm');
-    $perm = trim($chk_adm['perm']);
-    if ($perm == "101" || $perm == "102" && empty($num)) {
-        return true;
-    } elseif ($num == $perm) {
-        return true;
-    } else {
-        return false;
-    } 
+/*
+
+Show informations
+
+*/
+
+// show fatal error
+function fatal_error($error) {
+    echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
+    exit;
 }
 
-// deprecated 31.03.2020. 5:52:58
-function is_administrator($num = '', $id = '') {
-    global $db, $user_id;
+// show error
+function show_error($error) {
+    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
+}
 
-    if (empty($id) && !empty($user_id)) {
-        $id = $user_id;
-    }
-
-    $chk_adm = $db->select('vavok_users', "id='" . $id . "'", '', 'perm');
-    $perm = trim($chk_adm['perm']);
-    if ($perm == $num) {
-        return true;
-    } elseif (empty($num) && ($perm == 101 || $perm == 102)) {
-        return true;
-    } else {
-        return false;
+// add smiles
+function smiles($string) {
+    
+    $dir = opendir (BASEDIR . "images/smiles");
+    while ($file = readdir ($dir)) {
+        if (preg_match ("/.gif/", $file)) {
+            $smfile[] = str_replace(".gif", "", $file);
+        } 
     } 
+    closedir ($dir);
+    rsort($smfile);
+
+    foreach($smfile as $smval) {
+        $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
+    } 
+
+    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=";)" />', $string);
+    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=":)" />', $string);
+    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/(.gif" alt=":(" />', $string);
+    $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'images/smiles/D.gif" alt=":D" />', $string);
+    $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'images/smiles/E.gif" alt=":E" />', $string);
+    $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
+
+   return $string;
 } 
 
-// is ignored - deprecated 31.03.2020. 5:53:28
-function isignored($tid, $uid) {
-    global $db;
-    $ign = $db->count_row('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
-    if ($ign > 0) {
-        return true;
-    } 
-    return false;
-}
-
-// ignore result - deprecated 31.03.2020. 5:53:35
-function ignoreres($uid, $tid) { 
-    // 0 user can't ignore the target
-    // 1 yes can ignore
-    // 2 already ignored
-    if ($uid == $tid) {
-        return 0;
-    } 
-    /*
-  if (ismod($tid)) {
-    //you cant ignore staff members
-    return 0;
-  }
-  if (arebuds($tid, $uid)) {
-    //why the hell would anyone ignore his bud? o.O
-    return 0;
-  }
-  */
-    if (isignored($tid, $uid)) {
-        return 2; // the target is already ignored by the user
-    } 
-    return 1;
-} 
-
-// is buddy - deprecated 31.03.2020. 5:54:11
-function isbuddy($tid, $uid) {
-    global $db;
-    $ign = $db->count_row('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
-    if ($ign > 0) {
-        return true;
-    } 
-    return false;
-}
-
-// count number of lines in file
-function counter_string($files) {
-    $count_lines = 0;
-    if (file_exists($files)) {
-        $lines = file($files);
-        $count_lines = count($lines);
-    } 
-
-    return $count_lines;
-}
-
-// private messages - deprecated 31.03.2020. 5:55:07
-function getpmcount($uid, $view = "all") {
-    global $db, $user_id;
-    if ($view == "all") {
-        $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $user_id . "' OR deleted IS NULL)");
-    } elseif ($view == "snt") {
-        $nopm = $db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $user_id . "' OR deleted IS NULL)");
-    } elseif ($view == "str") {
-        $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
-    } elseif ($view == "urd") {
-        $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
-    } 
-    return $nopm;
-} 
-
-// get number of unread pms - deprecated 31.03.2020. 5:55:07
-function getunreadpm($uid) {
-    global $db;
-    $nopm = $db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
-    return $nopm[0];
-}
-
-// number of private msg's - deprecated 31.03.2020. 5:55:07
-function user_mail($userid) {
-    $fcheck_all = getpmcount($userid);
-    $new_privat = getunreadpm($userid);
-
-    $all_mail = $new_privat . '/' . $fcheck_all;
-
-    return $all_mail;
-} 
-
-// user online status - deprecated 31.03.2020. 5:55:07
-function user_online($login) {
-    global $db;
-
-    $xuser = $users->getidfromnick($login);
-    $statwho = '<font color="#FF0000">[Off]</font>';
-
-    $result = $db->count_row('online', 'user="' . $xuser . '"');
-
-    if ($result > 0 && $xuser > 0) {
-        $statwho = '<font color="#00FF00">[On]</font>';
-    } 
-
-    return $statwho;
+function nosmiles($string) {
+    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
+    return $string;
 }
 
 // get title for page
@@ -789,148 +572,6 @@ function page_title($string) {
     }
 
     return $position;
-} 
-
-// number of registered members - deprecated 31.03.2020. 5:55:41
-function regmemcount() {
-    global $db;
-    $rmc = $db->count_row('vavok_users');
-    return $rmc;
-}
-
-// send email - deprecated 28.3.2020. 15:36:41
-function sendmail($usermail, $subject, $msg, $mail = "", $name = "") {
-    global $config, $config_srvhost;
-
-    if (empty($mail)) {
-        $mail = $config_srvhost;
-        if (substr($mail, 0, 2) == 'm.') {
-            $mail = substr($str, 2);
-        } 
-        if (substr($mail, 0, 4) == 'www.') {
-            $mail = substr($str, 4);
-        }
-        $mail = 'no_reply@' . $mail;
-        $name = $config["title"];
-    } 
-    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-
-    $adds = "From: " . $name . " <" . $mail . ">\n";
-    $adds .= "X-sender: " . $name . " <" . $mail . ">\n";
-    $adds .= "Content-Type: text/plain; charset=utf-8\n";
-    $adds .= "MIME-Version: 1.0\n";
-    $adds .= "Content-Transfer-Encoding: 8bit\n";
-    $adds .= "X-Mailer: PHP v." . phpversion();
-
-    return mail($usermail, $subject, $msg, $adds);
-} 
-
-function compress_output_gzip($output) {
-    return gzcompress($output, 3);
-} 
-
-function compress_output_deflate($output) {
-    return gzdeflate($output, 3);
-}
-
-// generate meta tags "description" and "keywords"
-function create_metatags($story) {
-    $keyword_count = 10;
-    $newarr = array ();
-    $headers = array ();
-    $quotes = array("\x27", "\x22", "\x60", "\t", '\n', '\r', '\\', "'", ",", ".", "/", "¬", "#", ";", ":", "@", "~", "[", "]", "{", "}", "=", "-", "+", ")", "(", "*", "&", "^", "%", "$", "<", ">", "?", "!", '"');
-    $fastquotes = array("\x27", "\x22", "\x60", "\t", "\n", "\r", '"', "'");
-
-    $story = preg_replace("'\[hide\](.*?)\[/hide\]'si", "", $story);
-
-    $story = str_replace('<br>', ' ', $story);
-    $story = trim(strip_tags($story));
-    $story = str_replace($fastquotes, '', $story);
-
-    $headers['description'] = substr($story, 0, 190);
-
-    $story = str_replace('<br>', ' ', $story);
-    $story = trim(strip_tags($story));
-
-    $story = str_replace($quotes, '', $story);
-
-    $arr = explode(" ", $story);
-
-    foreach ($arr as $word) {
-        if (strlen($word) > 4) $newarr [] = $word;
-    } 
-
-    $arr = array_count_values ($newarr);
-    arsort ($arr);
-
-    $arr = array_keys($arr);
-
-    $total = count ($arr);
-
-    $offset = 0;
-
-    $arr = array_slice ($arr, $offset, $keyword_count);
-
-    $headers['keywords'] = implode(", ", $arr);
-
-    return $headers;
-} 
-
-// deprecated 31.03.2020. 5:56:16
-function isstarred($pmid) {
-    global $db;
-    $strd = $db->select('inbox', "id='" . $pmid . "'", '', 'starred');
-    if ($strd['starred'] == "1") {
-        return true;
-    } else {
-        return false;
-    } 
-} 
-
-// deprecated 31.03.2020. 5:56:16
-function parsepm($text) {
-    $text = antiword($text);
-    $text = smiles($text);
-    $text = getbbcode($text);
-    if (get_magic_quotes_gpc()) {
-        $text = stripslashes($text);
-    } 
-
-    return $text;
-}
-
-// check URL
-function validateURL($URL) {
-    $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
-    return (bool)preg_match($v, $URL);
-} 
-
-function isValidEmail($email) { // deprecated 28.04.2020. 2:33:28
-    if (preg_match("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$^", $email) == true) {
-        return true;
-    } else {
-        return false;
-    } 
-}
-
-// is this really number - return integer
-function clean_int($i) {
-    if (is_numeric($i)) {
-        return (int)$i;
-    } 
-    // return False if we don't get a number
-    else {
-        return false;
-    } 
-}
-
-// get info about user - deprecated 31.03.2020. 5:56:51
-function get_user_info($xuser_id, $info) {
-    global $db;
-    if ($info == 'email') {
-        $uinfo = $db->select('vavok_about', "uid='" . $xuser_id . "'", '', 'email');
-        return $uinfo['email'];
-    } 
 }
 
 // Get message from url
@@ -988,6 +629,39 @@ function show_counter() {
     } 
 }
 
+/* 
+
+Admin panel
+
+*/
+
+function get_admin_links($file) {
+    global $lang_home, $users;
+
+    $handle = fopen(BASEDIR . "used/dataadmin/" . $file, "r");
+    if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            $fileData = explode('||', $line);
+
+            $linkName = trim($fileData[1]);
+            $linkNameArray = array(trim($fileData[1]) => 'zero');
+            $linkNames = array_replace($linkNameArray, $lang_home);
+
+            if (file_exists($fileData[0]) && $users->check_permissions(trim($fileData[2]), 'show')) {
+                echo '<a href="' . $fileData[0] . '" class="btn btn-outline-primary sitelink">' . $lang_home[$linkName] . '</a>' . "\n";
+            }
+        }
+
+        fclose($handle);
+    }
+}
+
+/*
+
+Other
+
+*/
+
 // get prefered language
 function getDefaultLanguage() {
     if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
@@ -1019,36 +693,9 @@ function parseDefaultLanguage($http_accept, $deflang = "en") {
     return strtolower($deflang);
 }
 
-// check special permissions - deprecated! 02.07.2017. 09:45:18 use checkPermissions
-function chkcpecprm($permname, $needed) {
-    global $user_id, $db;
-
-    $check = $db->count_row('specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'");
-
-    if ($check > 0) {
-        $check_data = $db->select('specperm', "uid='" . $user_id . "' AND permname='" . $permname . "'", '', 'permacc');
-        $perms = explode(',', $check_data['permacc']);
-        if ($needed == 'show' && $perms[0] == 1) {
-            return true;
-        } elseif ($needed == 'edit' && $perms[1] == 2) {
-            return true;
-        } elseif ($needed == 'del' && $perms[2] == 3) {
-            return true;
-        } elseif ($needed == 'insert' && $perms[3] == 4) {
-            return true;
-        } elseif ($needed == 'editunpub' && $perms[4] == 5) {
-            return true;
-        } else {
-            return false;
-        } 
-    } else {
-        return false;
-    } 
-}
-
 // java script bb codes for text input
 function java_bbcode($inputName) {
-	
+    
 ?>
 <script language="JavaScript">
 <!--
@@ -1065,7 +712,7 @@ function java_bbcode($inputName) {
          var length    = element.selectionEnd - element.selectionStart; 
          element.value = str.substr(0, start) + text1 + str.substr(start, length) + text2 + str.substr(start + length); 
      } else document.form.<?php echo $inputName; ?>.value += text1+text2; 
-  }	
+  } 
 //--> 
 </script>
 
@@ -1085,42 +732,6 @@ function redirect_to($url) {
         exit; // protects from code being executed after redirect request
     } else {
         throw new Exception('Cannot redirect, headers already sent');
-    }
-}
-
-// show fatal error
-function fatal_error($error) {
-    echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
-    exit;
-}
-
-// show error
-function show_error($error) {
-    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
-}
-
-// count login attempts
-function login_attempt_count($seconds, $username, $ip, $db) {
-    try {
-        // First we delete old attempts from the table
-        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
-        $oldest = date("Y-m-d H:i:s", $oldest);
-        $db->delete('login_attempts', "`datetime` < '" . $oldest . "'");
-        
-        // Next we insert this attempt into the table
-        $values = array(
-        'address' => $ip,
-        'datetime' =>  date("Y-m-d H:i:s"),
-        'username' => $username
-        );
-        $db->insert_data('login_attempts', $values);
-        
-        // Finally we count the number of recent attempts from this ip address  
-        $attempts = $db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
-
-        return $attempts;
-    } catch (PDOEXCEPTION $e) {
-        echo "Error: " . $e;
     }
 }
 
@@ -1147,23 +758,66 @@ function website_home_address() {
     return transfer_protocol() . $_SERVER['HTTP_HOST'];
 }
 
-// multibyte ucfirst by plemieux
-function my_mb_ucfirst($str) {
-    $fc = mb_strtoupper(mb_substr($str, 0, 1));
-    return $fc.mb_substr($str, 1);
-}
+// website configuration
+function get_configuration($data = '') {
+    global $config;
 
-
-// check if sting contain unicode characters
-function is_unicode($data) {
-
-    if (strlen($data) !== strlen(utf8_decode($data))) {
-        return true;
+    if (empty($data)) {
+        return $config;
     } else {
-        return false;
+        return $config[$data];
     }
-
 }
 
+function compress_output_gzip($output) {
+    return gzcompress($output, 3);
+} 
+
+function compress_output_deflate($output) {
+    return gzdeflate($output, 3);
+}
+
+// generate meta tags "description" and "keywords"
+function create_metatags($story) {
+    $keyword_count = 10;
+    $newarr = array ();
+    $headers = array ();
+    $quotes = array("\x27", "\x22", "\x60", "\t", '\n', '\r', '\\', "'", ",", ".", "/", "¬", "#", ";", ":", "@", "~", "[", "]", "{", "}", "=", "-", "+", ")", "(", "*", "&", "^", "%", "$", "<", ">", "?", "!", '"');
+    $fastquotes = array("\x27", "\x22", "\x60", "\t", "\n", "\r", '"', "'");
+
+    $story = preg_replace("'\[hide\](.*?)\[/hide\]'si", "", $story);
+
+    $story = str_replace('<br>', ' ', $story);
+    $story = trim(strip_tags($story));
+    $story = str_replace($fastquotes, '', $story);
+
+    $headers['description'] = substr($story, 0, 190);
+
+    $story = str_replace('<br>', ' ', $story);
+    $story = trim(strip_tags($story));
+
+    $story = str_replace($quotes, '', $story);
+
+    $arr = explode(" ", $story);
+
+    foreach ($arr as $word) {
+        if (strlen($word) > 4) $newarr [] = $word;
+    } 
+
+    $arr = array_count_values ($newarr);
+    arsort ($arr);
+
+    $arr = array_keys($arr);
+
+    $total = count ($arr);
+
+    $offset = 0;
+
+    $arr = array_slice ($arr, $offset, $keyword_count);
+
+    $headers['keywords'] = implode(", ", $arr);
+
+    return $headers;
+}
 
 ?>

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   16.06.2020. 22:43:06
+* Updated:   19.07.2020. 21:18:21
 */
 
 require_once"../include/strtup.php";
@@ -71,7 +71,6 @@ if ($substr_log < 3) {
                         $password = check($pass);
 
                         $mail = htmlspecialchars(stripslashes(strtolower($meil)));
-                        $brow = check($users->user_browser());
                         $config_themes = check($config_themes);
                         $config["regConfirm"] = (int)$config["regConfirm"];
 
@@ -82,8 +81,7 @@ if ($substr_log < 3) {
                         }
 
                         // register user
-                        $regdate = time();
-                        register($log, $password, $regdate, $config["regConfirm"], $registration_key, $config_themes, $brow, $ip, $mail); // register user
+                        $users->register($log, $password, $config["regConfirm"], $registration_key, $config_themes, $mail); // register user
                          
                         // send email with reg. data
                         if ($config["regConfirm"] == "1") {

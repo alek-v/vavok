@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   29.04.2020. 9:16:06
+* Updated:   19.07.2020. 20:29:57
 */
 
 require_once"../include/strtup.php";
@@ -57,7 +57,7 @@ $max_attempts = 5;
 // login
 if (empty($action) && !empty($log)) {
 
-	if (login_attempt_count($max_time_in_seconds, $log, $userip, $db) > $max_attempts) {
+	if ($users->login_attempt_count($max_time_in_seconds, $log, $users->find_ip(), $db) > $max_attempts) {
 	    include "../themes/" . $config_themes . "/index.php";
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
@@ -70,7 +70,7 @@ if (empty($action) && !empty($log)) {
     // user is logging in with email
     if ($users->validate_email($log)) {
 
-        $userx_about = $db->get_data('vavok_about', "email='" . $log . "'", 'uid');
+        $userx_about = $db->get_data('vavok_about', "email='{$log}'", 'uid');
         $userx_id = $userx_about['uid'];
         $log = $users->getnickfromid($userx_id);
 
@@ -98,7 +98,7 @@ if (empty($action) && !empty($log)) {
         
         } 
 
-        $ip = preg_replace("/[^0-9.]/", "", $ip);
+        $ip = $users->find_ip();
         $pr_ip = explode(".", $ip);
         $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
 
@@ -112,7 +112,7 @@ if (empty($action) && !empty($log)) {
         session_regenerate_id(); // get new session id to prevent session fixation
 
         // update data in profile
-        $db->update('vavok_users', 'ipadd', check($ip), "id='{$userx_id}'");
+        $db->update('vavok_users', 'ipadd', $ip, "id='{$userx_id}'");
 
         if ($user_profil['regche'] == "1") {
             redirect_to(BASEDIR . "pages/key.php?log=$log");

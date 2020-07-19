@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
 * online, hit & click counter
-* Updated:   06.05.2020. 18:22:05
+* Updated:   19.07.2020. 20:59:23
 */
 
 // don't count visits it this is cron job
@@ -31,8 +31,8 @@ $bz_date = time();
 if (!$users->is_reg()) {
     $user_id = 0;
 } 
-$bz_ip = $ip;
-$xmatch = $user_id . '-' . $ip . '-' . $users->user_browser();
+$bz_ip = $users->find_ip();
+$xmatch = $user_id . '-' . $users->find_ip() . '-' . $users->user_browser();
 
 // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
 $db->delete(get_configuration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);

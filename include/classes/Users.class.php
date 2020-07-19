@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   18.07.2020. 19:25:12
+* Updated:   19.07.2020. 20:06:41
 */
 
 
@@ -14,6 +14,7 @@ class Users {
 		global $db;
 
 		$this->db = $db;
+		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick(check($_SESSION['log'])) : '';
 	}
 
 	// check current session if user is registered
@@ -21,11 +22,9 @@ class Users {
 
 	    if (!empty($_SESSION['log']) && !empty($_SESSION['permissions'])) {
 
-	        $isuser_check = $this->getidfromnick(check($_SESSION['log']));
+	        if (!empty($this->user_id)) {
 
-	        if (!empty($isuser_check)) {
-
-	            $show_user = $this->db->get_data('vavok_users', "id='" . $isuser_check . "'", 'name, perm');
+	            $show_user = $this->db->get_data('vavok_users', "id='" . $this->user_id . "'", 'name, perm');
 
 	            if (check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
 	            	// everything is ok
@@ -49,7 +48,7 @@ class Users {
 	// Logout
 	function logout($user_id) {
 
-	    $this->db->delete('online', "user = '{$this->getidfromnick($_SESSION['log'])}'");
+	    $this->db->delete('online', "user = '{$this->user_id}'");
 
 	    // destroy cookies
 	    setcookie('cooklog', "", time() - 3600);
@@ -62,6 +61,62 @@ class Users {
 
 	    // destoy session
 	    session_destroy();
+
+	}
+
+	// count login attempts
+	function login_attempt_count($seconds, $username, $ip, $db) {
+	    try {
+	        // First we delete old attempts from the table
+	        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
+	        $oldest = date("Y-m-d H:i:s", $oldest);
+	        $db->delete('login_attempts', "`datetime` < '" . $oldest . "'");
+	        
+	        // Next we insert this attempt into the table
+	        $values = array(
+	        'address' => $ip,
+	        'datetime' =>  date("Y-m-d H:i:s"),
+	        'username' => $username
+	        );
+	        $db->insert_data('login_attempts', $values);
+	        
+	        // Finally we count the number of recent attempts from this ip address  
+	        $attempts = $db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
+
+	        return $attempts;
+	    } catch (PDOEXCEPTION $e) {
+	        echo "Error: " . $e;
+	    }
+	}
+
+	// register user
+	function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
+	    global $lang_home, $config, $db;
+	    
+	    $values = array(
+	        'name' => $name,
+	        'pass' => $this->password_encrypt($pass),
+	        'perm' => '107',
+	        'skin' => $theme,
+	        'browsers' => check($this->user_browser()),
+	        'ipadd' => $this->find_ip(),
+	        'timezone' => 0,
+	        'banned' => 0,
+	        'newmsg' => 0,
+	        'lang' => $config["language"]
+	    );
+	    $db->insert_data('vavok_users', $values);
+
+	    $user_id = $db->get_data('vavok_users', "name='{$name}'", 'id')['id'];
+
+	    $db->insert_data('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
+	    $db->insert_data('page_setting', array('uid' => $user_id, 'newsmes' => 5, 'forummes' => 5, 'forumtem' => 10, 'privmes' => 5));
+	    $db->insert_data('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
+	    $db->insert_data('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
+
+	    // send private message
+	    $msg = $lang_home['autopmreg'];
+	    $this->autopm($msg, $user_id);
 
 	}
 
@@ -82,7 +137,7 @@ class Users {
 		$_SESSION['lang'] = $language;
 
 		// Update language if user is registered
-		if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->getidfromnick($_SESSION['log'])}'"); }
+		if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
 
 	}
 
@@ -119,9 +174,9 @@ class Users {
 	// private messages
 	function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . current_user_id() . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
-	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . current_user_id() . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "str") {
 	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
 	    } elseif ($view == "urd") {
@@ -277,7 +332,7 @@ class Users {
 	    return $rage;
 	} 
 
-	// Get informations about user
+	// Get informations about user from database
 	public function get_user_info($users_id, $info) {
 
 	    if ($info == 'email') {
@@ -291,6 +346,20 @@ class Users {
 	    	return $full_name;
 	    } else { return false; }
 
+	}
+
+	// Find user's IP address
+	public function find_ip() {
+		if (isset($_SERVER['HTTP_X_REAL_IP']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_REAL_IP'])) {
+			$ip = $_SERVER['HTTP_X_REAL_IP'];
+		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} elseif (isset($_SERVER['HTTP_CLIENT_IP']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_CLIENT_IP'])) {
+		    $ip = $_SERVER['HTTP_CLIENT_IP'];
+		} else {
+		    $ip = preg_replace("/[^0-9.]/", "", $_SERVER['REMOTE_ADDR']);
+		}
+		return htmlspecialchars(stripslashes($ip));
 	}
 
 	// user online status
@@ -310,7 +379,6 @@ class Users {
 	// check permissions for admin panel
 	// check if user have permitions to see, edit, delete, etc selected part of the website
 	function check_permissions($permname, $needed = 'show') {
-	    $user_id = $this->getidfromnick($_SESSION['log']);
 
 	    $permname = str_replace('.php', '', $permname);
 
@@ -318,11 +386,11 @@ class Users {
 	        return true;
 	    }
 
-	    $check = $this->db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='{$user_id}' AND permname='{$permname}'");
+	    $check = $this->db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
 
 	    if ($check > 0) {
 	    	
-	        $check_data = $this->db->get_data(get_configuration('tablePrefix') . 'specperm', "uid='{$user_id}' AND permname='{$permname}'", 'permacc');
+	        $check_data = $this->db->get_data(get_configuration('tablePrefix') . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
 	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
@@ -342,6 +410,17 @@ class Users {
 	    } else {
 	        return false;
 	    } 
+	}
+
+	// Current user id
+	function current_user_id($user_id = '') {
+	    $user_id = $this->user_id;
+
+	    if (empty($user_id)) {
+	        $user_id = 0;
+	    }
+
+	    return $user_id;
 	}
 
 	// number of registered members
@@ -410,11 +489,11 @@ class Users {
 
 	// check if user is moderator
 	function is_moderator($num = '', $id = '') {
-	    if (empty($id) && !empty(current_user_id())) {
-	        $id = current_user_id();
+	    if (empty($id) && !empty($this->user_id)) {
+	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->db->get_data('vavok_users', "id='" . $id . "'", 'perm');
+	    $chk_adm = $this->db->get_data('vavok_users', "id='{$id}'", 'perm');
 	    $perm = intval($chk_adm['perm']);
 	    
 	    if ($perm === $num) {
@@ -428,11 +507,11 @@ class Users {
 
 	// check if user is administrator
 	function is_administrator($num = '', $id = '') {
-	    if (empty($id) && !empty(current_user_id())) {
-	        $id = current_user_id();
+	    if (empty($id) && !empty($this->user_id)) {
+	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->db->get_data('vavok_users', "id='" . $id . "'", 'perm');
+	    $chk_adm = $this->db->get_data('vavok_users', "id='{$id}'", 'perm');
 	    $perm = intval($chk_adm['perm']);
 
 	    if ($perm === $num) {

@@ -1,6 +1,6 @@
 <?php 
 // (c) Aleksandar Vranešević - vavok.net
-// modified: 13.06.2020. 23:15:37
+// modified: 19.07.2020. 21:18:37
 
 if (isset($_SERVER['PHP_SELF'])) {
     $phpself = $_SERVER['PHP_SELF'];
@@ -19,6 +19,7 @@ if (isset($_SESSION['log'])) {
     $username = 'Guest';
 }
 
+$ip = $users->find_ip();
 $hostname = gethostbyaddr($ip);
 
 if ($opendir = opendir(BASEDIR . "used/datados")) {

@@ -20,12 +20,7 @@ if (!$users->is_reg()) { redirect_to("../?error"); }
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $my_title = $lang_admin['banning'];
     include_once"../themes/$config_themes/index.php";
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
+ 
 
     echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banunban'] . '</b><br /><br />';
 

@@ -102,7 +102,7 @@ if ($action == 'save') {
 
 	$values = array();
 	$values[] = $skins;
-	$values[] = $ip;
+	$values[] = $users->find_ip();
 	$values[] = $user_timezone;
 	$values[] = $mskin;
 	 

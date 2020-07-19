@@ -31,7 +31,7 @@ $infa = no_br(check($_POST['infa']));
 $email = htmlspecialchars(strtolower($_POST['email']));
 $site = no_br(check($_POST['site']));
 $browser = no_br(check($users->user_browser()));
-$ip = no_br(check($ip));
+$ip = no_br(check($users->find_ip()));
 $sex = no_br(check($_POST['pol']));
 $happy = no_br(check($_POST['happy']));
 
