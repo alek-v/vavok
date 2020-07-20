@@ -5,9 +5,7 @@
 require_once"../include/strtup.php";
 $my_title = $lang_admin['uncomfreg'];
 
-if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
-    redirect_to("Location: ../index.php?error");
-} 
+if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { redirect_to("../index.php?error"); } 
 
 $act = isset($_GET['act']) ? check($_GET['act']) : '';
 if (!empty($_GET['action'])) {

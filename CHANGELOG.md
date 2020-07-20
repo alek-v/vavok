@@ -1,3 +1,8 @@
+# Vavok v1.5.3
+- Updated user permissions
+
+
+
 # Vavok v1.5.2
 - Updated navigation
 - Updated language files

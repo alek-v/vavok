@@ -2,17 +2,12 @@
 // (c) vavok.net - Aleksandar Vranesevic
 require_once"../include/strtup.php";
 
-if (!$users->check_permissions('adminpanel', 'show')) {
-    redirect_to("Location: ../");
-}
+if (!$users->check_permissions('adminpanel', 'show')) { redirect_to("../"); }
 
-if (!empty($_GET['action'])) {
-    $action = check($_GET['action']);
-} else {
-    $action = 'main';
-}
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
 
 if ($action == 'refver') {
+
     $vavokStableVersionURL = "http://www.vavok.net/cms/version.txt";
     $key = 'stableversion'; // key to save cache with    
 
@@ -41,21 +36,15 @@ if ($action == 'refver') {
         }
     }
 
-    // check license
-    // $data = file_get_contents('http://www.vavok.net/cms/v.php?s=' . $my_license[1] . '&amp;ps=' . $my_license[2] . '&amp;i=' . $my_license[0] . '');
-
     header("Location: index.php");
     exit;
-} 
-
-$my_license = @file_get_contents('../used/licensekey.dat');
-$my_license = explode('||', $my_license);
-
+}
 
 $my_title = $lang_home['admpanel'];
 include_once"../themes/" . $config_themes . "/index.php";
  
-if ($action == 'main') {
+if (empty($action)) {
+
 	// moderator links
 	get_admin_links("moderator_pages.dat");
 
@@ -101,7 +90,7 @@ if ($action == 'main') {
         echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
     } 
 
-    if ($users->is_administrator(101, $user_id)) {
+    if ($users->is_administrator(101)) {
         echo '<hr>';
         echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_admin['syssets'] . '</a>';
         echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngprof'] . '</a>';
@@ -167,6 +156,7 @@ if ($action == "opttbl" && $users->is_administrator(101)) {
     echo '<p><img src="../images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
     echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 }
+
 // check vavok cms version
 if ($action == 'version') {
 $version = $vavok_version;

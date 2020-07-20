@@ -17,13 +17,10 @@ if (!empty($uz)) {
         $uz = $users->getidfromnick($uz);
         redirect_to("user.php?uz=" . $uz);
     } 
-} else {
-	redirect_to("../");
-}
+} else { redirect_to("../"); }
 
 $my_title = $lang_user['profile'] . " " . $uz;
 include_once"../themes/" . $config_themes . "/index.php";
-
 
 $checkIfExist = $db->count_row('vavok_users', "id='{$users_id}'");
 $about_user = $db->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site');
@@ -34,6 +31,7 @@ $showPage = new PageGen("pages/user-profile/user-profile.tpl");
 
 // if user doesn't exist show error page
 if ($checkIfExist < 1 || $users_id == 0) {
+    
 	echo '<div class="user_profile">';
     echo '<img src="../images/img/error.gif" alt="error.gif"> ' . $lang_home['usrnoexist'] . '';
     echo '</div>';
@@ -160,7 +158,7 @@ if ($uz != $users->getnickfromid($user_id) && $users->is_reg()) {
     $userMenu = new PageGen("pages/user-profile/user-menu.tpl");
     $userMenu->set('add-to', $lang_user['addto']);
     $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['contact'] . '</a>');
-    if (!isignored($users_id, $user_id)) {
+    if (!$users->isignored($users_id, $user_id)) {
     //$userMenu->set('add-to', $lang_user['addto']);
     $userMenu->set('ignore', '<a href="ignor.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['ignore'] . '</a>');
     $userMenu->set('sendMessage', '<br /><a href="inbox.php?action=sendpm&amp;who=' . $users_id . '">' . $lang_page['sendmsg'] . '</a><br>');

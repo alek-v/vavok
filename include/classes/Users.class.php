@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   19.07.2020. 20:06:41
+* Updated:   20.07.2020. 4:16:14
 */
 
 
@@ -26,14 +26,14 @@ class Users {
 
 	            $show_user = $this->db->get_data('vavok_users', "id='" . $this->user_id . "'", 'name, perm');
 
+	            // Check if permissions are changed
 	            if (check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
-	            	// everything is ok
-	                return true;
+	                return true; // everything is ok
 	            } else {
-	                session_destroy();
+	            	$this->logout($this->user_id);
+
 	                return false;
 	            }
-
 	        } else {
 	            return false;
 	        }
@@ -381,7 +381,7 @@ class Users {
 
 	    $permname = str_replace('.php', '', $permname);
 
-	    if ($this->is_administrator(101)) {
+	    if ($this->is_administrator()) {
 	        return true;
 	    }
 

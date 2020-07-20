@@ -1,14 +1,12 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 19.07.2020. 20:21:27
+// modified: 20.07.2020. 4:28:04
 // todo: rewrite whole page
 
 require_once"../include/strtup.php";
 require_once"../include/htmlbbparser.php";
 
-if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->check_permissions('pageedit', 'show'))) {
-    redirect_to("../?isset=ap_noaccess");
-}
+if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { redirect_to("../?isset=ap_noaccess"); }
 
 // init page editor
 $pageEditor = new Page;
@@ -45,12 +43,9 @@ if ($action == "editfile") {
     if (!empty($file) && !empty($text_files)) {
         $page_info = $pageEditor->select_page($page_id, 'crtdby, published');
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
-        } 
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator(101)) {
+        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -90,6 +85,7 @@ if ($action == 'editmainhead') {
 
 // update head tags on specific page
 if ($action == "editheadtag") {
+
     // get default image link
     $image = !empty($_POST['image']) ? check($_POST['image']) : '';
 
@@ -100,14 +96,10 @@ if ($action == "editheadtag") {
         $page_info = $pageEditor->select_page($page_id, 'crtdby');
 
         // check can user see page
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
-            redirect_to("Location: index.php?isset=ap_noaccess");
-        }
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); }
 
         // check can user edit page
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
-            redirect_to("Location: index.php?isset=ap_noaccess");
-        } 
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $user_id) { redirect_to("index.php?isset=ap_noaccess"); } 
 
         // update db data
         $data = array(
@@ -131,11 +123,11 @@ if ($action == "renamepg") {
     if (!empty($pg) && !empty($file)) {
         $page_info = $pageEditor->select_page($page_id, 'crtdby');
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator(101)) {
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(101) && $page_info['crtdby'] != $user_id) {
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $user_id) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -152,11 +144,7 @@ if ($action == "renamepg") {
 
 if ($action == "addnew") {
 
-    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator(101)) {
-
-        redirect_to("index.php?isset=ap_noaccess");
-
-    }
+    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); }
 
     $newfile = isset($_POST['newfile']) ? check($_POST['newfile']) : '';
     $type = isset($_POST['type']) ? check($_POST['type']) : '';
@@ -245,7 +233,7 @@ if ($action == "addnew") {
 
 if ($action == "del") {
 
-    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator(101)) {
+    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator()) {
         redirect_to("index.php?isset=ap_noaccess");
     }
 
@@ -259,7 +247,7 @@ if ($action == "del") {
 if ($action == "publish") {
     if (!empty($page_id)) {
 
-        if (!$users->check_permissions('pageedit', 'publish') && !$users->is_administrator(101)) {
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -269,29 +257,28 @@ if ($action == "publish") {
     } 
 
     redirect_to("files.php?action=show&file=" . $file . "&isset=mp_editfiles");
-} 
+}
+
 // unpublish page
 if ($action == "unpublish") {
+
     if (!empty($page_id)) {
 
-        if (!$users->check_permissions('pageedit', 'publish') && !$users->is_administrator(101)) {
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
-        } 
+        }
+
         // update db data
         $pageEditor->visibility($page_id, 1);
     } 
 
-    header("Location: files.php?action=show&file=" . $file . "&isset=mp_editfiles");
-    exit;
-} 
+    redirect_to("files.php?action=show&file=" . $file . "&isset=mp_editfiles");
+}
+
 // update page language
 if ($action == 'pagelang') {
-    if (!$users->is_administrator(101)) {
-        header("Location: ../?isset=ap_noaccess");
-        exit;
-    }
-
+    if (!$users->is_administrator()) { redirect_to("../?isset=ap_noaccess"); }
 
     $pageId = check($_GET['id']);
     $lang = check($_POST['lang']);
@@ -300,8 +287,8 @@ if ($action == 'pagelang') {
     $pageEditor->language($pageId, $lang);
 
     $pageData = $pageEditor->select_page($pageId);
-    header("Location: files.php?action=show&file=" . $pageData['pname'] . "!." . $lang . "!.php&isset=mp_editfiles");
-    exit;
+    redirect_to("files.php?action=show&file=" . $pageData['pname'] . "!." . $lang . "!.php&isset=mp_editfiles");
+
 } 
 
 ?>
