@@ -113,12 +113,6 @@ if ($error == '401') {
 
     echo '<b>' . $lang_error['dberrmsg'] . '</b><br>';
 } else {
-    if (isset($_GET['isset'])) {
-	$isset = check($_GET['isset']);
-	echo '<div align="center"><b><font color="#FF0000">';
-	echo get_isset();
-	echo '</font></b></div>';
-}
     $logdat = BASEDIR . "used/datalog/error.dat";
     $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } 

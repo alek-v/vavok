@@ -209,15 +209,6 @@ if ($config["openReg"] == "1") {
 
 		$current_page = new PageGen('pages/registration/register.tpl');
 
-
-		if (isset($_GET['isset'])) {
-			$isset = check($_GET['isset']);
-			echo '<div align="center"><b><font color="#FF0000">';
-			echo get_isset();
-			echo '</font></b></div>';
-		}
-
-
 		if (!empty($_GET['ptl'])) {
 			$current_page->set('page_to_load', check($_GET['ptl']));
 		}

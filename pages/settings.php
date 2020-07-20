@@ -151,13 +151,6 @@ $mediaLikeButton = 'off'; // dont show like buttons
 $my_title = $lang_setting['settings'];
 include_once"../themes/$config_themes/index.php";
 
-if (isset($_GET['isset'])) {
-	$isset = check($_GET['isset']);
-	echo '<div align="center"><b><font color="#FF0000">';
-	echo get_isset();
-	echo '</font></b></div>';
-}
-
 if ($users->is_reg()) {
 
 	$show_user = $db->get_data('vavok_users', "id='" . $user_id . "'", 'lang, mskin, skin');

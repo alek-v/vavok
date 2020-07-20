@@ -14,13 +14,8 @@ function prev_dir($string) {
 
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101) {
+        
         include_once"../themes/$config_themes/index.php";
-        if (isset($_GET['isset'])) {
-				$isset = check($_GET['isset']);
-				echo '<div align="center"><b><font color="#FF0000">';
-				echo get_isset();
-				echo '</font></b></div>';
-				}
 
         switch ($action) {
             default:

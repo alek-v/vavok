@@ -6,13 +6,6 @@ require_once "../include/strtup.php";
 $my_title = 'Install';
 include_once "include/header.php";
 
-if (isset($_GET['isset'])) {
-	$isset = check($_GET['isset']);
-	echo '<div align="center"><b><font color="#FF0000">';
-	echo get_isset();
-	echo '</font></b></div>';
-}
-
 if (isset($_GET['act'])) {
 	$act = $_GET['act'];
 } elseif (isset($_POST['act'])) {
