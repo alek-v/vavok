@@ -2,8 +2,8 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* Updated:   19.07.2020. 21:17:59
+* URI:       https://vavok.net
+* Updated:   20.07.2020. 16:13:39
 */
 
 /*
@@ -627,33 +627,6 @@ function show_counter() {
         } 
         return $counter;
     } 
-}
-
-/* 
-
-Admin panel
-
-*/
-
-function get_admin_links($file) {
-    global $lang_home, $users;
-
-    $handle = fopen(BASEDIR . "used/dataadmin/" . $file, "r");
-    if ($handle) {
-        while (($line = fgets($handle)) !== false) {
-            $fileData = explode('||', $line);
-
-            $linkName = trim($fileData[1]);
-            $linkNameArray = array(trim($fileData[1]) => 'zero');
-            $linkNames = array_replace($linkNameArray, $lang_home);
-
-            if (file_exists($fileData[0]) && $users->check_permissions(trim($fileData[2]), 'show')) {
-                echo '<a href="' . $fileData[0] . '" class="btn btn-outline-primary sitelink">' . $lang_home[$linkName] . '</a>' . "\n";
-            }
-        }
-
-        fclose($handle);
-    }
 }
 
 /*
