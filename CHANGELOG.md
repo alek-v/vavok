@@ -1,5 +1,6 @@
 # Vavok v1.5.3
-- Updated user permissions
+- Updated: User permissions
+- Updated: Administration panel access levels update
 
 
 
