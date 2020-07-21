@@ -1,6 +1,9 @@
 # Vavok v1.5.3
 - Updated: User permissions
 - Updated: Administration panel access levels update
+- Update: Upload directory can be changed
+- Update: Language handling improvements
+- Added: New function clear_directory()
 
 
 
