@@ -77,7 +77,17 @@ function clear_files($files) {
     return $files;
 }
 
-// Read directory
+// Clear directory
+function clear_directory($directory) {
+    $di = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
+    $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
+
+    foreach($ri as $file) {
+        $file->isDir() ?  rmdir($file) : unlink($file);
+    }
+}
+
+// Read directory size
 function read_dir($dir) {
     if ($path = opendir($dir)) while ($file_name = readdir($path)) {
         $size = 0;
@@ -261,6 +271,11 @@ function erase_img($image) {
     return $image;
 }
 
+function no_smiles($string) {
+    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
+    return $string;
+}
+
 // parse bb code
 function badlink($link, $prefix) {
     if ($prefix == "mailto:") {
@@ -271,7 +286,8 @@ function badlink($link, $prefix) {
     if (strpos($link, ".") == 0 || strpos($link, ".") == strlen($link) || (strpos($link, "/") < strpos($link, ".") && strpos($link, "/") !== false)) {
         return 1;
     } 
-} ;
+}
+
 function setlinks($r, $prefix) {
     $target = "";
     if (substr($r, 0, strlen($prefix)) == $prefix) {
@@ -552,11 +568,6 @@ function smiles($string) {
     $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
 
    return $string;
-} 
-
-function nosmiles($string) {
-    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
-    return $string;
 }
 
 // get title for page
