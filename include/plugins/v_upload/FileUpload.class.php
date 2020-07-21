@@ -2,7 +2,6 @@
 
 class FileUpload {
 
-
 	function __construct() {
 
 		global $db, $lang_admin;
@@ -173,7 +172,7 @@ HEAD;
 	}
 
 
-	public function upload() {
+	public function upload($directory = '') {
 
 
     if (isset($_POST['width']) && !empty($_POST['width'])) {
@@ -196,17 +195,18 @@ HEAD;
     $fileInfo = pathinfo($upload_Name);
 	$upload_Ext = strtolower($fileInfo["extension"]);
 
-    function RecursiveMkdir($path)
-    {
+    function RecursiveMkdir($path) {
         if (!file_exists($path)) {
             RecursiveMkdir(dirname($path));
             mkdir($path, 0777);
         } 
-    } 
+    }
+
     // Validation
     if ($upload_Size == 0) {
         die("<p align='center'><font face='Arial' size='3' color='#FF0000'>Please enter a valid upload</font></p>");
-    } 
+    }
+
     if ($upload_Size > 10000000) { // 10000000 bytes = 10MB
         // delete file if it is too big
         unlink($upload_Temp);
@@ -244,7 +244,9 @@ HEAD;
     @copy(BASEDIR . "fls/.htaccess", "../fls/" . $first_dir . "/" . $second_dir . "/.htaccess");
     } 
 
-    $uploadFile = BASEDIR . "fls/" . $first_dir . "/" . $second_dir . "/" . $upload_Name ;
+    $uploadFile = BASEDIR . "fls/" . $first_dir . "/" . $second_dir . "/" . $upload_Name;
+
+    if (!empty($directory)) { $uploadFile = $directory . $upload_Name; }
 
     if (file_exists($uploadFile)) {
         return array('error' => $this->lang_admin['fileexists']);
@@ -256,7 +258,6 @@ HEAD;
         } 
         
         if (!empty($width) && $width > 0) {
-            include(BASEDIR . 'include/simpleimage.php');
             $image = new SimpleImage();
             $image->load($upload_Temp);
             $image->resizeToWidth($width);
@@ -266,20 +267,27 @@ HEAD;
             move_uploaded_file($upload_Temp , $uploadFile);
         } 
 
-        chmod($uploadFile, 0644);
-        $upload_URL = "/fls/" . $first_dir . "/" . $second_dir . "/" . $upload_Name;
-        $ext = substr($upload_Name, strrpos($upload_Name, '.') + 1);
-        $ext = strtolower($ext);
+        // Insert data to database if we are uploading to default upload directory
+        if (empty($directory)) {
+	        chmod($uploadFile, 0644);
 
-		$values = array(
-			'name' => $upload_Name,
-			'date' => time(),
-			'ext' => $ext,
-			'fulldir' => $upload_URL
-		);
-		$this->db->insert_data('uplfiles', $values);
+	        $upload_URL = "/fls/" . $first_dir . "/" . $second_dir . "/" . $upload_Name;
+	        $ext = substr($upload_Name, strrpos($upload_Name, '.') + 1);
+	        $ext = strtolower($ext);
 
-    }
+			$values = array(
+				'name' => $upload_Name,
+				'date' => time(),
+				'ext' => $ext,
+				'fulldir' => $upload_URL
+			);
+
+			$this->db->insert_data('uplfiles', $values);
+
+	    } else {
+	    	$upload_URL = $directory . $upload_Name;
+	    }
+	}
 
     return array('file_address' => website_home_address() . $upload_URL);
 
