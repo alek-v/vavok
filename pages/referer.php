@@ -1,10 +1,10 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 // page settings
 $data_on_page = 10; // referere links per page
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = "Referer";
 include_once"../themes/$config_themes/index.php";

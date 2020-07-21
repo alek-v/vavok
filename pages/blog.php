@@ -6,7 +6,7 @@
 * Updated:   18.07.2020. 19:25:06
 */
 
-include"../include/strtup.php";
+include"../include/startup.php";
 
 
 $pg = isset($_GET['pg']) ? check($_GET['pg']) : ''; // blog page

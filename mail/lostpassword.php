@@ -1,7 +1,7 @@
 <?php
 // (c) vavok.net
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $my_title = $lang_home['lostpass'];
 

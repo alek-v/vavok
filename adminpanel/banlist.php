@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);

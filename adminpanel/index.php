@@ -6,7 +6,7 @@
 * Updated:   20.07.2020. 16:14:08
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->check_permissions('adminpanel', 'show')) { redirect_to("../"); }
 

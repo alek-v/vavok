@@ -1,5 +1,5 @@
 <?php
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 
 $p31_hits = file(BASEDIR . "used/datacounter/31_hits.dat");

@@ -6,7 +6,7 @@
 * Updated:   21.06.2020. 12:50:31
 */
 
-include_once"../include/strtup.php";
+include_once"../include/startup.php";
 
 // page name
 $pg = isset($_GET['pg']) ? check($_GET['pg']) : '';

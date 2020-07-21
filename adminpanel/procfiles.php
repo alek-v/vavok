@@ -3,7 +3,7 @@
 // modified: 20.07.2020. 4:28:04
 // todo: rewrite whole page
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
 
 if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { redirect_to("../?isset=ap_noaccess"); }

@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg() || (!$users->is_moderator() && !$users->is_administrator())) {
     redirect_to("../pages/input.php?action=exit");

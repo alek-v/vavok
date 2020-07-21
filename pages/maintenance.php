@@ -1,14 +1,14 @@
  <?php
 // (c) vavok.net
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if ($config["siteOff"] != 1) {
     header("Location: ../");
     exit;
 } 
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = "Maintenance";
 include_once"../themes/$config_themes/index.php";

@@ -1,5 +1,5 @@
 <?php
-include"../include/strtup.php";
+include"../include/startup.php";
 
 if (!$users->is_reg()) {
 	redirect_to("../pages/login.php");

@@ -1,5 +1,5 @@
 <?php
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $rat = (int)$_GET['rat'];
 $imgs = (int)$_GET['imgs'];

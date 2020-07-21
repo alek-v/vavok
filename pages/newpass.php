@@ -1,12 +1,12 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (isset($_POST['newpar'])) {$newpar = check($_POST['newpar']);}
 if (isset($_POST['newpar2'])) {$newpar2 = check($_POST['newpar2']);}
 if (isset($_POST['oldpar'])) {$oldpar = check($_POST['oldpar']);}
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 if ($users->is_reg()) {
     

@@ -1,9 +1,9 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranesevic
 
-// /install/install.php have disabled connection to db in strtup.php, so I manipulate with db in this page
+// /install/install.php have disabled connection to db in startup.php, so I manipulate with db in this page
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 require_once "../lang/" . $config["language"] . "/installinstall.php";
 
 $my_title = 'Install';

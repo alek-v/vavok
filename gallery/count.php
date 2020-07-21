@@ -1,6 +1,6 @@
 <?php
 // modified: 9.11.2011 2:40:09
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 
 //

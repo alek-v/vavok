@@ -1,9 +1,9 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 $my_title = 'Contact'; // update lang
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);

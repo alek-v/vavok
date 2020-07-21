@@ -1,13 +1,13 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 // meta tag for this page
 $genHeadTag = '<meta name="robots" content="noindex">';
 $genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/login/login.css">';
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_home['login'];
 include_once"../themes/$config_themes/index.php";

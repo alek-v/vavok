@@ -1,7 +1,7 @@
 <?php 
 // (c) vavok.net
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator(101)) {
     redirect_to("../?auth_error");

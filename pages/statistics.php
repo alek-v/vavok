@@ -1,10 +1,10 @@
 <?php
 // modified: 10.1.2016. 2:19:53
 // (c) VAVOK .net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 include"../lang/" . $config["language"] . "/pagescounter.php";
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_page['statistic'];
 include"../themes/$config_themes/index.php";

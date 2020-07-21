@@ -6,7 +6,7 @@
 * Updated:   04.05.2020. 5:10:55
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $page = isset($_GET['page']) ? check($_GET['page']) : 1;
 

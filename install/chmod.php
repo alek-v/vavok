@@ -1,7 +1,7 @@
 <?php 
 // modified: 11.9.2012 0:16:26
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $my_title = "CHMOD";
 include_once"../themes/$config_themes/index.php";

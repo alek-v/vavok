@@ -2,7 +2,7 @@
 // (c) vavok.net - Aleksandar Vranesevic
 // modified: 02.04.2020. 20:16:28
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
     redirect_to("../pages/input.php?action=exit");

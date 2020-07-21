@@ -6,7 +6,7 @@
 * Updated:   19.06.2020. 23:57:14
 */
 
-include"../include/strtup.php";
+include"../include/startup.php";
 
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';

@@ -2,8 +2,8 @@
 // modified: 26.3.2015. 2:09:28
 // (c) vavok.net
 
-include"../include/strtup.php";
-//include"/home/vavoknet/public_html/include/strtup.php";
+include"../include/startup.php";
+//include"/home/vavoknet/public_html/include/startup.php";
 
 // hours user have to confirm registration
 $confirmationHours = 48;

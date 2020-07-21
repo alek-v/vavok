@@ -6,7 +6,7 @@
 * Updated:   19.07.2020. 20:29:57
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) { $action = check($_GET["action"]); } else { $action = ''; }
 

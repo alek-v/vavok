@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (isset($_POST['uz'])) {
     $uz = check($_POST['uz']);

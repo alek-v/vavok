@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   19.06.2020. 20:01:43
+* Updated:   21.07.2020. 3:19:53
 */
 
 // time when execution of the script has started
@@ -135,11 +135,6 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
 
     } 
 }
-
-if (!file_exists(BASEDIR . "lang/" . $config["language"] . "/index.php")) {
-        $config["language"] = 'english';
-}
-include_once BASEDIR . "lang/" . $config["language"] . "/index.php";
 
 // this functions are not in functions.php because they require language files
 function user_status($message) {

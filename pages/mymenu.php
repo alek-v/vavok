@@ -1,8 +1,8 @@
 <?php
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 include_once"../themes/" . $config_themes . "/index.php";
 

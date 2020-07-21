@@ -6,11 +6,11 @@
 * Updated:   29.04.2020. 9:15:57
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $my_title = $lang_ban['banned'];
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 if ($users->is_reg()) {
 

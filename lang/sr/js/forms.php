@@ -2,7 +2,7 @@
 // (c) vavok.net
 header("Content-type: text/javascript"); 
 
-include("../../../include/strtup.php");
+include("../../../include/startup.php");
 
 if (file_exists("../../serbian_cyrillic/isset.php")) {
 	include("../../serbian_cyrillic/isset.php");

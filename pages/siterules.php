@@ -1,8 +1,8 @@
 <?php 
 // modified: 19.6.2014 7:18:43
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_siterules['siterules'];
 include_once"../themes/$config_themes/index.php";

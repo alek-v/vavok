@@ -8,7 +8,7 @@ Site administrator have access to this page and user with special permissions
 
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
 
 // checking access permitions

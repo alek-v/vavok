@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
     header ("Location: ../pages/input.php?action=exit");

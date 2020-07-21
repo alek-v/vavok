@@ -1,7 +1,7 @@
 <?php
 // (c) vavok.net
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg()) {
 	redirect_to("../index.php?isset=inputoff");
@@ -146,7 +146,7 @@ if ($action == 'save') {
 
 require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_setting['settings'];
 include_once"../themes/$config_themes/index.php";

@@ -1,5 +1,5 @@
 <?php
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $p24_hits = file(BASEDIR . "used/datacounter/24_hits.dat");
 $p24_hitsarr = explode("|", $p24_hits[0]);

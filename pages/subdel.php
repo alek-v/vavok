@@ -1,9 +1,7 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 include_once"../themes/$config_themes/index.php";
-
-$mediaLikeButton = 'off'; // dont show like buttons
 
 $code = !empty($_GET['subdel']) ? check($_GET['subdel']) : '';
 $subscriptionName = !empty($_GET['sn']) ? check($_GET['sn']) : '';

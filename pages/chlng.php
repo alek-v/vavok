@@ -6,7 +6,7 @@
 * Updated:   15.07.2020. 1:59:31
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $language = isset($_GET['lang']) ? check($_GET['lang']) : ''; // get language
 

@@ -6,11 +6,11 @@
 * Updated:   19.07.2020. 21:18:21
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 
 if ($action == 'reguser') {
@@ -67,11 +67,9 @@ if ($substr_log < 3) {
 
                     if ($securimage->check($_POST['captcha_code']) == true) {
 
-                        $log = check($log);
                         $password = check($pass);
 
                         $mail = htmlspecialchars(stripslashes(strtolower($meil)));
-                        $config_themes = check($config_themes);
                         $config["regConfirm"] = (int)$config["regConfirm"];
 
                         if ($config["regConfirm"] == "1") {

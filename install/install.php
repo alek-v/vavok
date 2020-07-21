@@ -1,7 +1,7 @@
 <?php
 // (c) vavok.net
 
-require_once "../include/strtup.php";
+require_once "../include/startup.php";
 
 $my_title = 'Install';
 include_once "include/header.php";

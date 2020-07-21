@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrator())) {
     redirect_to("../");
@@ -8,7 +8,7 @@ if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrato
 
 // page settings
 $data_on_page = 10; // online users per page
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = 'Online';
 include_once"../themes/$config_themes/index.php";

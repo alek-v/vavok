@@ -1,13 +1,13 @@
 <?php 
 // modified: 
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if ($config["showCounter"] == 6 && !$users->is_administrator()) {
     redirect_to("../");
 }
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_home['statistic'];
 include_once"../themes/$config_themes/index.php";

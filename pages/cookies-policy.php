@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $my_title = 'Cookies Policy';
 include_once"../themes/$config_themes/index.php";

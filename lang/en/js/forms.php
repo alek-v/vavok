@@ -2,7 +2,7 @@
 // (c) vavok.net
 header("Content-type: text/javascript"); 
 
-include("../../../include/strtup.php");
+include("../../../include/startup.php");
 
 include("../../english/isset.php");
 ?>

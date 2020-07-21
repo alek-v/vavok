@@ -1,13 +1,13 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg()) {
     header ("Location: ../?isset=inputoff");
     exit;
 }
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 if (!empty($_POST['site']) && !validateURL($_POST['site'])) {
     header ("Location: profile.php?isset=insite");

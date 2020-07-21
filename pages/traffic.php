@@ -1,11 +1,10 @@
 <?php 
 // modified: 10.1.2016. 2:41:49
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 $my_title = $lang_traffic['traffic'];
 include_once"../themes/$config_themes/index.php";
 
-$mediaLikeButton = 'off'; // dont show like buttons
 
 if ($config["gzip"] == "1") {
     echo '<font color="#00FF00">' . $lang_traffic['gzipon'] . '</font><br><br>';

@@ -1,12 +1,12 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg()) {
     redirect_to("../pages/login.php?ptl=pages/inbox.php");
 } 
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $last_notif = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
 // update notification data
