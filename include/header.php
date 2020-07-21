@@ -2,17 +2,57 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* Updated:   10.05.2020. 18:37:31
+* URI:       https://vavok.net
+* Updated:   21.07.2020. 3:20:03
 */
 
+// Update language if page is using different language then current one
+// Use page language
+if (!empty($_GET['pg'])) {
+	$this_page = new Page();
+	$v_lang = $this_page->select_page_name($_GET['pg'], $fields = 'lang')['lang'];
+
+	$users->change_language($v_lang);
+}
+
+// Load main page
+elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
+	$requested_language = isset($_GET['ln']) ? check($_GET['ln']) : '';
+
+	// Load user notice from URL
+	$url_isset = isset($_GET['isset']) ? '?isset=' . check($_GET['isset']) : '';
+
+	// Page class
+	$page = new Page();
+
+	// Load page with language requested in URL if exists
+	$page_data = $page->load_main_page($requested_language);
+
+	// Update language
+	if (!empty($page_data['lang'])) { $users->change_language($page_data['lang']); }
+
+	// Redirect to root dir if visitor is using site default language and this language is requested in url
+	// Example: default website language is english and user is opening www.example.com/en/
+	if (get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists("lang/" . $requested_language . "/index.php")) {
+		redirect_to("/" . $url_isset);
+	}
+
+	/*
+	  Redirect if user's language is not website default language,
+	  language is not in URL (www.example.com/en/)
+	  and page with users's language exists
+	*/
+	if (get_configuration('siteDefaultLang') != $users->get_user_language() && empty($requested_language)) {
+		redirect_to("/" .  $users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
+	}
+
+}
 
 if (!empty($_SESSION['log'])) {
 
-    $vavok_users = $db->get_data('vavok_users', "id='{$users->getidfromnick($_SESSION['log'])}'");
+    $vavok_users = $db->get_data('vavok_users', "id='" . $users->getidfromnick($_SESSION['log']) . "'");
 
     $user_id = $vavok_users['id']; // user id
-    $log = $_SESSION['log'];
 
     $user_profil = $db->get_data('vavok_profil', "uid='{$user_id}'", 'regche');
 
@@ -36,18 +76,24 @@ if (!empty($_SESSION['log'])) {
 
     if (!empty($vavok_users['lang'])) { // language
 
-        $config["language"] = $vavok_users['lang'];
+        // Use language from profile
+        $config['language'] = $vavok_users['lang'];
+
+        // Update language in session if it is not language from prifile
+        if (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang']) { $_SESSION['lang'] = $vavok_users['lang']; }
 
     } 
 
     if ($vavok_users['banned'] == "1" && !strstr($phpself, 'pages/ban.php')) { // banned?
 
+    	// Redirect to ban page
         redirect_to(BASEDIR . "pages/ban.php");
 
     }
 
     if ($user_profil['regche'] == 1 && !strstr($phpself, 'pages/key.php')) { // activate account
 
+    	// Account need to be activated
         setcookie('cookpass', '');
         setcookie('cooklog', '');
         setcookie(session_name(), '');
@@ -71,28 +117,10 @@ if (!empty($_SESSION['log'])) {
     }
 
 } else {
-    // if subdomain is www
-    if (substr($_SERVER['HTTP_HOST'], 0, 3) == 'www') {
-        $config_themes = $config["webtheme"];
-    } 
-    // if subdomain is mobile
-    elseif (substr($_SERVER['HTTP_HOST'], 0, 2) == 'm.') {
-        $config_themes = $config["mTheme"];
-    } 
-    // else
-    else {
-        if ($users->user_device() == 'phone' && $config["redbrow"] == 1) {
-            redirect_to(transfer_protocol() . "m." . $config["homeBase"] . $request_uri); 
-            // header("Location: http://m.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
-        } elseif ($users->user_device() == 'computer' && $config["redbrow"] == 1) {
-            redirect_to(transfer_protocol() . "www." . $config["homeBase"] . $request_uri); 
-            // header("Location: http://www.".$config["homeBase"]."".$request_uri."", TRUE, 301); // 301 Moved Permanently
-        } elseif ($users->user_device() == 'phone') {
-            $config_themes = $config["mTheme"];
-        } else {
-            $config_themes = $config["webtheme"];
-        } 
-    } 
+
+	// User's site theme
+    $config_themes = $config["webtheme"];
+
 }
 
 // if skin not found
@@ -100,83 +128,18 @@ if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
     $config_themes = 'default';
 }
 
-// current theme
+// Current theme
 define("MY_THEME", $config_themes);
+
+// Load language files
+if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) {
+        $config["language"] = 'english';
+}
+include_once BASEDIR . "lang/" . $users->get_user_language() . "/index.php";
 
 // language settings
 // use language from session
 if (!empty($_SESSION['lang'])) { $config["language"] = $_SESSION['lang']; } 
-
-// if there is no language chosen by user
-
-if (empty($user_id)) {
-
-	// use page language
-	if (!empty($_GET['pg'])) {
-		$this_page = new Page();
-		$v_lang = $this_page->select_page_name($_GET['pg'], $fields = 'lang')['lang'];
-	}
-
-	elseif (!empty($_SESSION['lang'])) {
-		$v_lang = $_SESSION['lang'];
-	}
-
-	elseif (!isset($v_lang) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) { // use browser language
-
-        $v_lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-
-    } else { $v_lang = ''; }
-
-    $v_lang = substr($v_lang, 0, 2);
-
-    switch ($v_lang) {
-
-        case "en": 
-
-            // english
-
-            if (file_exists(BASEDIR . 'lang/english/index.php')) {
-                $_SESSION['lang'] = 'english';
-                $config["language"] = 'english';
-            } else {
-
-                $_SESSION['lang'] = $config["language"];
-
-            } 
-
-            break;
-
-        case "sr": 
-
-            // serbian
-
-            if (file_exists(BASEDIR . 'lang/serbian_cyrillic/index.php')) {
-
-                $_SESSION['lang'] = 'serbian_cyrillic';
-                $config["language"] = 'serbian_cyrillic';
-
-            } elseif (file_exists(BASEDIR . 'lang/serbian_latin/index.php')) {
-
-                $_SESSION['lang'] = 'serbian_latin';
-                $config["language"] = 'serbian_latin';
-
-            } else {
-
-                $_SESSION['lang'] = $config["language"];
-
-            } 
-
-            break;
-
-        default: 
-
-            // include default language in all other cases of different lang detection
-            $_SESSION['lang'] = $config["language"];
-
-            break;
-    
-    } 
-} 
 
 if ($config["noCache"] == "0") {
     header("Expires: Sat, 25 Jul 1997 05:00:00 GMT");

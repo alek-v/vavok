@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   20.07.2020. 4:16:14
+* Updated:   21.07.2020. 3:18:16
 */
 
 
@@ -14,7 +14,7 @@ class Users {
 		global $db;
 
 		$this->db = $db;
-		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick(check($_SESSION['log'])) : '';
+		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : '';
 	}
 
 	// check current session if user is registered
@@ -45,7 +45,7 @@ class Users {
 	}
 
 	// Logout
-	function logout($user_id) {
+	public function logout($user_id) {
 
 	    $this->db->delete('online', "user = '{$this->user_id}'");
 
@@ -64,7 +64,7 @@ class Users {
 	}
 
 	// count login attempts
-	function login_attempt_count($seconds, $username, $ip, $db) {
+	public function login_attempt_count($seconds, $username, $ip, $db) {
 	    try {
 	        // First we delete old attempts from the table
 	        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
@@ -89,7 +89,7 @@ class Users {
 	}
 
 	// register user
-	function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
+	public function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
 	    global $lang_home, $config, $db;
 	    
 	    $values = array(
@@ -127,21 +127,26 @@ class Users {
 
 	// Change user's language
 	public function change_language($language) {
+		$language = $this->get_prefered_language($language);
+		$current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
 
-		// unset current language
-		$_SESSION['lang'] = "";
-		unset($_SESSION['lang']);
+		// Update language if it is changed
+		if ($current_session != $language) {
+			// unset current language
+			$_SESSION['lang'] = "";
+			unset($_SESSION['lang']);
 
-		// set new language
-		$_SESSION['lang'] = $language;
+			// set new language
+			$_SESSION['lang'] = $language;
 
-		// Update language if user is registered
-		if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
+			// Update language if user is registered
+			if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
+		}
 
 	}
 
 	// delete user from database
-	function delete_user($users) {
+	public function delete_user($users) {
 
 	    // check if it is really user's id
 	    if (preg_match("/^([0-9]+)$/", $users)) {
@@ -171,7 +176,7 @@ class Users {
 	*/
 
 	// private messages
-	function getpmcount($uid, $view = "all") {
+	public function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
 	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
@@ -190,7 +195,7 @@ class Users {
 	}
 
 	// number of private msg's
-	function user_mail($userid) {
+	public function user_mail($userid) {
 	    $fcheck_all = $this->getpmcount($userid);
 	    $new_privat = $this->getunreadpm($userid);
 
@@ -199,7 +204,7 @@ class Users {
 	    return $all_mail;
 	}
 
-	function isstarred($pmid) {
+	public function isstarred($pmid) {
 	    $strd = $this->db->get_data('inbox', "id='" . $pmid . "'", 'starred');
 	    if ($strd['starred'] == "1") {
 	        return true;
@@ -208,7 +213,7 @@ class Users {
 	    } 
 	} 
 
-	function parsepm($text) {
+	public function parsepm($text) {
 		
 		// decode
 		$text = base64_decode($text);
@@ -225,7 +230,7 @@ class Users {
 	} 
 
 	// send private message
-	function send_pm($pmtext, $user_id, $who) {
+	public function send_pm($pmtext, $user_id, $who) {
 
 		$pmtext = base64_encode($pmtext);
 
@@ -253,7 +258,7 @@ class Users {
 	}
 
 	// Private message by system
-	function autopm($msg, $who, $sys = '') {
+	public function autopm($msg, $who, $sys = '') {
 
 	    if (!empty($sys)) {
 	        $sysid = $sys;
@@ -278,26 +283,31 @@ class Users {
 
 	*/
 
+	// Show username
+	public function show_username() {
+		return $_SESSION['log'];
+	}
+
 	// get user nick from user id number
-	function getnickfromid($uid) {
+	public function getnickfromid($uid) {
 	    $unick = $this->db->get_data('vavok_users', "id='{$uid}'", 'name');
 	    return $unick['name'];
 	}
 
 	// get vavok_users user id from nickname
-	function getidfromnick($nick) {
+	public function getidfromnick($nick) {
 	    $uid = $this->db->get_data('vavok_users', "name='{$nick}'", 'id');
 	    return $uid['id'];
 	}
 
 	// get vavok_users user id from email
-	function get_id_from_mail($mail) {
+	public function get_id_from_mail($mail) {
 	    $uid = $this->db->get_data('vavok_about', "email='{$mail}'", 'uid');
 	    return $uid['uid'];
 	}
 
 	// Calculate age
-	function get_age($strdate) {
+	public function get_age($strdate) {
 	    $dob = explode(".", $strdate);
 	    if (count($dob) != 3) {
 	        return 0;
@@ -335,16 +345,29 @@ class Users {
 	public function get_user_info($users_id, $info) {
 
 	    if ($info == 'email') {
-	        $uinfo = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'email');
-	        return $uinfo['email'];
+	        return $this->db->get_data('vavok_about', "uid='{$users_id}'", 'email')['email'];
 	    } elseif ($info == 'full_name') {
 	    	$uinfo = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'rname, surname');
 
 	    	$full_name = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
 
 	    	return $full_name;
+	    } elseif ('language') {
+	    	return $this->db->get_data('vavok_users', "id='{$users_id}'", 'lang')['lang'];
 	    } else { return false; }
 
+	}
+
+	// User's language
+	public function get_user_language() {
+		if ($this->is_reg()) {
+			return $this->get_user_info($this->user_id, 'language');
+		} else {
+			// Use language from session if exists
+			if (!empty($_SESSION['lang'])) { return $this->get_prefered_language($_SESSION['lang']); }
+
+			return get_configuration('siteDefaultLang');
+		}
 	}
 
 	// Find user's IP address
@@ -580,6 +603,48 @@ class Users {
 	function password_check($password, $hash) {
 
 		return password_verify($password, $hash);
+
+	}
+
+	public function get_prefered_language($language = '', $format = '') {
+		// Get browser preferred language
+		$locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
+
+		// Use default language
+		if (empty($language)) { $language = get_configuration('siteDefaultLang'); }
+
+
+		if ($language == 'en') { $language = 'english'; }
+
+		if ($language == 'sr') {
+			$language = 'serbian_latin';
+
+			// If browser user serbian it is cyrillic
+			if ($locale == 'sr') {
+				$language = 'serbian_cyrillic';
+			}
+
+			// check if language is available
+			if ($language == 'serbian_latin' && file_exists(BASEDIR . "lang/serbian_latin/index.php")) {
+				$language = 'serbian_latin';
+			} elseif (file_exists(BASEDIR . "lang/serbian_cyrillic/index.php")) { // check if cyrillic scrypt is installed
+				$language = 'serbian_cyrillic';
+			} else {
+				$language = 'serbian_latin'; // cyrillic script not installed, use latin
+			}
+		}
+
+		// Return showr version
+		if ($format == 'short') {
+			if ($language == 'english') { $language = 'en'; }
+
+			if ($language == 'serbian_latin' || $language == 'serbian_cyrillic') {
+				$language = 'sr';
+			}
+
+		}
+
+		return $language;
 
 	}
 
