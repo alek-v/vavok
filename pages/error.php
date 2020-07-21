@@ -8,7 +8,7 @@ if (!defined('BASEDIR')) {
     define("BASEDIR", $folder_level);
 } 
 
-require_once BASEDIR . "include/strtup.php";
+require_once BASEDIR . "include/startup.php";
 
 $ip = $users->find_ip();
 
@@ -36,9 +36,9 @@ $hostname = str_replace(":|:", "|", $hostname);
 $datetime = time();
 
 if (empty($_SESSION['log'])) {
-    $log = 'Guest';
+    $users->show_username() = 'Guest';
 } else {
-    $log = $_SESSION['log'];
+    $users->show_username() = $_SESSION['log'];
 }
 $log = str_replace(":|:", "|", $log);
 
@@ -46,34 +46,34 @@ $log = str_replace(":|:", "|", $log);
 if ($error == '401') {
     echo $lang_error['err401'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error401.dat";
-    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '402') {
     echo $lang_error['err402'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error402.dat";
-    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '403') {
     echo $lang_error['err403'] . '.<br>';
 
-    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
     echo $lang_error['err404youtrytoop'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . '<br>' . $lang_error['filenotfound'] . '.<br>';
 
-    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
     echo $lang_error['err406descr'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . ' ' . $lang_error['notfonserver'] . '.<br>';
 
-    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
 } elseif ($error == '500') {
     echo $lang_error['err500'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error500.dat";
-    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '502') {
     echo $lang_error['err502'] . '.<br>';
     $logdat = BASEDIR . "used/datalog/error502.dat";
-    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == "db") {
     $line = 0;
     $file = file(BASEDIR . "used/datalog/dberror.dat");
@@ -114,7 +114,7 @@ if ($error == '401') {
     echo '<b>' . $lang_error['dberrmsg'] . '</b><br>';
 } else {
     $logdat = BASEDIR . "used/datalog/error.dat";
-    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } 
 
 if (isset($write) && !empty($logdat)) {

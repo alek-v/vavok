@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator()) { redirect_to('./?error=noauth'); }
 
@@ -44,18 +44,18 @@ if ($action == "edit") {
 
                 echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
 
-                if ($log != $config["adminNick"] && $user == $config["adminNick"]) {
+                if ($users->show_username() != $config["adminNick"] && $user == $config["adminNick"]) {
                     echo '<br>' . $lang_admin['noauthtoedit'] . '!<br>';
                     include_once"../themes/$config_themes/foot.php";
                     exit;
                 } 
 
-                if (($log != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $log != $user) {
+                if (($users->show_username() != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
                     echo '<br>' . $lang_admin['noauthtoban'] . '!<br>';
                     include_once"../themes/$config_themes/foot.php";
                     exit;
                 } 
-                $casenick = strcasecmp($user, $log);
+                $casenick = strcasecmp($user, $users->show_username());
                 if ($casenick == 0) {
                     echo '<b><font color="red">' . $lang_admin['myprofile'] . '!</font></b><br><br>';
                 } 
@@ -64,7 +64,7 @@ if ($action == "edit") {
 
                 $userx_access = (int)$show_userx['perm'];
 
-                if ($_SESSION['permissions'] == 101 && $log == $config["adminNick"]) {
+                if ($_SESSION['permissions'] == 101 && $users->show_username() == $config["adminNick"]) {
                     $array_dostup = array(101 => "" . $lang_home['access101'] . "", 102 => "" . $lang_home['access102'] . "", 103 => "" . $lang_home['access103'] . "", 105 => "" . $lang_home['access105'] . "", 106 => "" . $lang_home['access106'] . "", 107 => "" . $lang_home['access107'] . "");
                     if ($userx_access == "0" || empty($userx_access)) {
                         $userx_access = "107";

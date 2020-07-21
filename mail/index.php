@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
 $name = isset($_POST['name']) ? check($_POST['name']) : '';
@@ -55,7 +55,7 @@ if (empty($action)) {
         $user_email = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'email');
 
         $usernameAndMail = new PageGen("mail/usernameAndMail_registered.tpl");
-        $usernameAndMail->set('log', $log);
+        $usernameAndMail->set('log', $users->show_username());
         $usernameAndMail->set('user_email', $user_email['email']);
 
         $showPage->set('usernameAndMail', $usernameAndMail->output());

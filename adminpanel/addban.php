@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
@@ -55,10 +55,10 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
                 echo '<br />';
 
-                if ($show_user['perm'] >= 101 && $show_user['perm'] <= 105 && $user != $log) {
-                    echo '' . $lang_admin['noauthtoban'] . '<br /><br />';
+                if ($show_user['perm'] >= 101 && $show_user['perm'] <= 105 && $user != $users->show_username()) {
+                    echo $lang_admin['noauthtoban'] . '<br /><br />';
                 } else {
-                    if ($user == $log) {
+                    if ($user == $users->show_username()) {
                         echo '<b><font color="#FF0000">' . $lang_admin['myprofile'] . '!</font></b><br /><br />';
                     } 
 

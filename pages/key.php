@@ -6,7 +6,7 @@
 * Updated:   20.05.2020. 23:51:16
 */
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
 $recipient_mail = isset($_POST['recipient']) ? check($_POST['recipient']) : '';
@@ -53,7 +53,7 @@ if ($action == 'resendkey') {
 
 }
 
-$mediaLikeButton = 'off'; // dont show like buttons
+
 
 $my_title = $lang_page['confreg'];
 include_once"../themes/$config_themes/index.php";
@@ -64,7 +64,7 @@ if (empty($action)) {
 
     if ($users->is_reg()) {
 
-        echo $lang_page['wellcome'] . ', <b>' . $log . '!</b><br>';
+        echo $lang_page['wellcome'] . ', <b>' . $users->show_username() . '!</b><br>';
         echo $lang_page['confinfo'] . '<br>';
 
     }

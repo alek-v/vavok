@@ -1,7 +1,7 @@
 <?php 
 // (c) vavok.net
 
-require_once"../include/strtup.php";
+require_once"../include/startup.php";
 
 if (isset($_GET['action'])) {$action = check($_GET['action']);}
 
@@ -20,13 +20,12 @@ if ($action == "acadd") {
     $msg = check(wordwrap($_POST['msg'], 150, ' ', 1));
     $msg = substr($msg, 0, 1200);
     $msg = check($msg);
-    $log = check($log);
 
     $msg = antiword($msg);
     $msg = smiles($msg);
     $msg = no_br($msg, '<br />');
 
-    $text = $msg . '|' . $log . '|' . date_fixed($time, "d.m.y") . '|' . date_fixed($time, "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
+    $text = $msg . '|' . $users->show_username() . '|' . date_fixed($time, "d.m.y") . '|' . date_fixed($time, "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
     $text = no_br($text);
 
     $fp = fopen("../used/adminchat.dat", "a+");
