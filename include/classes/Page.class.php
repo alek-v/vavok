@@ -2,9 +2,9 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* class for managing pages
-* Updated:   19.07.2020. 22:11:25
+* URI:       https://vavok.net
+* Package:   Class for managing pages
+* Updated:   21.07.2020. 3:18:24
 */
 
 class Page {
@@ -108,6 +108,20 @@ class Page {
 
 	}
 
+	// Load main page
+	public function load_main_page($language = '') {
+		// Load page with requested language
+		if (!empty($language)) { $language = " AND lang='{$language}'"; }
+
+		// get data
+		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'{$language}", 'tname, content, lang');
+
+		// return false if there is no data
+		if (empty($page_data['tname']) && empty($page_data['content'])) {
+			return false;
+		} else { return $page_data; }
+	}
+
 	// check if page exists
 	function page_exists($file = '', $where = '') {
 		if (!empty($file) && $this->db->count_row($this->table_prefix . 'pages', "file='{$file}'") > 0) {
@@ -198,19 +212,6 @@ class Page {
 		return $website . $r;
 	}
 
-	// Load main page
-	public function load_main_page($language = '') {
-		// Load page with requested language
-		if (!empty($language)) { $language = " AND lang='{$language}'"; }
-
-		// get data
-		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'{$language}", 'tname, content');
-
-		// return false if there is no data
-		if (empty($page_data['tname']) && empty($page_data['content'])) {
-			return false;
-		} else { return $page_data; }
-	}
 
 }
 ?>
