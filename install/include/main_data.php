@@ -24,7 +24,7 @@ if (file_exists('../include/plugins')) {
 
 // create data directories
 $directories = array(
-	'databck', 'datacache', 'dataconfig', 'datados', 'datagallery', 'datalang', 'datalog', 'dataphoto', 'datasessions', 'datatmp', 'datamain', 'dataadmin', 'fls'
+	'databck', 'datacache', 'dataconfig', 'datados', 'datagallery', 'datalang', 'datalog', 'dataphoto', 'datasessions', 'datatmp', 'datamain', 'dataadmin'
 );
 
 foreach ($directories as $dir) {
@@ -32,6 +32,7 @@ foreach ($directories as $dir) {
 		mkdir('../used/' . $dir, 0755);
 	}
 }
+mkdir('../fls/', 0755);
 
 // Create data files in 'used' directory
 $dataFiles = array(

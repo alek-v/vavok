@@ -2,6 +2,7 @@
 // (c) vavok.net
 
 require_once "../include/startup.php";
+include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
 
 $my_title = 'Install';
 include_once "include/header.php";

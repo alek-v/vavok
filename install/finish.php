@@ -4,7 +4,8 @@
 // /install/install.php have disabled connection to db in startup.php, so I manipulate with db in this page
 
 require_once"../include/startup.php";
-require_once "../lang/" . $config["language"] . "/installinstall.php";
+include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
+require_once "../lang/" . get_configuration('language') . "/installinstall.php";
 
 $my_title = 'Install';
 require_once"include/header.php";
@@ -223,7 +224,7 @@ if ($step == "regadmin") {
                         // write to database
                         $registration_key = '';
                         $config["regConfirm"] = '0';
-                        register($name, $password, $sitetime, $config["regConfirm"], $registration_key, 'default', $users->user_browser(), $users->find_ip(), $email); // register user
+                        $users->register($name, $password, $config["regConfirm"], $registration_key, 'default', $email); // register user
                         $user_id = $users->getidfromnick($name);
                         $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}
