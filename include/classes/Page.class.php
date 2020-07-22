@@ -4,12 +4,13 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   22.07.2020. 0:43:43
+* Updated:   22.07.2020. 2:32:07
 */
 
 class Page {
 
 	public $page_title;
+	public $page_content;
 
 	// class constructor
 	function __construct() {
@@ -179,6 +180,9 @@ class Page {
 		} else {
 			// Update page title
 			$this->page_title = $page_data['tname'];
+
+			// Page content
+			$this->page_content = $page_data['content'];
 
 			return $page_data;
 

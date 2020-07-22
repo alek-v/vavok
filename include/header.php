@@ -79,6 +79,10 @@ if (!empty($_SESSION['log'])) {
 	// User's site theme
     $config_themes = $config["webtheme"];
 
+    if (empty($_SESSION['lang'])) { $users->change_language(); };
+
+    $config['language'] = $_SESSION['lang'];
+
 }
 
 // if skin not found

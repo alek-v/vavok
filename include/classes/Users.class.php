@@ -125,7 +125,7 @@ class Users {
 	*/
 
 	// Change user's language
-	public function change_language($language) {
+	public function change_language($language = '') {
 		$language = $this->get_prefered_language($language);
 		$current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
 
@@ -363,7 +363,7 @@ class Users {
 			return $this->get_user_info($this->user_id, 'language');
 		} else {
 			// Use language from session if exists
-			if (!empty($_SESSION['lang'])) { return $this->get_prefered_language($_SESSION['lang']); }
+			if (!empty($_SESSION['lang'])) { return $_SESSION['lang']; }
 
 			return get_configuration('siteDefaultLang');
 		}
@@ -643,7 +643,7 @@ class Users {
 
 		}
 
-		return $language;
+		return strtolower($language);
 
 	}
 

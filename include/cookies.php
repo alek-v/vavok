@@ -19,7 +19,7 @@ if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['
 	$cookie_id = $users->getidfromnick($unlog);
 
     // get user's data
-	$cookie_check = $db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass, perm');
+	$cookie_check = $db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass, perm, lang');
 
     // if user exists
     if (!empty($cookie_check['name'])) {
@@ -36,6 +36,7 @@ if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['
             $_SESSION['permissions'] = $cookie_check['perm'];
             $_SESSION['my_ip'] = $my_ip;
             $_SESSION['my_brow'] = $users->user_browser();
+            $_SESSION['lang'] = $cookie_check['lang'];
             
             // update ip address and last visit time
             $db->update('vavok_users', 'ipadd', $users->find_ip(), "id = '{$cookie_id}'");

@@ -125,9 +125,9 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
     // we don't need this data if this is system request or we are installing cms
     if (!strstr($phpself, '/cronjob/') && !strstr($phpself, '/install/finish.php')) {
 
-        require_once BASEDIR . "include/pages.php";
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 
+        require_once BASEDIR . "include/pages.php";
         require_once BASEDIR . "include/antidos.php";
         require_once BASEDIR . "include/counters.php";
         require_once BASEDIR . "include/referer.php";
