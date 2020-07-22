@@ -284,7 +284,7 @@ class Users {
 
 	// Show username
 	public function show_username() {
-		return $_SESSION['log'];
+		return isset($_SESSION['log']) ? $_SESSION['log'] : '';
 	}
 
 	// get user nick from user id number
