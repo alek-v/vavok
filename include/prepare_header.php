@@ -1,13 +1,10 @@
 <?php
 // (c) Aleksandar Vranešević - https://vavok.net
-// modified: 19.04.2020. 1:21:06
+// modified: 22.07.2020. 0:42:55
 // prepare headers for page
 
-// get page title
-if (!isset($my_title)) { $my_title = page_title($phpself); }
-
-// if we still dont have a page title use website main title
-if (empty($my_title)) { $my_title = $config["title"]; }
+// Update page title if page is not dynamic
+if (isset($my_title)) { $current_page->page_title = $my_title; }
 
 // load head tags for specific page
 $head_tag = '';

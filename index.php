@@ -3,13 +3,10 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   21.07.2020. 3:19:34
+* Updated:   22.07.2020. 0:42:50
 */
 
 require_once("include/startup.php");
-
-// Page title
-$my_title = !empty($page_data['tname']) ? $page_data['tname'] : '';
 
 // Page header
 include_once("themes/" . $config_themes . "/index.php");

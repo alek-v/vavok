@@ -4,10 +4,12 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   21.07.2020. 3:18:24
+* Updated:   22.07.2020. 0:43:43
 */
 
 class Page {
+
+	public $page_title;
 
 	// class constructor
 	function __construct() {
@@ -17,6 +19,22 @@ class Page {
 		$this->transfer_protocol = transfer_protocol(); // transfer protocol
 		$this->db = $db; // database
 		$this->user_id = $users->current_user_id(); // user id with active login
+
+		if (empty($page_title)) { $this->page_title = get_configuration('title'); /* Page title */ }
+	}
+
+	/*
+	Update, insert and delete informations
+	*/
+
+	// insert new page
+	function insert($values) {
+		$this->db->insert_data($this->table_prefix . 'pages', $values);
+	}
+
+	// delete page
+	function delete($id) {
+		$this->db->delete($this->table_prefix . 'pages', "id='{$id}'");
 	}
 
 	// update page
@@ -69,6 +87,40 @@ class Page {
 	    $this->db->update($this->table_prefix . 'pages', $fields, $values, "`id`='{$id}'");
 	}
 
+	// page visibility. publish or unpubilsh for visitors
+	function visibility($id, $visibility) {
+        $values = array($visibility, time());
+
+
+        $fields = array('published', 'pubdate');
+
+        $this->db->update($this->table_prefix . 'pages', $fields, $values, "id='" . $id . "'");
+	}
+
+	// update page language
+	function language($id, $lang) {
+		$pageData = $this->select_page($id);
+	    // update database data
+	    $this->db->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
+	}
+
+	// update head tags
+	function head_data($id, $data) {
+
+		// get database fields
+        $fields = array_keys($data);
+
+        // get data for fields
+        $values = array_values($data);
+
+        // update page data
+        $this->db->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
+	}
+
+	/*
+	Read data
+	*/
+
 	// return total number of pages
 	function total_pages($creator = '') {
 		$where = '';
@@ -103,8 +155,13 @@ class Page {
 			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '{$name}'");
 		}
 
+		$page_data = $this->db->get_data($this->table_prefix . 'pages', "pname='{$name}'", $fields);
+
+		// Update page title
+		$this->page_title = $page_data['tname'];
+
 		// return page data
-		return $this->db->get_data($this->table_prefix . 'pages', "pname='{$name}'", $fields);
+		return $page_data;
 
 	}
 
@@ -119,7 +176,13 @@ class Page {
 		// return false if there is no data
 		if (empty($page_data['tname']) && empty($page_data['content'])) {
 			return false;
-		} else { return $page_data; }
+		} else {
+			// Update page title
+			$this->page_title = $page_data['tname'];
+
+			return $page_data;
+
+		}
 	}
 
 	// check if page exists
@@ -137,47 +200,6 @@ class Page {
 	function get_page_id($where) {
 		return $this->db->get_data($this->table_prefix . 'pages', $where, 'id')['id'];
 	}
-
-	// insert new page
-	function insert($values) {
-		$this->db->insert_data($this->table_prefix . 'pages', $values);
-	}
-
-	// delete page
-	function delete($id) {
-		$this->db->delete($this->table_prefix . 'pages', "id='{$id}'");
-	}
-
-	// page visibility. publish or unpubilsh for visitors
-	function visibility($id, $visibility) {
-        $values = array($visibility, time());
-
-
-        $fields = array('published', 'pubdate');
-
-        $this->db->update($this->table_prefix . 'pages', $fields, $values, "id='" . $id . "'");
-	}
-
-	// update page language
-	function language($id, $lang) {
-		$pageData = $this->select_page($id);
-	    // update database data
-	    $this->db->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
-	}
-
-	// update head tags
-	function head_data($id, $data) {
-
-		// get database fields
-        $fields = array_keys($data);
-
-        // get data for fields
-        $values = array_values($data);
-
-        // update page data
-        $this->db->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
-	}
-
 
 	// load page editor program
 	function loadPageEditor () {
@@ -210,6 +232,19 @@ class Page {
 
 		// return url
 		return $website . $r;
+	}
+
+	// get title for page
+	function page_title() {
+	    $page_title = $this->db->get_data('pages', "pname='" . $_SERVER['PHP_SELF'] . "'", 'tname')['tname'];
+
+	    if (!empty($page_title)) {
+	        $title = $page_title;
+	    } else {
+	        $title = '';
+	    }
+
+	    return $title;
 	}
 
 
