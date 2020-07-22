@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   20.07.2020. 16:13:39
+* Updated:   22.07.2020. 0:44:27
 */
 
 /*
@@ -568,21 +568,6 @@ function smiles($string) {
     $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
 
    return $string;
-}
-
-// get title for page
-function page_title($string) {
-    global $db;
-
-    $page_title = $db->get_data('pages', "pname='" . $string . "'", 'tname');
-
-    if (!empty($page_title['tname'])) {
-        $position = $page_title['tname'];
-    } else {
-        $position = '';
-    }
-
-    return $position;
 }
 
 // Get message from url
