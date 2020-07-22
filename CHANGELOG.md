@@ -4,6 +4,7 @@
 - Update: Upload directory can be changed
 - Update: Language handling improvements
 - Update: Get page title from class
+- Update: Language updates
 - Added: New function clear_directory()
 
 
