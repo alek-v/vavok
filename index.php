@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   22.07.2020. 2:33:21
+* Updated:   23.07.2020. 0:10:32
 */
 
 require_once("include/startup.php");
@@ -12,7 +12,7 @@ require_once("include/startup.php");
 include_once("themes/" . $config_themes . "/index.php");
 
 // Show page content
-echo $current_page->page_content;
+$current_page->show_page();
 
 // Load website footer
 include_once"themes/" . $config_themes . "/foot.php";

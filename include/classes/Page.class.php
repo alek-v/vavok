@@ -122,6 +122,11 @@ class Page {
 	Read data
 	*/
 
+	// Show page content
+	public function show_page() {
+		echo $this->page_content;
+	}
+
 	// return total number of pages
 	function total_pages($creator = '') {
 		$where = '';
