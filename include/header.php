@@ -81,8 +81,6 @@ if (!empty($_SESSION['log'])) {
 
     if (empty($_SESSION['lang'])) { $users->change_language(); };
 
-    $config['language'] = $_SESSION['lang'];
-
 }
 
 // if skin not found
@@ -92,16 +90,6 @@ if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
 
 // Current theme
 define("MY_THEME", $config_themes);
-
-// Load language files
-if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) {
-        $config["language"] = 'english';
-}
-include_once BASEDIR . "lang/" . $users->get_user_language() . "/index.php";
-
-// language settings
-// use language from session
-if (!empty($_SESSION['lang'])) { $config["language"] = $_SESSION['lang']; } 
 
 if ($config["noCache"] == "0") {
     header("Expires: Sat, 25 Jul 1997 05:00:00 GMT");

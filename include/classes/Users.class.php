@@ -364,8 +364,9 @@ class Users {
 		} else {
 			// Use language from session if exists
 			if (!empty($_SESSION['lang'])) { return $_SESSION['lang']; }
-
-			return get_configuration('siteDefaultLang');
+			else {
+				return get_configuration('siteDefaultLang');
+			}
 		}
 	}
 
@@ -613,9 +614,9 @@ class Users {
 		if (empty($language)) { $language = get_configuration('siteDefaultLang'); }
 
 
-		if ($language == 'en') { $language = 'english'; }
-
-		if ($language == 'sr') {
+		if ($language == 'en') {
+			$language = 'english';
+		} elseif ($language == 'sr') {
 			$language = 'serbian_latin';
 
 			// If browser user serbian it is cyrillic

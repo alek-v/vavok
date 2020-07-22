@@ -7,7 +7,8 @@ if (!empty($_GET['pg'])) {
 
 	$page_data = $current_page->select_page_name(check($_GET['pg']), $fields = 'lang, content, tname');
 
-	if (!empty($page_data['lang']) && $page_data['lang'] != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language($page_data['lang']); }
+	// Update language
+	if (!empty($page_data['lang']) && strtolower($page_data['lang']) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($page_data['lang'])); }
 	  
 }
 
@@ -25,7 +26,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	$page_data = $current_page->load_main_page($requested_language);
 
 	// Update language
-	if (!empty($page_data['lang']) && $page_data['lang'] != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language($page_data['lang']); }
+	if (!empty($page_data['lang']) && strtolower($page_data['lang']) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($page_data['lang'])); }
 
 	// Redirect to root dir if visitor is using site default language and this language is requested in url
 	// Example: default website language is english and user is opening www.example.com/en/
@@ -45,8 +46,15 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 } else {
     // Start class for pages that are not dynamic
     $current_page = new Page();
-
-	if ($users->get_prefered_language($config['language'], 'short') != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language($page_data['lang']); }
 }
 
+// Load language files
+if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) {
+        $config["language"] = 'english';
+}
+include_once BASEDIR . "lang/" . $users->get_user_language() . "/index.php";
+
+// language settings
+// use language from session
+if (!empty($_SESSION['lang'])) { $config["language"] = $_SESSION['lang']; } 
 ?>
