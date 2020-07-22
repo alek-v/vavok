@@ -1,15 +1,7 @@
 <?php 
 // (c) vavok.net
 require_once"../include/startup.php";
-
-
-
-$my_title = $lang_page['userlist'];
-include_once"../themes/$config_themes/index.php";
  
-
-$time = time();
-
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
 } else {
@@ -41,7 +33,10 @@ if ($view == "name") {
     $sql = "SELECT id, name FROM vavok_users ORDER BY name LIMIT $limit_start, $items_per_page";
 } else {
     $sql = "SELECT id, name FROM vavok_users ORDER BY regdate DESC LIMIT $limit_start, $items_per_page";
-} 
+}
+
+$my_title = $lang_page['userlist'];
+include_once"../themes/$config_themes/index.php";
 
 if ($num_items > 0) {
 
@@ -50,6 +45,7 @@ if ($num_items > 0) {
         if ($item['id'] == 0 || $item['name'] == 'System') {
             continue;
         }
+        
         $profile = $db->get_data('vavok_profil', "uid='{$item['id']}'");
 
         echo '<div class="a">';

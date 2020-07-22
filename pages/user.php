@@ -62,10 +62,10 @@ if ($user_profil['regche'] == "1") {
     $showPage->set('regCheck', '');
 }
 
-if ($show_user['banned'] == "1" && $user_profil['bantime'] > $time) {
+if ($show_user['banned'] == "1" && $user_profil['bantime'] > time()) {
     $profileBanned = new PageGen("pages/user-profile/banned.tpl");
     $profileBanned->set('banned', $lang_user['userbanned'] . '!');
-    $time_ban = round($user_profil['bantime'] - $time);
+    $time_ban = round($user_profil['bantime'] - time());
     $profileBanned->set('timeLeft', $lang_user['bantimeleft'] . ': ' . formattime($time_ban));
     $profileBanned->set('reason', $lang_user['reason'] . ': ' . $user_profil['bandesc']);
 

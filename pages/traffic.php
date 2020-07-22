@@ -1,10 +1,11 @@
 <?php 
-// modified: 10.1.2016. 2:41:49
 // (c) vavok.net
+// modified: 22.07.2020. 1:54:10
+
 require_once"../include/startup.php";
+
 $my_title = $lang_traffic['traffic'];
 include_once"../themes/$config_themes/index.php";
-
 
 if ($config["gzip"] == "1") {
     echo '<font color="#00FF00">' . $lang_traffic['gzipon'] . '</font><br><br>';
@@ -12,8 +13,7 @@ if ($config["gzip"] == "1") {
     echo '<font color="#FF0000">' . $lang_traffic['gzipoff'] . '</font><br><br>';
 }
 
-$time = time();
-$timeon = maketime(round($time - $_SESSION['currs']));
+$timeon = maketime(round(time() - $_SESSION['currs']));
 
 echo $lang_traffic['visitedpages'] . ': <b>' . ($_SESSION['counton'] + 1) . '</b><br>';
 echo $lang_traffic['timeonsite'] . ': <b>' . $timeon . '</b><br><br>';

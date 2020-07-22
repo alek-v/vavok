@@ -22,16 +22,12 @@ if (!isset($config_banlist)) {
     $config_banlist = 10;
 } 
 
-$time = time();
-
 if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(103))) {
     redirect_to("../index.php?error");
 } 
 
 $my_title = $lang_admin['banlist'];
 include_once"../themes/$config_themes/index.php";
-
- 
 
 echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banlist'] . '</b><br><br>'; 
 

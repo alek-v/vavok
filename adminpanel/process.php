@@ -25,7 +25,7 @@ if ($action == "acadd") {
     $msg = smiles($msg);
     $msg = no_br($msg, '<br />');
 
-    $text = $msg . '|' . $users->show_username() . '|' . date_fixed($time, "d.m.y") . '|' . date_fixed($time, "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
+    $text = $msg . '|' . $users->show_username() . '|' . date_fixed(time(), "d.m.y") . '|' . date_fixed(time(), "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
     $text = no_br($text);
 
     $fp = fopen("../used/adminchat.dat", "a+");

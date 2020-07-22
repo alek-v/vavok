@@ -3,14 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   29.04.2020. 9:15:57
+* Updated:   22.07.2020. 1:52:59
 */
 
 require_once"../include/startup.php";
 
 $my_title = $lang_ban['banned'];
-
-
 
 if ($users->is_reg()) {
 
@@ -22,8 +20,7 @@ if ($users->is_reg()) {
     $bandesc = $show_prof['bandesc'];
     $allban = $show_prof['allban'];
 
-    $time = time();
-    $time_ban = round($bantime - $time);
+    $time_ban = round($bantime - time());
 
         if ($time_ban > 0) {
 
@@ -63,7 +60,7 @@ if ($users->is_reg()) {
     redirect_to("../");
 } 
 
-echo '<br><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 include_once"../themes/$config_themes/foot.php";
 

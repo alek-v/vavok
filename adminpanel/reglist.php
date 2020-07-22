@@ -3,7 +3,6 @@
 
 
 require_once"../include/startup.php";
-$my_title = $lang_admin['uncomfreg'];
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { redirect_to("../index.php?error"); } 
 
@@ -27,8 +26,6 @@ if (!empty($_GET['view'])) {
     $view = '';
 } 
 
-$time = time();
-
 if ($act == 'conf' && !empty($usr)) {
     $fields = array('regche', 'regkey');
     $values = array('', '');
@@ -44,11 +41,11 @@ if ($act == 'conf' && !empty($usr)) {
 
     header("Location: reglist.php?isset=mp_ydelconf");
     exit;
-} 
+}
+
+$my_title = $lang_admin['uncomfreg'];
 
 include_once"../themes/$config_themes/index.php";
-
- 
 
 if (empty($action)) {
     if ($page == "" || $page <= 0)$page = 1;

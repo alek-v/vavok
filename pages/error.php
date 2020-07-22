@@ -36,12 +36,10 @@ $hostname = str_replace(":|:", "|", $hostname);
 $datetime = time();
 
 if (empty($_SESSION['log'])) {
-    $users->show_username() = 'Guest';
+    $log = 'Guest';
 } else {
-    $users->show_username() = $_SESSION['log'];
+    $log = $_SESSION['log'];
 }
-$log = str_replace(":|:", "|", $log);
-
 
 if ($error == '401') {
     echo $lang_error['err401'] . '.<br>';

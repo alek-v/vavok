@@ -1,6 +1,6 @@
 <?php 
 // (c) Aleksandar Vranešević - vavok.net
-// modified: 19.07.2020. 21:18:37
+// modified: 22.07.2020. 0:44:08
 
 if (isset($_SERVER['PHP_SELF'])) {
     $phpself = $_SERVER['PHP_SELF'];
@@ -30,7 +30,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
 
             $file_array_filemtime = @filemtime(BASEDIR . "used/datados/$doslog");
 
-            if ($file_array_filemtime < ($time-60)) {
+            if ($file_array_filemtime < (time() - 60)) {
 
                 if (file_exists(BASEDIR . "used/datados/$doslog")) {
                     @unlink(BASEDIR . "used/datados/$doslog");

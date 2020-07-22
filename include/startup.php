@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   21.07.2020. 3:19:53
+* Updated:   22.07.2020. 0:43:56
 */
 
 // time when execution of the script has started
@@ -24,8 +24,6 @@ if ($config_debug == 0) {
     ini_set('display_errors', '1');
 }
 
-
-$time = time(); // current time
 $config_srvhost = $_SERVER['HTTP_HOST'];
 $config_requri = urldecode($_SERVER['REQUEST_URI']);
 $phpself = $_SERVER['PHP_SELF'];
@@ -127,6 +125,7 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
     // we don't need this data if this is system request or we are installing cms
     if (!strstr($phpself, '/cronjob/') && !strstr($phpself, '/install/finish.php')) {
 
+        require_once BASEDIR . "include/pages.php";
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 
         require_once BASEDIR . "include/antidos.php";
@@ -175,7 +174,7 @@ function show_gentime() {
 } 
 
 if (empty($_SESSION['currs'])) {
-    $_SESSION['currs'] = $time;
+    $_SESSION['currs'] = time();
 }
 
 if (empty($_SESSION['counton'])) {
@@ -188,6 +187,6 @@ $_SESSION['counton']++;
 $counton = $_SESSION['counton'];
 
 // visitor's time on the site
-$timeon = maketime(round($time - $_SESSION['currs']));
+$timeon = maketime(round(time() - $_SESSION['currs']));
 
 ?>

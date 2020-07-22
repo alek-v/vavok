@@ -1,13 +1,9 @@
 <?php 
-// modified: 
+// modified: 22.07.2020. 1:59:44
 
 require_once"../include/startup.php";
 
-if ($config["showCounter"] == 6 && !$users->is_administrator()) {
-    redirect_to("../");
-}
-
-
+if ($config["showCounter"] == 6 && !$users->is_administrator()) { redirect_to("../"); }
 
 $my_title = $lang_home['statistic'];
 include_once"../themes/$config_themes/index.php";
@@ -18,8 +14,8 @@ if (!empty($_GET['action'])) {
     $action = '';
 } 
 
-$hour = (int)date("H", $time);
-$hday = date("j", $time)-1;
+$hour = (int)date("H", time());
+$hday = date("j", time())-1;
 
 if (empty($action)) {
     $pcounter_guest = $db->count_row(get_configuration('tablePrefix') . 'online', "user='0'");

@@ -118,7 +118,6 @@ if (!isset($act) || empty($act)) {
         echo '<br /><img src="../images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
     } 
 
-    $time = time();
     if (isset($_GET['page'])) {
         $page = check($_GET['page']);
     } else { $page = ''; }
