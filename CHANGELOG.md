@@ -3,6 +3,7 @@
 - Updated: Administration panel access levels update
 - Update: Upload directory can be changed
 - Update: Language handling improvements
+- Update: Get page title from class
 - Added: New function clear_directory()
 
 
