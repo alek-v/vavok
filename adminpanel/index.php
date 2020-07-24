@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   20.07.2020. 16:14:08
+* Updated:   24.07.2020. 18:59:18
 */
 
 require_once"../include/startup.php";
@@ -120,7 +120,7 @@ if (empty($action)) {
 
     }
 
-    if (file_exists('news.php') && ($users->is_administrator()) || $users->check_permissions('news', 'show')) {
+    if (file_exists('news.php') && ($users->is_administrator() || $users->check_permissions('news', 'show'))) {
         echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
     } 
 
@@ -154,12 +154,13 @@ if (empty($action)) {
 
 if ($action == 'clear' && $users->is_administrator(101)) {
 
+	echo '<p>';
 	if (file_exists('delusers.php')) {
     	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanusers'] . '</a>';
 	}
     echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanmodlog'] . '</a>';
 
-    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a>';
+	echo '</p>';
 
 } 
 
@@ -167,9 +168,8 @@ if ($action == "clrmlog" && $users->is_administrator(101)) {
     $sql = "DELETE FROM mlog";
     $db->query($sql);
 
-    echo '<img src="../images/img/open.gif" alt="" /> ' . $lang_admin['mlogcleaned'] . '';
+    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $lang_admin['mlogcleaned'] . '</p>';
 
-    echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a>';
 } 
 
 if ($action == "sysmng" && $users->is_administrator(101)) {
@@ -184,7 +184,6 @@ if ($action == "sysmng" && $users->is_administrator(101)) {
     // echo '<a href="index.php?action=opttbl">Optimize tables</a>'; // update lang
     echo '</p>';
     
-    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 } 
 
 if ($action == "opttbl" && $users->is_administrator(101)) {
@@ -198,7 +197,6 @@ if ($action == "opttbl" && $users->is_administrator(101)) {
     } 
 
     echo '<p><img src="../images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
-    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 }
 
 // check vavok cms version
@@ -219,8 +217,10 @@ $key = 'checkver'; // key to save cache with
 
     echo '</div>';
 
+}
 
-    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
+if (!empty($action)) {
+	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
 }
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
