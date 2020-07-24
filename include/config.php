@@ -1,6 +1,6 @@
 <?php
 // Aleksandar Vranešević - (c) vavok.net
-// modified: 29.04.2020. 0:11:17
+// modified: 24.07.2020. 17:57:56
 
 
 $con_text = file_get_contents(BASEDIR . "used/config.dat");
@@ -19,7 +19,6 @@ $config = array(
 "adminEmail" => $con_data[9], // your email
 "timeZone" => $con_data[10], // time zone
 "title" => $con_data[11], // page title
-"mTheme" => $con_data[12], // default mobile theme
 "homeUrl" => $con_data[14], // home page. Try to not use www. or m.
 "bookPost" => 10, // no. of messages per page in guestbook - deprecated! 09.04.2018. 1:04:28
 "bookGuestAdd" => $con_data[20], // allow guests to write in gb
