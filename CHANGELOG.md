@@ -6,6 +6,7 @@
 - Update: Get page title from class
 - Update: Language updates
 - Update: Theme updates
+- Update: Page updates
 - Added: New function clear_directory()
 - Added: New function show_page()
 
