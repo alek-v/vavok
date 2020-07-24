@@ -19,9 +19,9 @@ echo '<div class="row">';
 
 if ($users->is_reg()) {
 
-    $about_user = $db->get_data('vavok_about', "uid='{$user_id}'");
-    $user_profil = $db->get_data('vavok_profil', "uid='{$user_id}'", 'subscri');
-    $show_user = $db->get_data('vavok_users', "id='{$user_id}'", 'skin, banned, browsers');
+    $about_user = $db->get_data('vavok_about', "uid='{$users->user_id}'");
+    $user_profil = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'subscri');
+    $show_user = $db->get_data('vavok_users', "id='{$users->user_id}'", 'skin, banned, browsers');
 
     echo '<div class="col-sm">';
 

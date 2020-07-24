@@ -23,14 +23,14 @@ if ($users->is_reg()) {
 
     if (empty($action)) {
 
-        $num_items = $db->count_row('`ignore`', "name='{$user_id}'");
+        $num_items = $db->count_row('`ignore`', "name='{$users->user_id}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, $page, 'ignor.php?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 
-        $sql = "SELECT target FROM `ignore` WHERE name='" . $user_id . "' LIMIT $limit_start, $items_per_page";
+        $sql = "SELECT target FROM `ignore` WHERE name='{$users->user_id}' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
             foreach ($db->query($sql) as $item) {
@@ -58,16 +58,16 @@ if ($users->is_reg()) {
         // $uid = getuid_sid($sid);
         $tnick = $users->getnickfromid($who);
         if ($todo == "add") {
-            if ($users->ignoreres($user_id, $who) == 1) {
-                $db->insert_data('`ignore`', array('name' => $user_id, 'target' => $who));
+            if ($users->ignoreres($users->user_id, $who) == 1) {
+                $db->insert_data('`ignore`', array('name' => $users->user_id, 'target' => $who));
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $lang_home['user'] . " $tnick " . $lang_page['sucadded'] . "<br>";
             } else {
                 echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $lang_page['cantadd'] . " " . $tnick . " " . $lang_page['inignor'] . "<br>";
             } 
         } elseif ($todo = "del") {
-            if ($users->ignoreres($user_id, $who) == 2) {
-                $db->delete('`ignore`', "name='" . $user_id . "' AND target='" . $who . "'");
+            if ($users->ignoreres($users->user_id, $who) == 2) {
+                $db->delete('`ignore`', "name='{$users->user_id}' AND target='" . $who . "'");
 
                 echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> $tnick " . $lang_page['deltdfrmignor'] . "<br>";
             } else {

@@ -19,8 +19,8 @@ if ($action == 'save') {
 	$subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
 	$inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
 		
-	$getinfo = $db->get_data('vavok_about', "uid='{$user_id}'", 'email');
-	$notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'email');
+	$getinfo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'email');
+	$notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'email');
 	$email = $getinfo['email'];
 
 	if (empty($lang)) {
@@ -64,14 +64,14 @@ if ($action == 'save') {
 
 	        $randkey = generate_password();
 	        
-	        $db->insert_data('subs', array('user_id' => $user_id, 'user_mail' => $email, 'user_pass' => $randkey));
+	        $db->insert_data('subs', array('user_id' => $users->user_id, 'user_mail' => $email, 'user_pass' => $randkey));
 
 	        $result = 'ok'; // sucessfully subscribed to site news!
 	        $subnewss = "1";
 	    } 
 	}
 	if ($subnews == "no") {
-	    $email_check = $db->get_data('subs', "user_id='{$user_id}'", 'user_mail');
+	    $email_check = $db->get_data('subs', "user_id='{$users->user_id}'", 'user_mail');
 
 
 	    if ($email_check['user_mail'] == "") {
@@ -80,7 +80,7 @@ if ($action == 'save') {
 	        $randkey = "";
 	    } else {
 	    	// unsub
-	        $db->delete('subs', "user_id='{$user_id}'");
+	        $db->delete('subs', "user_id='{$users->user_id}'");
 	    	
 	        $result = 'no';
 	        $subnewss = 0;
@@ -106,7 +106,7 @@ if ($action == 'save') {
 	$values[] = $user_timezone;
 	$values[] = $mskin;
 	 
-	$db->update('vavok_users', $fields, $values, "id='{$user_id}'");
+	$db->update('vavok_users', $fields, $values, "id='{$users->user_id}'");
 	unset($fields, $values);
 
 	// Update language
@@ -123,7 +123,7 @@ if ($action == 'save') {
 	$values[] = $randkey;
 	$values[] = time();
 	 
-	$db->update('vavok_profil', $fields, $values, "uid='{$user_id}'");
+	$db->update('vavok_profil', $fields, $values, "uid='{$users->user_id}'");
 	unset($fields, $values);
 
 	// notification settings
@@ -131,11 +131,11 @@ if ($action == 'save') {
 		$inbox_notification = 1;
 	}
 
-	$check_inb = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
+	$check_inb = $db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'");
 	if ($check_inb > 0) {
-	    $db->update('notif', 'active', $inbox_notification, "uid='{$user_id}' AND type='inbox'");
+	    $db->update('notif', 'active', $inbox_notification, "uid='{$users->user_id}' AND type='inbox'");
 	} else {
-		$db->insert_data('notif', array('active' => $inbox_notification, 'uid' => $user_id, 'type' => 'inbox'));
+		$db->insert_data('notif', array('active' => $inbox_notification, 'uid' => $users->user_id, 'type' => 'inbox'));
 	}
 
 	// redirect
@@ -143,20 +143,17 @@ if ($action == 'save') {
 
 }
 
-
 require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
-
-
 
 $my_title = $lang_setting['settings'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_reg()) {
 
-	$show_user = $db->get_data('vavok_users', "id='" . $user_id . "'", 'lang, mskin, skin');
-	$page_set = $db->get_data('page_setting', "uid='" . $user_id . "'");
-	$user_profil = $db->get_data('vavok_profil', "uid='" . $user_id . "'", 'subscri');
-	$inbox_notif = $db->get_data('notif', "uid='" . $user_id . "' AND type='inbox'", 'active');
+	$show_user = $db->get_data('vavok_users', "id='{$users->user_id}'", 'lang, mskin, skin');
+	$page_set = $db->get_data('page_setting', "uid='{$users->user_id}'");
+	$user_profil = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'subscri');
+	$inbox_notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'active');
 
 	echo '<br><form method="post" action="settings.php?action=save">';
     
@@ -171,14 +168,11 @@ if ($users->is_reg()) {
     echo '</select><br />';
     closedir($dir);
     
-    
 	$config_themes_show = str_replace("web_", "", $show_user['skin']);
 	$config_themes_show = str_replace("wap_", "", $config_themes_show);
 	$config_themes_show = ucfirst($config_themes_show);
-		
 
 	echo '<input name="skins" type="hidden" value="' . $show_user['skin'] . '" />';
-
 
     // echo 'Time zone (+1 -1):<br><input name="sdvig" value="'.$udata[30].'" /><br />';
     

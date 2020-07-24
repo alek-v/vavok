@@ -6,10 +6,10 @@ if (!$users->is_reg()) {
     redirect_to("../pages/login.php?ptl=pages/inbox.php");
 } 
 
-$last_notif = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
+$last_notif = $db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'");
 // update notification data
 if ($last_notif > 0) {
-    $db->update('notif', 'lstinb', 0, "uid='{$user_id}' AND type='inbox'");
+    $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
 } 
 
 $genHeadTag = '<meta name="robots" content="noindex">
@@ -28,7 +28,7 @@ $pmid = isset($_GET['pmid']) ? check($_GET["pmid"]) : '';
 
 if ($action == "main" or empty($action)) {
 
-    $num_items = $users->getpmcount($user_id);
+    $num_items = $users->getpmcount($users->user_id);
     $items_per_page = 10;
 
     // navigation
@@ -40,7 +40,7 @@ if ($action == "main" or empty($action)) {
     $sql = "SELECT
     a.name, b.id, b.byuid, b.unread, b.starred FROM vavok_users a
     JOIN inbox b ON a.id = b.byuid
-    WHERE b.touid='{$user_id}' AND (deleted IS NULL OR deleted <> '{$user_id}')
+    WHERE b.touid='{$users->user_id}' AND (deleted IS NULL OR deleted <> '{$users->user_id}')
     ORDER BY b.timesent DESC
     LIMIT $limit_start, $items_per_page";
 
@@ -80,7 +80,7 @@ if ($action == "main" or empty($action)) {
 
 } else if ($action == "dialog") {
 
-    $pms = $db->count_row('inbox', "(byuid=$user_id AND touid=$who) OR (byuid=$who AND touid=$user_id) AND (deleted IS NULL OR deleted = $who) ORDER BY timesent");
+    $pms = $db->count_row('inbox', "(byuid=$users->user_id AND touid=$who) OR (byuid=$who AND touid=$users->user_id) AND (deleted IS NULL OR deleted = $who) ORDER BY timesent");
 
     $num_items = $pms; //changable
     $items_per_page = 50;
@@ -94,52 +94,44 @@ if ($action == "main" or empty($action)) {
         $read_only = 'readonly';
     }
 
-    if ($num_items > 0) {
-
-        $db->update('inbox', 'unread', 0, "byuid='{$who}' AND touid='{$user_id}'");
+    $db->update('inbox', 'unread', 0, "byuid='{$who}' AND touid='{$users->user_id}'");
 
 
-        echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
-        echo '<div class="form-group">';
-        echo '<label for="chatbarText"></label>';
-        echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $lang_home['message'] . '..." ' . $read_only . ' />';
-        echo '</div>';
-        echo '<input type="hidden" name="who" id="who" value="' . $who . '" class="send_pm" />';
+    echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
+    echo '<div class="form-group">';
+    echo '<label for="chatbarText"></label>';
+    echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $lang_home['message'] . '..." ' . $read_only . ' />';
+    echo '</div>';
+    echo '<input type="hidden" name="who" id="who" value="' . $who . '" class="send_pm" />';
 
-        echo '<input type="hidden" name="lastid" id="lastid" value="' . $who . '" />';
-        echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $lang_home['send'] . '</button>';
-        echo '</form><br />'; // update lang
-
-
-        echo '<div id="message_box" class="message_box" style="overflow-y: scroll; height:400px;overflow-x: hidden;">';
+    echo '<input type="hidden" name="lastid" id="lastid" value="' . $who . '" />';
+    echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $lang_home['send'] . '</button>';
+    echo '</form><br />'; // update lang
 
 
-        echo '<p id="outputList" class="outputList"></p>'; // ajax messages
+    echo '<div id="message_box" class="message_box" style="overflow-y: scroll; height:400px;overflow-x: hidden;">';
 
 
-        $pms = "SELECT * FROM inbox WHERE (byuid = '" . $user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
-        foreach ($db->query($pms) as $pm) {
-
-            $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $users->getnickfromid($pm['byuid']) . "</a> ";
-            echo $bylnk;
-            $tmopm = date("d m y - h:i:s", $pm['timesent']);
-            echo "$tmopm<br />";
-
-            echo $users->parsepm($pm['text']);
-
-            echo '<hr />';
-
-        } 
-          
-
-        echo '</div>'; // end of #message-box
+    echo '<p id="outputList" class="outputList"></p>'; // ajax messages
 
 
-    } else {
+    $pms = "SELECT * FROM inbox WHERE (byuid = '" . $users->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
+    foreach ($db->query($pms) as $pm) {
 
-        echo '<p><img src="../images/img/reload.gif" alt="Inbox is empty" /> Inbox is empty!</p>'; // update lang
+        $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $users->getnickfromid($pm['byuid']) . "</a> ";
+        echo $bylnk;
+        $tmopm = date("d m y - h:i:s", $pm['timesent']);
+        echo "$tmopm<br />";
+
+        echo $users->parsepm($pm['text']);
+
+        echo '<hr />';
 
     } 
+      
+
+    echo '</div>'; // end of #message-box
+
 
     echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
 

@@ -3,18 +3,18 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   19.06.2020. 23:57:30
+* Updated:   24.07.2020. 21:47:37
 */
 
 class Comments {
 
 	// class constructor
 	function __construct() {
-		global $db, $user_id, $users;
+		global $db, $users;
 
 		$this->table_prefix = get_configuration('tablePrefix'); // table prefix
 		$this->db = $db; // database
-		$this->user_id = $user_id; // user id with active login
+		$this->user_id = $users->user_id; // user id with active login
 		$this->users = $users;
 	}
 

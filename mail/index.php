@@ -58,7 +58,7 @@ if (empty($action)) {
 
     } else {
 
-        $user_email = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'email');
+        $user_email = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'email');
 
         $usernameAndMail = new PageGen("mail/usernameAndMail_registered.tpl");
         $usernameAndMail->set('log', $users->show_username());

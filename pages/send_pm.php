@@ -10,10 +10,10 @@ $who = isset($_POST["who"]) ? $who = check($_POST["who"]) : $who = '';
 // dont send message to system
 if ($who == 1) { redirect_to('inbox.php?who=1'); }
 
-$inbox_notif = $db->get_data('notif', "uid='{$user_id}' AND type='inbox'", 'active');
+$inbox_notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'active');
 
 $whonick = $users->getnickfromid($who);
-$byuid = $user_id;
+$byuid = $users->user_id;
 
 $stmt = $db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");
 $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
@@ -24,7 +24,7 @@ $pmfl = $lastpm + 0; // 0 is $config["floodTime"] // return in production
 if ($pmfl < time()) {
     if (!$users->isignored($byuid, $who)) {
 
-        $users->send_pm($pmtext, $user_id, $who);
+        $users->send_pm($pmtext, $users->user_id, $who);
 
         echo 'sent';
 

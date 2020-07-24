@@ -56,7 +56,7 @@ $values[] = $surname;
 $values[] = $street;
 $values[] = $zip;
 
-$db->update('vavok_about', $fields, $values, "uid='" . $user_id . "'");
+$db->update('vavok_about', $fields, $values, "uid='{$users->user_id}'");
 
 redirect_to("./profile.php?isset=editprofil");
 

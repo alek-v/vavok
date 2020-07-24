@@ -45,7 +45,7 @@ if ($action == "editfile") {
 
         if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -58,7 +58,7 @@ if ($action == "editfile") {
         } 
 
         $text_files = str_replace('{INBOX}', '<?php echo \'<a href="\' . BASEDIR . \'pages/inbox.php">\' . $lang_home[\'inbox\'] . \'</a>\'; ?>', $text_files);
-        $text_files = str_replace('{INBOXMSGS}', '<?php echo \'(\' . $users->user_mail($user_id) . \')\'; ?>', $text_files);
+        $text_files = str_replace('{INBOXMSGS}', '<?php echo \'(\' . $users->user_mail($users->user_id) . \')\'; ?>', $text_files);
         $text_files = str_replace('{LOGOUT}', '<?php echo \'<a href="\' . BASEDIR . \'pages/input.php?action=exit">Log out</a>\'; ?>', $text_files);
 
         $text_files = str_replace('{BASEDIR}', '<?php echo BASEDIR; ?>', $text_files);
@@ -99,7 +99,7 @@ if ($action == "editheadtag") {
         if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); }
 
         // check can user edit page
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $user_id) { redirect_to("index.php?isset=ap_noaccess"); } 
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) { redirect_to("index.php?isset=ap_noaccess"); } 
 
         // update db data
         $data = array(
@@ -127,7 +127,7 @@ if ($action == "renamepg") {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $user_id) {
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -209,9 +209,9 @@ if ($action == "addnew") {
         'lang' => $pagelang,
         'created' => time(),
         'lastupd' => time(),
-        'lstupdby' => $user_id,
+        'lstupdby' => $users->user_id,
         'file' => $newfiles,
-        'crtdby' => $user_id,
+        'crtdby' => $users->user_id,
         'published' => '1',
         'pubdate' => '0',
         'tname' => $page_title,

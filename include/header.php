@@ -12,9 +12,9 @@ if (!empty($_SESSION['log'])) {
 
     $user_id = $vavok_users['id']; // user id
 
-    $user_profil = $db->get_data('vavok_profil', "uid='{$user_id}'", 'regche');
+    $user_profil = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'regche');
 
-    $db->update('vavok_profil', 'lastvst', time(), "uid='{$user_id}'");
+    $db->update('vavok_profil', 'lastvst', time(), "uid='{$users->user_id}'");
 
     if (!empty($vavok_users['mskin']) && $users->user_device() == 'phone') {
 

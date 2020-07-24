@@ -46,7 +46,7 @@ include BASEDIR . "include/load_header.php";
 				<?php
 
 				if ($users->is_reg()) {
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($user_id) . ')</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($users->user_id) . ')</a></li>';
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a></li>';
 				    if ($users->is_administrator()) {
 				        echo'<li class="nav-item"><a href="' . HOMEDIR . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';

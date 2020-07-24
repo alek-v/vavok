@@ -12,8 +12,8 @@ $my_title = $lang_ban['banned'];
 
 if (!$users->is_reg()) { redirect_to("../"); } 
 
-$vavok_userx = $db->get_data('vavok_users', "id='{$user_id}'", 'banned');
-$show_prof = $db->get_data('vavok_profil', "uid='{$user_id}'", 'bantime, bandesc, allban');
+$vavok_userx = $db->get_data('vavok_users', "id='{$users->user_id}'", 'banned');
+$show_prof = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'bantime, bandesc, allban');
 
 $banned = $vavok_userx['banned'];
 $bantime = $show_prof['bantime'];
@@ -25,7 +25,7 @@ $time_ban = round($bantime - time());
 if ($time_ban > 0) {
 
     // remove session - logout user
-    $users->logout($user_id);
+    $users->logout($users->user_id);
 
     // headers could not be send before cookies, so we load it here
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -51,8 +51,8 @@ if ($time_ban > 0) {
 
     echo '<p>' . $lang_ban['endbanadvice'] . ' <b><a href="siterules.php" class="btn btn-outline-primary sitelink">' . $lang_ban['siterules'] . '</a></b></p>';
 
-    $db->update('vavok_users', 'banned', 0, "id='" . $user_id . "'");
-    $db->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='" . $user_id . "'");
+    $db->update('vavok_users', 'banned', 0, "id='{$users->user_id}'");
+    $db->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='{$users->user_id}'");
 
 }
 

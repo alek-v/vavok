@@ -58,10 +58,10 @@ class Mailer {
 
 	// add to queue
 	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "") {
-		global $db, $user_id;
+		global $db, $users;
 
 		$data = array(
-			'uad' => $user_id,
+			'uad' => $users->user_id,
 			'sender' => $senderName,
 			'sender_mail' => $senderMail,
 			'recipient' => $usermail,

@@ -23,7 +23,7 @@ if (!empty($_GET['action'])) {
 
 if ($users->is_reg()) {
     if (empty($action)) {
-        $chk_photo = $db->get_data('vavok_about', "uid='" . $user_id . "'", 'photo');
+        $chk_photo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'photo');
 
         if (!empty($chk_photo['photo'])) {
             echo '<div class="photo">';
@@ -57,25 +57,25 @@ if ($users->is_reg()) {
                 if ($av_string == "gif" || $av_string == "jpg" || $av_string == "jpeg" || $av_string == "png") {
                     if ($av_file) {
                         // remove old photo
-                        if (file_exists("../used/dataphoto/" . $user_id . ".jpg")) {
-                            unlink("../used/dataphoto/" . $user_id . ".jpg");
-                        } elseif (file_exists("../used/dataphoto/" . $user_id . ".png")) {
-                            unlink("../used/dataphoto/" . $user_id . ".png");
-                        } elseif (file_exists("../used/dataphoto/" . $user_id . ".gif")) {
-                            unlink("../used/dataphoto/" . $user_id . ".gif");
-                        } elseif (file_exists("../used/dataphoto/" . $user_id . ".jpeg")) {
-                            unlink("../used/dataphoto/" . $user_id . ".jpeg");
+                        if (file_exists("../used/dataphoto/" . $users->user_id . ".jpg")) {
+                            unlink("../used/dataphoto/" . $users->user_id . ".jpg");
+                        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".png")) {
+                            unlink("../used/dataphoto/" . $users->user_id . ".png");
+                        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".gif")) {
+                            unlink("../used/dataphoto/" . $users->user_id . ".gif");
+                        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".jpeg")) {
+                            unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
                         } 
                         // add new photo
-                        copy($_FILES['file']['tmp_name'], "../used/dataphoto/" . $user_id . "." . $av_string . "");
+                        copy($_FILES['file']['tmp_name'], "../used/dataphoto/" . $users->user_id . "." . $av_string . "");
                         $ch = $_FILES['file']['tmp_name'];
                         chmod($ch, 0777);
-                        chmod("../used/dataphoto/" . $user_id . "." . $av_string . "", 0777);
+                        chmod("../used/dataphoto/" . $users->user_id . "." . $av_string . "", 0777);
 
-                        $db->update('vavok_about', 'photo', "gallery/photo.php?uz=" . $user_id, "uid='" . $user_id . "'");
+                        $db->update('vavok_about', 'photo', "gallery/photo.php?uz=" . $users->user_id, "uid='{$users->user_id}'");
                         echo '<div class="photo">';
                         echo '<br>Photo saved!<br>';
-                        echo 'Current photo: <img src="../gallery/photo.php?uz=' . $user_id . '" alt="" /><br>';
+                        echo 'Current photo: <img src="../gallery/photo.php?uz=' . $users->user_id . '" alt="" /><br>';
                         echo '</div>';
                     } else {
                         echo 'Error uploading photography<br>';
@@ -93,17 +93,17 @@ if ($users->is_reg()) {
         echo '<a href="photo.php">' . $lang_home['back'] . '</a><br>';
     } 
     if ($action == 'remove') {
-        if (file_exists("../used/dataphoto/" . $user_id . ".jpg")) {
-            unlink("../used/dataphoto/" . $user_id . ".jpg");
-        } elseif (file_exists("../used/dataphoto/" . $user_id . ".png")) {
-            unlink("../used/dataphoto/" . $user_id . ".png");
-        } elseif (file_exists("../used/dataphoto/" . $user_id . ".gif")) {
-            unlink("../used/dataphoto/" . $user_id . ".gif");
-        } elseif (file_exists("../used/dataphoto/" . $user_id . ".jpeg")) {
-            unlink("../used/dataphoto/" . $user_id . ".jpeg");
+        if (file_exists("../used/dataphoto/" . $users->user_id . ".jpg")) {
+            unlink("../used/dataphoto/" . $users->user_id . ".jpg");
+        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".png")) {
+            unlink("../used/dataphoto/" . $users->user_id . ".png");
+        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".gif")) {
+            unlink("../used/dataphoto/" . $users->user_id . ".gif");
+        } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".jpeg")) {
+            unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
         } 
 
-        $db->update('vavok_about', 'photo', "", "uid='" . $user_id . "'");
+        $db->update('vavok_about', 'photo', "", "uid='{$users->user_id}'");
 
         echo '<p>Your photography successfully deleted!</p><br />'; // update lang
 

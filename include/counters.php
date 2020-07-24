@@ -3,8 +3,8 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* online, hit & click counter
-* Updated:   24.07.2020. 16:25:35
+* Online, hit & click counter
+* Updated:   24.07.2020. 21:49:19
 */
 
 // don't count visits it this is cron job
@@ -30,7 +30,8 @@ $bz_date = time();
 
 if (!$users->is_reg()) {
     $user_id = 0;
-} 
+} else { $user_id = $users->user_id; }
+
 $bz_ip = $users->find_ip();
 $xmatch = $user_id . '-' . $users->find_ip() . '-' . $users->user_browser();
 

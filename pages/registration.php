@@ -103,7 +103,8 @@ if ($substr_log < 3) {
                         	'content' => $regmail,
                         	'sent' => 1,
                         	'timesent' => date("Y-m-d H:i:s"),
-                        	'timeadded' => date("Y-m-d H:i:s")
+                        	'timeadded' => date("Y-m-d H:i:s"),
+                            'sender' => ''
 
                         );
                         $db->insert_data('email_queue', $values);

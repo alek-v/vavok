@@ -10,6 +10,8 @@
 
 class Users {
 
+	public $user_id;
+
 	function __construct() {
 		global $db;
 
@@ -572,7 +574,7 @@ class Users {
 	    return 0;
 	  }
 	  */
-	    if (isignored($tid, $uid)) {
+	    if ($this->isignored($tid, $uid)) {
 	        return 2; // the target is already ignored by the user
 	    } 
 	    return 1;

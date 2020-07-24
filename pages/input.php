@@ -136,7 +136,7 @@ if (empty($action) && !empty($log)) {
 if ($users->is_reg() && $action == "exit") {
 
     // log out
-    $users->logout($user_id);
+    $users->logout($users->user_id);
 
     redirect_to("../?isset=exit");
 }

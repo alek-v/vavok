@@ -153,15 +153,15 @@ if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) 
 }
 
 
-if ($uz != $users->getnickfromid($user_id) && $users->is_reg()) {
+if ($uz != $users->getnickfromid($users->user_id) && $users->is_reg()) {
 
     $userMenu = new PageGen("pages/user-profile/user-menu.tpl");
     $userMenu->set('add-to', $lang_user['addto']);
     $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['contact'] . '</a>');
-    if (!$users->isignored($users_id, $user_id)) {
+    if (!$users->isignored($users_id, $users->user_id)) {
     //$userMenu->set('add-to', $lang_user['addto']);
     $userMenu->set('ignore', '<a href="ignor.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $lang_user['ignore'] . '</a>');
-    $userMenu->set('sendMessage', '<br /><a href="inbox.php?action=sendpm&amp;who=' . $users_id . '">' . $lang_page['sendmsg'] . '</a><br>');
+    $userMenu->set('sendMessage', '<br /><a href="inbox.php?action=dialog&amp;who=' . $users_id . '">' . $lang_page['sendmsg'] . '</a><br>');
 
     } else {
         $userMenu->set('ignore', $lang_user['ignore'] . '<br />');
@@ -181,7 +181,7 @@ if ($uz != $users->getnickfromid($user_id) && $users->is_reg()) {
 
     $showPage->set('userMenu', $userMenu->output());
 
-} elseif ($users->getnickfromid($user_id) == $uz && $users->is_reg()) {
+} elseif ($users->getnickfromid($users->user_id) == $uz && $users->is_reg()) {
 
     $adminMenu = new PageGen("pages/user-profile/admin-update-profile.tpl");
     $adminMenu->set('profileLink', '<a href="../pages/profile.php">' . $lang_user['updateprofile'] . '</a>');
@@ -195,7 +195,7 @@ if (!empty($about_user['photo'])) {
 
     $ext = strtolower(substr($about_user['photo'], strrpos($about_user['photo'], '.') + 1));
 
-    if ($users_id != $user_id) {
+    if ($users_id != $users->user_id) {
         $showPage->set('userPhoto', '<img src="../' . $about_user['photo'] . '" alt="" /><br>');
     } else {
         $showPage->set('userPhoto', '<a href="../pages/photo.php"><img src="../' . $about_user['photo'] . '" alt="" /></a>');

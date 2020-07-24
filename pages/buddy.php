@@ -30,8 +30,8 @@ if ($users->is_reg()) {
         $tnick = $users->getnickfromid($who);
 
         if ($todo == "add") {
-            if ($users->ignoreres($user_id, $who) == 1 && !isbuddy($who, $user_id)) {
-                $db->insert_data('buddy', array('name' => $user_id, 'target' => $who));
+            if ($users->ignoreres($users->user_id, $who) == 1 && !$users->isbuddy($who, $users->user_id)) {
+                $db->insert_data('buddy', array('name' => $users->user_id, 'target' => $who));
 
                 header ("Location: buddy.php?isset=kontakt_add");
                 exit;
@@ -40,7 +40,7 @@ if ($users->is_reg()) {
                 exit;
             } 
         } elseif ($todo = "del") {
-            $db->delete('buddy', "name='" . $user_id . "' AND target='" . $who . "'");
+            $db->delete('buddy', "name='{$users->user_id}' AND target='" . $who . "'");
 
             header ("Location: buddy.php?start=$start&isset=kontakt_del");
             exit;
@@ -58,14 +58,14 @@ if ($users->is_reg()) {
             $page = 1;
         }
 
-        $num_items = $db->count_row('buddy', "name='" . $user_id . "'");
+        $num_items = $db->count_row('buddy', "name='{$users->user_id}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, $page, 'buddy.php?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 
-        $sql = "SELECT target FROM buddy WHERE name='" . $user_id . "' LIMIT $limit_start, $items_per_page";
+        $sql = "SELECT target FROM buddy WHERE name='{$users->user_id}' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
 

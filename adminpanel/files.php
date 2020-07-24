@@ -67,7 +67,7 @@ if (empty($action)) {
     $total_pages = $pageEditor->total_pages();
 
     if ($edit_only_own_pages == 'yes') {
-        $total_pages = $pageEditor->total_pages($user_id);
+        $total_pages = $pageEditor->total_pages($users->user_id);
     } 
 
     // start navigation
@@ -75,7 +75,7 @@ if (empty($action)) {
 
 
     if ($edit_only_own_pages == 'yes') {
-        $sql = "SELECT * FROM " . get_configuration('tablePrefix') . "pages WHERE crtdby='{$user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM " . get_configuration('tablePrefix') . "pages WHERE crtdby='{$users->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } else {
         $sql = "SELECT * FROM " . get_configuration('tablePrefix') . "pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     }
@@ -102,7 +102,7 @@ if (empty($action)) {
             echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b>';
 
             // Check for permissions to edit pages
-            if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator() || $page_info['crtdby'] == $user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+            if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator() || $page_info['crtdby'] == $users->user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
             }
 
@@ -160,7 +160,7 @@ if ($action == "show") {
             redirect_to("index.php?isset=ap_noaccess");
         } 
 
-        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
             redirect_to("index.php?isset=ap_noaccess");
         } 
 
@@ -238,7 +238,7 @@ if ($action == "edit") {
 
         if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -248,7 +248,7 @@ if ($action == "edit") {
         $datamainfile = $page_info['content'];
 
         $datamainfile = str_replace('<?php echo \'<a href="\' . BASEDIR . \'pages/inbox.php">\' . $lang_home[\'inbox\'] . \'</a>\'; ?>', '{INBOX}', $datamainfile);
-        $datamainfile = str_replace('<?php echo \'(\' . $users->user_mail($user_id) . \')\'; ?>', '{INBOXMSGS}', $datamainfile);
+        $datamainfile = str_replace('<?php echo \'(\' . $users->user_mail($users->user_id) . \')\'; ?>', '{INBOXMSGS}', $datamainfile);
         $datamainfile = str_replace('<?php echo \'<a href="\' . BASEDIR . \'pages/input.php?action=exit">\' . $lang_home[\'logout\'] . \'</a>\'; ?>', '{LOGOUT}', $datamainfile);
 
         $datamainfile = str_replace('<?=BASEDIR?>', '{BASEDIR}', $datamainfile);
@@ -307,7 +307,7 @@ if ($action == "headtag") {
 
     $page_info = $pageEditor->select_page($page_id);
 
-    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $user_id) {
+    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 

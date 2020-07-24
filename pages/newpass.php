@@ -10,7 +10,7 @@ if (isset($_POST['oldpar'])) {$oldpar = check($_POST['oldpar']);}
 
 if ($users->is_reg()) {
     
-    $check_pass = $db->get_data('vavok_users', "id='" . $user_id . "'", 'pass');
+    $check_pass = $db->get_data('vavok_users', "id='{$users->user_id}'", 'pass');
 		
     $newpar = check($newpar);
     $oldpar = check($oldpar);
@@ -22,7 +22,7 @@ if ($users->is_reg()) {
             // write changes
             $newpass = $users->password_encrypt($newpar);
 
-            $db->update('vavok_users', 'pass', $newpass, "id='" . $user_id . "'");
+            $db->update('vavok_users', 'pass', $newpass, "id='{$users->user_id}'");
 
             setcookie('cookpar', '');
             setcookie('cooklog', '');
@@ -30,7 +30,7 @@ if ($users->is_reg()) {
             setcookie(session_name(), '');
             session_destroy();
 
-            redirect_to(website_home_address() . "/pages/input.php?log=" . $users->getnickfromid($user_id) . "&pass=" . $newpar . "&isset=editpass");
+            redirect_to(website_home_address() . "/pages/input.php?log=" . $users->getnickfromid($users->user_id) . "&pass=" . $newpar . "&isset=editpass");
 
         } else {
             redirect_to("profile.php?isset=nopass");

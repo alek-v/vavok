@@ -120,7 +120,7 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
 
 
     // we are connected to database and we can load Users class
-    $users = new Users;
+    $users = new Users();
 
     // we don't need this data if this is system request or we are installing cms
     if (!strstr($_SERVER['PHP_SELF'], '/cronjob/') && !strstr($_SERVER['PHP_SELF'], '/install/finish.php')) {
