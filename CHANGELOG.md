@@ -7,6 +7,7 @@
 - Update: Language updates
 - Update: Theme updates
 - Update: Page updates
+- Update: Include header and footer
 - Added: New function clear_directory()
 - Added: New function show_page()
 
