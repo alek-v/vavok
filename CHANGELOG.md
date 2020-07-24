@@ -3,7 +3,7 @@
 - Updated: Administration panel access levels update
 - Update: Upload directory can be changed
 - Update: Language handling improvements
-- Update: Get page title from class
+- Update: Get page data from class
 - Update: Language updates
 - Update: Theme updates
 - Update: Page updates
