@@ -2,23 +2,18 @@
 // (c) vavok.net
 require_once"../include/startup.php";
 
-if (isset($_GET['action'])) {
-    $action = check($_GET['action']);
-}
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
 
-if (!$users->is_reg() || !$users->is_administrator()) {
-    header("Location: ../");
-    exit;
-} 
+if (!$users->is_reg() || !$users->is_administrator()) { redirect_to("../"); } 
 
 if (empty($action)) {
-phpinfo();
+	phpinfo();
 }
 if ($action == 'magic_quotes_check') {
-if(get_magic_quotes_gpc()) {
-	echo "Magic quotes are enabled";
-} else {
-	echo "Magic quotes are disabled";
-}
+	if (get_magic_quotes_gpc()) {
+		echo "Magic quotes are enabled";
+	} else {
+		echo "Magic quotes are disabled";
+	}
 }
 ?>
