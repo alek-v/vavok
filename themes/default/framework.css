@@ -9,6 +9,11 @@ html, body {
 	height: 100%;
 }
 
+img {
+	max-width: 100%;
+	max-height: auto;
+}
+
 iframe {
     width: 100%;
 }

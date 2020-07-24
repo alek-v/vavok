@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   21.06.2020. 12:50:54
+* Updated:   23.07.2020. 19:28:38
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
@@ -35,7 +35,7 @@ include BASEDIR . "include/load_header.php";
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container container-header">
 	    	<a class="navbar-brand" href="<?php echo HOMEDIR; ?>">
-	    		<img src="/themes/default/images/logo.png" height="30" alt="Logo">
+	    		<img src="/themes/default/images/logo.png" width="30" height="30" alt="Logo">
 	  		</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -63,13 +63,18 @@ include BASEDIR . "include/load_header.php";
 				?>
 				</ul>
 				<div class="nav-contact">
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav">
-							<li class="nav-item">
-								<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
-							</li>
-						</ul>
-					</div>
+					<ul class="navbar-nav">
+						<li class="nav-item">
+							<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
+						</li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $lang_home['lang']; ?></a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+					          <a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/vavok3/images/flag_great_britain_32.png" alt="english language" /></a>
+					          <a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/vavok3/images/serbia_flag_32.png" alt="српски језик" /></a>
+					        </div>
+			      		</li>
+					</ul>
 				</div>
 			</div>
 		</div>
