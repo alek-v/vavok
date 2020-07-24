@@ -4,15 +4,18 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   24.07.2020. 12:02:44
+* Updated:   24.07.2020. 13:30:11
 */
 
 class Page {
 
-	public $page_name;
-	public $page_language;
-	public $page_title;
-	public $page_content;
+	public $page_name; // Page name
+	public $page_language; // Page language
+	public $page_title; // Title
+	public $page_content; // Content
+	public $published; // Visitors can see page
+	public $page_author; // Page author
+	public $page_created_date; // Page created date
 
 	// class constructor
 	function __construct($page_name = '', $page_language = '') {
@@ -158,32 +161,28 @@ class Page {
 
 	}
 
-	// select page by name - get page data
-	function select_page_name($name, $fields = '*') {
-
-		// update visitor counter if page is vewed by visitor
-		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
-
-			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '{$name}'");
-		}
-
-		$page_data = $this->db->get_data($this->table_prefix . 'pages', "pname='{$name}'", $fields);
-
-		// Update page title
-		$this->page_title = $page_data['tname'];
-
-		// return page data
-		return $page_data;
-
-	}
-
 	// Load page
 	public function load_page() {
 		// Load page with requested language
 		$language = !empty($this->page_language) ? " AND lang='" . $this->page_language . "'" : '';
 
-		// get data
-		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'{$language}", 'tname, content, lang');
+		// Load main page only from main page
+		if (isset($_GET['pg']) && $_GET['pg'] == 'index') return false;
+
+		// Update visitor counter if page is vewed by visitor
+		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
+
+			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '" . $this->page_name . "'{$language}");
+
+		}
+
+		// Get data
+		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'{$language}");
+
+		// When language is set and page does not exsist try to find page without language
+		if (empty($page_data) && !empty($this->page_language)) {
+			$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'");
+		}
 
 		// return false if there is no data
 		if (empty($page_data['tname']) && empty($page_data['content'])) {
@@ -197,6 +196,18 @@ class Page {
 
 			// Page content
 			$this->page_content = $page_data['content'];
+
+			// Published
+			$this->published = $page_data['published'];
+
+			// Published
+			$this->page_id = $page_data['id'];
+
+			// Published
+			$this->page_author = $page_data['crtdby'];
+
+			// Created date
+			$this->page_created_date = $page_data['created'];
 
 			return $page_data;
 

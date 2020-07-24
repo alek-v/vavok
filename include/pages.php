@@ -8,9 +8,10 @@
 
 if (!empty($_GET['pg'])) {
 	// Page class
-	$current_page = new Page();
+	$current_page = new Page($_GET['pg'], $users->get_prefered_language($users->get_user_language(), 'short'));
 
-	$page_data = $current_page->select_page_name(check($_GET['pg']), $fields = 'lang, content, tname');
+	// Load page
+	$page_data = $current_page->load_page();
 
 	// Update language
 	if (!empty($page_data['lang']) && strtolower($page_data['lang']) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($page_data['lang'])); }
@@ -25,7 +26,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	// Load user notice from URL
 	$url_isset = isset($_GET['isset']) ? '?isset=' . check($_GET['isset']) : '';
 
-	// Page class
+	// Load main page
 	$current_page = new Page('index', $requested_language);
 
 	// Load page with language requested in URL if exists

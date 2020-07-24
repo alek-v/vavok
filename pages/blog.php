@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   18.07.2020. 19:25:06
+* Updated:   24.07.2020. 13:46:44
 */
 
 include"../include/startup.php";
@@ -17,42 +17,36 @@ $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
 
 
-
 switch ($pg) {
+
 	case isset($pg):
-		
-		// page data management
-		$blog = new Page();
 
 		// Get page id
-		// Redirect to blog main page if page dows not exist
-		$page_id = $blog->get_page_id("pname = '{$pg}'") or redirect_to(HOMEDIR . 'blog/');
-
-		// select page from id
-		$post_data = $blog->select_page($page_id);
+		// Redirect to blog main page if page does not exist
+		$page_id = !empty($current_page->page_id) or redirect_to(HOMEDIR . 'blog/');
 
 		// generate page
 		$post = new PageGen('pages/blog/post.tpl');
 
 		// Author
 		// Author link
-		$author_full_name = $users->get_user_info($post_data['crtdby'], 'full_name');
-		$author_name = !empty($author_full_name) ? $author_full_name : $users->getnickfromid($post_data['crtdby']);
+		$author_full_name = $users->get_user_info($current_page->page_author, 'full_name');
+		$author_name = !empty($author_full_name) ? $author_full_name : $users->getnickfromid($current_page->page_author);
 
-		$author_link = '<a href="' . HOMEDIR . 'pages/user.php?uz=' . $post_data['crtdby'] . '">' . $author_name . '</a>';
+		$author_link = '<a href="' . HOMEDIR . 'pages/user.php?uz=' . $current_page->page_author . '">' . $author_name . '</a>';
 		$post->set('author_link', $author_link);
 
 		// Time created
-		$post->set('created_date', date_fixed($post_data['created'], 'd.m.Y.'));
+		$post->set('created_date', date_fixed($current_page->page_created_date, 'd.m.Y.'));
 
 		// content
-		$post->set('content', getbbcode($post_data['content']));
+		$post->set('content', getbbcode($current_page->page_content));
 
 		// day created
-		$post->set('date-created-day', date('d', $post_data['created']));
+		$post->set('date-created-day', date('d', $current_page->page_created_date));
 
 		// month created
-		$post->set('date-created-month', mb_substr($ln_all_month[date('n', $post_data['created']) - 1], 0, 3));
+		$post->set('date-created-month', mb_substr($ln_all_month[date('n', $current_page->page_created_date) - 1], 0, 3));
 
 		// comments
 		$comments = new Comments();
@@ -85,15 +79,6 @@ switch ($pg) {
 		$show_comments->set('all_comments', $merge_all);
 
 		$post->set('comments', $show_comments->output());
-
-		// Page title
-		$my_title = $post_data['tname'];
-
-		// Show page language
-		// <html lang="(lang)">
-		if (!empty($post_data['lang'])) {
-			define("PAGE_LANGUAGE", ' lang="' . $post_data['lang'] . '"');
-		}
 
 		// page header
 		include"../themes/" . $config_themes . "/index.php";
