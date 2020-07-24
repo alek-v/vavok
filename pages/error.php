@@ -137,7 +137,6 @@ if (isset($write) && !empty($logdat)) {
     } 
 } 
 
-echo '<div class="break"></div>';
 echo '<p><img src="' . HOMEDIR . 'images/img/homepage.gif" alt="" /> <a href="/" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><p>';
 
 include_once BASEDIR . "themes/" . $config_themes . "/foot.php";

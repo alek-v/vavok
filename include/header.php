@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   22.07.2020. 0:43:02
+* Updated:   24.07.2020. 16:26:25
 */
 
 if (!empty($_SESSION['log'])) {
@@ -42,14 +42,14 @@ if (!empty($_SESSION['log'])) {
 
     } 
 
-    if ($vavok_users['banned'] == "1" && !strstr($phpself, 'pages/ban.php')) { // banned?
+    if ($vavok_users['banned'] == "1" && !strstr($_SERVER['PHP_SELF'], 'pages/ban.php')) { // banned?
 
     	// Redirect to ban page
         redirect_to(BASEDIR . "pages/ban.php");
 
     }
 
-    if ($user_profil['regche'] == 1 && !strstr($phpself, 'pages/key.php')) { // activate account
+    if ($user_profil['regche'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/key.php')) { // activate account
 
     	// Account need to be activated
         setcookie('cookpass', '');
@@ -77,7 +77,7 @@ if (!empty($_SESSION['log'])) {
 } else {
 
 	// User's site theme
-    $config_themes = $config["webtheme"];
+    $config_themes = get_configuration('webtheme');
 
     if (empty($_SESSION['lang'])) { $users->change_language(); };
 
@@ -98,7 +98,7 @@ if ($config["noCache"] == "0") {
     header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 } 
 
-if ($config["siteOff"] == 1 && !strstr($phpself, 'pages/maintenance.php') && !strstr($phpself, 'input.php') && !$users->is_administrator() && !strstr($phpself, 'pages/login.php')) {
+if (get_configuration('siteOff') == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/maintenance.php') && !strstr($_SERVER['PHP_SELF'], 'input.php') && !$users->is_administrator() && !strstr($_SERVER['PHP_SELF'], 'pages/login.php')) {
     redirect_to(website_home_address() . "/pages/maintenance.php");
 } 
 

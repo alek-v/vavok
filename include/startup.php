@@ -123,7 +123,7 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
     $users = new Users;
 
     // we don't need this data if this is system request or we are installing cms
-    if (!strstr($phpself, '/cronjob/') && !strstr($phpself, '/install/finish.php')) {
+    if (!strstr($_SERVER['PHP_SELF'], '/cronjob/') && !strstr($_SERVER['PHP_SELF'], '/install/finish.php')) {
 
         require_once BASEDIR . "include/cookies.php";
         require_once BASEDIR . "include/header.php"; 

@@ -2,9 +2,6 @@
 // (c) Aleksandar Vranešević - vavok.net
 // modified: 22.07.2020. 0:44:08
 
-if (isset($_SERVER['PHP_SELF'])) {
-    $phpself = $_SERVER['PHP_SELF'];
-} 
 if (empty($config_requri)) {
     $config_requri = "index.php";
 } 
@@ -87,7 +84,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
             $logdat = BASEDIR . "used/datalog/ban.dat";
             $hostname = gethostbyaddr($ip);
 
-            $write = '|Blocked access for IP|' . $phpself . $config_requri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $users->user_browser() . '|' . $http_referer . '|' . $username . '|';
+            $write = '|Blocked access for IP|' . $_SERVER['PHP_SELF'] . $config_requri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $users->user_browser() . '|' . $http_referer . '|' . $username . '|';
 
             $fp = fopen($logdat, "a+");
             flock ($fp, LOCK_EX);

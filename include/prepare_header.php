@@ -1,6 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - https://vavok.net
-// modified: 22.07.2020. 0:42:55
+// modified: 24.07.2020. 16:28:49
 // prepare headers for page
 
 // Update page title if page is not dynamic
@@ -10,7 +10,7 @@ if (isset($my_title)) { $current_page->page_title = $my_title; }
 $head_tag = '';
 
 // if we are not installing cms
-if (!stristr($phpself, 'install/install.php')) {
+if (!stristr($_SERVER['PHP_SELF'], 'install/install.php')) {
 
     // is this regular page
     if (!empty($pg)) {
@@ -27,7 +27,7 @@ if (!stristr($phpself, 'install/install.php')) {
 
     // no data using $clean_requri, try PHP_SELF :)
     if (empty($head_tag)) {
-        $vk_page = $db->get_data('pages', "pname='" . $phpself . "'");
+        $vk_page = $db->get_data('pages', "pname='" . $_SERVER['PHP_SELF'] . "'");
         if (!empty($vk_page['headt'])) {
             $head_tag .= $vk_page['headt'];
         } 

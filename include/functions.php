@@ -466,8 +466,7 @@ function generate_password() {
 } 
 
 // antiflood
-$phpself = $_SERVER['PHP_SELF'];
-function flooder($ip, $phpself) {
+function flooder($ip, $phpself = '') {
     global $config;
 
     $old_db = file(BASEDIR . "used/flood.dat");
@@ -481,7 +480,7 @@ function flooder($ip, $phpself) {
         if (($old_db_arr[0] + $config["floodTime"]) > time()) {
             fputs ($new_db, $old_db_line);
 
-            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $phpself) {
+            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
                 $result = true;
             } 
         } 

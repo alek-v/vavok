@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
 * online, hit & click counter
-* Updated:   19.07.2020. 20:59:23
+* Updated:   24.07.2020. 16:25:35
 */
 
 // don't count visits it this is cron job
@@ -48,7 +48,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
              
             $values = array();
             $values[] = $bz_date;
-            $values[] = $phpself;
+            $values[] = $_SERVER['PHP_SELF'];
              
             $db->update(get_configuration('tablePrefix') . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
             unset($fields, $values);
@@ -59,7 +59,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
             $values = array(
             'date' => $bz_date,
             'ip' => $bz_ip,
-            'page' => $phpself,
+            'page' => $_SERVER['PHP_SELF'],
             'user' => $user_id,
             'usr_chck' => $xmatch,
             'bot' => $searchbot
@@ -72,7 +72,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
     $values = array(
     'date' => $bz_date,
     'ip' => $bz_ip,
-    'page' => $phpself,
+    'page' => $_SERVER['PHP_SELF'],
     'user' => $user_id,
     'usr_chck' => $xmatch,
     'bot' => $searchbot
