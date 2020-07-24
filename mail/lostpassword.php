@@ -34,7 +34,7 @@ if ($page == 'send') {
 
         if ($mailsus == $checkmail) {
 
-			require_once '../include/plugins/securimage/securimage.php';
+			require_once BASEDIR . 'include/plugins/securimage/securimage.php';
 			$securimage = new Securimage();
 
 			if ($securimage->check($_POST['captcha_code']) == true) {
