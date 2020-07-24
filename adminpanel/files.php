@@ -2,12 +2,6 @@
 // (c) vavok.net
 // todo: rewrite whole page
 
-/*
-
-Site administrator have access to this page and user with special permissions
-
-*/
-
 require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
 
@@ -528,14 +522,14 @@ if ($action == "new") {
 
  
 
-    echo '<div>
-    <h1><img src="../images/img/edit.gif" alt="" /> ' . $lang_home['newfile'] . '</h1></div>';
+    echo '
+    <h1>' . $lang_home['newfile'] . '</h1>';
 
     echo '<div class="form-group">
     		<form method="post" action="procfiles.php?action=addnew">';
     echo '<label for="newfile">' . $lang_home['pagename'] . ':</label>';
 	    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
-    </div>'; 
+    '; 
 
 
     // language

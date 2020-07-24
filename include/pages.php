@@ -1,5 +1,10 @@
 <?php
-
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   24.07.2020. 12:02:34
+*/
 
 if (!empty($_GET['pg'])) {
 	// Page class
@@ -14,16 +19,17 @@ if (!empty($_GET['pg'])) {
 
 // Load main page
 elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
-	// Page class
-	$current_page = new Page();
-
+	// Requested page language
 	$requested_language = isset($_GET['ln']) ? check($_GET['ln']) : '';
 
 	// Load user notice from URL
 	$url_isset = isset($_GET['isset']) ? '?isset=' . check($_GET['isset']) : '';
 
+	// Page class
+	$current_page = new Page('index', $requested_language);
+
 	// Load page with language requested in URL if exists
-	$page_data = $current_page->load_main_page($requested_language);
+	$page_data = $current_page->load_page();
 
 	// Update language
 	if (!empty($page_data['lang']) && strtolower($page_data['lang']) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($page_data['lang'])); }

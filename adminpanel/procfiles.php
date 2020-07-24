@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 20.07.2020. 4:28:04
+// modified: 24.07.2020. 12:17:40
 // todo: rewrite whole page
 
 require_once"../include/startup.php";
@@ -195,7 +195,7 @@ if ($action == "addnew") {
         if (!empty($page_structure)) {
             // user's custom page structure
             $page_url = website_home_address() . '/' . $page_structure . '/' . $newfile . '/';
-        } elseif ($type = 'post') {
+        } elseif ($type == 'post') {
             // blog post
             $page_url = website_home_address() . '/blog/' . $newfile . '/';
         } else {

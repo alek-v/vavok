@@ -4,22 +4,26 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   22.07.2020. 2:32:07
+* Updated:   24.07.2020. 12:02:44
 */
 
 class Page {
 
+	public $page_name;
+	public $page_language;
 	public $page_title;
 	public $page_content;
 
 	// class constructor
-	function __construct() {
+	function __construct($page_name = '', $page_language = '') {
 		global $db, $users;
 
-		$this->table_prefix = get_configuration('tablePrefix'); // table prefix
-		$this->transfer_protocol = transfer_protocol(); // transfer protocol
+		$this->table_prefix = get_configuration('tablePrefix'); // Table prefix
+		$this->transfer_protocol = transfer_protocol(); // Transfer protocol
 		$this->db = $db; // database
-		$this->user_id = $users->current_user_id(); // user id with active login
+		$this->user_id = $users->current_user_id(); // User id with active login
+		$this->page_name = $page_name;
+		$this->page_language = $page_language;
 
 		if (empty($page_title)) { $this->page_title = get_configuration('title'); /* Page title */ }
 	}
@@ -124,7 +128,9 @@ class Page {
 
 	// Show page content
 	public function show_page() {
+
 		echo $this->page_content;
+
 	}
 
 	// return total number of pages
@@ -171,13 +177,13 @@ class Page {
 
 	}
 
-	// Load main page
-	public function load_main_page($language = '') {
+	// Load page
+	public function load_page() {
 		// Load page with requested language
-		if (!empty($language)) { $language = " AND lang='{$language}'"; }
+		$language = !empty($this->page_language) ? " AND lang='" . $this->page_language . "'" : '';
 
 		// get data
-		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='index'{$language}", 'tname, content, lang');
+		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'{$language}", 'tname, content, lang');
 
 		// return false if there is no data
 		if (empty($page_data['tname']) && empty($page_data['content'])) {
@@ -185,6 +191,9 @@ class Page {
 		} else {
 			// Update page title
 			$this->page_title = $page_data['tname'];
+
+			// Update language
+			if (!empty($page_data['lang']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' lang="' . $page_data['lang'] . '"');
 
 			// Page content
 			$this->page_content = $page_data['content'];
