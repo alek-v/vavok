@@ -1,21 +1,348 @@
 <?php 
 // (c) vavok.net
 require_once"../include/startup.php";
-$my_title = "Settings";
 
 if (!$users->is_reg() || !$users->is_administrator(101)) {
-    header ("Location: ../pages/error.php?error=401");
-    exit;
+    redirect_to("../pages/error.php?error=401");
 }
 
-if (!empty($_GET['action'])) {
-    $action = check($_GET['action']);
-} else {
-    $action = '';
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+
+// main settings update
+if ($action == "editone") {
+
+	// Check fields
+    if (empty($_POST['conf_set0']) || empty($_POST['conf_set1']) || empty($_POST['conf_set2']) || empty($_POST['conf_set3']) || empty($_POST['conf_set8']) || empty($_POST['conf_set9']) || empty($_POST['conf_set10']) || empty($_POST['conf_set11']) || empty($_POST['conf_set14']) || empty($_POST['conf_set21']) || empty($_POST['conf_set29']) || empty($_POST['conf_set61']) || empty($_POST['conf_set62']) || empty($_POST['conf_set63'])) {
+        redirect_to("settings.php?action=setone&isset=mp_nosset");
+    }
+
+    $ufile = file_get_contents(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile);
+
+	$udata[0] = check($_POST['conf_set0']);
+    $udata[1] = check($_POST['conf_set1']);
+    $udata[2] = check($_POST['conf_set2']);
+    $udata[3] = check($_POST['conf_set3']);
+    $udata[8] = check($_POST['conf_set8']);
+    $udata[9] = htmlspecialchars(stripslashes(trim($_POST['conf_set9'])));
+    $udata[10] = check($_POST['conf_set10']);
+    $udata[11] = check($_POST['conf_set11']);
+    $udata[14] = check($_POST['conf_set14']);
+    $udata[21] = check($_POST['conf_set21']); // transfer protocol
+    $udata[29] = (int)$_POST['conf_set29'];
+    $udata[47] = check($_POST['conf_set47']);
+    $udata[61] = (int)$_POST['conf_set61'];
+    $udata[62] = (int)$_POST['conf_set62'];
+    $udata[63] = (int)$_POST['conf_set63'];
+
+    $utext = '';
+
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    // update configuration file
+    if (!empty($udata[8]) && !empty($udata[9])) {
+        file_put_contents(BASEDIR . "used/config.dat", $utext);
+    } 
+
+    // update .htaccess file
+    // dont force https
+$htaccess_tp_nos = '# force https protocol
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+        // force https
+$htaccess_tp_s = '# force https protocol
+RewriteCond %{HTTPS} !=on
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+    if (get_configuration('transferProtocol') == 'HTTPS' && ($udata[21] == 'auto' || $udata[21] == 'HTTP')) {
+
+        // Disable forcing HTTPS in .htaccess
+
+        $file = file_get_contents('../.htaccess');
+
+        $start = strpos($file, '# force https protocol');
+        $strlen = mb_strlen($htaccess_tp_s); // find string length
+
+
+        $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
+
+        file_put_contents('../.htaccess', $file);
+
+    } elseif ($udata[21] == 'HTTPS' && (get_configuration('transferProtocol') == 'HTTP' || get_configuration('transferProtocol') == 'auto')) {
+        
+        // Enable forcing HTTPS in .htaccess
+
+        $file = file_get_contents('../.htaccess');
+
+        $start = strpos($file, '# force https protocol');
+        $strlen = mb_strlen($htaccess_tp_nos); // find string length
+
+
+        $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
+
+        file_put_contents('../.htaccess', $file);
+    }
+
+    redirect_to("settings.php?isset=mp_yesset");
+
+ 
 } 
 
+
+if ($action == "edittwo") {
+
+	if ($_POST['conf_set4'] != "" && $_POST['conf_set5'] != "" && $_POST['conf_set7'] != "" && isset($_POST['conf_set32']) && $_POST['conf_set74'] != "") {
+	
+	$ufile = file(BASEDIR . "used/config.dat");
+	$udata = explode("|", $ufile[0]);
+
+	$udata[4] = (int)$_POST['conf_set4'];
+	$udata[5] = (int)$_POST['conf_set5'];
+	$udata[7] = (int)$_POST['conf_set7'];
+	$udata[32] = (int)$_POST['conf_set32']; // cookie consent
+	$udata[74] = (int)$_POST['conf_set74'];
+
+	for ($u = 0; $u < $config["configKeys"]; $u++) {
+	    $utext .= $udata[$u] . '|';
+	} 
+
+	if (!empty($udata[8]) && !empty($udata[9])) {
+        // Save data
+        file_put_contents(BASEDIR . "used/config.dat", $utext);
+	} 
+
+	redirect_to ("settings.php?isset=mp_yesset");
+
+	} else {
+	header ("Location: settings.php?action=settwo&isset=mp_nosset");
+	exit;
+	} 
+	
+} 
+
+if ($action == "editthree") {
+
+    if ($_POST['conf_set20'] != "" && $_POST['conf_set22'] != "" && $_POST['conf_set24'] != "" && $_POST['conf_set25'] != "" && $_POST['conf_set56'] != "") {
+
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
+
+    $udata[20] = (int)$_POST['conf_set20'];
+    $udata[22] = (int)$_POST['conf_set22'];
+    $udata[24] = (int)$_POST['conf_set24'];
+    $udata[25] = (int)$_POST['conf_set25'];
+    $udata[56] = (int)$_POST['conf_set56'];
+    $udata[63] = (int)$_POST['conf_set63'];
+    $udata[64] = (int)$_POST['conf_set64'];
+    $udata[65] = (int)$_POST['conf_set65'];
+
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    file_put_contents(BASEDIR . "used/config.dat", $utext);
+
+    header ("Location: settings.php?isset=mp_yesset");
+    exit;
+    } else {
+    header ("Location: settings.php?action=setthree&isset=mp_nosset");
+    exit;
+    }
+}
+
+if ($action == "editfour") {
+
+    if ($_POST['conf_set38'] != "" && $_POST['conf_set39'] != "" && $_POST['conf_set49'] != "") {
+
+    // update main config
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
+
+    if (!empty($_POST['conf_set28'])) {
+    $udata[28] = (int)$_POST['conf_set28'];
+    }
+    $udata[37] = (int)$_POST['conf_set37'];
+    $udata[38] = (int)$_POST['conf_set38'];
+    $udata[38] = $udata[38] * 1024;
+    $udata[38] = (int)$udata[38];
+    $udata[39] = (int)$_POST['conf_set39'];
+    $udata[49] = (int)$_POST['conf_set49'];
+    $udata[68] = (int)$_POST['conf_set68'];
+
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    file_put_contents(BASEDIR . "used/config.dat", $utext);
+
+    // update gallery settings
+    $gallery_file = file(BASEDIR . "used/dataconfig/gallery.dat");
+    if ($gallery_file) {
+        $gallery_data = explode("|", $gallery_file[0]);
+
+        $gallery_data[0] = (int)$_POST['gallery_set0'];
+        $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
+        $gallery_data[5] = (int)$_POST['screen_width'];
+        $gallery_data[6] = (int)$_POST['screen_height'];
+        $gallery_data[7] = (int)$_POST['media_buttons'];
+
+
+        for ($u = 0; $u < $config["configKeys"]; $u++) {
+            $gallery_text .= $gallery_data[$u] . '|';
+        } 
+
+        if (isset($gallery_data[0])) {
+            file_put_contents(BASEDIR . "used/dataconfig/gallery.dat", $gallery_text);
+        }
+    }
+
+    redirect_to("settings.php?isset=mp_yesset");
+
+    } else { redirect_to("settings.php?action=setfour&isset=mp_nosset"); }
+
+} 
+
+if ($action == "editfive") {
+
+	if (!empty($_POST['conf_set30'])) {
+	$ufile = file(BASEDIR . "used/config.dat");
+	$udata = explode("|", $ufile[0]);
+
+	$udata[30] = (int)$_POST['conf_set30'];
+
+	for ($u = 0; $u < $config["configKeys"]; $u++) {
+	    $utext .= $udata[$u] . '|';
+	} 
+
+	if (!empty($udata[8]) && !empty($udata[9])) {
+	    file_put_contents(BASEDIR . "used/config.dat", $utext);
+	}
+
+	redirect_to("settings.php?isset=mp_yesset");
+
+	} else { redirect_to("settings.php?action=setfive&isset=mp_nosset"); }
+
+}
+
+if ($action == "editseven") {
+
+    if (!empty($_POST['conf_set6']) || !empty($_POST['conf_set51']) || !empty($_POST['conf_set70'])) {
+
+        // url of custom pages
+        $htaccess = file_get_contents('../.htaccess'); // load .htaccess file
+
+        // replace custom link
+        $chars = strlen('# website custom pages');
+        $start = strpos($htaccess, '# website custom pages') + $chars;
+        $end = strpos($htaccess, '# end of website custom pages');
+
+        $replace = '';
+        for ($i=$start; $i < $end; $i++) {
+            $replace .= $htaccess[$i];
+        }
+
+        // do replacement
+        if (!empty($_POST['conf_set28'])) {
+            $_POST['conf_set28'] = str_replace(' ', '', $_POST['conf_set28']);
+
+            $replacement = "\r\n" . 'RewriteRule ^' . $_POST['conf_set28'] . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
+        } else { $replacement = "\r\n# custom_link - don't remove\r\n"; }
+
+        $new_htaccess = str_replace($replace, $replacement, $htaccess);
+
+        // save changes
+        file_put_contents('../.htaccess', $new_htaccess);
+
+        $data = array(
+            6 => $_POST['conf_set6'],
+            28 => $_POST['conf_set28'],
+            51 => $_POST['conf_set51'],
+            70 => $_POST['conf_set70']
+        );
+
+        $config_update = new Config();
+        $config_update->update($data);
+
+        redirect_to("settings.php?isset=mp_yesset");
+
+    } else {
+        redirect_to("settings.php?action=setseven&isset=mp_nosset");
+    } 
+    
+} 
+
+if ($action == "editeight") {
+
+    if ($_POST['conf_set58'] != "" && $_POST['conf_set76'] != "") {
+    $ufile = file(BASEDIR . "used/config.dat");
+    $udata = explode("|", $ufile[0]);
+
+    $udata[58] = (int)$_POST['conf_set58'];
+    $udata[76] = round($_POST['conf_set76'] * 1440);
+
+    for ($u = 0; $u < $config["configKeys"]; $u++) {
+        $utext .= $udata[$u] . '|';
+    } 
+
+    if (!empty($udata[8]) && !empty($udata[9])) {
+        file_put_contents(BASEDIR . "used/config.dat", $utext);
+    }
+
+    redirect_to("settings.php?isset=mp_yesset");
+
+    } else {
+    redirect_to("settings.php?action=seteight&isset=mp_nosset");
+    } 
+
+} 
+// edit database settings
+if ($action == "editnine") {
+
+    if ($_POST['conf_set77'] != "" && $_POST['conf_set78'] != "" && $_POST['conf_set79'] != "" && $_POST['conf_set80'] != "") {
+
+        // check for tables
+        if (!$db->table_exists($_POST['conf_set71'] . 'pages')) { $db->copy_table('pages', $_POST['conf_set71']); } // pages for this site
+        if (!$db->table_exists($_POST['conf_set71'] . 'online')) { $db->copy_table('online', $_POST['conf_set71']); } // visitor counter for this site
+        if (!$db->table_exists($_POST['conf_set71'] . 'specperm')) { $db->copy_table('specperm', $_POST['conf_set71']); } // permittions for this site
+
+        if (!$db->table_exists($_POST['conf_set71'] . 'counter')) {
+
+            $db->copy_table('counter', $_POST['conf_set71']);
+
+            // set default values
+            $db->query("INSERT INTO " . $_POST['conf_set71'] . "counter (`day`, `month`, `visits_today`, `visits_total`, `clicks_today`, `clicks_total`) VALUES (0, 0, 0, 0, 0, 0)");
+
+        } // visitor counter for this site
+
+
+
+        $data = array(
+            71 => $_POST['conf_set71'], // crossdomain table prefix 'tablePrefix'
+            77 => $_POST['conf_set77'],
+            78 => $_POST['conf_set78'],
+            79 => $_POST['conf_set79'],
+            80 => $_POST['conf_set80']
+        );
+
+        $config_update = new Config();
+        $config_update->update($data);
+
+        redirect_to("settings.php?isset=mp_yesset");
+
+    } else {
+
+    redirect_to("settings.php?action=setnine&isset=mp_nosset");
+
+    }
+
+}
+
+$my_title = "Settings";
+
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
- 
 
 if (empty($action)) {
     echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $lang_apsetting['mainset'] . '</a>';
@@ -34,7 +361,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
     if ($action == "setone") {
         echo '<h1>' . $lang_apsetting['mainset'] . '</h1>';
 
-        echo '<form method="post" action="procsets.php?action=editone">';
+        echo '<form method="post" action="settings.php?action=editone">';
 
         echo '<p>' . $lang_apsetting['language'] . ':<br /><select name="conf_set47"><option value="' . $config['siteDefaultLang'] . '">' . $config['siteDefaultLang'] . '</option>';
 
@@ -55,24 +382,6 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         $dir = opendir ("../themes");
         while ($file = readdir ($dir)) {
             if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $config['webtheme'] && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
-                $nfile = str_replace("web_", "", $file);
-                $nfile = str_replace("wap_", "", $nfile);
-                $nfile = ucfirst($nfile);
-                echo '<option value="' . $file . '">' . $nfile . '</option>';
-            } 
-        } 
-        echo '</select></p>';
-        closedir ($dir);
-
-        // default mobile skin
-        $config_themes_show = str_replace("web_", "", $config['mTheme']);
-        $config_themes_show = str_replace("wap_", "", $config_themes_show);
-        $config_themes_show = ucfirst($config_themes_show);
-        echo '<p>Mobile skin:<br /><select name="conf_set12"><option value="' . $config['mTheme'] . '">' . $config_themes_show . '</option>';
-
-        $dir = opendir ("../themes");
-        while ($file = readdir($dir)) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $config['mTheme'] && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
                 $nfile = str_replace("web_", "", $file);
                 $nfile = str_replace("wap_", "", $nfile);
                 $nfile = ucfirst($nfile);
@@ -191,7 +500,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
 if ($action == "settwo") {
     echo '<h1>' . $lang_apsetting['shwinfo'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=edittwo">';
+    echo '<form method="post" action="settings.php?action=edittwo">';
 
     echo '<p>' . $lang_apsetting['showclock'] . ': <br />' . $lang_apsetting['yes'] . '';
     if ($config['showtime'] == "1") {
@@ -267,11 +576,12 @@ if ($action == "settwo") {
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-} 
+}
+
 if ($action == "setthree") {
     echo '<h1>' . $lang_apsetting['gbnewschatset'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editthree">';
+    echo '<form method="post" action="settings.php?action=editthree">';
 
     echo '<p>' . $lang_apsetting['allowguestingb'] . ': <br />' . $lang_apsetting['yes'];
     if ($config['bookGuestAdd'] == "1") {
@@ -294,7 +604,8 @@ if ($action == "setthree") {
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-} 
+}
+
 if ($action == "setfour") {
 
     $kbs = $config['photoFileSize'] / 1024;
@@ -302,7 +613,7 @@ if ($action == "setfour") {
     // forum settings
     echo '<h1>' . $lang_apsetting['forumandgalset'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editfour">';
+    echo '<form method="post" action="settings.php?action=editfour">';
 
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Forum settings<br /><br />';
     echo '<p>' . $lang_apsetting['forumon'] . ': <br />' . $lang_apsetting['yes'] . '';
@@ -380,21 +691,22 @@ if ($action == "setfour") {
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-} 
-// 30,32,33,40,41,42,46,66
+}
+
 if ($action == "setfive") {
     echo '<h1>' . $lang_apsetting['downandinbxsets'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editfive">';
+    echo '<form method="post" action="settings.php?action=editfive">';
 
     echo '<p>' . $lang_apsetting['maxinbxmsgs'] . ':<br /><input name="conf_set30" maxlength="5" value="' . $config['pvtLimit'] . '" /></p>';
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 }
+
 if ($action == "setseven") {
     echo '<h1>' . $lang_apsetting['pagessets'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editseven">';
+    echo '<form method="post" action="settings.php?action=editseven">';
 
     echo '<div class="form-group">';
         echo '<label for="custom-pages">' . $lang_home['customPageUrl'] . '</label>';
@@ -451,23 +763,25 @@ if ($action == "setseven") {
     echo '<button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></div>
     </form>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-} 
+}
+
 if ($action == "seteight") {
     echo '<h1>' . $lang_apsetting['other'] . '</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editeight">';
+    echo '<form method="post" action="settings.php?action=editeight">';
 
     echo '<p>' . $lang_apsetting['maxlogfile'] . ':<br /><input name="conf_set58" maxlength="3" value="' . $config['maxLogData'] . '" /></p>';
     echo '<p>' . $lang_apsetting['maxbantime'] . ':<br /><input name="conf_set76" maxlength="3" value="' . round($config['maxBanTime'] / 1440) . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
-} 
+}
+
 // database settings
 if ($action == "setnine") {
     echo '<h1>Database settings</h1>';
 
-    echo '<form method="post" action="procsets.php?action=editnine">';
+    echo '<form method="post" action="settings.php?action=editnine">';
 
     echo '<p>Database host:<br /><input name="conf_set77" maxlength="40" value="' . $config['dbhost'] . '" /></p>';
     echo '<p>' . $lang_apsetting['username'] . ':<br /><input name="conf_set78" maxlength="40" value="' . $config['dbuser'] . '" /></p>';
@@ -483,4 +797,5 @@ echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+
 ?>
