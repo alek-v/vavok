@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 15:53:22
+* Updated:   24.07.2020. 18:38:15
 */
 
 require_once"../include/startup.php";
@@ -24,10 +24,10 @@ if ($action == "go") {
     // Validate email address
     if (!$users->validate_email($umail)) { redirect_to("./?isset=noemail"); }
 
-    require_once '../lang/' . $config['siteDefaultLang'] . '/index.php';
+    require_once BASEDIR . 'lang/' . get_configuration('siteDefaultLang') . '/index.php';
 
     // Captcha code
-    require_once '../include/plugins/securimage/securimage.php';
+    require_once BASEDIR . 'include/plugins/securimage/securimage.php';
     $securimage = new Securimage();
 
     // Check captcha code
@@ -35,7 +35,7 @@ if ($action == "go") {
 
     // Send email
     $mail = new Mailer();
-    $mail->send($config["adminEmail"], $lang_home['msgfrmst'] . " " . $config["title"], $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', $config["siteTime"]), $umail, $name);
+    $mail->send(get_configuration("adminEmail"), $lang_home['msgfrmst'] . " " . get_configuration("title"), $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', get_configuration("siteTime")), $umail, $name);
 
     // Email sent
     redirect_to("./?isset=mail");
