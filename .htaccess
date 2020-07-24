@@ -2,7 +2,7 @@ DirectoryIndex index.php index.html
 
 AddDefaultCharset UTF-8
 
-<Files ~ "include|used|lang">
+<Files ~ "include|used">
    Order allow,deny
    Deny from all
 </Files>
