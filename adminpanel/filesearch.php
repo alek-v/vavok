@@ -23,7 +23,7 @@ if (!empty($_GET['page'])) {
 
 if ($action == "tpc") {
     $my_title = 'Search';
-    include"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     echo'<form action="filesearch.php?action=stpc" method="POST">';
     echo 'Page name:<br><input name="stext" maxlength="30" /><br>';
@@ -34,11 +34,11 @@ if ($action == "tpc") {
     echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
     echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
 
-    include"../themes/$config_themes/foot.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 } else if ($action == "stpc") {
     $stext = check($_POST["stext"]);
     $my_title = 'Search';
-    include"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     if (empty($stext)) {
         echo "<br>Please fill all fields";
@@ -86,7 +86,7 @@ if ($action == "tpc") {
     echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
     echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
 
-    include"../themes/$config_themes/foot.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
     exit;
 } 
 

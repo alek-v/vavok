@@ -25,7 +25,7 @@ if (!empty($_GET['view'])) {
 
 $my_title = $lang_admin['modlist'];
 
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
  
 
@@ -56,6 +56,6 @@ if (empty($action)) {
 echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

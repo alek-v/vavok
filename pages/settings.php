@@ -149,7 +149,7 @@ require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
 
 
 $my_title = $lang_setting['settings'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_reg()) {
 
@@ -220,6 +220,6 @@ if ($users->is_reg()) {
 echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a></p>';
 
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

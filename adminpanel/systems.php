@@ -15,7 +15,7 @@ function prev_dir($string) {
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101) {
         
-        include_once"../themes/$config_themes/index.php";
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         switch ($action) {
             default:
@@ -169,6 +169,6 @@ if ($users->is_reg()) {
     exit;
 } 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

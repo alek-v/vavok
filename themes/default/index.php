@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   23.07.2020. 19:28:38
+* Updated:   24.07.2020. 15:53:03
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
@@ -70,8 +70,8 @@ include BASEDIR . "include/load_header.php";
 						<li class="nav-item dropdown">
 							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $lang_home['lang']; ?></a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-					          <a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/vavok3/images/flag_great_britain_32.png" alt="english language" /></a>
-					          <a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/vavok3/images/serbia_flag_32.png" alt="српски језик" /></a>
+					          <a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /></a>
+					          <a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /></a>
 					        </div>
 			      		</li>
 					</ul>

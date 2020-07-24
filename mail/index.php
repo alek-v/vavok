@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   24.07.2020. 15:53:22
+*/
+
 require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
@@ -40,7 +46,7 @@ if (empty($action)) {
 
     $my_title = $lang_home['contact'];
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     // generate page
     $showPage = new PageGen("mail/mail_index.tpl");
@@ -66,6 +72,6 @@ if (empty($action)) {
 // show page
 echo $showPage->output();
 
-include_once "../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

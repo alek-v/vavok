@@ -1,9 +1,8 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/startup.php";
-include_once"../themes/$config_themes/index.php";
-
-
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $code = !empty($_GET['subdel']) ? check($_GET['subdel']) : '';
 $subscriptionName = !empty($_GET['sn']) ? check($_GET['sn']) : '';
@@ -17,7 +16,7 @@ if (!empty($code)) {
                 $db->update('vavok_profil', array('subscri', 'newscod'), array(0, ''), "uid='" . $email_check['user_id'] . "'");
             } 
 
-            $db->delete('subs', "user_pass='" . $code . "'");
+            $db->delete('subs', "user_pass='{$code}'");
 
             echo '<p>' . $lang_mail['hello'] . ' ' . $uz_log . '!</p>
             <p>' . $lang_mail['delsubok'] . '!</p>';
@@ -33,6 +32,6 @@ if (!empty($code)) {
 
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

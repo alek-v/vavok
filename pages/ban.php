@@ -28,7 +28,7 @@ if ($users->is_reg()) {
             $users->logout($user_id);
 
             // headers could not be send before cookies, so we load it here
-            include_once"../themes/$config_themes/index.php";
+            require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
             echo '<img src="../images/img/error.gif" alt=""> <b>' . $lang_ban['banned1'] . '</b><br /><br />';
             echo '<b><font color="#FF0000">' . $lang_ban['bandesc'] . ': ' . $bandesc . '</font></b>';
@@ -41,7 +41,7 @@ if ($users->is_reg()) {
 
         } else {
 
-            include_once"../themes/$config_themes/index.php";
+            require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
             echo '<img src="../images/img/open.gif" alt=""> ' . $lang_ban['wasbanned'] . '<br /><br />';
             if ($bandesc != "") {
@@ -62,6 +62,6 @@ if ($users->is_reg()) {
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

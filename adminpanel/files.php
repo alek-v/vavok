@@ -60,7 +60,7 @@ if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(
 
 if (empty($action)) {
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     echo '<h1>' . $lang_home['filelist'] . '</h1>';
 
@@ -166,7 +166,7 @@ if ($action == "show") {
 
         $showname = $page_info['pname'];
 
-        include_once"../themes/$config_themes/index.php"; 
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
         echo '<p>' . $lang_home['shwingpage'] . ' <b>' . $showname . '</b></p>';
         echo '<p>' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']);
@@ -243,7 +243,7 @@ if ($action == "edit") {
             exit;
         } 
 
-        include_once"../themes/$config_themes/index.php";
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         $datamainfile = $page_info['content'];
 
@@ -293,7 +293,7 @@ if ($action == "edit") {
         echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
         
     } else {
-        include_once"../themes/$config_themes/index.php";
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
         echo $lang_admin['file'] . ' ' . $file . ' ' . $lang_admin['noexist'] . '<br />';
     } 
 
@@ -312,7 +312,7 @@ if ($action == "headtag") {
         exit;
     } 
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     ?>
 
@@ -431,7 +431,7 @@ if ($action == "headtag") {
 if ($action == 'mainmeta') {
     if (!$users->is_administrator(101)) { redirect_to("../?isset=ap_noaccess"); }
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     echo '<img src="/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
@@ -456,7 +456,7 @@ if ($action == 'renamepg') {
 
     $pg = check($_GET['pg']);
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     if (isset($_GET['isset'])) {
         $isset = check($_GET['isset']);
@@ -518,7 +518,7 @@ if ($action == "new") {
 	</style>
     ';
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
  
 
@@ -590,7 +590,7 @@ if ($action == "poddel") {
         exit;
     } 
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     if (!empty($file)) {
         if ($file != "index.php") {
@@ -615,7 +615,7 @@ if ($action == "pagelang") {
     // get page data
     $pageData = $pageEditor->select_page($id);
 
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
     echo '<div class="form-group">';
 
@@ -673,6 +673,6 @@ if ($action != "faq") {
 echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

@@ -50,7 +50,7 @@ if ($users->is_reg()) {
     if (empty($action)) {
 
         $my_title = $lang_page['contacts'];
-        include_once"../themes/$config_themes/index.php";
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
  
 
@@ -93,6 +93,6 @@ if ($users->is_reg()) {
 echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

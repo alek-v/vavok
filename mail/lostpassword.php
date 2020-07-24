@@ -3,15 +3,16 @@
 
 require_once"../include/startup.php";
 
+$page = isset($_GET['page']) ? check($_GET['page']) : '';
+$logus = isset($_POST['logus']) ? check($_POST['logus']) : '';
+$mailsus = isset($_POST['mailsus']) ? check($_POST['mailsus']) : '';
+
+// Page settings
 $my_title = $lang_home['lostpass'];
 
 $genHeadTag = '<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />';
 
-include_once"../themes/$config_themes/index.php";
-
-$page = isset($_GET['page']) ? check($_GET['page']) : '';
-$logus = isset($_POST['logus']) ? check($_POST['logus']) : '';
-$mailsus = isset($_POST['mailsus']) ? check($_POST['mailsus']) : '';
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($page) || $page == 'index') {
 	
@@ -21,6 +22,7 @@ if (empty($page) || $page == 'index') {
 	
 }
 
+// Send mail
 if ($page == 'send') {
 
     if (!empty($logus) && !empty($mailsus)) {
@@ -66,6 +68,6 @@ if ($page == 'send') {
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

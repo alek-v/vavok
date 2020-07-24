@@ -4,7 +4,7 @@
 require_once"../include/startup.php";
 
 $my_title = "CHMOD";
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
     $mode = 777;
@@ -47,6 +47,6 @@ if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
     header ("Location: index.php");
 } 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

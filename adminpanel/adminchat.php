@@ -20,7 +20,7 @@ $times = date("H:i");
 
 $my_title = $lang_admin['adminchat'];
 
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<img src="../images/img/menu.gif" alt=""> <b>' . $lang_admin['adminchat'] . '</b><br><br>';
 
@@ -127,6 +127,6 @@ echo'<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</
 
 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

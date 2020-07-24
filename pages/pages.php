@@ -27,7 +27,7 @@ if (empty($current_page->page_content)) {
 // header("Status: 404 Not Found");
 header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 
-include"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 ?>
 
@@ -38,7 +38,7 @@ include"../themes/$config_themes/index.php";
 
 <?php
 
-include"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 exit;
 }
 
@@ -48,7 +48,7 @@ exit;
 $this_page = new PageGen('pages/page/page.tpl');
 
 // load theme
-include"../themes/" . $config_themes . "/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 // Check if page is published
 if ($current_page->published == 1 && !$users->is_administrator()) {
@@ -56,7 +56,7 @@ if ($current_page->published == 1 && !$users->is_administrator()) {
 	echo '<p><br /><br />';
 	echo '<a href="' . website_home_address() . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-	include"../themes/$config_themes/foot.php";
+	require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 	exit;
 }
 
@@ -75,6 +75,6 @@ $this_page->set('homepage_url', website_home_address()); // homepage url
 echo $this_page->output();
 
 // load footer
-include"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

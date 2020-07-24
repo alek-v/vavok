@@ -81,13 +81,13 @@ switch ($pg) {
 		$post->set('comments', $show_comments->output());
 
 		// page header
-		include"../themes/" . $config_themes . "/index.php";
+		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 		// show page content
 		echo $post->output();
 
 		// page footer
-		include"../themes/" . $config_themes . "/foot.php";
+		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 		break;
 	
@@ -97,7 +97,7 @@ switch ($pg) {
 		$my_title = 'Blog';
 		
 		// page header
-		include"../themes/" . $config_themes . "/index.php";
+		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 		// load index template
 		$showPage = new PageGen("pages/blog/index.tpl");
@@ -112,7 +112,7 @@ switch ($pg) {
 			echo '<p><img src="../images/img/reload.gif" alt="" /> There is nothing here</p>';
 
 			// page footer
-			include"../themes/" . $config_themes . "/foot.php";
+			require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 			break;
 
@@ -175,7 +175,7 @@ switch ($pg) {
 
 
 		// page footer
-		include"../themes/" . $config_themes . "/foot.php";
+		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 		break;
 }

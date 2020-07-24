@@ -7,14 +7,13 @@ $data_on_page = 10; // referere links per page
 
 
 $my_title = "Referer";
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($_GET['page']) || $_GET['page'] < 1) {
     $page = 1;
 } else {
     $page = check($_GET['page']);
-} 
-
+}
 
 if ($config["showRefPage"] == "1" || $users->is_administrator()) {
 
@@ -44,6 +43,6 @@ if ($config["showRefPage"] == "1" || $users->is_administrator()) {
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

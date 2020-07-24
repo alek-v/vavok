@@ -56,7 +56,7 @@ if ($action == 'resendkey') {
 
 
 $my_title = $lang_page['confreg'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 // enter registration key
@@ -127,6 +127,6 @@ if ($action == "inkey") {
 
 echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt="Home page" /> ' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

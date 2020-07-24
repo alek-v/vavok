@@ -11,7 +11,7 @@ $data_on_page = 10; // online users per page
 
 
 $my_title = 'Online';
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
  
 
@@ -106,6 +106,6 @@ if ($list != "full") {
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once "../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

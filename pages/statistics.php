@@ -1,5 +1,5 @@
 <?php
-// modified: 10.1.2016. 2:19:53
+// modified: 24.07.2020. 15:04:52
 // (c) VAVOK .net
 require_once"../include/startup.php";
 include"../lang/" . $config["language"] . "/pagescounter.php";
@@ -7,7 +7,7 @@ include"../lang/" . $config["language"] . "/pagescounter.php";
 
 
 $my_title = $lang_page['statistic'];
-include"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 $pcount = file(BASEDIR . "used/datacounter/host.dat");
@@ -63,6 +63,6 @@ $tot = $u[0] + $u[1] + $u[2] + $u[3] + $u[4] + $u[5];
 echo '<br><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a><br>';
 
 
-include"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

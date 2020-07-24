@@ -2,10 +2,8 @@
 // (c) vavok.net
 require_once"../include/startup.php";
 
-
-
 $my_title = 'Change Photo'; // update lang
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 ?>
 <style type="text/css">
@@ -120,6 +118,6 @@ if (empty($action)) {
 } 
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

@@ -36,7 +36,7 @@ if ($view == "name") {
 }
 
 $my_title = $lang_page['userlist'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($num_items > 0) {
 
@@ -65,7 +65,7 @@ echo '</p>';
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
 echo '<img src="../images/img/homepage.gif" alt="' . $lang_home['home'] . '" /> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>
 

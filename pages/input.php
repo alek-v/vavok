@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   19.07.2020. 20:29:57
+* Updated:   24.07.2020. 15:17:55
 */
 
 require_once"../include/startup.php";
@@ -58,12 +58,12 @@ $max_attempts = 5;
 if (empty($action) && !empty($log)) {
 
 	if ($users->login_attempt_count($max_time_in_seconds, $log, $users->find_ip(), $db) > $max_attempts) {
-	    include "../themes/" . $config_themes . "/index.php";
+	    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
 	    Try again in " . explode(':', maketime($max_time_in_seconds))[0] . " minutes.</p>"; // update lang
 
-	    include "../themes/" . $config_themes . "/foot.php";
+	    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 	    exit;
 	}
 

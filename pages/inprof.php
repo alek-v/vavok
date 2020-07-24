@@ -7,8 +7,6 @@ if (!$users->is_reg()) {
     exit;
 }
 
-
-
 if (!empty($_POST['site']) && !validateURL($_POST['site'])) {
     header ("Location: profile.php?isset=insite");
     exit;
@@ -60,7 +58,6 @@ $values[] = $zip;
 
 $db->update('vavok_about', $fields, $values, "uid='" . $user_id . "'");
 
-header ("Location: ./profile.php?isset=editprofil");
-exit;
+redirect_to("./profile.php?isset=editprofil");
 
 ?>

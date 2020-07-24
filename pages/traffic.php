@@ -5,7 +5,7 @@
 require_once"../include/startup.php";
 
 $my_title = $lang_traffic['traffic'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($config["gzip"] == "1") {
     echo '<font color="#00FF00">' . $lang_traffic['gzipon'] . '</font><br><br>';
@@ -21,7 +21,7 @@ echo $lang_traffic['timeonsite'] . ': <b>' . $timeon . '</b><br><br>';
 
 echo '<br><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>
 

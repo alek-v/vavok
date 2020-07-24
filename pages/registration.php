@@ -41,7 +41,7 @@ $genHeadTag = '<meta name="robots" content="noindex">';
 $my_title = $lang_home['registration'];
 
 // load theme header
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 // check email
 $check_mail = $db->count_row('vavok_about', "email='{$meil}'");
@@ -176,7 +176,7 @@ if ($substr_log < 3) {
 echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 exit;
 
 }
@@ -190,7 +190,7 @@ $genHeadTag = '<meta name="robots" content="noindex">';
 $genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/registration/register.css">';
 
 $my_title = $lang_home['registration'];
-include_once"../themes/" . $config_themes . "/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 if ($config["openReg"] == "1") {
@@ -235,6 +235,6 @@ if ($config["openReg"] == "1") {
 
 }
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

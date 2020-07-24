@@ -3,7 +3,7 @@
 require_once"../include/startup.php";
 
 $my_title = 'Cookies Policy';
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 ?>
 
 <h1>Cookies Policy</h1>
@@ -77,5 +77,5 @@ include_once"../themes/$config_themes/index.php";
 <?php
 echo '<p><a href="' . transfer_protocol() . $config_srvhost . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 ?>

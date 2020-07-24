@@ -19,7 +19,7 @@ if (!$users->is_reg()) { redirect_to("../?error"); }
 
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $my_title = $lang_admin['banning'];
-    include_once"../themes/$config_themes/index.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 
     echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banunban'] . '</b><br /><br />';
@@ -194,6 +194,6 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     redirect_to("../?error");
 } 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

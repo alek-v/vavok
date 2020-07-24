@@ -1,5 +1,6 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || (!$users->is_moderator() && !$users->is_administrator())) {
@@ -33,7 +34,7 @@ function geo_check_ip($ip) {
 $ipData = geo_check_ip($ip);
 
 $my_title = 'IP Informations';
-include'../themes/' . $config_themes . '/index.php';
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 ?>
 
@@ -52,6 +53,6 @@ echo '</div>';
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include'../themes/' . $config_themes . '/foot.php';
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

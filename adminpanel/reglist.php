@@ -45,7 +45,7 @@ if ($act == 'conf' && !empty($usr)) {
 
 $my_title = $lang_admin['uncomfreg'];
 
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
     if ($page == "" || $page <= 0)$page = 1;
@@ -88,5 +88,5 @@ if (empty($action)) {
 echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

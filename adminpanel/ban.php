@@ -13,7 +13,7 @@ if (isset($_GET['start'])) {
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
         $my_title = "IP ban";
-        include_once"../themes/$config_themes/index.php";
+        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         echo '<img src="../images/img/menu.gif" alt=""> <b>IP ban panel</b><br><br>';
 
@@ -77,6 +77,6 @@ if ($users->is_reg()) {
     exit;
 } 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

@@ -47,7 +47,7 @@ if ($action == 'refver') {
 }
 
 $my_title = $lang_home['admpanel'];
-include_once"../themes/" . $config_themes . "/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 if (empty($action)) {
 
@@ -225,6 +225,6 @@ $key = 'checkver'; // key to save cache with
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

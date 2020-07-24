@@ -20,7 +20,7 @@ if (!empty($uz)) {
 } else { redirect_to("../"); }
 
 $my_title = $lang_user['profile'] . " " . $uz;
-include_once"../themes/" . $config_themes . "/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $checkIfExist = $db->count_row('vavok_users', "id='{$users_id}'");
 $about_user = $db->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site');
@@ -40,7 +40,7 @@ if ($checkIfExist < 1 || $users_id == 0) {
 
     echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
 
-    include_once"../themes/" . $config_themes . "/foot.php";
+    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
     exit;
 }
 
@@ -209,5 +209,5 @@ $showPage->set('homepage', '<a href="../" class="btn btn-primary homepage">' . $
 
 echo $showPage->output(); 
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

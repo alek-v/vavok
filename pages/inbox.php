@@ -6,8 +6,6 @@ if (!$users->is_reg()) {
     redirect_to("../pages/login.php?ptl=pages/inbox.php");
 } 
 
-
-
 $last_notif = $db->count_row('notif', "uid='{$user_id}' AND type='inbox'");
 // update notification data
 if ($last_notif > 0) {
@@ -20,7 +18,7 @@ $genHeadTag = '<meta name="robots" content="noindex">
 '; // header data
 
 $my_title = $lang_home['inbox'];
-require_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
 
 $action = isset($_GET['action']) ? check($_GET["action"]) : '';
 $page = isset($_GET['page']) ? check($_GET["page"]) : '';
@@ -149,6 +147,6 @@ if ($action == "main" or empty($action)) {
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-require_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

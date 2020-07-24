@@ -8,7 +8,7 @@ if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administ
 } 
 
 $my_title = $lang_admin['sitestats'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<p><img src="../images/img/webstats.png" alt="">  ' . $lang_admin['sitestats'] . '<br /><br /></p>';
 
@@ -19,6 +19,6 @@ echo '<p><br /><br />
 <a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

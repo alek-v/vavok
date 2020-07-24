@@ -1,7 +1,7 @@
 <?php 
 // (c) vavok.net
 require_once"../include/startup.php";
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $code = !empty($_GET['subdel']) ? check($_GET['subdel']) : '';
 $subscriptionName = !empty($_GET['sn']) ? check($_GET['sn']) : '';
@@ -30,6 +30,6 @@ if (!empty($code)) {
 
 echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

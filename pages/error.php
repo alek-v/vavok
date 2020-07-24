@@ -1,5 +1,6 @@
 <?php 
 // vavok.net
+
 if (!defined('BASEDIR')) {
     $folder_level = "";
     while (!file_exists($folder_level . "robots.txt")) {
@@ -20,7 +21,7 @@ if ($error == '404') {
     header("HTTP/1.0 404 Not Found");
 } 
 
-include_once BASEDIR . "themes/$config_themes/index.php";
+include_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $http_referer = !empty($_SERVER['HTTP_REFERER']) ? check($_SERVER['HTTP_REFERER']) : 'No referer';
 

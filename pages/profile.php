@@ -2,8 +2,6 @@
 // (c) vavok.net
 require_once"../include/startup.php";
 
-
-
 $genHeadTag = '
 <style type="text/css">
     .photo img {
@@ -15,11 +13,9 @@ $genHeadTag = '
 ';
 
 $my_title = $lang_profil['profsettings'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<div class="row">';
-
- 
 
 if ($users->is_reg()) {
 
@@ -99,6 +95,6 @@ echo '</div>';
 
 echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a></p>';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

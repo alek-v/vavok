@@ -3,20 +3,14 @@
 
 require_once"../include/startup.php";
 
-if ($config["siteOff"] != 1) {
-    header("Location: ../");
-    exit;
-} 
-
-
+if ($config["siteOff"] != 1) { redirect_to("../"); }
 
 $my_title = "Maintenance";
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo $lang_page['maintenance'] . '!<br /><br />';
+echo '<p>' . $lang_page['maintenance'] . '!</p>';
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

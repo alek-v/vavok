@@ -17,7 +17,7 @@ if (!empty($_POST['users'])) {
 
 $users_id = $users->getidfromnick($user);
 
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
     echo '<form method="post" action="users.php?action=edit">';
@@ -46,13 +46,13 @@ if ($action == "edit") {
 
                 if ($users->show_username() != $config["adminNick"] && $user == $config["adminNick"]) {
                     echo '<br>' . $lang_admin['noauthtoedit'] . '!<br>';
-                    include_once"../themes/$config_themes/foot.php";
+                    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
 
                 if (($users->show_username() != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
                     echo '<br>' . $lang_admin['noauthtoban'] . '!<br>';
-                    include_once"../themes/$config_themes/foot.php";
+                    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
                 $casenick = strcasecmp($user, $users->show_username());
@@ -252,5 +252,5 @@ echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_
 echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

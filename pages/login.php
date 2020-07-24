@@ -10,7 +10,7 @@ $genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/login/log
 
 
 $my_title = $lang_home['login'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $cookName = isset($_COOKIE['cookname']) ? $cookName = $_COOKIE['cookname'] : $cookName = '';
 
@@ -29,5 +29,5 @@ if (!empty($_GET['ptl'])) {
 echo $current_page->output();
 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

@@ -6,7 +6,7 @@ require_once"../include/startup.php";
 if ($config["showCounter"] == 6 && !$users->is_administrator()) { redirect_to("../"); }
 
 $my_title = $lang_home['statistic'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
@@ -145,6 +145,6 @@ if ($action == "count31") {
 
 echo '<br /><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
 
-include_once"../themes/" . $config_themes . "/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

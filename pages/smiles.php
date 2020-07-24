@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   04.05.2020. 5:10:55
+* Updated:   24.07.2020. 14:58:05
 */
 
 require_once"../include/startup.php";
@@ -11,7 +11,7 @@ require_once"../include/startup.php";
 $page = isset($_GET['page']) ? check($_GET['page']) : 1;
 
 $my_title = $lang_home['smile'];
-include_once"../themes/$config_themes/index.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 $dir = opendir (BASEDIR . "images/smiles");
@@ -58,6 +58,6 @@ echo '<p>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b></p>';
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
 
-include_once"../themes/$config_themes/foot.php";
+require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>
