@@ -1,21 +1,23 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   25.07.2020. 11:11:20
+*/
+
 require_once"../include/startup.php";
 
-if (!$users->is_reg()) {
-    redirect_to("../pages/login.php?ptl=pages/inbox.php");
-} 
+if (!$users->is_reg()) redirect_to("../pages/login.php?ptl=pages/inbox.php");
 
-$last_notif = $db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'");
-// update notification data
-if ($last_notif > 0) {
-    $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
-} 
+// Update notification data
+if ($db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'") > 0) $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
 
+// Header data
 $genHeadTag = '<meta name="robots" content="noindex">
 <script src="/js/inbox.js"></script>
 <script src="/js/ajax.js"></script>
-'; // header data
+';
 
 $my_title = $lang_home['inbox'];
 require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
@@ -23,16 +25,17 @@ require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
 $action = isset($_GET['action']) ? check($_GET["action"]) : '';
 $page = isset($_GET['page']) ? check($_GET["page"]) : '';
 $who = isset($_GET['who']) ? check($_GET["who"]) : '';
+if (empty($who) && isset($_POST['who'])) $who = $users->getidfromnick(check($_POST['who']));
 $pmid = isset($_GET['pmid']) ? check($_GET["pmid"]) : '';
 
 
-if ($action == "main" or empty($action)) {
+if (empty($action)) {
 
     $num_items = $users->getpmcount($users->user_id);
     $items_per_page = 10;
 
     // navigation
-    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?action=main&amp;');
+    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?');
 	$limit_start = $navigation->start()['start']; // starting point
 
     if ($num_items > 0) {
@@ -80,7 +83,9 @@ if ($action == "main" or empty($action)) {
 
 } else if ($action == "dialog") {
 
-    $pms = $db->count_row('inbox', "(byuid=$users->user_id AND touid=$who) OR (byuid=$who AND touid=$users->user_id) AND (deleted IS NULL OR deleted = $who) ORDER BY timesent");
+    if (empty($who) || empty($users->getnickfromid($who))) redirect_to('inbox.php?isset=nouser');
+
+    $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
     $num_items = $pms; //changable
     $items_per_page = 50;
@@ -94,7 +99,7 @@ if ($action == "main" or empty($action)) {
         $read_only = 'readonly';
     }
 
-    $db->update('inbox', 'unread', 0, "byuid='{$who}' AND touid='{$users->user_id}'");
+    $db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $users->user_id . "'");
 
 
     echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
@@ -132,10 +137,22 @@ if ($action == "main" or empty($action)) {
 
     echo '</div>'; // end of #message-box
 
+}
 
-    echo '<br /><br /><a href="inbox.php?action=main" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br />';
+else if ($action == "sendto") {
+
+    echo '<form method="post" action="inbox.php?action=dialog">';
+    echo '<div class="form-group">';
+    echo '<label for="who">' . $lang_page['sendpmto'] . ':</label>';
+    echo '<input type="text" name="who" id="who" class="form-control" />';
+    echo '</div>';
+    echo '<button type="submit" class="btn btn-primary">' . $lang_home['confirm'] . '</button>
+    </form>
+    <hr>';
 
 }
+
+if (!empty($action)) echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a></p>';
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
