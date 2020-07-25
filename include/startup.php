@@ -2,8 +2,8 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
-* Updated:   22.07.2020. 0:43:56
+* URI:       https://vavok.net
+* Updated:   25.07.2020. 11:41:43
 */
 
 // time when execution of the script has started
@@ -26,8 +26,7 @@ if ($config_debug == 0) {
 
 $config_srvhost = $_SERVER['HTTP_HOST'];
 $config_requri = urldecode($_SERVER['REQUEST_URI']);
-$phpself = $_SERVER['PHP_SELF'];
-$subself = substr($phpself, 1);
+$subself = substr($_SERVER['PHP_SELF'], 1);
 
 // clean URL (REQUEST_URI)
 $clean_requri = preg_replace(array('#(\?|&)' . session_name() . '=([^=&\s]*)#', '#(&|\?)+$#'), '', $config_requri);
@@ -49,7 +48,7 @@ if (!defined('BASEDIR')) {
 
 // for links, images and other mod rewriten directories
 if (!defined('HOMEDIR')) {
-    $path = $config_srvhost . $clean_requri;
+    $path = $_SERVER['HTTP_HOST'] . $clean_requri;
     $patharray = explode("/", $path);
     $pathindex = "";
 
@@ -60,55 +59,19 @@ if (!defined('HOMEDIR')) {
     define("HOMEDIR", $pathindex);
 }
 
-require_once BASEDIR . "include/config.php"; // load website configuration
+ // Load website configuration
+require_once BASEDIR . "include/config.php";
 
-// autoload classes
+// Autoload classes
 spl_autoload_register(function ($class) {
     include BASEDIR . "include/classes/" . $class . ".class.php";
 });
 
-// time zone
+// Default time zone
 date_default_timezone_set('UTC');
 
 @ini_set("url_rewriter.tags", "");
 @ini_set('session.use_trans_sid', false);
-
-// detect bots and spiders
-$user_agents = '';
-if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    $user_agents = $_SERVER['HTTP_USER_AGENT'];
-}
-if (stristr($user_agents, 'Yandex')) {
-    $searchbot = 'Yandex';
-} elseif (stristr($user_agents, 'Slurp')) {
-    $searchbot = 'Yahoo! Slurp';
-} elseif (stristr($user_agents, 'yahoo')) {
-    $searchbot = 'Yahoo!';
-} elseif (stristr($user_agents, 'mediapartners-google')) {
-    $searchbot = 'Mediapartners-Google';
-} elseif (stristr($user_agents, 'Googlebot-Image')) {
-    $searchbot = 'Googlebot-Image';
-} elseif (stristr($user_agents, 'google')) {
-    $searchbot = 'Googlebot';
-} elseif (stristr($user_agents, 'StackRambler')) {
-    $searchbot = 'Rambler';
-} elseif (stristr($user_agents, 'lycos')) {
-    $searchbot = 'Lycos';
-} elseif (stristr($user_agents, 'SurveyBot')) {
-    $searchbot = 'Survey';
-} elseif (stristr($user_agents, 'bingbot')) {
-    $searchbot = 'Bing';
-} elseif (stristr($user_agents, 'msnbot')) {
-    $searchbot = 'msnbot';
-} elseif (stristr($user_agents, 'Baiduspider')) {
-    $searchbot = 'Baidu Spider';
-} elseif (stristr($user_agents, 'Sosospider')) {
-    $searchbot = 'Soso Spider';
-} elseif (stristr($user_agents, 'ia_archiver')) {
-    $searchbot = 'ia_archiver';
-} elseif (stristr($user_agents, 'facebookexternalhit')) {
-    $searchbot = 'Facebook External Hit';
-}
 
 require_once BASEDIR . "include/functions.php";
 
@@ -118,15 +81,13 @@ if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
     // and this will be PDO connection to base
     $db = new Db($config["dbhost"], $config["dbname"], $config["dbuser"], $config["dbpass"]);
 
-
-    // we are connected to database and we can load Users class
+    // We are connected to database and we can load Users class
     $users = new Users();
 
-    // we don't need this data if this is system request or we are installing cms
+    // We don't need this data if this is system request or we are installing cms
     if (!strstr($_SERVER['PHP_SELF'], '/cronjob/') && !strstr($_SERVER['PHP_SELF'], '/install/finish.php')) {
 
         require_once BASEDIR . "include/cookies.php";
-        require_once BASEDIR . "include/header.php"; 
         require_once BASEDIR . "include/pages.php";
         require_once BASEDIR . "include/antidos.php";
         require_once BASEDIR . "include/counters.php";
@@ -171,22 +132,22 @@ function show_gentime() {
         $pagegen = $lang_home['pggen'] . ' ' . round($gen_time, 4) . ' s.<br />';
         return $pagegen;
     } 
-} 
-
-if (empty($_SESSION['currs'])) {
-    $_SESSION['currs'] = time();
 }
 
-if (empty($_SESSION['counton'])) {
-    $_SESSION['counton'] = 0;
+/*
+Website configuration
+*/
+
+if (get_configuration('noCache') == "0") {
+    header("Expires: Sat, 25 Jul 1997 05:00:00 GMT");
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Pragma: no-cache");
+    header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
 } 
 
-$_SESSION['counton']++;
-
-// pages visited at this session
-$counton = $_SESSION['counton'];
-
-// visitor's time on the site
-$timeon = maketime(round(time() - $_SESSION['currs']));
+// Website maintenance
+if (get_configuration('siteOff') == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/maintenance.php') && !strstr($_SERVER['PHP_SELF'], 'input.php') && !$users->is_administrator() && !strstr($_SERVER['PHP_SELF'], 'pages/login.php')) {
+    redirect_to(website_home_address() . "/pages/maintenance.php");
+} 
 
 ?>

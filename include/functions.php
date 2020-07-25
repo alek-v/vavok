@@ -12,7 +12,7 @@ Date and time
 
 */
 
-// correct date
+// Correct date
 function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     global $config; // time zone from config
     if (empty($timestamp)) {
@@ -40,7 +40,7 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     return $rdate;
 }
 
-// function for current time
+// Function for current time
 $user_time = $config["timeZone"] * 3600;
 $currHour = date("H", time() + $user_time);
 $currHour = round($currHour);
@@ -786,6 +786,50 @@ function create_metatags($story) {
     $headers['keywords'] = implode(", ", $arr);
 
     return $headers;
+}
+
+// Detect bots and spiders
+function detect_bot() {
+    $user_agents = '';
+    $searchbot = '';
+
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+        $user_agents = $_SERVER['HTTP_USER_AGENT'];
+    }
+    if (stristr($user_agents, 'Yandex')) {
+        $searchbot = 'Yandex';
+    } elseif (stristr($user_agents, 'Slurp')) {
+        $searchbot = 'Yahoo! Slurp';
+    } elseif (stristr($user_agents, 'yahoo')) {
+        $searchbot = 'Yahoo!';
+    } elseif (stristr($user_agents, 'mediapartners-google')) {
+        $searchbot = 'Mediapartners-Google';
+    } elseif (stristr($user_agents, 'Googlebot-Image')) {
+        $searchbot = 'Googlebot-Image';
+    } elseif (stristr($user_agents, 'google')) {
+        $searchbot = 'Googlebot';
+    } elseif (stristr($user_agents, 'StackRambler')) {
+        $searchbot = 'Rambler';
+    } elseif (stristr($user_agents, 'lycos')) {
+        $searchbot = 'Lycos';
+    } elseif (stristr($user_agents, 'SurveyBot')) {
+        $searchbot = 'Survey';
+    } elseif (stristr($user_agents, 'bingbot')) {
+        $searchbot = 'Bing';
+    } elseif (stristr($user_agents, 'msnbot')) {
+        $searchbot = 'msnbot';
+    } elseif (stristr($user_agents, 'Baiduspider')) {
+        $searchbot = 'Baidu Spider';
+    } elseif (stristr($user_agents, 'Sosospider')) {
+        $searchbot = 'Soso Spider';
+    } elseif (stristr($user_agents, 'ia_archiver')) {
+        $searchbot = 'ia_archiver';
+    } elseif (stristr($user_agents, 'facebookexternalhit')) {
+        $searchbot = 'Facebook External Hit';
+    }
+
+    return $searchbot;
+
 }
 
 ?>

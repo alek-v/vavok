@@ -38,8 +38,6 @@ $xmatch = $user_id . '-' . $users->find_ip() . '-' . $users->user_browser();
 // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
 $db->delete(get_configuration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
 
-if (!isset($searchbot)) { $searchbot = ''; }
-
 if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
     while ($bz_row = $db->get_data(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'")) {
         if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
@@ -63,7 +61,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
             'page' => $_SERVER['PHP_SELF'],
             'user' => $user_id,
             'usr_chck' => $xmatch,
-            'bot' => $searchbot
+            'bot' => detect_bot()
             );
             $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
             unset($values);
@@ -76,7 +74,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
     'page' => $_SERVER['PHP_SELF'],
     'user' => $user_id,
     'usr_chck' => $xmatch,
-    'bot' => $searchbot
+    'bot' => detect_bot()
     );
     $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
     unset($values);
