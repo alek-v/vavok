@@ -1,3 +1,11 @@
+# Vavok v1.5.4
+- Updated constants
+- Updated retrieving configuration data
+- Removed pages/inprof.php
+- Updated pages/profile.php
+
+
+
 # Vavok v1.5.3.1
 - Updated inbox
 - Updated User.class
