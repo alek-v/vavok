@@ -1,6 +1,7 @@
 <?php
-// modified: 19.07.2020. 21:00:00
 // (c) vavok.net
+// modified: 25.07.2020. 15:02:37
+
 if (!empty($_SERVER['HTTP_REFERER'])) { $ref_from = $_SERVER['HTTP_REFERER']; }
 
 if (!empty($ref_from) && preg_match("/http/", $ref_from)) {
@@ -11,7 +12,7 @@ if (!empty($ref_from) && preg_match("/http/", $ref_from)) {
 
     $ref_from = check($ref_from);
     // do not add my site to referer list
-    if ($ref_from != 'm.' . $config["homeBase"] && $ref_from != 'www.' . $config["homeBase"] && $ref_from != $config["homeBase"]) {
+    if ($ref_from != 'm.' . get_configuration('homeBase') && $ref_from != 'www.' . get_configuration('homeBase') && $ref_from != get_configuration('homeBase')) {
         $lines = file(BASEDIR . "used/referer.dat");
         $count = count($lines);
         for ($rb = 0; $rb < $count; $rb++) {
@@ -52,7 +53,7 @@ if (!empty($ref_from) && preg_match("/http/", $ref_from)) {
 
                 $reffile = file(BASEDIR . "used/referer.dat");
                 $ri = count($reffile);
-                if ($ri >= $config["refererLog"]) {
+                if ($ri >= get_configuration('refererLog')) {
                     $fp = fopen(BASEDIR . "used/referer.dat", "w");
                     flock ($fp, LOCK_EX);
                     unset($reffile[0]);

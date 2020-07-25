@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 15:53:03
+* Updated:   25.07.2020. 14:10:24
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
@@ -49,10 +49,10 @@ include BASEDIR . "include/load_header.php";
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($users->user_id) . ')</a></li>';
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a></li>';
 				    if ($users->is_administrator()) {
-				        echo'<li class="nav-item"><a href="' . HOMEDIR . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
+				        echo'<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
 				    } 
 				    if ($users->is_moderator()) {
-				        echo '<li class="nav-item"><a href="' . HOMEDIR . $config["mPanel"] . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
+				        echo '<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
 				    } 
 				} else {
 				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a></li>';

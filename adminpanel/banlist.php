@@ -16,11 +16,7 @@ if (!empty($_GET['view'])) {
     $view = check($_GET["view"]);
 } else {
     $view = '';
-} 
-
-if (!isset($config_banlist)) {
-    $config_banlist = 10;
-} 
+}
 
 if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(103))) {
     redirect_to("../index.php?error");
@@ -29,7 +25,7 @@ if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(1
 $my_title = $lang_admin['banlist'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banlist'] . '</b><br><br>'; 
+echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banlist'] . '</b></p>'; 
 
 $noi = $db->count_row('vavok_users', "banned='1' OR banned='2'");
 $items_per_page = 10;
@@ -45,12 +41,12 @@ if ($noi > 0) {
         if ($item['banned'] == '1') {
             $banned_profil = $db->get_data('vavok_profil', "id='" . $item['id'] . "'", 'bantime, bandesc');
 
-            $lnk = "<div class=\"a\"><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $lang_admin['banduration'] . ": " . date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $lang_admin['bandesc'] . ": " . $banned_profil['bandesc'] . "</small></div>";
+            $lnk = "<div class=\"a\"><p><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $lang_admin['banduration'] . ": " . date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $lang_admin['bandesc'] . ": " . $banned_profil['bandesc'] . "</small></p></div>";
             echo $lnk . "<br>";
         } 
     } 
 } else {
-    echo '<img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['noentry'] . '!<br><br>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['noentry'] . '!</p>';
 } 
 
 echo $navigation->get_navigation();

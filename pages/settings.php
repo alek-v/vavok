@@ -143,7 +143,7 @@ if ($action == 'save') {
 
 }
 
-require_once"../lang/" . $config["language"] . "/pagesprofile.php"; // lang file
+require_once"../lang/" . $users->get_user_language() . "/pagesprofile.php"; // lang file
 
 $my_title = $lang_setting['settings'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

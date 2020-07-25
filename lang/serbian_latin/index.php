@@ -110,7 +110,7 @@ $lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_bla
 $lang_home['purecookieButton'] = "Prihvatam"; // Button text
 
 // load additional language files
-$langdir = explode("/", $config_requri);
+$langdir = explode("/", REQUEST_URI);
 $langdir = $langdir[1];
 
 $phpselflang = str_replace(".php", '', SUB_SELF);

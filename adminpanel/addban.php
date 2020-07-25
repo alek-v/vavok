@@ -77,7 +77,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo $lang_admin['bandesc'] . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
                         echo '<input value="' . $lang_home['confirm'] . '" type="submit"></form><hr>';
 
-                        echo $lang_admin['maxbantime'] . ' ' . formattime(round($config["maxBanTime"] * 60)) . '<br />';
+                        echo $lang_admin['maxbantime'] . ' ' . formattime(round(get_configuration('maxBanTime') * 60)) . '<br />';
                         echo $lang_admin['bandesc1'] . '<br />';
                     } else {
                         echo '<b><font color="#FF0000">' . $lang_admin['confban'] . '</font></b><br />';
@@ -117,7 +117,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             } 
 
             if ($ban_time != "") {
-                if ($ban_time <= $config["maxBanTime"]) {
+                if ($ban_time <= get_configuration('maxBanTime')) {
                     if ($udd39 != "") {
                         $newbantime = round($time + ($ban_time * 60));
                         $newbandesc = no_br(check($udd39), ' ');
@@ -141,7 +141,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo '' . $lang_admin['noreason'] . '!<br />';
                     } 
                 } else {
-                    echo '' . $lang_admin['maxbantimeare'] . ' ' . round($config["maxBanTime"] / 1440) . ' ' . $lang_admin['days'] . '!<br />';
+                    echo '' . $lang_admin['maxbantimeare'] . ' ' . round(get_configuration('maxBanTime') / 1440) . ' ' . $lang_admin['days'] . '!<br />';
                 } 
             } else {
                 echo '' . $lang_admin['nobantime'] . '!<br />';

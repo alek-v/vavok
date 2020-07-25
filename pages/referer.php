@@ -1,10 +1,10 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/startup.php";
 
 // page settings
 $data_on_page = 10; // referere links per page
-
 
 $my_title = "Referer";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -15,7 +15,7 @@ if (empty($_GET['page']) || $_GET['page'] < 1) {
     $page = check($_GET['page']);
 }
 
-if ($config["showRefPage"] == "1" || $users->is_administrator()) {
+if (get_configuration('showRefPage') == 1 || $users->is_administrator()) {
 
     $file = file("../used/referer.dat");
     $file = array_reverse($file);

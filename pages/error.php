@@ -84,7 +84,7 @@ if ($error == '401') {
         $dbertime = date_fixed($dberrorstart, 'H-i-s', '');
         $subject = 'Database down';
         $mailtext = $lang_error['dbdownmail'] . " " . $dberdate . " " . $dbertime . "\n";
-        sendmail($config["adminEmail"], $subject, $mailtext); // email to me
+        sendmail(get_configuration('adminEmail'), $subject, $mailtext); // email to me
     } 
 
     if ($timeresult > 28800) { // 28800 = 8 hours
@@ -124,7 +124,7 @@ if (isset($write) && !empty($logdat)) {
 
     $file = file($logdat);
     $i = count($file);
-    if ($i >= $config["maxLogData"]) {
+    if ($i >= get_configuration('maxLogData')) {
         $fp = fopen($logdat, "w");
         flock ($fp, LOCK_EX);
         unset($file[0]);
@@ -135,8 +135,8 @@ if (isset($write) && !empty($logdat)) {
     } 
 } 
 
-echo '<p><img src="' . HOMEDIR . 'images/img/homepage.gif" alt="" /> <a href="/" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><p>';
+echo '<p><a href="/" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
 
-include_once BASEDIR . "themes/" . $config_themes . "/foot.php";
+include_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 ?>

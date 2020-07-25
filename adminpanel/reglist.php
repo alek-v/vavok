@@ -34,9 +34,9 @@ if ($act == 'conf' && !empty($usr)) {
     $about_user = $db->get_data('vavok_about', "uid='" . $usr . "'", 'email');
     $vav_name = $users->getnickfromid($usr);
 
-    $message = $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . $config["homeBase"] . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst($config["homeBase"]);
+    $message = $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . get_configuration('homeBase') . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst(get_configuration('homeBase'));
     $newMail = new Mailer;
-    $newMail->send($about_user['email'], $lang_home['msgfrmst'] . " " . $config["title"], $message);
+    $newMail->send($about_user['email'], $lang_home['msgfrmst'] . " " . get_configuration('title'), $message);
 
 
     header("Location: reglist.php?isset=mp_ydelconf");

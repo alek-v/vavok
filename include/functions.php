@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   22.07.2020. 0:44:27
+* Updated:   25.07.2020. 14:49:15
 */
 
 /*
@@ -14,7 +14,8 @@ Date and time
 
 // Correct date
 function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
-    global $config; // time zone from config
+    $timezone = get_configuration('timeZone');
+
     if (empty($timestamp)) {
         $timestamp = time();
     } 
@@ -22,16 +23,16 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
         $format = "d.m.y. / H:i";
     } 
     if (!empty($myzone)) {
-        $config["timeZone"] = $myzone;
+        $timezone = $myzone;
     } 
 
-    if (stristr($config["timeZone"], '-')) {
-        $clock = str_replace('-', '', $config["timeZone"]);
+    if (stristr($timezone, '-')) {
+        $clock = str_replace('-', '', $timezone);
         $clock = floatval($clock);
         $seconds = $clock * 3600; // number of seconds
         $rdate = date($format, $timestamp - ($seconds)); // return date
     } else {
-        $clock = str_replace('+', '', $config["timeZone"]);
+        $clock = str_replace('+', '', $timezone);
         $clock = floatval($clock);
         $seconds = $clock * 3600; // number of seconds
         $rdate = date($format, $timestamp + ($seconds)); // return date
@@ -41,7 +42,7 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
 }
 
 // Function for current time
-$user_time = $config["timeZone"] * 3600;
+$user_time = get_configuration('timeZone') * 3600;
 $currHour = date("H", time() + $user_time);
 $currHour = round($currHour);
 $currDate = date("d F Y", time() + $user_time);
@@ -467,8 +468,6 @@ function generate_password() {
 
 // antiflood
 function flooder($ip, $phpself = '') {
-    global $config;
-
     $old_db = file(BASEDIR . "used/flood.dat");
     $new_db = fopen(BASEDIR . "used/flood.dat", "w");
     flock ($new_db, LOCK_EX);
@@ -477,7 +476,7 @@ function flooder($ip, $phpself = '') {
     foreach($old_db as $old_db_line) {
         $old_db_arr = explode("|", $old_db_line);
 
-        if (($old_db_arr[0] + $config["floodTime"]) > time()) {
+        if (($old_db_arr[0] + get_configuration('floodTime')) > time()) {
             fputs ($new_db, $old_db_line);
 
             if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
@@ -489,6 +488,7 @@ function flooder($ip, $phpself = '') {
     fflush($new_db);
     flock ($new_db, LOCK_UN);
     fclose($new_db);
+
     return $result;
 }
 
@@ -593,8 +593,8 @@ function get_isset($msg = '') {
 
 // show online
 function show_online() {
-    global $config, $counter_reg, $counter_online;
-    if ($config["showOnline"] == "1") {
+    global $counter_reg, $counter_online;
+    if (get_configuration('showOnline') == "1") {
         $online = '<a href="/pages/online.php">[Online: ' . $counter_reg . '/' . $counter_online . ']</a>';
         return $online;
     } 
@@ -602,26 +602,27 @@ function show_online() {
 
 // show counter
 function show_counter() {
-    global $config, $counter_host, $counter_all, $counter_hits, $counter_allhits;
+    global $counter_host, $counter_all, $counter_hits, $counter_allhits;
 
-    if (!empty($config["showCounter"]) && $config["showCounter"] != "6") {
-        if ($config["showCounter"] == "1") {
+    if (!empty(get_configuration('showCounter')) && get_configuration('showCounter') != "6") {
+        if (get_configuration('showCounter') == 1) {
             $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_all . '</a>';
         } 
-        if ($config["showCounter"] == "2") {
+        if (get_configuration('showCounter') == 2) {
             $counter = '<a href="/pages/counter.php">' . $counter_hits . ' | ' . $counter_allhits . '</a>';
         } 
-        if ($config["showCounter"] == "3") {
+        if (get_configuration('showCounter') == 3) {
             $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_hits . '</a>';
         } 
-        if ($config["showCounter"] == "4") {
+        if (get_configuration('showCounter') == 4) {
             $counter = '<a href="/pages/counter.php">' . $counter_all . ' | ' . $counter_allhits . '</a>';
         } 
-        if ($config["showCounter"] == "5") {
+        if (get_configuration('showCounter') == 5) {
             $counter = '<a href="/pages/counter.php"><img src="/gallery/count.php" alt=""></a>';
-        } 
+        }
+
         return $counter;
-    } 
+    }
 }
 
 /*

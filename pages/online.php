@@ -2,7 +2,7 @@
 // (c) vavok.net
 require_once"../include/startup.php";
 
-if ($config["showOnline"] == 0 && (!$users->is_reg() && !$users->is_administrator())) {
+if (get_configuration('showOnline') == 0 && (!$users->is_reg() && !$users->is_administrator())) {
     redirect_to("../");
 } 
 
@@ -55,19 +55,19 @@ if ($list == "full") {
         if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
             echo '<b>' . $lang_home['guest'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
-                echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
             echo '<b>' . $item['bot'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
-                echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } else {
             echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
-                echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } 
@@ -90,7 +90,7 @@ if ($list == "full") {
 
         echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
         if ($users->is_moderator() || $users->is_administrator()) {
-            echo '<small><font color="#CC00CC">(<a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+            echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
         } 
         echo '<hr />';
     } 

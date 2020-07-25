@@ -99,7 +99,7 @@ $lang_home['purecookieButton'] = "Understood"; // Button text
 
 
 // load additional language files
-$langdir = explode("/", $config_requri);
+$langdir = explode("/", REQUEST_URI);
 $langdir = $langdir[1];
 
 $phpselflang = str_replace(".php", '', SUB_SELF);

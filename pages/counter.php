@@ -1,9 +1,9 @@
 <?php 
-// modified: 22.07.2020. 1:59:44
+// modified: 25.07.2020. 15:11:17
 
 require_once"../include/startup.php";
 
-if ($config["showCounter"] == 6 && !$users->is_administrator()) { redirect_to("../"); }
+if (get_configuration('showCounter') == 6 && !$users->is_administrator()) { redirect_to("../"); }
 
 $my_title = $lang_home['statistic'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -32,7 +32,7 @@ if (empty($action)) {
     $total_visits = $counts['visits_total']; // total visits
 
     echo $lang_count['temponline'] . ': ';
-    if ($config["showOnline"] == 1 || $users->is_administrator()) {
+    if (get_configuration('showOnline') == 1 || $users->is_administrator()) {
         echo '<a href="online.php">' . (int)$pcounter_online . '</a><br />';
     } else {
         echo '<b>' . (int)$pcounter_online . '</b><br />';

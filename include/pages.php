@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 12:02:34
+* Updated:   25.07.2020. 14:56:54
 */
 
 if (!empty($_GET['pg'])) {
@@ -56,12 +56,8 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 }
 
 // Load language files
-if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) {
-        $config["language"] = 'english';
-}
+if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
+
 include_once BASEDIR . "lang/" . $users->get_user_language() . "/index.php";
 
-// language settings
-// use language from session
-if (!empty($_SESSION['lang'])) { $config["language"] = $_SESSION['lang']; } 
 ?>

@@ -1,5 +1,6 @@
 <?php 
 // (c) vavok.net
+
 require_once"../include/startup.php";
 
 $my_title = 'Cookies Policy';
@@ -23,10 +24,10 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 <p>For the purposes of this Cookies Policy:</p>
 
 <ul>
-    <li><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Cookies Policy) refers to <?php echo $config['homeUrl']; ?>.</li>
+    <li><strong>Company</strong> (referred to as either "the Company", "We", "Us" or "Our" in this Cookies Policy) refers to <?php echo get_configuration('homeUrl'); ?>.</li>
     <li><strong>You</strong> means the individual accessing or using the Website, or a company, or any legal entity on behalf of which such individual is accessing or using the Website, as applicable.</li>
     <li><strong>Cookies</strong> means small files that are placed on Your computer, mobile device or any other device by a website, containing details of your browsing history on that website among its many uses.</li>
-    <li><strong>Website</strong> refers to <?php echo $config['homeUrl']; ?></li>
+    <li><strong>Website</strong> refers to <?php echo get_configuration('homeUrl'); ?></li>
 </ul>
 
 <h1>The use of the Cookies</h1>

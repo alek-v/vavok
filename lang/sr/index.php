@@ -26,5 +26,4 @@ if (!empty($language) && isset($_SESSION['lang'])) {
 }
 
 $ln_loc = 'sr';
-$config["language"] = $language;
 ?>

@@ -46,13 +46,13 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
         $file_dos_time = file($logfiles);
         $file_dos_str = explode("|", $file_dos_time[0]);
 
-        if ($file_dos_str[1] < ($config["siteTime"]-60)) {
+        if ($file_dos_str[1] < (get_configuration('siteTime')-60)) {
             unlink($logfiles);
         }
 
     } 
 
-    $write = '|' . $config["siteTime"] . '|Time: ' . date("Y-m-d / H:i:s", $config["siteTime"]) . '|Browser: ' . $users->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
+    $write = '|' . get_configuration('siteTime') . '|Time: ' . date("Y-m-d / H:i:s", get_configuration('siteTime')) . '|Browser: ' . $users->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
     $fp = fopen($logfiles, "a+");
     flock ($fp, LOCK_EX);
     fputs($fp, "$write\r\n");
@@ -61,7 +61,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
     @chmod ($fp, 0666);
     @chmod ($logfiles, 0666);
 
-    if (count(file($logfiles)) > $config["dosLimit"] && $config["dosLimit"] > 0) {
+    if (count(file($logfiles)) > get_configuration('dosLimit') && get_configuration('dosLimit') > 0) {
         
         unlink($logfiles);
 
@@ -96,7 +96,7 @@ if ($opendir = opendir(BASEDIR . "used/datados")) {
 
             $file = file($logdat);
             $i = count($file);
-            if ($i >= $config["maxLogData"]) {
+            if ($i >= get_configuration('maxLogData')) {
                 $fp = fopen($logdat, "w");
                 flock ($fp, LOCK_EX);
                 unset($file[0], $file[1]);

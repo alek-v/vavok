@@ -14,5 +14,4 @@ $users->change_language($language);
 
 
 $ln_loc = 'en';
-$config["language"] = $language;
 ?>

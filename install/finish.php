@@ -221,12 +221,10 @@ if ($step == "regadmin") {
 
                         // insert data to database if it is not crossdomain
                         if ($crossDomainInstall == 0) {
-                        // write to database
-                        $registration_key = '';
-                        $config["regConfirm"] = '0';
-                        $users->register($name, $password, $config["regConfirm"], $registration_key, 'default', $email); // register user
-                        $user_id = $users->getidfromnick($name);
-                        $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+                            // write to database
+                            $users->register($name, $password, 0, '', 'default', $email); // register user
+                            $user_id = $users->getidfromnick($name);
+                            $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}
 
                         echo '<p>' . $lang_install['installok'] . '.<br></p>';

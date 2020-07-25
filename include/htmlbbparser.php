@@ -6,7 +6,7 @@ $check_tag_balance = false;
 
 // bbcocode to xhtml
 function bb2html() {
-global $check_tag_balance, $insert_link, $prevent_xss, $config;
+global $check_tag_balance, $insert_link, $prevent_xss;
 
 $bb2html = func_get_arg(0);
 if (func_num_args() == 2) {
@@ -95,7 +95,7 @@ if (!empty($GLOBALS['do_debug'])) debug("\n".'$pre[$i]: '."$pre[$i]\n\n");// :de
             if (strpos($r3, "[/url]") !== false) {
                 list($r3, $r4) = explode("[/url]", $r3, 2);
                 $target = ' target="_blank"';
-                if (substr($r2, 0, 7) == "mailto:" || stristr($config["homeUrl"], $r2) || !stristr('http://', $r2)) {
+                if (substr($r2, 0, 7) == "mailto:" || stristr(get_configuration('homeUrl'), $r2) || !stristr('http://', $r2)) {
                     $target = "";
                 } 
                 $bb2html = $r1 . '<a href="' . $r2 . '"' . $target . '>' . $r3 . '</a>' . $r4;

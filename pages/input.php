@@ -89,8 +89,8 @@ if (empty($action) && !empty($log)) {
         if ($cookietrue == 1) {
 
             // encrypt data to save in cookie
-            $cookiePass = xoft_encode($pass, $config["keypass"]);
-            $cookieUsername = xoft_encode($show_userx['name'], $config["keypass"]);
+            $cookiePass = xoft_encode($pass, get_configuration('keypass'));
+            $cookieUsername = xoft_encode($show_userx['name'], get_configuration('keypass'));
 
             // save cookie
             SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/"); // one year

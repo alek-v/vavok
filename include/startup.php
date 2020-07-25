@@ -77,10 +77,10 @@ date_default_timezone_set('UTC');
 require_once BASEDIR . "include/functions.php";
 
 // Connect to database
-if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
+if (!strstr($config_requri, 'error=db') && !empty(get_configuration('dbhost'))) {
 
     // and this will be PDO connection to base
-    $db = new Db($config["dbhost"], $config["dbname"], $config["dbuser"], $config["dbpass"]);
+    $db = new Db(get_configuration('dbhost'), get_configuration('dbname'), get_configuration('dbuser'), get_configuration('dbpass'));
 
     // We are connected to database and we can load Users class
     $users = new Users();
@@ -126,13 +126,15 @@ function formattime($file_time) {
 
 // show page generation time
 function show_gentime() {
-    global $config, $start_time, $lang_home;
-    if ($config["pageGenTime"] == '1') {
+    global $start_time, $lang_home;
+
+    if (get_configuration('pageGenTime') == 1) {
         $end_time = microtime(true);
         $gen_time = $end_time - $start_time;
         $pagegen = $lang_home['pggen'] . ' ' . round($gen_time, 4) . ' s.<br />';
+
         return $pagegen;
-    } 
+    }
 }
 
 /*

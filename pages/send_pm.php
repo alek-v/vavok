@@ -19,7 +19,7 @@ $stmt = $db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");
 $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
 $stmt->closeCursor();
 
-$pmfl = $lastpm + 0; // 0 is $config["floodTime"] // return in production
+$pmfl = $lastpm + 0; // 0 is $config["floodTime"]
 
 if ($pmfl < time()) {
     if (!$users->isignored($byuid, $who)) {

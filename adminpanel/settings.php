@@ -37,7 +37,7 @@ if ($action == "editone") {
 
     $utext = '';
 
-    for ($u = 0; $u < $config["configKeys"]; $u++) {
+    for ($u = 0; $u < get_configuration('configKeys'); $u++) {
         $utext .= $udata[$u] . '|';
     } 
 
@@ -105,7 +105,7 @@ if ($action == "edittwo") {
 	$udata[32] = (int)$_POST['conf_set32']; // cookie consent
 	$udata[74] = (int)$_POST['conf_set74'];
 
-	for ($u = 0; $u < $config["configKeys"]; $u++) {
+	for ($u = 0; $u < get_configuration('configKeys'); $u++) {
 	    $utext .= $udata[$u] . '|';
 	} 
 
@@ -139,7 +139,7 @@ if ($action == "editthree") {
     $udata[64] = (int)$_POST['conf_set64'];
     $udata[65] = (int)$_POST['conf_set65'];
 
-    for ($u = 0; $u < $config["configKeys"]; $u++) {
+    for ($u = 0; $u < get_configuration('configKeys'); $u++) {
         $utext .= $udata[$u] . '|';
     } 
 
@@ -172,7 +172,7 @@ if ($action == "editfour") {
     $udata[49] = (int)$_POST['conf_set49'];
     $udata[68] = (int)$_POST['conf_set68'];
 
-    for ($u = 0; $u < $config["configKeys"]; $u++) {
+    for ($u = 0; $u < get_configuration('configKeys'); $u++) {
         $utext .= $udata[$u] . '|';
     } 
 
@@ -190,7 +190,7 @@ if ($action == "editfour") {
         $gallery_data[7] = (int)$_POST['media_buttons'];
 
 
-        for ($u = 0; $u < $config["configKeys"]; $u++) {
+        for ($u = 0; $u < get_configuration('configKeys'); $u++) {
             $gallery_text .= $gallery_data[$u] . '|';
         } 
 
@@ -213,7 +213,7 @@ if ($action == "editfive") {
 
 	$udata[30] = (int)$_POST['conf_set30'];
 
-	for ($u = 0; $u < $config["configKeys"]; $u++) {
+	for ($u = 0; $u < get_configuration('configKeys'); $u++) {
 	    $utext .= $udata[$u] . '|';
 	} 
 
@@ -283,7 +283,7 @@ if ($action == "editeight") {
     $udata[58] = (int)$_POST['conf_set58'];
     $udata[76] = round($_POST['conf_set76'] * 1440);
 
-    for ($u = 0; $u < $config["configKeys"]; $u++) {
+    for ($u = 0; $u < get_configuration('configKeys'); $u++) {
         $utext .= $udata[$u] . '|';
     } 
 
@@ -363,25 +363,25 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
 
         echo '<form method="post" action="settings.php?action=editone">';
 
-        echo '<p>' . $lang_apsetting['language'] . ':<br /><select name="conf_set47"><option value="' . $config['siteDefaultLang'] . '">' . $config['siteDefaultLang'] . '</option>';
+        echo '<p>' . $lang_apsetting['language'] . ':<br /><select name="conf_set47"><option value="' . get_configuration('siteDefaultLang') . '">' . get_configuration('siteDefaultLang') . '</option>';
 
         $dir = opendir ("../lang");
         while ($file = readdir($dir)) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $config['siteDefaultLang'] && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != get_configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
                 echo '<option value="' . $file . '">' . $file . '</option>';
             } 
         } 
         echo '</select></p>';
         closedir($dir);
 
-        $config_themes_show = str_replace("web_", "", $config['webtheme']);
+        $config_themes_show = str_replace("web_", "", get_configuration('webtheme'));
         $config_themes_show = str_replace("wap_", "", $config_themes_show);
         $config_themes_show = ucfirst($config_themes_show);
-        echo '<p>' . $lang_apsetting['webskin'] . ':<br /><select name="conf_set2"><option value="' . $config['webtheme'] . '">' . $config_themes_show . '</option>';
+        echo '<p>' . $lang_apsetting['webskin'] . ':<br /><select name="conf_set2"><option value="' . get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
 
         $dir = opendir ("../themes");
         while ($file = readdir ($dir)) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $config['webtheme'] && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
+            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != get_configuration('webtheme') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
                 $nfile = str_replace("web_", "", $file);
                 $nfile = str_replace("wap_", "", $nfile);
                 $nfile = ucfirst($nfile);
@@ -392,101 +392,84 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         closedir ($dir);
 
         // this will be admin username or system username
-        echo '<p>' . $lang_apsetting['adminusername'] . ':<br /><input name="conf_set8" maxlength="20" value="' . $config['adminNick'] . '" /></p>';
+        echo '<p>' . $lang_apsetting['adminusername'] . ':<br /><input name="conf_set8" maxlength="20" value="' . get_configuration('adminNick') . '" /></p>';
 
-        echo '<p>' . $lang_apsetting['adminemail'] . ':<br /><input name="conf_set9" maxlength="50" value="' . $config['adminEmail'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['timezone'] . ':<br /><input name="conf_set10" maxlength="3" value="' . $config['timeZone'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['pagetitle'] . ':<br /><input name="conf_set11" maxlength="100" value="' . $config['title'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['siteurl'] . ':<br /><input name="conf_set14" maxlength="50" value="' . $config['homeUrl'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['floodtime'] . ':<br /><input name="conf_set29" maxlength="3" value="' . $config['floodTime'] . '" /></p>';
-        echo '<p>' . $lang_apsetting['passkey'] . ':<br /><input name="conf_set1" maxlength="25" value="' . $config['keypass'] . '" /></p>';
+        echo '<p>' . $lang_apsetting['adminemail'] . ':<br /><input name="conf_set9" maxlength="50" value="' . get_configuration('adminEmail') . '" /></p>';
+        echo '<p>' . $lang_apsetting['timezone'] . ':<br /><input name="conf_set10" maxlength="3" value="' . get_configuration('timeZone') . '" /></p>';
+        echo '<p>' . $lang_apsetting['pagetitle'] . ':<br /><input name="conf_set11" maxlength="100" value="' . get_configuration('title') . '" /></p>';
+        echo '<p>' . $lang_apsetting['siteurl'] . ':<br /><input name="conf_set14" maxlength="50" value="' . get_configuration('homeUrl') . '" /></p>';
+        echo '<p>' . $lang_apsetting['floodtime'] . ':<br /><input name="conf_set29" maxlength="3" value="' . get_configuration('floodTime') . '" /></p>';
+        echo '<p>' . $lang_apsetting['passkey'] . ':<br /><input name="conf_set1" maxlength="25" value="' . get_configuration('keypass') . '" /></p>';
 
         // quarantine time
         echo '<p>' . $lang_apsetting['quarantinetime'] . ':<br /><select name="conf_set3">';
 
         $quarantine = array(0 => "" . $lang_apsetting['disabled'] . "", 21600 => "6 " . $lang_apsetting['hours'] . "", 43200 => "12 " . $lang_apsetting['hours'] . "", 86400 => "24 " . $lang_apsetting['hours'] . "", 129600 => "36 " . $lang_apsetting['hours'] . "", 172800 => "48 " . $lang_apsetting['hours'] . "");
 
-        echo '<option value="' . $config['quarantine'] . '">' . $quarantine[$config['quarantine']] . '</option>';
+        echo '<option value="' . get_configuration('quarantine') . '">' . $quarantine[get_configuration('quarantine')] . '</option>';
 
         foreach($quarantine as $k => $v) {
-            if ($k != $config['quarantine']) {
+            if ($k != get_configuration('quarantine')) {
                 echo '<option value="' . $k . '">' . $v . '</option>';
             } 
         } 
         echo '</select></p>';
-
 
         // transfer protocol
         echo '<p>Transfer protocol:<br /><select name="conf_set21">';
 
         $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
 
-        if (empty($config['transferProtocol'])) $config['transferProtocol'] = 'auto';
+        if (empty(get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
         
-        echo '<option value="' . $config['transferProtocol'] . '">' . $tProtocol[$config['transferProtocol']] . '</option>';
+        echo '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
 
         foreach($tProtocol as $k => $v) {
-            if ($k != $config['transferProtocol']) {
+            if ($k != $transfer_protocol) {
                 echo '<option value="' . $k . '">' . $v . '</option>';
             } 
         } 
         echo '</select></p>';
 
-
-        // is registration opened
+        // Registration opened or closed
         echo '<p>' . $lang_apsetting['openreg'] . ': <br />' . $lang_apsetting['yes'] . '';
-        if ($config['openReg'] == "1") {
+        if (get_configuration('openReg') == 1) {
             echo '<input name="conf_set61" type="radio" value="1" checked>';
         } else {
             echo '<input name="conf_set61" type="radio" value="1" />';
         } 
         echo ' &nbsp; &nbsp; ';
-        if ($config['openReg'] == "0") {
+        if (get_configuration('openReg') == 0) {
             echo '<input name="conf_set61" type="radio" value="0" checked>';
         } else {
             echo '<input name="conf_set61" type="radio" value="0" />';
         } 
         echo $lang_apsetting['no'] . '</p>';
 
-        // does user need to confirm registration
+        // Does user need to confirm registration
         echo '<p>' . $lang_apsetting['confregs'] . ': <br />' . $lang_apsetting['yes'] . '';
-        if ($config['regConfirm'] == "1") {
+        if (get_configuration('regConfirm') == 1) {
             echo '<input name="conf_set62" type="radio" value="1" checked>';
         } else {
             echo '<input name="conf_set62" type="radio" value="1" />';
         } 
         echo ' &nbsp; &nbsp; ';
-        if ($config['regConfirm'] == "0") {
+        if (get_configuration('regConfirm') == 0) {
             echo '<input name="conf_set62" type="radio" value="0" checked>';
         } else {
             echo '<input name="conf_set62" type="radio" value="0" />';
         } 
         echo $lang_apsetting['no'] . '</p>';
 
-        // redirect browser to mobile or desktop theme
-        echo '<p>Browser redirection: <br />' . $lang_apsetting['yes'] . '';
-        if ($config['redbrow'] == "1") {
-            echo '<input name="conf_set0" type="radio" value="1" checked>';
-        } else {
-            echo '<input name="conf_set0" type="radio" value="1" />';
-        } 
-        echo ' &nbsp; &nbsp; ';
-        if ($config['redbrow'] == "0") {
-            echo '<input name="conf_set0" type="radio" value="0" checked>';
-        } else {
-            echo '<input name="conf_set0" type="radio" value="0" />';
-        } 
-        echo $lang_apsetting['no'] . '</p>';
-
-        // maintenance mode
+        // Maintenance mode
         echo '<p>Maintenance: <br />' . $lang_apsetting['yes'] . ''; // update lang
-        if ($config['siteOff'] == 1) {
+        if (get_configuration('siteOff') == 1) {
             echo '<input name="conf_set63" type="radio" value="1" checked>';
         } else {
             echo '<input name="conf_set63" type="radio" value="1" />';
         } 
         echo ' &nbsp; &nbsp; ';
-        if ($config['siteOff'] == 0) {
+        if (get_configuration('siteOff') == 0) {
             echo '<input name="conf_set63" type="radio" value="0" checked>';
         } else {
             echo '<input name="conf_set63" type="radio" value="0" />';
@@ -503,13 +486,13 @@ if ($action == "settwo") {
     echo '<form method="post" action="settings.php?action=edittwo">';
 
     echo '<p>' . $lang_apsetting['showclock'] . ': <br />' . $lang_apsetting['yes'] . '';
-    if ($config['showtime'] == "1") {
+    if (get_configuration('showtime') == 1) {
         echo '<input name="conf_set4" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set4" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['showtime'] == "0") {
+    if (get_configuration('showtime') == 0) {
         echo '<input name="conf_set4" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set4" type="radio" value="0" />';
@@ -517,13 +500,13 @@ if ($action == "settwo") {
     echo $lang_apsetting['no'] . '</p>';
 
     echo '<p>' . $lang_apsetting['pagegen'] . ': <br />' . $lang_apsetting['yes'] . '';
-    if ($config['pageGenTime'] == "1") {
+    if (get_configuration('pageGenTime') == 1) {
         echo '<input name="conf_set5" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set5" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['pageGenTime'] == "0") {
+    if (get_configuration('pageGenTime') == 0) {
         echo '<input name="conf_set5" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set5" type="radio" value="0" />';
@@ -532,13 +515,13 @@ if ($action == "settwo") {
 
 
     echo '<p>' . $lang_apsetting['showonline'] . ': <br />' . $lang_apsetting['yes'] . '';
-    if ($config['showOnline'] == "1") {
+    if (get_configuration('showOnline') == 1) {
         echo '<input name="conf_set7" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set7" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['showOnline'] == "0") {
+    if (get_configuration('showOnline') == 0) {
         echo '<input name="conf_set7" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set7" type="radio" value="0" />';
@@ -547,13 +530,13 @@ if ($action == "settwo") {
 
 	// cookie consent
 	echo '<p>Cookie consent: <br />' . $lang_apsetting['yes'] . '';
-    if ($config['cookieConsent'] == "1") {
+    if (get_configuration('cookieConsent') == 1) {
         echo '<input name="conf_set32" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set32" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['cookieConsent'] == "0") {
+    if (get_configuration('cookieConsent') == 0) {
         echo '<input name="conf_set32" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set32" type="radio" value="0" />';
@@ -565,10 +548,10 @@ if ($action == "settwo") {
 
     $incounters = array(6 => "" . $lang_apsetting['dontshow'] . "", 1 => "" . $lang_apsetting['vsttotalvst'] . "", 2 => "" . $lang_apsetting['clicktotalclick'] . "", 3 => "" . $lang_apsetting['clickvisits'] . "", 4 => "" . $lang_apsetting['totclicktotvst']);
 
-    echo '<option value="' . $config['showCounter'] . '">' . $incounters[$config['showCounter']] . '</option>';
+    echo '<option value="' . get_configuration('howCounter') . '">' . $incounters[get_configuration('showCounter')] . '</option>';
 
     foreach($incounters as $k => $v) {
-        if ($k != $config['showCounter']) {
+        if ($k != get_configuration('showCounter')) {
             echo '<option value="' . $k . '">' . $v . '</option>';
         }
     } 
@@ -584,23 +567,23 @@ if ($action == "setthree") {
     echo '<form method="post" action="settings.php?action=editthree">';
 
     echo '<p>' . $lang_apsetting['allowguestingb'] . ': <br />' . $lang_apsetting['yes'];
-    if ($config['bookGuestAdd'] == "1") {
+    if (get_configuration('bookGuestAdd') == 1) {
         echo '<input name="conf_set20" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set20" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['bookGuestAdd'] == "0") {
+    if (get_configuration('bookGuestAdd') == 0) {
         echo '<input name="conf_set20" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set20" type="radio" value="0" />';
     } 
     echo $lang_apsetting['no'] . '</p>';
 
-    echo '<p>' . $lang_apsetting['maxinchat'] . ':<br /><input name="conf_set22" maxlength="4" value="' . $config['maxPostChat'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxnews'] . ':<br /><input name="conf_set24" maxlength="5" value="' . $config['maxPostNews'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxgbmsgs'] . ':<br /><input name="conf_set25" maxlength="5" value="' . $config['maxPostBook'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['onepassmail'] . ':<br /><input name="conf_set56" maxlength="3" value="' . $config['subMailPacket'] . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxinchat'] . ':<br /><input name="conf_set22" maxlength="4" value="' . get_configuration('maxPostChat') . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxnews'] . ':<br /><input name="conf_set24" maxlength="5" value="' . get_configuration('maxPostNews') . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxgbmsgs'] . ':<br /><input name="conf_set25" maxlength="5" value="' . get_configuration('maxPostBook') . '" /></p>';
+    echo '<p>' . $lang_apsetting['onepassmail'] . ':<br /><input name="conf_set56" maxlength="3" value="' . get_configuration('subMailPacket') . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
@@ -608,7 +591,7 @@ if ($action == "setthree") {
 
 if ($action == "setfour") {
 
-    $kbs = $config['photoFileSize'] / 1024;
+    $kbs = get_configuration('photoFileSize') / 1024;
 
     // forum settings
     echo '<h1>' . $lang_apsetting['forumandgalset'] . '</h1>';
@@ -617,13 +600,13 @@ if ($action == "setfour") {
 
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Forum settings<br /><br />';
     echo '<p>' . $lang_apsetting['forumon'] . ': <br />' . $lang_apsetting['yes'] . '';
-    if ($config['forumAccess'] == "1") {
+    if (get_configuration('forumAccess') == 1) {
         echo '<input name="conf_set49" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set49" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['forumAccess'] == "0") {
+    if (get_configuration('forumAccess') == 0) {
         echo '<input name="conf_set49" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set49" type="radio" value="0" />';
@@ -631,13 +614,13 @@ if ($action == "setfour") {
     echo $lang_apsetting['no'] . '</p>';
     
         echo '<p>Show language dropdown: <br />' . $lang_apsetting['yes'];
-    if ($config['forumChLang'] == "1") {
+    if (get_configuration('forumChLang') == 1) {
         echo '<input name="conf_set68" type="radio" value="1" checked>';
     } else {
         echo '<input name="conf_set68" type="radio" value="1" />';
     } 
     echo ' &nbsp; &nbsp; ';
-    if ($config['forumChLang'] == "0") {
+    if (get_configuration('forumChLang') == 0) {
         echo '<input name="conf_set68" type="radio" value="0" checked>';
     } else {
         echo '<input name="conf_set68" type="radio" value="0" />';
@@ -674,7 +657,7 @@ if ($action == "setfour") {
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Uploading in gallery<br /><br />';
 
     echo '<p>' . $lang_apsetting['photomaxkb'] . ':<br /><input name="conf_set38" maxlength="8" value="' . (int)$kbs . '" /></p>';
-    echo '<p>' . $lang_apsetting['photopx'] . ':<br /><input name="conf_set39" maxlength="4" value="' . $config['maxPhotoPixels'] . '" /></p>';
+    echo '<p>' . $lang_apsetting['photopx'] . ':<br /><input name="conf_set39" maxlength="4" value="' . get_configuration('maxPhotoPixels') . '" /></p>';
     echo '<p>Users can upload? <br />' . $lang_apsetting['yes'] . '';
     if ($gallery_data[0] == "1") {
         echo '<input name="gallery_set0" type="radio" value="1" checked>';
@@ -698,7 +681,7 @@ if ($action == "setfive") {
 
     echo '<form method="post" action="settings.php?action=editfive">';
 
-    echo '<p>' . $lang_apsetting['maxinbxmsgs'] . ':<br /><input name="conf_set30" maxlength="5" value="' . $config['pvtLimit'] . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxinbxmsgs'] . ':<br /><input name="conf_set30" maxlength="5" value="' . get_configuration('pvtLimit') . '" /></p>';
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
 }
@@ -710,18 +693,18 @@ if ($action == "setseven") {
 
     echo '<div class="form-group">';
         echo '<label for="custom-pages">' . $lang_home['customPageUrl'] . '</label>';
-        echo '<input class="form-control" name="conf_set28" id="custom-pages" value="' . $config['customPages'] . '" />';
+        echo '<input class="form-control" name="conf_set28" id="custom-pages" value="' . get_configuration('customPages') . '" />';
     echo '</div>';
 
     echo '<div class="form-group">';
         echo '<label for="referals">' . $lang_apsetting['maxrefererdata'] . '</label>';
-        echo '<input class="form-control" name="conf_set51" id="referals" maxlength="3" value="' . $config['refererLog'] . '" />';
+        echo '<input class="form-control" name="conf_set51" id="referals" maxlength="3" value="' . get_configuration('refererLog') . '" />';
     echo '</div>';
 
     echo '<p>' . $lang_apsetting['showrefpage'] . ': </p>';
     echo '<div class="form-group form-check form-check-inline">';
 
-       if ($config['showRefPage'] == "1") {
+       if (get_configuration('showRefPage') == 1) {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" checked>';
         } else {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" />';
@@ -731,7 +714,7 @@ if ($action == "setseven") {
     echo '</div>';
 
     echo '<div class="form-check form-check-inline">';
-        if ($config['showRefPage'] == "0") {
+        if (get_configuration('showRefPage') == 0) {
             echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" checked>';
         } else {
             echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" />';
@@ -742,7 +725,7 @@ if ($action == "setseven") {
     echo '<p>Facebook comments on pages:</p>'; // update lang
     echo '<div class="form-group form-check form-check-inline">';
 
-        if ($config['pgFbComm'] == "1") {
+        if (get_configuration('pgFbComm') == 1) {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" checked>';
         } else {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" />';
@@ -751,7 +734,7 @@ if ($action == "setseven") {
     echo '</div>';
 
     echo '<div class="form-check form-check-inline">';
-        if ($config['pgFbComm'] == "0") {
+        if (get_configuration('pgFbComm') == 0) {
             echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" checked>';
         } else {
             echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" />';
@@ -770,8 +753,8 @@ if ($action == "seteight") {
 
     echo '<form method="post" action="settings.php?action=editeight">';
 
-    echo '<p>' . $lang_apsetting['maxlogfile'] . ':<br /><input name="conf_set58" maxlength="3" value="' . $config['maxLogData'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxbantime'] . ':<br /><input name="conf_set76" maxlength="3" value="' . round($config['maxBanTime'] / 1440) . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxlogfile'] . ':<br /><input name="conf_set58" maxlength="3" value="' . get_configuration('maxLogData') . '" /></p>';
+    echo '<p>' . $lang_apsetting['maxbantime'] . ':<br /><input name="conf_set76" maxlength="3" value="' . round(get_configuration('maxBanTime') / 1440) . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
@@ -783,11 +766,11 @@ if ($action == "setnine") {
 
     echo '<form method="post" action="settings.php?action=editnine">';
 
-    echo '<p>Database host:<br /><input name="conf_set77" maxlength="40" value="' . $config['dbhost'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['username'] . ':<br /><input name="conf_set78" maxlength="40" value="' . $config['dbuser'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['password'] . ':<br /><input name="conf_set79" maxlength="40" value="' . $config['dbpass'] . '" /></p>';
-    echo '<p>' . $lang_apsetting['dbname'] . ':<br /><input name="conf_set80" maxlength="40" value="' . $config['dbname'] . '" /></p>';
-    echo '<p>Crossdomain table prefix:<br /><input name="conf_set71" maxlength="12" value="' . $config['tablePrefix'] . '" /></p>';
+    echo '<p>Database host:<br /><input name="conf_set77" maxlength="40" value="' . get_configuration('dbhost') . '" /></p>';
+    echo '<p>' . $lang_apsetting['username'] . ':<br /><input name="conf_set78" maxlength="40" value="' . get_configuration('dbuser') . '" /></p>';
+    echo '<p>' . $lang_apsetting['password'] . ':<br /><input name="conf_set79" maxlength="40" value="' . get_configuration('dbpass') . '" /></p>';
+    echo '<p>' . $lang_apsetting['dbname'] . ':<br /><input name="conf_set80" maxlength="40" value="' . get_configuration('dbname') . '" /></p>';
+    echo '<p>Crossdomain table prefix:<br /><input name="conf_set71" maxlength="12" value="' . get_configuration('tablePrefix') . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';

@@ -42,8 +42,8 @@ if ($page == 'send') {
                 $newpas = generate_password();
                 $new = $users->password_encrypt($newpas);
 
-                $subject = $lang_mail['newpassfromsite'] . ' ' . $config["title"];
-                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . $config["homeUrl"] . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n" . $config["homeUrl"] . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $lang_mail['ycchngpass']  . "\r\n";
+                $subject = $lang_mail['newpassfromsite'] . ' ' . get_configuration('title');
+                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . get_configuration('homeUrl') . "\n" . $lang_home['username'] . ": " . $logus . "\n" . $lang_home['pass'] . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n" . get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $lang_mail['ycchngpass']  . "\r\n";
 
 				$send_mail = new Mailer();
 				$send_mail->send($mailsus, $subject, $mail);

@@ -1,14 +1,12 @@
 <?php
-// modified: 24.07.2020. 15:04:52
+// modified: 25.07.2020. 15:23:12
 // (c) VAVOK .net
+
 require_once"../include/startup.php";
-include"../lang/" . $config["language"] . "/pagescounter.php";
-
-
+include"../lang/" . $users->get_user_language() . "/pagescounter.php";
 
 $my_title = $lang_page['statistic'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
-
 
 $pcount = file(BASEDIR . "used/datacounter/host.dat");
 $pcount = explode("|", $pcount[0]);
@@ -34,7 +32,7 @@ $vk_topic = "ok";
 }
 */
 
-if ($config["forumAccess"] == '1') {
+if (get_configuration('forumAccess') == 1) {
     $notc = $db->count_row('vk_topics');
     $nops = $db->count_row('vk_posts');
 

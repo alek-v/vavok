@@ -3,7 +3,7 @@
 
 require_once"../include/startup.php";
 
-if ($config["siteOff"] != 1) { redirect_to("../"); }
+if (get_configuration('siteOff') != 1) { redirect_to("../"); }
 
 $my_title = "Maintenance";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

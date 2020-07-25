@@ -145,7 +145,7 @@ $showPage->set('lastVisit', $lang_user['lastvisit'] . ': ' . date_fixed($user_pr
 
 if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
     $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
-    $ipAddress->set('ip-address', 'IP address: <a href="../' . $config["mPanel"] . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
+    $ipAddress->set('ip-address', 'IP address: <a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
 
     $showPage->set('ip-address', $ipAddress->output());
 } else {
@@ -169,12 +169,12 @@ if ($uz != $users->getnickfromid($users->user_id) && $users->is_reg()) {
     } 
 
     if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
-        $userMenu->set('banUser', '<a href="../' . $config["mPanel"] . '/addban.php?action=edit&amp;users=' . $uz . '">' . $lang_user['bandelban'] . '</a><br>');
+        $userMenu->set('banUser', '<a href="../' . get_configuration('mPanel') . '/addban.php?action=edit&amp;users=' . $uz . '">' . $lang_user['bandelban'] . '</a><br>');
     } else {
         $userMenu->set('banUser', '');
     }
     if ($users->is_reg() && $users->is_administrator(101)) {
-        $userMenu->set('updateProfile', '<a href="../' . $config["mPanel"] . '/users.php?action=edit&amp;users=' . $uz . '">' . $lang_user['update'] . '</a><br>');
+        $userMenu->set('updateProfile', '<a href="../' . get_configuration('mPanel') . '/users.php?action=edit&amp;users=' . $uz . '">' . $lang_user['update'] . '</a><br>');
     } else {
         $userMenu->set('updateProfile', '');
     }

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   19.07.2020. 21:18:21
+* Updated:   25.07.2020. 15:21:21
 */
 
 require_once"../include/startup.php";
@@ -70,26 +70,26 @@ if ($substr_log < 3) {
                         $password = check($pass);
 
                         $mail = htmlspecialchars(stripslashes(strtolower($meil)));
-                        $config["regConfirm"] = (int)$config["regConfirm"];
+                        get_configuration('regConfirm') = (int)get_configuration('regConfirm');
 
-                        if ($config["regConfirm"] == "1") {
+                        if (get_configuration('regConfirm') == "1") {
                             $registration_key = time() + 24 * 60 * 60;
                         } else {
                             $registration_key = '';
                         }
 
                         // register user
-                        $users->register($log, $password, $config["regConfirm"], $registration_key, $config_themes, $mail); // register user
+                        $users->register($log, $password, get_configuration('regConfirm'), $registration_key, $config_themes, $mail); // register user
                          
                         // send email with reg. data
-                        if ($config["regConfirm"] == "1") {
+                        if (get_configuration('regConfirm') == "1") {
                             $needkey = "\r\n\r\n" . $lang_home['emailpart5'] . "\r\n" . $lang_home['yourkey'] . ": " . $registration_key . "\r\n" . $lang_home['emailpart6'] . ":\r\n\r\n" . website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_home['emailpart7'] . "\r\n\r\n";
                         } else {
                             $needkey = "\r\n\r\n";
                         } 
 
-                        $subject = $lang_home['regonsite'] . ' ' . $config["title"];
-                        $regmail = $lang_home['hello'] . " " . $log . "\r\n" . $lang_home['emailpart1'] . " " . $config["homeUrl"] . " \r\n" . $lang_home['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $needkey . "" . $lang_home['emailpart3'] . "\r\n" . $lang_home['emailpart4'] . "";
+                        $subject = $lang_home['regonsite'] . ' ' . get_configuration('title');
+                        $regmail = $lang_home['hello'] . " " . $log . "\r\n" . $lang_home['emailpart1'] . " " . get_configuration('homeUrl') . " \r\n" . $lang_home['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $needkey . "" . $lang_home['emailpart3'] . "\r\n" . $lang_home['emailpart4'] . "";
 
                         // Send confirmation email
                         $newMail = new Mailer;
@@ -113,7 +113,7 @@ if ($substr_log < 3) {
                         echo '<p>' . $lang_home['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p>';
 
                         // confirm registration
-                        if ($config["regConfirm"] == "1") {
+                        if (get_configuration('regConfirm') == "1") {
 
                         	echo '
 							<form method="post" action="key.php?action=inkey">
@@ -194,7 +194,7 @@ $my_title = $lang_home['registration'];
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
-if ($config["openReg"] == "1") {
+if (get_configuration('openReg') == "1") {
 
 	if ($users->is_reg()) {
 
@@ -214,12 +214,12 @@ if ($config["openReg"] == "1") {
 
 		$current_page->set('registration_info', $lang_home['reginfo']);
 
-		if ($config["regConfirm"] == "1") {
+		if (get_configuration('regConfirm') == "1") {
 			$current_page->set('registration_key_info', $lang_home['keyinfo']);
 		}
 
-		if ($config["quarantine"] > 0) {
-			$current_page->set('quarantine_info', $lang_home['quarantine1'] . ' ' . round($config["quarantine"] / 3600) . ' ' . $lang_home['quarantine2']);
+		if (get_configuration('quarantine') > 0) {
+			$current_page->set('quarantine_info', $lang_home['quarantine1'] . ' ' . round(get_configuration('quarantine') / 3600) . ' ' . $lang_home['quarantine2']);
 		}
 
 		echo $current_page->output();

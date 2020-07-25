@@ -1,13 +1,12 @@
 <?php
 // Aleksandar Vranešević - (c) vavok.net
-// modified: 24.07.2020. 17:57:56
+// modified: 25.07.2020. 14:39:54
 
 
 $con_text = file_get_contents(BASEDIR . "used/config.dat");
 $con_data = explode("|", $con_text);
 
 $config = array(
-"redbrow" => $con_data[0], // redirection to www. or m.
 "keypass" => $con_data[1], // key for decrypting passwords
 "webtheme" => $con_data[2], // default web skin
 "quarantine" => $con_data[3], // quarantine for new users

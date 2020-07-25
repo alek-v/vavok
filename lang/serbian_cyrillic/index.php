@@ -109,7 +109,7 @@ $lang_home['purecookieDesc'] = "Коришћењем овог сајта при�
 $lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_blank">Због чега?</a>'; // Cookiepolicy link
 $lang_home['purecookieButton'] = "Прихватам"; // Button text
 
-$langdir = explode("/", $config_requri);
+$langdir = explode("/", REQUEST_URI);
 $langdir = $langdir[1];
 
 $phpselflang = str_replace(".php", '', SUB_SELF);

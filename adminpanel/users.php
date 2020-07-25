@@ -44,13 +44,13 @@ if ($action == "edit") {
 
                 echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
 
-                if ($users->show_username() != $config["adminNick"] && $user == $config["adminNick"]) {
+                if ($users->show_username() != get_configuration('adminNick') && $user == get_configuration('adminNick')) {
                     echo '<br>' . $lang_admin['noauthtoedit'] . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
 
-                if (($users->show_username() != $config["adminNick"]) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
+                if (($users->show_username() != get_configuration('adminNick')) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
                     echo '<br>' . $lang_admin['noauthtoban'] . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
@@ -64,7 +64,7 @@ if ($action == "edit") {
 
                 $userx_access = (int)$show_userx['perm'];
 
-                if ($_SESSION['permissions'] == 101 && $users->show_username() == $config["adminNick"]) {
+                if ($_SESSION['permissions'] == 101 && $users->show_username() == get_configuration('adminNick')) {
                     $array_dostup = array(101 => "" . $lang_home['access101'] . "", 102 => "" . $lang_home['access102'] . "", 103 => "" . $lang_home['access103'] . "", 105 => "" . $lang_home['access105'] . "", 106 => "" . $lang_home['access106'] . "", 107 => "" . $lang_home['access107'] . "");
                     if ($userx_access == "0" || empty($userx_access)) {
                         $userx_access = "107";
@@ -232,7 +232,7 @@ if ($action == "poddel") {
 
 // delete user
 if ($action == "deluser") {
-    if ($user != $config["adminNick"]) {
+    if ($user != get_configuration('adminNick')) {
         $userx_id = $users->getidfromnick($user);
         $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'perm');
 
