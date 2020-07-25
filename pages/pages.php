@@ -65,7 +65,7 @@ $this_page->set('content', $current_page->page_content);
 
 // facebook comments
 if ($config["pgFbComm"] == 1) {
-	$this_page->set('facebook_comments', $this_page->facebook_comments($config_srvhost, $clean_requri));
+	$this_page->set('facebook_comments', $this_page->facebook_comments('', $clean_requri));
 }
 
 // homepage address
