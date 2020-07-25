@@ -56,12 +56,12 @@ if ($error == '401') {
     $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
-    echo $lang_error['err404youtrytoop'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . '<br>' . $lang_error['filenotfound'] . '.<br>';
+    echo $lang_error['err404youtrytoop'] . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $lang_error['filenotfound'] . '.<br>';
 
     $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
-    echo $lang_error['err406descr'] . ' ' . $config_srvhost . '' . $phpself . $request_uri . ' ' . $lang_error['notfonserver'] . '.<br>';
+    echo $lang_error['err406descr'] . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $lang_error['notfonserver'] . '.<br>';
 
     $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
