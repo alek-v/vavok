@@ -105,10 +105,10 @@ class PageGen {
     }
 
 
-    function facebook_comments($config_srvhost, $clean_requri) {
+    function facebook_comments($config_srvhost = '', $clean_requri) {
 
     $pages = new Page();
-    return '<div class="fb-comments" data-href="' . $pages->media_page_url($config_srvhost, $clean_requri) . '" data-width="470" data-num-posts="10"></div>';
+    return '<div class="fb-comments" data-href="' . $pages->media_page_url($_SERVER['HTTP_HOST'], $clean_requri) . '" data-width="470" data-num-posts="10"></div>';
 
     }
 
