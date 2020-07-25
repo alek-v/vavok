@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 18.07.2020. 18:43:21
+// modified: 25.07.2020. 13:16:08
 
 $language = 'english';
 $ln_loc = 'en';
@@ -102,7 +102,7 @@ $lang_home['purecookieButton'] = "Understood"; // Button text
 $langdir = explode("/", $config_requri);
 $langdir = $langdir[1];
 
-$phpselflang = str_replace(".php", '', $subself);
+$phpselflang = str_replace(".php", '', SUB_SELF);
 $phpselflang = str_replace("/", '', $phpselflang);
 
 if(file_exists(BASEDIR . "lang/english/" . $langdir . ".php")) {

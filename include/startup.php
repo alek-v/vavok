@@ -3,20 +3,20 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 11:41:43
+* Updated:   25.07.2020. 13:17:11
 */
 
-// time when execution of the script has started
+// Time when execution of the script has started
 $start_time = microtime(true);
 
 // session
 session_name("sid");
 session_start();
 
-// vavok cms settings
+// Vavok cms settings
 $config_debug = 1;
 
-// error reporting
+// Error reporting
 if ($config_debug == 0) {
     error_reporting(0);
 } else {
@@ -24,20 +24,21 @@ if ($config_debug == 0) {
     ini_set('display_errors', '1');
 }
 
-$config_srvhost = $_SERVER['HTTP_HOST'];
-$config_requri = urldecode($_SERVER['REQUEST_URI']);
-$subself = substr($_SERVER['PHP_SELF'], 1);
+/*
+Constants
+*/
 
-// clean URL (REQUEST_URI)
-$clean_requri = preg_replace(array('#(\?|&)' . session_name() . '=([^=&\s]*)#', '#(&|\?)+$#'), '', $config_requri);
-$clean_requri = explode('&fb_action_ids', $clean_requri);
-$clean_requri = $clean_requri[0];
-$clean_requri = explode('?fb_action_ids', $clean_requri);
-$clean_requri = $clean_requri[0];
-$clean_requri = explode('?isset', $clean_requri);
-$clean_requri = $clean_requri[0];
+define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
+$config_requri = urldecode($_SERVER['REQUEST_URI']); // deprecated 25.07.2020. 13:04:27
+define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
 
-// root dir for including system files
+// Clean URL (REQUEST_URI)
+$clean_requri = explode('&fb_action_ids', REQUEST_URI)[0]; // facebook
+$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
+$clean_requri = explode('?isset', $clean_requri)[0];
+define('CLEAN_REQUEST_URI', $clean_requri);
+
+// Root dir for including system files
 if (!defined('BASEDIR')) {
     $folder_level = "";
     while (!file_exists($folder_level . "robots.txt")) {
@@ -46,9 +47,9 @@ if (!defined('BASEDIR')) {
     define("BASEDIR", $folder_level);
 }
 
-// for links, images and other mod rewriten directories
+// For links, images and other mod rewriten directories
 if (!defined('HOMEDIR')) {
-    $path = $_SERVER['HTTP_HOST'] . $clean_requri;
+    $path = $_SERVER['HTTP_HOST'] . CLEAN_REQUEST_URI;
     $patharray = explode("/", $path);
     $pathindex = "";
 
@@ -75,7 +76,7 @@ date_default_timezone_set('UTC');
 
 require_once BASEDIR . "include/functions.php";
 
-// connect to database
+// Connect to database
 if (!strstr($config_requri, 'error=db') && !empty($config["dbhost"])) {
 
     // and this will be PDO connection to base

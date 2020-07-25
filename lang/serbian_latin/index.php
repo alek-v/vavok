@@ -113,7 +113,7 @@ $lang_home['purecookieButton'] = "Prihvatam"; // Button text
 $langdir = explode("/", $config_requri);
 $langdir = $langdir[1];
 
-$phpselflang = str_replace(".php", '', $subself);
+$phpselflang = str_replace(".php", '', SUB_SELF);
 $phpselflang = str_replace("/", '', $phpselflang);
 
 if(file_exists(BASEDIR."lang/serbian_latin/" . $langdir . ".php")) {

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 13:46:44
+* Updated:   25.07.2020. 13:26:24
 */
 
 include"../include/startup.php";
@@ -70,7 +70,7 @@ switch ($pg) {
 		if ($users->is_reg()) {
 
 			$add_comment = new PageGen('pages/blog/add_comment.tpl');
-			$add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $page_id . '&amp;ptl=' . $clean_requri);
+			$add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
 
 			$post->set('add_comment', $add_comment->output());
 

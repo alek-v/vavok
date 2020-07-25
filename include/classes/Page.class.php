@@ -242,10 +242,10 @@ class Page {
 	}
 
 	// url for facebook share, twitter etc to prevent duplicated url's
-	function media_page_url($request, $website = '') {
+	public function media_page_url() {
 
 		// Clean up request
-		$r = preg_replace('/&page=(\d+)/', '', $request);
+		$r = preg_replace('/&page=(\d+)/', '', $_SERVER['HTTP_HOST']);
 		$r = preg_replace('/page=(\d+)/', '', $r);
 		$r = str_replace('&page=last', '', $r);
 		$r = str_replace('page=last', '', $r);
@@ -264,7 +264,7 @@ class Page {
 	}
 
 	// get title for page
-	function page_title() {
+	public function page_title() {
 	    $page_title = $this->db->get_data('pages', "pname='" . $_SERVER['PHP_SELF'] . "'", 'tname')['tname'];
 
 	    if (!empty($page_title)) {

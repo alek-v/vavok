@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   24.07.2020. 14:03:16
+* Updated:   25.07.2020. 13:24:32
 */
 
 include_once"../include/startup.php";
@@ -64,9 +64,7 @@ if ($current_page->published == 1 && !$users->is_administrator()) {
 $this_page->set('content', $current_page->page_content);
 
 // facebook comments
-if ($config["pgFbComm"] == 1) {
-	$this_page->set('facebook_comments', $this_page->facebook_comments('', $clean_requri));
-}
+if ($config["pgFbComm"] == 1) $this_page->set('facebook_comments', $this_page->facebook_comments());
 
 // homepage address
 $this_page->set('homepage_url', website_home_address()); // homepage url

@@ -26,10 +26,8 @@ include_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 $http_referer = !empty($_SERVER['HTTP_REFERER']) ? check($_SERVER['HTTP_REFERER']) : 'No referer';
 
 $http_referer = str_replace(":|:", "|", $http_referer);
-$request_uri = check(urldecode($_SERVER['REQUEST_URI']));
-$request_uri = str_replace(":|:", "|", $request_uri);
-$phpself = $_SERVER['PHP_SELF'];
-$phpself = str_replace("/pages/error.php", "", $phpself);
+$request_uri = str_replace(":|:", "|", REQUEST_URI);
+$phpself = str_replace("/pages/error.php", "", $_SERVER['PHP_SELF']);
 $phpself = str_replace(":|:", "|", $phpself);
 $hostname = gethostbyaddr($ip);
 $hostname = str_replace(":|:", "|", $hostname);

@@ -25,7 +25,7 @@ if (!stristr($_SERVER['PHP_SELF'], 'install/install.php')) {
 
     } 
 
-    // no data using $clean_requri, try PHP_SELF :)
+    // no data, try PHP_SELF
     if (empty($head_tag)) {
         $vk_page = $db->get_data('pages', "pname='" . $_SERVER['PHP_SELF'] . "'");
         if (!empty($vk_page['headt'])) {
