@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   21.07.2020. 3:18:16
+* Updated:   25.07.2020. 10:06:38
 */
 
 
@@ -17,6 +17,102 @@ class Users {
 
 		$this->db = $db;
 		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : '';
+
+		// Get user data
+		if (!empty($this->user_id)) {
+
+			// Get data
+		    $vavok_users = $db->get_data('vavok_users', "id='{$this->user_id}'");
+		    $user_profil = $db->get_data('vavok_profil', "uid='{$this->user_id}'", 'regche');
+
+		    $db->update('vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
+
+		    // Theme
+		    $config_themes = $vavok_users['skin'];
+
+		 	// Time zone
+		    if (!empty($vavok_users['timezone'])) define('MY_TIMEZONE', $vavok_users['timezone']);
+
+		 	// Language
+		    if (!empty($vavok_users['lang'])) {
+
+		        // Update language in session if it is not language from prifile
+		        if (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang']) $_SESSION['lang'] = $vavok_users['lang'];
+
+		    } 
+
+		    // Check if user is banned
+		    if ($vavok_users['banned'] == "1" && !strstr($_SERVER['PHP_SELF'], 'pages/ban.php')) redirect_to(BASEDIR . "pages/ban.php");
+
+		 	// activate account
+		    if ($user_profil['regche'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/key.php')) {
+
+		        setcookie('cookpass', '');
+		        setcookie('cooklog', '');
+		        setcookie(session_name(), '');
+		        unset($_SESSION['log']);
+		        session_destroy();
+
+		    }
+
+		    // check session life
+		    if (get_configuration('sessionLife') > 0) {
+
+		        if (($_SESSION['my_time'] + get_configuration('sessionLife')) < time() && $_SESSION['my_time'] > 0) {
+
+		            session_unset();
+		            setcookie(session_name(), '');
+		            session_destroy();
+
+		            redirect_to(BASEDIR . $request_uri);
+
+		        } 
+		    }
+
+		} else {
+
+			// User's site theme
+		    $config_themes = get_configuration('webtheme');
+
+		    if (empty($_SESSION['lang'])) $this->change_language();
+
+		}
+
+		// if skin not found
+		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
+		    $config_themes = 'default';
+		}
+
+		/*
+		Count visited pages and time on site
+		*/
+
+		if (empty($_SESSION['currs'])) {
+		    $_SESSION['currs'] = time();
+		}
+
+		if (empty($_SESSION['counton'])) {
+		    $_SESSION['counton'] = 0;
+		} 
+
+		$_SESSION['counton']++;
+
+		// pages visited at this session
+		$this->visited_pages = $_SESSION['counton'];
+
+		// visitor's time on the site
+		$this->time_on_site = maketime(round(time() - $_SESSION['currs']));
+
+		/*
+		User settings
+		*/
+
+		// Current theme
+		define("MY_THEME", $config_themes);
+
+		// If timezone is not defined use default
+		if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', get_configuration('timeZone'));
+
 	}
 
 	// check current session if user is registered
@@ -26,7 +122,7 @@ class Users {
 
 	        if (!empty($this->user_id)) {
 
-	            $show_user = $this->db->get_data('vavok_users', "id='" . $this->user_id . "'", 'name, perm');
+	            $show_user = $this->db->get_data('vavok_users', "id='{$this->user_id}'", 'name, perm');
 
 	            // Check if permissions are changed
 	            if (check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
@@ -92,7 +188,7 @@ class Users {
 
 	// register user
 	public function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
-	    global $lang_home, $config, $db;
+	    global $lang_home, $db;
 	    
 	    $values = array(
 	        'name' => $name,
@@ -104,7 +200,7 @@ class Users {
 	        'timezone' => 0,
 	        'banned' => 0,
 	        'newmsg' => 0,
-	        'lang' => $config["language"]
+	        'lang' => get_configuration('language')
 	    );
 	    $db->insert_data('vavok_users', $values);
 
@@ -251,7 +347,7 @@ class Users {
             $user_mail = $this->db->get_data('vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
-            $send_mail->send($user_mail['email'], "Message on " . $config["homeUrl"], "Hello " . $users->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $config["homeUrl"]); // update lang
+            $send_mail->send($user_mail['email'], "Message on " . get_configuration('homeUrl'), "Hello " . $users->getnickfromid($who) . "\r\n\r\nYou have new message on site " . get_configuration('homeUrl')); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }

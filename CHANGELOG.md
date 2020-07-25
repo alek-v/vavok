@@ -1,3 +1,12 @@
+# Vavok v1.5.3.1
+- Updated inbox
+- Updated User.class
+- Updated language files
+- Added: New functon detect_bot()
+- Removed include/header.php
+
+
+
 # Vavok v1.5.3
 - Updated: User permissions
 - Updated: Administration panel access levels update
