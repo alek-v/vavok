@@ -105,6 +105,9 @@ if ($substr_log < 3) {
                         );
                         $db->insert_data('email_queue', $values);
 
+                        // Registration completed successfully
+                        $completed = 'successfully';
+
                         // registration successfully, show info
                         echo '<p>' . $localization->string('regoknick') . ': <b>' . $log . '</b> <br /><br /></p>';
 
@@ -169,8 +172,10 @@ if ($substr_log < 3) {
 
 }
 
-echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+// Show back link if registration is not completed
+if (!isset($completed)) { echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>'; }
+
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 exit;
