@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:37:18
+*/
+
 require_once"../include/startup.php";
 
 $my_title = 'Change Photo'; // update lang
@@ -25,9 +31,9 @@ if ($users->is_reg()) {
     if (empty($action)) {
         $chk_photo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'photo');
 
-        if (!empty($chk_photo['photo'])) {
+        if (!empty($localization->string('photo'))) {
             echo '<div class="photo">';
-            echo '<h4>Your photo</h4><br /><img src="../' . $chk_photo['photo'] . '" alt="" /><br>';
+            echo '<h4>Your photo</h4><br /><img src="../' . $localization->string('photo') . '" alt="" /><br>';
             echo '</div>';
             echo '<div class="break"></div>';
         } 
@@ -35,7 +41,7 @@ if ($users->is_reg()) {
         echo '<form action="photo.php?action=photo" method="post" name="form" enctype="multipart/form-data">';
         echo '<br>Change your profile photography: <br>';
         echo '<input type="file" name="file" /><br><br>';
-        echo '<input type="submit" value="' . $lang_page['upload'] . '" /></form>';
+        echo '<input type="submit" value="' . $localization->string('upload') . '" /></form>';
         echo '<div class="break"></div>';
         echo '<div class="break"></div>';
 
@@ -81,13 +87,13 @@ if ($users->is_reg()) {
                         echo 'Error uploading photography<br>';
                     } 
                 } else {
-                    echo $lang_page['badfileext'] . '<br>';
+                    echo $localization->string('badfileext') . '<br>';
                 } 
             } else {
                 echo 'Photography must be under 1024 px<br>';
             } 
         } else {
-            echo $lang_page['filemustb'] . ' under 5 MB<br>';
+            echo $localization->string('filemustb') . ' under 5 MB<br>';
         } 
 
         echo '<a href="photo.php">' . $localization->string('back') . '</a><br>';

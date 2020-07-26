@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:24:49
+*/
+
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
@@ -22,10 +28,10 @@ if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(1
     redirect_to("../index.php?error");
 } 
 
-$my_title = $lang_admin['banlist'];
+$my_title = $localization->string('banlist');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $lang_admin['banlist'] . '</b></p>'; 
+echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('banlist') . '</b></p>'; 
 
 $noi = $db->count_row('vavok_users', "banned='1' OR banned='2'");
 $items_per_page = 10;
@@ -41,12 +47,12 @@ if ($noi > 0) {
         if ($item['banned'] == '1') {
             $banned_profil = $db->get_data('vavok_profil', "id='" . $item['id'] . "'", 'bantime, bandesc');
 
-            $lnk = "<div class=\"a\"><p><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $lang_admin['banduration'] . ": " . date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $lang_admin['bandesc'] . ": " . $banned_profil['bandesc'] . "</small></p></div>";
+            $lnk = "<div class=\"a\"><p><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $localization->string('banduration') . ": " . date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $localization->string('bandesc') . ": " . $banned_profil['bandesc'] . "</small></p></div>";
             echo $lnk . "<br>";
         } 
     } 
 } else {
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['noentry'] . '!</p>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('noentry') . '!</p>';
 } 
 
 echo $navigation->get_navigation();

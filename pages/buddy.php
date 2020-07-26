@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:18:14
+*/
+
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
@@ -46,7 +52,7 @@ if ($users->is_reg()) {
 
     if (empty($action)) {
 
-        $my_title = $lang_page['contacts'];
+        $my_title = $localization->string('contacts');
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         if ($page == "" || $page <= 0) {
@@ -75,18 +81,18 @@ if ($users->is_reg()) {
             } 
 
         } else {
-            echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nobuddy'] . '<br><br>';
+            echo '<p><img src="../images/img/reload.gif" alt=""> ' . $localization->string('nobuddy') . '</p>';
         } 
 
         echo $navigation->get_navigation();
 
     } 
 } else {
-    echo $localization->string('notloged') . '<br><br>';
+    echo '<p>' . $localization->string('notloged') . '</p>';
 } 
 
-echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a>';
+echo '<p><img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

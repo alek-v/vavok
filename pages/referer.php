@@ -1,5 +1,10 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:38:04
+*/
 
 require_once"../include/startup.php";
 
@@ -31,14 +36,14 @@ if (get_configuration('showRefPage') == 1 || $users->is_administrator()) {
         $data = explode("|", $file[$i]);
         $datime = date("H:i:s", $data[1]);
 
-        echo '<b><a href="' . transfer_protocol() . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $lang_page['visits'] . ': ' . $data[3] . '<br /><hr />';
+        echo '<b><a href="' . transfer_protocol() . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $localization->string('visits') . ': ' . $data[3] . '<br /><hr />';
 
     } 
 
     echo $navigation->get_navigation();
 
 } else {
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_page['pgviewoff'] . '<br></p>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('pgviewoff') . '<br></p>';
 } 
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';

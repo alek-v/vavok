@@ -2,8 +2,8 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* Updated:   26.07.2020. 2:58:47
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:41:18
 */
 
 require_once"../include/startup.php";
@@ -54,7 +54,7 @@ echo '</p>';
 
 echo $navigation->get_navigation();
 
-echo '<p>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b></p>';
+echo '<p>' . $localization->string('totsmiles') . ': <b>' . (int)$total . '</b></p>';
 echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 

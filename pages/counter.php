@@ -1,5 +1,10 @@
 <?php 
-// modified: 25.07.2020. 15:11:17
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:21:03
+*/
 
 require_once"../include/startup.php";
 
@@ -31,30 +36,30 @@ if (empty($action)) {
     $visits_today = $counts['visits_today']; // visits today
     $total_visits = $counts['visits_total']; // total visits
 
-    echo $lang_count['temponline'] . ': ';
+    echo $localization->string('temponline') . ': ';
     if (get_configuration('showOnline') == 1 || $users->is_administrator()) {
         echo '<a href="online.php">' . (int)$pcounter_online . '</a><br />';
     } else {
         echo '<b>' . (int)$pcounter_online . '</b><br />';
     }
 
-    echo $lang_count['registered'] . ': <b>' . (int)$pcounter_reg . '</b><br />';
-    echo $lang_count['guests'] . ': <b>' . (int)$pcounter_guest . '</b><br /><br />';
+    echo $localization->string('registered') . ': <b>' . (int)$pcounter_reg . '</b><br />';
+    echo $localization->string('guests') . ': <b>' . (int)$pcounter_guest . '</b><br /><br />';
 
-    echo $lang_count['vststoday'] . ': <b>' . (int)$visits_today . '</b><br />';
-    echo $lang_count['vstpagestoday'] . ': <b>' . (int)$clicks_today . '</b><br />';
-    echo $lang_count['totvisits'] . ': <b>' . (int)$total_visits . '</b><br />';
-    echo $lang_count['totopenpages'] . ': <b>' . (int)$total_clicks . '</b><br /><br />';
+    echo $localization->string('vststoday') . ': <b>' . (int)$visits_today . '</b><br />';
+    echo $localization->string('vstpagestoday') . ': <b>' . (int)$clicks_today . '</b><br />';
+    echo $localization->string('totvisits') . ': <b>' . (int)$total_visits . '</b><br />';
+    echo $localization->string('totopenpages') . ': <b>' . (int)$total_clicks . '</b><br /><br />';
 
-    //echo $lang_count['vstinhour'] . ': <b>' . (int)$pcounter_hourhost . '</b><br />';
-    //echo $lang_count['vstpagesinhour'] . ': <b>' . (int)$pcounter_hourhits . '</b><br /><br />';
+    //echo $localization->string('vstinhour') . ': <b>' . (int)$pcounter_hourhost . '</b><br />';
+    //echo $localization->string('vstpagesinhour') . ': <b>' . (int)$pcounter_hourhits . '</b><br /><br />';
 
 }
 
 // last 24 hours
 if ($action == "count24") {
     exit;
-    echo'<img src="../images/img/partners.gif" alt="" /> <b>' . $lang_count['statbyhour'] . '</b><br /><br />';
+    echo'<img src="../images/img/partners.gif" alt="" /> <b>' . $localization->string('statbyhour') . '</b><br /><br />';
 
     $p24_hits = file(BASEDIR . "used/datacounter/24_hits.dat");
     $p24_hits = explode("|", $p24_hits[0]);
@@ -62,11 +67,11 @@ if ($action == "count24") {
     $p24_host = file(BASEDIR . "used/datacounter/24_host.dat");
     $p24_host = explode("|", $p24_host[0]);
 
-    echo $lang_count['vstin24hgraph'] . '<br />';
+    echo $localization->string('vstin24hgraph') . '<br />';
     echo '<img src="' . BASEDIR . 'gallery/count24.php" alt="" /><br /><br />';
 
     if ($hour > 0) {
-        echo '<b>' . $lang_count['vstdpages'] . '</b><br />';
+        echo '<b>' . $localization->string('vstdpages') . '</b><br />';
 
         for($i = 0;$i < $hour;$i++) {
             $p24_hitshour = explode("-", $p24_hits[$i]);
@@ -75,11 +80,11 @@ if ($action == "count24") {
             $tekhour2 = (date("H:i", $p24_hitshour[0]-3600));
 
             if ($tekhour != "" && $tekhour2 != "") {
-                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hitshour[1] . '</b> ' . $lang_count['views'] . '<br />';
+                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hitshour[1] . '</b> ' . $localization->string('views') . '<br />';
             } 
         } 
 
-        echo '<br /><b>' . $lang_count['uniquevsts'] . '</b><br />';
+        echo '<br /><b>' . $localization->string('uniquevsts') . '</b><br />';
 
         for($i = 0;$i < $hour;$i++) {
             $p24_hosthour = explode("-", $p24_host[$i]);
@@ -87,11 +92,11 @@ if ($action == "count24") {
             $tekhour2 = (date("H:i", $p24_hosthour[0]-3600));
 
             if ($tekhour != "" && $tekhour2 != "") {
-                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hosthour[1] . '</b> ' . $lang_count['visitss'] . '<br />';
+                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hosthour[1] . '</b> ' . $localization->string('visitss') . '<br />';
             } 
         } 
     } else {
-        echo $lang_count['statnotformed'] . '<br />';
+        echo $localization->string('statnotformed') . '<br />';
     } 
 
     echo'<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
@@ -99,7 +104,7 @@ if ($action == "count24") {
 // statistics for a month
 if ($action == "count31") {
     exit;
-    echo '<img src="../images/img/partners.gif" alt=""> <b>' . $lang_count['statbyday'] . '</b><br /><br />';
+    echo '<img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('statbyday') . '</b><br /><br />';
 
     $p31_hits = file(BASEDIR . "used/datacounter/31_hits.dat");
     $p31_hits = explode("|", $p31_hits[0]);
@@ -111,7 +116,7 @@ if ($action == "count31") {
     echo '<img src="' . BASEDIR . 'gallery/count31.php" alt="" /><br /><br />';
 
     if ($hday > 0) {
-        echo '<b>' . $lang_count['vstdpages'] . '</b><br />';
+        echo '<b>' . $localization->string('vstdpages') . '</b><br />';
 
         for($i = 0;$i < $hday;$i++) {
             $p31_hitshour = explode("-", $p31_hits[$i]);
@@ -120,11 +125,11 @@ if ($action == "count31") {
             $tekhour2 = (date("d.m", $p31_hitshour[0]-86400));
 
             if ($tekhour != "" && $tekhour2 != "") {
-                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hitshour[1] . '</b> ' . $lang_count['views'] . '<br />';
+                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hitshour[1] . '</b> ' . $localization->string('views') . '<br />';
             } 
         } 
 
-        echo '<br /><b>' . $lang_count['uniquevsts'] . '</b><br />';
+        echo '<br /><b>' . $localization->string('uniquevsts') . '</b><br />';
 
         for($i = 0;$i < $hday;$i++) {
             $p31_hosthour = explode("-", $p31_host[$i]);
@@ -133,17 +138,17 @@ if ($action == "count31") {
             $tekhour2 = (date("d.m", $p31_hosthour[0]-86400));
 
             if ($tekhour != "" && $tekhour2 != "") {
-                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hosthour[1] . '</b> ' . $lang_count['visitss'] . '<br />';
+                echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hosthour[1] . '</b> ' . $localization->string('visitss') . '<br />';
             } 
         } 
     } else {
-        echo $lang_count['statnotformed'] . '<br />';
+        echo '<p>' . $localization->string('statnotformed') . '</p>';
     } 
 
-    echo '<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    echo '<p><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 } 
 
-echo '<br /><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 2:49:24
+* Updated:   26.07.2020. 17:26:52
 */
 
 require_once"../include/startup.php";
@@ -76,10 +76,10 @@ if (empty($action)) {
 
 
     } else {
-        echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['nopmsgs'] . '<br /><br />';
+        echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('nopmsgs') . '<br /><br />';
     } 
 
-    echo '<a href="inbox.php?action=sendto" class="btn btn-primary sitelink">' . $lang_page['sendmsg'] . '</a><br />';
+    echo '<a href="inbox.php?action=sendto" class="btn btn-primary sitelink">' . $localization->string('sendmsg') . '</a><br />';
 
 } else if ($action == "dialog") {
 
@@ -143,7 +143,7 @@ else if ($action == "sendto") {
 
     echo '<form method="post" action="inbox.php?action=dialog">';
     echo '<div class="form-group">';
-    echo '<label for="who">' . $lang_page['sendpmto'] . ':</label>';
+    echo '<label for="who">' . $localization->string('sendpmto') . ':</label>';
     echo '<input type="text" name="who" id="who" class="form-control" />';
     echo '</div>';
     echo '<button type="submit" class="btn btn-primary">' . $localization->string('confirm') . '</button>

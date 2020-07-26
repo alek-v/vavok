@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 18:59:18
+* Updated:   26.07.2020. 14:29:09
 */
 
 require_once"../include/startup.php";
@@ -55,12 +55,12 @@ if (empty($action)) {
 	Moderator access level or bigger
 	*/
 
-	echo '<a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $lang_admin['admchat'] . '</a>';
-	echo '<a href="adminlist.php" class="btn btn-outline-primary sitelink">' . $lang_admin['modlist'] . '</a>';
-	echo '<a href="reglist.php" class="btn btn-outline-primary sitelink">' . $lang_admin['notconf'] . '</a>';
+	echo '<a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $localization->string('admchat') . '</a>';
+	echo '<a href="adminlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('modlist') . '</a>';
+	echo '<a href="reglist.php" class="btn btn-outline-primary sitelink">' . $localization->string('notconf') . '</a>';
 
     $totalUsers = $db->count_row('vavok_users') - 1; // - 1 - do not count "System"
-    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $lang_admin['userlist'] . ' (' . $totalUsers . ')</a>';
+    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('userlist') . ' (' . $totalUsers . ')</a>';
 
     /*
     Super moderator access level or bigger
@@ -69,12 +69,12 @@ if (empty($action)) {
     if ($users->is_moderator(103) || $users->is_moderator(105) || $users->is_administrator()) {
 
     	if (file_exists('reports.php')) {
-        	echo '<a href="reports.php" class="btn btn-outline-primary sitelink">' . $lang_admin['usrcomp'] . '</a>';
+        	echo '<a href="reports.php" class="btn btn-outline-primary sitelink">' . $localization->string('usrcomp') . '</a>';
     	}
 
         if (file_exists('upload.php')) {
-        	echo '<a href="upload.php" class="btn btn-outline-primary sitelink">' . $lang_admin['upload'] . '</a>';
-        	echo '<a href="uploaded_files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['uplFiles'] . '</a>';
+        	echo '<a href="upload.php" class="btn btn-outline-primary sitelink">' . $localization->string('upload') . '</a>';
+        	echo '<a href="uploaded_files.php" class="btn btn-outline-primary sitelink">' . $localization->string('uplFiles') . '</a>';
             echo '<a href="search_uploads.php" class="btn btn-outline-primary sitelink">Search uploaded files</a>'; // update lang
         }
 
@@ -88,8 +88,8 @@ if (empty($action)) {
 
         echo '<hr>';
 
-        echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_admin['banunban'] . '</a>';
-        echo '<a href="banlist.php" class="btn btn-outline-primary sitelink">' . $lang_admin['banlist'] . '</a>';
+        echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $localization->string('banunban') . '</a>';
+        echo '<a href="banlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('banlist') . '</a>';
 
     } 
 
@@ -102,30 +102,30 @@ if (empty($action)) {
         echo '<hr>';
 
         if (file_exists('forumadmin.php')) {
-	        echo '<a href="forumadmin.php?action=fcats" class="btn btn-outline-primary sitelink">' . $lang_admin['forumcat'] . '</a>';
-	        echo '<a href="forumadmin.php?action=forums" class="btn btn-outline-primary sitelink">' . $lang_admin['forums'] . '</a>';
+	        echo '<a href="forumadmin.php?action=fcats" class="btn btn-outline-primary sitelink">' . $localization->string('forumcat') . '</a>';
+	        echo '<a href="forumadmin.php?action=forums" class="btn btn-outline-primary sitelink">' . $localization->string('forums') . '</a>';
         }
         if (file_exists('gallery/manage_gallery.php')) {
-            echo'<a href="gallery/manage_gallery.php" class="btn btn-outline-primary sitelink">' . $lang_admin['gallery'] . '</a>';
+            echo'<a href="gallery/manage_gallery.php" class="btn btn-outline-primary sitelink">' . $localization->string('gallery') . '</a>';
         } 
         if (file_exists('votes.php')) {
-            echo'<a href="votes.php" class="btn btn-outline-primary sitelink">' . $lang_admin['pools'] . '</a>';
+            echo'<a href="votes.php" class="btn btn-outline-primary sitelink">' . $localization->string('pools') . '</a>';
         }
         if (file_exists("antiword.php")) {
-        	echo '<a href="antiword.php" class="btn btn-outline-primary sitelink">' . $lang_admin['badword'] . '</a>';
+        	echo '<a href="antiword.php" class="btn btn-outline-primary sitelink">' . $localization->string('badword') . '</a>';
         }
 
         echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $localization->string('statistics') . '</a>';
-        echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngprof'] . '</a>';
+        echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngprof') . '</a>';
 
     }
 
     if (file_exists('news.php') && ($users->is_administrator() || $users->check_permissions('news', 'show'))) {
-        echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $lang_admin['sitenews'] . '</a>';
+        echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $localization->string('sitenews') . '</a>';
     } 
 
     if (file_exists('files.php') && ($users->is_administrator() || $users->check_permissions('pageedit'))) {
-        echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngpage'] . '</a>';
+        echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngpage') . '</a>';
     }
 
     /*
@@ -136,14 +136,14 @@ if (empty($action)) {
 
         echo '<hr>';
 
-        echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_admin['syssets'] . '</a>';
-        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $lang_admin['ipbanp'] . ' (' . counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
+        echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('syssets') . '</a>';
+        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $localization->string('ipbanp') . ' (' . counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
         if (file_exists('subscribe.php')) {
-            echo '<a href="subscribe.php" class="btn btn-outline-primary sitelink">' . $lang_admin['subscriptions'] . '</a>';
+            echo '<a href="subscribe.php" class="btn btn-outline-primary sitelink">' . $localization->string('subscriptions') . '</a>';
         } 
-        echo '<a href="index.php?action=sysmng" class="btn btn-outline-primary sitelink">' . $lang_admin['sysmng'] . '</a>';
+        echo '<a href="index.php?action=sysmng" class="btn btn-outline-primary sitelink">' . $localization->string('sysmng') . '</a>';
         if (file_exists('logfiles.php')) {
-            echo '<a href="logfiles.php" class="btn btn-outline-primary sitelink">' . $lang_admin['logcheck'] . '</a>';
+            echo '<a href="logfiles.php" class="btn btn-outline-primary sitelink">' . $localization->string('logcheck') . '</a>';
         }
         if (file_exists('email-queue.php')) {
             echo '<a href="email-queue.php" class="btn btn-outline-primary sitelink">Add to email queue</a>';
@@ -156,9 +156,9 @@ if ($action == 'clear' && $users->is_administrator(101)) {
 
 	echo '<p>';
 	if (file_exists('delusers.php')) {
-    	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanusers'] . '</a>';
+    	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $localization->string('cleanusers') . '</a>';
 	}
-    echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanmodlog'] . '</a>';
+    echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $localization->string('cleanmodlog') . '</a>';
 
 	echo '</p>';
 
@@ -168,16 +168,16 @@ if ($action == "clrmlog" && $users->is_administrator(101)) {
     $sql = "DELETE FROM mlog";
     $db->query($sql);
 
-    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $lang_admin['mlogcleaned'] . '</p>';
+    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $localization->string('mlogcleaned') . '</p>';
 
 } 
 
 if ($action == "sysmng" && $users->is_administrator(101)) {
     echo '<p>';
-    echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['chksystem'] . '</a>';
-    echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $lang_admin['cleansys'] . '</a>';
+    echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $localization->string('chksystem') . '</a>';
+    echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $localization->string('cleansys') . '</a>';
     if (file_exists('backup.php')) {
-        echo '<a href="backup.php" class="btn btn-outline-primary sitelink">' . $lang_admin['backup'] . '</a>';
+        echo '<a href="backup.php" class="btn btn-outline-primary sitelink">' . $localization->string('backup') . '</a>';
     }
     echo '<a href="serverbenchmark.php" class="btn btn-outline-primary sitelink">Server benchmark</a>';
     // update
@@ -208,11 +208,11 @@ $key = 'checkver'; // key to save cache with
     echo '<div class="b">Vavok CMS ' . $localization->string('version') . ': <b>' . $vavok_version . '</b>';
 
     if ($version != $last_ver && !empty($last_ver)) {
-        echo '<p><img src="../images/img/close.gif" alt="" /> ' . $lang_admin['newver'] . '!</p>';
+        echo '<p><img src="../images/img/close.gif" alt="" /> ' . $localization->string('newver') . '!</p>';
         echo '<p><img src="../images/img/reload.gif" alt="" /> Latest version: ' . $last_ver . '</p>';
         echo '<a href="index.php?action=refver" class="btn btn-outline-primary sitelink">Refresh</a>';
     } else {
-        echo '<p><img src="../images/img/reload.gif" alt=""> ' . $lang_admin['hnewver'] . '!</p>';
+        echo '<p><img src="../images/img/reload.gif" alt=""> ' . $localization->string('hnewver') . '!</p>';
     } 
 
     echo '</div>';

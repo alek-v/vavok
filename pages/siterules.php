@@ -1,14 +1,19 @@
 <?php 
-// modified: 26.07.2020. 1:44:42
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:40:33
+*/
+
 require_once"../include/startup.php";
 
-$my_title = $lang_siterules['siterules'];
+$my_title = $localization->string('siterules');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo $lang_siterules['mainrules'];
+echo '<p>' . $localization->string('mainrules') . '</p>';;
 
-echo "<br><br><br>";
-echo '<a href="../">' . $localization->string('home') . '</a>';
+echo '<p><a href="../">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

@@ -4,10 +4,10 @@ class FileUpload {
 
 	function __construct() {
 
-		global $db, $lang_admin;
+		global $db, $localization;
 
 		$this->db = $db;
-		$this->lang_admin = $lang_admin;
+		$this->lang_admin = $localization->show_strings();
 
 	}
 

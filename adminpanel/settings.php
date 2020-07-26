@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:37:40
+*/
+
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator(101)) {
@@ -344,25 +350,25 @@ $my_title = "Settings";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
-    echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $lang_apsetting['mainset'] . '</a>';
-    echo '<a href="settings.php?action=setnine" class="btn btn-outline-primary sitelink">' . $lang_apsetting['mainset'] . ' -> ' . $lang_apsetting['database'] . '</a>';
-    echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $lang_apsetting['shwinfo'] . '</a>';
-    echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $lang_apsetting['bookchatnews'] . '</a>';
-    echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $lang_apsetting['forumgallery'] . '</a>';
+    echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $localization->string('mainset') . '</a>';
+    echo '<a href="settings.php?action=setnine" class="btn btn-outline-primary sitelink">' . $localization->string('mainset') . ' -> ' . $localization->string('database') . '</a>';
+    echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $localization->string('shwinfo') . '</a>';
+    echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $localization->string('bookchatnews') . '</a>';
+    echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $localization->string('forumgallery') . '</a>';
     echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a>';
-    // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $lang_apsetting['advert'] . '</a><br />';
-    echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $lang_apsetting['pagemanage'] . '</a>';
-    echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $lang_apsetting['other'] . '</a>';
+    // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $localization->string('advert') . '</a><br />';
+    echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $localization->string('pagemanage') . '</a>';
+    echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $localization->string('other') . '</a>';
 } 
 
 if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
     // main settings
     if ($action == "setone") {
-        echo '<h1>' . $lang_apsetting['mainset'] . '</h1>';
+        echo '<h1>' . $localization->string('mainset') . '</h1>';
 
         echo '<form method="post" action="settings.php?action=editone">';
 
-        echo '<p>' . $lang_apsetting['language'] . ':<br /><select name="conf_set47"><option value="' . get_configuration('siteDefaultLang') . '">' . get_configuration('siteDefaultLang') . '</option>';
+        echo '<p>' . $localization->string('language') . ':<br /><select name="conf_set47"><option value="' . get_configuration('siteDefaultLang') . '">' . get_configuration('siteDefaultLang') . '</option>';
 
         $dir = opendir ("../lang");
         while ($file = readdir($dir)) {
@@ -376,7 +382,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         $config_themes_show = str_replace("web_", "", get_configuration('webtheme'));
         $config_themes_show = str_replace("wap_", "", $config_themes_show);
         $config_themes_show = ucfirst($config_themes_show);
-        echo '<p>' . $lang_apsetting['webskin'] . ':<br /><select name="conf_set2"><option value="' . get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
+        echo '<p>' . $localization->string('webskin') . ':<br /><select name="conf_set2"><option value="' . get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
 
         $dir = opendir ("../themes");
         while ($file = readdir ($dir)) {
@@ -391,19 +397,19 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         closedir ($dir);
 
         // this will be admin username or system username
-        echo '<p>' . $lang_apsetting['adminusername'] . ':<br /><input name="conf_set8" maxlength="20" value="' . get_configuration('adminNick') . '" /></p>';
+        echo '<p>' . $localization->string('adminusername') . ':<br /><input name="conf_set8" maxlength="20" value="' . get_configuration('adminNick') . '" /></p>';
 
-        echo '<p>' . $lang_apsetting['adminemail'] . ':<br /><input name="conf_set9" maxlength="50" value="' . get_configuration('adminEmail') . '" /></p>';
-        echo '<p>' . $lang_apsetting['timezone'] . ':<br /><input name="conf_set10" maxlength="3" value="' . get_configuration('timeZone') . '" /></p>';
-        echo '<p>' . $lang_apsetting['pagetitle'] . ':<br /><input name="conf_set11" maxlength="100" value="' . get_configuration('title') . '" /></p>';
-        echo '<p>' . $lang_apsetting['siteurl'] . ':<br /><input name="conf_set14" maxlength="50" value="' . get_configuration('homeUrl') . '" /></p>';
-        echo '<p>' . $lang_apsetting['floodtime'] . ':<br /><input name="conf_set29" maxlength="3" value="' . get_configuration('floodTime') . '" /></p>';
-        echo '<p>' . $lang_apsetting['passkey'] . ':<br /><input name="conf_set1" maxlength="25" value="' . get_configuration('keypass') . '" /></p>';
+        echo '<p>' . $localization->string('adminemail') . ':<br /><input name="conf_set9" maxlength="50" value="' . get_configuration('adminEmail') . '" /></p>';
+        echo '<p>' . $localization->string('timezone') . ':<br /><input name="conf_set10" maxlength="3" value="' . get_configuration('timeZone') . '" /></p>';
+        echo '<p>' . $localization->string('pagetitle') . ':<br /><input name="conf_set11" maxlength="100" value="' . get_configuration('title') . '" /></p>';
+        echo '<p>' . $localization->string('siteurl') . ':<br /><input name="conf_set14" maxlength="50" value="' . get_configuration('homeUrl') . '" /></p>';
+        echo '<p>' . $localization->string('floodtime') . ':<br /><input name="conf_set29" maxlength="3" value="' . get_configuration('floodTime') . '" /></p>';
+        echo '<p>' . $localization->string('passkey') . ':<br /><input name="conf_set1" maxlength="25" value="' . get_configuration('keypass') . '" /></p>';
 
         // quarantine time
-        echo '<p>' . $lang_apsetting['quarantinetime'] . ':<br /><select name="conf_set3">';
+        echo '<p>' . $localization->string('quarantinetime') . ':<br /><select name="conf_set3">';
 
-        $quarantine = array(0 => "" . $lang_apsetting['disabled'] . "", 21600 => "6 " . $lang_apsetting['hours'] . "", 43200 => "12 " . $lang_apsetting['hours'] . "", 86400 => "24 " . $lang_apsetting['hours'] . "", 129600 => "36 " . $lang_apsetting['hours'] . "", 172800 => "48 " . $lang_apsetting['hours'] . "");
+        $quarantine = array(0 => "" . $localization->string('disabled') . "", 21600 => "6 " . $localization->string('hours') . "", 43200 => "12 " . $localization->string('hours') . "", 86400 => "24 " . $localization->string('hours') . "", 129600 => "36 " . $localization->string('hours') . "", 172800 => "48 " . $localization->string('hours') . "");
 
         echo '<option value="' . get_configuration('quarantine') . '">' . $quarantine[get_configuration('quarantine')] . '</option>';
 
@@ -432,7 +438,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         echo '</select></p>';
 
         // Registration opened or closed
-        echo '<p>' . $lang_apsetting['openreg'] . ': <br />' . $lang_apsetting['yes'] . '';
+        echo '<p>' . $localization->string('openreg') . ': <br />' . $localization->string('yes') . '';
         if (get_configuration('openReg') == 1) {
             echo '<input name="conf_set61" type="radio" value="1" checked>';
         } else {
@@ -444,10 +450,10 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         } else {
             echo '<input name="conf_set61" type="radio" value="0" />';
         } 
-        echo $lang_apsetting['no'] . '</p>';
+        echo $localization->string('no') . '</p>';
 
         // Does user need to confirm registration
-        echo '<p>' . $lang_apsetting['confregs'] . ': <br />' . $lang_apsetting['yes'] . '';
+        echo '<p>' . $localization->string('confregs') . ': <br />' . $localization->string('yes') . '';
         if (get_configuration('regConfirm') == 1) {
             echo '<input name="conf_set62" type="radio" value="1" checked>';
         } else {
@@ -459,10 +465,10 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         } else {
             echo '<input name="conf_set62" type="radio" value="0" />';
         } 
-        echo $lang_apsetting['no'] . '</p>';
+        echo $localization->string('no') . '</p>';
 
         // Maintenance mode
-        echo '<p>Maintenance: <br />' . $lang_apsetting['yes'] . ''; // update lang
+        echo '<p>Maintenance: <br />' . $localization->string('yes') . ''; // update lang
         if (get_configuration('siteOff') == 1) {
             echo '<input name="conf_set63" type="radio" value="1" checked>';
         } else {
@@ -474,18 +480,18 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         } else {
             echo '<input name="conf_set63" type="radio" value="0" />';
         } 
-        echo $lang_apsetting['no'] . '</p>';
+        echo $localization->string('no') . '</p>';
 
         echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
         echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
     } 
 } 
 if ($action == "settwo") {
-    echo '<h1>' . $lang_apsetting['shwinfo'] . '</h1>';
+    echo '<h1>' . $localization->string('shwinfo') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=edittwo">';
 
-    echo '<p>' . $lang_apsetting['showclock'] . ': <br />' . $lang_apsetting['yes'] . '';
+    echo '<p>' . $localization->string('showclock') . ': <br />' . $localization->string('yes') . '';
     if (get_configuration('showtime') == 1) {
         echo '<input name="conf_set4" type="radio" value="1" checked>';
     } else {
@@ -497,9 +503,9 @@ if ($action == "settwo") {
     } else {
         echo '<input name="conf_set4" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
-    echo '<p>' . $lang_apsetting['pagegen'] . ': <br />' . $lang_apsetting['yes'] . '';
+    echo '<p>' . $localization->string('pagegen') . ': <br />' . $localization->string('yes') . '';
     if (get_configuration('pageGenTime') == 1) {
         echo '<input name="conf_set5" type="radio" value="1" checked>';
     } else {
@@ -511,10 +517,10 @@ if ($action == "settwo") {
     } else {
         echo '<input name="conf_set5" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
 
-    echo '<p>' . $lang_apsetting['showonline'] . ': <br />' . $lang_apsetting['yes'] . '';
+    echo '<p>' . $localization->string('showonline') . ': <br />' . $localization->string('yes') . '';
     if (get_configuration('showOnline') == 1) {
         echo '<input name="conf_set7" type="radio" value="1" checked>';
     } else {
@@ -526,10 +532,10 @@ if ($action == "settwo") {
     } else {
         echo '<input name="conf_set7" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
 	// cookie consent
-	echo '<p>Cookie consent: <br />' . $lang_apsetting['yes'] . '';
+	echo '<p>Cookie consent: <br />' . $localization->string('yes') . '';
     if (get_configuration('cookieConsent') == 1) {
         echo '<input name="conf_set32" type="radio" value="1" checked>';
     } else {
@@ -541,12 +547,12 @@ if ($action == "settwo") {
     } else {
         echo '<input name="conf_set32" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
 
-    echo '<p>' . $lang_apsetting['countlook'] . ':<br /><select name="conf_set74">';
+    echo '<p>' . $localization->string('countlook') . ':<br /><select name="conf_set74">';
 
-    $incounters = array(6 => "" . $lang_apsetting['dontshow'] . "", 1 => "" . $lang_apsetting['vsttotalvst'] . "", 2 => "" . $lang_apsetting['clicktotalclick'] . "", 3 => "" . $lang_apsetting['clickvisits'] . "", 4 => "" . $lang_apsetting['totclicktotvst']);
+    $incounters = array(6 => "" . $localization->string('dontshow') . "", 1 => "" . $localization->string('vsttotalvst') . "", 2 => "" . $localization->string('clicktotalclick') . "", 3 => "" . $localization->string('clickvisits') . "", 4 => "" . $localization->string('totclicktotvst'));
 
     echo '<option value="' . get_configuration('showCounter') . '">' . $incounters[get_configuration('showCounter')] . '</option>';
 
@@ -562,11 +568,11 @@ if ($action == "settwo") {
 }
 
 if ($action == "setthree") {
-    echo '<h1>' . $lang_apsetting['gbnewschatset'] . '</h1>';
+    echo '<h1>' . $localization->string('gbnewschatset') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=editthree">';
 
-    echo '<p>' . $lang_apsetting['allowguestingb'] . ': <br />' . $lang_apsetting['yes'];
+    echo '<p>' . $localization->string('allowguestingb') . ': <br />' . $localization->string('yes');
     if (get_configuration('bookGuestAdd') == 1) {
         echo '<input name="conf_set20" type="radio" value="1" checked>';
     } else {
@@ -578,12 +584,12 @@ if ($action == "setthree") {
     } else {
         echo '<input name="conf_set20" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
-    echo '<p>' . $lang_apsetting['maxinchat'] . ':<br /><input name="conf_set22" maxlength="4" value="' . get_configuration('maxPostChat') . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxnews'] . ':<br /><input name="conf_set24" maxlength="5" value="' . get_configuration('maxPostNews') . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxgbmsgs'] . ':<br /><input name="conf_set25" maxlength="5" value="' . get_configuration('maxPostBook') . '" /></p>';
-    echo '<p>' . $lang_apsetting['onepassmail'] . ':<br /><input name="conf_set56" maxlength="3" value="' . get_configuration('subMailPacket') . '" /></p>';
+    echo '<p>' . $localization->string('maxinchat') . ':<br /><input name="conf_set22" maxlength="4" value="' . get_configuration('maxPostChat') . '" /></p>';
+    echo '<p>' . $localization->string('maxnews') . ':<br /><input name="conf_set24" maxlength="5" value="' . get_configuration('maxPostNews') . '" /></p>';
+    echo '<p>' . $localization->string('maxgbmsgs') . ':<br /><input name="conf_set25" maxlength="5" value="' . get_configuration('maxPostBook') . '" /></p>';
+    echo '<p>' . $localization->string('onepassmail') . ':<br /><input name="conf_set56" maxlength="3" value="' . get_configuration('subMailPacket') . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
@@ -594,12 +600,12 @@ if ($action == "setfour") {
     $kbs = get_configuration('photoFileSize') / 1024;
 
     // forum settings
-    echo '<h1>' . $lang_apsetting['forumandgalset'] . '</h1>';
+    echo '<h1>' . $localization->string('forumandgalset') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=editfour">';
 
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Forum settings<br /><br />';
-    echo '<p>' . $lang_apsetting['forumon'] . ': <br />' . $lang_apsetting['yes'] . '';
+    echo '<p>' . $localization->string('forumon') . ': <br />' . $localization->string('yes') . '';
     if (get_configuration('forumAccess') == 1) {
         echo '<input name="conf_set49" type="radio" value="1" checked>';
     } else {
@@ -611,9 +617,9 @@ if ($action == "setfour") {
     } else {
         echo '<input name="conf_set49" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
     
-        echo '<p>Show language dropdown: <br />' . $lang_apsetting['yes'];
+        echo '<p>Show language dropdown: <br />' . $localization->string('yes');
     if (get_configuration('forumChLang') == 1) {
         echo '<input name="conf_set68" type="radio" value="1" checked>';
     } else {
@@ -625,7 +631,7 @@ if ($action == "setfour") {
     } else {
         echo '<input name="conf_set68" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
 
     // gallery settings
@@ -636,10 +642,10 @@ if ($action == "setfour") {
         $gallery_data = explode("|", '|||||||||||||');
     }
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Gallery settings<br /><br />';
-    echo '<p>' . $lang_apsetting['photosperpg'] . ':<br /><input name="gallery_set8" maxlength="2" value="' . $gallery_data[8] . '" /></p>';
+    echo '<p>' . $localization->string('photosperpg') . ':<br /><input name="gallery_set8" maxlength="2" value="' . $gallery_data[8] . '" /></p>';
     echo '<p>Maximum width in gallery:<br /><input name="screen_width" maxlength="5" value="' . $gallery_data[5] . '" /></p>';
     echo '<p>Maximum height in gallery:<br /><input name="screen_height" maxlength="5" value="' . $gallery_data[6] . '" /></p>';
-    echo '<p>Social media like buttons in gallery <br />' . $lang_apsetting['yes']; // update lang
+    echo '<p>Social media like buttons in gallery <br />' . $localization->string('yes'); // update lang
     if ($gallery_data[7] == "1") {
         echo '<input name="media_buttons" type="radio" value="1" checked>';
     } else {
@@ -651,14 +657,14 @@ if ($action == "setfour") {
     } else {
         echo '<input name="media_buttons" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
 
     echo '<br /><img src="../images/img/forums.gif" alt=""/> Uploading in gallery<br /><br />';
 
-    echo '<p>' . $lang_apsetting['photomaxkb'] . ':<br /><input name="conf_set38" maxlength="8" value="' . (int)$kbs . '" /></p>';
-    echo '<p>' . $lang_apsetting['photopx'] . ':<br /><input name="conf_set39" maxlength="4" value="' . get_configuration('maxPhotoPixels') . '" /></p>';
-    echo '<p>Users can upload? <br />' . $lang_apsetting['yes'] . '';
+    echo '<p>' . $localization->string('photomaxkb') . ':<br /><input name="conf_set38" maxlength="8" value="' . (int)$kbs . '" /></p>';
+    echo '<p>' . $localization->string('photopx') . ':<br /><input name="conf_set39" maxlength="4" value="' . get_configuration('maxPhotoPixels') . '" /></p>';
+    echo '<p>Users can upload? <br />' . $localization->string('yes') . '';
     if ($gallery_data[0] == "1") {
         echo '<input name="gallery_set0" type="radio" value="1" checked>';
     } else {
@@ -670,24 +676,24 @@ if ($action == "setfour") {
     } else {
         echo '<input name="gallery_set0" type="radio" value="0" />';
     } 
-    echo $lang_apsetting['no'] . '</p>';
+    echo $localization->string('no') . '</p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setfive") {
-    echo '<h1>' . $lang_apsetting['downandinbxsets'] . '</h1>';
+    echo '<h1>' . $localization->string('downandinbxsets') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=editfive">';
 
-    echo '<p>' . $lang_apsetting['maxinbxmsgs'] . ':<br /><input name="conf_set30" maxlength="5" value="' . get_configuration('pvtLimit') . '" /></p>';
+    echo '<p>' . $localization->string('maxinbxmsgs') . ':<br /><input name="conf_set30" maxlength="5" value="' . get_configuration('pvtLimit') . '" /></p>';
     echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setseven") {
-    echo '<h1>' . $lang_apsetting['pagessets'] . '</h1>';
+    echo '<h1>' . $localization->string('pagessets') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=editseven">';
 
@@ -697,11 +703,11 @@ if ($action == "setseven") {
     echo '</div>';
 
     echo '<div class="form-group">';
-        echo '<label for="referals">' . $lang_apsetting['maxrefererdata'] . '</label>';
+        echo '<label for="referals">' . $localization->string('maxrefererdata') . '</label>';
         echo '<input class="form-control" name="conf_set51" id="referals" maxlength="3" value="' . get_configuration('refererLog') . '" />';
     echo '</div>';
 
-    echo '<p>' . $lang_apsetting['showrefpage'] . ': </p>';
+    echo '<p>' . $localization->string('showrefpage') . ': </p>';
     echo '<div class="form-group form-check form-check-inline">';
 
        if (get_configuration('showRefPage') == 1) {
@@ -709,7 +715,7 @@ if ($action == "setseven") {
         } else {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" />';
         } 
-        echo '<label class="form-check-label" for="referal-yes">' . $lang_apsetting['yes'] . '</label>';
+        echo '<label class="form-check-label" for="referal-yes">' . $localization->string('yes') . '</label>';
 
     echo '</div>';
 
@@ -719,7 +725,7 @@ if ($action == "setseven") {
         } else {
             echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" />';
         } 
-        echo '<label class="form-check-label" for="referal-no">' . $lang_apsetting['no'] . '</label>';
+        echo '<label class="form-check-label" for="referal-no">' . $localization->string('no') . '</label>';
     echo '</div>';
 
     echo '<p>Facebook comments on pages:</p>'; // update lang
@@ -730,7 +736,7 @@ if ($action == "setseven") {
         } else {
             echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" />';
         } 
-        echo '<label class="form-check-label" for="referal-yes">' . $lang_apsetting['yes'] . '</label>';
+        echo '<label class="form-check-label" for="referal-yes">' . $localization->string('yes') . '</label>';
     echo '</div>';
 
     echo '<div class="form-check form-check-inline">';
@@ -739,7 +745,7 @@ if ($action == "setseven") {
         } else {
             echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" />';
         } 
-        echo '<label class="form-check-label" for="referal-no">' . $lang_apsetting['no'] . '</label>';
+        echo '<label class="form-check-label" for="referal-no">' . $localization->string('no') . '</label>';
     echo '</div>';
 
     echo '<div class="col-sm-10">';
@@ -749,12 +755,12 @@ if ($action == "setseven") {
 }
 
 if ($action == "seteight") {
-    echo '<h1>' . $lang_apsetting['other'] . '</h1>';
+    echo '<h1>' . $localization->string('other') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=editeight">';
 
-    echo '<p>' . $lang_apsetting['maxlogfile'] . ':<br /><input name="conf_set58" maxlength="3" value="' . get_configuration('maxLogData') . '" /></p>';
-    echo '<p>' . $lang_apsetting['maxbantime'] . ':<br /><input name="conf_set76" maxlength="3" value="' . round(get_configuration('maxBanTime') / 1440) . '" /></p>';
+    echo '<p>' . $localization->string('maxlogfile') . ':<br /><input name="conf_set58" maxlength="3" value="' . get_configuration('maxLogData') . '" /></p>';
+    echo '<p>' . $localization->string('maxbantime') . ':<br /><input name="conf_set76" maxlength="3" value="' . round(get_configuration('maxBanTime') / 1440) . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
@@ -767,9 +773,9 @@ if ($action == "setnine") {
     echo '<form method="post" action="settings.php?action=editnine">';
 
     echo '<p>Database host:<br /><input name="conf_set77" maxlength="40" value="' . get_configuration('dbhost') . '" /></p>';
-    echo '<p>' . $lang_apsetting['username'] . ':<br /><input name="conf_set78" maxlength="40" value="' . get_configuration('dbuser') . '" /></p>';
-    echo '<p>' . $lang_apsetting['password'] . ':<br /><input name="conf_set79" maxlength="40" value="' . get_configuration('dbpass') . '" /></p>';
-    echo '<p>' . $lang_apsetting['dbname'] . ':<br /><input name="conf_set80" maxlength="40" value="' . get_configuration('dbname') . '" /></p>';
+    echo '<p>' . $localization->string('username') . ':<br /><input name="conf_set78" maxlength="40" value="' . get_configuration('dbuser') . '" /></p>';
+    echo '<p>' . $localization->string('password') . ':<br /><input name="conf_set79" maxlength="40" value="' . get_configuration('dbpass') . '" /></p>';
+    echo '<p>' . $localization->string('dbname') . ':<br /><input name="conf_set80" maxlength="40" value="' . get_configuration('dbname') . '" /></p>';
     echo '<p>Crossdomain table prefix:<br /><input name="conf_set71" maxlength="12" value="' . get_configuration('tablePrefix') . '" /></p>';
 
     echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';

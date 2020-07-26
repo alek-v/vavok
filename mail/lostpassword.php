@@ -1,5 +1,10 @@
 <?php
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:58:41
+*/
 
 require_once"../include/startup.php";
 
@@ -42,27 +47,30 @@ if ($page == 'send') {
                 $newpas = generate_password();
                 $new = $users->password_encrypt($newpas);
 
-                $subject = $lang_mail['newpassfromsite'] . ' ' . get_configuration('title');
-                $mail = $lang_mail['hello'] . " " . $logus . "\r\n" . $lang_mail['yournewdata'] . " " . get_configuration('homeUrl') . "\n" . $localization->string('username') . ": " . $logus . "\n" . $localization->string('pass') . ": " . $newpas . "\r\n\r\n" . $lang_mail['lnkforautolog'] . ":\r\n" . get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $lang_mail['ycchngpass']  . "\r\n";
+                $subject = $localization->string('newpassfromsite') . ' ' . get_configuration('title');
+                $mail = $localization->string('hello') . " " . $logus . "\r\n" . $localization->string('yournewdata') . " " . get_configuration('homeUrl') . "\n" . $localization->string('username') . ": " . $logus . "\n" . $localization->string('pass') . ": " . $newpas . "\r\n\r\n" . $localization->string('lnkforautolog') . ":\r\n" . get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $localization->string('ycchngpass')  . "\r\n";
 
 				$send_mail = new Mailer();
 				$send_mail->send($mailsus, $subject, $mail);
 
-                // update user's profile
+                // Update user's profile
                 $db->update('vavok_users', 'pass', $new, "id='{$userx_id}'");
 
-                echo '<b>' . $lang_mail['passgen'] . '</b><br><br>';
+                echo '<p><b>' . $localization->string('passgen') . '</b></p>';
             } else {
-                echo $lang_mail['wrongcaptcha'] . '!<br><br>';
-                echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';;
+                echo '<p>' . $localization->string('wrongcaptcha') . '!</p>';
+
+                echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
             } 
         } else {
-            echo $lang_mail['wrongmail'] . '!<br><br>';
-            echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';;
+            echo '<p>' . $localization->string('wrongmail') . '!</p>';
+
+            echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
         } 
     } else {
-        echo $lang_mail['noneededdata'] . '!<br><br>';
-        echo '<a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';;
+        echo '<p>' . $localization->string('noneededdata') . '!</p>';
+
+        echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
     } 
 } 
 

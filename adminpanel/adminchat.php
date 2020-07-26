@@ -1,6 +1,10 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranesevic
-// modified: 02.04.2020. 20:16:28
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:19:28
+*/
 
 require_once"../include/startup.php";
 
@@ -18,11 +22,11 @@ $rand = rand(100, 999);
 $dates = date("d.m.y");
 $times = date("H:i");
 
-$my_title = $lang_admin['adminchat'];
+$my_title = $localization->string('adminchat');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo '<img src="../images/img/menu.gif" alt=""> <b>' . $lang_admin['adminchat'] . '</b><br><br>';
+echo '<img src="../images/img/menu.gif" alt=""> <b>' . $localization->string('adminchat') . '</b><br><br>';
 
 if (empty($action)) {
     echo '<a href="#down"><img src="../images/img/downs.gif" alt=""></a> ';
@@ -112,14 +116,14 @@ if (empty($action)) {
 } 
 
 if ($action == "prodel") {
-    echo '<br>' . $lang_admin['delacmsgs'] . '?<br>';
-    echo '<b><a href="process.php?action=acdel" class="btn btn-outline-primary sitelink">' . $lang_admin['yessure'] . '!</a></b><br>';
+    echo '<br>' . $localization->string('delacmsgs') . '?<br>';
+    echo '<b><a href="process.php?action=acdel" class="btn btn-outline-primary sitelink">' . $localization->string('yessure') . '!</a></b><br>';
 
     echo '<br><a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
 if ($total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
-    echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanchat'] . '</a>';
+    echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $localization->string('cleanchat') . '</a>';
 } 
 
 echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';

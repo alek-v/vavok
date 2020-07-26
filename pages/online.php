@@ -1,10 +1,14 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:36:26
+*/
+
 require_once"../include/startup.php";
 
-if (get_configuration('showOnline') == 0 && (!$users->is_reg() && !$users->is_administrator())) {
-    redirect_to("../");
-} 
+if (get_configuration('showOnline') == 0 && (!$users->is_reg() && !$users->is_administrator())) redirect_to("../");
 
 // page settings
 $data_on_page = 10; // online users per page
@@ -12,7 +16,7 @@ $data_on_page = 10; // online users per page
 $my_title = 'Online';
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $lang_page['whoisonline'] . '</b></p>';
+echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $localization->string('whoisonline') . '</b></p>';
 
 $total = $db->count_row(get_configuration('tablePrefix') . 'online');
 $totalreg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
@@ -36,7 +40,7 @@ if (isset($_GET['start'])) {
     $start = check($_GET['start']);
 } 
 
-echo $lang_page['totonsite'] . ': <b>' . (int)$total . '</b><br />' . $lang_page['registered'] . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
+echo $localization->string('totonsite') . ': <b>' . (int)$total . '</b><br />' . $localization->string('registered') . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
 
 if ($list == "full") {
 
@@ -73,7 +77,7 @@ if ($list == "full") {
     $total = $totalreg;
 
     if ($total < 1) {
-        echo '<br /><img src="../images/img/reload.gif" alt=""> <b>' . $lang_page['noregd'] . '!</b><br />';
+        echo '<br /><img src="../images/img/reload.gif" alt=""> <b>' . $localization->string('noregd') . '!</b><br />';
     } 
 
     $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
@@ -96,9 +100,9 @@ if ($list == "full") {
 echo $navigation->get_navigation();
 
 if ($list != "full") {
-    echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $lang_page['showguest'] . '</a></p>';
+    echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $localization->string('showguest') . '</a></p>';
 } else {
-    echo'<p><a href="online.php?list=reg" class="btn btn-outline-primary sitelink">' . $lang_page['hideguest'] . '</a></p>';
+    echo'<p><a href="online.php?list=reg" class="btn btn-outline-primary sitelink">' . $localization->string('hideguest') . '</a></p>';
 } 
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';

@@ -1,5 +1,10 @@
 <?php 
-// vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:23:38
+*/
 
 if (!defined('BASEDIR')) {
     $folder_level = "";
@@ -41,34 +46,34 @@ if (empty($_SESSION['log'])) {
 }
 
 if ($error == '401') {
-    echo $lang_error['err401'] . '.<br>';
+    echo $localization->string('err401') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error401.dat";
     $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '402') {
-    echo $lang_error['err402'] . '.<br>';
+    echo $localization->string('err402') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error402.dat";
     $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '403') {
-    echo $lang_error['err403'] . '.<br>';
+    echo $localization->string('err403') . '.<br>';
 
     $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
-    echo $lang_error['err404youtrytoop'] . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $lang_error['filenotfound'] . '.<br>';
+    echo $localization->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $localization->string('filenotfound') . '.<br>';
 
     $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
-    echo $lang_error['err406descr'] . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $lang_error['notfonserver'] . '.<br>';
+    echo $localization->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $localization->string('notfonserver') . '.<br>';
 
     $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
 } elseif ($error == '500') {
-    echo $lang_error['err500'] . '.<br>';
+    echo $localization->string('err500') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error500.dat";
     $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == '502') {
-    echo $lang_error['err502'] . '.<br>';
+    echo $localization->string('err502') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error502.dat";
     $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
 } elseif ($error == "db") {
@@ -83,7 +88,7 @@ if ($error == '401') {
         $dberdate = date_fixed($dberrorstart, 'd-M-Y', '');
         $dbertime = date_fixed($dberrorstart, 'H-i-s', '');
         $subject = 'Database down';
-        $mailtext = $lang_error['dbdownmail'] . " " . $dberdate . " " . $dbertime . "\n";
+        $mailtext = $localization->string('dbdownmail') . " " . $dberdate . " " . $dbertime . "\n";
         sendmail(get_configuration('adminEmail'), $subject, $mailtext); // email to me
     } 
 
@@ -108,7 +113,7 @@ if ($error == '401') {
         } 
     } 
 
-    echo '<b>' . $lang_error['dberrmsg'] . '</b><br>';
+    echo '<b>' . $localization->string('dberrmsg') . '</b><br>';
 } else {
     $logdat = BASEDIR . "used/datalog/error.dat";
     $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';

@@ -10,55 +10,55 @@ $action = isset($_GET['action']) ? check($_GET['action']) : '';
 // Save data
 if ($action == 'save') {
 
-if (!empty($_POST['site']) && !validateURL($_POST['site'])) redirect_to("profile.php?isset=insite");
+	if (!empty($_POST['site']) && !validateURL($_POST['site'])) redirect_to("profile.php?isset=insite");
 
-// check email
-if (!empty($_POST['email']) && !$users->validate_email($_POST['email'])) redirect_to("profile.php?isset=noemail");
+	// check email
+	if (!empty($_POST['email']) && !$users->validate_email($_POST['email'])) redirect_to("profile.php?isset=noemail");
 
-// check birthday
-// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
+	// check birthday
+	// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
 
 
-$my_name = no_br(check($_POST['my_name']));
-$surname = no_br(check($_POST['surname']));
-$city = no_br(check($_POST['otkel']));
-$street = no_br(check($_POST['street']));
-$zip = no_br(check($_POST['zip']));
-$infa = no_br(check($_POST['infa']));
-$email = htmlspecialchars(strtolower($_POST['email']));
-$site = no_br(check($_POST['site']));
-$browser = no_br(check($users->user_browser()));
-$ip = no_br(check($users->find_ip()));
-$sex = no_br(check($_POST['pol']));
-$happy = no_br(check($_POST['happy']));
+	$my_name = no_br(check($_POST['my_name']));
+	$surname = no_br(check($_POST['surname']));
+	$city = no_br(check($_POST['otkel']));
+	$street = no_br(check($_POST['street']));
+	$zip = no_br(check($_POST['zip']));
+	$infa = no_br(check($_POST['infa']));
+	$email = htmlspecialchars(strtolower($_POST['email']));
+	$site = no_br(check($_POST['site']));
+	$browser = no_br(check($users->user_browser()));
+	$ip = no_br(check($users->find_ip()));
+	$sex = no_br(check($_POST['pol']));
+	$happy = no_br(check($_POST['happy']));
 
-$fields = array();
-$fields[] = 'city';
-$fields[] = 'about';
-$fields[] = 'email';
-$fields[] = 'site';
-$fields[] = 'sex';
-$fields[] = 'birthday';
-$fields[] = 'rname';
-$fields[] = 'surname';
-$fields[] = 'address';
-$fields[] = 'zip';
+	$fields = array();
+	$fields[] = 'city';
+	$fields[] = 'about';
+	$fields[] = 'email';
+	$fields[] = 'site';
+	$fields[] = 'sex';
+	$fields[] = 'birthday';
+	$fields[] = 'rname';
+	$fields[] = 'surname';
+	$fields[] = 'address';
+	$fields[] = 'zip';
 
-$values = array();
-$values[] = $city;
-$values[] = $infa;
-$values[] = $email;
-$values[] = $site;
-$values[] = $sex;
-$values[] = $happy;
-$values[] = $my_name;
-$values[] = $surname;
-$values[] = $street;
-$values[] = $zip;
+	$values = array();
+	$values[] = $city;
+	$values[] = $infa;
+	$values[] = $email;
+	$values[] = $site;
+	$values[] = $sex;
+	$values[] = $happy;
+	$values[] = $my_name;
+	$values[] = $surname;
+	$values[] = $street;
+	$values[] = $zip;
 
-$db->update('vavok_about', $fields, $values, "uid='{$users->user_id}'");
+	$db->update('vavok_about', $fields, $values, "uid='{$users->user_id}'");
 
-redirect_to("./profile.php?isset=editprofil");
+	redirect_to("./profile.php?isset=editprofil");
 
 }
 
@@ -72,7 +72,7 @@ $genHeadTag = '
 </style>
 ';
 
-$my_title = $lang_profil['profsettings'];
+$my_title = $localization->string('profsettings');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<div class="row">';
@@ -84,19 +84,19 @@ $show_user = $db->get_data('vavok_users', "id='{$users->user_id}'", 'skin, banne
 echo '<div class="col-sm">';
 
     echo '<form method="post" action="profile.php?action=save">';
-    echo $lang_profil['name'] . ':<br /><input name="my_name" value="' . $about_user['rname'] . '" /><br />';
-    echo $lang_profil['surname'] . ':<br /><input name="surname" value="' . $about_user['surname'] . '" /><br />';
-    echo $lang_profil['city'] . ':<br /><input name="otkel" value="' . $about_user['city'] . '" /><br />';
-    echo $lang_profil['street'] . ':<br /><input name="street" value="' . $about_user['address'] . '" /><br />';
-    echo $lang_profil['postal'] . ':<br /><input name="zip" value="' . $about_user['zip'] . '" /><br />';
-    echo $lang_profil['aboutyou'] . ':<br /><input name="infa" value="' . $about_user['about'] . '" /><br />';
+    echo $localization->string('name') . ':<br /><input name="my_name" value="' . $about_user['rname'] . '" /><br />';
+    echo $localization->string('surname') . ':<br /><input name="surname" value="' . $about_user['surname'] . '" /><br />';
+    echo $localization->string('city') . ':<br /><input name="otkel" value="' . $about_user['city'] . '" /><br />';
+    echo $localization->string('street') . ':<br /><input name="street" value="' . $about_user['address'] . '" /><br />';
+    echo $localization->string('postal') . ':<br /><input name="zip" value="' . $about_user['zip'] . '" /><br />';
+    echo $localization->string('aboutyou') . ':<br /><input name="infa" value="' . $about_user['about'] . '" /><br />';
     echo $localization->string('yemail') . ':<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
-    echo $lang_profil['site'] . ':<br /><input name="site" value="' . $about_user['site'] . '" /><br />'; 
-    echo $lang_profil['birthday'] . ' (dd.mm.yyyy):<br /><input name="happy" value="' . $about_user['birthday'] . '" /><br />';
+    echo $localization->string('site') . ':<br /><input name="site" value="' . $about_user['site'] . '" /><br />'; 
+    echo $localization->string('birthday') . ' (dd.mm.yyyy):<br /><input name="happy" value="' . $about_user['birthday'] . '" /><br />';
 
-    echo $lang_profil['sex'] . ':<br />';
+    echo $localization->string('sex') . ':<br />';
 
-    echo $lang_profil['male'] . ' ';
+    echo $localization->string('male') . ' ';
 
     if ($about_user['sex'] == "M") {
         echo '<input name="pol" type="radio" value="M" checked>';
@@ -109,7 +109,7 @@ echo '<div class="col-sm">';
     } else {
         echo'<input name="pol" type="radio" value="Z" />';
     } 
-    echo ' ' . $lang_profil['female'] . '<br /><br />';
+    echo ' ' . $localization->string('female') . '<br /><br />';
 
 
     echo'<input value="' . $localization->string('save') . '" type="submit" />
@@ -119,9 +119,9 @@ echo '<div class="col-sm">';
     // change password
     echo '<hr>';
     echo '<form method="post" action="newpass.php">';
-    echo $lang_profil['newpass'] . ':<br /><input name="newpar" /><br />';
-    echo $lang_profil['passagain'] . ':<br /><input name="newpar2" /><br />';
-    echo $lang_profil['oldpass'] . ':<br /><input name="oldpar" /><br />';
+    echo $localization->string('newpass') . ':<br /><input name="newpar" /><br />';
+    echo $localization->string('passagain') . ':<br /><input name="newpar2" /><br />';
+    echo $localization->string('oldpass') . ':<br /><input name="oldpar" /><br />';
     echo '<br /><input value="' . $localization->string('save') . '" type="submit" />
     </form>
     <hr>';

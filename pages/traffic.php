@@ -1,25 +1,28 @@
 <?php 
-// (c) vavok.net
-// modified: 22.07.2020. 1:54:10
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:49:15
+*/
 
 require_once"../include/startup.php";
 
-$my_title = $lang_traffic['traffic'];
+$my_title = $localization->string('traffic');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($config["gzip"] == "1") {
-    echo '<font color="#00FF00">' . $lang_traffic['gzipon'] . '</font><br><br>';
+    echo '<font color="#00FF00">' . $localization->string('gzipon') . '</font><br><br>';
 } else {
-    echo '<font color="#FF0000">' . $lang_traffic['gzipoff'] . '</font><br><br>';
+    echo '<font color="#FF0000">' . $localization->string('gzipoff') . '</font><br><br>';
 }
 
 $timeon = maketime(round(time() - $_SESSION['currs']));
 
-echo $lang_traffic['visitedpages'] . ': <b>' . ($_SESSION['counton'] + 1) . '</b><br>';
-echo $lang_traffic['timeonsite'] . ': <b>' . $timeon . '</b><br><br>';
+echo $localization->string('visitedpages') . ': <b>' . ($_SESSION['counton'] + 1) . '</b><br>';
+echo $localization->string('timeonsite') . ': <b>' . $timeon . '</b><br><br>';
 
-
-echo '<br><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

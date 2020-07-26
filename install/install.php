@@ -1,5 +1,10 @@
 <?php
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:11:41
+*/
 
 require_once "../include/startup.php";
 include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
@@ -36,7 +41,7 @@ if ($step == 'first' || empty($step) && empty($act)) {
 
     <form method="post" action="install.php?step=first_end">
     <fieldset>
-    <legend><?php echo $lang_install['firststepdatabase']; ?></legend>
+    <legend><?php echo $localization->string('firststepdatabase'); ?></legend>
     <label for="dbhost">Database host (mostly localhost):</label><br />
     <input name="dbhost" id="dbhost" maxlength="30" /><br />
     <label for="database">Database name:</label><br />
@@ -75,10 +80,10 @@ if ($step == 'first_end') {
      
 
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['firststepdatabase'] . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('firststepdatabase') . '<br></p>';
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_install['dataadded'] . '!</p>';
-    echo '<p><a href="finish.php?step=second&amp;host=' . $mysql_host . '&amp;user=' . $mysql_username . '&amp;pass=' . $mysql_password . '&amp;db=' . $mysql_database . '">' . $lang_install['secondstep'] . '</a> - ' . strtolower($lang_install['inserttint']) . '</p>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('dataadded') . '!</p>';
+    echo '<p><a href="finish.php?step=second&amp;host=' . $mysql_host . '&amp;user=' . $mysql_username . '&amp;pass=' . $mysql_password . '&amp;db=' . $mysql_database . '">' . $localization->string('secondstep') . '</a> - ' . strtolower($localization->string('inserttint')) . '</p>';
 
 }
 

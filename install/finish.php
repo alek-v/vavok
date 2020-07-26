@@ -1,16 +1,19 @@
 <?php 
-// (c) vavok.net - Aleksandar Vranesevic
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:07:58
+*/
 
-// /install/install.php have disabled connection to db in startup.php, so I manipulate with db in this page
+// Database connection is disabled for /install/install.php so I manipulate with db here
 
-require_once"../include/startup.php";
+require_once "../include/startup.php";
 include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
-require_once "../lang/" . get_configuration('language') . "/installinstall.php";
+require_once BASEDIR . "lang/" . get_configuration('language') . "/installinstall.php";
 
 $my_title = 'Install';
 require_once"include/header.php";
-
- 
 
 if (isset($_GET['step'])) {
     $step = $_GET['step'];
@@ -65,15 +68,15 @@ if ($step == 'second') {
         } 
     } 
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['secondstep'] . ' - ' . $lang_install['inserttint'] . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('secondstep') . ' - ' . $localization->string('inserttint') . '<br></p>';
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $lang_install['dataadded'] . '!<br /></p>';
-    echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">' . $lang_install['thirdstep'] . '</a></p>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('dataadded') . '!<br /></p>';
+    echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">' . $localization->string('thirdstep') . '</a></p>';
 } 
 
 if ($step == 'third') {
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installinfo'] . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('installinfo') . '<br></p>';
         // check if website and admin already exists (crossdomain website)
     if ($users->regmemcount() > 1) {
 		echo '<p>It seems that you are configuring crossdomain website.<br />
@@ -86,7 +89,7 @@ if ($step == 'third') {
 
     <form method="post" action="finish.php?step=regadmin">
     <fieldset>
-    <legend><?php echo $lang_install['thirdstep'];
+    <legend><?php echo $localization->string('thirdstep'];
     ?></legend>
     <label for="name">Username (max20):</label><br />
     <input name="name" id="name" maxlength="20" /><br />
@@ -108,7 +111,7 @@ if ($step == 'third') {
 // instalation results
 if ($step == "regadmin") {
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $lang_install['installresults'] . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('installresults') . '<br></p>';
 
     // check if website and admin already exists (crossdomain website)
     $crossDomainInstall = 0;
@@ -227,28 +230,28 @@ if ($step == "regadmin") {
                             $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}
 
-                        echo '<p>' . $lang_install['installok'] . '.<br></p>';
+                        echo '<p>' . $localization->string('installok') . '.<br></p>';
 
-                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
+                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $localization->string('logintosite') . '</a></b></p>';
                     } else {
-                        echo '<p><b>' . $lang_install['siteaddressbad'] . '</b></p>';
+                        echo '<p><b>' . $localization->string('siteaddressbad') . '</b></p>';
                         echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
                     } 
                 } else {
-                    echo '<p><b>' . $lang_install['bademail'] . '</b></p>';
+                    echo '<p><b>' . $localization->string('bademail') . '</b></p>';
                     echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
                 } 
             } else {
-                echo '<p><b>' . $lang_install['badagainbass'] . '.</b></p>';
+                echo '<p><b>' . $localization->string('badagainbass') . '.</b></p>';
                 echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
             } 
  
         } else {
-            echo '<p><b>' . $lang_install['shortuserpass'] . '</b></p>';
+            echo '<p><b>' . $localization->string('shortuserpass') . '</b></p>';
             echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
         } 
     } else {
-        echo '<p><b>' . $lang_install['fillfields'] . '.</b></p>';
+        echo '<p><b>' . $localization->string('fillfields') . '.</b></p>';
         echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
     } 
 }

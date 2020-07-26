@@ -1,5 +1,10 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:13:30
+*/
 
 require_once"../include/startup.php";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -18,16 +23,16 @@ if (!empty($code)) {
 
             $db->delete('subs', "user_pass='{$code}'");
 
-            echo '<p>' . $lang_mail['hello'] . ' ' . $uz_log . '!</p>
-            <p>' . $lang_mail['delsubok'] . '!</p>';
+            echo '<p>' . $localization->string('hello') . ' ' . $uz_log . '!</p>
+            <p>' . $localization->string('delsubok') . '!</p>';
         } else {
-            echo '<p>' . $lang_mail['unsubcodefail'] . '!</p>'; // code does not match
+            echo '<p>' . $localization->string('unsubcodefail') . '!</p>'; // code does not match
         } 
     } else {
-        echo '<p>' . $lang_mail['unsubcodefail'] . '!</p>'; // bad code
+        echo '<p>' . $localization->string('unsubcodefail') . '!</p>'; // bad code
     } 
 } else {
-    echo '<p>' . $lang_mail['unsubfail'] . '!</p>'; // code 
+    echo '<p>' . $localization->string('unsubfail') . '!</p>'; // code 
 } 
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';

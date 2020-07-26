@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:54:35
+*/
+
 require_once"../include/startup.php";
  
 if (!empty($_GET['action'])) {
@@ -35,7 +41,7 @@ if ($view == "name") {
     $sql = "SELECT id, name FROM vavok_users ORDER BY regdate DESC LIMIT $limit_start, $items_per_page";
 }
 
-$my_title = $lang_page['userlist'];
+$my_title = $localization->string('userlist');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($num_items > 0) {
@@ -63,7 +69,7 @@ echo $navigation->get_navigation();
 echo '</p>';
 
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
-echo '<img src="../images/img/homepage.gif" alt="' . $localization->string('home') . '" /> <a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

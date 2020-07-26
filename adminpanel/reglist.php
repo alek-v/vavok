@@ -1,5 +1,10 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:31:19
+*/
 
 require_once"../include/startup.php";
 
@@ -33,7 +38,7 @@ if ($act == 'conf' && !empty($usr)) {
     $about_user = $db->get_data('vavok_about', "uid='" . $usr . "'", 'email');
     $vav_name = $users->getnickfromid($usr);
 
-    $message = $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . get_configuration('homeBase') . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst(get_configuration('homeBase'));
+    $message = $localization->string('hello') . " " . $vav_name . "!\r\n\r\n" . $localization->string('sitemod') . " " . get_configuration('homeBase') . " " . $localization->string('confirmedreg') . ".\r\n" . $localization->string('youcanlog') . ".\r\n\r\n" . $localization->string('bye') . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst(get_configuration('homeBase'));
     $newMail = new Mailer;
     $newMail->send($about_user['email'], $localization->string('msgfrmst') . " " . get_configuration('title'), $message);
 
@@ -42,7 +47,7 @@ if ($act == 'conf' && !empty($usr)) {
     exit;
 }
 
-$my_title = $lang_admin['uncomfreg'];
+$my_title = $localization->string('uncomfreg'];
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -64,9 +69,9 @@ if (empty($action)) {
         foreach ($db->query($sql) as $item) {
             $show_userx = $db->get_data('vavok_users', "id='" . $item['uid'] . "'", 'browsers, ipadd');
             $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $users->getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
-            if ($item['regche'] == "1") {
-                $bt = "" . $lang_admin['notconfirmed'] . "!";
-                $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $lang_admin['confirms'] . '</a>';
+            if ($item['regche'] == 1) {
+                $bt = "" . $localization->string('notconfirmed') . "!";
+                $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $localization->string('confirms') . '</a>';
             } else {
                 $bt = "Confirmed";
             } 
@@ -74,7 +79,7 @@ if (empty($action)) {
             echo ' ' . $lnk . ' IP: ' . $show_userx["ipadd"] . ' browser: ' . $show_userx["browsers"] . ' ' . $bym . '<br>';
         } 
     } else {
-        echo '<img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['emptyunconf'] . '!<br><br>';
+        echo '<img src="../images/img/reload.gif" alt="" /> ' . $localization->string('emptyunconf') . '!<br><br>';
     } 
 
     $navigation = new Navigation($items_per_page, $num_items, $page, 'reglist.php?');

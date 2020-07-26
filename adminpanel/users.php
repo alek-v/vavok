@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:03:39
+*/
+
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator()) { redirect_to('./?error=noauth'); }
@@ -21,9 +27,9 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
     echo '<form method="post" action="users.php?action=edit">';
-    echo $lang_admin['chooseuser'] . ':<br>';
+    echo $localization->string('chooseuser') . ':<br>';
     echo '<input type="text" name="users" maxlength="20" /><br><br>';
-    echo '<input value="' . $lang_admin['showdata'] . '" type="submit" /></form><hr>';
+    echo '<input value="' . $localization->string('showdata') . '" type="submit" /></form><hr>';
 }
 
 // change profile
@@ -42,22 +48,22 @@ if ($action == "edit") {
             
             if (!empty($userx_id)) {
 
-                echo '<img src="../images/img/profiles.gif" alt=""> ' . $lang_admin['usrprofile'] . ' ' . $user . '<br>';
+                echo '<img src="../images/img/profiles.gif" alt=""> ' . $localization->string('usrprofile') . ' ' . $user . '<br>';
 
                 if ($users->show_username() != get_configuration('adminNick') && $user == get_configuration('adminNick')) {
-                    echo '<br>' . $lang_admin['noauthtoedit'] . '!<br>';
+                    echo '<br>' . $localization->string('noauthtoedit') . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
 
                 if (($users->show_username() != get_configuration('adminNick')) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
-                    echo '<br>' . $lang_admin['noauthtoban'] . '!<br>';
+                    echo '<br>' . $localization->string('noauthtoban') . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
                 $casenick = strcasecmp($user, $users->show_username());
                 if ($casenick == 0) {
-                    echo '<b><font color="red">' . $lang_admin['myprofile'] . '!</font></b><br><br>';
+                    echo '<b><font color="red">' . $localization->string('myprofile') . '!</font></b><br><br>';
                 } 
 
                 echo '<form method="post" action="users.php?action=upgrade&amp;users=' . $user . '">';
@@ -70,7 +76,7 @@ if ($action == "edit") {
                         $userx_access = "107";
                     } 
 
-                    echo $lang_admin['accesslevel'] . ':<br>';
+                    echo $localization->string('accesslevel') . ':<br>';
                     echo '<select name="udd7"><option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
 
                     foreach($array_dostup as $k => $v) {
@@ -86,45 +92,45 @@ if ($action == "edit") {
                     echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Special permitions</a><br />';
                 }
 
-                echo $lang_admin['newpassinfo'] . ':<br><input name="udd1" /><br>';
-                echo $lang_admin['city'] . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
-                echo $lang_admin['aboutyou'] . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
-                echo 'Email:<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
-                echo $lang_admin['site'] . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
-                // echo $lang_admin['regdate'] . ':<br><input name="udd6" value="' . date_fixed(check($userx_profil[1]), "d.m.Y") . '" /><br>';
-                echo $lang_admin['browser'] . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
-                echo $lang_admin['name'] . ':<br><input name="udd29" value="' . $about_userx['rname'] . '" /><br>';
-                echo $lang_admin['perstatus'] . ':<br><input name="udd40" value="' . $userx_profil['perstat'] . '" /><br>';
+                echo $localization->string('newpassinfo') . ':<br><input name="udd1" /><br>';
+                echo $localization->string('city') . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
+                echo $localization->string('aboutyou') . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
+                echo $localization->string('email') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
+                echo $localization->string('site') . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
+                // echo $localization->string('regdate') . ':<br><input name="udd6" value="' . date_fixed(check($userx_profil[1]), "d.m.Y") . '" /><br>';
+                echo $localization->string('browser') . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
+                echo $localization->string('name') . ':<br><input name="udd29" value="' . $about_userx['rname'] . '" /><br>';
+                echo $localization->string('perstatus') . ':<br><input name="udd40" value="' . $userx_profil['perstat'] . '" /><br>';
 
-                echo $lang_admin['sitenews'] . ': ';
+                echo $localization->string('sitenews') . ': ';
                 if ($userx_profil['subscri'] == "1") {
-                    echo '<b>' . $lang_admin['subscribed'] . '</b><br>';
+                    echo '<b>' . $localization->string('subscribed') . '</b><br>';
                 } else {
-                    echo '<b>' . $lang_admin['notsubed'] . '</b><br>';
+                    echo '<b>' . $localization->string('notsubed') . '</b><br>';
                 } 
                 if ($show_userx['banned'] == "1") {
-                    echo '<font color="#FF0000"><b>' . $lang_admin['confban'] . '</b></font><br>';
+                    echo '<font color="#FF0000"><b>' . $localization->string('confban') . '</b></font><br>';
                 } 
                 if ($userx_profil['regche'] == "1") {
-                    echo '<font color="#FF0000"><b>' . $lang_admin['notactivated'] . '</b></font><br>';
+                    echo '<font color="#FF0000"><b>' . $localization->string('notactivated') . '</b></font><br>';
                 } 
-                echo '' . $lang_admin['numbbans'] . ': <b>' . (int)$userx_profil['allban'] . '</b><br>';
-                echo $lang_admin['lastvst'] . ': <b>' . date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
+                echo $localization->string('numbbans') . ': <b>' . (int)$userx_profil['allban'] . '</b><br>';
+                echo $localization->string('lastvst') . ': <b>' . date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
                 echo 'IP: <b>' . $show_userx['ipadd'] . '</b><br>';
 
                 echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form><hr>';
 
                 if ($userx_access < 101 || $userx_access > 105) {
-                    echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
+                    echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('deluser') . '</a></b>';
                 } 
             } else {
-                echo $lang_admin['usrnoexist'] . '!';
+                echo $localization->string('usrnoexist') . '!';
             } 
         } else {
-            echo $lang_admin['usrnoexist'] . '!';
+            echo $localization->string('usrnoexist') . '!';
         } 
     } else {
-        echo $lang_admin['usrnoexist'] . '!';
+        echo $localization->string('usrnoexist') . '!';
     } 
 
     echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
@@ -204,28 +210,28 @@ if ($action == "upgrade") {
                 
                 $db->update('vavok_profil', 'perstat', no_br(check($udd40)), "uid='{$users_id}'");
 
-                echo $lang_admin['usrdataupd'] . '!<br>';
+                echo $localization->string('usrdataupd') . '!<br>';
 
                 if (!empty($udd1)) {
-                    echo '<font color=red>' . $lang_admin['passchanged'] . ': ' . $udd1 . '</font> <br>';
+                    echo '<font color=red>' . $localization->string('passchanged') . ': ' . $udd1 . '</font> <br>';
                 } 
-                echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
+                echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('changeotheruser') . '</a><br>';
             } else {
-                echo $lang_admin['usrnoexist'] . '!<br>';
+                echo $localization->string('usrnoexist') . '!<br>';
             }
         } else {
-            echo $lang_admin['urlnotok'] . '!<br>';
+            echo $localization->string('urlnotok') . '!<br>';
         } 
     } else {
-        echo $lang_admin['emailnotok'] . '<br>';
+        echo $localization->string('emailnotok') . '<br>';
     } 
     echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
 // confirm delete
 if ($action == "poddel") {
-    echo $lang_admin['confusrdel'] . ' <b>' . $user . '</b>?<br><br>';
-    echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
+    echo $localization->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
+    echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('deluser') . '</a></b>';
 
     echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
@@ -238,11 +244,11 @@ if ($action == "deluser") {
 
         if ($show_userx['perm'] < 101 || $show_userx['perm'] > 105) {
             $users->delete_user($user);
-            echo $lang_admin['usrdeleted'] . '!<br>';
+            echo $localization->string('usrdeleted') . '!<br>';
 
-            echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
+            echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('changeotheruser') . '</a><br>';
         } else {
-            echo $lang_admin['noaccessdel'] . '<br>';
+            echo $localization->string('noaccessdel') . '<br>';
             echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
         } 
     } 

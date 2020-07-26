@@ -1,10 +1,14 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:25:09
+*/
+
 require_once"../include/startup.php";
 
-
-
-$my_title = $lang_page['ignorlist'];
+$my_title = $localization->string('ignorlist');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
 if (!empty($_GET['action'])) {
@@ -47,7 +51,7 @@ if ($users->is_reg()) {
                 echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $localization->string('delete') . "</a><br>";
             } 
         } else {
-            echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['ignorempty'] . '<br><br>';
+            echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('ignorempty'] . '<br><br>';
         } 
 
         echo $navigation->get_navigation();
@@ -61,28 +65,28 @@ if ($users->is_reg()) {
             if ($users->ignoreres($users->user_id, $who) == 1) {
                 $db->insert_data('`ignore`', array('name' => $users->user_id, 'target' => $who));
 
-                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $localization->string('user') . " $tnick " . $lang_page['sucadded'] . "<br>";
+                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $localization->string('user') . " $tnick " . $localization->string('sucadded') . "<br>";
             } else {
-                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $lang_page['cantadd'] . " " . $tnick . " " . $lang_page['inignor'] . "<br>";
+                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $localization->string('cantadd') . " " . $tnick . " " . $localization->string('inignor') . "<br>";
             } 
         } elseif ($todo = "del") {
             if ($users->ignoreres($users->user_id, $who) == 2) {
                 $db->delete('`ignore`', "name='{$users->user_id}' AND target='" . $who . "'");
 
-                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> $tnick " . $lang_page['deltdfrmignor'] . "<br>";
+                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> $tnick " . $localization->string('deltdfrmignor') . "<br>";
             } else {
-                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> $tnick " . $lang_page['notinignor'] . "<br>";
+                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> $tnick " . $localization->string('notinignor') . "<br>";
             } 
         } 
 
-        echo '<br><a href="ignor.php" class="btn btn-outline-primary sitelink">' . $lang_page['ignorlist'] . '</a><br>';
+        echo '<br><a href="ignor.php" class="btn btn-outline-primary sitelink">' . $localization->string('ignorlist') . '</a><br>';
     } 
 } else {
-    echo $localization->string('notloged') . '<br><br>';
+    echo '<p>' . $localization->string('notloged') . '</p>';
 } 
 
-echo '<a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

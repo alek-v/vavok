@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 17:47:27
+*/
+
 require_once"../include/startup.php";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -17,18 +23,18 @@ if (!empty($code)) {
 
             $db->delete('subs', "user_pass='" . $code . "'");
 
-            echo $lang_page['hello'] . ' ' . $uz_log . '!<br>' . $lang_page['delsubok'] . '!<br><br>';
+            echo $localization->string('hello') . ' ' . $uz_log . '!<br>' . $localization->string('delsubok') . '!<br><br>';
         } else {
-            echo $lang_page['unsubcodefail'] . '!<br><br>'; // code does not match
+            echo $localization->string('unsubcodefail') . '!<br><br>'; // code does not match
         } 
     } else {
-        echo $lang_page['unsubcodefail'] . '!<br><br>'; // bad code
+        echo $localization->string('unsubcodefail') . '!<br><br>'; // bad code
     } 
 } else {
-    echo $lang_page['unsubfail'] . '!<br><br>'; // code 
+    echo $localization->string('unsubfail') . '!<br><br>'; // code 
 } 
 
-echo '<a href="../" class="homepage">' . $localization->string('home') . '</a>';
+echo '<p><a href="../" class="homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

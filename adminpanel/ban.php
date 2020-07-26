@@ -1,6 +1,13 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:22:46
+*/
+
 require_once"../include/startup.php";
+
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
 } else {
@@ -12,6 +19,7 @@ if (isset($_GET['start'])) {
 
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
+
         $my_title = "IP ban";
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -35,11 +43,11 @@ if ($users->is_reg()) {
 
                 $num = $total - $i-1;
 
-                echo $i2 . '. ' . $data[1] . ' <br><a href="process.php?action=razban&amp;start=' . $start . '&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $lang_admin['delban'] . '</a><hr>';
+                echo $i2 . '. ' . $data[1] . ' <br><a href="process.php?action=razban&amp;start=' . $start . '&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $localization->string('delban') . '</a><hr>';
             } 
 
             if ($total < 1) {
-                echo'<br><img src="../images/img/reload.gif" alt="" /> ' . $lang_admin['emptylist'] . '<br><br>';
+                echo'<br><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('emptylist') . '<br><br>';
             } 
 
             if ($start != 0) {
@@ -55,14 +63,14 @@ if ($users->is_reg()) {
             } 
 
             echo '<hr><form method="post" action="process.php?action=zaban&amp;start=' . $start . '">';
-            echo '' . $lang_admin['iptoblock'] . ':<br><input name="ips" /><br><br>';
+            echo '' . $localization->string('iptoblock') . ':<br><input name="ips" /><br><br>';
             echo '<input value="' . $localization->string('confirm') . '" type="submit" /></form>';
 
             echo '<hr>';
-            echo '' . $lang_admin['ipbanexam'] . '<br><br>';
-            echo '<br>' . $lang_admin['allbanips'] . ': ' . $total . '<br><br><br>';
+            echo '' . $localization->string('ipbanexam') . '<br><br>';
+            echo '<br>' . $localization->string('allbanips') . ': ' . $total . '<br><br><br>';
             if ($total > 1) {
-                echo'<br><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $lang_admin['dellist'] . '</a>';
+                echo'<br><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $localization->string('dellist') . '</a>';
             } 
         } 
 

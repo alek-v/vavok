@@ -1,6 +1,10 @@
 <?php 
-// (c) vavok.net
-// todo: rewrite whole page
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:26:48
+*/
 
 require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
@@ -18,10 +22,7 @@ $pageEditor = new Page();
 // get page id we work with
 $page_id = $pageEditor->get_page_id("file='{$file}'");
 
-
 $config_editfiles = 20;
-$my_title = 'Files'; // current page title
-
 
 // editing mode
 // use visual mode as default
@@ -57,6 +58,8 @@ if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(
 } else {
     $edit_only_own_pages = '';
 }
+
+$my_title = 'Files'; // current page title
 
 if (empty($action)) {
 
@@ -285,7 +288,7 @@ if ($action == "edit") {
         
     } else {
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
-        echo $lang_admin['file'] . ' ' . $file . ' ' . $lang_admin['noexist'] . '<br />';
+        echo '<p>' . $localization->string('file') . ' ' . $file . ' ' . $localization->string('noexist') . '</p>';
     } 
 
 } 

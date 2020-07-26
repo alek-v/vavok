@@ -1,11 +1,14 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:20:43
+*/
+
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
-    header ("Location: ../pages/input.php?action=exit");
-    exit;
-}
+if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) redirect_to("../pages/input.php?action=exit");
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
@@ -23,7 +26,7 @@ if (!empty($_GET['view'])) {
     $view = '';
 } 
 
-$my_title = $lang_admin['modlist'];
+$my_title = $localization->string('modlist');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -31,7 +34,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
 
-    echo '<img src="../images/img/user.gif" alt=""> <b>' . $lang_admin['adminlistl'] . '</b><br><br>'; 
+    echo '<img src="../images/img/user.gif" alt=""> <b>' . $localization->string('adminlistl') . '</b><br><br>'; 
 
     $num_items = $db->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
     $items_per_page = 10;

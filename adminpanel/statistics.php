@@ -1,19 +1,22 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   26.07.2020. 14:43:49
+*/
+
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) {
-    header ("Location: ../?errorAuth");
-    exit;
-} 
+if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) redirect_to("../?errorAuth");
 
-$my_title = $lang_admin['sitestats'];
+$my_title = $localization->string('sitestats');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-echo '<p><img src="../images/img/webstats.png" alt="">  ' . $lang_admin['sitestats'] . '<br /><br /></p>';
+echo '<p><img src="../images/img/webstats.png" alt="">  ' . $localization->string('sitestats') . '<br /><br /></p>';
 
-echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"> ' . $lang_admin['visitstats'] . '</a><br />';
-echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $lang_admin['usronline'] . '</a></p>';
+echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"> ' . $localization->string('visitstats') . '</a><br />';
+echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $localization->string('usronline') . '</a></p>';
 
 echo '<p><br /><br />
 <a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';

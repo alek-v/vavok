@@ -11,7 +11,7 @@
 		</div>
 
 		<div class="col-4 text-right">
-			<p>Strana 1 od 1</p>
+			<!--<p>Page 1 of 1</p>-->
 		</div>
 
 	</div>

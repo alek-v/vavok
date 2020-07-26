@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   26.07.2020. 2:50:13
+* Updated:   26.07.2020. 17:28:10
 */
 
 require_once"../include/startup.php";
@@ -53,24 +53,21 @@ if ($action == 'resendkey') {
 
 }
 
-
-
-$my_title = $lang_page['confreg'];
+$my_title = $localization->string('confreg');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
-
 
 // enter registration key
 if (empty($action)) {
 
     if ($users->is_reg()) {
 
-        echo $lang_page['wellcome'] . ', <b>' . $users->show_username() . '!</b><br>';
-        echo $lang_page['confinfo'] . '<br>';
+        echo $localization->string('wellcome') . ', <b>' . $users->show_username() . '!</b><br>';
+        echo $localization->string('confinfo') . '<br>';
 
     }
 
     echo '<form method="post" action="key.php?action=inkey"><br>';
-    echo $lang_page['key'] . ':<br>';
+    echo $localization->string('key') . ':<br>';
     echo '<input name="key" maxlength="20" /><br><br>';
     echo '<button class="btn btn-primary" type="submit">' . $localization->string('confirm') . '</button>
     </form>';
@@ -82,7 +79,7 @@ if (empty($action)) {
 	<hr>
     ';
 
-    echo $lang_page['actinfodel'] . '<br />';
+    echo $localization->string('actinfodel') . '<br />';
 
 }
 
@@ -106,7 +103,7 @@ if ($action == "inkey") {
 
         } else {
 
-            echo '<p>' . $lang_page['keyok'] . '!</p>';
+            echo '<p>' . $localization->string('keyok') . '!</p>';
 
 
             echo '<pr><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $localization->string('login') . '</a></p>';
@@ -117,7 +114,7 @@ if ($action == "inkey") {
 
     } else {
 
-        echo '<p>' . $lang_page['nokey'] . '!</p>';
+        echo '<p>' . $localization->string('nokey') . '!</p>';
 
         echo '<p><a href="key.php"><img src="../images/img/back.gif" alt="Back" /> ' . $localization->string('back') . '</a></p>';
 

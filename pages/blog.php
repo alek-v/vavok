@@ -3,11 +3,10 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 2:46:42
+* Updated:   26.07.2020. 18:50:50
 */
 
 include"../include/startup.php";
-
 
 $pg = isset($_GET['pg']) ? check($_GET['pg']) : ''; // blog page
 
@@ -15,7 +14,6 @@ $page = isset($_GET['page']) ? check($_GET['page']) : 1; // page number
 
 $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
-
 
 switch ($pg) {
 
@@ -46,7 +44,7 @@ switch ($pg) {
 		$post->set('date-created-day', date('d', $current_page->page_created_date));
 
 		// month created
-		$post->set('date-created-month', mb_substr($ln_all_month[date('n', $current_page->page_created_date) - 1], 0, 3));
+		$post->set('date-created-month', mb_substr($localization->show_all()['ln_all_month'][date('n', $current_page->page_created_date) - 1], 0, 3));
 
 		// comments
 		$comments = new Comments();
@@ -178,6 +176,7 @@ switch ($pg) {
 		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 		break;
+
 }
 
 
