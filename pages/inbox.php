@@ -83,7 +83,7 @@ if (empty($action)) {
 
 } else if ($action == "dialog") {
 
-    if (empty($who) || empty($users->getnickfromid($who))) redirect_to('inbox.php?isset=nouser');
+    if (empty($who)) fatal_error('User does not exist');
 
     $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
@@ -101,7 +101,6 @@ if (empty($action)) {
 
     $db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $users->user_id . "'");
 
-
     echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
     echo '<div class="form-group">';
     echo '<label for="chatbarText"></label>';
@@ -113,12 +112,9 @@ if (empty($action)) {
     echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $localization->string('send') . '</button>';
     echo '</form><br />'; // update lang
 
-
     echo '<div id="message_box" class="message_box" style="overflow-y: scroll; height:400px;overflow-x: hidden;">';
 
-
     echo '<p id="outputList" class="outputList"></p>'; // ajax messages
-
 
     $pms = "SELECT * FROM inbox WHERE (byuid = '" . $users->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
     foreach ($db->query($pms) as $pm) {
@@ -133,7 +129,6 @@ if (empty($action)) {
         echo '<hr />';
 
     } 
-      
 
     echo '</div>'; // end of #message-box
 
