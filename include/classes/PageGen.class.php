@@ -30,23 +30,16 @@ class PageGen {
     public function parse_language($content) {
 
         // load language data
-        global $lang_home;
+        global $localization;
+
+        $all = $localization->show_strings();
 
         $search = array();
-        foreach($lang_home as $key => $val) {
+        foreach($all as $key => $val) {
         array_push($search, '{@website_language[' . $key . ']}}');
         }
 
-        $content = str_replace($search, $lang_home, $content);
-
-
-        // deprecated 04.05.2020. 6:42:42
-        $searchx = array(); 
-        foreach($lang_home as $key => $val) {
-        array_push($searchx, '{@$lang_home[\'' . $key . '\']}}');
-        }
-
-        $content = str_replace($searchx, $lang_home, $content);
+        $content = str_replace($search, $all, $content);
 
         return $content;
 

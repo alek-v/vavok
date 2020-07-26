@@ -33,12 +33,12 @@ $showPage = new PageGen("pages/user-profile/user-profile.tpl");
 if ($checkIfExist < 1 || $users_id == 0) {
     
 	echo '<div class="user_profile">';
-    echo '<img src="../images/img/error.gif" alt="error.gif"> ' . $lang_home['usrnoexist'] . '';
+    echo '<img src="../images/img/error.gif" alt="error.gif"> ' . $localization->string('usrnoexist') . '';
     echo '</div>';
     echo '<div class="break"></div>';
     echo '<div class="clear"></div>';
 
-    echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
     exit;
@@ -205,7 +205,7 @@ if (!empty($about_user['photo'])) {
     $showPage->set('userPhoto', '');
 }
 
-$showPage->set('homepage', '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>');
+$showPage->set('homepage', '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>');
 
 echo $showPage->output(); 
 

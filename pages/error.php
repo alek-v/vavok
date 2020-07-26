@@ -135,7 +135,7 @@ if (isset($write) && !empty($logdat)) {
     } 
 } 
 
-echo '<p><a href="/" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="/" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 include_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

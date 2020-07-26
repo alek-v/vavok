@@ -29,7 +29,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
         echo '<form method="post" action="addban.php?action=edit">';
         echo '<input name="users" maxlength="20" /><br /><br />';
-        echo '<input value="' . $lang_home['confirm'] . '" type="submit" /></form><hr>';
+        echo '<input value="' . $localization->string('confirm') . '" type="submit" /></form><hr>';
     } 
     // edit profile
     if ($action == "edit") {
@@ -75,7 +75,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo '<input name="bform" type="radio" value="sut"> ' . $lang_admin['days'] . '<br />';
 
                         echo $lang_admin['bandesc'] . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
-                        echo '<input value="' . $lang_home['confirm'] . '" type="submit"></form><hr>';
+                        echo '<input value="' . $localization->string('confirm') . '" type="submit"></form><hr>';
 
                         echo $lang_admin['maxbantime'] . ' ' . formattime(round(get_configuration('maxBanTime') * 60)) . '<br />';
                         echo $lang_admin['bandesc1'] . '<br />';
@@ -136,7 +136,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo $lang_admin['usrdata'] . ' ' . $user . ' ' . $lang_admin['edited'] . '!<br />';
                         echo '<b><font color="FF0000">' . $lang_admin['confban'] . '</font></b><br /><br />';
 
-                        echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+                        echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
                     } else {
                         echo '' . $lang_admin['noreason'] . '!<br />';
                     } 
@@ -149,7 +149,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         } else {
             echo $lang_admin['usrnoexist'] . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
     } 
 
     if ($action == "deleteban") {
@@ -174,22 +174,22 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
             echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br />';
         } else {
-            echo'' . $lang_home['usrnoexist'] . '!<br />';
+            echo '<p>' . $localization->string('usrnoexist') . '!</p>';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+        echo'<p><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></a>';
     } 
     // delete user
     if ($action == "deluser") {
         $user = check($user);
         $users->delete_user($user);
 
-        echo '' . $lang_admin['usrdeleted'] . '!<br />';
+        echo '<p>' . $lang_admin['usrdeleted'] . '!</p>';
 
-        echo '<br /><a href="addban.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+        echo '<p><a href="addban.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
     } 
 
-    echo '<br /><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
+    echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 } else {
     redirect_to("../?error");
 } 

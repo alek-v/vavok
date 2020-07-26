@@ -43,20 +43,20 @@ if ($users->is_reg()) {
             } 
 
             if ($start != 0) {
-                echo '<a href="ban.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $lang_home['back'] . '</a> ';
+                echo '<a href="ban.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $localization->string('back') . '</a> ';
             } else {
-                echo'&lt; ' . $lang_home['back'] . ' ';
+                echo'&lt; ' . $localization->string('back') . ' ';
             } 
             echo'|';
             if ($total > $start + 10) {
-                echo ' <a href="ban.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $lang_home['forw'] . ' &gt;</a>';
+                echo ' <a href="ban.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $localization->string('forw') . ' &gt;</a>';
             } else {
-                echo' ' . $lang_home['forw'] . ' &gt;';
+                echo' ' . $localization->string('forw') . ' &gt;';
             } 
 
             echo '<hr><form method="post" action="process.php?action=zaban&amp;start=' . $start . '">';
             echo '' . $lang_admin['iptoblock'] . ':<br><input name="ips" /><br><br>';
-            echo '<input value="' . $lang_home['confirm'] . '" type="submit" /></form>';
+            echo '<input value="' . $localization->string('confirm') . '" type="submit" /></form>';
 
             echo '<hr>';
             echo '' . $lang_admin['ipbanexam'] . '<br><br>';
@@ -66,8 +66,8 @@ if ($users->is_reg()) {
             } 
         } 
 
-        echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
-        echo'<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
+        echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+        echo'<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
     } else {
         header ("Location: ../index.php?error");
         exit;

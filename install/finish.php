@@ -143,7 +143,7 @@ if ($step == "regadmin") {
                         	if (!$users->is_administrator(101, $adminId) || !$users->password_check($password, $adminPass['pass'])) {
                         		echo '<p>You are configuring cross-domain website.<br />
                         		Please enter main website administrator username and password</p>';
-                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
 
                         		exit;
                         	}
@@ -232,24 +232,24 @@ if ($step == "regadmin") {
                         echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $lang_install['logintosite'] . '</a></b></p>';
                     } else {
                         echo '<p><b>' . $lang_install['siteaddressbad'] . '</b></p>';
-                        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+                        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
                     } 
                 } else {
                     echo '<p><b>' . $lang_install['bademail'] . '</b></p>';
-                    echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+                    echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
                 } 
             } else {
                 echo '<p><b>' . $lang_install['badagainbass'] . '.</b></p>';
-                echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+                echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
             } 
  
         } else {
             echo '<p><b>' . $lang_install['shortuserpass'] . '</b></p>';
-            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
         } 
     } else {
         echo '<p><b>' . $lang_install['fillfields'] . '.</b></p>';
-        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $lang_home['back'] . '</a></p>';
+        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
     } 
 }
 

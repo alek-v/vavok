@@ -3,26 +3,11 @@
 
 $language = 'serbian_cyrillic';
 $ln_loc = 'sr';
-$charset = 'UTF-8';
-$allow_recoding = true;
-$text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
-$number_thousands_separator = ',';
-$number_decimal_separator = '.';
-// current date
-$currDate = str_replace("January", "Јануар", $currDate);
-$currDate = str_replace("February", "Фебруар", $currDate);
-$currDate = str_replace("March", "Март", $currDate);
-$currDate = str_replace("April", "Април", $currDate);
-$currDate = str_replace("May", "Мај", $currDate);
-$currDate = str_replace("June", "Јун", $currDate);
-$currDate = str_replace("July", "Јул", $currDate);
-$currDate = str_replace("August", "Август", $currDate);
-$currDate = str_replace("September", "Септембар", $currDate);
-$currDate = str_replace("October", "Октобар", $currDate);
-$currDate = str_replace("November", "Новембар", $currDate);
-$currDate = str_replace("December", "Децембар", $currDate); 
+$ln_charset = 'UTF-8';
+$ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
+
 // shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
-$byteUnits = array('бајтова', 'КБ', 'МБ', 'ГБ', 'ТБ', 'ПБ', 'ЕБ');
+$ln_byteUnits = array('бајтова', 'КБ', 'МБ', 'ГБ', 'ТБ', 'ПБ', 'ЕБ');
 
 $ln_day_of_week = array('Понедељак', 'Уторак', 'Среда', 'Четвтак', 'Петак', 'Субота','Недеља');
 $ln_all_month = array('јануар', 'фебруар', 'март', 'април', 'мај', 'јун', 'јул', 'август', 'септембар', 'октобар', 'новембар', 'децембар');
@@ -31,7 +16,7 @@ $ln_all_month = array('јануар', 'фебруар', 'март', 'април'
 // variable below
 $ln_datefmt = '%d. %B %Y.';
 $ln_timefmt = '%H:%M';
-$timespanfmt = '%s дана, %s сати, %s минута и %s секунди';
+$ln_timespanfmt = '%s дана, %s сати, %s минута и %s секунди';
 
 // главно
 $lang_home['home'] = "На главну";
@@ -39,7 +24,7 @@ $lang_home['login'] = "Пријави се";
 $lang_home['register'] = "Регистрација";
 $lang_home['lostpass'] = "Заборављена шифра";
 $lang_home['forum'] = "Форум";
-$lang_home['statistic'] = "Статистика";
+$lang_home['statistics'] = "Статистика";
 $lang_home['sitelife'] = "Живот сајта";
 $lang_home['guestbook'] = "Књига гостију";
 $lang_home['sitenews'] = "Новости сајта";
@@ -121,4 +106,20 @@ if(file_exists(BASEDIR."lang/serbian_cyrillic/" . $phpselflang . ".php")) {
 include_once BASEDIR."lang/serbian_cyrillic/" . $phpselflang . ".php"; }
 
 // ob_start("lat_to_cyr_skiptags");
+
+$language_data = array(
+	'language' => $language,
+	'ln_loc' => $ln_loc,
+	'ln_charset' => 'UTF-8',
+	'ln_text_dir' => $ln_text_dir,
+	'ln_byteUnits' => $ln_byteUnits,
+	'ln_day_of_week' => $ln_day_of_week,
+	'ln_all_month' => $ln_all_month,
+	'ln_datefmt' => $ln_datefmt,
+	'ln_timefmt' => $ln_timefmt,
+	'ln_timespanfmt' => $ln_timespanfmt
+);
+
+$localization = new Localization($language_data, $lang_home);
+
 ?>

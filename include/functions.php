@@ -833,4 +833,44 @@ function detect_bot() {
 
 }
 
+// Administrator status name
+function user_status($message) {
+    global $localization;
+    $message = str_replace('101', $localization->string('access101'), $message);
+    $message = str_replace('102', $localization->string('access102'), $message);
+    $message = str_replace('103', $localization->string('access103'), $message);
+    $message = str_replace('105', $localization->string('access105'), $message);
+    $message = str_replace('106', $localization->string('access106'), $message);
+    $message = str_replace('107', $localization->string('access107'), $message);
+    return $message;
+}
+
+// format time into days and minutes
+function formattime($file_time) {
+    global $localization;
+    if ($file_time >= 86400) {
+        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $localization->string('days');
+    } elseif ($file_time >= 3600) {
+        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $localization->string('hours');
+    } elseif ($file_time >= 60) {
+        $file_time = round($file_time / 60) . ' ' . $localization->string('minutes');
+    } else {
+        $file_time = round($file_time) . ' ' . $localization->string('secs');
+    } 
+    return $file_time;
+}
+
+// show page generation time
+function show_gentime() {
+    global $start_time, $localization;
+
+    if (get_configuration('pageGenTime') == 1) {
+        $end_time = microtime(true);
+        $gen_time = $end_time - $start_time;
+        $pagegen = $localization->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
+
+        return $pagegen;
+    }
+}
+
 ?>

@@ -16,8 +16,8 @@ echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"
 echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $lang_admin['usronline'] . '</a></p>';
 
 echo '<p><br /><br />
-<a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

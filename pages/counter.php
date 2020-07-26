@@ -5,7 +5,7 @@ require_once"../include/startup.php";
 
 if (get_configuration('showCounter') == 6 && !$users->is_administrator()) { redirect_to("../"); }
 
-$my_title = $lang_home['statistic'];
+$my_title = $localization->string('statistics');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (!empty($_GET['action'])) {
@@ -94,7 +94,7 @@ if ($action == "count24") {
         echo $lang_count['statnotformed'] . '<br />';
     } 
 
-    echo'<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo'<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 // statistics for a month
 if ($action == "count31") {
@@ -140,10 +140,10 @@ if ($action == "count31") {
         echo $lang_count['statnotformed'] . '<br />';
     } 
 
-    echo '<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
-echo '<br /><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
+echo '<br /><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

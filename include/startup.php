@@ -97,46 +97,6 @@ if (!strstr($config_requri, 'error=db') && !empty(get_configuration('dbhost'))) 
     } 
 }
 
-// this functions are not in functions.php because they require language files
-function user_status($message) {
-    global $lang_home;
-    $message = str_replace('101', $lang_home['access101'], $message);
-    $message = str_replace('102', $lang_home['access102'], $message);
-    $message = str_replace('103', $lang_home['access103'], $message);
-    $message = str_replace('105', $lang_home['access105'], $message);
-    $message = str_replace('106', $lang_home['access106'], $message);
-    $message = str_replace('107', $lang_home['access107'], $message);
-    return $message;
-}
-
-// format time into days and minutes
-function formattime($file_time) {
-    global $lang_home;
-    if ($file_time >= 86400) {
-        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $lang_home['days'];
-    } elseif ($file_time >= 3600) {
-        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $lang_home['hours'];
-    } elseif ($file_time >= 60) {
-        $file_time = round($file_time / 60) . ' ' . $lang_home['minutes'];
-    } else {
-        $file_time = round($file_time) . ' ' . $lang_home['secs'];
-    } 
-    return $file_time;
-}
-
-// show page generation time
-function show_gentime() {
-    global $start_time, $lang_home;
-
-    if (get_configuration('pageGenTime') == 1) {
-        $end_time = microtime(true);
-        $gen_time = $end_time - $start_time;
-        $pagegen = $lang_home['pggen'] . ' ' . round($gen_time, 4) . ' s.<br />';
-
-        return $pagegen;
-    }
-}
-
 /*
 Website configuration
 */

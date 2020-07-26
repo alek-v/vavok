@@ -9,13 +9,10 @@ if (get_configuration('showOnline') == 0 && (!$users->is_reg() && !$users->is_ad
 // page settings
 $data_on_page = 10; // online users per page
 
-
 $my_title = 'Online';
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
- 
-
-echo '<img src="../images/img/online.gif" alt=""> <b>' . $lang_page['whoisonline'] . '</b><br /><br />';
+echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $lang_page['whoisonline'] . '</b></p>';
 
 $total = $db->count_row(get_configuration('tablePrefix') . 'online');
 $totalreg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
@@ -53,19 +50,19 @@ if ($list == "full") {
         $time = date_fixed($item['date'], 'H:i');
 
         if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
-            echo '<b>' . $lang_home['guest'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+            echo '<b>' . $localization->string('guest') . '</b> (' . $localization->string('time') . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
-            echo '<b>' . $item['bot'] . '</b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+            echo '<b>' . $item['bot'] . '</b> (' . $localization->string('time') . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
             echo '<hr />';
         } else {
-            echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+            echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $localization->string('time') . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
             } 
@@ -88,7 +85,7 @@ if ($list == "full") {
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
 
-        echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $lang_home['time'] . ': ' . $time . ')<br />';
+        echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $localization->string('time') . ': ' . $time . ')<br />';
         if ($users->is_moderator() || $users->is_administrator()) {
             echo '<small><font color="#CC00CC">(<a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
         } 
@@ -104,7 +101,7 @@ if ($list != "full") {
     echo'<p><a href="online.php?list=reg" class="btn btn-outline-primary sitelink">' . $lang_page['hideguest'] . '</a></p>';
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

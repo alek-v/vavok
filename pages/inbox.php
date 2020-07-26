@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 11:11:20
+* Updated:   26.07.2020. 2:49:24
 */
 
 require_once"../include/startup.php";
@@ -19,7 +19,7 @@ $genHeadTag = '<meta name="robots" content="noindex">
 <script src="/js/ajax.js"></script>
 ';
 
-$my_title = $lang_home['inbox'];
+$my_title = $localization->string('inbox');
 require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
 
 $action = isset($_GET['action']) ? check($_GET["action"]) : '';
@@ -105,12 +105,12 @@ if (empty($action)) {
     echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
     echo '<div class="form-group">';
     echo '<label for="chatbarText"></label>';
-    echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $lang_home['message'] . '..." ' . $read_only . ' />';
+    echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $localization->string('message') . '..." ' . $read_only . ' />';
     echo '</div>';
     echo '<input type="hidden" name="who" id="who" value="' . $who . '" class="send_pm" />';
 
     echo '<input type="hidden" name="lastid" id="lastid" value="' . $who . '" />';
-    echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $lang_home['send'] . '</button>';
+    echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $localization->string('send') . '</button>';
     echo '</form><br />'; // update lang
 
 
@@ -146,15 +146,15 @@ else if ($action == "sendto") {
     echo '<label for="who">' . $lang_page['sendpmto'] . ':</label>';
     echo '<input type="text" name="who" id="who" class="form-control" />';
     echo '</div>';
-    echo '<button type="submit" class="btn btn-primary">' . $lang_home['confirm'] . '</button>
+    echo '<button type="submit" class="btn btn-primary">' . $localization->string('confirm') . '</button>
     </form>
     <hr>';
 
 }
 
-if (!empty($action)) echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a></p>';
+if (!empty($action)) echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a></p>';
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

@@ -90,7 +90,7 @@ if ($users->is_reg()) {
             echo $lang_page['filemustb'] . ' under 5 MB<br>';
         } 
 
-        echo '<a href="photo.php">' . $lang_home['back'] . '</a><br>';
+        echo '<a href="photo.php">' . $localization->string('back') . '</a><br>';
     } 
     if ($action == 'remove') {
         if (file_exists("../used/dataphoto/" . $users->user_id . ".jpg")) {
@@ -107,16 +107,16 @@ if ($users->is_reg()) {
 
         echo '<p>Your photography successfully deleted!</p><br />'; // update lang
 
-        echo '<a href="profile.php">' . $lang_home['back'] . '</a><br />';
+        echo '<a href="profile.php">' . $localization->string('back') . '</a><br />';
     } 
 } else {
-    echo '<br>' . $lang_home['notloged'] . '<br><br><br>';
+    echo '<br>' . $localization->string('notloged') . '<br><br><br>';
 } 
 
 if (empty($action)) {
-    echo '<a href="../pages/profile.php">' . $lang_home['back'] . '</a><br />';
+    echo '<a href="../pages/profile.php">' . $localization->string('back') . '</a><br />';
 } 
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

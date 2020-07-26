@@ -157,9 +157,9 @@ if ($act == "edit") {
     echo 'Page title:<br />'; // update lang
     echo '<textarea cols="50" rows="3" name="msg">' . $page_title['tname'] . '</textarea><br />';
 
-    echo '<br /><input type="submit" value="' . $lang_home['save'] . '"></form><hr>';
+    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
 
-    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($act == "addnew") {
@@ -167,13 +167,13 @@ if ($act == "addnew") {
     echo 'Page: <input type="text" name="tpage" value=""><br />'; // update lang
     echo 'Page title: <input type="text" name="msg" value=""><br />';
 
-    echo '<br /><input type="submit" value="' . $lang_home['save'] . '"></form><hr>';
+    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
 
-    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 }
 
-echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

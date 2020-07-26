@@ -28,7 +28,7 @@ if (!empty($code)) {
     echo $lang_page['unsubfail'] . '!<br><br>'; // code 
 } 
 
-echo '<a href="../" class="homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="../" class="homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   24.07.2020. 14:58:05
+* Updated:   26.07.2020. 2:58:47
 */
 
 require_once"../include/startup.php";
 
 $page = isset($_GET['page']) ? check($_GET['page']) : 1;
 
-$my_title = $lang_home['smile'];
+$my_title = $localization->string('smile');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
@@ -55,7 +55,7 @@ echo '</p>';
 echo $navigation->get_navigation();
 
 echo '<p>' . $lang_page['totsmiles'] . ': <b>' . (int)$total . '</b></p>';
-echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

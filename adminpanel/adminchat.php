@@ -26,18 +26,18 @@ echo '<img src="../images/img/menu.gif" alt=""> <b>' . $lang_admin['adminchat'] 
 
 if (empty($action)) {
     echo '<a href="#down"><img src="../images/img/downs.gif" alt=""></a> ';
-    echo '<a href="adminchat.php?r=' . $rand . '" class="btn btn-outline-primary sitelink">' . $lang_home['refresh'] . '</a><br>';
+    echo '<a href="adminchat.php?r=' . $rand . '" class="btn btn-outline-primary sitelink">' . $localization->string('refresh') . '</a><br>';
 
-    echo'<hr><form action="process.php?action=acadd" method="post"><b>' . $lang_home['message'] . '</b><br>';
+    echo'<hr><form action="process.php?action=acadd" method="post"><b>' . $localization->string('message') . '</b><br>';
     echo'<textarea cols="80" rows="5" name="msg"></textarea><br>';
 
-    echo'<input type="submit" value="' . $lang_home['save'] . '" /></form><hr>';
+    echo'<input type="submit" value="' . $localization->string('save') . '" /></form><hr>';
 
     $file = file("../used/adminchat.dat");
     $file = array_reverse($file);
     $total = count($file);
     if ($total < 1) {
-        echo'<br><img src="../images/img/reload.gif" alt=""> <b>' . $lang_home['nomsgs'] . '</b><br>';
+        echo'<br><img src="../images/img/reload.gif" alt=""> <b>' . $localization->string('nomsgs') . '</b><br>';
     } 
     if (empty($_GET['start'])) $start = 0;
     else $start = $_GET['start'];
@@ -56,7 +56,7 @@ if (empty($action)) {
         echo'<div class=b><b><a href="../pages/user.php?uz=' . $data[1] . '" class="btn btn-outline-primary sitelink"> ' . $data[1] . ' </a></b> ' . $statwho;
 
         if ($dates == $data[2]) {
-            $data[2] = '<font color="#FF0000">' . $lang_home['today'] . '</font>';
+            $data[2] = '<font color="#FF0000">' . $localization->string('today') . '</font>';
         } 
 
         echo'<small> (' . $data[2] . ' / ' . $data[3] . ')</small></div>' . $data_text . '<br><small><font color="#CC00CC">[' . $data[4] . ', ' . $data[5] . ']</font></small>';
@@ -65,15 +65,15 @@ if (empty($action)) {
 
     echo'<hr>';
     if ($start != 0) {
-        echo '<a href="adminchat.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $lang_home['back'] . '</a> ';
+        echo '<a href="adminchat.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $localization->string('back') . '</a> ';
     } else {
-        echo'&lt; ' . $lang_home['back'] . '';
+        echo'&lt; ' . $localization->string('back') . '';
     } 
     echo'|';
     if ($total > $start + 10) {
-        echo ' <a href="adminchat.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $lang_home['forw'] . ' &gt;</a>';
+        echo ' <a href="adminchat.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $localization->string('forw') . ' &gt;</a>';
     } else {
-        echo'' . $lang_home['forw'] . ' &gt;';
+        echo'' . $localization->string('forw') . ' &gt;';
     } 
 
     if ($total > 0) {
@@ -108,22 +108,22 @@ if (empty($action)) {
 
     echo '<br><br>';
 
-    echo '<a href="../pages/smiles.php" class="btn btn-outline-primary sitelink">' . $lang_home['smile'] . '</a>';
+    echo '<a href="../pages/smiles.php" class="btn btn-outline-primary sitelink">' . $localization->string('smile') . '</a>';
 } 
 
 if ($action == "prodel") {
     echo '<br>' . $lang_admin['delacmsgs'] . '?<br>';
     echo '<b><a href="process.php?action=acdel" class="btn btn-outline-primary sitelink">' . $lang_admin['yessure'] . '!</a></b><br>';
 
-    echo '<br><a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br><a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
 if ($total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
     echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $lang_admin['cleanchat'] . '</a>';
 } 
 
-echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo'<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
+echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo'<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
 
 
 

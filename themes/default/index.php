@@ -46,18 +46,18 @@ include BASEDIR . "include/load_header.php";
 				<?php
 
 				if ($users->is_reg()) {
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $lang_home['inbox'] . ' (' . $users->user_mail($users->user_id) . ')</a></li>';
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $lang_home['mymenu'] . '</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $localization->string('inbox') . ' (' . $users->user_mail($users->user_id) . ')</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $localization->string('mymenu') . '</a></li>';
 				    if ($users->is_administrator()) {
-				        echo'<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $lang_home['admpanel'] . '</a></li>';
+				        echo'<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $localization->string('admpanel') . '</a></li>';
 				    } 
 				    if ($users->is_moderator()) {
-				        echo '<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $lang_home['modpanel'] . '</a></li>';
+				        echo '<li class="nav-item"><a href="' . HOMEDIR . get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $localization->string('modpanel') . '</a></li>';
 				    } 
 				} else {
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $lang_home['login'] . '</a></li>';
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $lang_home['register'] . '</a></li>';
-				    //echo '<li class="nav-item"><a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $lang_home['lostpass'] . '</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $localization->string('login') . '</a></li>';
+				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $localization->string('register') . '</a></li>';
+				    //echo '<li class="nav-item"><a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $localization->string('lostpass') . '</a></li>';
 				} 
 
 				?>
@@ -65,10 +65,10 @@ include BASEDIR . "include/load_header.php";
 				<div class="nav-contact">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $lang_home['contact']; ?></a>
+							<a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $localization->string('contact'); ?></a>
 						</li>
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $lang_home['lang']; ?></a>
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?php echo $localization->string('lang'); ?></a>
 							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 					          <a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /></a>
 					          <a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /></a>

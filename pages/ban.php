@@ -56,7 +56,7 @@ if ($time_ban > 0) {
 
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

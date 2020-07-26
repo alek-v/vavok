@@ -5,7 +5,7 @@
 require_once"../include/startup.php";
 include"../lang/" . $users->get_user_language() . "/pagescounter.php";
 
-$my_title = $lang_page['statistic'];
+$my_title = $localization->string('statistic');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $pcount = file(BASEDIR . "used/datacounter/host.dat");
@@ -58,7 +58,7 @@ $tot = $u[0] + $u[1] + $u[2] + $u[3] + $u[4] + $u[5];
 // $u[3]=komentara u novostima
 // $u[4]=novosti
 // $u[5]=komentara u downloadu
-echo '<br><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a><br>';
+echo '<br><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a><br>';
 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

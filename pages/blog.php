@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 13:26:24
+* Updated:   26.07.2020. 2:46:42
 */
 
 include"../include/startup.php";
@@ -151,7 +151,7 @@ switch ($pg) {
 
 			$page_posts->set('post_text', $content);
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
-			$page_posts->set('read_more_title', $lang_home['readmore']);
+			$page_posts->set('read_more_title', $localization->string('readmore'));
 
 
 			// blog post objects

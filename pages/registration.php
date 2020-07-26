@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   25.07.2020. 15:21:21
+* Updated:   26.07.2020. 2:57:41
 */
 
 require_once"../include/startup.php";
@@ -38,7 +38,7 @@ if ($str1 > 20 || $str2 > 20) {
 $genHeadTag = '<meta name="robots" content="noindex">';
 
 // Page title
-$my_title = $lang_home['registration'];
+$my_title = $localization->string('registration');
 
 // load theme header
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -83,13 +83,13 @@ if ($substr_log < 3) {
                          
                         // send email with reg. data
                         if (get_configuration('regConfirm') == "1") {
-                            $needkey = "\r\n\r\n" . $lang_home['emailpart5'] . "\r\n" . $lang_home['yourkey'] . ": " . $registration_key . "\r\n" . $lang_home['emailpart6'] . ":\r\n\r\n" . website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $lang_home['emailpart7'] . "\r\n\r\n";
+                            $needkey = "\r\n\r\n" . $localization->string('emailpart5') . "\r\n" . $localization->string('yourkey') . ": " . $registration_key . "\r\n" . $localization->string('emailpart6') . ":\r\n\r\n" . website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $localization->string('emailpart7') . "\r\n\r\n";
                         } else {
                             $needkey = "\r\n\r\n";
                         } 
 
-                        $subject = $lang_home['regonsite'] . ' ' . get_configuration('title');
-                        $regmail = $lang_home['hello'] . " " . $log . "\r\n" . $lang_home['emailpart1'] . " " . get_configuration('homeUrl') . " \r\n" . $lang_home['emailpart2'] . ":\r\n\r\n" . $lang_home['username'] . ": " . $log . "\r\n" . $needkey . "" . $lang_home['emailpart3'] . "\r\n" . $lang_home['emailpart4'] . "";
+                        $subject = $localization->string('regonsite') . ' ' . get_configuration('title');
+                        $regmail = $localization->string('hello') . " " . $log . "\r\n" . $localization->string('emailpart1') . " " . get_configuration('homeUrl') . " \r\n" . $localization->string('emailpart2') . ":\r\n\r\n" . $localization->string('username') . ": " . $log . "\r\n" . $needkey . "" . $localization->string('emailpart3') . "\r\n" . $localization->string('emailpart4') . "";
 
                         // Send confirmation email
                         $newMail = new Mailer;
@@ -110,7 +110,7 @@ if ($substr_log < 3) {
                         $db->insert_data('email_queue', $values);
 
                         // registration successfully, show info
-                        echo '<p>' . $lang_home['regoknick'] . ': <b>' . $log . '</b> <br /><br /></p>';
+                        echo '<p>' . $localization->string('regoknick') . ': <b>' . $log . '</b> <br /><br /></p>';
 
                         // confirm registration
                         if (get_configuration('regConfirm') == "1") {
@@ -119,10 +119,10 @@ if ($substr_log < 3) {
 							<form method="post" action="key.php?action=inkey">
 
 								<div class="form-group">
-									<label for="key">' . $lang_home['yourkey'] . '</label>
+									<label for="key">' . $localization->string('yourkey') . '</label>
 									<input type="text" class="form-control" id="key" name="key" placeholder="">
 								</div>
-								<button type="submit" class="btn btn-primary">' . $lang_home['confirm'] . '</button>
+								<button type="submit" class="btn btn-primary">' . $localization->string('confirm') . '</button>
 
 							</form>
 							<form method="post" action="key.php?action=resendkey">
@@ -130,59 +130,56 @@ if ($substr_log < 3) {
 								<div class="form-group">
 									<input type="hidden" class="form-control" id="recipient" name="recipient" value="' . $mail . '">
 								</div>
-								<button type="submit" class="btn btn-primary">' . $lang_home['resend'] . '</button>
+								<button type="submit" class="btn btn-primary">' . $localization->string('resend') . '</button>
 
 							</form>
                         	';
 
-                            echo '<p><b>' . $lang_home['enterkeymessage'] . '</b></p>';
+                            echo '<p><b>' . $localization->string('enterkeymessage') . '</b></p>';
 
                         } else {
 
-                        	echo '<p>' . $lang_home['loginnow'] . '<br /></p>';
+                        	echo '<p>' . $localization->string('loginnow') . '<br /></p>';
 
                         }
 
                     } else {
 
-                        echo $lang_home['badcaptcha'] . '!<br />';
+                        echo $localization->string('badcaptcha') . '!<br />';
                         
                     } 
 
                 } else {
 
-                    echo $lang_home['badmail'] . "<br />";
+                    echo $localization->string('badmail') . "<br />";
 
                 }
 
         } else {
 
-            echo $lang_home['userexists'] . "<br />";
+            echo $localization->string('userexists') . "<br />";
 
         } 
 
     } else {
 
-        echo $lang_home['emailexists'] . '<br />';
+        echo $localization->string('emailexists') . '<br />';
 
     } 
 
 } else {
 
-    echo $lang_home['toomuchslashes'] . '<br />';
+    echo $localization->string('toomuchslashes') . '<br />';
 
-} 
- 
+}
 
-echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="registration.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 exit;
 
 }
-
-
 
 $log = isset($log) ? $log = check($log) : $log = '';
 
@@ -190,7 +187,7 @@ $log = isset($log) ? $log = check($log) : $log = '';
 $genHeadTag = '<meta name="robots" content="noindex">';
 $genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/registration/register.css">';
 
-$my_title = $lang_home['registration'];
+$my_title = $localization->string('registration');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
@@ -200,7 +197,7 @@ if (get_configuration('openReg') == "1") {
 
 		$current_page = new PageGen('pages/registration/already_registered.tpl');
 
-		$current_page->set('message', $log . ', ' . $lang_home['againreg']);
+		$current_page->set('message', $log . ', ' . $localization->string('againreg'));
 
 		echo $current_page->output();
 
@@ -212,14 +209,14 @@ if (get_configuration('openReg') == "1") {
 			$current_page->set('page_to_load', check($_GET['ptl']));
 		}
 
-		$current_page->set('registration_info', $lang_home['reginfo']);
+		$current_page->set('registration_info', $localization->string('reginfo'));
 
 		if (get_configuration('regConfirm') == "1") {
-			$current_page->set('registration_key_info', $lang_home['keyinfo']);
+			$current_page->set('registration_key_info', $localization->string('keyinfo'));
 		}
 
 		if (get_configuration('quarantine') > 0) {
-			$current_page->set('quarantine_info', $lang_home['quarantine1'] . ' ' . round(get_configuration('quarantine') / 3600) . ' ' . $lang_home['quarantine2']);
+			$current_page->set('quarantine_info', $localization->string('quarantine1') . ' ' . round(get_configuration('quarantine') / 3600) . ' ' . $localization->string('quarantine2'));
 		}
 
 		echo $current_page->output();
@@ -230,7 +227,7 @@ if (get_configuration('openReg') == "1") {
 
 	$current_page = new PageGen('pages/registration/registration_stopped.tpl');
 
-	$current_page->set('message', $lang_home['regstoped']);
+	$current_page->set('message', $localization->string('regstoped'));
 
 	echo $current_page->output();
 

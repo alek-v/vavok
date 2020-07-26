@@ -30,9 +30,9 @@ if ($action == "tpc") {
     echo "<br>";
     echo '<input type="submit" value="Search"></form><br><br>';
 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
-    echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
 
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 } else if ($action == "stpc") {
@@ -82,9 +82,9 @@ if ($action == "tpc") {
 
     } 
 
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
-    echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br />';
+    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
 
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
     exit;

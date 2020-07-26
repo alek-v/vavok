@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 18:38:15
+* Updated:   26.07.2020. 1:28:30
 */
 
 require_once"../include/startup.php";
@@ -35,7 +35,7 @@ if ($action == "go") {
 
     // Send email
     $mail = new Mailer();
-    $mail->send(get_configuration("adminEmail"), $lang_home['msgfrmst'] . " " . get_configuration("title"), $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $lang_home['datesent'] . ": " . date('d.m.Y. / H:i', get_configuration("siteTime")), $umail, $name);
+    $mail->send(get_configuration("adminEmail"), $localization->string('msgfrmst') . " " . get_configuration("title"), $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i', get_configuration("siteTime")), $umail, $name);
 
     // Email sent
     redirect_to("./?isset=mail");
@@ -44,7 +44,7 @@ if ($action == "go") {
 
 if (empty($action)) {
 
-    $my_title = $lang_home['contact'];
+    $my_title = $localization->string('contact');
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 

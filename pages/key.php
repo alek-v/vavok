@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   20.05.2020. 23:51:16
+* Updated:   26.07.2020. 2:50:13
 */
 
 require_once"../include/startup.php";
@@ -72,12 +72,12 @@ if (empty($action)) {
     echo '<form method="post" action="key.php?action=inkey"><br>';
     echo $lang_page['key'] . ':<br>';
     echo '<input name="key" maxlength="20" /><br><br>';
-    echo '<button class="btn btn-primary" type="submit">' . $lang_home['confirm'] . '</button>
+    echo '<button class="btn btn-primary" type="submit">' . $localization->string('confirm') . '</button>
     </form>';
 
     echo '
     <form method="post" action="key.php?action=resendkey&amp;uid=' . $recipient_id . '">
-		<button type="submit" class="btn btn-primary sitelink">' . $lang_home['resend'] . '</button>
+		<button type="submit" class="btn btn-primary sitelink">' . $localization->string('resend') . '</button>
 	</form>
 	<hr>
     ';
@@ -99,9 +99,9 @@ if ($action == "inkey") {
 
         if (!$db->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) {
 
-            echo '<p>' . $lang_home['keynotok'] . '!</p>';
+            echo '<p>' . $localization->string('keynotok') . '!</p>';
 
-            echo '<pr><a href="../pages/key.php"><img src="../images/img/back.gif" alt="Back"> ' . $lang_home['back'] . '</a></p>';
+            echo '<p><a href="../pages/key.php"><img src="../images/img/back.gif" alt="Back"> ' . $localization->string('back') . '</a></p>';
 
 
         } else {
@@ -109,7 +109,7 @@ if ($action == "inkey") {
             echo '<p>' . $lang_page['keyok'] . '!</p>';
 
 
-            echo '<pr><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $lang_home['login'] . '</a></p>';
+            echo '<pr><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $localization->string('login') . '</a></p>';
 
 
         }
@@ -119,13 +119,13 @@ if ($action == "inkey") {
 
         echo '<p>' . $lang_page['nokey'] . '!</p>';
 
-        echo '<p><a href="key.php"><img src="../images/img/back.gif" alt="Back" /> ' . $lang_home['back'] . '</a></p>';
+        echo '<p><a href="key.php"><img src="../images/img/back.gif" alt="Back" /> ' . $localization->string('back') . '</a></p>';
 
     } 
 
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt="Home page" /> ' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt="Home page" /> ' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

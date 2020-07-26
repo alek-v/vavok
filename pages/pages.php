@@ -33,7 +33,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 <p>Error 404 - Page not found<br /></p>
 <div class="break"></div>
-<p><a href="<?php echo website_home_address(); ?>" class="btn btn-primary homepage"><?php echo $lang_home['home']; ?></a></p>
+<p><a href="<?php echo website_home_address(); ?>" class="btn btn-primary homepage"><?php echo $localization->string('home'); ?></a></p>
 <div class="break"></div>
 
 <?php
@@ -54,7 +54,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 if ($current_page->published == 1 && !$users->is_administrator()) {
 	echo '<p>Requested page is not published.</p>'; // update lang
 	echo '<p><br /><br />';
-	echo '<a href="' . website_home_address() . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+	echo '<a href="' . website_home_address() . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 	require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 	exit;

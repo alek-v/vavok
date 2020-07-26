@@ -2,9 +2,9 @@
 /*
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
+* URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   24.07.2020. 21:49:19
+* Updated:   26.07.2020. 3:49:26
 */
 
 // don't count visits it this is cron job

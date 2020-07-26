@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 24.07.2020. 12:17:40
+// modified: 26.07.2020. 2:33:09
 // todo: rewrite whole page
 
 require_once"../include/startup.php";
@@ -55,20 +55,14 @@ if ($action == "editfile") {
         if (get_magic_quotes_gpc()) {
             // strip all slashes
             $text_files = stripslashes($text_files);
-        } 
-
-        $text_files = str_replace('{INBOX}', '<?php echo \'<a href="\' . BASEDIR . \'pages/inbox.php">\' . $lang_home[\'inbox\'] . \'</a>\'; ?>', $text_files);
-        $text_files = str_replace('{INBOXMSGS}', '<?php echo \'(\' . $users->user_mail($users->user_id) . \')\'; ?>', $text_files);
-        $text_files = str_replace('{LOGOUT}', '<?php echo \'<a href="\' . BASEDIR . \'pages/input.php?action=exit">Log out</a>\'; ?>', $text_files);
-
-        $text_files = str_replace('{BASEDIR}', '<?php echo BASEDIR; ?>', $text_files);
+        }
 
         // update db data
         $pageEditor->update($page_id, $text_files);
     } 
 
-    header("Location: files.php?action=edit&file=$file&isset=mp_editfiles");
-    exit;
+    redirect_to("files.php?action=edit&file=$file&isset=mp_editfiles");
+
 }
 
 // update head tags on all pages

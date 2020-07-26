@@ -62,7 +62,7 @@ if (empty($action)) {
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-    echo '<h1>' . $lang_home['filelist'] . '</h1>';
+    echo '<h1>' . $localization->string('filelist') . '</h1>';
 
     $total_pages = $pageEditor->total_pages();
 
@@ -121,14 +121,14 @@ if (empty($action)) {
             }
 
             // Informations about page
-            echo ' ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
 
         } else {
 
             echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b>';
             echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
-            echo ' ' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
 
         } 
@@ -141,10 +141,10 @@ if (empty($action)) {
     $navigation = new Navigation($config_editfiles, $total_pages, $page, 'files.php?');
     echo $navigation->get_navigation();
 
-    echo '<br />' . $lang_home['totpages'] . ': <b>' . (int)$total_pages . '</b><br />';
+    echo '<br />' . $localization->string('totpages') . ': <b>' . (int)$total_pages . '</b><br />';
     echo '<div>&nbsp;</div>';
     if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a><br />';
+        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a><br />';
     } 
 } 
 
@@ -168,9 +168,9 @@ if ($action == "show") {
 
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
-        echo '<p>' . $lang_home['shwingpage'] . ' <b>' . $showname . '</b></p>';
-        echo '<p>' . $lang_home['created'] . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['crtdby']);
-        echo ' | ' . $lang_home['lastupdate'] . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $lang_home['by'] . ' ' . $users->getnickfromid($page_info['lstupdby']);
+        echo '<p>' . $localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
+        echo '<p>' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']);
+        echo ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
         
         // post type
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
@@ -185,7 +185,7 @@ if ($action == "show") {
         echo '</p>';
 
         echo '<p>';
-        echo $lang_home['pgaddress'] . ': ';
+        echo $localization->string('pgaddress') . ': ';
 
         // if it is index doesnt show this page like other pages
         if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
@@ -209,14 +209,14 @@ if ($action == "show") {
         echo '</p>';
 
 
-        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['edit'] . '</a><br />';
+        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('edit') . '</a><br />';
         if ($users->check_permissions('pageedit', 'del') || $users->is_administrator()) {
-        echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a><br />';
+        echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a><br />';
         }
     } 
 
     if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a><br />';
+        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a><br />';
     }
 
 } 
@@ -245,16 +245,7 @@ if ($action == "edit") {
 
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-        $datamainfile = $page_info['content'];
-
-        $datamainfile = str_replace('<?php echo \'<a href="\' . BASEDIR . \'pages/inbox.php">\' . $lang_home[\'inbox\'] . \'</a>\'; ?>', '{INBOX}', $datamainfile);
-        $datamainfile = str_replace('<?php echo \'(\' . $users->user_mail($users->user_id) . \')\'; ?>', '{INBOXMSGS}', $datamainfile);
-        $datamainfile = str_replace('<?php echo \'<a href="\' . BASEDIR . \'pages/input.php?action=exit">\' . $lang_home[\'logout\'] . \'</a>\'; ?>', '{LOGOUT}', $datamainfile);
-
-        $datamainfile = str_replace('<?=BASEDIR?>', '{BASEDIR}', $datamainfile);
-        $datamainfile = str_replace('<?php echo BASEDIR; ?>', '{BASEDIR}', $datamainfile);
-
-        $datamainfile = htmlspecialchars($datamainfile); 
+        $datamainfile = htmlspecialchars($page_info['content']);
 
         // show page name
         $show_up_file = str_replace('.php', '', $file);
@@ -286,10 +277,10 @@ if ($action == "edit") {
 
         echo '<br /><br />';
 
-        echo '<br /><button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button></form><hr>';
+        echo '<br /><button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button></form><hr>';
         echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
 
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_home['pagetitle'] . '</a>';
+        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a>';
         echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
         
     } else {
@@ -423,7 +414,7 @@ if ($action == "headtag") {
     echo '<input type=text" name="image" id="image" value="' . $page_info['default_img'] . '">';
 
     echo '<br />
-            <button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button>
+            <button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button>
 
             </form><hr />';
 } 
@@ -443,9 +434,9 @@ if ($action == 'mainmeta') {
     echo $headtags;
     echo '</textarea>';
 
-    echo '<br /><input type="submit" value="' . $lang_home['save'] . '"></form><hr>';
+    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
 
-    echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($action == 'renamepg') {
@@ -470,9 +461,9 @@ if ($action == 'renamepg') {
     echo '<form action="procfiles.php?action=renamepg" name="form" method="POST">';
     echo '<input type="text" name="pg" value="' . $pg . '">';
     echo '<input type="hidden" name="file" value="' . $pg . '">';
-    echo '<br /><input type="submit" value="' . $lang_home['save'] . '"></form><hr /><br />';
+    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr /><br />';
 
-    echo '<a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($action == "new") {
@@ -523,11 +514,11 @@ if ($action == "new") {
  
 
     echo '
-    <h1>' . $lang_home['newfile'] . '</h1>';
+    <h1>' . $localization->string('newfile') . '</h1>';
 
     echo '<div class="form-group">
     		<form method="post" action="procfiles.php?action=addnew">';
-    echo '<label for="newfile">' . $lang_home['pagename'] . ':</label>';
+    echo '<label for="newfile">' . $localization->string('pagename') . ':</label>';
 	    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
     '; 
 
@@ -536,7 +527,7 @@ if ($action == "new") {
     $languages = "SELECT * FROM languages ORDER BY lngeng";
 
     echo '<div class="form-group">
-    <label for="language">' . $lang_home['language'] . ' (optional):</label>';
+    <label for="language">' . $localization->string('language') . ' (optional):</label>';
     echo '<select class="form-control" id="language" name="lang">';
 
     echo '<option value="">Don\'t set</option>';
@@ -562,7 +553,7 @@ if ($action == "new") {
     <label for="page_structure">Page structure:</label>
     <select class="form-control" id="page_structure" name="page_structure">
         <option value="">/page/new-page/</option>
-        <option value="' . get_configuration('customPages') . '">/' . get_configuration('customPages') . '/' . $lang_home['new-page'] . '/</option>
+        <option value="' . get_configuration('customPages') . '">/' . get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>
     </select>
     </div>';
 
@@ -572,13 +563,13 @@ if ($action == "new") {
     <div class="form-group form-check">
       <input class="form-check-input" type="checkbox" value="" name="allow_unicode" id="allow-unicode">
       <label class="form-check-label" for="allow-unicode">
-        <?php echo $lang_home['allowUnicodeUrl']; ?>
+        <?php echo $localization->string('allowUnicodeUrl'); ?>
       </label>
     </div>
 
     <?php
     echo '<div class="form-group">
-    <button class="btn btn-primary" type="submit" />' . $lang_home['newpage'] . '</button>
+    <button class="btn btn-primary" type="submit" />' . $localization->string('newpage') . '</button>
     </div>
     </form>';
 } 
@@ -594,15 +585,15 @@ if ($action == "poddel") {
 
     if (!empty($file)) {
         if ($file != "index.php") {
-            echo $lang_home['confdelfile'] . ' <b>' . $file . '</b><br />';
-            echo '<b><a href="procfiles.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $lang_home['delete'] . '</a></b><br />';
+            echo $localization->string('confdelfile') . ' <b>' . $file . '</b><br />';
+            echo '<b><a href="procfiles.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a></b><br />';
         } else {
-            echo $lang_home['indexnodel'] . '!<br />';
+            echo $localization->string('indexnodel') . '!<br />';
         } 
     } else {
-        echo $lang_home['nofiletodel'] . '<br />';
+        echo $localization->string('nofiletodel') . '<br />';
     } 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($action == "pagelang") {
@@ -621,7 +612,7 @@ if ($action == "pagelang") {
 
 	    echo '<form method="post" action="procfiles.php?action=pagelang&amp;id=' . $pageData['id'] . '">'; 
 
-		    echo '<label for="lang">' . $lang_home['language'] . '</label>';
+		    echo '<label for="lang">' . $localization->string('language') . '</label>';
 
 		    echo '<select name="lang" id="lang" class="custom-select custom-select-lg mb-3">';
 
@@ -643,17 +634,17 @@ if ($action == "pagelang") {
 
 		    echo '</select>';
 
-		    echo '<button type="submit" class="btn btn-primary">' . $lang_home['save'] . '</button>
+		    echo '<button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button>
 
 	    </form>';
 
     echo '</div>';
 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br />';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($action != "new" && ($users->check_permissions('pageedit', 'insert') || $users->is_administrator())) {
-    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $lang_home['newpage'] . '</a>';
+    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $localization->string('newpage') . '</a>';
 } 
 if ($users->is_administrator() && ($action == 'edit' || $action == 'show')) {
     echo '<a href="files.php?action=pagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
@@ -665,13 +656,14 @@ if ($users->is_administrator()) {
     echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">Search</a>';
 } 
 if (!empty($action)) {
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $lang_home['mngpage'] . '</a>';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngpage') . '</a>';
 } 
 if ($action != "faq") {
-    // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $lang_home['faq'] . '</a>';
+    // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $localization->string('faq') . '</a>';
 }
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

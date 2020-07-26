@@ -1,9 +1,6 @@
 <?php 
 // (c) vavok.net
 require_once"../include/startup.php";
-$my_title = 'Contact'; // update lang
-
-
 
 if (!empty($_GET['action'])) {
     $action = check($_GET["action"]);
@@ -52,8 +49,6 @@ if ($users->is_reg()) {
         $my_title = $lang_page['contacts'];
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
- 
-
         if ($page == "" || $page <= 0) {
             $page = 1;
         }
@@ -75,7 +70,7 @@ if ($users->is_reg()) {
 
                 $lnk = "<a href=\"../pages/user.php?uz=" . $item['target'] . "\"  class=\"sitelink\">" . $tnick . "</a>";
                 echo $users->user_online($tnick) . " " . $lnk . ": ";
-                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"buddy.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $lang_home['delete'] . "</a><br>";
+                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"buddy.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $localization->string('delete') . "</a><br>";
 
             } 
 
@@ -87,11 +82,11 @@ if ($users->is_reg()) {
 
     } 
 } else {
-    echo $lang_home['notloged'] . '<br><br>';
+    echo $localization->string('notloged') . '<br><br>';
 } 
 
-echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

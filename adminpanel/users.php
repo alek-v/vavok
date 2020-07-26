@@ -65,7 +65,7 @@ if ($action == "edit") {
                 $userx_access = (int)$show_userx['perm'];
 
                 if ($_SESSION['permissions'] == 101 && $users->show_username() == get_configuration('adminNick')) {
-                    $array_dostup = array(101 => "" . $lang_home['access101'] . "", 102 => "" . $lang_home['access102'] . "", 103 => "" . $lang_home['access103'] . "", 105 => "" . $lang_home['access105'] . "", 106 => "" . $lang_home['access106'] . "", 107 => "" . $lang_home['access107'] . "");
+                    $array_dostup = array(101 => "" . $localization->string('access101') . "", 102 => "" . $localization->string('access102') . "", 103 => "" . $localization->string('access103') . "", 105 => "" . $localization->string('access105') . "", 106 => "" . $localization->string('access106') . "", 107 => "" . $localization->string('access107') . "");
                     if ($userx_access == "0" || empty($userx_access)) {
                         $userx_access = "107";
                     } 
@@ -112,7 +112,7 @@ if ($action == "edit") {
                 echo $lang_admin['lastvst'] . ': <b>' . date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
                 echo 'IP: <b>' . $show_userx['ipadd'] . '</b><br>';
 
-                echo '<br><input value="' . $lang_home['save'] . '" type="submit" /></form><hr>';
+                echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form><hr>';
 
                 if ($userx_access < 101 || $userx_access > 105) {
                     echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
@@ -127,7 +127,7 @@ if ($action == "edit") {
         echo $lang_admin['usrnoexist'] . '!';
     } 
 
-    echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 // update changes
@@ -219,7 +219,7 @@ if ($action == "upgrade") {
     } else {
         echo $lang_admin['emailnotok'] . '<br>';
     } 
-    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
 // confirm delete
@@ -227,7 +227,7 @@ if ($action == "poddel") {
     echo $lang_admin['confusrdel'] . ' <b>' . $user . '</b>?<br><br>';
     echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_admin['deluser'] . '</a></b>';
 
-    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
 // delete user
@@ -243,13 +243,13 @@ if ($action == "deluser") {
             echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['changeotheruser'] . '</a><br>';
         } else {
             echo $lang_admin['noaccessdel'] . '<br>';
-            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
         } 
     } 
 } 
 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

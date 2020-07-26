@@ -7,7 +7,7 @@ require_once"../include/startup.php";
 $genHeadTag = '<meta name="robots" content="noindex">';
 $genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/login/login.css">';
 
-$my_title = $lang_home['login'];
+$my_title = $localization->string('login');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $cookName = isset($_COOKIE['cookname']) ? $cookName = $_COOKIE['cookname'] : $cookName = '';

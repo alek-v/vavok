@@ -157,7 +157,7 @@ if ($users->is_reg()) {
 
 	echo '<br><form method="post" action="settings.php?action=save">';
     
-	echo $lang_home['lang'] . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
+	echo $localization->string('lang') . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
 
     $dir = opendir ("../lang");
     while ($file = readdir ($dir)) {
@@ -204,14 +204,14 @@ if ($users->is_reg()) {
     } 
     echo 'No<br />';
 
-    echo '<br><br><input value="' . $lang_home['save'] . '" type="submit" /></form>';
+    echo '<br><br><input value="' . $localization->string('save') . '" type="submit" /></form>';
 
 
 } else {
-    echo $lang_home['notloged'] . '<br>';
+    echo $localization->string('notloged') . '<br>';
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

@@ -76,7 +76,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 <?php
-echo '<p><a href="' . transfer_protocol() . $_SERVER['HTTP_HOST'] . '" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="' . transfer_protocol() . $_SERVER['HTTP_HOST'] . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 ?>

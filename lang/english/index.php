@@ -1,14 +1,12 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 25.07.2020. 13:16:08
+// modified: 26.07.2020. 1:34:34
 
 $language = 'english';
 $ln_loc = 'en';
 $ln_charset = 'UTF-8';
-$ln_allow_recoding = true;
 $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
-$number_thousands_separator = ',';
-$number_decimal_separator = '.';
+
 // shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
@@ -27,7 +25,7 @@ $lang_home['login'] = "Login";
 $lang_home['register'] = "Registration";
 $lang_home['lostpass'] = "Lost password?";
 $lang_home['forum'] = "Forum";
-$lang_home['statistic'] = "Statistics";
+$lang_home['statistics'] = "Statistics";
 $lang_home['sitelife'] = "Sitelife";
 $lang_home['guestbook'] = "Guestbook";
 $lang_home['sitenews'] = "Site news";
@@ -109,4 +107,19 @@ if(file_exists(BASEDIR . "lang/english/" . $langdir . ".php")) {
 include_once BASEDIR . "lang/english/" . $langdir . ".php"; }
 if(file_exists(BASEDIR . "lang/english/" . $phpselflang . ".php")) {
 include_once BASEDIR . "lang/english/" . $phpselflang . ".php"; }
+
+$language_data = array(
+	'language' => $language,
+	'ln_loc' => $ln_loc,
+	'ln_charset' => 'UTF-8',
+	'ln_text_dir' => $ln_text_dir,
+	'ln_byteUnits' => $ln_byteUnits,
+	'ln_day_of_week' => $ln_day_of_week,
+	'ln_all_month' => $ln_all_month,
+	'ln_datefmt' => $ln_datefmt,
+	'ln_timefmt' => $ln_timefmt,
+	'ln_timespanfmt' => $ln_timespanfmt
+);
+
+$localization = new Localization($language_data, $lang_home);
 ?>

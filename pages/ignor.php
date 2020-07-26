@@ -44,7 +44,7 @@ if ($users->is_reg()) {
             */
                 $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '" class="btn btn-outline-primary sitelink">' . $tnick . '</a>';
                 echo "$lnk: ";
-                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $lang_home['delete'] . "</a><br>";
+                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $localization->string('delete') . "</a><br>";
             } 
         } else {
             echo '<img src="../images/img/reload.gif" alt=""> ' . $lang_page['ignorempty'] . '<br><br>';
@@ -61,7 +61,7 @@ if ($users->is_reg()) {
             if ($users->ignoreres($users->user_id, $who) == 1) {
                 $db->insert_data('`ignore`', array('name' => $users->user_id, 'target' => $who));
 
-                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $lang_home['user'] . " $tnick " . $lang_page['sucadded'] . "<br>";
+                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $localization->string('user') . " $tnick " . $lang_page['sucadded'] . "<br>";
             } else {
                 echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $lang_page['cantadd'] . " " . $tnick . " " . $lang_page['inignor'] . "<br>";
             } 
@@ -78,11 +78,11 @@ if ($users->is_reg()) {
         echo '<br><a href="ignor.php" class="btn btn-outline-primary sitelink">' . $lang_page['ignorlist'] . '</a><br>';
     } 
 } else {
-    echo $lang_home['notloged'] . '<br><br>';
+    echo $localization->string('notloged') . '<br><br>';
 } 
 
-echo '<a href="inbox.php" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

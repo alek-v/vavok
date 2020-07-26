@@ -104,7 +104,7 @@ if ($users->is_reg()) {
 
                 if ($did != "") {
                     if (prev_dir($did) != "") {
-                        echo '<img src="../images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
+                        echo '<img src="../images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';
                     } 
                     echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
                 } 
@@ -124,14 +124,14 @@ if ($users->is_reg()) {
                         } 
                         echo 'CHMOD: <br><input type="text" name="mode" value="' . permissions("../used/" . $_GET['file'] . "") . '" maxlength="3" /><br>
 <input name="file" type="hidden" value="' . $_GET['file'] . '" />
-<input type=submit value="' . $lang_home['save'] . '"></form><hr>';
+<input type=submit value="' . $localization->string('save') . '"></form><hr>';
 
                 } else {
                     echo 'No file name!<hr>';
                 } 
 
                 if (prev_dir($_GET['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_GET['file']) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
+                    echo '<a href="systems.php?did=' . prev_dir($_GET['file']) . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';
                 } 
                 echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
 
@@ -151,15 +151,15 @@ if ($users->is_reg()) {
                 } 
 
                 if (prev_dir($_POST['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_POST['file']) . '" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a><br>';
+                    echo '<a href="systems.php?did=' . prev_dir($_POST['file']) . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br>';
                 } 
                 echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $lang_admin['checksys'] . '</a><br>';
 
                 break;
         } 
 
-        echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>
-		<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a><br>';
+        echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>
+		<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
     } else {
         header("Location: ../index.php?error");
         exit;

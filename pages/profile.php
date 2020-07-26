@@ -90,7 +90,7 @@ echo '<div class="col-sm">';
     echo $lang_profil['street'] . ':<br /><input name="street" value="' . $about_user['address'] . '" /><br />';
     echo $lang_profil['postal'] . ':<br /><input name="zip" value="' . $about_user['zip'] . '" /><br />';
     echo $lang_profil['aboutyou'] . ':<br /><input name="infa" value="' . $about_user['about'] . '" /><br />';
-    echo $lang_home['yemail'] . ':<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
+    echo $localization->string('yemail') . ':<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
     echo $lang_profil['site'] . ':<br /><input name="site" value="' . $about_user['site'] . '" /><br />'; 
     echo $lang_profil['birthday'] . ' (dd.mm.yyyy):<br /><input name="happy" value="' . $about_user['birthday'] . '" /><br />';
 
@@ -112,7 +112,7 @@ echo '<div class="col-sm">';
     echo ' ' . $lang_profil['female'] . '<br /><br />';
 
 
-    echo'<input value="' . $lang_home['save'] . '" type="submit" />
+    echo'<input value="' . $localization->string('save') . '" type="submit" />
 
     </form>';
 
@@ -122,7 +122,7 @@ echo '<div class="col-sm">';
     echo $lang_profil['newpass'] . ':<br /><input name="newpar" /><br />';
     echo $lang_profil['passagain'] . ':<br /><input name="newpar2" /><br />';
     echo $lang_profil['oldpass'] . ':<br /><input name="oldpar" /><br />';
-    echo '<br /><input value="' . $lang_home['save'] . '" type="submit" />
+    echo '<br /><input value="' . $localization->string('save') . '" type="submit" />
     </form>
     <hr>';
 
@@ -144,7 +144,7 @@ echo '</div>';
 
 echo '</div>';
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

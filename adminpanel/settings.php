@@ -12,14 +12,13 @@ $action = isset($_GET['action']) ? check($_GET['action']) : '';
 if ($action == "editone") {
 
 	// Check fields
-    if (empty($_POST['conf_set0']) || empty($_POST['conf_set1']) || empty($_POST['conf_set2']) || empty($_POST['conf_set3']) || empty($_POST['conf_set8']) || empty($_POST['conf_set9']) || empty($_POST['conf_set10']) || empty($_POST['conf_set11']) || empty($_POST['conf_set14']) || empty($_POST['conf_set21']) || empty($_POST['conf_set29']) || empty($_POST['conf_set61']) || empty($_POST['conf_set62']) || empty($_POST['conf_set63'])) {
+    if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set2']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
         redirect_to("settings.php?action=setone&isset=mp_nosset");
     }
 
     $ufile = file_get_contents(BASEDIR . "used/config.dat");
     $udata = explode("|", $ufile);
 
-	$udata[0] = check($_POST['conf_set0']);
     $udata[1] = check($_POST['conf_set1']);
     $udata[2] = check($_POST['conf_set2']);
     $udata[3] = check($_POST['conf_set3']);
@@ -350,7 +349,7 @@ if (empty($action)) {
     echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $lang_apsetting['shwinfo'] . '</a>';
     echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $lang_apsetting['bookchatnews'] . '</a>';
     echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $lang_apsetting['forumgallery'] . '</a>';
-    echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $lang_home['inbox'] . '</a>';
+    echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a>';
     // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $lang_apsetting['advert'] . '</a><br />';
     echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $lang_apsetting['pagemanage'] . '</a>';
     echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $lang_apsetting['other'] . '</a>';
@@ -420,6 +419,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
 
         $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
 
+        $transfer_protocol = get_configuration('transferProtocol');
         if (empty(get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
         
         echo '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
@@ -476,8 +476,8 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
         } 
         echo $lang_apsetting['no'] . '</p>';
 
-        echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-        echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+        echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+        echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
     } 
 } 
 if ($action == "settwo") {
@@ -548,7 +548,7 @@ if ($action == "settwo") {
 
     $incounters = array(6 => "" . $lang_apsetting['dontshow'] . "", 1 => "" . $lang_apsetting['vsttotalvst'] . "", 2 => "" . $lang_apsetting['clicktotalclick'] . "", 3 => "" . $lang_apsetting['clickvisits'] . "", 4 => "" . $lang_apsetting['totclicktotvst']);
 
-    echo '<option value="' . get_configuration('howCounter') . '">' . $incounters[get_configuration('showCounter')] . '</option>';
+    echo '<option value="' . get_configuration('showCounter') . '">' . $incounters[get_configuration('showCounter')] . '</option>';
 
     foreach($incounters as $k => $v) {
         if ($k != get_configuration('showCounter')) {
@@ -557,8 +557,8 @@ if ($action == "settwo") {
     } 
     echo '</select></p>';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setthree") {
@@ -585,8 +585,8 @@ if ($action == "setthree") {
     echo '<p>' . $lang_apsetting['maxgbmsgs'] . ':<br /><input name="conf_set25" maxlength="5" value="' . get_configuration('maxPostBook') . '" /></p>';
     echo '<p>' . $lang_apsetting['onepassmail'] . ':<br /><input name="conf_set56" maxlength="3" value="' . get_configuration('subMailPacket') . '" /></p>';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setfour") {
@@ -672,8 +672,8 @@ if ($action == "setfour") {
     } 
     echo $lang_apsetting['no'] . '</p>';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setfive") {
@@ -682,8 +682,8 @@ if ($action == "setfive") {
     echo '<form method="post" action="settings.php?action=editfive">';
 
     echo '<p>' . $lang_apsetting['maxinbxmsgs'] . ':<br /><input name="conf_set30" maxlength="5" value="' . get_configuration('pvtLimit') . '" /></p>';
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "setseven") {
@@ -692,7 +692,7 @@ if ($action == "setseven") {
     echo '<form method="post" action="settings.php?action=editseven">';
 
     echo '<div class="form-group">';
-        echo '<label for="custom-pages">' . $lang_home['customPageUrl'] . '</label>';
+        echo '<label for="custom-pages">' . $localization->string('customPageUrl') . '</label>';
         echo '<input class="form-control" name="conf_set28" id="custom-pages" value="' . get_configuration('customPages') . '" />';
     echo '</div>';
 
@@ -743,9 +743,9 @@ if ($action == "setseven") {
     echo '</div>';
 
     echo '<div class="col-sm-10">';
-    echo '<button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></div>
+    echo '<button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></div>
     </form>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 if ($action == "seteight") {
@@ -756,8 +756,8 @@ if ($action == "seteight") {
     echo '<p>' . $lang_apsetting['maxlogfile'] . ':<br /><input name="conf_set58" maxlength="3" value="' . get_configuration('maxLogData') . '" /></p>';
     echo '<p>' . $lang_apsetting['maxbantime'] . ':<br /><input name="conf_set76" maxlength="3" value="' . round(get_configuration('maxBanTime') / 1440) . '" /></p>';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
 // database settings
@@ -772,12 +772,12 @@ if ($action == "setnine") {
     echo '<p>' . $lang_apsetting['dbname'] . ':<br /><input name="conf_set80" maxlength="40" value="' . get_configuration('dbname') . '" /></p>';
     echo '<p>Crossdomain table prefix:<br /><input name="conf_set71" maxlength="12" value="' . get_configuration('tablePrefix') . '" /></p>';
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $lang_home['save'] . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $lang_home['back'] . '</a>';
+    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
+    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

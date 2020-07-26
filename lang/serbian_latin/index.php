@@ -4,23 +4,8 @@
 $language = 'serbian_latin';
 $ln_loc = 'sr';
 $ln_charset = 'UTF-8';
-$ln_allow_recoding = true;
 $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
-$number_thousands_separator = ',';
-$number_decimal_separator = '.';
-// current date
-$currDate = str_replace("January", "Januar", $currDate);
-$currDate = str_replace("February", "Februar", $currDate);
-$currDate = str_replace("March", "Mart", $currDate);
-$currDate = str_replace("April", "April", $currDate);
-$currDate = str_replace("May", "Maj", $currDate);
-$currDate = str_replace("June", "Jun", $currDate);
-$currDate = str_replace("July", "Jul", $currDate);
-$currDate = str_replace("August", "Avgust", $currDate);
-$currDate = str_replace("September", "Septembar", $currDate);
-$currDate = str_replace("October", "Oktobar", $currDate);
-$currDate = str_replace("November", "Novembar", $currDate);
-$currDate = str_replace("December", "Decembar", $currDate); 
+
 // shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bajtova', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
@@ -39,7 +24,7 @@ $lang_home['login'] = "Prijavite se";
 $lang_home['register'] = "Registracija";
 $lang_home['lostpass'] = "Zaboravljena šifra";
 $lang_home['forum'] = "Forum";
-$lang_home['statistic'] = "Statistika";
+$lang_home['statistics'] = "Statistika";
 $lang_home['sitelife'] = "Život sajta";
 $lang_home['guestbook'] = "Knjiga gostiju";
 $lang_home['sitenews'] = "Novosti sajta";
@@ -122,4 +107,20 @@ if(file_exists(BASEDIR."lang/serbian_latin/" . $phpselflang . ".php")) {
 include_once BASEDIR."lang/serbian_latin/" . $phpselflang . ".php"; }
 
 // ob_start("cyr_to_lat_skiptags");
+
+$language_data = array(
+	'language' => $language,
+	'ln_loc' => $ln_loc,
+	'ln_charset' => 'UTF-8',
+	'ln_text_dir' => $ln_text_dir,
+	'ln_byteUnits' => $ln_byteUnits,
+	'ln_day_of_week' => $ln_day_of_week,
+	'ln_all_month' => $ln_all_month,
+	'ln_datefmt' => $ln_datefmt,
+	'ln_timefmt' => $ln_timefmt,
+	'ln_timespanfmt' => $ln_timespanfmt
+);
+
+$localization = new Localization($language_data, $lang_home);
+
 ?>

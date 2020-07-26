@@ -63,7 +63,7 @@ echo $navigation->get_navigation();
 echo '</p>';
 
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
-echo '<img src="../images/img/homepage.gif" alt="' . $lang_home['home'] . '" /> <a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<img src="../images/img/homepage.gif" alt="' . $localization->string('home') . '" /> <a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

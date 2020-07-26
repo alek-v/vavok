@@ -188,7 +188,7 @@ class Users {
 
 	// register user
 	public function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
-	    global $lang_home, $db;
+	    global $localization, $db;
 	    
 	    $values = array(
 	        'name' => $name,
@@ -211,7 +211,7 @@ class Users {
 	    $db->insert_data('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
 	    // send private message
-	    $msg = $lang_home['autopmreg'];
+	    $msg = $localization->string('autopmreg');
 	    $this->autopm($msg, $user_id);
 
 	}

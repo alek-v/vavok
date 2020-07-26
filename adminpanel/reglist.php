@@ -1,7 +1,6 @@
 <?php 
 // (c) vavok.net
 
-
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { redirect_to("../index.php?error"); } 
@@ -36,7 +35,7 @@ if ($act == 'conf' && !empty($usr)) {
 
     $message = $lang_admin['hello'] . " " . $vav_name . "!\r\n\r\n" . $lang_admin['sitemod'] . " " . get_configuration('homeBase') . " " . $lang_admin['confirmedreg'] . ".\r\n" . $lang_admin['youcanlog'] . ".\r\n\r\n" . $lang_admin['bye'] . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst(get_configuration('homeBase'));
     $newMail = new Mailer;
-    $newMail->send($about_user['email'], $lang_home['msgfrmst'] . " " . get_configuration('title'), $message);
+    $newMail->send($about_user['email'], $localization->string('msgfrmst') . " " . get_configuration('title'), $message);
 
 
     header("Location: reglist.php?isset=mp_ydelconf");
@@ -85,8 +84,8 @@ if (empty($action)) {
     echo '</p>';
 }
 
-echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a>';
+echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

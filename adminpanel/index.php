@@ -46,7 +46,7 @@ if ($action == 'refver') {
     exit;
 }
 
-$my_title = $lang_home['admpanel'];
+$my_title = $localization->string('admpanel');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 if (empty($action)) {
@@ -115,7 +115,7 @@ if (empty($action)) {
         	echo '<a href="antiword.php" class="btn btn-outline-primary sitelink">' . $lang_admin['badword'] . '</a>';
         }
 
-        echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $lang_home['statistic'] . '</a>';
+        echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $localization->string('statistics') . '</a>';
         echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $lang_admin['mngprof'] . '</a>';
 
     }
@@ -205,7 +205,7 @@ $version = $vavok_version;
 $key = 'checkver'; // key to save cache with 
 // get cached data from file cache, also check if cached data is not old
 
-    echo'<div class="b">Vavok CMS ' . $lang_home['version'] . ': <b>' . $vavok_version . '</b>';
+    echo '<div class="b">Vavok CMS ' . $localization->string('version') . ': <b>' . $vavok_version . '</b>';
 
     if ($version != $last_ver && !empty($last_ver)) {
         echo '<p><img src="../images/img/close.gif" alt="" /> ' . $lang_admin['newver'] . '!</p>';
@@ -220,10 +220,10 @@ $key = 'checkver'; // key to save cache with
 }
 
 if (!empty($action)) {
-	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $lang_home['admpanel'] . '</a></p>';
+	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a></p>';
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $lang_home['home'] . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
