@@ -1,6 +1,6 @@
 <?php
 // (c) vavok . net
-// modified: 05.06.2020. 20:02:27
+// modified: 26.07.2020. 23:08:13
 
 $lang_profil['profsettings'] = "Profile settings";
 $lang_profil['city'] = "City";
@@ -21,7 +21,6 @@ $lang_profil['sex'] = "Sex";
 $lang_profil['male'] = "Male";
 $lang_profil['female'] = "Female";
 $lang_profil['delsubscription'] = "Unsubscribe from site news";
-$lang_profil['subscribe'] = "Subscribe to site news";
 $lang_profil['newpass'] = "New password";
 $lang_profil['passagain'] = "Repeat password";
 $lang_profil['oldpass'] = "Old password";

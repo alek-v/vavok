@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:39:31
+* Updated:   26.07.2020. 23:12:20
 */
 
 require_once"../include/startup.php";
@@ -180,8 +180,8 @@ if ($users->is_reg()) {
 	echo '<input name="skins" type="hidden" value="' . $show_user['skin'] . '" />';
 
     // echo 'Time zone (+1 -1):<br><input name="sdvig" value="'.$udata[30].'" /><br />';
-    
-    echo $localization->string('subscribe') . ': <br />Yes';
+
+    echo $localization->string('subscribetonews') . ': <br />Yes';
     if ($user_profil['subscri'] == "1") {
         echo '<input name="subnews" type="radio" value="yes" checked>';
     } else {

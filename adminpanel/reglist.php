@@ -3,34 +3,18 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:31:19
+* Updated:   26.07.2020. 23:42:40
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { redirect_to("../index.php?error"); } 
 
-$act = isset($_GET['act']) ? check($_GET['act']) : '';
-if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
-} else {
-    $action = '';
-} 
-if (isset($_GET['usr'])) {
-    $usr = check($_GET['usr']);
-} 
-if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
-} else {
-    $page = '';
-} 
-if (!empty($_GET['view'])) {
-    $view = check($_GET["view"]);
-} else {
-    $view = '';
-} 
+$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$usr = isset($_GET['usr']) ? check($_GET['usr']) : '';
+$page = isset($_GET['page']) ? check($_GET['page']) : '';
 
-if ($act == 'conf' && !empty($usr)) {
+if ($action == 'conf' && !empty($usr)) {
     $fields = array('regche', 'regkey');
     $values = array('', '');
     $db->update('vavok_profil', $fields, $values, "uid='" . $usr . "'");
@@ -47,7 +31,7 @@ if ($act == 'conf' && !empty($usr)) {
     exit;
 }
 
-$my_title = $localization->string('uncomfreg'];
+$my_title = $localization->string('uncomfreg');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -71,15 +55,15 @@ if (empty($action)) {
             $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $users->getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
             if ($item['regche'] == 1) {
                 $bt = "" . $localization->string('notconfirmed') . "!";
-                $bym = '<a href="reglist.php?act=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $localization->string('confirms') . '</a>';
+                $bym = '<a href="reglist.php?action=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $localization->string('confirms') . '</a>';
             } else {
                 $bt = "Confirmed";
             } 
 
-            echo ' ' . $lnk . ' IP: ' . $show_userx["ipadd"] . ' browser: ' . $show_userx["browsers"] . ' ' . $bym . '<br>';
+            echo '<p>' . $lnk . ' IP: ' . $show_userx["ipadd"] . ' ' . $localization->string('browser') . ': ' . $show_userx["browsers"] . ' ' . $bym . '</p>';
         } 
     } else {
-        echo '<img src="../images/img/reload.gif" alt="" /> ' . $localization->string('emptyunconf') . '!<br><br>';
+        echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('emptyunconf') . '!</p>';
     } 
 
     $navigation = new Navigation($items_per_page, $num_items, $page, 'reglist.php?');
@@ -89,8 +73,8 @@ if (empty($action)) {
     echo '</p>';
 }
 
-echo '<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

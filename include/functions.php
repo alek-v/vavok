@@ -532,13 +532,13 @@ Show informations
 
 */
 
-// show fatal error
+// Show fatal error and stop script execution
 function fatal_error($error) {
     echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
     exit;
 }
 
-// show error
+// Show error
 function show_error($error) {
     echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 }

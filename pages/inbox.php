@@ -83,7 +83,7 @@ if (empty($action)) {
 
 } else if ($action == "dialog") {
 
-    if (empty($who)) fatal_error('User does not exist');
+    if (empty($who) || empty($users->getnickfromid($who))) { show_error('User does not exist'); require_once BASEDIR . "themes/" . MY_THEME . "/foot.php"; exit; }
 
     $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
