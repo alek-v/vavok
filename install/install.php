@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:11:41
+* Updated:   26.07.2020. 20:05:22
 */
 
 require_once "../include/startup.php";

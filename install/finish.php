@@ -3,14 +3,13 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:07:58
+* Updated:   26.07.2020. 20:05:27
 */
 
 // Database connection is disabled for /install/install.php so I manipulate with db here
 
 require_once "../include/startup.php";
 include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
-require_once BASEDIR . "lang/" . get_configuration('language') . "/installinstall.php";
 
 $my_title = 'Install';
 require_once"include/header.php";
@@ -89,7 +88,7 @@ if ($step == 'third') {
 
     <form method="post" action="finish.php?step=regadmin">
     <fieldset>
-    <legend><?php echo $localization->string('thirdstep'];
+    <legend><?php echo $localization->string('thirdstep');
     ?></legend>
     <label for="name">Username (max20):</label><br />
     <input name="name" id="name" maxlength="20" /><br />
@@ -157,7 +156,6 @@ if ($step == "regadmin") {
                         $myconfig = new Config;
 
                         $values = array(
-                        0 => '0',
                         1 => generate_password(),
                         2 => 'default',
                         3 => '0',
