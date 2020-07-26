@@ -3,15 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   26.07.2020. 2:57:41
+* Updated:   26.07.2020. 18:57:33
 */
 
 require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? check($_GET['action']) : '';
-
-
-
 
 if ($action == 'reguser') {
 
@@ -70,16 +67,15 @@ if ($substr_log < 3) {
                         $password = check($pass);
 
                         $mail = htmlspecialchars(stripslashes(strtolower($meil)));
-                        get_configuration('regConfirm') = (int)get_configuration('regConfirm');
 
-                        if (get_configuration('regConfirm') == "1") {
+                        if (get_configuration('regConfirm') == 1) {
                             $registration_key = time() + 24 * 60 * 60;
                         } else {
                             $registration_key = '';
                         }
 
                         // register user
-                        $users->register($log, $password, get_configuration('regConfirm'), $registration_key, $config_themes, $mail); // register user
+                        $users->register($log, $password, get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
                          
                         // send email with reg. data
                         if (get_configuration('regConfirm') == "1") {
