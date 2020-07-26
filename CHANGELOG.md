@@ -1,8 +1,10 @@
 # Vavok v1.5.4
 - Updated constants
 - Updated retrieving configuration data
-- Removed pages/inprof.php
 - Updated pages/profile.php
+- Updated localization
+- Created class Localization.class.php
+- Removed pages/inprof.php
 
 
 
