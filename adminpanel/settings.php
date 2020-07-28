@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:37:40
+* Updated:   28.07.2020. 12:22:13
 */
 
 require_once"../include/startup.php";
@@ -370,7 +370,7 @@ if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
 
         echo '<p>' . $localization->string('language') . ':<br /><select name="conf_set47"><option value="' . get_configuration('siteDefaultLang') . '">' . get_configuration('siteDefaultLang') . '</option>';
 
-        $dir = opendir ("../lang");
+        $dir = opendir(BASEDIR . "include/lang");
         while ($file = readdir($dir)) {
             if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != get_configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
                 echo '<option value="' . $file . '">' . $file . '</option>';

@@ -51,7 +51,7 @@ if ($users->is_reg()) {
                 echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $localization->string('delete') . "</a><br>";
             } 
         } else {
-            echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('ignorempty'] . '<br><br>';
+            echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('ignorempty') . '<br><br>';
         } 
 
         echo $navigation->get_navigation();

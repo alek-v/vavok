@@ -1,17 +1,15 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// updated: 15.07.2020. 1:59:04
+// updated: 28.07.2020. 11:26:48
 
 $language = 'english';
 
 // check is language available
-if (!file_exists(BASEDIR . "lang/english/index.php")) {
+if (!file_exists(BASEDIR . "include/lang/english/index.php")) {
 	redirect_to('../?error=lang');
 }
 
-
 $users->change_language($language);
-
 
 $ln_loc = 'en';
 ?>

@@ -101,10 +101,10 @@ $langdir = $langdir[1];
 $phpselflang = str_replace(".php", '', SUB_SELF);
 $phpselflang = str_replace("/", '', $phpselflang);
 
-if(file_exists(BASEDIR."lang/serbian_latin/" . $langdir . ".php")) {
-include_once BASEDIR."lang/serbian_latin/" . $langdir . ".php"; }
-if(file_exists(BASEDIR."lang/serbian_latin/" . $phpselflang . ".php")) {
-include_once BASEDIR."lang/serbian_latin/" . $phpselflang . ".php"; }
+if (file_exists(BASEDIR . "include/lang/" . $language . "/" . $langdir . ".php")) {
+include_once BASEDIR . "include/lang/" . $language . "/" . $langdir . ".php"; }
+if (file_exists(BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php")) {
+include_once BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php"; }
 
 // ob_start("cyr_to_lat_skiptags");
 

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 14:56:54
+* Updated:   28.07.2020. 11:32:00
 */
 
 if (!empty($_GET['pg'])) {
@@ -37,7 +37,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 
 	// Redirect to root dir if visitor is using site default language and this language is requested in url
 	// Example: default website language is english and user is opening www.example.com/en/
-	if (get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists("lang/" . $requested_language . "/index.php")) {
+	if (get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists(BASEDIR . "include/lang/" . $requested_language . "/index.php")) {
 		redirect_to("/" . $url_isset);
 	}
 
@@ -56,8 +56,8 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 }
 
 // Load language files
-if (!file_exists(BASEDIR . "lang/" . $users->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
+if (!file_exists(BASEDIR . "include/lang/" . $users->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
 
-include_once BASEDIR . "lang/" . $users->get_user_language() . "/index.php";
+include_once BASEDIR . "include/lang/" . $users->get_user_language() . "/index.php";
 
 ?>

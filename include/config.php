@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Website configuration
-* Updated:   26.07.2020. 3:49:02
+* Updated:   28.07.2020. 12:25:31
 */
 
 
@@ -44,7 +44,6 @@ $config = array(
 "mPanel" => $con_data[48], // folder with admin panel
 "forumAccess" => $con_data[49], // is forum on? 1" => online, 0" => offline
 "refererLog" => $con_data[51], // no. of loged referers
-"noCache" => $con_data[52], // allow caching
 "subMailPacket" => $con_data[56], // emails in one package to subscribed users
 "dosLimit" => $con_data[57], // max. no. of requests per IP in 1 min.
 "maxLogData" => $con_data[58], // max log data

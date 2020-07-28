@@ -3,11 +3,11 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:44:50
+* Updated:   28.07.2020. 11:45:53
 */
 
 require_once"../include/startup.php";
-include"../lang/" . $users->get_user_language() . "/pagescounter.php";
+include_once BASEDIR . "include/lang/" . $users->get_user_language() . "/pagescounter.php";
 
 $my_title = $localization->string('statistics');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

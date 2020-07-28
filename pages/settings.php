@@ -148,8 +148,6 @@ if ($action == 'save') {
 
 }
 
-require_once"../lang/" . $users->get_user_language() . "/pagesprofile.php"; // lang file
-
 $my_title = $localization->string('settings');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -164,7 +162,7 @@ if ($users->is_reg()) {
     
 	echo $localization->string('lang') . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
 
-    $dir = opendir ("../lang");
+    $dir = opendir(BASEDIR . "include/lang");
     while ($file = readdir ($dir)) {
         if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $show_user['lang']) && strlen($file) > 2) {
             echo '<option value="' . $file . '">' . $file . '</option>';

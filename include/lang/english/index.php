@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 26.07.2020. 1:34:34
+// modified: 28.07.2020. 11:27:48
 
 $language = 'english';
 $ln_loc = 'en';
@@ -103,10 +103,10 @@ $langdir = $langdir[1];
 $phpselflang = str_replace(".php", '', SUB_SELF);
 $phpselflang = str_replace("/", '', $phpselflang);
 
-if(file_exists(BASEDIR . "lang/english/" . $langdir . ".php")) {
-include_once BASEDIR . "lang/english/" . $langdir . ".php"; }
-if(file_exists(BASEDIR . "lang/english/" . $phpselflang . ".php")) {
-include_once BASEDIR . "lang/english/" . $phpselflang . ".php"; }
+if (file_exists(BASEDIR . "include/lang/" . $language . "/" . $langdir . ".php")) {
+include_once BASEDIR . "include/lang/" . $language . "/" . $langdir . ".php"; }
+if (file_exists(BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php")) {
+include_once BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php"; }
 
 $language_data = array(
 	'language' => $language,

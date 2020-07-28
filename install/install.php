@@ -3,11 +3,11 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 20:05:22
+* Updated:   28.07.2020. 11:25:21
 */
 
 require_once "../include/startup.php";
-include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
+include_once BASEDIR . "include/lang/" . get_configuration('language') . "/index.php";
 
 $my_title = 'Install';
 include_once "include/header.php";

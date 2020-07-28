@@ -578,7 +578,7 @@ function get_isset($msg = '') {
         $isset = check($_GET['isset']);
     }
 
-    include_once BASEDIR . "lang/" . get_configuration("language") . "/isset.php";
+    include_once BASEDIR . "include/lang/" . get_configuration("language") . "/isset.php";
 
     if (isset($isset) && !empty($issetLang[$isset])) {
 

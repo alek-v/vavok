@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   24.07.2020. 13:30:11
+* Updated:   27.07.2020. 4:13:26
 */
 
 class Page {
@@ -245,7 +245,7 @@ class Page {
 	public function media_page_url() {
 
 		// Clean up request
-		$r = preg_replace('/&page=(\d+)/', '', $_SERVER['HTTP_HOST']);
+		$r = preg_replace('/&page=(\d+)/', '', CLEAN_REQUEST_URI);
 		$r = preg_replace('/page=(\d+)/', '', $r);
 		$r = str_replace('&page=last', '', $r);
 		$r = str_replace('page=last', '', $r);

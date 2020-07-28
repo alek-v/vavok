@@ -1,6 +1,6 @@
 <?php
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 15.07.2020. 1:59:09
+// modified: 28.07.2020. 11:31:18
 
 // get browser preferred language
 $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
@@ -13,9 +13,9 @@ if ($locale == 'sr') {
 }
 
 // check is language available
-if ($language == 'serbian_latin' && file_exists(BASEDIR . "lang/serbian_latin/index.php")) {
+if ($language == 'serbian_latin' && file_exists(BASEDIR . "include/lang/serbian_latin/index.php")) {
 	$language = 'serbian_latin';
-} elseif (file_exists(BASEDIR . "lang/serbian_cyrillic/index.php")) { // check if cyrillic scrypt is installed
+} elseif (file_exists(BASEDIR . "include/lang/serbian_cyrillic/index.php")) { // check if cyrillic scrypt is installed
 	$language = 'serbian_cyrillic';
 } else {
 	$language = 'serbian_latin'; // cyrillic script not installed, use latin

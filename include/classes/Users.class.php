@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   25.07.2020. 10:06:38
+* Updated:   28.07.2020. 11:22:14
 */
 
 
@@ -15,9 +15,16 @@ class Users {
 	function __construct() {
 		global $db;
 
+		// Session
+		session_name("sid");
+		session_start();
+
 		$this->db = $db;
 		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : '';
 
+		// Default time zone
+		date_default_timezone_set('UTC');
+		
 		// Get user data
 		if (!empty($this->user_id)) {
 
@@ -723,9 +730,9 @@ class Users {
 			}
 
 			// check if language is available
-			if ($language == 'serbian_latin' && file_exists(BASEDIR . "lang/serbian_latin/index.php")) {
+			if ($language == 'serbian_latin' && file_exists(BASEDIR . "include/lang/serbian_latin/index.php")) {
 				$language = 'serbian_latin';
-			} elseif (file_exists(BASEDIR . "lang/serbian_cyrillic/index.php")) { // check if cyrillic scrypt is installed
+			} elseif (file_exists(BASEDIR . "include/lang/serbian_cyrillic/index.php")) { // check if cyrillic scrypt is installed
 				$language = 'serbian_cyrillic';
 			} else {
 				$language = 'serbian_latin'; // cyrillic script not installed, use latin

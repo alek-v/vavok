@@ -3,13 +3,13 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 20:05:27
+* Updated:   28.07.2020. 11:24:46
 */
 
 // Database connection is disabled for /install/install.php so I manipulate with db here
 
 require_once "../include/startup.php";
-include_once BASEDIR . "lang/" . get_configuration('language') . "/index.php";
+include_once BASEDIR . "include/lang/" . get_configuration('language') . "/index.php";
 
 $my_title = 'Install';
 require_once"include/header.php";

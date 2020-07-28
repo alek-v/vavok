@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 1:28:30
+* Updated:   28.07.2020. 11:42:05
 */
 
 require_once"../include/startup.php";
@@ -23,8 +23,6 @@ if ($action == "go") {
 
     // Validate email address
     if (!$users->validate_email($umail)) { redirect_to("./?isset=noemail"); }
-
-    require_once BASEDIR . 'lang/' . get_configuration('siteDefaultLang') . '/index.php';
 
     // Captcha code
     require_once BASEDIR . 'include/plugins/securimage/securimage.php';
