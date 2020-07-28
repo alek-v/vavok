@@ -1,10 +1,11 @@
-# Vavok v1.5.4.beta1
+# Vavok v1.5.4.beta2
 - Updated constants
 - Updated retrieving configuration data
 - Updated pages/profile.php
 - Updated localization
 - Created class Localization.class.php
 - Removed pages/inprof.php
+- Moved files from 'lang' to 'include/lang'
 
 
 
