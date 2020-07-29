@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 14:49:15
+* Updated:   29.07.2020. 18:00:47
 */
 
 /*
@@ -578,7 +578,7 @@ function get_isset($msg = '') {
         $isset = check($_GET['isset']);
     }
 
-    include_once BASEDIR . "include/lang/" . get_configuration("language") . "/isset.php";
+    include_once BASEDIR . "include/lang/" . get_configuration("siteDefaultLang") . "/isset.php";
 
     if (isset($isset) && !empty($issetLang[$isset])) {
 
@@ -727,14 +727,14 @@ function website_home_address() {
     return transfer_protocol() . $_SERVER['HTTP_HOST'];
 }
 
-// website configuration
-function get_configuration($data = '') {
+// website configuration // deprecated 29.07.2020. 3:18:52
+function get_configuration($data = '', $full_configuration = false) {
     global $config;
 
-    if (empty($data)) {
-        return $config;
-    } else {
+    if (!empty($data)) {
         return $config[$data];
+    } else {
+        return false;
     }
 }
 
