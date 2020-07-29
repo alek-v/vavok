@@ -3,29 +3,26 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 11:24:46
+* Updated:   29.07.2020. 18:09:58
 */
-
-// Database connection is disabled for /install/install.php so I manipulate with db here
-
-require_once "../include/startup.php";
-include_once BASEDIR . "include/lang/" . get_configuration('language') . "/index.php";
-
-$my_title = 'Install';
-require_once"include/header.php";
 
 if (isset($_GET['step'])) {
     $step = $_GET['step'];
 } else {
     $step = $_POST['step'];
-} 
+}
 
-$sitetime = time();
-$datex = date("d.m.y");
-$timex = date("H:i");
+$my_title = 'Install';
 
 if ($step == 'second') {
-	if ($db->table_exists('vavok_users') > 0) {
+
+    require_once "include/header.php";
+
+    $con = mysqli_connect($_GET['host'], $_GET['user'], $_GET['pass'], $_GET['db']);
+
+	if (mysqli_num_rows(mysqli_query($con, "SHOW TABLES LIKE 'vavok_users'"))) {
+
+
 		echo '<p>Data in selected database already exists, please select another database for this website.<br />
 		If you are configuring crossdomain website continue to third step of installation.</p>';
 		echo '<p>
@@ -61,21 +58,24 @@ if ($step == 'second') {
         // If it has a semicolon at the end, it's the end of the query
         if (substr(trim($line), -1, 1) == ';') {
             // Perform the query
-            $db->query($templine); 
+            mysqli_query($con, $templine);
             // Reset temp variable to empty
             $templine = '';
-        } 
-    } 
+        }
+    }
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('secondstep') . ' - ' . $localization->string('inserttint') . '<br></p>';
+    echo '<p><img src="../images/img/partners.gif" alt="" /> Second step - Creating database<br></p>';
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $localization->string('dataadded') . '!<br /></p>';
-    echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">' . $localization->string('thirdstep') . '</a></p>';
+    echo '<p><img src="../images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
+    echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">Third step</a></p>';
 } 
 
 if ($step == 'third') {
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('installinfo') . '<br></p>';
+    require_once "../include/startup.php";
+    require_once "include/header.php";
+
+    echo '<p><img src="../images/img/partners.gif" alt="" /> This will make you register as an administrator of this website.<br>After successful registration, delete folder "install"<br></p>';
         // check if website and admin already exists (crossdomain website)
     if ($users->regmemcount() > 1) {
 		echo '<p>It seems that you are configuring crossdomain website.<br />
@@ -88,8 +88,7 @@ if ($step == 'third') {
 
     <form method="post" action="finish.php?step=regadmin">
     <fieldset>
-    <legend><?php echo $localization->string('thirdstep');
-    ?></legend>
+    <legend>Third step</legend>
     <label for="name">Username (max20):</label><br />
     <input name="name" id="name" maxlength="20" /><br />
     <label for="password">Password (max20):</label><br />
@@ -106,11 +105,14 @@ if ($step == 'third') {
     <hr />
 
 <?php
-} 
+}
 // instalation results
 if ($step == "regadmin") {
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> ' . $localization->string('installresults') . '<br></p>';
+    require_once "../include/startup.php";
+    require_once "include/header.php";
+
+    echo '<p><img src="../images/img/partners.gif" alt="" /> Installation results</p>';
 
     // check if website and admin already exists (crossdomain website)
     $crossDomainInstall = 0;
@@ -145,7 +147,7 @@ if ($step == "regadmin") {
                         	if (!$users->is_administrator(101, $adminId) || !$users->password_check($password, $adminPass['pass'])) {
                         		echo '<p>You are configuring cross-domain website.<br />
                         		Please enter main website administrator username and password</p>';
-                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
 
                         		exit;
                         	}
@@ -156,69 +158,35 @@ if ($step == "regadmin") {
                         $myconfig = new Config;
 
                         $values = array(
-                        1 => generate_password(),
-                        2 => 'default',
-                        3 => '0',
-                        4 => '0',
-                        5 => '0',
-                        6 => '0',
-                        7 => '0',
-                        8 => $name,
-                        9 => $email,
-                        10 => '0', // time zone
-                        11 => $osite_name,
-                        12 => 'default',
-                        14 => $osite,
-                        20 => '0',
-                        21 => 'auto', // force HTTPS
-                        22 => 200,
-                        24 => 100,
-                        25 => 1000,
-                        29 => 10,
-                        32 => '0', // cookie consent
-                        33 => 4,
-                        34 => 100,
-                        35 => '0',
-                        36 => '0',
-                        37 => 5,
-                        38 => 40000,
-                        39 => 320,
-                        40 => 5,
-                        41 => 600,
-                        42 => 5,
-                        44 => 5,
-                        45 => 15,
-                        46 => 5,
-                        47 => 'english',
-                        48 => 'adminpanel',
-                        49 => '0',
-                        50 => 1,
-                        51 => 100,
-                        52 => 1,
-                        53 => '0',
-                        54 => 5,
-                        55 => 6,
-                        56 => 50,
-                        57 => 400,
-                        58 => 200,
-                        59 => '0',
-                        60 => 5,
-                        61 => 1,
-                        62 => '0',
-                        63 => '0',
-                        64 => '0',
-                        65 => '0',
-                        66 => 15,
-                        67 => '0',
-                        68 => '0',
-                        69 => 1,
-                        70 => '0',
-                        72 => '0',
-                        74 => 6,
-                        76 => 43200
+                        'keypass' => generate_password(),
+                        'webtheme' => 'default',
+                        'quarantine' => 0,
+                        'showtime' => 0,
+                        'pageGenTime' => 0,
+                        'pgFbComm' => 0,
+                        'showOnline' => 0,
+                        'adminNick' => $name,
+                        'adminEmail' => $email,
+                        'timeZone' => 0, // time zone
+                        'title' => $osite_name,
+                        'homeUrl' => $osite,
+                        'bookGuestAdd' => 0,
+                        'transferProtocol' => 'auto',
+                        'maxPostChat' => 2000,
+                        'maxPostNews' => 10000,
+                        'floodTime' => 10,
+                        'photoList' => 5,
+                        'photoFileSize' => 40000,
+                        'maxPhotoPixels' => 640,
+                        'siteDefaultLang' => 'english',
+                        'mPanel' => 'adminpanel',
+                        'subMailPacket' => 50,
+                        'dosLimit' => 480,
+                        'showCounter' => 6,
+                        'maxBanTime' => 43200
                         );
-                        $myconfig->update($values);
 
+                        $myconfig->update_config_data($values);
 
                         // insert data to database if it is not crossdomain
                         if ($crossDomainInstall == 0) {
@@ -228,29 +196,29 @@ if ($step == "regadmin") {
                             $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}
 
-                        echo '<p>' . $localization->string('installok') . '.<br></p>';
+                        echo '<p>Installation competed successfully<br></p>';
 
-                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">' . $localization->string('logintosite') . '</a></b></p>';
+                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">Login</a></b></p>';
                     } else {
-                        echo '<p><b>' . $localization->string('siteaddressbad') . '</b></p>';
-                        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+                        echo '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
+                        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
                     } 
                 } else {
-                    echo '<p><b>' . $localization->string('bademail') . '</b></p>';
-                    echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+                    echo '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
+                    echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
                 } 
             } else {
-                echo '<p><b>' . $localization->string('badagainbass') . '.</b></p>';
-                echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+                echo '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
+                echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
             } 
  
         } else {
-            echo '<p><b>' . $localization->string('shortuserpass') . '</b></p>';
-            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+            echo '<p><b>Your username or your password are too short</b></p>';
+            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
         } 
     } else {
-        echo '<p><b>' . $localization->string('fillfields') . '.</b></p>';
-        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">' . $localization->string('back') . '</a></p>';
+        echo '<p><b>You didn\'t write all of the required information! Please complete all the empty fields</b></p>';
+        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
     } 
 }
 

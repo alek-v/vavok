@@ -1,40 +1,83 @@
 <?php
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   29.07.2020. 17:38:20
+*/
 
-// create main website data
-include 'include/main_data.php';
-include '../include/classes/Config.class.php';
+require_once "../include/startup.php";
 
-
-$action = isset($_GET['action']) ? $_GET['action'] : '';
-
-// init class
-$myconfig = new Config;
-
-if ($action == 'proceed') {
-
-$myconfig->update(array(47 => $_POST['language']));
-
-header("Location: install.php"); exit;
+if (isset($_GET['step'])) {
+	$step = $_GET['step'];
+} elseif (isset($_POST['step'])) {
+	$step = $_POST['step'];
+} else {
+	$step = '';
 }
 
+$my_title = 'Install';
+include_once "include/header.php";
 
+// first step
+if (empty($step)) {
+    ?>
+    <p>By installing this software you agree to <a href="../LICENSE">license</a><br /><br /></p>
 
-// include header
-include"include/header.php";
-?>
-
-<form id="form1" name="form1" action="index.php?action=proceed" method="post">
-  <fieldset>
-    <legend>Language</legend>
-    <label for="select">Select:</label>
+    <form method="post" action="index.php?step=first_end">
+    <fieldset>
+    <legend>Installation: first step</legend>
+    <label for="dbhost">Database host (mostly localhost):</label><br />
+    <input name="dbhost" id="dbhost" maxlength="30" /><br />
+    <label for="database">Database name:</label><br />
+    <input name="database" id="database" maxlength="30" /><br />
+    <label for="dbusername">Database username:</label><br />
+    <input name="dbusername" id="dbusername" maxlength="30" /><br />
+    <label for="dbpass">Database password:</label><br />
+    <input name="dbpass" id="dbpass" maxlength="30" /><br />
+    <label for="select">Language:</label>
     <select name="language" id="language">
     <option name="english" value="english">English</option>
     </select>
-    <input id="submit" name="submit" type="submit" value="Submit" />
-  </fieldset>
-</form>
+    <input value="Continue..." type="submit" />
+    </fieldset>
+    </form>
+    <hr />
 
-<?php
-include"include/footer.php";
+    <?php
+}
+
+if ($step == 'first_end') {
+
+    $values = array(
+	    'DB_HOST' => $_POST['dbhost'],
+	    'DB_USERNAME' => $_POST['dbusername'],
+	    'DB_PASSWORD' => $_POST['dbpass'],
+	    'DB_DATABASE' => $_POST['database']
+    );
+
+    $myconfig = new Config();
+    $myconfig->update_config_file($values);
+
+    // Create local files
+    include "include/main_data.php";
+
+    // prepare to import mysql data
+    // MySQL host
+    $mysql_host = $_POST['dbhost'];
+    // MySQL username
+    $mysql_username = $_POST['dbusername'];
+    // MySQL password
+    $mysql_password = $_POST['dbpass'];
+    // database name
+    $mysql_database = $_POST['database'];
+
+    echo '<p><img src="../images/img/partners.gif" alt="" /> Second step<br></p>';
+
+    echo '<p><img src="../images/img/reload.gif" alt="" /> Data successfully saved!</p>';
+    echo '<p><a href="finish.php?step=second&amp;host=' . $mysql_host . '&amp;user=' . $mysql_username . '&amp;pass=' . $mysql_password . '&amp;db=' . $mysql_database . '">Second step</a> - Creating database</p>';
+
+}
+
+include_once"include/footer.php";
 ?>

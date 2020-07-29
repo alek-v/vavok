@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 INSERT INTO `vavok_users` (`id`, `name`, `pass`, `perm`, `skin`, `browsers`, `ipadd`, `timezone`, `banned`, `newmsg`, `lang`) VALUES
 (1, 'System', '0', 10, 'default', 'Surfboard', '127.0.0.1', '0', '0', 0, '?');
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `lastvst` varchar(30) NOT NULL default '',         -- last visit
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
   `phone` varchar(30) NOT NULL default '',
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
   `reported` char(1) NOT NULL default '0',
   `deleted` int(11) NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `ignore` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS `buddy` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `mlog` (
   `details` TEXT NOT NULL,
   `actdt` int(100) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `subs` (
   `date_subscribed` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `subscription_name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `default_img` varchar(120) DEFAULT NULL COMMENT 'default image to show for bot''s and article headers',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstupdby`, `file`, `crtdby`, `headt`, `published`, `pubdate`, `content`) VALUES
 (1, 'Hello World', 'index', '', 0, 0, 1, 'index.php', 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/images/img/hello-world.png\" alt=\"Hello World\" width=\"626\" height=\"626\" /></p>\r\n<p>&nbsp;</p>');
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
   `lstinb` varchar(120) NOT NULL DEFAULT '' COMMENT 'last notification of received message',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -184,7 +184,7 @@ CREATE TABLE IF NOT EXISTS `splist` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -196,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `specperm` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `uplfiles` (
   `ext` varchar(5) NOT NULL COMMENT 'extension',
   `fulldir` varchar(200) NOT NULL COMMENT 'full file address',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `lngeng` varchar(30) NOT NULL,
   `iso-2` varchar(35) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=137 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
 
 
 INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
@@ -380,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `datetime` datetime DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -396,7 +396,7 @@ CREATE TABLE IF NOT EXISTS `email_queue` (
   `timesent` datetime DEFAULT NULL,
   `timeadded` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -407,4 +407,56 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `date` datetime NOT NULL,
   `pid` int(11) NOT NULL COMMENT 'page id where comment will be shown',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+
+
+-- Site settings
+CREATE TABLE IF NOT EXISTS `settings` (
+  `name` varchar(60) NOT NULL DEFAULT 'system',
+  `keypass` varchar(255) NOT NULL,
+  `webtheme` varchar(255) NOT NULL,
+  `quarantine` int(3) NOT NULL DEFAULT 0,
+  `showtime` int(1) NOT NULL DEFAULT 0,
+  `pageGenTime` int(1) NOT NULL DEFAULT 0,
+  `pgFbComm` int(1) NOT NULL DEFAULT 0,
+  `showOnline` int(1) NOT NULL DEFAULT 0,
+  `adminNick` varchar(255) NOT NULL,
+  `adminEmail` varchar(255) NOT NULL,
+  `timeZone` varchar(3) NOT NULL DEFAULT '0',
+  `title` varchar(255) NOT NULL,
+  `homeUrl` varchar(255) NOT NULL,
+  `bookGuestAdd` int(1) NOT NULL DEFAULT 0,
+  `transferProtocol` varchar(10) NOT NULL,
+  `maxPostChat` int(5) DEFAULT NULL,
+  `maxPostNews` int(5) DEFAULT NULL,
+  `customPages` varchar(255) DEFAULT NULL,
+  `floodTime` int(2) NOT NULL DEFAULT 0,
+  `pvtLimit` int(5) NOT NULL DEFAULT 0,
+  `cookieConsent` int(1) NOT NULL DEFAULT 0,
+  `photoList` int(3) DEFAULT NULL,
+  `photoFileSize` int(6) DEFAULT NULL,
+  `maxPhotoPixels` int(6) DEFAULT NULL,
+  `siteDefaultLang` varchar(255) NOT NULL,
+  `mPanel` varchar(255) NOT NULL,
+  `forumAccess` int(1) NOT NULL DEFAULT 0,
+  `refererLog` int(6) DEFAULT NULL,
+  `subMailPacket` int(5) DEFAULT 50,
+  `dosLimit` int(4) NOT NULL,
+  `maxLogData` int(5) NOT NULL,
+  `openReg` int(1) NOT NULL DEFAULT 0,
+  `regConfirm` int(1) NOT NULL DEFAULT 0,
+  `siteOff` int(1) NOT NULL DEFAULT 0,
+  `forumChLang` int(1) NOT NULL DEFAULT 0,
+  `showRefPage` int(1) NOT NULL DEFAULT 0,
+  `showCounter` int(1) NOT NULL DEFAULT 0,
+  `maxBanTime` int(6) NOT NULL DEFAULT 43200,
+  PRIMARY KEY (`name`),
+  UNIQUE KEY `UNIQUE` (`name`),
+  KEY `settings` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `settings` (`name`  , `keypass`, `webtheme`, `quarantine`, `showtime`, `pageGenTime`, `pgFbComm`, `showOnline`, `adminNick`, `adminEmail`, `timeZone`, `title`, `homeUrl`, `bookGuestAdd`, `transferProtocol`, `maxPostChat`, `maxPostNews`, `customPages`, `floodTime`, `pvtLimit`, `cookieConsent`, `photoList`, `photoFileSize`, `maxPhotoPixels`, `siteDefaultLang`, `mPanel`, `forumAccess`, `refererLog`, `subMailPacket`, `dosLimit`, `maxLogData`, `openReg`, `regConfirm`, `siteOff`, `forumChLang`, `showRefPage`, `showCounter`, `maxBanTime`) VALUES
+                       ('system', ''       , ''        , 0           , 0         , 0            , 0         , 0           , ''         , ''          , '0'       , ''     , ''       , 0             , ''                , NULL         , NULL         , NULL         , 0          , 0         , 0              , NULL       , NULL           , NULL            , ''               , ''      , 0            , NULL        , 50             , 120       , 0           , 0        , 0           , 0        , 0            , 0            , 0            , 43200);
+
+
