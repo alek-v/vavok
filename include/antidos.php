@@ -1,13 +1,13 @@
 <?php 
 // (c) Aleksandar Vranešević - vavok.net
-// modified: 28.07.2020. 12:33:33
+// modified: 29.07.2020. 12:04:15
 
 if (empty(REQUEST_URI)) {
     $config_requri = "index.php";
 } else { $config_requri = REQUEST_URI; }
 
 if (isset($_SERVER['HTTP_REFERER'])) {
-    $http_referer = urldecode(strtok($_SERVER['HTTP_REFERER'], 'sid'));
+    $http_referer = urldecode($_SERVER['HTTP_REFERER']);
 } else {
     $http_referer = "No referer";
 }
