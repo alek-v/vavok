@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:03:39
+* Updated:   29.07.2020. 20:02:55
 */
 
 require_once"../include/startup.php";
@@ -95,7 +95,7 @@ if ($action == "edit") {
                 echo $localization->string('newpassinfo') . ':<br><input name="udd1" /><br>';
                 echo $localization->string('city') . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
                 echo $localization->string('aboutyou') . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
-                echo $localization->string('email') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
+                echo $localization->string('yemail') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
                 echo $localization->string('site') . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
                 // echo $localization->string('regdate') . ':<br><input name="udd6" value="' . date_fixed(check($userx_profil[1]), "d.m.Y") . '" /><br>';
                 echo $localization->string('browser') . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
