@@ -87,24 +87,24 @@ if ($action == "delallsub" && $_SESSION['permissions'] == 101) {
 
 if ($action == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 	$ips = check($_POST['ips']);
-    if (!empty($ips)) {
 
+    if (!empty($ips) && substr_count($ips, '.') == 3) {
         $fp = fopen("../used/ban.dat", "a+");
         flock ($fp, LOCK_EX);
         fputs($fp, "|$ips|\r\n");
         fflush ($fp);
         flock ($fp, LOCK_UN);
         fclose($fp);
-    } 
-    header ("Location: ban.php");
-    exit;
+    }
+
+    redirect_to("ban.php");
 } 
 
 if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 
 	if (isset($_POST['id'])) {$id = check($_POST['id']);} else {$id = check($_GET['id']);}
 
-    if (!empty($id)) {
+    if (isset($id)) {
 
         $file = file("../used/ban.dat");
         $fp = fopen("../used/ban.dat", "w");
