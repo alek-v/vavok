@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   28.07.2020. 11:22:14
+* Updated:   29.07.2020. 18:41:02
 */
 
 
@@ -21,9 +21,6 @@ class Users {
 
 		$this->db = $db;
 		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : '';
-
-		// Default time zone
-		date_default_timezone_set('UTC');
 		
 		// Get user data
 		if (!empty($this->user_id)) {
@@ -60,20 +57,6 @@ class Users {
 		        unset($_SESSION['log']);
 		        session_destroy();
 
-		    }
-
-		    // check session life
-		    if (get_configuration('sessionLife') > 0) {
-
-		        if (($_SESSION['my_time'] + get_configuration('sessionLife')) < time() && $_SESSION['my_time'] > 0) {
-
-		            session_unset();
-		            setcookie(session_name(), '');
-		            session_destroy();
-
-		            redirect_to(BASEDIR . $request_uri);
-
-		        } 
 		    }
 
 		} else {
@@ -195,7 +178,7 @@ class Users {
 
 	// register user
 	public function register($name, $pass, $regkeys, $rkey, $theme, $mail) {
-	    global $localization, $db;
+	    global $localization, $db, $vavok;
 	    
 	    $values = array(
 	        'name' => $name,
@@ -207,7 +190,7 @@ class Users {
 	        'timezone' => 0,
 	        'banned' => 0,
 	        'newmsg' => 0,
-	        'lang' => get_configuration('language')
+	        'lang' => $vavok->get_configuration('siteDefaultLang')
 	    );
 	    $db->insert_data('vavok_users', $values);
 
@@ -513,11 +496,11 @@ class Users {
 	        return true;
 	    }
 
-	    $check = $this->db->count_row(get_configuration('tablePrefix') . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
+	    $check = $this->db->count_row(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
 
 	    if ($check > 0) {
 	    	
-	        $check_data = $this->db->get_data(get_configuration('tablePrefix') . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
+	        $check_data = $this->db->get_data(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
 	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
