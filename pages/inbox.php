@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:26:52
+* Updated:   28.07.2020. 23:26:01
 */
 
 require_once"../include/startup.php";
@@ -35,7 +35,7 @@ if (empty($action)) {
     $items_per_page = 10;
 
     // navigation
-    $navigation = new Navigation($items_per_page, $i, $page, 'inbox.php?');
+    $navigation = new Navigation($items_per_page, $num_items, $page, 'inbox.php?');
 	$limit_start = $navigation->start()['start']; // starting point
 
     if ($num_items > 0) {
