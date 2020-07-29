@@ -1,10 +1,16 @@
-# Vavok v1.5.4.beta2
+# Vavok v1.5.4.beta3
 - Updated constants
 - Updated retrieving configuration data
-- Updated pages/profile.php
 - Updated localization
+- Updated .htaccess to protect .env
+- Updated website settings page
+- Updated website installer
+- Update: Use new configuration constants
 - Created class Localization.class.php
+- Created class Vavok.class.php
+- Created .env for website configuration
 - Removed pages/inprof.php
+- Removed install/install.php
 - Moved files from 'lang' to 'include/lang'
 
 
