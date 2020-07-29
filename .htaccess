@@ -6,7 +6,7 @@ AddDefaultCharset UTF-8
    Order allow,deny
    Deny from all
 </Files>
-<Files ~ "(.dat|.tpl|error_log|.htaccess)$">
+<Files ~ "(.dat|.tpl|error_log|.env|.htaccess)$">
    Order allow,deny
    Deny from all
 </Files>
