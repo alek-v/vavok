@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   25.07.2020. 14:10:24
+* Updated:   29.07.2020. 17:55:03
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
@@ -82,4 +82,4 @@ include BASEDIR . "include/load_header.php";
 
 <div class="container">
 
-<?php echo get_isset(); /* get message from url */ ?>
+<?php echo $vavok->get_isset(); /* get message from url */ ?>

@@ -3,17 +3,19 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   25.07.2020. 14:39:47
+* Updated:   29.07.2020. 3:48:49
 */
 
-// set cookie
+/**
+ * Set session data from cookie
+ */
 if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog'])) {
 
     // decode username from cookie
-    $unlog = xoft_decode($_COOKIE['cooklog'], get_configuration('keypass'));
+    $unlog = xoft_decode($_COOKIE['cooklog'], $vavok->get_configuration('keypass'));
 
     // decode password from cookie
-    $unpar = xoft_decode($_COOKIE['cookpass'], get_configuration('keypass'));
+    $unpar = xoft_decode($_COOKIE['cookpass'], $vavok->get_configuration('keypass'));
     
     // search for username provided in cookie
 	$cookie_id = $users->getidfromnick($unlog);

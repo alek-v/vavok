@@ -37,7 +37,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 
 	// Redirect to root dir if visitor is using site default language and this language is requested in url
 	// Example: default website language is english and user is opening www.example.com/en/
-	if (get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists(BASEDIR . "include/lang/" . $requested_language . "/index.php")) {
+	if ($vavok->get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists(BASEDIR . "include/lang/" . $requested_language . "/index.php")) {
 		redirect_to("/" . $url_isset);
 	}
 
@@ -46,7 +46,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	  language is not in URL (www.example.com/en/)
 	  and page with users's language exists
 	*/
-	if (get_configuration('siteDefaultLang') != $users->get_user_language() && empty($requested_language)) {
+	if ($vavok->get_configuration('siteDefaultLang') != $users->get_user_language() && empty($requested_language)) {
 		redirect_to("/" .  $users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
 	}
 
