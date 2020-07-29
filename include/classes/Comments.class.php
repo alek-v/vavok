@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   24.07.2020. 21:47:37
+* Updated:   29.07.2020. 19:48:23
 */
 
 class Comments {
@@ -12,7 +12,6 @@ class Comments {
 	function __construct() {
 		global $db, $users;
 
-		$this->table_prefix = get_configuration('tablePrefix'); // table prefix
 		$this->db = $db; // database
 		$this->user_id = $users->user_id; // user id with active login
 		$this->users = $users;
@@ -25,14 +24,14 @@ class Comments {
 		$values = array('uid' => $this->user_id, 'comment' => $content, 'pid' => $pid, 'date' => date('Y-m-d H:i:s'));
 
 		// Insert data to database
-		$this->db->insert_data($this->table_prefix . 'comments', $values);
+		$this->db->insert_data(DB_PREFIX . 'comments', $values);
 
 	}
 
 	// count number of comments
 	public function count_comments($pid) {
 
-		return $this->db->count_row(get_configuration('tablePrefix') . 'comments', 'pid=' . $pid);
+		return $this->db->count_row(DB_PREFIX . 'comments', 'pid=' . $pid);
 
 	}
 
@@ -41,7 +40,7 @@ class Comments {
 
 		$all_posts = array();
 
-		foreach ($this->db->query("SELECT * FROM " . get_configuration('tablePrefix') . "comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}") as $key) {
+		foreach ($this->db->query("SELECT * FROM " . DB_PREFIX . "comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}") as $key) {
 
 			// load template
 			$page_posts = new PageGen('pages/blog/comment.tpl');

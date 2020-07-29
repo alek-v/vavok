@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:21:03
+* Updated:   29.07.2020. 0:02:41
 */
 
 require_once"../include/startup.php";
@@ -23,13 +23,13 @@ $hour = (int)date("H", time());
 $hday = date("j", time())-1;
 
 if (empty($action)) {
-    $pcounter_guest = $db->count_row(get_configuration('tablePrefix') . 'online', "user='0'");
+    $pcounter_guest = $db->count_row(DB_PREFIX . 'online', "user='0'");
 
-    $pcounter_online = $db->count_row(get_configuration('tablePrefix') . 'online');
+    $pcounter_online = $db->count_row(DB_PREFIX . 'online');
 
     $pcounter_reg = $pcounter_online - $pcounter_guest;
 
-    $counts = $db->get_data(get_configuration('tablePrefix') . 'counter');
+    $counts = $db->get_data(DB_PREFIX . 'counter');
 
     $clicks_today = $counts['clicks_today'];
     $total_clicks = $counts['clicks_total'];

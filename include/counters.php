@@ -4,11 +4,8 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   26.07.2020. 3:49:26
+* Updated:   28.07.2020. 23:02:52
 */
-
-// don't count visits it this is cron job
-if (stristr($_SERVER['PHP_SELF'], '/cronjob/') == true) { exit; }
 
 $day = date("d");
 $hour = date("H");
@@ -36,10 +33,10 @@ $bz_ip = $users->find_ip();
 $xmatch = $user_id . '-' . $users->find_ip() . '-' . $users->user_browser();
 
 // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
-$db->delete(get_configuration('tablePrefix') . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
+$db->delete(DB_PREFIX . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
 
-if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
-    while ($bz_row = $db->get_data(get_configuration('tablePrefix') . 'online', "usr_chck = '" . $xmatch . "'")) {
+if ($db->count_row(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
+    while ($bz_row = $db->get_data(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'")) {
         if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
             $fields = array();
             $fields[] = 'date';
@@ -49,7 +46,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
             $values[] = $bz_date;
             $values[] = $_SERVER['PHP_SELF'];
              
-            $db->update(get_configuration('tablePrefix') . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
+            $db->update(DB_PREFIX . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
             unset($fields, $values);
             
             $found = 1;
@@ -63,7 +60,7 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
             'usr_chck' => $xmatch,
             'bot' => detect_bot()
             );
-            $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
+            $db->insert_data(DB_PREFIX . 'online', $values);
             unset($values);
         } 
     } 
@@ -76,12 +73,12 @@ if ($db->count_row(get_configuration('tablePrefix') . 'online', "usr_chck = '" .
     'usr_chck' => $xmatch,
     'bot' => detect_bot()
     );
-    $db->insert_data(get_configuration('tablePrefix') . 'online', $values);
+    $db->insert_data(DB_PREFIX . 'online', $values);
     unset($values);
 } 
 
     // counter
-    $counts = $db->get_data(get_configuration('tablePrefix') . 'counter');
+    $counts = $db->get_data(DB_PREFIX . 'counter');
 
     $current_day = $counts['day'];
     $clicks_today = $counts['clicks_today'];
@@ -126,12 +123,12 @@ $values[] = $new_total_clicks;
 $values[] = $new_visits_today;
 $values[] = $new_total_visits;
 
-$db->update(get_configuration('tablePrefix') . 'counter', $fields, $values);
+$db->update(DB_PREFIX . 'counter', $fields, $values);
 unset($fields, $values);
 
 // show stats
-$counter_online = $db->count_row(get_configuration('tablePrefix') . 'online');
-$counter_reg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
+$counter_online = $db->count_row(DB_PREFIX . 'online');
+$counter_reg = $db->count_row(DB_PREFIX . 'online', "user > 0");
 
 $counter_host = $new_visits_today;
 $counter_all = $new_total_visits;

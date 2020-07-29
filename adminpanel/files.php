@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:26:48
+* Updated:   29.07.2020. 19:45:15
 */
 
 require_once"../include/startup.php";
@@ -78,9 +78,9 @@ if (empty($action)) {
 
 
     if ($edit_only_own_pages == 'yes') {
-        $sql = "SELECT * FROM " . get_configuration('tablePrefix') . "pages WHERE crtdby='{$users->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM " . DB_PREFIX . "pages WHERE crtdby='{$users->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } else {
-        $sql = "SELECT * FROM " . get_configuration('tablePrefix') . "pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM " . DB_PREFIX . "pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     }
 
     foreach ($db->query($sql) as $page_info) {
@@ -451,14 +451,6 @@ if ($action == 'renamepg') {
     $pg = check($_GET['pg']);
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
-
-    if (isset($_GET['isset'])) {
-        $isset = check($_GET['isset']);
-
-        echo '<div align="center"><b><font color="#FF0000">';
-        echo get_isset();
-        echo '</font></b></div>';
-    } 
 
     echo '<img src="/images/img/panel.gif" alt="" /> Rename page<br /><br />'; // update lang
     echo '<form action="procfiles.php?action=renamepg" name="form" method="POST">';

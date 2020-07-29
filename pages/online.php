@@ -18,8 +18,8 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $localization->string('whoisonline') . '</b></p>';
 
-$total = $db->count_row(get_configuration('tablePrefix') . 'online');
-$totalreg = $db->count_row(get_configuration('tablePrefix') . 'online', "user > 0");
+$total = $db->count_row(DB_PREFIX . 'online');
+$totalreg = $db->count_row(DB_PREFIX . 'online', "user > 0");
 
 if (!empty($_GET['list'])) {
     $list = check($_GET['list']);
@@ -48,7 +48,7 @@ if ($list == "full") {
 
     $start = $navigation->start()['start']; // starting point 
 
-    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online ORDER BY date DESC LIMIT $start, " . $data_on_page;
+    $full_query = "SELECT * FROM " . DB_PREFIX . "online ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');
@@ -84,7 +84,7 @@ if ($list == "full") {
 
     $start = $navigation->start()['start']; // starting point  
 
-    $full_query = "SELECT * FROM " . get_configuration('tablePrefix') . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
+    $full_query = "SELECT * FROM " . DB_PREFIX . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($db->query($full_query) as $item) {
         $time = date_fixed($item['date'], 'H:i');

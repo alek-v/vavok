@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   27.07.2020. 4:13:26
+* Updated:   28.07.2020. 23:02:28
 */
 
 class Page {
@@ -21,7 +21,7 @@ class Page {
 	function __construct($page_name = '', $page_language = '') {
 		global $db, $users;
 
-		$this->table_prefix = get_configuration('tablePrefix'); // Table prefix
+		$this->table_prefix = DB_PREFIX; // Table prefix
 		$this->transfer_protocol = transfer_protocol(); // Transfer protocol
 		$this->db = $db; // database
 		$this->user_id = $users->current_user_id(); // User id with active login
@@ -177,11 +177,11 @@ class Page {
 		}
 
 		// Get data
-		$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'{$language}");
+		$page_data = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'{$language}");
 
 		// When language is set and page does not exsist try to find page without language
 		if (empty($page_data) && !empty($this->page_language)) {
-			$page_data = $this->db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $this->page_name . "'");
+			$page_data = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'");
 		}
 
 		// return false if there is no data

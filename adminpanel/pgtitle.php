@@ -1,5 +1,11 @@
 <?php 
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   29.07.2020. 19:46:44
+*/
+
 require_once"../include/startup.php";
 
 $act = '';
@@ -19,7 +25,7 @@ if ($act == "addedit") {
     $msg = no_br($_POST['msg']);
 
     // get page data
-    $pageData = $db->get_data(get_configuration('tablePrefix') . 'pages', "file='{$tfile}'", 'file, headt');
+    $pageData = $db->get_data(DB_PREFIX . 'pages', "file='{$tfile}'", 'file, headt');
 
     $headData = $pageData['headt'];
 
@@ -41,7 +47,7 @@ if ($act == "addedit") {
 
     $fields = array('tname', 'headt');
     $values = array($msg, $headData);
-    $db->update(get_configuration('tablePrefix') . 'pages', $fields, $values, "file='{$tfile}'");
+    $db->update(DB_PREFIX . 'pages', $fields, $values, "file='{$tfile}'");
 
 
     redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
@@ -55,7 +61,7 @@ if ($act == "savenew") {
 
     $msg = no_br($_POST['msg']);
 
-    $last_notif = $db->get_data(get_configuration('tablePrefix') . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
+    $last_notif = $db->get_data(DB_PREFIX . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
     $headData = $last_notif['headt'];
 
@@ -82,13 +88,13 @@ if ($act == "savenew") {
             'tname' => $msg,
             'file' => $tpage
         );
-        $db->insert_data(get_configuration('tablePrefix'). 'pages', $values);
+        $db->insert_data(DB_PREFIX . 'pages', $values);
 
         $PBPage = false;
     } else {
         $fields = array('tname', 'headt');
         $values = array($msg, $headData);
-        $db->insert_data(get_configuration('tablePrefix') . 'pages', $fields, $values, "pname='" . $tpage . "'");
+        $db->insert_data(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
 
         $PBPage = true;
     } 
@@ -100,7 +106,7 @@ if ($act == "savenew") {
 if ($act == "del") {
     $tid = check($_GET['tid']);
 
-    $db->delete(get_configuration('tablePrefix') . 'pages', "pname = '" . $tid . "'");
+    $db->delete(DB_PREFIX . 'pages', "pname = '" . $tid . "'");
 
     redirect_to("pgtitle.php");
 } 
@@ -111,7 +117,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (!isset($act) || empty($act)) {
 
-    $nitems = $db->count_row(get_configuration('tablePrefix') . 'pages');
+    $nitems = $db->count_row(DB_PREFIX . 'pages');
     $total = $nitems;
 
     if ($total < 1) {
@@ -122,7 +128,7 @@ if (!isset($act) || empty($act)) {
         $page = check($_GET['page']);
     } else { $page = ''; }
 
-    $nitems = $db->count_row(get_configuration('tablePrefix') . 'pages', 'tname is not null');
+    $nitems = $db->count_row(DB_PREFIX . 'pages', 'tname is not null');
     $num_items = $nitems;
 
     $items_per_page = 30;
@@ -132,7 +138,7 @@ if (!isset($act) || empty($act)) {
 
     $limit_start = $navigation->start()['start']; // starting point
 
-    $sql = "SELECT id, pname, tname, file FROM " . get_configuration("tablePrefix") . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+    $sql = "SELECT id, pname, tname, file FROM " . DB_PREFIX . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {
@@ -150,7 +156,7 @@ if (!isset($act) || empty($act)) {
 if ($act == "edit") {
     $pgfile = check($_GET['pgfile']);
 
-    $page_title = $db->get_data(get_configuration('tablePrefix') . 'pages', "file='" . $pgfile . "'", 'tname, pname');
+    $page_title = $db->get_data(DB_PREFIX . 'pages', "file='" . $pgfile . "'", 'tname, pname');
 
     echo '<form action="pgtitle.php?act=addedit" method="POST">';
     echo '<input type="hidden" name="tfile" value="' . $pgfile . '"><br />';
