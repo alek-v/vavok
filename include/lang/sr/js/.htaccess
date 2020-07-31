@@ -1,4 +1,0 @@
-AddDefaultCharset UTF-8
-
-RewriteEngine on
-RewriteRule ^(.*)\.js$ $1.php
