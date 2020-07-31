@@ -26,7 +26,6 @@ class Vavok {
 		 */
 
 		define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
-		$config_requri = urldecode($_SERVER['REQUEST_URI']); // deprecated 25.07.2020. 13:04:27
 		define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
 
 		// Clean URL (REQUEST_URI)
