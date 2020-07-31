@@ -1,4 +1,4 @@
-# Vavok v1.5.4.beta4
+# Vavok v1.5.4
 - Updated constants
 - Updated retrieving configuration data
 - Updated localization
