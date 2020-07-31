@@ -1,4 +1,4 @@
-# Vavok v1.5.4.beta3
+# Vavok v1.5.4.beta4
 - Updated constants
 - Updated retrieving configuration data
 - Updated localization
@@ -11,6 +11,8 @@
 - Created .env for website configuration
 - Removed pages/inprof.php
 - Removed install/install.php
+- Removed lang/en/.*
+- Removed lang/sr/.*
 - Moved files from 'lang' to 'include/lang'
 
 
