@@ -3,8 +3,8 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Class for managing website configuration
-* Updated:   29.07.2020. 17:09:22
+* Package:   Class for managing website configuration
+* Updated:   01.08.2020. 19:11:47
 */
 
 class Config {

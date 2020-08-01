@@ -3,18 +3,18 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 19:45:15
+* Updated:   01.08.2020. 2:30:16
 */
 
 require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
 
 // checking access permitions
-if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { redirect_to("../"); }
+if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
-$page = isset($_GET['page']) ? check($_GET['page']) : '';
-$file = isset($_GET['file']) ? check($_GET['file']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
+$file = isset($_GET['file']) ? $vavok->check($_GET['file']) : '';
 
 // init class
 $pageEditor = new Page();
@@ -27,13 +27,13 @@ $config_editfiles = 20;
 // editing mode
 // use visual mode as default
 if (!empty($_SESSION['edmode'])) {
-    $edmode = check($_SESSION['edmode']);
+    $edmode = $vavok->check($_SESSION['edmode']);
 } else {
     $edmode = 'visual';
     $_SESSION['edmode'] = $edmode;
 } 
 if (!empty($_POST['edmode'])) {
-    $edmode = check($_POST['edmode']);
+    $edmode = $vavok->check($_POST['edmode']);
     $_SESSION['edmode'] = $edmode;
 }
 
@@ -124,14 +124,14 @@ if (empty($action)) {
             }
 
             // Informations about page
-            echo ' ' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
 
         } else {
 
             echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b>';
             echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
-            echo ' ' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
 
         } 
@@ -160,11 +160,11 @@ if ($action == "show") {
         $page_info = $pageData->select_page($page_id);
 
         if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
-            redirect_to("index.php?isset=ap_noaccess");
+            $vavok->redirect_to("index.php?isset=ap_noaccess");
         } 
 
         if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
-            redirect_to("index.php?isset=ap_noaccess");
+            $vavok->redirect_to("index.php?isset=ap_noaccess");
         } 
 
         $showname = $page_info['pname'];
@@ -172,8 +172,8 @@ if ($action == "show") {
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
         echo '<p>' . $localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
-        echo '<p>' . $localization->string('created') . ': ' . date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']);
-        echo ' | ' . $localization->string('lastupdate') . ' ' . date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+        echo '<p>' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']);
+        echo ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
         
         // post type
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
@@ -195,18 +195,18 @@ if ($action == "show") {
             // this is index page
         	if (!empty($page_info['lang'])) { $url_lang = strtolower($page_info['lang']) . '/'; } else { $url_lang = ''; }
 
-        	echo '<a href="' . website_home_address() . '/' . $url_lang . '" target="_blank">' . website_home_address() . '/' . $url_lang . '</a>';
+        	echo '<a href="' . $vavok->website_home_address() . '/' . $url_lang . '" target="_blank">' . $vavok->website_home_address() . '/' . $url_lang . '</a>';
 
  		} elseif ($post_type == 'post') {
             // this is blog post
-            echo '<br /><a href="' . website_home_address() . '/blog/' . $showname . '/" target="_blank">' . website_home_address() . '/blog/' . $showname . '/</a><br />';
+            echo '<br /><a href="' . $vavok->website_home_address() . '/blog/' . $showname . '/" target="_blank">' . $vavok->website_home_address() . '/blog/' . $showname . '/</a><br />';
 
         } elseif ($post_type == 'page' || empty($post_type)) {
             // this is page
-	        echo '<br /><a href="' . website_home_address() . '/page/' . $showname . '/" target="_blank">' . website_home_address() . '/page/' . $showname . '/</a><br />';
+	        echo '<br /><a href="' . $vavok->website_home_address() . '/page/' . $showname . '/" target="_blank">' . $vavok->website_home_address() . '/page/' . $showname . '/</a><br />';
         } else {
             // this is custom page structure
-            echo '<br /><a href="' . website_home_address() . '/' . $post_type . '/' . $showname . '/" target="_blank">' . website_home_address() . '/' . $post_type . '/' . $showname . '/</a><br />';
+            echo '<br /><a href="' . $vavok->website_home_address() . '/' . $post_type . '/' . $showname . '/" target="_blank">' . $vavok->website_home_address() . '/' . $post_type . '/' . $showname . '/</a><br />';
         }
 
         echo '</p>';
@@ -239,7 +239,7 @@ if ($action == "edit") {
     if ($checkPage == true) {
         $page_info = $pageEditor->select_page($page_id);
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { redirect_to("index.php?isset=ap_noaccess"); } 
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
         if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
@@ -296,7 +296,7 @@ if ($action == "edit") {
 if ($action == "headtag") {
 
     if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
-        redirect_to("index.php?isset=ap_noaccess");
+        $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
     $page_info = $pageEditor->select_page($page_id);
@@ -423,7 +423,7 @@ if ($action == "headtag") {
 } 
 
 if ($action == 'mainmeta') {
-    if (!$users->is_administrator(101)) { redirect_to("../?isset=ap_noaccess"); }
+    if (!$users->is_administrator(101)) { $vavok->redirect_to("../?isset=ap_noaccess"); }
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -448,7 +448,7 @@ if ($action == 'renamepg') {
         exit;
     }
 
-    $pg = check($_GET['pg']);
+    $pg = $vavok->check($_GET['pg']);
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -464,7 +464,7 @@ if ($action == 'renamepg') {
 if ($action == "new") {
 
     if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) {
-        redirect_to("index.php?isset=ap_noaccess");
+        $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
     $genHeadTag = '
@@ -542,13 +542,13 @@ if ($action == "new") {
     </div>
 
     <?php
-    if (!empty(get_configuration('customPages'))) {
+    if (!empty($vavok->get_configuration('customPages'))) {
 
     echo '<div class="form-group">
     <label for="page_structure">Page structure:</label>
     <select class="form-control" id="page_structure" name="page_structure">
         <option value="">/page/new-page/</option>
-        <option value="' . get_configuration('customPages') . '">/' . get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>
+        <option value="' . $vavok->get_configuration('customPages') . '">/' . $vavok->get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>
     </select>
     </div>';
 
@@ -593,10 +593,10 @@ if ($action == "poddel") {
 
 if ($action == "pagelang") {
     if (!$users->is_administrator()) {
-        redirect_to("index.php?isset=ap_noaccess");
+        $vavok->redirect_to("index.php?isset=ap_noaccess");
     } 
 
-    $id = check($_GET['id']);
+    $id = $vavok->check($_GET['id']);
 
     // get page data
     $pageData = $pageEditor->select_page($id);

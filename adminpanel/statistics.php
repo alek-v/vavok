@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:43:49
+* Updated:   01.08.2020. 2:40:57
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) redirect_to("../?errorAuth");
+if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
 
 $my_title = $localization->string('sitestats');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

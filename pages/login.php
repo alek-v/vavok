@@ -16,11 +16,11 @@ $cookName = isset($_COOKIE['cookname']) ? $cookName = $_COOKIE['cookname'] : $co
 $current_page = new PageGen('pages/login/login.tpl');
 
 if (!empty($cookName)) {
-	$current_page->set('username', check($cookName));
+	$current_page->set('username', $vavok->check($cookName));
 }
 
 if (!empty($_GET['ptl'])) {
-	$current_page->set('page_to_load', check($_GET['ptl']));
+	$current_page->set('page_to_load', $vavok->check($_GET['ptl']));
 }
 
 // Show page

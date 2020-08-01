@@ -3,11 +3,18 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   20.05.2020. 19:55:44
+* Updated:   01.08.2020. 19:10:49
 */
 
 
 class Mailer {
+	private $vavok;
+
+	function __construct() {
+		global $vavok;
+
+		$this->vavok = $vavok;
+	}
 
 	// send email
 	function send($usermail, $subject, $msg, $mail = "", $name = "") {
@@ -22,12 +29,12 @@ class Mailer {
 	            $mail = substr($mail, 4);
 	        }
 	        $mail = 'no_reply@' . $mail;
-	        $name = get_configuration('title');
+	        $name = $this->vavok->get_configuration('title');
 
 	    }
 
 	    // support for unicode emails
-	    if (is_unicode($usermail) && function_exists('idn_to_ascii')) {
+	    if ($this->vavok->is_unicode($usermail) && function_exists('idn_to_ascii')) {
 	    	// convert to ascii
 	    	$usermail = idn_to_ascii($usermail);
 	    }

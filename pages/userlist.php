@@ -9,17 +9,17 @@
 require_once"../include/startup.php";
  
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 } 
 if (!empty($_GET['view'])) {
-    $view = check($_GET["view"]);
+    $view = $vavok->check($_GET["view"]);
 } else {
     $view = '';
 } 
@@ -55,7 +55,7 @@ if ($num_items > 0) {
         $profile = $db->get_data('vavok_profil', "uid='{$item['id']}'");
 
         echo '<div class="a">';
-        echo '<a href="../pages/user.php?uz=' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . date_fixed($profile["regdate"], 'd.m.Y.'); // update lang
+        echo '<a href="../pages/user.php?uz=' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $vavok->date_fixed($profile["regdate"], 'd.m.Y.'); // update lang
         echo '</div>';
 
     }

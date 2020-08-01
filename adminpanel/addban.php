@@ -3,25 +3,25 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:17:11
+* Updated:   01.08.2020. 19:24:08
 */
 
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (isset($_POST['users'])) {
-    $user = check($_POST['users']);
+    $user = $vavok->check($_POST['users']);
 } elseif (isset($_GET['users'])) {
-    $user = check($_GET['users']);
+    $user = $vavok->check($_GET['users']);
 } else { $user = ''; }
 
 $time = time();
 
-if (!$users->is_reg()) { redirect_to("../?error"); } 
+if (!$users->is_reg()) { $vavok->redirect_to("../?error"); } 
 
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $my_title = $localization->string('banning');
@@ -51,12 +51,12 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             $show_user = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'banned, perm');
             $show_prof = $db->get_data('vavok_profil', "uid='" . $userx_id . "'", 'bantime, bandesc, allban, lastban');
 
-            $user = check($user);
+            $user = $vavok->check($user);
             if ($userx_id != "" && $users_nick != "") {
                 echo '<img src="../images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
                 echo 'Bans: <b>' . (int)$show_prof['allban'] . '</b><br />'; // update lang
                 if (ctype_digit($show_prof['lastban'])) {
-                    echo '' . $localization->string('lastban') . ': ' . date_fixed(check($show_prof['lastban']), "j.m.y/H:i") . '<br />';
+                    echo '' . $localization->string('lastban') . ': ' . $vavok->date_fixed($vavok->check($show_prof['lastban']), "j.m.y/H:i") . '<br />';
                 } 
 
                 echo '<br />';
@@ -83,16 +83,15 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo $localization->string('bandesc') . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
                         echo '<input value="' . $localization->string('confirm') . '" type="submit"></form><hr>';
 
-                        echo $localization->string('maxbantime') . ' ' . formattime(round(get_configuration('maxBanTime') * 60)) . '<br />';
+                        echo $localization->string('maxbantime') . ' ' . formattime(round($vavok->get_configuration('maxBanTime') * 60)) . '<br />';
                         echo $localization->string('bandesc1') . '<br />';
                     } else {
                         echo '<b><font color="#FF0000">' . $localization->string('confban') . '</font></b><br />';
                         if (ctype_digit($show_prof['lastban'])) {
-                            echo '' . $localization->string('bandate') . ': ' . date_fixed($show_prof['lastban']) . '<br />';
+                            echo '' . $localization->string('bandate') . ': ' . $vavok->date_fixed($show_prof['lastban']) . '<br />';
                         } 
                         echo $localization->string('banend') . ' ' . formattime($ost_time) . '<br />';
-                        echo $localization->string('bandesc') . ': ' . check($show_prof['bandesc']) . '<br />'; 
-                        // echo 'Kaznio: <a href="../pages/user.php?uz=' . check($udc[63]) . '&amp;' . SID . '">' . check($udc[63]) . '</a><br /><br />';
+                        echo $localization->string('bandesc') . ': ' . $vavok->check($show_prof['bandesc']) . '<br />'; 
                         echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('delban') . '</a><hr>';
                     } 
                 } 
@@ -106,10 +105,10 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     } 
 
     if ($action == "banuser") {
-        $bform = check($_POST['bform']);
-        $udd38 = check($_POST['duration']);
+        $bform = $vavok->check($_POST['bform']);
+        $udd38 = $vavok->check($_POST['duration']);
         $users_id = $users->getidfromnick($user);
-        $udd39 = check($_POST['udd39']);
+        $udd39 = $vavok->check($_POST['udd39']);
 
         if ($users_id != "") {
             if ($bform == "min") {
@@ -123,10 +122,10 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             } 
 
             if ($ban_time != "") {
-                if ($ban_time <= get_configuration('maxBanTime')) {
+                if ($ban_time <= $vavok->get_configuration('maxBanTime')) {
                     if ($udd39 != "") {
                         $newbantime = round($time + ($ban_time * 60));
-                        $newbandesc = no_br(check($udd39), ' ');
+                        $newbandesc = $vavok->no_br($vavok->check($udd39), ' ');
                         $newlastban = $time;
 
                         $vavok_profil = $db->get_data('vavok_users', "uid='" . $users_id . "'", 'allban');
@@ -147,7 +146,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo '' . $localization->string('noreason') . '!<br />';
                     } 
                 } else {
-                    echo '' . $localization->string('maxbantimeare') . ' ' . round(get_configuration('maxBanTime') / 1440) . ' ' . $localization->string('days') . '!<br />';
+                    echo '' . $localization->string('maxbantimeare') . ' ' . round($vavok->get_configuration('maxBanTime') / 1440) . ' ' . $localization->string('days') . '!<br />';
                 } 
             } else {
                 echo '' . $localization->string('nobantime') . '!<br />';
@@ -186,7 +185,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     } 
     // delete user
     if ($action == "deluser") {
-        $user = check($user);
+        $user = $vavok->check($user);
         $users->delete_user($user);
 
         echo '<p>' . $localization->string('usrdeleted') . '!</p>';
@@ -197,7 +196,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
     echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 } else {
-    redirect_to("../?error");
+    $vavok->redirect_to("../?error");
 } 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

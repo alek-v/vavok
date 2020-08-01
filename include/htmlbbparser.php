@@ -95,7 +95,7 @@ if (!empty($GLOBALS['do_debug'])) debug("\n".'$pre[$i]: '."$pre[$i]\n\n");// :de
             if (strpos($r3, "[/url]") !== false) {
                 list($r3, $r4) = explode("[/url]", $r3, 2);
                 $target = ' target="_blank"';
-                if (substr($r2, 0, 7) == "mailto:" || stristr(get_configuration('homeUrl'), $r2) || !stristr('http://', $r2)) {
+                if (substr($r2, 0, 7) == "mailto:" || stristr($vavok->get_configuration('homeUrl'), $r2) || !stristr('http://', $r2)) {
                     $target = "";
                 } 
                 $bb2html = $r1 . '<a href="' . $r2 . '"' . $target . '>' . $r3 . '</a>' . $r4;

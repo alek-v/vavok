@@ -3,17 +3,17 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:19:28
+* Updated:   01.08.2020. 19:16:49
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) {
-    redirect_to("../pages/input.php?action=exit");
+    $vavok->redirect_to("../pages/input.php?action=exit");
 }
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
@@ -55,7 +55,7 @@ if (empty($action)) {
         // ////////////////////////////////////////////////////////////
         $statwho = $users->user_online($data[1]); 
         // /////////////////////////////////////////////////////////////
-        $data_text = getbbcode($data[0]);
+        $data_text = $vavok->getbbcode($data[0]);
 
         echo'<div class=b><b><a href="../pages/user.php?uz=' . $data[1] . '" class="btn btn-outline-primary sitelink"> ' . $data[1] . ' </a></b> ' . $statwho;
 
@@ -122,7 +122,7 @@ if ($action == "prodel") {
     echo '<br><a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 } 
 
-if ($total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
+if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
     echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $localization->string('cleanchat') . '</a>';
 } 
 

@@ -12,16 +12,16 @@ $my_title = $localization->string('ignorlist');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 } 
-if (!empty($_POST['uz'])) { $uz = check($_POST['uz']); }
+if (!empty($_POST['uz'])) { $uz = $vavok->check($_POST['uz']); }
 
 if ($users->is_reg()) {
 

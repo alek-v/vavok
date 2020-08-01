@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:32:57
+* Updated:   01.08.2020. 0:25:14
 */
 
 require_once"../include/startup.php";
 
-if (get_configuration('siteOff') != 1) { redirect_to("../"); }
+if ($vavok->get_configuration('siteOff') != 1) { $vavok->redirect_to("../"); }
 
 $my_title = $localization->string('maintenance');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

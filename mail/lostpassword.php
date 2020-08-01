@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:58:41
+* Updated:   01.08.2020. 0:23:39
 */
 
 require_once"../include/startup.php";
 
-$page = isset($_GET['page']) ? check($_GET['page']) : '';
-$logus = isset($_POST['logus']) ? check($_POST['logus']) : '';
-$mailsus = isset($_POST['mailsus']) ? check($_POST['mailsus']) : '';
+$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
+$logus = isset($_POST['logus']) ? $vavok->check($_POST['logus']) : '';
+$mailsus = isset($_POST['mailsus']) ? $vavok->check($_POST['mailsus']) : '';
 
 // Page settings
 $my_title = $localization->string('lostpass');
@@ -47,8 +47,8 @@ if ($page == 'send') {
                 $newpas = generate_password();
                 $new = $users->password_encrypt($newpas);
 
-                $subject = $localization->string('newpassfromsite') . ' ' . get_configuration('title');
-                $mail = $localization->string('hello') . " " . $logus . "\r\n" . $localization->string('yournewdata') . " " . get_configuration('homeUrl') . "\n" . $localization->string('username') . ": " . $logus . "\n" . $localization->string('pass') . ": " . $newpas . "\r\n\r\n" . $localization->string('lnkforautolog') . ":\r\n" . get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $localization->string('ycchngpass')  . "\r\n";
+                $subject = $localization->string('newpassfromsite') . ' ' . $vavok->get_configuration('title');
+                $mail = $localization->string('hello') . " " . $logus . "\r\n" . $localization->string('yournewdata') . " " . $vavok->get_configuration('homeUrl') . "\n" . $localization->string('username') . ": " . $logus . "\n" . $localization->string('pass') . ": " . $newpas . "\r\n\r\n" . $localization->string('lnkforautolog') . ":\r\n" . $vavok->get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $localization->string('ycchngpass')  . "\r\n";
 
 				$send_mail = new Mailer();
 				$send_mail->send($mailsus, $subject, $mail);

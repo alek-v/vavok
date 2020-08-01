@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   28.07.2020. 23:02:52
+* Updated:   01.08.2020. 2:24:19
 */
 
 $day = date("d");
@@ -58,7 +58,7 @@ if ($db->count_row(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
             'page' => $_SERVER['PHP_SELF'],
             'user' => $user_id,
             'usr_chck' => $xmatch,
-            'bot' => detect_bot()
+            'bot' => $vavok->detect_bot()
             );
             $db->insert_data(DB_PREFIX . 'online', $values);
             unset($values);
@@ -71,7 +71,7 @@ if ($db->count_row(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
     'page' => $_SERVER['PHP_SELF'],
     'user' => $user_id,
     'usr_chck' => $xmatch,
-    'bot' => detect_bot()
+    'bot' => $vavok->detect_bot()
     );
     $db->insert_data(DB_PREFIX . 'online', $values);
     unset($values);

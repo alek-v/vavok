@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 18:09:58
+* Updated:   01.08.2020. 19:11:01
 */
 
 if (isset($_GET['step'])) {
@@ -98,7 +98,7 @@ if ($step == 'third') {
     <label for="email">Email:</label><br />
     <input name="email" id="email" maxlength="100" /><br />
     <label for="osite">Site address:</label><br />
-    <input name="osite" id="osite" value="<?php echo transfer_protocol() . $_SERVER['HTTP_HOST']; ?>" maxlength="100" /><br />
+    <input name="osite" id="osite" value="<?php echo $vavok->transfer_protocol() . $_SERVER['HTTP_HOST']; ?>" maxlength="100" /><br />
     <input value="Continue..." type="submit" />
     </fieldset>
     </form>
@@ -134,7 +134,7 @@ if ($step == "regadmin") {
         if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
             if ($password == $password2) {
                 if ($users->validate_email($email)) {
-                    if (validateURL($osite)) {
+                    if ($vavok->validateURL($osite)) {
                         $osite_name = ucfirst(str_replace("http://", "", $osite));
                         $osite_name = str_replace("https://", "", $osite_name);
 

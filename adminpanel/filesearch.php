@@ -8,7 +8,7 @@ if (!$users->is_reg() || !$users->is_administrator()) {
 } 
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
@@ -16,7 +16,7 @@ if (empty($action)) {
     $action = 'tpc';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 } 
@@ -36,7 +36,7 @@ if ($action == "tpc") {
 
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 } else if ($action == "stpc") {
-    $stext = check($_POST["stext"]);
+    $stext = $vavok->check($_POST["stext"]);
     $my_title = 'Search';
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 

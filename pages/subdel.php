@@ -9,8 +9,8 @@
 require_once"../include/startup.php";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-$code = !empty($_GET['subdel']) ? check($_GET['subdel']) : '';
-$subscriptionName = !empty($_GET['sn']) ? check($_GET['sn']) : '';
+$code = !empty($_GET['subdel']) ? $vavok->check($_GET['subdel']) : '';
+$subscriptionName = !empty($_GET['sn']) ? $vavok->check($_GET['sn']) : '';
 
 if (!empty($code)) {
     if (preg_match("/[^a-z0-9]/", $code)) {

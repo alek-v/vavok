@@ -3,26 +3,26 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 23:12:20
+* Updated:   01.08.2020. 19:20:31
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg()) {
-	redirect_to("../index.php?isset=inputoff");
+	$vavok->redirect_to("../index.php?isset=inputoff");
 }
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 // Save settings
 if ($action == 'save') {
 
-	$skins = isset($_POST['skins']) ? check($_POST['skins']) : '';
-	$mskin = isset($_POST['mskin']) ? check($_POST['mskin']) : '';
-	$lang = isset($_POST['lang']) ? check($_POST['lang']) : '';
-	$user_timezone = isset($_POST['timezone']) ? check($_POST['timezone']) : 0;
-	$subnews = isset($_POST['subnews']) ? check($_POST['subnews']) : '';
-	$inbox_notification = isset($_POST['inbnotif']) ? check($_POST['inbnotif']) : '';
+	$skins = isset($_POST['skins']) ? $vavok->check($_POST['skins']) : '';
+	$mskin = isset($_POST['mskin']) ? $vavok->check($_POST['mskin']) : '';
+	$lang = isset($_POST['lang']) ? $vavok->check($_POST['lang']) : '';
+	$user_timezone = isset($_POST['timezone']) ? $vavok->check($_POST['timezone']) : 0;
+	$subnews = isset($_POST['subnews']) ? $vavok->check($_POST['subnews']) : '';
+	$inbox_notification = isset($_POST['inbnotif']) ? $vavok->check($_POST['inbnotif']) : '';
 		
 	$getinfo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'email');
 	$notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'email');
@@ -144,7 +144,7 @@ if ($action == 'save') {
 	}
 
 	// redirect
-	redirect_to("./settings.php?isset=editsetting");
+	$vavok->redirect_to("./settings.php?isset=editsetting");
 
 }
 

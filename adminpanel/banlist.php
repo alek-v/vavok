@@ -3,29 +3,29 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:24:49
+* Updated:   01.08.2020. 2:39:22
 */
 
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 } 
 if (!empty($_GET['view'])) {
-    $view = check($_GET["view"]);
+    $view = $vavok->check($_GET["view"]);
 } else {
     $view = '';
 }
 
 if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(103))) {
-    redirect_to("../index.php?error");
+    $vavok->redirect_to("../index.php?error");
 } 
 
 $my_title = $localization->string('banlist');
@@ -47,7 +47,7 @@ if ($noi > 0) {
         if ($item['banned'] == '1') {
             $banned_profil = $db->get_data('vavok_profil', "id='" . $item['id'] . "'", 'bantime, bandesc');
 
-            $lnk = "<div class=\"a\"><p><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $localization->string('banduration') . ": " . date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $localization->string('bandesc') . ": " . $banned_profil['bandesc'] . "</small></p></div>";
+            $lnk = "<div class=\"a\"><p><a href=\"../pages/user.php?uz=" . $item['name'] . "\" class=\"sitelink\">" . $item['name'] . "</a> <small>" . $localization->string('banduration') . ": " . $vavok->date_fixed($banned_profil['bantime'], "d.m.y.") . " | " . $localization->string('bandesc') . ": " . $banned_profil['bandesc'] . "</small></p></div>";
             echo $lnk . "<br>";
         } 
     } 

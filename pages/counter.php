@@ -3,18 +3,18 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 0:02:41
+* Updated:   01.08.2020. 0:24:16
 */
 
 require_once"../include/startup.php";
 
-if (get_configuration('showCounter') == 6 && !$users->is_administrator()) { redirect_to("../"); }
+if ($vavok->get_configuration('showCounter') == 6 && !$users->is_administrator()) { $vavok->redirect_to("../"); }
 
 $my_title = $localization->string('statistics');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
@@ -37,7 +37,7 @@ if (empty($action)) {
     $total_visits = $counts['visits_total']; // total visits
 
     echo $localization->string('temponline') . ': ';
-    if (get_configuration('showOnline') == 1 || $users->is_administrator()) {
+    if ($vavok->get_configuration('showOnline') == 1 || $users->is_administrator()) {
         echo '<a href="online.php">' . (int)$pcounter_online . '</a><br />';
     } else {
         echo '<b>' . (int)$pcounter_online . '</b><br />';

@@ -1,12 +1,10 @@
 <?php
 include"../include/startup.php";
 
-if (!$users->is_reg()) {
-	redirect_to("../pages/login.php");
-}
+if (!$users->is_reg()) $vavok->redirect_to("../pages/login.php");
 
-$who = isset($_GET["who"]) ? check($_GET["who"]) : '';
-$last_id = isset($_GET["lastid"]) ? check($_GET["lastid"]) : '';
+$who = isset($_GET["who"]) ? $vavok->check($_GET["who"]) : '';
+$last_id = isset($_GET["lastid"]) ? $vavok->check($_GET["lastid"]) : '';
 
 // if there is last message id set
 if (isset($last_id) && !empty($last_id)) {

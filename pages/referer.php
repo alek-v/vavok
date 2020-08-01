@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:38:04
+* Updated:   01.08.2020. 0:26:22
 */
 
 require_once"../include/startup.php";
@@ -17,10 +17,10 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 if (empty($_GET['page']) || $_GET['page'] < 1) {
     $page = 1;
 } else {
-    $page = check($_GET['page']);
+    $page = $vavok->check($_GET['page']);
 }
 
-if (get_configuration('showRefPage') == 1 || $users->is_administrator()) {
+if ($vavok->get_configuration('showRefPage') == 1 || $users->is_administrator()) {
 
     $file = file("../used/referer.dat");
     $file = array_reverse($file);
@@ -36,7 +36,7 @@ if (get_configuration('showRefPage') == 1 || $users->is_administrator()) {
         $data = explode("|", $file[$i]);
         $datime = date("H:i:s", $data[1]);
 
-        echo '<b><a href="' . transfer_protocol() . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $localization->string('visits') . ': ' . $data[3] . '<br /><hr />';
+        echo '<b><a href="' . $vavok->transfer_protocol() . $data[0] . '">' . $data[0] . '</a></b> (' . $datime . ')<br />' . $localization->string('visits') . ': ' . $data[3] . '<br /><hr />';
 
     } 
 

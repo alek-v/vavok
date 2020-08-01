@@ -4,10 +4,10 @@
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || (!$users->is_moderator() && !$users->is_administrator())) {
-    redirect_to("../pages/input.php?action=exit");
+    $vavok->redirect_to("../pages/input.php?action=exit");
 }
 
-$ip = check($_GET['ip']);
+$ip = $vavok->check($_GET['ip']);
 
 if (empty($ip)) { exit('please set ip address'); }
 

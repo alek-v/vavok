@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   28.07.2020. 23:02:28
+* Updated:   31.07.2020. 23:49:34
 */
 
 class Page {
@@ -16,19 +16,21 @@ class Page {
 	public $published; // Visitors can see page
 	public $page_author; // Page author
 	public $page_created_date; // Page created date
+	public $vavok;
 
 	// class constructor
 	function __construct($page_name = '', $page_language = '') {
-		global $db, $users;
+		global $db, $users, $vavok;
 
 		$this->table_prefix = DB_PREFIX; // Table prefix
-		$this->transfer_protocol = transfer_protocol(); // Transfer protocol
+		$this->transfer_protocol = $vavok->transfer_protocol(); // Transfer protocol
 		$this->db = $db; // database
 		$this->user_id = $users->current_user_id(); // User id with active login
 		$this->page_name = $page_name;
 		$this->page_language = $page_language;
+		$this->vavok = $vavok;
 
-		if (empty($page_title)) { $this->page_title = get_configuration('title'); /* Page title */ }
+		if (empty($page_title)) { $this->page_title = $vavok->get_configuration('title'); /* Page title */ }
 	}
 
 	/*

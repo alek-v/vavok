@@ -9,16 +9,16 @@
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 }
-$uz = isset($_POST['uz']) ? check($_POST['uz']) : '';
+$uz = isset($_POST['uz']) ? $vavok->check($_POST['uz']) : '';
 
 if (!isset($config_kontaktlist)) {
     $config_kontaktlist = '10';
@@ -28,8 +28,8 @@ if ($users->is_reg()) {
 
     if ($action == "ign") {
 
-        $todo = check($_GET["todo"]);
-        $who = check($_GET["who"]); 
+        $todo = $vavok->check($_GET["todo"]);
+        $who = $vavok->check($_GET["who"]); 
         $tnick = $users->getnickfromid($who);
 
         if ($todo == "add") {

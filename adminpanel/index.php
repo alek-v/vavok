@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:29:09
+* Updated:   01.08.2020. 19:11:29
 */
 
 require_once"../include/startup.php";
 
-if (!$users->check_permissions('adminpanel', 'show')) { redirect_to("../"); }
+if (!$users->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../"); }
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 if ($action == 'refver') {
 
@@ -137,7 +137,7 @@ if (empty($action)) {
         echo '<hr>';
 
         echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('syssets') . '</a>';
-        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $localization->string('ipbanp') . ' (' . counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
+        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $localization->string('ipbanp') . ' (' . $vavok->counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
         if (file_exists('subscribe.php')) {
             echo '<a href="subscribe.php" class="btn btn-outline-primary sitelink">' . $localization->string('subscriptions') . '</a>';
         } 

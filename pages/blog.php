@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 18:50:50
+* Updated:   01.08.2020. 2:38:09
 */
 
 include"../include/startup.php";
 
-$pg = isset($_GET['pg']) ? check($_GET['pg']) : ''; // blog page
+$pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : ''; // blog page
 
-$page = isset($_GET['page']) ? check($_GET['page']) : 1; // page number
+$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1; // page number
 
 $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
@@ -21,7 +21,7 @@ switch ($pg) {
 
 		// Get page id
 		// Redirect to blog main page if page does not exist
-		$page_id = !empty($current_page->page_id) or redirect_to(HOMEDIR . 'blog/');
+		$page_id = !empty($current_page->page_id) or $vavok->redirect_to(HOMEDIR . 'blog/');
 
 		// generate page
 		$post = new PageGen('pages/blog/post.tpl');
@@ -35,7 +35,7 @@ switch ($pg) {
 		$post->set('author_link', $author_link);
 
 		// Time created
-		$post->set('created_date', date_fixed($current_page->page_created_date, 'd.m.Y.'));
+		$post->set('created_date', $vavok->date_fixed($current_page->page_created_date, 'd.m.Y.'));
 
 		// content
 		$post->set('content', getbbcode($current_page->page_content));

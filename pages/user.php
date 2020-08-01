@@ -3,15 +3,15 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:53:20
+* Updated:   01.08.2020. 19:52:56
 */
 
 require_once"../include/startup.php";
 
 if (isset($_POST['uz'])) {
-    $uz = check($_POST['uz']);
+    $uz = $vavok->check($_POST['uz']);
 } elseif (isset($_GET['uz'])) {
-    $uz = check($_GET['uz']);
+    $uz = $vavok->check($_GET['uz']);
 } 
 
 if (!empty($uz)) {
@@ -21,9 +21,9 @@ if (!empty($uz)) {
     } else {
         $users_id = $uz;
         $uz = $users->getidfromnick($uz);
-        redirect_to("user.php?uz=" . $uz);
+        $vavok->redirect_to("user.php?uz=" . $uz);
     } 
-} else { redirect_to("../"); }
+} else { $vavok->redirect_to("../"); }
 
 $my_title = $localization->string('profile') . " " . $uz;
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -49,7 +49,6 @@ if ($checkIfExist < 1 || $users_id == 0) {
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
     exit;
 }
-
 
 if ($about_user['sex'] == "N" || $about_user['sex'] == "n" || empty($about_user['sex'])) {
     $showPage->set('sex-img', '<img src="../images/img/anonim.gif" alt="" />');
@@ -83,7 +82,7 @@ if ($show_user['banned'] == "1" && $user_profil['bantime'] > time()) {
 if (!empty($user_profil['perstat'])) {
     $personalStatus = new PageGen("pages/user-profile/status.tpl");
     $personalStatus->set('status', $localization->string('status') . ':');
-    $personalStatus->set('personalStatus', check($user_profil['perstat']));
+    $personalStatus->set('personalStatus', $vavok->check($user_profil['perstat']));
     $showPage->set('personalStatus', $personalStatus->output());
 } else {
     $showPage->set('personalStatus', '');
@@ -99,29 +98,29 @@ if ($about_user['sex'] == "N" or $about_user['sex'] == 'n' or $about_user['sex']
     $showPage->set('usersSex', $localization->string('female'));
 }
 if ($about_user['city'] != "") {
-    $showPage->set('city', $localization->string('city') . ': ' . check($about_user['city']) . '<br>');
+    $showPage->set('city', $localization->string('city') . ': ' . $vavok->check($about_user['city']) . '<br>');
 } else {
     $showPage->set('city', '');
 }
 if ($about_user['about'] != "") {
-    $showPage->set('about', $localization->string('about') . ': ' . check($about_user['about']) . ' <br>');
+    $showPage->set('about', $localization->string('about') . ': ' . $vavok->check($about_user['about']) . ' <br>');
 } else {
     $showPage->set('about', '');
 }
 if (!empty($about_user['birthday']) && $about_user['birthday'] != "..") {
-    $showPage->set('birthday', $localization->string('birthday') . ': ' . check($about_user['birthday']) . '<br>');
+    $showPage->set('birthday', $localization->string('birthday') . ': ' . $vavok->check($about_user['birthday']) . '<br>');
 } else {
     $showPage->set('birthday', '');
 }
 
-if ($config["forumAccess"] == '1') {
+if ($vavok->get_configuration('forumAccess') == 1) {
     $showPage->set('forumPosts', $localization->string('formposts') . ': ' . (int)$user_profil['forummes'] . '<br>');
 } else {
     $showPage->set('forumPosts', '');
 }
 
 if (!empty($show_user['browsers'])) {
-    $showPage->set('browser', $localization->string('browser') . ': ' . check($show_user['browsers']) . ' <br>');
+    $showPage->set('browser', $localization->string('browser') . ': ' . $vavok->check($show_user['browsers']) . ' <br>');
 } else {
     $showPage->set('browser', '');
 }
@@ -130,34 +129,33 @@ $user_skin = $show_user['skin'];
 $user_skin = str_replace("web_", "", $user_skin);
 $user_skin = str_replace("wap_", "", $user_skin);
 $user_skin = ucfirst($user_skin);
-$showPage->set('siteSkin', $localization->string('skin') . ': ' . check($user_skin) . '<br>');
+$showPage->set('siteSkin', $localization->string('skin') . ': ' . $vavok->check($user_skin) . '<br>');
 
 if ($about_user['site'] == "http://" || $about_user['site'] == "https://") {
     $about_user['site'] = "";
 } 
 if (!empty($about_user['site'])) {
-    $showPage->set('site', $localization->string('site') . ': <a href="' . check($about_user['site']) . '" target="_blank">' . $about_user['site'] . '</a><br>');
+    $showPage->set('site', $localization->string('site') . ': <a href="' . $vavok->check($about_user['site']) . '" target="_blank">' . $about_user['site'] . '</a><br>');
 } else {
     $showPage->set('site', '');
 }
 
 if (!empty($user_profil['regdate'])) {
-    $showPage->set('regDate', $localization->string('regdate') . ': ' . date_fixed(check($user_profil['regdate']), "d.m.Y.") . '<br>');
+    $showPage->set('regDate', $localization->string('regdate') . ': ' . $vavok->date_fixed($vavok->check($user_profil['regdate']), "d.m.Y.") . '<br>');
 } else {
     $showPage->set('regDate', '');
 }
 
-$showPage->set('lastVisit', $localization->string('lastvisit') . ': ' . date_fixed($user_profil['lastvst'], 'd.m.Y. / H:i'));
+$showPage->set('lastVisit', $localization->string('lastvisit') . ': ' . $vavok->date_fixed($user_profil['lastvst'], 'd.m.Y. / H:i'));
 
 if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
     $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
-    $ipAddress->set('ip-address', 'IP address: <a href="../' . get_configuration('mPanel') . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
+    $ipAddress->set('ip-address', 'IP address: <a href="../' . $vavok->get_configuration('mPanel') . '/ip-informations.php?ip=' . $show_user['ipadd'] . '" target="_blank">'  . $show_user['ipadd'] . '</a>');
 
     $showPage->set('ip-address', $ipAddress->output());
 } else {
     $showPage->set('ip-address', '');
 }
-
 
 if ($uz != $users->getnickfromid($users->user_id) && $users->is_reg()) {
 
@@ -175,12 +173,12 @@ if ($uz != $users->getnickfromid($users->user_id) && $users->is_reg()) {
     } 
 
     if ($users->is_reg() && ($users->is_moderator() || $users->is_administrator())) {
-        $userMenu->set('banUser', '<a href="../' . get_configuration('mPanel') . '/addban.php?action=edit&amp;users=' . $uz . '">' . $localization->string('bandelban') . '</a><br>');
+        $userMenu->set('banUser', '<a href="../' . $vavok->get_configuration('mPanel') . '/addban.php?action=edit&amp;users=' . $uz . '">' . $localization->string('bandelban') . '</a><br>');
     } else {
         $userMenu->set('banUser', '');
     }
     if ($users->is_reg() && $users->is_administrator(101)) {
-        $userMenu->set('updateProfile', '<a href="../' . get_configuration('mPanel') . '/users.php?action=edit&amp;users=' . $uz . '">' . $localization->string('update') . '</a><br>');
+        $userMenu->set('updateProfile', '<a href="../' . $vavok->get_configuration('mPanel') . '/users.php?action=edit&amp;users=' . $uz . '">' . $localization->string('update') . '</a><br>');
     } else {
         $userMenu->set('updateProfile', '');
     }

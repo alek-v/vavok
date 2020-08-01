@@ -8,9 +8,9 @@
 
 require_once"../include/startup.php";
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
-$recipient_mail = isset($_POST['recipient']) ? check($_POST['recipient']) : '';
-$recipient_id = isset($_GET['uid']) ? check($_GET['uid']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+$recipient_mail = isset($_POST['recipient']) ? $vavok->check($_POST['recipient']) : '';
+$recipient_id = isset($_GET['uid']) ? $vavok->check($_GET['uid']) : '';
 
 // resend registration email with key
 if ($action == 'resendkey') {
@@ -49,7 +49,7 @@ if ($action == 'resendkey') {
 
     }
 
-    redirect_to('key.php?uid=' . $recipient_id);
+    $vavok->redirect_to('key.php?uid=' . $recipient_id);
 
 }
 
@@ -87,9 +87,9 @@ if (empty($action)) {
 if ($action == "inkey") {
 
     if (isset($_GET['key'])) {
-        $key = check(trim($_GET['key']));
+        $key = $vavok->check(trim($_GET['key']));
     } else {
-        $key = check(trim($_POST['key']));
+        $key = $vavok->check(trim($_POST['key']));
     } 
 
     if (!empty($key)) {

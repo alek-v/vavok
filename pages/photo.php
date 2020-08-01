@@ -22,7 +22,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 <?php
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 

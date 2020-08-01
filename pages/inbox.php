@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 23:26:01
+* Updated:   01.08.2020. 19:28:59
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg()) redirect_to("../pages/login.php?ptl=pages/inbox.php");
+if (!$users->is_reg()) $vavok->redirect_to("../pages/login.php?ptl=pages/inbox.php");
 
 // Update notification data
 if ($db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'") > 0) $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
@@ -22,12 +22,11 @@ $genHeadTag = '<meta name="robots" content="noindex">
 $my_title = $localization->string('inbox');
 require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
 
-$action = isset($_GET['action']) ? check($_GET["action"]) : '';
-$page = isset($_GET['page']) ? check($_GET["page"]) : '';
-$who = isset($_GET['who']) ? check($_GET["who"]) : '';
-if (empty($who) && isset($_POST['who'])) $who = $users->getidfromnick(check($_POST['who']));
-$pmid = isset($_GET['pmid']) ? check($_GET["pmid"]) : '';
-
+$action = isset($_GET['action']) ? $vavok->check($_GET["action"]) : '';
+$page = isset($_GET['page']) ? $vavok->check($_GET["page"]) : '';
+$pmid = isset($_GET['pmid']) ? $vavok->check($_GET["pmid"]) : '';
+$who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
+if (empty($who) && isset($_POST['who'])) $who = $users->getidfromnick($vavok->check($_POST['who']));
 
 if (empty($action)) {
 
@@ -83,7 +82,7 @@ if (empty($action)) {
 
 } else if ($action == "dialog") {
 
-    if (empty($who) || empty($users->getnickfromid($who))) { show_error('User does not exist'); require_once BASEDIR . "themes/" . MY_THEME . "/foot.php"; exit; }
+    if (empty($who) || empty($users->getnickfromid($who))) { $vavok->show_error('User does not exist'); require_once BASEDIR . "themes/" . MY_THEME . "/foot.php"; exit; }
 
     $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 

@@ -2,9 +2,9 @@
 // (c) vavok.net
 require_once"../include/startup.php";
 
-if (isset($_POST['newpar'])) {$newpar = check($_POST['newpar']);}
-if (isset($_POST['newpar2'])) {$newpar2 = check($_POST['newpar2']);}
-if (isset($_POST['oldpar'])) {$oldpar = check($_POST['oldpar']);}
+if (isset($_POST['newpar'])) {$newpar = $vavok->check($_POST['newpar']);}
+if (isset($_POST['newpar2'])) {$newpar2 = $vavok->check($_POST['newpar2']);}
+if (isset($_POST['oldpar'])) {$oldpar = $vavok->check($_POST['oldpar']);}
 
 
 
@@ -12,8 +12,8 @@ if ($users->is_reg()) {
     
     $check_pass = $db->get_data('vavok_users', "id='{$users->user_id}'", 'pass');
 		
-    $newpar = check($newpar);
-    $oldpar = check($oldpar);
+    $newpar = $vavok->check($newpar);
+    $oldpar = $vavok->check($oldpar);
 
     if ($newpar == $newpar2) {
 
@@ -30,16 +30,16 @@ if ($users->is_reg()) {
             setcookie(session_name(), '');
             session_destroy();
 
-            redirect_to(website_home_address() . "/pages/input.php?log=" . $users->getnickfromid($users->user_id) . "&pass=" . $newpar . "&isset=editpass");
+            $vavok->redirect_to(website_home_address() . "/pages/input.php?log=" . $users->getnickfromid($users->user_id) . "&pass=" . $newpar . "&isset=editpass");
 
         } else {
-            redirect_to("profile.php?isset=nopass");
+            $vavok->redirect_to("profile.php?isset=nopass");
         } 
     } else {
-        redirect_to("profile.php?isset=nonewpass");
+        $vavok->redirect_to("profile.php?isset=nonewpass");
     } 
 } else {
-    redirect_to("../index.php?isset=inputoff");
+    $vavok->redirect_to("../index.php?isset=inputoff");
 } 
 
 ?>

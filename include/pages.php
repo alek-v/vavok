@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 11:32:00
+* Updated:   01.08.2020. 19:21:08
 */
 
 if (!empty($_GET['pg'])) {
@@ -21,10 +21,10 @@ if (!empty($_GET['pg'])) {
 // Load main page
 elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	// Requested page language
-	$requested_language = isset($_GET['ln']) ? check($_GET['ln']) : '';
+	$requested_language = isset($_GET['ln']) ? $vavok->check($_GET['ln']) : '';
 
 	// Load user notice from URL
-	$url_isset = isset($_GET['isset']) ? '?isset=' . check($_GET['isset']) : '';
+	$url_isset = isset($_GET['isset']) ? '?isset=' . $vavok->check($_GET['isset']) : '';
 
 	// Load main page
 	$current_page = new Page('index', $requested_language);
@@ -38,7 +38,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	// Redirect to root dir if visitor is using site default language and this language is requested in url
 	// Example: default website language is english and user is opening www.example.com/en/
 	if ($vavok->get_configuration('siteDefaultLang') == $users->get_prefered_language($requested_language) && !empty($requested_language) && file_exists(BASEDIR . "include/lang/" . $requested_language . "/index.php")) {
-		redirect_to("/" . $url_isset);
+		$vavok->redirect_to("/" . $url_isset);
 	}
 
 	/*
@@ -47,7 +47,7 @@ elseif (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
 	  and page with users's language exists
 	*/
 	if ($vavok->get_configuration('siteDefaultLang') != $users->get_user_language() && empty($requested_language)) {
-		redirect_to("/" .  $users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
+		$vavok->redirect_to("/" .  $users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
 	}
 
 } else {

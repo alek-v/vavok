@@ -3,39 +3,39 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 12:22:13
+* Updated:   01.08.2020. 19:11:40
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator(101)) {
-    redirect_to("../pages/error.php?error=401");
+    $vavok->redirect_to("../pages/error.php?error=401");
 }
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 // Мain settings update
 if ($action == "editone") {
 
 	// Check fields
     if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set2']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
-        redirect_to("settings.php?action=setone&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
     }
 
     $fields = array('keypass','webtheme','quarantine','adminNick','adminEmail','timeZone','title','homeUrl','transferProtocol','floodTime','siteDefaultLang','openReg','regConfirm','siteOff');
 
     $values = array(
-        check($_POST['conf_set1']),
-        check($_POST['conf_set2']),
-        check($_POST['conf_set3']),
-        check($_POST['conf_set8']),
+        $vavok->check($_POST['conf_set1']),
+        $vavok->check($_POST['conf_set2']),
+        $vavok->check($_POST['conf_set3']),
+        $vavok->check($_POST['conf_set8']),
         htmlspecialchars(stripslashes(trim($_POST['conf_set9']))),
-        check($_POST['conf_set10']),
-        check($_POST['conf_set11']),
-        check($_POST['conf_set14']),
-        check($_POST['conf_set21']),
+        $vavok->check($_POST['conf_set10']),
+        $vavok->check($_POST['conf_set11']),
+        $vavok->check($_POST['conf_set14']),
+        $vavok->check($_POST['conf_set21']),
         (int)$_POST['conf_set29'],
-        check($_POST['conf_set47']),
+        $vavok->check($_POST['conf_set47']),
         (int)$_POST['conf_set61'],
         (int)$_POST['conf_set62'],
         (int)$_POST['conf_set63']
@@ -83,7 +83,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
         file_put_contents('../.htaccess', $file);
     }
 
-    redirect_to("settings.php?isset=mp_yesset");
+    $vavok->redirect_to("settings.php?isset=mp_yesset");
 
  
 } 
@@ -91,7 +91,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 if ($action == "edittwo") {
 
 	if (!isset($_POST['conf_set4']) || !isset($_POST['conf_set5']) || !isset($_POST['conf_set7']) || !isset($_POST['conf_set32']) || !isset($_POST['conf_set74'])) {
-        redirect_to("settings.php?action=settwo&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=settwo&isset=mp_nosset");
     }
 
     $fields = array(
@@ -113,14 +113,14 @@ if ($action == "edittwo") {
     // Update data
 	$db->update(DB_PREFIX . 'settings', $fields, $values);
 
-	redirect_to("settings.php?isset=mp_yesset");
+	$vavok->redirect_to("settings.php?isset=mp_yesset");
 	
 } 
 
 if ($action == "editthree") {
 
     if (!isset($_POST['conf_set20']) || !isset($_POST['conf_set22']) || !isset($_POST['conf_set24']) || !isset($_POST['conf_set56'])) {
-        redirect_to("settings.php?action=setthree&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=setthree&isset=mp_nosset");
     }
 
     $fields = array(
@@ -139,14 +139,14 @@ if ($action == "editthree") {
 
     $db->update(DB_PREFIX . 'settings', $fields, $values);
 
-    redirect_to("settings.php?isset=mp_yesset");
+    $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 
 if ($action == "editfour") {
 
     if (!isset($_POST['conf_set38']) || !isset($_POST['conf_set39']) || !isset($_POST['conf_set49'])) {
-        redirect_to("settings.php?action=setfour&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=setfour&isset=mp_nosset");
     }
 
     // Update main config
@@ -191,28 +191,28 @@ if ($action == "editfour") {
         }
     }
 
-    redirect_to("settings.php?isset=mp_yesset");
+    $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 
 if ($action == "editfive") {
 
 	if (!isset($_POST['conf_set30'])) {
-        redirect_to("settings.php?action=setfive&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=setfive&isset=mp_nosset");
     }
 
 	$udata[30] = (int)$_POST['conf_set30'];
 
 	$db->update(DB_PREFIX . 'settings', 'pvtLimit', (int)$_POST['conf_set30']);
 
-	redirect_to("settings.php?isset=mp_yesset");
+	$vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 
 if ($action == "editseven") {
 
     if (!isset($_POST['conf_set6']) || !isset($_POST['conf_set51']) || !isset($_POST['conf_set70'])) {
-        redirect_to("settings.php?action=setseven&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=setseven&isset=mp_nosset");
     }
 
     // url of custom pages
@@ -256,14 +256,14 @@ if ($action == "editseven") {
 
     $db->update(DB_PREFIX . 'settings', $fields, $values);
 
-    redirect_to("settings.php?isset=mp_yesset");
+    $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 
 if ($action == "editeight") {
 
     if (!isset($_POST['conf_set58']) || !isset($_POST['conf_set76'])) {
-        redirect_to("settings.php?action=seteight&isset=mp_nosset");
+        $vavok->redirect_to("settings.php?action=seteight&isset=mp_nosset");
     }
 
     $fields = array(
@@ -279,7 +279,7 @@ if ($action == "editeight") {
     // Update data
     $db->update(DB_PREFIX . 'settings', $fields, $values);
 
-    redirect_to("settings.php?isset=mp_yesset");
+    $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 

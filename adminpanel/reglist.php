@@ -3,16 +3,16 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 23:42:40
+* Updated:   01.08.2020. 2:40:41
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { redirect_to("../index.php?error"); } 
+if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) { $vavok->redirect_to("../index.php?error"); } 
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
-$usr = isset($_GET['usr']) ? check($_GET['usr']) : '';
-$page = isset($_GET['page']) ? check($_GET['page']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+$usr = isset($_GET['usr']) ? $vavok->check($_GET['usr']) : '';
+$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
 
 if ($action == 'conf' && !empty($usr)) {
     $fields = array('regche', 'regkey');
@@ -22,9 +22,9 @@ if ($action == 'conf' && !empty($usr)) {
     $about_user = $db->get_data('vavok_about', "uid='" . $usr . "'", 'email');
     $vav_name = $users->getnickfromid($usr);
 
-    $message = $localization->string('hello') . " " . $vav_name . "!\r\n\r\n" . $localization->string('sitemod') . " " . get_configuration('homeBase') . " " . $localization->string('confirmedreg') . ".\r\n" . $localization->string('youcanlog') . ".\r\n\r\n" . $localization->string('bye') . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst(get_configuration('homeBase'));
+    $message = $localization->string('hello') . " " . $vav_name . "!\r\n\r\n" . $localization->string('sitemod') . " " . $vavok->get_configuration('homeBase') . " " . $localization->string('confirmedreg') . ".\r\n" . $localization->string('youcanlog') . ".\r\n\r\n" . $localization->string('bye') . "!\r\n\r\n\r\n\r\n" . $users->getnickfromid($users->user_id) . "\r\n" . ucfirst($vavok->get_configuration('homeBase'));
     $newMail = new Mailer;
-    $newMail->send($about_user['email'], $localization->string('msgfrmst') . " " . get_configuration('title'), $message);
+    $newMail->send($about_user['email'], $localization->string('msgfrmst') . " " . $vavok->get_configuration('title'), $message);
 
 
     header("Location: reglist.php?isset=mp_ydelconf");
@@ -52,7 +52,7 @@ if (empty($action)) {
     if ($num_items > 0) {
         foreach ($db->query($sql) as $item) {
             $show_userx = $db->get_data('vavok_users', "id='" . $item['uid'] . "'", 'browsers, ipadd');
-            $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $users->getnickfromid($item['uid']) . "</a> (" . date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
+            $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $users->getnickfromid($item['uid']) . "</a> (" . $vavok->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
             if ($item['regche'] == 1) {
                 $bt = "" . $localization->string('notconfirmed') . "!";
                 $bym = '<a href="reglist.php?action=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $localization->string('confirms') . '</a>';

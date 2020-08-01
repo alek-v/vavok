@@ -3,30 +3,30 @@
 
 require_once"../include/startup.php";
 
-if (isset($_GET['action'])) {$action = check($_GET['action']);}
+if (isset($_GET['action'])) {$action = $vavok->check($_GET['action']);}
 
 if (!$users->is_reg()) {
-    redirect_to(BASEDIR . "pages/error.php?isset=nologin");
+    $vavok->redirect_to(BASEDIR . "pages/error.php?isset=nologin");
 }
 
 // add to admin chat
 if ($action == "acadd") {
 
     if (!$users->is_reg() || !$users->check_permissions('adminchat')) {
-        redirect_to(BASEDIR . "pages/input.php?action=exit");
+        $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
     }
 
-    $brow = check($users->user_browser());
-    $msg = check(wordwrap($_POST['msg'], 150, ' ', 1));
+    $brow = $vavok->check($users->user_browser());
+    $msg = $vavok->check(wordwrap($_POST['msg'], 150, ' ', 1));
     $msg = substr($msg, 0, 1200);
-    $msg = check($msg);
+    $msg = $vavok->check($msg);
 
-    $msg = antiword($msg);
-    $msg = smiles($msg);
-    $msg = no_br($msg, '<br />');
+    $msg = $vavok->antiword($msg);
+    $msg = $vavok->smiles($msg);
+    $msg = $vavok->no_br($msg, '<br />');
 
-    $text = $msg . '|' . $users->show_username() . '|' . date_fixed(time(), "d.m.y") . '|' . date_fixed(time(), "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
-    $text = no_br($text);
+    $text = $msg . '|' . $users->show_username() . '|' . $vavok->date_fixed(time(), "d.m.y") . '|' . $vavok->date_fixed(time(), "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
+    $text = $vavok->no_br($text);
 
     $fp = fopen("../used/adminchat.dat", "a+");
     flock ($fp, LOCK_EX);
@@ -51,7 +51,7 @@ if ($action == "acadd") {
 // empty admin chat
 if ($action == "acdel") {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-        clear_files("../used/adminchat.dat");
+        $vavok->clear_files("../used/adminchat.dat");
 
         header ("Location: adminchat.php?isset=mp_admindelchat");
         exit;
@@ -59,7 +59,7 @@ if ($action == "acdel") {
 } 
 
 if ($action == "delmail" && $_SESSION['permissions'] == 101) {
-    $users_id = check($_GET['users']);
+    $users_id = $vavok->check($_GET['users']);
     //$users_id = $users->getidfromnick($users);
     if ($users_id != "") {
 
@@ -86,7 +86,7 @@ if ($action == "delallsub" && $_SESSION['permissions'] == 101) {
 
 
 if ($action == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-	$ips = check($_POST['ips']);
+	$ips = $vavok->check($_POST['ips']);
 
     if (!empty($ips) && substr_count($ips, '.') == 3) {
         $fp = fopen("../used/ban.dat", "a+");
@@ -97,12 +97,12 @@ if ($action == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permiss
         fclose($fp);
     }
 
-    redirect_to("ban.php");
+    $vavok->redirect_to("ban.php");
 } 
 
 if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 
-	if (isset($_POST['id'])) {$id = check($_POST['id']);} else {$id = check($_GET['id']);}
+	if (isset($_POST['id'])) {$id = $vavok->check($_POST['id']);} else {$id = $vavok->check($_GET['id']);}
 
     if (isset($id)) {
 
@@ -120,20 +120,20 @@ if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permis
 
     }
 
-    redirect_to("ban.php");
+    $vavok->redirect_to("ban.php");
 
 } 
 
 if ($action == "delallip" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 
-    clear_files("../used/ban.dat");
+    $vavok->clear_files("../used/ban.dat");
 
-    redirect_to("ban.php");
+    $vavok->redirect_to("ban.php");
 
 } 
 
 if ($action == "delbw" && $_SESSION['permissions'] == 101) {
-	$stroka = check($_GET['stroka']);
+	$stroka = $vavok->check($_GET['stroka']);
     $file = file('../used/antiword.dat');
     $filestr = explode("|", $file[0]);
     unset($filestr[$stroka]);
@@ -145,7 +145,7 @@ if ($action == "delbw" && $_SESSION['permissions'] == 101) {
     exit;
 } 
 if ($action == "addbw" && $_SESSION['permissions'] == 101 && $_POST['slovo'] != '') {
-	$slovo = check($_POST['slovo']);
+	$slovo = $vavok->check($_POST['slovo']);
     $fp = fopen(BASEDIR . "used/antiword.dat", "a+");
     $text = preg_replace ("|[\r\n]+|si", "", $slovo);
     fputs($fp, $text . '|');
@@ -155,24 +155,24 @@ if ($action == "addbw" && $_SESSION['permissions'] == 101 && $_POST['slovo'] != 
 } 
 
 if ($action == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-    clear_files("../used/datalog/error401.dat");
-    clear_files("../used/datalog/error402.dat");
-    clear_files("../used/datalog/error403.dat");
-    clear_files("../used/datalog/error404.dat");
-    clear_files("../used/datalog/error406.dat");
-    clear_files("../used/datalog/error500.dat");
-    clear_files("../used/datalog/error502.dat");
-    clear_files("../used/datalog/dberror.dat");
-    clear_files("../used/datalog/error.dat");
-    clear_files("../used/datalog/ban.dat");
+    $vavok->clear_files("../used/datalog/error401.dat");
+    $vavok->clear_files("../used/datalog/error402.dat");
+    $vavok->clear_files("../used/datalog/error403.dat");
+    $vavok->clear_files("../used/datalog/error404.dat");
+    $vavok->clear_files("../used/datalog/error406.dat");
+    $vavok->clear_files("../used/datalog/error500.dat");
+    $vavok->clear_files("../used/datalog/error502.dat");
+    $vavok->clear_files("../used/datalog/dberror.dat");
+    $vavok->clear_files("../used/datalog/error.dat");
+    $vavok->clear_files("../used/datalog/ban.dat");
 
-    redirect_to("logfiles.php?isset=mp_dellogs");
+    $vavok->redirect_to("logfiles.php?isset=mp_dellogs");
 } 
 
 if ($action == "delerid" && !empty($_GET['err']) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 
-	$err = check($_GET['err']);
-    clear_files("../used/datalog/" . $err . ".dat");
+	$err = $vavok->check($_GET['err']);
+    $vavok->clear_files("../used/datalog/" . $err . ".dat");
 
     header ("Location: logfiles.php?isset=mp_dellogs");
     exit;

@@ -4,14 +4,14 @@
 
 <?php
 
-if ($config["showOnline"] == 1) {
-echo '<span>' . show_online() . '<br /></span>';
+if ($vavok->get_configuration('showOnline') == 1) {
+echo '<span>' . $vavok->show_online() . '<br /></span>';
 }
-if ($config["showCounter"] != 6) {
-	echo '<span>' . show_counter() . '<br /></span>';
+if ($vavok->get_configuration('showCounter') != 6) {
+	echo '<span>' . $vavok->show_counter() . '<br /></span>';
 }
-if ($config["pageGenTime"] == 1) {
-    echo '<span>' . show_gentime() . '<br /></span>';
+if ($vavok->get_configuration('pageGenTime') == 1) {
+    echo '<span>' . $vavok->show_gentime() . '<br /></span>';
 } 
 
 echo '<span>powered by <a href="https://www.vavok.net/" class="sitelink">Vavok.net</a></span>';

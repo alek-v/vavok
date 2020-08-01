@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:23:38
+* Updated:   01.08.2020. 0:24:38
 */
 
 if (!defined('BASEDIR')) {
@@ -19,7 +19,7 @@ require_once BASEDIR . "include/startup.php";
 $ip = $users->find_ip();
 
 if (isset($_GET['error'])) {
-    $error = check($_GET['error']);
+    $error = $vavok->check($_GET['error']);
 } 
 
 if ($error == '404') {
@@ -28,7 +28,7 @@ if ($error == '404') {
 
 include_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-$http_referer = !empty($_SERVER['HTTP_REFERER']) ? check($_SERVER['HTTP_REFERER']) : 'No referer';
+$http_referer = !empty($_SERVER['HTTP_REFERER']) ? $vavok->check($_SERVER['HTTP_REFERER']) : 'No referer';
 
 $http_referer = str_replace(":|:", "|", $http_referer);
 $request_uri = str_replace(":|:", "|", REQUEST_URI);
@@ -85,11 +85,11 @@ if ($error == '401') {
     $timeresult = $nowtime - $dberrorstart;
 
     if ($timeresult > 300) { // 300 = 5 minutes
-        $dberdate = date_fixed($dberrorstart, 'd-M-Y', '');
-        $dbertime = date_fixed($dberrorstart, 'H-i-s', '');
+        $dberdate = $vavok->date_fixed($dberrorstart, 'd-M-Y', '');
+        $dbertime = $vavok->date_fixed($dberrorstart, 'H-i-s', '');
         $subject = 'Database down';
         $mailtext = $localization->string('dbdownmail') . " " . $dberdate . " " . $dbertime . "\n";
-        sendmail(get_configuration('adminEmail'), $subject, $mailtext); // email to me
+        sendmail($vavok->get_configuration('adminEmail'), $subject, $mailtext); // email to me
     } 
 
     if ($timeresult > 28800) { // 28800 = 8 hours
@@ -129,7 +129,7 @@ if (isset($write) && !empty($logdat)) {
 
     $file = file($logdat);
     $i = count($file);
-    if ($i >= get_configuration('maxLogData')) {
+    if ($i >= $vavok->get_configuration('maxLogData')) {
         $fp = fopen($logdat, "w");
         flock ($fp, LOCK_EX);
         unset($file[0]);

@@ -3,22 +3,22 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 20:02:55
+* Updated:   01.08.2020. 19:25:19
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || !$users->is_administrator()) { redirect_to('./?error=noauth'); }
+if (!$users->is_reg() || !$users->is_administrator()) { $vavok->redirect_to('./?error=noauth'); }
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_POST['users'])) {
-    $user = check($_POST['users']);
+    $user = $vavok->check($_POST['users']);
 } elseif (!empty($_GET['users'])) {
-    $user = check($_GET['users']);
+    $user = $vavok->check($_GET['users']);
 } else { $user = ''; }
 
 $users_id = $users->getidfromnick($user);
@@ -50,13 +50,13 @@ if ($action == "edit") {
 
                 echo '<img src="../images/img/profiles.gif" alt=""> ' . $localization->string('usrprofile') . ' ' . $user . '<br>';
 
-                if ($users->show_username() != get_configuration('adminNick') && $user == get_configuration('adminNick')) {
+                if ($users->show_username() != $vavok->get_configuration('adminNick') && $user == $vavok->get_configuration('adminNick')) {
                     echo '<br>' . $localization->string('noauthtoedit') . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
                 } 
 
-                if (($users->show_username() != get_configuration('adminNick')) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
+                if (($users->show_username() != $vavok->get_configuration('adminNick')) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
                     echo '<br>' . $localization->string('noauthtoban') . '!<br>';
                     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
                     exit;
@@ -70,7 +70,7 @@ if ($action == "edit") {
 
                 $userx_access = (int)$show_userx['perm'];
 
-                if ($_SESSION['permissions'] == 101 && $users->show_username() == get_configuration('adminNick')) {
+                if ($_SESSION['permissions'] == 101 && $users->show_username() == $vavok->get_configuration('adminNick')) {
                     $array_dostup = array(101 => "" . $localization->string('access101') . "", 102 => "" . $localization->string('access102') . "", 103 => "" . $localization->string('access103') . "", 105 => "" . $localization->string('access105') . "", 106 => "" . $localization->string('access106') . "", 107 => "" . $localization->string('access107') . "");
                     if ($userx_access == "0" || empty($userx_access)) {
                         $userx_access = "107";
@@ -97,7 +97,7 @@ if ($action == "edit") {
                 echo $localization->string('aboutyou') . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
                 echo $localization->string('yemail') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
                 echo $localization->string('site') . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
-                // echo $localization->string('regdate') . ':<br><input name="udd6" value="' . date_fixed(check($userx_profil[1]), "d.m.Y") . '" /><br>';
+                // echo $localization->string('regdate') . ':<br><input name="udd6" value="' . $vavok->date_fixed($vavok->check($userx_profil[1]), "d.m.Y") . '" /><br>';
                 echo $localization->string('browser') . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
                 echo $localization->string('name') . ':<br><input name="udd29" value="' . $about_userx['rname'] . '" /><br>';
                 echo $localization->string('perstatus') . ':<br><input name="udd40" value="' . $userx_profil['perstat'] . '" /><br>';
@@ -115,7 +115,7 @@ if ($action == "edit") {
                     echo '<font color="#FF0000"><b>' . $localization->string('notactivated') . '</b></font><br>';
                 } 
                 echo $localization->string('numbbans') . ': <b>' . (int)$userx_profil['allban'] . '</b><br>';
-                echo $localization->string('lastvst') . ': <b>' . date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
+                echo $localization->string('lastvst') . ': <b>' . $vavok->date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
                 echo 'IP: <b>' . $show_userx['ipadd'] . '</b><br>';
 
                 echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form><hr>';
@@ -139,26 +139,26 @@ if ($action == "edit") {
 // update changes
 if ($action == "upgrade") {
 
-    $udd1 = isset($_POST['udd1']) ? check($_POST['udd1']) : '';
-    $udd2 = isset($_POST['udd2']) ? check($_POST['udd2']) : '';
-    $udd3 = isset($_POST['udd3']) ? check($_POST['udd3']) : '';
-    $udd4 = isset($_POST['udd4']) ? check($_POST['udd4']) : '';
-    $udd5 = isset($_POST['udd5']) ? check($_POST['udd5']) : '';
-    $udd6 = isset($_POST['udd6']) ? check($_POST['udd6']) : '';
-    $udd7 = isset($_POST['udd7']) ? check($_POST['udd7']) : ''; // access level
-    $udd8 = isset($_POST['udd8']) ? check($_POST['udd8']) : '';
-    $udd9 = isset($_POST['udd9']) ? check($_POST['udd9']) : '';
-    $udd10 = isset($_POST['udd10']) ? check($_POST['udd10']) : '';
-    $udd11 = isset($_POST['udd11']) ? check($_POST['udd11']) : '';
-    $udd12 = isset($_POST['udd12']) ? check($_POST['udd12']) : '';
-    $udd13 = isset($_POST['udd13']) ? check($_POST['udd13']) : '';
-    $udd29 = isset($_POST['udd29']) ? check($_POST['udd29']) : '';
-    $udd40 = isset($_POST['udd40']) ? check($_POST['udd40']) : '';
-    $udd43 = isset($_POST['udd43']) ? check($_POST['udd43']) : '';
+    $udd1 = isset($_POST['udd1']) ? $vavok->check($_POST['udd1']) : '';
+    $udd2 = isset($_POST['udd2']) ? $vavok->check($_POST['udd2']) : '';
+    $udd3 = isset($_POST['udd3']) ? $vavok->check($_POST['udd3']) : '';
+    $udd4 = isset($_POST['udd4']) ? $vavok->check($_POST['udd4']) : '';
+    $udd5 = isset($_POST['udd5']) ? $vavok->check($_POST['udd5']) : '';
+    $udd6 = isset($_POST['udd6']) ? $vavok->check($_POST['udd6']) : '';
+    $udd7 = isset($_POST['udd7']) ? $vavok->check($_POST['udd7']) : ''; // access level
+    $udd8 = isset($_POST['udd8']) ? $vavok->check($_POST['udd8']) : '';
+    $udd9 = isset($_POST['udd9']) ? $vavok->check($_POST['udd9']) : '';
+    $udd10 = isset($_POST['udd10']) ? $vavok->check($_POST['udd10']) : '';
+    $udd11 = isset($_POST['udd11']) ? $vavok->check($_POST['udd11']) : '';
+    $udd12 = isset($_POST['udd12']) ? $vavok->check($_POST['udd12']) : '';
+    $udd13 = isset($_POST['udd13']) ? $vavok->check($_POST['udd13']) : '';
+    $udd29 = isset($_POST['udd29']) ? $vavok->check($_POST['udd29']) : '';
+    $udd40 = isset($_POST['udd40']) ? $vavok->check($_POST['udd40']) : '';
+    $udd43 = isset($_POST['udd43']) ? $vavok->check($_POST['udd43']) : '';
 
     if ($users->validate_email($udd4)) {
 
-        if (empty($udd5) || validateURL($udd5) === true) {
+        if (empty($udd5) || $vavok->validateURL($udd5) === true) {
 
             $users_id = $users->getidfromnick($user);
 
@@ -176,7 +176,7 @@ if ($action == "upgrade") {
                 } 
 
                 if (!empty($newpass)) {
-                    $db->update('vavok_users', 'pass', no_br($newpass), "id='{$users_id}'");
+                    $db->update('vavok_users', 'pass', $vavok->no_br($newpass), "id='{$users_id}'");
                 }
 
                 // access level
@@ -202,13 +202,13 @@ if ($action == "upgrade") {
                 }
 
 
-                $db->update('vavok_users', 'browsers', no_br(check($udd13)), "id='{$users_id}'");
+                $db->update('vavok_users', 'browsers', $vavok->no_br($vavok->check($udd13)), "id='{$users_id}'");
 
                 $fields = array('city', 'about', 'email', 'site', 'rname');
-                $values = array(no_br(check($udd2)), check($udd3), no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), no_br(check($udd5)), no_br(check($udd29)));
+                $values = array(no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
                 $db->update('vavok_about', $fields, $values, "uid='" . $users_id . "'");
                 
-                $db->update('vavok_profil', 'perstat', no_br(check($udd40)), "uid='{$users_id}'");
+                $db->update('vavok_profil', 'perstat', no_br($vavok->check($udd40)), "uid='{$users_id}'");
 
                 echo $localization->string('usrdataupd') . '!<br>';
 
@@ -238,7 +238,7 @@ if ($action == "poddel") {
 
 // delete user
 if ($action == "deluser") {
-    if ($user != get_configuration('adminNick')) {
+    if ($user != $vavok->get_configuration('adminNick')) {
         $userx_id = $users->getidfromnick($user);
         $show_userx = $db->get_data('vavok_users', "id='" . $userx_id . "'", 'perm');
 

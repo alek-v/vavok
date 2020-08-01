@@ -3,13 +3,13 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   25.07.2020. 15:18:03
+* Updated:   01.08.2020. 19:21:54
 */
 
 include_once"../include/startup.php";
 
 // Page name
-$pg = isset($_GET['pg']) ? check($_GET['pg']) : '';
+$pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : '';
 
 /*
     redirect to url_rewrite url
@@ -17,7 +17,7 @@ $pg = isset($_GET['pg']) ? check($_GET['pg']) : '';
     it redirect to non-rewriten url
 */
 if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) {
-	redirect_to(BASEDIR . 'page/' . $pg . '/');
+	$vavok->redirect_to(BASEDIR . 'page/' . $pg . '/');
 }
 
 /* Page not found */
@@ -33,7 +33,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 <p>Error 404 - Page not found<br /></p>
 <div class="break"></div>
-<p><a href="<?php echo website_home_address(); ?>" class="btn btn-primary homepage"><?php echo $localization->string('home'); ?></a></p>
+<p><a href="<?php echo $vavok->website_home_address(); ?>" class="btn btn-primary homepage"><?php echo $localization->string('home'); ?></a></p>
 <div class="break"></div>
 
 <?php
@@ -54,7 +54,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 if ($current_page->published == 1 && !$users->is_administrator()) {
 	echo '<p>Requested page is not published.</p>'; // update lang
 	echo '<p><br /><br />';
-	echo '<a href="' . website_home_address() . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+	echo '<a href="' . $vavok->website_home_address() . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 	require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 	exit;
@@ -64,10 +64,10 @@ if ($current_page->published == 1 && !$users->is_administrator()) {
 $this_page->set('content', $current_page->page_content);
 
 // facebook comments
-if (get_configuration('pgFbComm') == 1) $this_page->set('facebook_comments', $this_page->facebook_comments());
+if ($vavok->get_configuration('pgFbComm') == 1) $this_page->set('facebook_comments', $this_page->facebook_comments());
 
 // homepage address
-$this_page->set('homepage_url', website_home_address()); // homepage url
+$this_page->set('homepage_url', $vavok->website_home_address()); // homepage url
 
 // show page
 echo $this_page->output();

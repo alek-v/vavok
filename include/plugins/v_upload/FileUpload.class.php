@@ -176,13 +176,13 @@ HEAD;
 
 
     if (isset($_POST['width']) && !empty($_POST['width'])) {
-        $width = check($_POST['width']);
+        $width = $vavok->check($_POST['width']);
     }
     if (isset($_POST['rename']) && !empty($_POST['rename'])) {
-        $rename = check($_POST['rename']);
+        $rename = $vavok->check($_POST['rename']);
     } 
     if (isset($_POST['lowercase']) && !empty($_POST['lowercase'])) {
-        $lowercase = check($_POST['lowercase']);
+        $lowercase = $vavok->check($_POST['lowercase']);
     } else {
     	$lowercase = '';
     }
@@ -289,7 +289,7 @@ HEAD;
 	    }
 	}
 
-    return array('file_address' => website_home_address() . $upload_URL);
+    return array('file_address' => $vavok->website_home_address() . $upload_URL);
 
 	}
 

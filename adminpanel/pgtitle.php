@@ -3,26 +3,26 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 19:46:44
+* Updated:   01.08.2020. 19:24:24
 */
 
 require_once"../include/startup.php";
 
 $act = '';
 if (isset($_GET['act'])) {
-    $act = check($_GET['act']);
+    $act = $vavok->check($_GET['act']);
 } elseif (isset($_POST['act'])) {
-	$act = check($_POST['act']);
+	$act = $vavok->check($_POST['act']);
 }
 
 if (!$users->is_administrator() || !$users->is_reg()) {
-    redirect_to("../?error");
+    $vavok->redirect_to("../?error");
 } 
 
 if ($act == "addedit") {
 
-    $tfile = check($_POST['tfile']);
-    $msg = no_br($_POST['msg']);
+    $tfile = $vavok->check($_POST['tfile']);
+    $msg = $vavok->no_br($_POST['msg']);
 
     // get page data
     $pageData = $db->get_data(DB_PREFIX . 'pages', "file='{$tfile}'", 'file, headt');
@@ -50,16 +50,16 @@ if ($act == "addedit") {
     $db->update(DB_PREFIX . 'pages', $fields, $values, "file='{$tfile}'");
 
 
-    redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
+    $vavok->redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
 
 } 
 
 if ($act == "savenew") {
-    $tpage = check($_POST['tpage']);
+    $tpage = $vavok->check($_POST['tpage']);
     $tpage = strtolower($tpage);
     $tpage = str_replace(' ', '-', $tpage);
 
-    $msg = no_br($_POST['msg']);
+    $msg = $vavok->no_br($_POST['msg']);
 
     $last_notif = $db->get_data(DB_PREFIX . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
@@ -99,16 +99,16 @@ if ($act == "savenew") {
         $PBPage = true;
     } 
 
-    redirect_to("pgtitle.php?isset=savedok");
+    $vavok->redirect_to("pgtitle.php?isset=savedok");
 
 } 
 
 if ($act == "del") {
-    $tid = check($_GET['tid']);
+    $tid = $vavok->check($_GET['tid']);
 
     $db->delete(DB_PREFIX . 'pages', "pname = '" . $tid . "'");
 
-    redirect_to("pgtitle.php");
+    $vavok->redirect_to("pgtitle.php");
 } 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -125,7 +125,7 @@ if (!isset($act) || empty($act)) {
     } 
 
     if (isset($_GET['page'])) {
-        $page = check($_GET['page']);
+        $page = $vavok->check($_GET['page']);
     } else { $page = ''; }
 
     $nitems = $db->count_row(DB_PREFIX . 'pages', 'tname is not null');
@@ -154,7 +154,7 @@ if (!isset($act) || empty($act)) {
 } 
 
 if ($act == "edit") {
-    $pgfile = check($_GET['pgfile']);
+    $pgfile = $vavok->check($_GET['pgfile']);
 
     $page_title = $db->get_data(DB_PREFIX . 'pages', "file='" . $pgfile . "'", 'tname, pname');
 

@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:15:45
+* Updated:   01.08.2020. 2:38:20
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg()) { redirect_to("../"); } 
+if (!$users->is_reg()) { $vavok->redirect_to("../"); } 
 
 $vavok_userx = $db->get_data('vavok_users', "id='{$users->user_id}'", 'banned');
 $show_prof = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'bantime, bandesc, allban');

@@ -9,12 +9,12 @@
 require_once"../include/startup.php";
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (isset($_GET['start'])) {
-    $start = check($_GET['start']);
+    $start = $vavok->check($_GET['start']);
 } 
 
 if ($users->is_reg()) {

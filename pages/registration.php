@@ -3,32 +3,32 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   26.07.2020. 18:57:33
+* Updated:   01.08.2020. 2:28:30
 */
 
 require_once"../include/startup.php";
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 if ($action == 'reguser') {
 
-$log = isset($_POST['log']) ? check($_POST['log']) : '';
-$pass = isset($_POST['par']) ? check($_POST['par']) : '';
-$pass2 = isset($_POST['pars']) ? check($_POST['pars']) : '';
-$meil = isset($_POST['meil']) ? check($_POST['meil']) : '';
-$pagetoload = isset($_POST['ptl']) ? check($_POST['ptl']) : '';
+$log = isset($_POST['log']) ? $vavok->check($_POST['log']) : '';
+$pass = isset($_POST['par']) ? $vavok->check($_POST['par']) : '';
+$pass2 = isset($_POST['pars']) ? $vavok->check($_POST['pars']) : '';
+$meil = isset($_POST['meil']) ? $vavok->check($_POST['meil']) : '';
+$pagetoload = isset($_POST['ptl']) ? $vavok->check($_POST['ptl']) : '';
 
 $str1 = mb_strlen($log);
 $str2 = mb_strlen($pass);
 
 if ($str1 > 20 || $str2 > 20) {
-    redirect_to("registration.php?isset=biginfo");
+    $vavok->redirect_to("registration.php?isset=biginfo");
 } elseif ($str1 < 3 || $str2 < 3) {
-    redirect_to("registration.php?isset=smallinfo");
+    $vavok->redirect_to("registration.php?isset=smallinfo");
 } elseif (!$users->validate_username($log)) {
-    redirect_to("registration.php?isset=useletter");
+    $vavok->redirect_to("registration.php?isset=useletter");
 } elseif ($pass !== $pass2) {
-    redirect_to("registration.php?isset=nopassword");
+    $vavok->redirect_to("registration.php?isset=nopassword");
 }
 
 // meta tag for this page
@@ -64,28 +64,28 @@ if ($substr_log < 3) {
 
                     if ($securimage->check($_POST['captcha_code']) == true) {
 
-                        $password = check($pass);
+                        $password = $vavok->check($pass);
 
                         $mail = htmlspecialchars(stripslashes(strtolower($meil)));
 
-                        if (get_configuration('regConfirm') == 1) {
+                        if ($vavok->get_configuration('regConfirm') == 1) {
                             $registration_key = time() + 24 * 60 * 60;
                         } else {
                             $registration_key = '';
                         }
 
                         // register user
-                        $users->register($log, $password, get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
+                        $users->register($log, $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
                          
                         // send email with reg. data
-                        if (get_configuration('regConfirm') == "1") {
-                            $needkey = "\r\n\r\n" . $localization->string('emailpart5') . "\r\n" . $localization->string('yourkey') . ": " . $registration_key . "\r\n" . $localization->string('emailpart6') . ":\r\n\r\n" . website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $localization->string('emailpart7') . "\r\n\r\n";
+                        if ($vavok->get_configuration('regConfirm') == "1") {
+                            $needkey = "\r\n\r\n" . $localization->string('emailpart5') . "\r\n" . $localization->string('yourkey') . ": " . $registration_key . "\r\n" . $localization->string('emailpart6') . ":\r\n\r\n" . $vavok->website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $localization->string('emailpart7') . "\r\n\r\n";
                         } else {
                             $needkey = "\r\n\r\n";
                         } 
 
-                        $subject = $localization->string('regonsite') . ' ' . get_configuration('title');
-                        $regmail = $localization->string('hello') . " " . $log . "\r\n" . $localization->string('emailpart1') . " " . get_configuration('homeUrl') . " \r\n" . $localization->string('emailpart2') . ":\r\n\r\n" . $localization->string('username') . ": " . $log . "\r\n" . $needkey . "" . $localization->string('emailpart3') . "\r\n" . $localization->string('emailpart4') . "";
+                        $subject = $localization->string('regonsite') . ' ' . $vavok->get_configuration('title');
+                        $regmail = $localization->string('hello') . " " . $log . "\r\n" . $localization->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . " \r\n" . $localization->string('emailpart2') . ":\r\n\r\n" . $localization->string('username') . ": " . $log . "\r\n" . $needkey . "" . $localization->string('emailpart3') . "\r\n" . $localization->string('emailpart4') . "";
 
                         // Send confirmation email
                         $newMail = new Mailer;
@@ -112,7 +112,7 @@ if ($substr_log < 3) {
                         echo '<p>' . $localization->string('regoknick') . ': <b>' . $log . '</b> <br /><br /></p>';
 
                         // confirm registration
-                        if (get_configuration('regConfirm') == "1") {
+                        if ($vavok->get_configuration('regConfirm') == "1") {
 
                         	echo '
 							<form method="post" action="key.php?action=inkey">
@@ -182,7 +182,7 @@ exit;
 
 }
 
-$log = isset($log) ? $log = check($log) : $log = '';
+$log = isset($log) ? $log = $vavok->check($log) : $log = '';
 
 // meta tag for this page
 $genHeadTag = '<meta name="robots" content="noindex">';
@@ -192,7 +192,7 @@ $my_title = $localization->string('registration');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
-if (get_configuration('openReg') == "1") {
+if ($vavok->get_configuration('openReg') == "1") {
 
 	if ($users->is_reg()) {
 
@@ -207,17 +207,17 @@ if (get_configuration('openReg') == "1") {
 		$current_page = new PageGen('pages/registration/register.tpl');
 
 		if (!empty($_GET['ptl'])) {
-			$current_page->set('page_to_load', check($_GET['ptl']));
+			$current_page->set('page_to_load', $vavok->check($_GET['ptl']));
 		}
 
 		$current_page->set('registration_info', $localization->string('reginfo'));
 
-		if (get_configuration('regConfirm') == "1") {
+		if ($vavok->get_configuration('regConfirm') == "1") {
 			$current_page->set('registration_key_info', $localization->string('keyinfo'));
 		}
 
-		if (get_configuration('quarantine') > 0) {
-			$current_page->set('quarantine_info', $localization->string('quarantine1') . ' ' . round(get_configuration('quarantine') / 3600) . ' ' . $localization->string('quarantine2'));
+		if ($vavok->get_configuration('quarantine') > 0) {
+			$current_page->set('quarantine_info', $localization->string('quarantine1') . ' ' . round($vavok->get_configuration('quarantine') / 3600) . ' ' . $localization->string('quarantine2'));
 		}
 
 		echo $current_page->output();

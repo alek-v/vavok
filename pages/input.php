@@ -3,41 +3,41 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   24.07.2020. 15:17:55
+* Updated:   01.08.2020. 19:39:58
 */
 
 require_once"../include/startup.php";
 
-if (!empty($_GET['action'])) { $action = check($_GET["action"]); } else { $action = ''; }
+if (!empty($_GET['action'])) { $action = $vavok->check($_GET["action"]); } else { $action = ''; }
 
 if (isset($_POST['log'])) {
-    $log = check($_POST['log']);
+    $log = $vavok->check($_POST['log']);
 } else if (isset($_GET['log'])) {
-    $log = check($_GET['log']);
+    $log = $vavok->check($_GET['log']);
 } else {
 	$log = '';
 }
 
 if (isset($_POST['pass'])) {
-    $pass = check($_POST['pass']);
+    $pass = $vavok->check($_POST['pass']);
 } else if (isset($_GET['pass'])) {
-    $pass = check($_GET['pass']);
+    $pass = $vavok->check($_GET['pass']);
 } else {
 	$pass = '';
 }
 
 if (isset($_POST['cookietrue'])) {
-    $cookietrue = check($_POST['cookietrue']);
+    $cookietrue = $vavok->check($_POST['cookietrue']);
 } else if (isset($_GET['cookietrue'])) {
-    $cookietrue = check($_GET['cookietrue']);
+    $cookietrue = $vavok->check($_GET['cookietrue']);
 } else {
 	$cookietrue = '';
 }
 
 if (isset($_POST['ptl'])) {
-    $pagetoload = check($_POST['ptl']);
+    $pagetoload = $vavok->check($_POST['ptl']);
 } else if (isset($_GET['ptl'])) {
-    $pagetoload = check($_GET['ptl']);
+    $pagetoload = $vavok->check($_GET['ptl']);
 } else {
 	$pagetoload = '';
 }
@@ -57,7 +57,7 @@ $max_attempts = 5;
 // login
 if (empty($action) && !empty($log)) {
 
-	if ($users->login_attempt_count($max_time_in_seconds, $log, $users->find_ip(), $db) > $max_attempts) {
+	if ($users->login_attempt_count($max_time_in_seconds, $log, $users->find_ip()) > $max_attempts) {
 	    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
@@ -89,8 +89,8 @@ if (empty($action) && !empty($log)) {
         if ($cookietrue == 1) {
 
             // encrypt data to save in cookie
-            $cookiePass = xoft_encode($pass, get_configuration('keypass'));
-            $cookieUsername = xoft_encode($show_userx['name'], get_configuration('keypass'));
+            $cookiePass = $vavok->xoft_encode($pass, $vavok->get_configuration('keypass'));
+            $cookieUsername = $vavok->xoft_encode($show_userx['name'], $vavok->get_configuration('keypass'));
 
             // save cookie
             SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/"); // one year
@@ -115,17 +115,17 @@ if (empty($action) && !empty($log)) {
         $db->update('vavok_users', 'ipadd', $ip, "id='{$userx_id}'");
 
         if ($user_profil['regche'] == "1") {
-            redirect_to(BASEDIR . "pages/key.php?log=$log");
+            $vavok->redirect_to(BASEDIR . "pages/key.php?log=$log");
         }
 
         if ($show_userx['banned'] == '1') {
-            redirect_to(BASEDIR . "pages/ban.php?log=$log");
+            $vavok->redirect_to(BASEDIR . "pages/ban.php?log=$log");
         }
 
         if (!empty($pagetoload)) {
-            redirect_to(BASEDIR . $pagetoload);
+            $vavok->redirect_to(BASEDIR . $pagetoload);
         } else {
-            redirect_to(BASEDIR);
+            $vavok->redirect_to(BASEDIR);
         } 
 
     }
@@ -138,8 +138,8 @@ if ($users->is_reg() && $action == "exit") {
     // log out
     $users->logout($users->user_id);
 
-    redirect_to("../?isset=exit");
+    $vavok->redirect_to("../?isset=exit");
 }
 
-redirect_to("../?isset=inputoff");
+$vavok->redirect_to("../?isset=inputoff");
 ?>

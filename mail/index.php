@@ -3,40 +3,40 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 11:42:05
+* Updated:   01.08.2020. 0:20:52
 */
 
 require_once"../include/startup.php";
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
-$name = isset($_POST['name']) ? check($_POST['name']) : '';
-$body = isset($_POST['body']) ? check($_POST['body']) : '';
-$umail = isset($_POST['umail']) ? check($_POST['umail']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+$name = isset($_POST['name']) ? $vavok->check($_POST['name']) : '';
+$body = isset($_POST['body']) ? $vavok->check($_POST['body']) : '';
+$umail = isset($_POST['umail']) ? $vavok->check($_POST['umail']) : '';
 
 if ($action == "go") {
 
     // Check name
-    if (empty($name)) { redirect_to("./?isset=noname"); }
+    if (empty($name)) { $vavok->redirect_to("./?isset=noname"); }
 
     // Check email body
-    if (empty($body)) { redirect_to("./?isset=nobody"); }
+    if (empty($body)) { $vavok->redirect_to("./?isset=nobody"); }
 
     // Validate email address
-    if (!$users->validate_email($umail)) { redirect_to("./?isset=noemail"); }
+    if (!$users->validate_email($umail)) { $vavok->redirect_to("./?isset=noemail"); }
 
     // Captcha code
     require_once BASEDIR . 'include/plugins/securimage/securimage.php';
     $securimage = new Securimage();
 
     // Check captcha code
-    if ($securimage->check($_POST['captcha_code']) != true) { redirect_to("./?isset=vrcode"); }
+    if ($securimage->check($_POST['captcha_code']) != true) { $vavok->redirect_to("./?isset=vrcode"); }
 
     // Send email
     $mail = new Mailer();
-    $mail->send(get_configuration("adminEmail"), $localization->string('msgfrmst') . " " . get_configuration("title"), $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i', get_configuration("siteTime")), $umail, $name);
+    $mail->send($vavok->get_configuration("adminEmail"), $localization->string('msgfrmst') . " " . $vavok->get_configuration("title"), $body . " \n\n\n\n\n-----------------------------------------\nBrowser: " . $users->user_browser() . "\nIP: " . $users->find_ip() . "\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i', $vavok->get_configuration("siteTime")), $umail, $name);
 
     // Email sent
-    redirect_to("./?isset=mail");
+    $vavok->redirect_to("./?isset=mail");
 
 }
 

@@ -8,7 +8,7 @@
 
 require_once"../include/startup.php";
 
-$page = isset($_GET['page']) ? check($_GET['page']) : 1;
+$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
 
 $my_title = $localization->string('smile');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";

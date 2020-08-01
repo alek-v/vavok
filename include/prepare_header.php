@@ -1,6 +1,6 @@
 <?php
 // (c) Aleksandar Vranešević - https://vavok.net
-// modified: 24.07.2020. 16:28:49
+// modified: 01.08.2020. 2:54:08
 // prepare headers for page
 
 // Update page title if page is not dynamic
@@ -60,7 +60,7 @@ if (!empty($genHeadTag)) { $head_tag .= $genHeadTag; }
 // check for missing tags
 
 // tell bots what is our preferred page
-if (!stristr($head_tag, 'rel="canonical"') && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . transfer_protocol() . $_SERVER['HTTP_HOST'] . '/page/' . $pg . '/" />'; }
+if (!stristr($head_tag, 'rel="canonical"') && isset($pg)) { $head_tag .= "\n" . '<link rel="canonical" href="' . $vavok->transfer_protocol() . $_SERVER['HTTP_HOST'] . '/page/' . $pg . '/" />'; }
 
 // add missing open graph tags
 if (!strstr($head_tag, 'og:type')) { $head_tag .= "\n" . '<meta property="og:type" content="website" />'; }

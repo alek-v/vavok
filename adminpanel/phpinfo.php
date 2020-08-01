@@ -1,10 +1,11 @@
 <?php
 // (c) vavok.net
+
 require_once"../include/startup.php";
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
-if (!$users->is_reg() || !$users->is_administrator()) { redirect_to("../"); } 
+if (!$users->is_reg() || !$users->is_administrator()) { $vavok->redirect_to("../"); } 
 
 if (empty($action)) {
 	phpinfo();

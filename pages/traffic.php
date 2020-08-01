@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:49:15
+* Updated:   01.08.2020. 20:47:37
 */
 
 require_once"../include/startup.php";
@@ -11,7 +11,7 @@ require_once"../include/startup.php";
 $my_title = $localization->string('traffic');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-if ($config["gzip"] == "1") {
+if ($vavok->get_configuration('gzip') == 1) {
     echo '<font color="#00FF00">' . $localization->string('gzipon') . '</font><br><br>';
 } else {
     echo '<font color="#FF0000">' . $localization->string('gzipoff') . '</font><br><br>';

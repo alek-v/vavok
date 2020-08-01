@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   28.07.2020. 11:45:53
+* Updated:   01.08.2020. 0:27:11
 */
 
 require_once"../include/startup.php";
@@ -29,7 +29,7 @@ echo $localization->string('vstpagestoday') . ': <b>' . (int)$pcounter_hits . '<
 echo $localization->string('totvisits') . ': <b>' . (int)$pcounter_all . '</b><br>';
 echo $localization->string('totopenpages') . ': <b>' . (int)$pcounter_allhits . '</b><br>';
 
-if (get_configuration('forumAccess') == 1) {
+if ($vavok->get_configuration('forumAccess') == 1) {
     $notc = $db->count_row('vk_topics');
     $nops = $db->count_row('vk_posts');
 

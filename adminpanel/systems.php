@@ -8,7 +8,7 @@
 
 require_once"../include/startup.php";
 
-$action = isset($_GET['action']) ? check($_GET['action']) : '';
+$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 function prev_dir($string) {
     $d1 = strrpos($string, "/");
@@ -29,7 +29,7 @@ if ($users->is_reg()) {
                 echo '<img src="../images/img/menu.gif" alt=""> ' . $localization->string('checksys') . '<hr>';
 
                 if (isset($_GET['did'])) {
-                    $did = check($_GET['did']);
+                    $did = $vavok->check($_GET['did']);
                 } else {
                     $did = "";
                 }

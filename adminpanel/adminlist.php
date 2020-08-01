@@ -3,25 +3,25 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:20:43
+* Updated:   01.08.2020. 2:39:15
 */
 
 require_once"../include/startup.php";
 
-if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) redirect_to("../pages/input.php?action=exit");
+if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) $vavok->redirect_to("../pages/input.php?action=exit");
 
 if (!empty($_GET['action'])) {
-    $action = check($_GET["action"]);
+    $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
 } 
 if (!empty($_GET['page'])) {
-    $page = check($_GET["page"]);
+    $page = $vavok->check($_GET["page"]);
 } else {
     $page = '';
 } 
 if (!empty($_GET['view'])) {
-    $view = check($_GET["view"]);
+    $view = $vavok->check($_GET["view"]);
 } else {
     $view = '';
 } 
@@ -47,7 +47,7 @@ if (empty($action)) {
     if ($num_items > 0) {
         foreach ($db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
             if ($item['perm'] == '101' or $item['perm'] == '102' or $item['perm'] == '103' or $item['perm'] == '105' or $item['perm'] == '106') {
-                $lnk = "<div class=\"a\"><a href=\"../pages/user.php?uz=" . $item['id'] . "\" class=\"sitelink\">" . $item['name'] . "</a> - " . user_status($item['perm']) . "</div>";
+                $lnk = "<div class=\"a\"><a href=\"../pages/user.php?uz=" . $item['id'] . "\" class=\"sitelink\">" . $item['name'] . "</a> - " . $users->user_status($item['perm']) . "</div>";
                 echo $lnk . "<br>";
             } 
         } 

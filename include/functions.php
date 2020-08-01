@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 18:00:47
+* Updated:   01.08.2020. 2:23:34
 */
 
 /*
@@ -12,9 +12,11 @@ Date and time
 
 */
 
-// Correct date
+// Correct date - deprecated in Vavok v1.5.5
 function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
-    $timezone = get_configuration('timeZone');
+    global $vavok;
+
+    $timezone = $vavok->get_configuration('timeZone');
 
     if (empty($timestamp)) {
         $timestamp = time();
@@ -41,15 +43,7 @@ function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
     return $rdate;
 }
 
-// Function for current time
-$user_time = get_configuration('timeZone') * 3600;
-$currHour = date("H", time() + $user_time);
-$currHour = round($currHour);
-$currDate = date("d F Y", time() + $user_time);
-$curr = date("i:s", time() + $user_time);
-$currTime = date("$currHour:i:s", time() + $user_time);
-$currTime2 = date("$currHour:i", time());
-
+// maketime - deprecated in Vavok v1.5.5
 function maketime($string) {
     if ($string < 3600) {
         $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
@@ -59,13 +53,28 @@ function maketime($string) {
     return $string;
 }
 
+// format time into days and minutes - deprecated in Vavok v1.5.5
+function formattime($file_time) {
+    global $localization;
+    if ($file_time >= 86400) {
+        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $localization->string('days');
+    } elseif ($file_time >= 3600) {
+        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $localization->string('hours');
+    } elseif ($file_time >= 60) {
+        $file_time = round($file_time / 60) . ' ' . $localization->string('minutes');
+    } else {
+        $file_time = round($file_time) . ' ' . $localization->string('secs');
+    } 
+    return $file_time;
+}
+
 /*
 
 File manipulation
 
 */
 
-// clear file
+// clear file - deprecated in Vavok v1.5.5
 function clear_files($files) {
     $file = file($files);
     $fp = fopen($files, "a+");
@@ -78,7 +87,7 @@ function clear_files($files) {
     return $files;
 }
 
-// Clear directory
+// Clear directory - deprecated in Vavok v1.5.5
 function clear_directory($directory) {
     $di = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
     $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
@@ -88,7 +97,7 @@ function clear_directory($directory) {
     }
 }
 
-// Read directory size
+// Read directory size - deprecated in Vavok v1.5.5
 function read_dir($dir) {
     if ($path = opendir($dir)) while ($file_name = readdir($path)) {
         $size = 0;
@@ -100,7 +109,7 @@ function read_dir($dir) {
     return $size;
 }
 
-// count number of lines in file
+// count number of lines in file - deprecated in Vavok v1.5.5
 function counter_string($files) {
     $count_lines = 0;
     if (file_exists($files)) {
@@ -117,7 +126,7 @@ String and text manipulation
 
 */
 
-// Multibyte ucfirst by plemieux
+// Multibyte ucfirst by plemieux - deprecated in Vavok v1.5.5
 function my_mb_ucfirst($str) {
     $fc = mb_strtoupper(mb_substr($str, 0, 1));
     return $fc.mb_substr($str, 1);
@@ -150,7 +159,7 @@ function win_to_utf($str) {
 }
 
 // make safe url for urlrewriting - link generating
-// convert non-latin chars to latin and remove special
+// convert non-latin chars to latin and remove special - deprecated in Vavok v1.5.5
 function trans($str) {
     $sr_latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
     $sr_cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
@@ -210,7 +219,7 @@ function trans($str) {
     return $text;
 }
 
-// remove unwanted characters from Unicode URL-s
+// remove unwanted characters from Unicode URL-s - deprecated in Vavok v1.5.5
 function trans_unicode($text) {
 
     $tr = array(
@@ -227,7 +236,7 @@ function trans_unicode($text) {
     return $text;
 }
 
-// no new line
+// no new line - deprecated in Vavok v1.5.5
 function no_br($msg, $replace = "") { 
     // convert to unix new lines
     $msg = preg_replace("/\r\n/", "\n", $msg); 
@@ -236,7 +245,7 @@ function no_br($msg, $replace = "") {
     return $msg;
 }
 
-// file size
+// file size - deprecated in Vavok v1.5.5
 function formatsize($file_size) {
     if ($file_size >= 1073741824) {
         $file_size = round($file_size / 1073741824 * 100) / 100 . " GB";
@@ -250,7 +259,7 @@ function formatsize($file_size) {
     return $file_size;
 }
 
-// badword / anti spam function
+// badword / anti spam function - deprecated in Vavok v1.5.5
 function antiword($string) {
     $words = file_get_contents(BASEDIR . "used/antiword.dat");
     $wordlist = explode("|", $words);
@@ -263,7 +272,7 @@ function antiword($string) {
     return $string;
 }
 
-// delete image links
+// delete image links - deprecated in Vavok v1.5.5
 function erase_img($image) {
     $image = preg_replace('#<img src="\.\./images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
     $image = preg_replace('#<img src="\.\./images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
@@ -277,7 +286,7 @@ function no_smiles($string) {
     return $string;
 }
 
-// parse bb code
+// parse bb code - deprecated in Vavok v1.5.5
 function badlink($link, $prefix) {
     if ($prefix == "mailto:") {
         if (strpos($link, "@") === false || strpos($link, ".", (strpos($link, "@") + 2)) === false || substr_count($link, "@") > 1 || strpos($link, "@") == 0) {
@@ -288,7 +297,7 @@ function badlink($link, $prefix) {
         return 1;
     } 
 }
-
+// deprecated in Vavok v1.5.5
 function setlinks($r, $prefix) {
     $target = "";
     if (substr($r, 0, strlen($prefix)) == $prefix) {
@@ -330,6 +339,7 @@ function setlinks($r, $prefix) {
     return $r;
 }
 
+// get bb code - deprecated in Vavok v1.5.5
 function getbbcode($r) {
     $r = str_replace("\r\n", "<br />", $r);
     $r = str_replace("[br]", "<br />", $r);
@@ -385,7 +395,7 @@ Security
 
 */
 
-// check input fields
+// check input fields - deprecated in Vavok v1.5.5
 function check($str, $mysql = "") {
     if (get_magic_quotes_gpc()) {
         // strip all slashes
@@ -411,7 +421,7 @@ function check($str, $mysql = "") {
     return $str;
 }
 
-// CHMOD function
+// CHMOD function - deprecated in Vavok v1.5.5
 function permissions($filez) {
     $filez = decoct(fileperms("$filez")) % 1000;
     return $filez;
@@ -429,7 +439,7 @@ function safe_decode($string) {
     return $data;
 }
 
-// encode using key
+// encode using key - deprecated in Vavok v1.5.5
 function xoft_encode($string, $key) {
     $result = "";
     for($i = 1; $i <= strlen($string); $i++) {
@@ -441,7 +451,7 @@ function xoft_encode($string, $key) {
     return safe_encode($result);
 } 
 
-// decode using key
+// decode using key - deprecated in Vavok v1.5.5
 function xoft_decode($string, $key) {
     $string = safe_decode($string);
     $result = "";
@@ -454,7 +464,7 @@ function xoft_decode($string, $key) {
     return $result;
 } 
 
-// generate password
+// generate password - deprecated in Vavok v1.5.5
 function generate_password() {
     $length = rand(10, 12);
     $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
@@ -466,8 +476,10 @@ function generate_password() {
     return $makepass;
 } 
 
-// antiflood
+// antiflood - deprecated in Vavok v1.5.5
 function flooder($ip, $phpself = '') {
+    global $vavok;
+
     $old_db = file(BASEDIR . "used/flood.dat");
     $new_db = fopen(BASEDIR . "used/flood.dat", "w");
     flock ($new_db, LOCK_EX);
@@ -476,7 +488,7 @@ function flooder($ip, $phpself = '') {
     foreach($old_db as $old_db_line) {
         $old_db_arr = explode("|", $old_db_line);
 
-        if (($old_db_arr[0] + get_configuration('floodTime')) > time()) {
+        if (($old_db_arr[0] + $vavok->get_configuration('floodTime')) > time()) {
             fputs ($new_db, $old_db_line);
 
             if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
@@ -498,13 +510,13 @@ Validations
 
 */
 
-// check URL
+// check URL - deprecated in Vavok v1.5.5
 function validateURL($URL) {
     $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
     return (bool)preg_match($v, $URL);
 }
 
-// is this really number - return integer
+// is this really number - return integer - deprecated in Vavok v1.5.5
 function clean_int($i) {
     if (is_numeric($i)) {
         return (int)$i;
@@ -515,7 +527,7 @@ function clean_int($i) {
     } 
 }
 
-// check if sting contain unicode characters
+// check if sting contain unicode characters - deprecated in Vavok v1.5.5
 function is_unicode($data) {
 
     if (strlen($data) !== strlen(utf8_decode($data))) {
@@ -532,18 +544,18 @@ Show informations
 
 */
 
-// Show fatal error and stop script execution
+// Show fatal error and stop script execution - deprecated in Vavok v1.5.5
 function fatal_error($error) {
     echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
     exit;
 }
 
-// Show error
+// Show error - deprecated in Vavok v1.5.5
 function show_error($error) {
     echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 }
 
-// add smiles
+// add smiles - deprecated in Vavok v1.5.5
 function smiles($string) {
     
     $dir = opendir (BASEDIR . "images/smiles");
@@ -569,8 +581,9 @@ function smiles($string) {
    return $string;
 }
 
-// Get message from url
+// Get message from url - deprecated in Vavok v1.5.5
 function get_isset($msg = '') {
+    global $vavok;
 
     if (!empty($msg)) {
         $isset = $msg;
@@ -578,7 +591,7 @@ function get_isset($msg = '') {
         $isset = check($_GET['isset']);
     }
 
-    include_once BASEDIR . "include/lang/" . get_configuration("siteDefaultLang") . "/isset.php";
+    include_once BASEDIR . "include/lang/" . $vavok->get_configuration("siteDefaultLang") . "/isset.php";
 
     if (isset($isset) && !empty($issetLang[$isset])) {
 
@@ -591,37 +604,51 @@ function get_isset($msg = '') {
 
 }
 
-// show online
+// show online - deprecated in Vavok v1.5.5
 function show_online() {
-    global $counter_reg, $counter_online;
-    if (get_configuration('showOnline') == "1") {
+    global $counter_reg, $counter_online, $vavok;
+
+    if ($vavok->get_configuration('showOnline') == "1") {
         $online = '<a href="/pages/online.php">[Online: ' . $counter_reg . '/' . $counter_online . ']</a>';
         return $online;
     } 
 }
 
-// show counter
+// show counter - deprecated in Vavok v1.5.5
 function show_counter() {
-    global $counter_host, $counter_all, $counter_hits, $counter_allhits;
+    global $counter_host, $counter_all, $counter_hits, $counter_allhits, $vavok;
 
-    if (!empty(get_configuration('showCounter')) && get_configuration('showCounter') != "6") {
-        if (get_configuration('showCounter') == 1) {
+    if (!empty($vavok->get_configuration('showCounter')) && $vavok->get_configuration('showCounter') != "6") {
+        if ($vavok->get_configuration('showCounter') == 1) {
             $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_all . '</a>';
         } 
-        if (get_configuration('showCounter') == 2) {
+        if ($vavok->get_configuration('showCounter') == 2) {
             $counter = '<a href="/pages/counter.php">' . $counter_hits . ' | ' . $counter_allhits . '</a>';
         } 
-        if (get_configuration('showCounter') == 3) {
+        if ($vavok->get_configuration('showCounter') == 3) {
             $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_hits . '</a>';
         } 
-        if (get_configuration('showCounter') == 4) {
+        if ($vavok->get_configuration('showCounter') == 4) {
             $counter = '<a href="/pages/counter.php">' . $counter_all . ' | ' . $counter_allhits . '</a>';
         } 
-        if (get_configuration('showCounter') == 5) {
+        if ($vavok->get_configuration('showCounter') == 5) {
             $counter = '<a href="/pages/counter.php"><img src="/gallery/count.php" alt=""></a>';
         }
 
         return $counter;
+    }
+}
+
+// show page generation time - deprecated in Vavok v1.5.5
+function show_gentime() {
+    global $start_time, $localization, $vavok;
+
+    if ($vavok->get_configuration('pageGenTime') == 1) {
+        $end_time = microtime(true);
+        $gen_time = $end_time - $start_time;
+        $pagegen = $localization->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
+
+        return $pagegen;
     }
 }
 
@@ -631,7 +658,7 @@ Other
 
 */
 
-// get prefered language
+// get prefered language - deprecated in Vavok v1.5.5
 function getDefaultLanguage() {
     if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
         return parseDefaultLanguage($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
@@ -662,7 +689,7 @@ function parseDefaultLanguage($http_accept, $deflang = "en") {
     return strtolower($deflang);
 }
 
-// java script bb codes for text input
+// java script bb codes for text input - deprecated in Vavok v1.5.5
 function java_bbcode($inputName) {
     
 ?>
@@ -694,7 +721,7 @@ function java_bbcode($inputName) {
 <?php
 }
 
-// redirect page
+// redirect page - deprecated in Vavok v1.5.5
 function redirect_to($url) {
     if (!headers_sent()) { // check headers - you can not send headers if they already sent
         header('Location: ' . $url);
@@ -704,16 +731,17 @@ function redirect_to($url) {
     }
 }
 
-// get transfer protocol https or http
+// get transfer protocol https or http - deprecated in Vavok v1.5.5
 function transfer_protocol() {
+    global $vavok;
 
-    if (empty(get_configuration('transferProtocol')) || get_configuration('transferProtocol') == 'auto') {
+    if (empty($vavok->get_configuration('transferProtocol')) || $vavok->get_configuration('transferProtocol') == 'auto') {
         if (!empty($_SERVER['HTTPS'])) {
             $connectionProtocol = 'https://';
         } else {
             $connectionProtocol = 'http://';
         }
-    } elseif (get_configuration('transferProtocol') == 'HTTPS') {
+    } elseif ($vavok->get_configuration('transferProtocol') == 'HTTPS') {
         $connectionProtocol = 'https://';
     } else {
         $connectionProtocol = 'http://';
@@ -722,20 +750,9 @@ function transfer_protocol() {
     return $connectionProtocol;
 }
 
-// complete dynamic website address
+// complete dynamic website address - deprecated in Vavok v1.5.5
 function website_home_address() {
     return transfer_protocol() . $_SERVER['HTTP_HOST'];
-}
-
-// website configuration // deprecated 29.07.2020. 3:18:52
-function get_configuration($data = '', $full_configuration = false) {
-    global $config;
-
-    if (!empty($data)) {
-        return $config[$data];
-    } else {
-        return false;
-    }
 }
 
 function compress_output_gzip($output) {
@@ -746,7 +763,7 @@ function compress_output_deflate($output) {
     return gzdeflate($output, 3);
 }
 
-// generate meta tags "description" and "keywords"
+// generate meta tags "description" and "keywords" - deprecated in Vavok v1.5.5
 function create_metatags($story) {
     $keyword_count = 10;
     $newarr = array ();
@@ -789,7 +806,7 @@ function create_metatags($story) {
     return $headers;
 }
 
-// Detect bots and spiders
+// Detect bots and spiders - deprecated in Vavok v1.5.5
 function detect_bot() {
     $user_agents = '';
     $searchbot = '';
@@ -833,7 +850,7 @@ function detect_bot() {
 
 }
 
-// Administrator status name
+// Administrator status name - deprecated in Vavok v1.5.5
 function user_status($message) {
     global $localization;
     $message = str_replace('101', $localization->string('access101'), $message);
@@ -845,32 +862,5 @@ function user_status($message) {
     return $message;
 }
 
-// format time into days and minutes
-function formattime($file_time) {
-    global $localization;
-    if ($file_time >= 86400) {
-        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $localization->string('days');
-    } elseif ($file_time >= 3600) {
-        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $localization->string('hours');
-    } elseif ($file_time >= 60) {
-        $file_time = round($file_time / 60) . ' ' . $localization->string('minutes');
-    } else {
-        $file_time = round($file_time) . ' ' . $localization->string('secs');
-    } 
-    return $file_time;
-}
-
-// show page generation time
-function show_gentime() {
-    global $start_time, $localization;
-
-    if (get_configuration('pageGenTime') == 1) {
-        $end_time = microtime(true);
-        $gen_time = $end_time - $start_time;
-        $pagegen = $localization->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
-
-        return $pagegen;
-    }
-}
 
 ?>
