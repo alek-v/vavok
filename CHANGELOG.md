@@ -2,6 +2,7 @@
 - System functions moved to Vavok.class.php
 - Updated localization files
 - Updated site installation
+- Updated cookie management
 - Removed file include/cookies.php
 - Removed file include/config.php
 
