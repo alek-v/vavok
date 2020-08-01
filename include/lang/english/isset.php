@@ -66,7 +66,7 @@ $issetLang = array(
 "ap_noaccess" => 'You do not have permition to access this page',
 
 // user isset
-"quarantine" => 'Quarantine is on! New users cannot write comments and messages ' . round(get_configuration("quarantine") / 3600) . ' hours after registration',
+"quarantine" => 'Quarantine is on! New users cannot write comments and messages %u hours after registration',
 "addfoto" => 'Photography successfully added',
 "delfoto" => 'Photography successfully deleted',
 "editfoto" => 'Photography successfully edited',
@@ -93,7 +93,7 @@ $issetLang = array(
 
 // forms
 $formsArray = array(
-"antiflood" =>  'Antiflood! Please wait ' . (int)get_configuration("floodTime") . ' seconds',
+"antiflood" =>  'Antiflood! Please wait %u seconds',
 "nobody" =>  'You didn\'t enter message text',
 "addon" =>  'Message successfully saved!<br />',
 "noadduzer" => 'Member does not exist',
