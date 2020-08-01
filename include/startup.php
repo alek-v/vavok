@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:11:12
+* Updated:   01.08.2020. 22:40:04
 */
 
 /**
@@ -28,11 +28,6 @@ if (!defined('BASEDIR')) {
 spl_autoload_register(function ($class) {
     include BASEDIR . "include/classes/{$class}.class.php";
 });
-
-/**
- * Functions
- */
-require_once BASEDIR . "include/functions.php";
 
 /**
  * Main class
