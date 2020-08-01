@@ -6,7 +6,7 @@ $check_tag_balance = false;
 
 // bbcocode to xhtml
 function bb2html() {
-global $check_tag_balance, $insert_link, $prevent_xss;
+global $check_tag_balance, $insert_link, $prevent_xss, $vavok;
 
 $bb2html = func_get_arg(0);
 if (func_num_args() == 2) {
@@ -109,10 +109,10 @@ if (!empty($GLOBALS['do_debug'])) debug("\n".'$pre[$i]: '."$pre[$i]\n\n");// :de
     $bb2html = str_replace("[url\n=", "[url=", $bb2html); 
     // //[url]
     // /default url link setting
-    $bb2html = setlinks($bb2html, "http://");
-    $bb2html = setlinks($bb2html, "https://");
-    $bb2html = setlinks($bb2html, "ftp://");
-    $bb2html = setlinks($bb2html, "mailto:"); 
+    $bb2html = $vavok->setlinks($bb2html, "http://");
+    $bb2html = $vavok->setlinks($bb2html, "https://");
+    $bb2html = $vavok->setlinks($bb2html, "ftp://");
+    $bb2html = $vavok->setlinks($bb2html, "mailto:"); 
 
 	// floaters..
 	$bb2html = str_replace('[right]', '<div class="right">', $bb2html);
