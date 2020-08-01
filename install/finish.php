@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:11:01
+* Updated:   02.08.2020. 1:42:55
 */
 
 if (isset($_GET['step'])) {
@@ -147,7 +147,7 @@ if ($step == "regadmin") {
                         	if (!$users->is_administrator(101, $adminId) || !$users->password_check($password, $adminPass['pass'])) {
                         		echo '<p>You are configuring cross-domain website.<br />
                         		Please enter main website administrator username and password</p>';
-                        		echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+                        		echo '<p><a href="finish.php?step=third">Back</a></p>';
 
                         		exit;
                         	}
@@ -158,7 +158,7 @@ if ($step == "regadmin") {
                         $myconfig = new Config;
 
                         $values = array(
-                        'keypass' => generate_password(),
+                        'keypass' => $vavok->generate_password(),
                         'webtheme' => 'default',
                         'quarantine' => 0,
                         'showtime' => 0,
@@ -201,24 +201,24 @@ if ($step == "regadmin") {
                         echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">Login</a></b></p>';
                     } else {
                         echo '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
-                        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+                        echo '<p><a href="finish.php?step=third">Back</a></p>';
                     } 
                 } else {
                     echo '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
-                    echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+                    echo '<p><a href="finish.php?step=third">Back</a></p>';
                 } 
             } else {
                 echo '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
-                echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+                echo '<p><a href="finish.php?step=third">Back</a></p>';
             } 
  
         } else {
             echo '<p><b>Your username or your password are too short</b></p>';
-            echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+            echo '<p><a href="finish.php?step=third">Back</a></p>';
         } 
     } else {
         echo '<p><b>You didn\'t write all of the required information! Please complete all the empty fields</b></p>';
-        echo '<p><img src="' . BASEDIR . 'images/img/back.gif" alt="" /> <a href="finish.php?step=third">Back</a></p>';
+        echo '<p><a href="finish.php?step=third">Back</a></p>';
     } 
 }
 
