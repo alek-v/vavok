@@ -1,3 +1,12 @@
+# Vavok v1.5.5.beta1
+- System functions moved to Vavok.class.php
+- Updated localization files
+- Updated site installation
+- Removed file include/cookies.php
+- Removed file include/config.php
+
+
+
 # Vavok v1.5.4
 - Updated constants
 - Updated retrieving configuration data
