@@ -3,10 +3,8 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   29.07.2020. 17:38:20
+* Updated:   01.08.2020. 19:11:08
 */
-
-require_once "../include/startup.php";
 
 if (isset($_GET['step'])) {
 	$step = $_GET['step'];
@@ -48,6 +46,18 @@ if (empty($step)) {
 }
 
 if ($step == 'first_end') {
+    /**
+     * Root dir for including system files
+     */
+    if (!defined('BASEDIR')) {
+        $folder_level = "";
+        while (!file_exists($folder_level . "robots.txt")) {
+            $folder_level .= "../";
+        } 
+        define("BASEDIR", $folder_level);
+    }
+
+    include "../include/classes/Config.class.php";
 
     $values = array(
 	    'DB_HOST' => $_POST['dbhost'],
