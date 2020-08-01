@@ -5,6 +5,7 @@
 - Updated cookie management
 - Removed file include/cookies.php
 - Removed file include/config.php
+- Removed file include/functions.php
 
 
 
