@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 21:51:48
+* Updated:   01.08.2020. 23:33:05
 */
 
 class Vavok {
@@ -721,11 +721,11 @@ class Vavok {
 
 	// show page generation time
 	function show_gentime() {
-	    global $start_time, $localization;
+	    global $localization;
 
 	    if ($this->get_configuration('pageGenTime') == 1) {
 	        $end_time = microtime(true);
-	        $gen_time = $end_time - $start_time;
+	        $gen_time = $end_time - START_TIME;
 	        $pagegen = $localization->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
 
 	        return $pagegen;
