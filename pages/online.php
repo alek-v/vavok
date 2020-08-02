@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:25:54
+* Updated:   02.08.2020. 2:21:17
 */
 
 require_once"../include/startup.php";
@@ -13,7 +13,7 @@ if ($vavok->get_configuration('showOnline') == 0 && (!$users->is_reg() && !$user
 // page settings
 $data_on_page = 10; // online users per page
 
-$my_title = 'Online';
+$current_page->page_title = 'Online';
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $localization->string('whoisonline') . '</b></p>';

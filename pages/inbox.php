@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:28:59
+* Updated:   02.08.2020. 2:48:28
 */
 
 require_once"../include/startup.php";
@@ -14,12 +14,12 @@ if (!$users->is_reg()) $vavok->redirect_to("../pages/login.php?ptl=pages/inbox.p
 if ($db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'") > 0) $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
 
 // Header data
-$genHeadTag = '<meta name="robots" content="noindex">
+$current_page->append_head_tags('<meta name="robots" content="noindex">
 <script src="/js/inbox.js"></script>
 <script src="/js/ajax.js"></script>
-';
+');
 
-$my_title = $localization->string('inbox');
+$current_page->page_title = $localization->string('inbox');
 require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
 
 $action = isset($_GET['action']) ? $vavok->check($_GET["action"]) : '';

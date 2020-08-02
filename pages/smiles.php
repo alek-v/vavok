@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:41:18
+* Updated:   02.08.2020. 2:59:39
 */
 
 require_once"../include/startup.php";
 
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
 
-$my_title = $localization->string('smile');
+$current_page->page_title = $localization->string('smile');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 

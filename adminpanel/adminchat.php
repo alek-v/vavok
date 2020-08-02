@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:16:49
+* Updated:   02.08.2020. 3:05:01
 */
 
 require_once"../include/startup.php";
@@ -22,7 +22,7 @@ $rand = rand(100, 999);
 $dates = date("d.m.y");
 $times = date("H:i");
 
-$my_title = $localization->string('adminchat');
+$current_page->page_title = $localization->string('adminchat');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -126,8 +126,8 @@ if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION
     echo '<br><a href="adminchat.php?action=prodel" class="btn btn-outline-primary sitelink">' . $localization->string('cleanchat') . '</a>';
 } 
 
-echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo'<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 
 

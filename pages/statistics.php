@@ -3,13 +3,13 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:27:11
+* Updated:   02.08.2020. 2:59:09
 */
 
 require_once"../include/startup.php";
 include_once BASEDIR . "include/lang/" . $users->get_user_language() . "/pagescounter.php";
 
-$my_title = $localization->string('statistics');
+$current_page->page_title = $localization->string('statistics');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $pcount = file(BASEDIR . "used/datacounter/host.dat");

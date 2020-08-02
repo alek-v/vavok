@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 2:39:15
+* Updated:   02.08.2020. 3:04:55
 */
 
 require_once"../include/startup.php";
@@ -26,7 +26,7 @@ if (!empty($_GET['view'])) {
     $view = '';
 } 
 
-$my_title = $localization->string('modlist');
+$current_page->page_title = $localization->string('modlist');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -56,7 +56,7 @@ if (empty($action)) {
     echo $navigation->get_navigation();
 
 } 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

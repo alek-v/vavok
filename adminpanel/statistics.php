@@ -3,14 +3,14 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 2:40:57
+* Updated:   02.08.2020. 3:03:53
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
 
-$my_title = $localization->string('sitestats');
+$current_page->page_title = $localization->string('sitestats');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<p><img src="../images/img/webstats.png" alt="">  ' . $localization->string('sitestats') . '<br /><br /></p>';

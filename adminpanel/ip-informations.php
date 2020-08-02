@@ -33,7 +33,7 @@ function geo_check_ip($ip) {
 
 $ipData = geo_check_ip($ip);
 
-$my_title = 'IP Informations';
+$current_page->page_title = 'IP Informations';
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 ?>

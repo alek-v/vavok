@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 2:38:20
+* Updated:   02.08.2020. 3:06:52
 */
 
 require_once"../include/startup.php";
@@ -20,7 +20,7 @@ $allban = $show_prof['allban'];
 
 $time_ban = round($bantime - time());
 
-$my_title = $localization->string('banned');
+$current_page->page_title = $localization->string('banned');
 
 if ($time_ban > 0) {
 

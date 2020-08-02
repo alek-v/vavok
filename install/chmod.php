@@ -1,9 +1,9 @@
 <?php 
-// modified: 11.9.2012 0:16:26
+// modified: 02.08.2020. 3:03:43
 // (c) vavok.net
 require_once"../include/startup.php";
 
-$my_title = "CHMOD";
+$current_page->page_title = "CHMOD";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
@@ -42,7 +42,7 @@ if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
 
     echo "</div>";
 
-    echo'<br><br><img src="../images/img/homepage.gif" alt=""> <a href="../index.php?' . SID . '">Home page</a><br>';
+    echo'<p><a href="../index.php">Home page</a></p>';
 } else {
     header ("Location: index.php");
 } 

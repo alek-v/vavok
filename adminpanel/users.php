@@ -254,7 +254,7 @@ if ($action == "deluser") {
     } 
 } 
 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 

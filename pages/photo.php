@@ -8,7 +8,7 @@
 
 require_once"../include/startup.php";
 
-$my_title = 'Change Photo'; // update lang
+$current_page->page_title = 'Change Photo'; // update lang
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 ?>

@@ -178,7 +178,7 @@ if ($act == "addnew") {
     echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 }
 
-echo '<a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

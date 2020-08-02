@@ -1,6 +1,6 @@
 <?php 
 // (c) vavok.net - Aleksandar Vranešević
-// modified: 01.08.2020. 1:33:02
+// modified: 02.08.2020. 16:40:24
 // todo: rewrite whole page
 
 require_once"../include/startup.php";
@@ -186,13 +186,13 @@ if ($action == "addnew") {
         }
 
         // full page address
-        if (!empty($page_structure)) {
+        if (!empty($page_structure) && $newfile != 'index') {
             // user's custom page structure
             $page_url = $vavok->website_home_address() . '/' . $page_structure . '/' . $newfile . '/';
         } elseif ($type == 'post') {
             // blog post
             $page_url = $vavok->website_home_address() . '/blog/' . $newfile . '/';
-        } else {
+        } elseif ($newfile != 'index') {
             // page
             $page_url = $vavok->website_home_address() . '/page/' . $newfile . '/';
         }

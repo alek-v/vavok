@@ -3,7 +3,7 @@
 
 require_once"../include/startup.php";
 
-$my_title = 'Cookies Policy';
+$current_page->page_title = 'Cookies Policy';
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 ?>
 

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:20:52
+* Updated:   02.08.2020. 3:03:08
 */
 
 require_once"../include/startup.php";
@@ -42,7 +42,7 @@ if ($action == "go") {
 
 if (empty($action)) {
 
-    $my_title = $localization->string('contact');
+    $current_page->page_title = $localization->string('contact');
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 

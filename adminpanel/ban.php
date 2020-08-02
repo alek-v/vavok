@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 14:22:46
+* Updated:   02.08.2020. 3:04:48
 */
 
 require_once"../include/startup.php";
@@ -20,7 +20,7 @@ if (isset($_GET['start'])) {
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
 
-        $my_title = "IP ban";
+        $current_page->page_title = "IP ban";
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         echo '<img src="../images/img/menu.gif" alt=""> <b>IP ban panel</b><br><br>';
@@ -74,8 +74,8 @@ if ($users->is_reg()) {
             } 
         } 
 
-        echo'<br><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-        echo'<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
+        echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+        echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
     } else {
         header ("Location: ../index.php?error");
         exit;

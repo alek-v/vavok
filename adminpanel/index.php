@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:11:29
+* Updated:   02.08.2020. 3:04:34
 */
 
 require_once"../include/startup.php";
@@ -46,7 +46,7 @@ if ($action == 'refver') {
     exit;
 }
 
-$my_title = $localization->string('admpanel');
+$current_page->page_title = $localization->string('admpanel');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 if (empty($action)) {

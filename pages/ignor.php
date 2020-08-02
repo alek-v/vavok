@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:25:09
+* Updated:   02.08.2020. 3:06:25
 */
 
 require_once"../include/startup.php";
 
-$my_title = $localization->string('ignorlist');
+$current_page->page_title = $localization->string('ignorlist');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
 
 if (!empty($_GET['action'])) {

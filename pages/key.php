@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   26.07.2020. 17:28:10
+* Updated:   02.08.2020. 3:06:11
 */
 
 require_once"../include/startup.php";
@@ -53,7 +53,7 @@ if ($action == 'resendkey') {
 
 }
 
-$my_title = $localization->string('confreg');
+$current_page->page_title = $localization->string('confreg');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 // enter registration key

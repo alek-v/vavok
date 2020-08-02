@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   31.07.2020. 23:49:34
+* Updated:   02.08.2020. 16:36:03
 */
 
 class Page {
@@ -16,6 +16,7 @@ class Page {
 	public $published; // Visitors can see page
 	public $page_author; // Page author
 	public $page_created_date; // Page created date
+	public $head_tags; // Head tags
 	public $vavok;
 
 	// class constructor
@@ -29,8 +30,8 @@ class Page {
 		$this->page_name = $page_name;
 		$this->page_language = $page_language;
 		$this->vavok = $vavok;
-
-		if (empty($page_title)) { $this->page_title = $vavok->get_configuration('title'); /* Page title */ }
+		$this->page_title = $this->page_title(); // Page title
+		$this->head_tags = $this->get_head_tags();
 	}
 
 	/*
@@ -211,6 +212,9 @@ class Page {
 			// Created date
 			$this->page_created_date = $page_data['created'];
 
+			// Head tags
+			$this->head_tags = $this->get_head_tags($page_data['headt']);
+
 			return $page_data;
 
 		}
@@ -259,7 +263,7 @@ class Page {
 		// remove index.php from urls to remove double content
 		$r = str_replace('/index.php', '/', $r);
 
-		if (empty($website)) { $website = website_home_address(); }
+		if (empty($website)) { $website = $this->vavok->website_home_address(); }
 
 		// return url
 		return $website . $r;
@@ -267,17 +271,50 @@ class Page {
 
 	// get title for page
 	public function page_title() {
-	    $page_title = $this->db->get_data('pages', "pname='" . $_SERVER['PHP_SELF'] . "'", 'tname')['tname'];
+		if (!empty($this->page_title)) { return $this->page_title; }
+
+	    $page_title = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'", 'tname')['tname'];
 
 	    if (!empty($page_title)) {
-	        $title = $page_title;
+	        return $page_title;
 	    } else {
-	        $title = '';
+	        return $this->vavok->get_configuration('title');
 	    }
-
-	    return $title;
 	}
 
+	/**
+	 * Page gead tags
+	 *
+	 * @param string $tags
+	 * @return string
+	 */
+	private function get_head_tags($tags = '') {
+		$tags = $this->head_tags . $tags;
+
+        $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'");
+        if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
+
+		// tell bots what is our preferred page
+		if (!stristr($tags, 'rel="canonical"') && isset($_GET['pg'])) { $tags .= "\n" . '<link rel="canonical" href="' . $this->vavok->transfer_protocol() . $_SERVER['HTTP_HOST'] . '/page/' . $_GET['pg'] . '/" />'; }
+
+		// add missing open graph tags
+		if (!strstr($tags, 'og:type')) { $tags .= "\n" . '<meta property="og:type" content="website" />'; }
+
+		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->vavok->get_configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }
+
+		return $tags;
+	}
+
+	/**
+	 * Append head tags
+	 *
+	 * @param string $tags
+	 * @return void
+	 */
+	public function append_head_tags($tags) {
+		$this->head_tags .= $tags;
+	}
 
 }
+
 ?>

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:18:14
+* Updated:   02.08.2020. 3:06:46
 */
 
 require_once"../include/startup.php";
@@ -52,7 +52,7 @@ if ($users->is_reg()) {
 
     if (empty($action)) {
 
-        $my_title = $localization->string('contacts');
+        $current_page->page_title = $localization->string('contacts');
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
         if ($page == "" || $page <= 0) {
@@ -91,7 +91,7 @@ if ($users->is_reg()) {
     echo '<p>' . $localization->string('notloged') . '</p>';
 } 
 
-echo '<p><img src="../images/img/back.gif" alt=""> <a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
+echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

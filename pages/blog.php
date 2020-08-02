@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 2:38:09
+* Updated:   02.08.2020. 2:21:29
 */
 
 include"../include/startup.php";
@@ -38,7 +38,7 @@ switch ($pg) {
 		$post->set('created_date', $vavok->date_fixed($current_page->page_created_date, 'd.m.Y.'));
 
 		// content
-		$post->set('content', getbbcode($current_page->page_content));
+		$post->set('content', $vavok->getbbcode($current_page->page_content));
 
 		// day created
 		$post->set('date-created-day', date('d', $current_page->page_created_date));
@@ -92,7 +92,7 @@ switch ($pg) {
 	default:
 
 		// page title
-		$my_title = 'Blog';
+		$current_page->page_title = 'Blog';
 		
 		// page header
 		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -135,7 +135,7 @@ switch ($pg) {
 			// if there is more then 120 words
 			if (count(explode(' ', $key['content'])) > 120) {
 				// show first 120 words
-				$content = getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 120))) . '...';
+				$content = $vavok->getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 120))) . '...';
 			}
 
 			// replace html headings

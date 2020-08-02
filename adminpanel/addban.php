@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:24:08
+* Updated:   02.08.2020. 3:02:44
 */
 
 require_once"../include/startup.php";
@@ -24,7 +24,7 @@ $time = time();
 if (!$users->is_reg()) { $vavok->redirect_to("../?error"); } 
 
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
-    $my_title = $localization->string('banning');
+    $current_page->page_title = $localization->string('banning');
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 
@@ -193,7 +193,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         echo '<p><a href="addban.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
     } 
 
-    echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
     echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 } else {
     $vavok->redirect_to("../?error");

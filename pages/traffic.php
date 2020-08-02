@@ -3,12 +3,12 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 20:47:37
+* Updated:   02.08.2020. 2:59:01
 */
 
 require_once"../include/startup.php";
 
-$my_title = $localization->string('traffic');
+$current_page->page_title = $localization->string('traffic');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($vavok->get_configuration('gzip') == 1) {

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:11:40
+* Updated:   02.08.2020. 3:04:19
 */
 
 require_once"../include/startup.php";
@@ -283,7 +283,7 @@ if ($action == "editeight") {
 
 }
 
-$my_title = "Settings";
+$current_page->page_title = "Settings";
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -703,7 +703,7 @@ if ($action == "seteight") {
     echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
 }
 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

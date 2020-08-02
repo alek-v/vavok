@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:52:56
+* Updated:   02.08.2020. 2:58:33
 */
 
 require_once"../include/startup.php";
@@ -25,7 +25,7 @@ if (!empty($uz)) {
     } 
 } else { $vavok->redirect_to("../"); }
 
-$my_title = $localization->string('profile') . " " . $uz;
+$current_page->page_title = $localization->string('profile') . " " . $uz;
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $checkIfExist = $db->count_row('vavok_users', "id='{$users_id}'");

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:26:22
+* Updated:   02.08.2020. 3:05:13
 */
 
 require_once"../include/startup.php";
@@ -11,7 +11,7 @@ require_once"../include/startup.php";
 // page settings
 $data_on_page = 10; // referere links per page
 
-$my_title = "Referer";
+$current_page->page_title = "Referer";
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($_GET['page']) || $_GET['page'] < 1) {
