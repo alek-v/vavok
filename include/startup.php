@@ -3,13 +3,11 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 22:40:04
+* Updated:   02.08.2020. 18:00:00
 */
 
-/**
- * Time when execution of the script has started
- */
-$start_time = microtime(true);
+define('START_TIME', microtime(true));
+define('VERSION', '1.5.5.beta2');
 
 /**
  * Root dir for including system files
@@ -45,7 +43,7 @@ $db = new Db(DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 $users = new Users();
 
 /**
- * We don't need this data if this is system request or we are installing cms
+ * We don't need this data if this is system request
  * Pages manipulation
  * IP management - IP ban
  * Statistics
