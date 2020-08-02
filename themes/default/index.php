@@ -3,13 +3,11 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:27:49
+* Updated:   02.08.2020. 16:42:01
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
 // default page templates directory is /themes/templates/
-
-include BASEDIR . "include/prepare_header.php";
 
 // header
 header("Content-type:text/html; charset=utf-8");
@@ -24,7 +22,6 @@ header("Content-type:text/html; charset=utf-8");
 <script src="<?php echo HOMEDIR; ?>themes/default/bootstrap/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/framework.css?v=<?php echo filemtime(BASEDIR . 'themes/default/framework.css'); ?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/style.css?v=<?php echo filemtime(BASEDIR . 'themes/default/style.css'); ?>" />
-
 <?php
 // load data for header
 include BASEDIR . "include/load_header.php";
