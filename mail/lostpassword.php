@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:23:39
+* Updated:   02.08.2020. 2:48:53
 */
 
 require_once"../include/startup.php";
@@ -13,9 +13,9 @@ $logus = isset($_POST['logus']) ? $vavok->check($_POST['logus']) : '';
 $mailsus = isset($_POST['mailsus']) ? $vavok->check($_POST['mailsus']) : '';
 
 // Page settings
-$my_title = $localization->string('lostpass');
+$current_page->page_title = $localization->string('lostpass');
 
-$genHeadTag = '<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />';
+$current_page->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />');
 
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 

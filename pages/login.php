@@ -4,10 +4,10 @@
 require_once"../include/startup.php";
 
 // meta tag for this page
-$genHeadTag = '<meta name="robots" content="noindex">';
-$genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/login/login.css">';
+$current_page->append_head_tags('<meta name="robots" content="noindex">');
+$current_page->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/login/login.css">');
 
-$my_title = $localization->string('login');
+$current_page->page_title = $localization->string('login');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 $cookName = isset($_COOKIE['cookname']) ? $cookName = $_COOKIE['cookname'] : $cookName = '';

@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   01.08.2020. 2:28:30
+* Updated:   02.08.2020. 2:56:06
 */
 
 require_once"../include/startup.php";
@@ -32,10 +32,10 @@ if ($str1 > 20 || $str2 > 20) {
 }
 
 // meta tag for this page
-$genHeadTag = '<meta name="robots" content="noindex">';
+$current_page->append_head_tags('<meta name="robots" content="noindex">');
 
 // Page title
-$my_title = $localization->string('registration');
+$current_page->page_title = $localization->string('registration');
 
 // load theme header
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -185,10 +185,10 @@ exit;
 $log = isset($log) ? $log = $vavok->check($log) : $log = '';
 
 // meta tag for this page
-$genHeadTag = '<meta name="robots" content="noindex">';
-$genHeadTag .= '<link rel="stylesheet" href="../themes/templates/pages/registration/register.css">';
+$current_page->append_head_tags('<meta name="robots" content="noindex">');
+$current_page->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/registration/register.css">');
 
-$my_title = $localization->string('registration');
+$current_page->page_title = $localization->string('registration');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 

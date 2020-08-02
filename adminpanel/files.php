@@ -49,7 +49,7 @@ if ($edmode == 'visual') {
     $textEditor = str_replace('#selector', '#text_files', $loadTextEditor);
 
     // add to page header
-    $genHeadTag = $textEditor;
+    $current_page->append_head_tags($textEditor);
 }
 
 // check if user can edit only pages that are made by themself or have permitions to edit all pages
@@ -59,7 +59,7 @@ if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator(
     $edit_only_own_pages = '';
 }
 
-$my_title = 'Files'; // current page title
+$current_page->page_title = 'Files'; // current page title
 
 if (empty($action)) {
 
@@ -467,7 +467,7 @@ if ($action == "new") {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
-    $genHeadTag = '
+    $current_page->append_head_tags('
 	<style type="text/css">
 		.tooltip {
 			border-bottom: 1px dotted #000000; color: #000000; outline: none;
@@ -502,7 +502,7 @@ if ($action == "new") {
 		.info { background: #9FDAEE; border: 1px solid #2BB0D7;	padding: 20px;}
 		.warning { background: #FFFFAA; border: 1px solid #FFAD33; }
 	</style>
-    ';
+    ');
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -657,7 +657,7 @@ if ($action != "faq") {
     // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $localization->string('faq') . '</a>';
 }
 
-echo '<p><a href="index.php" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

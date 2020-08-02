@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       http://vavok.net
-* Updated:   01.08.2020. 19:39:58
+* Updated:   02.08.2020. 2:54:54
 */
 
 require_once"../include/startup.php";
@@ -47,7 +47,7 @@ if ($log == 'System') { // cannot login as a System
 }
 
 // meta tag for this page
-$genHeadTag = '<meta name="robots" content="noindex">';
+$current_page->append_head_tags('<meta name="robots" content="noindex">');
 
 // check login attempts
 $max_time_in_seconds = 600;

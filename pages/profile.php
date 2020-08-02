@@ -18,7 +18,6 @@ if ($action == 'save') {
 	// check birthday
 	// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
 
-
 	$my_name = $vavok->no_br($vavok->check($_POST['my_name']));
 	$surname = $vavok->no_br($vavok->check($_POST['surname']));
 	$city = $vavok->no_br($vavok->check($_POST['otkel']));
@@ -62,7 +61,7 @@ if ($action == 'save') {
 
 }
 
-$genHeadTag = '
+$current_page->append_head_tags('
 <style type="text/css">
     .photo img {
         max-width: 100px;
@@ -70,9 +69,9 @@ $genHeadTag = '
         overflow: hidden;
     }
 </style>
-';
+');
 
-$my_title = $localization->string('profsettings');
+$current_page->page_title = $localization->string('profsettings');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 echo '<div class="row">';
