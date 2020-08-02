@@ -1,11 +1,14 @@
-# Vavok v1.5.5.beta1
+# Vavok v1.5.5.beta2
 - System functions moved to Vavok.class.php
 - Updated localization files
 - Updated site installation
 - Updated cookie management
+- Updated setting page title
+- Updated setting additional head tags
 - Removed file include/cookies.php
 - Removed file include/config.php
 - Removed file include/functions.php
+- Removed file include/prepare_header.php
 
 
 
