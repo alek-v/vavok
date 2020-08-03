@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   02.08.2020. 16:36:03
+* Updated:   03.08.2020. 8:07:37
 */
 
 class Page {
@@ -17,7 +17,8 @@ class Page {
 	public $page_author; // Page author
 	public $page_created_date; // Page created date
 	public $head_tags; // Head tags
-	public $vavok;
+	private $vavok;
+	private $users;
 
 	// class constructor
 	function __construct($page_name = '', $page_language = '') {
@@ -26,12 +27,48 @@ class Page {
 		$this->table_prefix = DB_PREFIX; // Table prefix
 		$this->transfer_protocol = $vavok->transfer_protocol(); // Transfer protocol
 		$this->db = $db; // database
-		$this->user_id = $users->current_user_id(); // User id with active login
-		$this->page_name = $page_name;
-		$this->page_language = $page_language;
 		$this->vavok = $vavok;
+		$this->users = $users;
+		$this->user_id = $users->current_user_id(); // User id with active login
+		if (isset($_GET['pg'])) $this->page_name = $this->vavok->check($_GET['pg']); // Requested page name
+		if (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') { $this->page_name = 'index'; }
+		if (isset($_GET['ln'])) $this->page_language = $this->vavok->check($_GET['ln']);
+		if (isset($_GET['pg'])) $this->page_language = $this->get_page_language($this->vavok->check($_GET['pg']));
 		$this->page_title = $this->page_title(); // Page title
 		$this->head_tags = $this->get_head_tags();
+
+		// Update user's language
+		if (!empty($this->page_language) && strtolower($this->page_language) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($this->page_language)); }
+
+		// Load main page
+		if (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
+
+			// Redirect to root dir if visitor is using site default language and this language is requested in url
+			// Example: default website language is english and user is opening www.example.com/en/
+			if (isset($_GET['ln']) && $this->vavok->get_configuration('siteDefaultLang') == $this->users->get_prefered_language($this->page_language) && !empty($this->users->get_prefered_language($this->page_language)) && file_exists(BASEDIR . "include/lang/" . $this->users->get_prefered_language($this->page_language) . "/index.php")) {
+				$this->vavok->redirect_to(HOMEDIR);
+			}
+
+			/*
+			  Redirect if user's language is not website default language,
+			  language is not in URL (www.example.com/en/)
+			  and page with users's language exists
+			*/
+			if ($vavok->get_configuration('siteDefaultLang') != $this->users->get_user_language() && empty($_GET['ln'])) {
+				$vavok->redirect_to("/" .  $this->users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
+			}
+
+		}
+
+	    /**
+	     * Show website maintenance page
+	     */
+	    if ($this->vavok->get_configuration('siteOff') == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/maintenance.php') && !strstr($_SERVER['PHP_SELF'], 'pages/input.php') && !$this->users->is_administrator() && !strstr($_SERVER['PHP_SELF'], 'pages/login.php')) {
+	        $this->vavok->redirect_to($this->vavok->website_home_address() . "/pages/maintenance.php");
+	    }
+
+		$this->load_page();
+
 	}
 
 	/*
@@ -218,6 +255,19 @@ class Page {
 			return $page_data;
 
 		}
+	}
+
+	/**
+	 * Return page language
+	 *
+	 * @param string $page
+	 * @return bool|string
+	 */
+	private function get_page_language($page)
+	{
+		$lang = $this->db->get_data(DB_PREFIX . 'pages', "pname = '{$page}'", 'lang')['lang'];
+		if (empty($lang)) return false;
+		return $lang;
 	}
 
 	// check if page exists
