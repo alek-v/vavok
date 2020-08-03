@@ -27,19 +27,8 @@ spl_autoload_register(function ($class) {
     include BASEDIR . "include/classes/{$class}.class.php";
 });
 
-/**
- * Main class
- */
 $vavok = new Vavok();
-
-/**
- * Connect to database
- */
 $db = new Db();
-
-/**
- * Users
- */
 $users = new Users();
 
 /**
@@ -47,11 +36,10 @@ $users = new Users();
  */
 if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
 	$current_page = new Page();
+	$localization = new Localization();
     new Manageip();
     new Counter();
     new Referer();
-
-    require_once BASEDIR . "include/pages.php";
 }
 
 
