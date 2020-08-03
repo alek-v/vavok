@@ -3,6 +3,7 @@
 - Created class Counter.class.php
 - Created class Manageip.class.php
 - Created class Referer.class.php
+- Updated class Localization.class.php
 - Updated localization files
 - Updated site installation
 - Updated cookie management
@@ -17,6 +18,7 @@
 - Removed file include/antidos.php
 - Removed file include/counters.php
 - Removed file include/referer.php
+- Removed file include/pages.php
 
 
 
