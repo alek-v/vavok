@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 1:29:54
+* Updated:   03.08.2020. 9:20:52
 */
 
 class Localization {
@@ -11,12 +11,23 @@ class Localization {
 	private $language_data;
 	private $strings;
 	private $all;
+	private $users;
 
-	function __construct($language_data, $strings) {
+	function __construct() {
+		global $users;
+
+		$this->users = $users;
+
+		/**
+		 * Load localization files
+		 */
+		if (!file_exists(BASEDIR . "include/lang/" . $this->users->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
+
+		include_once BASEDIR . "include/lang/" . $this->users->get_user_language() . "/index.php";
 
 		// Language data
 		$this->language_data = $language_data;
-		$this->strings = $strings;
+		$this->strings = $lang_home;
 		$this->all = array_merge($this->language_data, $this->strings);
 
 	}
