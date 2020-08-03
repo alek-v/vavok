@@ -1,6 +1,10 @@
 <?php
-// (c) vavok.net - Aleksandar Vranešević
-// modified: 28.07.2020. 11:27:48
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   03.08.2020. 9:23:09
+*/
 
 $language = 'english';
 $ln_loc = 'en';
@@ -111,7 +115,7 @@ include_once BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php"
 $language_data = array(
 	'language' => $language,
 	'ln_loc' => $ln_loc,
-	'ln_charset' => 'UTF-8',
+	'ln_charset' => $ln_charset,
 	'ln_text_dir' => $ln_text_dir,
 	'ln_byteUnits' => $ln_byteUnits,
 	'ln_day_of_week' => $ln_day_of_week,
@@ -121,5 +125,4 @@ $language_data = array(
 	'ln_timespanfmt' => $ln_timespanfmt
 );
 
-$localization = new Localization($language_data, $lang_home);
 ?>

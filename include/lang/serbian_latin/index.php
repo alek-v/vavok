@@ -1,5 +1,10 @@
 <?php
-// (c) vavok.net
+/*
+* (c) Aleksandar Vranešević
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   03.08.2020. 9:23:25
+*/
 
 $language = 'serbian_latin';
 $ln_loc = 'sr';
@@ -111,7 +116,7 @@ include_once BASEDIR . "include/lang/" . $language . "/" . $phpselflang . ".php"
 $language_data = array(
 	'language' => $language,
 	'ln_loc' => $ln_loc,
-	'ln_charset' => 'UTF-8',
+	'ln_charset' => $ln_charset,
 	'ln_text_dir' => $ln_text_dir,
 	'ln_byteUnits' => $ln_byteUnits,
 	'ln_day_of_week' => $ln_day_of_week,
@@ -120,7 +125,5 @@ $language_data = array(
 	'ln_timefmt' => $ln_timefmt,
 	'ln_timespanfmt' => $ln_timespanfmt
 );
-
-$localization = new Localization($language_data, $lang_home);
 
 ?>
