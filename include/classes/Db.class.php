@@ -3,11 +3,13 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   28.07.2020. 23:03:14
+* Updated:   03.08.2020. 1:15:17
 */
 
 
-// database class
+/**
+ * Database class
+ */
 class Db extends PDO {
     private $error;
     private $sql;
@@ -15,7 +17,7 @@ class Db extends PDO {
     private $errorCallbackFunction;
     private $errorMsgFormat;
 
-    public function __construct($server, $db_name, $user = "", $passwd = "") {
+    public function __construct() {
         $options = array(
             PDO::ATTR_PERSISTENT => false,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -23,7 +25,7 @@ class Db extends PDO {
             );
 
         try {
-            parent::__construct("mysql:host=$server;dbname=$db_name", $user, $passwd, $options);
+            parent::__construct("mysql:host=" . DB_HOST . ";dbname=" . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
         } 
         catch (PDOException $e) {
             echo 'Database error: ' . $this->error = $e->getMessage();
