@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 2:21:29
+* Updated:   03.08.2020. 10:33:13
 */
 
 include"../include/startup.php";
@@ -145,7 +145,7 @@ switch ($pg) {
 			$page_posts->set('date-created-day', date('d', $key['created']));
 
 			// month created
-			$page_posts->set('date-created-month', mb_substr($ln_all_month[date('n', $key['created']) - 1], 0, 3));
+			$page_posts->set('date-created-month', mb_substr($localization->show_all()['ln_all_month'][date('n', $key['created']) - 1], 0, 3));
 
 			$page_posts->set('post_text', $content);
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
