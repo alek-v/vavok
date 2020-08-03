@@ -55,7 +55,7 @@ class Page {
 			  and page with users's language exists
 			*/
 			if ($vavok->get_configuration('siteDefaultLang') != $this->users->get_user_language() && empty($_GET['ln'])) {
-				$vavok->redirect_to("/" .  $this->users->get_prefered_language($users->get_user_language(), 'short') . "/" . $url_isset);
+				$vavok->redirect_to("/" .  $this->users->get_prefered_language($users->get_user_language(), 'short') . "/");
 			}
 
 		}
