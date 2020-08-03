@@ -1,14 +1,22 @@
-# Vavok v1.5.5.beta2
+# Vavok v1.5.5.beta4
 - System functions moved to Vavok.class.php
+- Created class Counter.class.php
+- Created class Manageip.class.php
+- Created class Referer.class.php
 - Updated localization files
 - Updated site installation
 - Updated cookie management
 - Updated setting page title
 - Updated setting additional head tags
+- Updated Db.class.php
+- Updated Page.class.php
 - Removed file include/cookies.php
 - Removed file include/config.php
 - Removed file include/functions.php
 - Removed file include/prepare_header.php
+- Removed file include/antidos.php
+- Removed file include/counters.php
+- Removed file include/referer.php
 
 
 
