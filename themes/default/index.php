@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 16:42:01
+* Updated:   04.08.2020. 18:18:16
 */
 
 // custom page templates directory is named "templates" and it must be under template main folder
@@ -23,8 +23,15 @@ header("Content-type:text/html; charset=utf-8");
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/framework.css?v=<?php echo filemtime(BASEDIR . 'themes/default/framework.css'); ?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/style.css?v=<?php echo filemtime(BASEDIR . 'themes/default/style.css'); ?>" />
 <?php
-// load data for header
-include BASEDIR . "include/load_header.php";
+/**
+ * Load data for header
+ */
+$current_page->load_head_tags();
+
+/**
+ * Cookie consent
+ */
+if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "include/plugins/cookie-consent/cookie-consent.php"; }
 ?>
 </head>
 <body class="d-flex flex-column">

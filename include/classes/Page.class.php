@@ -4,19 +4,19 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   03.08.2020. 8:07:37
+* Updated:   04.08.2020. 19:32:59
 */
 
 class Page {
 
-	public $page_name; // Page name
-	public $page_language; // Page language
-	public $page_title; // Title
-	public $page_content; // Content
-	public $published; // Visitors can see page
-	public $page_author; // Page author
+	public $page_name;         // Page name
+	public $page_language;     // Page language
+	public $page_title;        // Title
+	public $page_content;      // Content
+	public $published;         // Visitors can see page
+	public $page_author;       // Page author
 	public $page_created_date; // Page created date
-	public $head_tags; // Head tags
+	public $head_tags;         // Head tags
 	private $vavok;
 	private $users;
 
@@ -34,14 +34,12 @@ class Page {
 		if (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') { $this->page_name = 'index'; }
 		if (isset($_GET['ln'])) $this->page_language = $this->vavok->check($_GET['ln']);
 		if (isset($_GET['pg'])) $this->page_language = $this->get_page_language($this->vavok->check($_GET['pg']));
-		$this->page_title = $this->page_title(); // Page title
-		$this->head_tags = $this->get_head_tags();
 
 		// Update user's language
 		if (!empty($this->page_language) && strtolower($this->page_language) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($this->page_language)); }
 
 		// Load main page
-		if (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') {
+		if ($this->page_name == 'index') {
 
 			// Redirect to root dir if visitor is using site default language and this language is requested in url
 			// Example: default website language is english and user is opening www.example.com/en/
@@ -67,7 +65,9 @@ class Page {
 	        $this->vavok->redirect_to($this->vavok->website_home_address() . "/pages/maintenance.php");
 	    }
 
+		$this->head_tags = $this->get_head_tags();
 		$this->load_page();
+		$this->page_title = $this->page_title();
 
 	}
 
@@ -250,11 +250,24 @@ class Page {
 			$this->page_created_date = $page_data['created'];
 
 			// Head tags
-			$this->head_tags = $this->get_head_tags($page_data['headt']);
+			$this->head_tags = $this->append_head_tags($page_data['headt']);
 
 			return $page_data;
 
 		}
+	}
+
+	/**
+	 * Return page header tags
+	 */
+	public function load_head_tags() {
+
+		// include head tags specified for current page
+		echo $this->head_tags;
+
+		echo "\r\n<!-- Vavok CMS http://www.vavok.net -->
+		<title>{$this->page_title}</title>\r\n";
+
 	}
 
 	/**
@@ -338,16 +351,20 @@ class Page {
 	 * @param string $tags
 	 * @return string
 	 */
-	private function get_head_tags($tags = '') {
-		$tags = $this->head_tags . $tags;
+	private function get_head_tags() {
+		$tags = file_get_contents(BASEDIR . 'used/headmeta.dat');
 
         $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'");
         if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
 
-		// tell bots what is our preferred page
+		/**
+		 * Tell bots what is our preferred page
+		 */
 		if (!stristr($tags, 'rel="canonical"') && isset($_GET['pg'])) { $tags .= "\n" . '<link rel="canonical" href="' . $this->vavok->transfer_protocol() . $_SERVER['HTTP_HOST'] . '/page/' . $_GET['pg'] . '/" />'; }
 
-		// add missing open graph tags
+		/**
+		 * Add missing open graph tags
+		 */
 		if (!strstr($tags, 'og:type')) { $tags .= "\n" . '<meta property="og:type" content="website" />'; }
 
 		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->vavok->get_configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }
@@ -362,7 +379,7 @@ class Page {
 	 * @return void
 	 */
 	public function append_head_tags($tags) {
-		$this->head_tags .= $tags;
+		return $this->head_tags .= $tags;
 	}
 
 }
