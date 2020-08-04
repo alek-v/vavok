@@ -3,14 +3,12 @@
 - Created class Counter.class.php
 - Created class Manageip.class.php
 - Created class Referer.class.php
-- Updated class Localization.class.php
 - Updated localization files
 - Updated site installation
 - Updated cookie management
 - Updated setting page title
 - Updated setting additional head tags
 - Updated Db.class.php
-- Updated Page.class.php
 - Removed file include/cookies.php
 - Removed file include/config.php
 - Removed file include/functions.php
@@ -19,6 +17,7 @@
 - Removed file include/counters.php
 - Removed file include/referer.php
 - Removed file include/pages.php
+- Removed file inlude/load_header.php
 
 
 
