@@ -71,9 +71,9 @@ if ($action == "tpc") {
                 $tlink = "Unreachable<br>";
             } else {
             	if (!empty($item['lang'])) {
-            		$itemLang = '(' . $item['lang'] . ')'; } else {
+            		$itemLang = ' (' . mb_strtolower($item['lang']) . ')'; } else {
             			$itemLang = ''; }
-                $tlink = '<a href="files.php?action=show&amp;file=' . $item['file'] . '" class="btn btn-outline-primary sitelink">' . $tname . '</a> ' . $itemLang . '<br />';
+                $tlink = '<a href="files.php?action=show&amp;file=' . $item['file'] . '" class="btn btn-outline-primary sitelink">' . $tname . $itemLang . '</a><br />';
             } 
             echo $tlink;
         } 
