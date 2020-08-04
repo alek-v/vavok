@@ -7,6 +7,7 @@
 - Updated site installation
 - Updated cookie management
 - Updated setting page title
+- Updated loading page head tags
 - Updated setting additional head tags
 - Updated Db.class.php
 - Removed file include/cookies.php
