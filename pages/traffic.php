@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 2:59:01
+* Updated:   03.08.2020. 12:50:03
 */
 
 require_once"../include/startup.php";
@@ -11,13 +11,7 @@ require_once"../include/startup.php";
 $current_page->page_title = $localization->string('traffic');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-if ($vavok->get_configuration('gzip') == 1) {
-    echo '<font color="#00FF00">' . $localization->string('gzipon') . '</font><br><br>';
-} else {
-    echo '<font color="#FF0000">' . $localization->string('gzipoff') . '</font><br><br>';
-}
-
-$timeon = maketime(round(time() - $_SESSION['currs']));
+$timeon = $vavok->maketime(round(time() - $_SESSION['currs']));
 
 echo $localization->string('visitedpages') . ': <b>' . ($_SESSION['counton'] + 1) . '</b><br>';
 echo $localization->string('timeonsite') . ': <b>' . $timeon . '</b><br><br>';
