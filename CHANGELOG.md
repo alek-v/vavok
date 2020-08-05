@@ -10,6 +10,8 @@
 - Updated loading page head tags
 - Updated setting additional head tags
 - Updated Db.class.php
+- Added page tags
+- Added form templates
 - Removed file include/cookies.php
 - Removed file include/config.php
 - Removed file include/functions.php
