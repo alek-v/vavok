@@ -2,53 +2,65 @@
 // (c) vavok.net
 // generate page from template
 
-
 class PageGen {
-    // the filename of the template to load.
+
     protected $file;
-
-    // an array of values for replacing each tag on the template (the key for each value is its corresponding tag).
     protected $values = array();
+    private $localization;
 
-    // creates a new template object and sets its associated file.
-    public function __construct($file) {
+    public function __construct($file)
+    {
+        global $localization;
 
-        // get template
+        /**
+         * Get template
+         */
         if (file_exists(BASEDIR . 'themes/' . MY_THEME . '/templates/' . $file)) {
         	$this->file = BASEDIR . 'themes/' . MY_THEME . '/templates/' . $file;
         } else {
         	$this->file = BASEDIR . "themes/templates/" . $file;
     	}
+
+        /**
+         * Page localization
+         */
+        $this->localization = $localization;
     } 
 
-    // sets a value for replacing a specific tag.
-    public function set($key, $value) {
+    /**
+     * Sets a value for replacing a specific tag
+     */
+    public function set($key, $value)
+    {
         $this->values{$key} = $value;
     } 
 
-    // parse language variables from .tpl files
-    public function parse_language($content) {
-
-        // load language data
-        global $localization;
-
-        $all = $localization->show_strings();
+    /**
+     * Replace language variables from .tpl files with corresponding strings
+     *
+     * @param string $content
+     * @return string
+     */
+    public function parse_language($content)
+    {
+        $all = $this->localization->show_strings();
 
         $search = array();
         foreach($all as $key => $val) {
-        array_push($search, '{@website_language[' . $key . ']}}');
+            array_push($search, '{@website_language[' . $key . ']}}');
         }
 
         $content = str_replace($search, $all, $content);
 
         return $content;
-
     }
 
-    // outputs the content of the template, replacing the keys for its respective values.
-    public function output() {
-
-        /*
+    /**
+     * Outputs the content of the template, replacing the keys for its respective values
+     */
+    public function output()
+    {
+        /**
         * Tries to verify if the file exists.
         * If it doesn't return with an error message.
         * Anything else loads the file contents and loops through the array replacing every key for its value.
@@ -64,23 +76,28 @@ class PageGen {
             $output = str_replace($tagToReplace, $value, $output);
         }
 
-        // parse language
+        /**
+         * Replace strings
+         */
         $output = $this->parse_language($output);
 
-        // remove keys that are not set
+        /**
+         * Remove keys that are not set
+         */
         $output = preg_replace('/{@(.*)}}/' , '', $output);
 
         return $output;
     }
 
-    /*
+    /**
     * Merges the content from an array of templates and separates it with $separator.
     * 
-    * @param array $templates an array of Template objects to merge
-    * @param string $separator the string that is used between each Template object
+    * @param array $templates
+    * @param string $separator
     * @return string 
     */
-    static public function merge($templates, $separator = "\n") {
+    static public function merge($templates, $separator = "\n")
+    {
         /*
         * Loops through the array concatenating the outputs from each template, separating with $separator.
         * If a type different from PageGen is found we provide an error message.
@@ -97,8 +114,13 @@ class PageGen {
         return $output;
     }
 
-
-    function facebook_comments() {
+    /**
+     * Facebook comments
+     *
+     * @return string;
+     */
+    function facebook_comments()
+    {
     	$pages = new Page();
     	return '<div class="fb-comments" data-href="' . $pages->media_page_url() . '" data-width="470" data-num-posts="10"></div>';
     }

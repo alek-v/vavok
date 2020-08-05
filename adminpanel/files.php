@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 2:30:16
+* Updated:   05.08.2020. 15:57:40
 */
 
 require_once"../include/startup.php";
@@ -15,14 +15,287 @@ if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissi
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
 $file = isset($_GET['file']) ? $vavok->check($_GET['file']) : '';
+$text_files = isset($_POST['text_files']) ? $_POST['text_files'] : ''; // keep data as received so html codes will be ok
+$id = isset($_POST['id']) ? $vavok->check($_POST['id']) : '';
+$id = isset($_GET['id']) ? $vavok->check($_GET['id']) : '';
 
 // init class
-$pageEditor = new Page();
+$page_editor = new Page();
 
 // get page id we work with
-$page_id = $pageEditor->get_page_id("file='{$file}'");
+$page_id = $page_editor->get_page_id("file='{$file}'");
+
+if (isset($_GET['file'])) {
+    // get page id we work with
+    $page_id = $page_editor->get_page_id("file='{$file}'");
+} elseif (isset($_POST['file'])) {
+    $file = $vavok->check($_POST['file']);
+    // get page id we work with
+    $page_id = $page_editor->get_page_id("file='{$file}'");
+} else {
+    $file = '';
+}
 
 $config_editfiles = 20;
+
+if ($action == "editfile") {
+    // get edit mode
+    if (!empty($_SESSION['edmode'])) {
+        $edmode = $vavok->check($_SESSION['edmode']);
+    } else {
+        $edmode = 'columnist';
+        $_SESSION['edmode'] = $edmode;
+    } 
+
+    if (!empty($file) && !empty($text_files)) {
+        $page_info = $page_editor->select_page($page_id, 'crtdby, published');
+
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
+
+        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+            header("Location: index.php?isset=ap_noaccess");
+            exit;
+        }
+
+        // bug when magic quotes are on and '\' sign
+        // if magic quotes are on we don't want ' to become \'
+        if (get_magic_quotes_gpc()) {
+            // strip all slashes
+            $text_files = stripslashes($text_files);
+        }
+
+        // update db data
+        $page_editor->update($page_id, $text_files);
+    } 
+
+    $vavok->redirect_to("files.php?action=edit&file=$file&isset=mp_editfiles");
+
+}
+
+if ($action == 'savetags') {
+    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+
+    $tags = isset($_POST['tags']) ? $vavok->check($_POST['tags']) : '';
+
+    if (!empty($tags)) { $page_editor->update_tags($id, $tags); }
+
+    $vavok->redirect_to("files.php?action=tags&id={$id}&isset=mp_editfiles");
+}
+// update head tags on all pages
+if ($action == 'editmainhead') {
+    if (!$users->is_administrator(101)) {
+        $vavok->redirect_to("../?isset=ap_noaccess");
+    } 
+
+    // update header data
+    file_put_contents("../used/headmeta.dat", $text_files);
+
+    $vavok->redirect_to("files.php?action=mainmeta&isset=mp_editfiles");
+}
+
+// update head tags on specific page
+if ($action == "editheadtag") {
+    // get default image link
+    $image = !empty($_POST['image']) ? $vavok->check($_POST['image']) : '';
+
+    // update header tags
+    if (!empty($file)) {
+
+        // who created page
+        $page_info = $page_editor->select_page($page_id, 'crtdby');
+
+        // check can user see page
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+
+        // check can user edit page
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
+
+        // update db data
+        $data = array(
+            'headt' => $text_files,
+            'default_img' => $image
+        );
+        $page_editor->head_data($page_id, $data);
+
+        // redirect
+        $vavok->redirect_to("files.php?action=headtag&file=$file&isset=mp_editfiles");
+
+    } 
+    // fields must not be empty
+    $vavok->redirect_to("files.php?action=headtag&file=$file&isset=mp_noeditfiles");
+}
+
+// rename page
+if ($action == "save_renamed") {
+    $pg = $vavok->check($_POST['pg']); // new file name
+
+    if (!empty($pg) && !empty($file)) {
+        $page_info = $page_editor->select_page($page_id, 'crtdby');
+
+        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
+            header("Location: index.php?isset=ap_noaccess");
+            exit;
+        } 
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
+            header("Location: index.php?isset=ap_noaccess");
+            exit;
+        } 
+
+        // rename page
+        $page_editor->rename($pg, $page_id);
+
+        header("Location: files.php?action=edit&file=$pg&isset=mp_editfiles");
+        exit;
+    } 
+    header("Location: files.php?action=edit&file=$pg&isset=mp_noedit");
+    exit;
+}
+
+if ($action == "addnew") {
+    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+
+    $newfile = isset($_POST['newfile']) ? $vavok->check($_POST['newfile']) : '';
+    $type = isset($_POST['type']) ? $vavok->check($_POST['type']) : '';
+    $page_structure = isset($_POST['page_structure']) ? $vavok->check($_POST['page_structure']) : '';
+    $allow_unicode = isset($_POST['allow_unicode']) ? true : false;
+
+    // page title
+    $page_title = $newfile;
+
+    // page name in url
+    if ($allow_unicode === false) {
+        // remove unicode chars
+        $newfile = $vavok->trans($newfile);
+    } else {
+        $newfile = $vavok->trans_unicode($newfile);
+    }
+
+    // if page structure is set
+    if (!empty($page_structure)) {
+        $type = $page_structure;
+    }
+
+    // page language
+    if (isset($_POST['lang']) && !empty($_POST['lang'])) {
+
+        $pagelang = $vavok->check($_POST['lang']);
+
+        $pagelang_file = '!.' . $pagelang . '!';
+
+    } else {
+
+        $pagelang = '';
+
+    }
+
+    if (!empty($newfile)) {
+        // page filename
+        $newfiles = $newfile . $pagelang_file . '.php';
+
+        // check if page exists
+        $includePageLang = !empty($pagelang) ? " AND lang='{$pagelang}'" : '';
+
+        if ($page_editor->page_exists('', "pname='{$newfile}'" . $includePageLang)) {
+            $vavok->redirect_to("files.php?action=new&isset=mp_pageexists");
+        }
+
+        // full page address
+        if (!empty($page_structure) && $newfile != 'index') {
+            // user's custom page structure
+            $page_url = $vavok->website_home_address() . '/' . $page_structure . '/' . $newfile . '/';
+        } elseif ($type == 'post') {
+            // blog post
+            $page_url = $vavok->website_home_address() . '/blog/' . $newfile . '/';
+        } elseif ($newfile != 'index') {
+            // page
+            $page_url = $vavok->website_home_address() . '/page/' . $newfile . '/';
+        }
+
+        // insert db data
+        $values = array(
+        'pname' => $newfile,
+        'lang' => $pagelang,
+        'created' => time(),
+        'lastupd' => time(),
+        'lstupdby' => $users->user_id,
+        'file' => $newfiles,
+        'crtdby' => $users->user_id,
+        'published' => '1',
+        'pubdate' => '0',
+        'tname' => $page_title,
+        'headt' => '<meta property="og:title" content="' . $page_title . '" />'. "\r\n" . '<meta property="og:url" content="' . $page_url . '" />' . "\r\n" . '<link rel="canonical" href="' . $page_url . '" />',
+        'type' => $type
+        );
+
+        // insert data
+        $page_editor->insert($values);
+
+        // file successfully created
+        $vavok->redirect_to("files.php?action=edit&file=$newfiles&isset=mp_newfiles");
+
+    } else {
+        $vavok->redirect_to("files.php?action=new&isset=mp_noyesfiles");
+    }
+
+}
+
+if ($action == "del") {
+    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator()) {
+        $vavok->redirect_to("index.php?isset=ap_noaccess");
+    }
+
+    // delete page
+    $page_editor->delete($page_id);
+ 
+    $vavok->redirect_to("files.php?isset=mp_delfiles");
+}
+
+// publish page; page will be avaliable for visitors
+if ($action == "publish") {
+    if (!empty($page_id)) {
+
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
+            header("Location: index.php?isset=ap_noaccess");
+            exit;
+        }
+
+        // update db data
+        $page_editor->visibility($page_id, 2);
+    } 
+
+    $vavok->redirect_to("files.php?action=show&file=" . $file . "&isset=mp_editfiles");
+}
+
+// unpublish page
+if ($action == "unpublish") {
+    if (!empty($page_id)) {
+
+        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
+            header("Location: index.php?isset=ap_noaccess");
+            exit;
+        }
+
+        // update db data
+        $page_editor->visibility($page_id, 1);
+    } 
+
+    $vavok->redirect_to("files.php?action=show&file=" . $file . "&isset=mp_editfiles");
+}
+
+// update page language
+if ($action == 'pagelang') {
+    if (!$users->is_administrator()) { $vavok->redirect_to("../?isset=ap_noaccess"); }
+
+    $pageId = $vavok->check($_GET['id']);
+    $lang = $vavok->check($_POST['lang']);
+
+    // update database data
+    $page_editor->language($pageId, $lang);
+
+    $pageData = $page_editor->select_page($pageId);
+    $vavok->redirect_to("files.php?action=show&file=" . $pageData['pname'] . "!." . $lang . "!.php&isset=mp_editfiles");
+
+}
 
 // editing mode
 // use visual mode as default
@@ -40,7 +313,7 @@ if (!empty($_POST['edmode'])) {
 
 if ($edmode == 'visual') {
     // text editor
-    $loadTextEditor = $pageEditor->loadPageEditor();
+    $loadTextEditor = $page_editor->loadPageEditor();
 
     // remove fullpage plugin if exists, we dont need html header and footer tags
     $loadTextEditor = str_replace('fullpage ' , '', $loadTextEditor);
@@ -67,10 +340,10 @@ if (empty($action)) {
 
     echo '<h1>' . $localization->string('filelist') . '</h1>';
 
-    $total_pages = $pageEditor->total_pages();
+    $total_pages = $page_editor->total_pages();
 
     if ($edit_only_own_pages == 'yes') {
-        $total_pages = $pageEditor->total_pages($users->user_id);
+        $total_pages = $page_editor->total_pages($users->user_id);
     } 
 
     // start navigation
@@ -116,11 +389,11 @@ if (empty($action)) {
 
             // Check for permissions to publish and unpublish pages
             if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
-                echo ' | <a href="procfiles.php?action=publish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
+                echo ' | <a href="files.php?action=publish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
             } 
 
             if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
-                echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
+                echo ' | <a href="files.php?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
             }
 
             // Informations about page
@@ -152,7 +425,6 @@ if (empty($action)) {
 } 
 
 if ($action == "show") {
-
     if (!empty($page_id)) {
         $base_file = $file;
 
@@ -180,10 +452,10 @@ if ($action == "show") {
         echo ' | Page type: ' . $post_type;
 
         if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
-            echo ' | <a href="procfiles.php?action=publish&amp;file=' . $file . '">[Publish]</a>';
+            echo ' | <a href="files.php?action=publish&amp;file=' . $file . '">[Publish]</a>';
         } 
         if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
-            echo ' | <a href="procfiles.php?action=unpublish&amp;file=' . $file . '">[Unpublish]</a>';
+            echo ' | <a href="files.php?action=unpublish&amp;file=' . $file . '">[Unpublish]</a>';
         }
         echo '</p>';
 
@@ -226,7 +498,7 @@ if ($action == "show") {
 
 if ($action == "edit") {
     // check if page exists
-    $checkPage = $pageEditor->page_exists($file);
+    $checkPage = $page_editor->page_exists($file);
 
     // coder mode for advanced users / coders
     if ($edmode == 'coder') {
@@ -237,7 +509,7 @@ if ($action == "edit") {
     } 
 
     if ($checkPage == true) {
-        $page_info = $pageEditor->select_page($page_id);
+        $page_info = $page_editor->select_page($page_id);
 
         if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
@@ -256,36 +528,58 @@ if ($action == "edit") {
             $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
         } 
 
-        echo '<p>Edit mode: ' . $edmode_name . '</p>
-        <form method="post" action="files.php?action=edit&amp;file=' . $file . '">
-		<select name="edmode" >
-		<option value="' . $edmode . '">' . $edmode_name . '</option>';
+        echo '<p>Edit mode: ' . $edmode_name . '</p>';
+
+		$form = new PageGen('forms/form.tpl');
+		$form->set('form_method', 'post');
+		$form->set('form_action', 'files.php?action=edit&amp;file=' . $file);
+
+		$select = new PageGen('forms/select.tpl');
+		$select->set('label_for', 'edmode');
+		$select->set('select_id', 'edmode');
+		$select->set('select_name', 'edmode');
+
+		$options = '<option value="' . $edmode . '">' . $edmode_name . '</option>';
+
 		if ($edmode == 'coder') {
-			echo '<option value="visual">Visual</option>';
+			$options .= '<option value="visual">Visual</option>';
 		} else {
-		echo '<option value="coder">Coder</option>';
+			$options .= '<option value="coder">Coder</option>';
 		}
-		
-		echo '</select>
-		<input type="submit" name="submit_button" value="Go">
-		</form><br />';
 
-        echo '<hr /><p>Updating page ' . $show_up_file . ' | <a href="files.php?action=renamepg&amp;pg=' . $file . '" class="btn btn-outline-primary sitelink">rename</a></p><br />'; // update lang
+		$select->set('options', $options);
 
-        echo '<form action="procfiles.php?action=editfile&amp;file=' . $file . '" name="form" method="POST">';
+		$form->set('fields', $select->output());
+		echo $form->output();
 
-        echo '<textarea id="text_files" name="text_files">';
-        echo $datamainfile;
-        echo '</textarea>';
+        echo '<hr />';
 
-        echo '<br /><br />';
+        echo '<p>Updating page ' . $show_up_file . ' | <a href="files.php?action=renamepg&amp;pg=' . $file . '" class="btn btn-outline-primary sitelink">rename</a></p>'; // update lang
 
-        echo '<br /><button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button></form><hr>';
+        $form = new PageGen('forms/form.tpl');
+        $form->set('form_method', 'post');
+        $form->set('form_name', 'form');
+        $form->set('form_action', 'files.php?action=editfile&amp;file=' . $file);
+
+        $textarea = new PageGen('forms/textarea.tpl');
+        $textarea->set('label_for', 'text_files');
+        $textarea->set('textarea_id', 'text_files');
+        $textarea->set('textarea_name', 'text_files');
+        $textarea->set('textarea_rows', '3');
+        $textarea->set('textarea_value', $datamainfile);
+
+        $form->set('fields', $textarea->output());
+
+        echo $form->output();
+
+        echo '<hr>';
         echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
 
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a>';
+        echo '<p><a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a>';
+        echo '<a href="files.php?action=updpagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
         echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
-        
+        echo '<a href="files.php?action=tags&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Tags</a></p>'; // update lang
+
     } else {
         require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
         echo '<p>' . $localization->string('file') . ' ' . $file . ' ' . $localization->string('noexist') . '</p>';
@@ -294,12 +588,11 @@ if ($action == "edit") {
 } 
 // edit meta tags
 if ($action == "headtag") {
-
     if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
-    $page_info = $pageEditor->select_page($page_id);
+    $page_info = $page_editor->select_page($page_id);
 
     if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
         header("Location: index.php?isset=ap_noaccess");
@@ -358,10 +651,8 @@ if ($action == "headtag") {
 }
 </style>
 
-
 <?php
 
- 
     // show page name
     if (!stristr($file, '/')) {
         $show_up_file = str_replace('.php', '', $file);
@@ -370,56 +661,84 @@ if ($action == "headtag") {
         } 
     } else {
         $show_up_file = $file;
-    } 
+    }
+
+    ?>
+
+	<!-- add tags using javascript -->
+	<script language="JavaScript">
+	<!--
+	  function tag(text1, text2) 
+	  { 
+	     if ((document.selection)) 
+	     { 
+	       document.form.text_files.focus(); 
+	       document.form.document.selection.createRange().text = text1+document.form.document.selection.createRange().text+text2; 
+	     } else if(document.forms['form'].elements['text_files'].selectionStart != undefined) { 
+	         var element    = document.forms['form'].elements['text_files']; 
+	         var str     = element.value; 
+	         var start    = element.selectionStart; 
+	         var length    = element.selectionEnd - element.selectionStart; 
+	         element.value = str.substr(0, start) + text1 + str.substr(start, length) + text2 + str.substr(start + length); 
+	     } else document.form.text_files.value += text1+text2; 
+	  }	
+	//--> 
+	</script>
+
+	<p>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;description&quot; content=&quot;', '&quot; />'); return false;">&lt;description&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;keywords&quot; content=&quot;', '&quot; />'); return false;">&lt;keywords&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;author&quot; content=&quot;', '&quot; />'); return false;">&lt;author&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:image&quot; content=&quot;', '&quot; />'); return false;">&lt;og:image&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:title&quot; content=&quot;', '&quot; />'); return false;">&lt;og:title&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:url&quot; content=&quot;', '&quot; />'); return false;">&lt;og:url&gt;</a>
+		<a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:description&quot; content=&quot;', '&quot; />'); return false;">&lt;og:description&gt;</a>
+	</p>
+
+
+<?php
 
     echo '<legend>Updating file ' . $show_up_file . '</legend>'; // update lang 
 
-    echo '<form action="procfiles.php?action=editheadtag&amp;file=' . $file . '" name="form" method="POST">';
+    /**
+     * Load form
+     */
+	$form = new PageGen('forms/form.tpl');
+	$form->set('form_action', 'files.php?action=editheadtag&amp;file=' . $file);
+	$form->set('form_method', 'POST');
+	$form->set('form_name', 'form');
 
-    ?>
-<!-- add tags using javascript -->
-<script language="JavaScript">
-<!--
-  function tag(text1, text2) 
-  { 
-     if ((document.selection)) 
-     { 
-       document.form.text_files.focus(); 
-       document.form.document.selection.createRange().text = text1+document.form.document.selection.createRange().text+text2; 
-     } else if(document.forms['form'].elements['text_files'].selectionStart != undefined) { 
-         var element    = document.forms['form'].elements['text_files']; 
-         var str     = element.value; 
-         var start    = element.selectionStart; 
-         var length    = element.selectionEnd - element.selectionStart; 
-         element.value = str.substr(0, start) + text1 + str.substr(start, length) + text2 + str.substr(start + length); 
-     } else document.form.text_files.value += text1+text2; 
-  }	
-//--> 
-</script>
+    /**
+     * Textarea
+     */
+	$textarea = new PageGen('forms/textarea.tpl');
+	$textarea->set('label_for', 'text');
+	$textarea->set('textarea_name', 'text_files');
+	$textarea->set('textarea_id', 'text');
+	$textarea->set('textarea_value', $page_info['headt']);
 
-            <p>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;description&quot; content=&quot;', '&quot; />'); return false;">&lt;description&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;keywords&quot; content=&quot;', '&quot; />'); return false;">&lt;keywords&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta name=&quot;author&quot; content=&quot;', '&quot; />'); return false;">&lt;author&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:image&quot; content=&quot;', '&quot; />'); return false;">&lt;og:image&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:title&quot; content=&quot;', '&quot; />'); return false;">&lt;og:title&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:url&quot; content=&quot;', '&quot; />'); return false;">&lt;og:url&gt;</a>
-           <a class="x_meta_buttons" href=# onClick="javascript:tag('<meta property=&quot;og:description&quot; content=&quot;', '&quot; />'); return false;">&lt;og:description&gt;</a>
-            </p>
+    /**
+     * Input field
+     */
+	$image_input = new PageGen('forms/input.tpl');
+	$image_input->set('label_for', 'image');
+	$image_input->set('label_value', 'Default image:');
+	$image_input->set('input_type', 'text');
+	$image_input->set('input_name', 'image');
+	$image_input->set('input_id', 'image');
+	$image_input->set('input_value', $page_info['default_img']);
 
-<?php
-	echo '<label for="text"></label>';
-    echo '<textarea cols="80" rows="30" name="text_files" id="text">';
-    echo $page_info['headt'];
-    echo '</textarea>';
+    /**
+     * Insert fields
+     */
+	$form->set('fields', $form->merge(array($textarea, $image_input)));
 
-	echo '<label for="image">Default image:</label>';
-    echo '<input type=text" name="image" id="image" value="' . $page_info['default_img'] . '">';
+    /**
+     * Show form
+     */
+	echo $form->output();
 
-    echo '<br />
-            <button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button>
-
-            </form><hr />';
+	echo '<hr />';
 } 
 
 if ($action == 'mainmeta') {
@@ -429,15 +748,23 @@ if ($action == 'mainmeta') {
 
     echo '<img src="/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
-    $headtags = file_get_contents('../used/headmeta.dat');
+    $headtags = trim(file_get_contents(BASEDIR . 'used/headmeta.dat'));
 
-    echo '<form action="procfiles.php?action=editmainhead" name="form" method="POST">';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_action', 'files.php?action=editmainhead');
+    $form->set('form_name', 'form');
+    $form->set('form_method', 'post');
 
-    echo '<textarea cols="80" rows="30" name="text_files">';
-    echo $headtags;
-    echo '</textarea>';
+    $textarea = new PageGen('forms/textarea.tpl');
+    $textarea->set('label_for', '');
+    $textarea->set('textarea_name', 'text_files');
+    $textarea->set('textarea_value', $headtags);
+    $textarea->set('textarea_id', '');
 
-    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
+    $form->set('fields', $textarea->output());
+    echo $form->output();
+
+    echo '<hr>';
 
     echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
@@ -452,17 +779,36 @@ if ($action == 'renamepg') {
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-    echo '<img src="/images/img/panel.gif" alt="" /> Rename page<br /><br />'; // update lang
-    echo '<form action="procfiles.php?action=renamepg" name="form" method="POST">';
-    echo '<input type="text" name="pg" value="' . $pg . '">';
-    echo '<input type="hidden" name="file" value="' . $pg . '">';
-    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr /><br />';
+    echo '<h1>Rename page</h1>'; // update lang
 
-    echo '<a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_action', 'files.php?action=save_renamed');
+    $form->set('form_name', 'form');
+    $form->set('form_method', 'POST');
+
+    $input_pg = new PageGen('forms/input.tpl');
+    $input_pg->set('label_for', '');
+    $input_pg->set('input_type', 'text');
+    $input_pg->set('input_name', 'pg');
+    $input_pg->set('input_id', '');
+    $input_pg->set('input_value', $pg);
+
+    $input_file = new PageGen('forms/input.tpl');
+    $input_file->set('label_for', '');
+    $input_file->set('input_type', 'hidden');
+    $input_file->set('input_name', 'file');
+    $input_file->set('input_id', '');
+    $input_file->set('input_value', $pg);
+
+    $form->set('fields', $form->merge(array($input_pg, $input_file)));
+    echo $form->output();
+
+    echo '<hr />';
+
+    echo '<p><a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 } 
 
 if ($action == "new") {
-
     if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
@@ -506,67 +852,95 @@ if ($action == "new") {
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
- 
+    echo '<h1>' . $localization->string('newfile') . '</h1>';
 
-    echo '
-    <h1>' . $localization->string('newfile') . '</h1>';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'files.php?action=addnew');
 
-    echo '<div class="form-group">
-    		<form method="post" action="procfiles.php?action=addnew">';
-    echo '<label for="newfile">' . $localization->string('pagename') . ':</label>';
-	    echo '<input class="form-control" type="text" name="newfile" id="newfile" maxlength="120" />
-    '; 
+    /**
+     * Page name input
+     */
+    $input_new_file = new PageGen('forms/input.tpl');
+    $input_new_file->set('label_for', 'newfile');
+    $input_new_file->set('label_value', $localization->string('pagename') . ':');
+    $input_new_file->set('input_type', 'text');
+    $input_new_file->set('input_name', 'newfile');
+    $input_new_file->set('input_id', 'newfile');
+    $input_new_file->set('input_maxlength', 120);
 
-
-    // language
+    /**
+     * Language select
+     */
     $languages = "SELECT * FROM languages ORDER BY lngeng";
 
-    echo '<div class="form-group">
-    <label for="language">' . $localization->string('language') . ' (optional):</label>';
-    echo '<select class="form-control" id="language" name="lang">';
-
-    echo '<option value="">Don\'t set</option>';
+    $options = '<option value="">Don\'t set</option>';
     foreach ($db->query($languages) as $lang) {
-        echo "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
-    } 
-    echo "</select>
-    </div>";
-    ?>
+        $options .= "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
+    }
 
-    <div class="form-group">
-    <label for="type">Post type:</label>
-    <select class="form-control" id="type" name="type">
-        <option value="page">Page</option>
-        <option value="post">Post</option>
-    </select>
-    </div>
+    $select_language = new PageGen('forms/select.tpl');
+    $select_language->set('label_for', 'language');
+    $select_language->set('label_value', $localization->string('language') . ' (optional):');
+    $select_language->set('select_id', 'language');
+    $select_language->set('select_name', 'lang');
+    $select_language->set('options', $options);
 
-    <?php
+    /**
+     * Page type select
+     */
+    $select_type = new PageGen('forms/select.tpl');
+    $select_type->set('label_for', 'type');
+    $select_type->set('label_value', 'Post type:');
+    $select_type->set('select_id', 'type');
+    $select_type->set('select_name', 'type');
+    $select_type->set('options', '<option value="page">Page</option><option value="post">Post</option>');
+
+    /**
+     * Custom page structure
+     */
     if (!empty($vavok->get_configuration('customPages'))) {
 
-    echo '<div class="form-group">
-    <label for="page_structure">Page structure:</label>
-    <select class="form-control" id="page_structure" name="page_structure">
-        <option value="">/page/new-page/</option>
-        <option value="' . $vavok->get_configuration('customPages') . '">/' . $vavok->get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>
-    </select>
-    </div>';
+	    $select_structure = new PageGen('forms/select.tpl');
+	    $select_structure->set('label_for', 'page_structure');
+	    $select_structure->set('label_value', 'Page structure:');
+	    $select_structure->set('select_id', 'page_structure');
+	    $select_structure->set('select_name', 'page_structure');
+	    $select_structure->set('options', '<option value="">/page/new-page/</option>
+	    <option value="' . $vavok->get_configuration('customPages') . '">/' . $vavok->get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>');
 
-    }
-    ?>
+    } else { $select_structure = ''; }
 
-    <div class="form-group form-check">
-      <input class="form-check-input" type="checkbox" value="" name="allow_unicode" id="allow-unicode">
-      <label class="form-check-label" for="allow-unicode">
-        <?php echo $localization->string('allowUnicodeUrl'); ?>
-      </label>
-    </div>
+    /**
+     * Allow unicode url checkbox
+     */
+    $checkbox_allow_unicode = new PageGen('forms/checkbox.tpl');
+    $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
+    $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
+    $checkbox_allow_unicode->set('label_for', 'allow-unicode');
+    $checkbox_allow_unicode->set('label_value', $localization->string('allowUnicodeUrl'));
+    $checkbox_allow_unicode->set('website_language[save]', $localization->string('newpage'));
 
-    <?php
-    echo '<div class="form-group">
-    <button class="btn btn-primary" type="submit" />' . $localization->string('newpage') . '</button>
-    </div>
-    </form>';
+    /**
+     * All form fields
+     */
+    $fields = array($input_new_file, $select_language, $select_type, $select_structure, $checkbox_allow_unicode);
+
+    /**
+     * Remove field is it is empty
+     */
+    if (empty($select_structure)) unset($fields[3]);
+
+    /**
+     * Merge fields
+     */
+    $form->set('fields', $form->merge($fields));
+
+    /**
+     * Show form
+     */
+    echo $form->output();
+
 } 
 
 // confirm that you want to delete a page
@@ -581,7 +955,7 @@ if ($action == "poddel") {
     if (!empty($file)) {
         if ($file != "index.php") {
             echo $localization->string('confdelfile') . ' <b>' . $file . '</b><br />';
-            echo '<b><a href="procfiles.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a></b><br />';
+            echo '<b><a href="files.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a></b><br />';
         } else {
             echo $localization->string('indexnodel') . '!<br />';
         } 
@@ -591,7 +965,7 @@ if ($action == "poddel") {
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
-if ($action == "pagelang") {
+if ($action == "updpagelang") {
     if (!$users->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     } 
@@ -599,63 +973,85 @@ if ($action == "pagelang") {
     $id = $vavok->check($_GET['id']);
 
     // get page data
-    $pageData = $pageEditor->select_page($id);
+    $pageData = $page_editor->select_page($id);
 
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-    echo '<div class="form-group">';
+	$form = new PageGen('forms/form.tpl');
+	$form->set('form_method', 'post');
+	$form->set('form_action', 'files.php?action=pagelang&amp;id=' . $pageData['id']);
 
-	    echo '<form method="post" action="procfiles.php?action=pagelang&amp;id=' . $pageData['id'] . '">'; 
+	$select_language = new PageGen('forms/select.tpl');
+	$select_language->set('label_for', 'lang');
+	$select_language->set('label_value', $localization->string('language'));
+	$select_language->set('select_name', 'lang');
+	$select_language->set('select_id', 'lang');
 
-		    echo '<label for="lang">' . $localization->string('language') . '</label>';
+	$options = '';
+	if (!empty($pageData['lang'])) {
+		$options .= '<option value="' . $pageData['lang'] . '">' . $pageData['lang'] . '</option>';
+		$options .= '<option value="">Leave empty</option>'; // update language
+	} else {
+		$options .= '<option value="">Leave empty</option>'; // update language
+	}
 
-		    echo '<select name="lang" id="lang" class="custom-select custom-select-lg mb-3">';
+	$languages = "SELECT * FROM languages ORDER BY lngeng";
 
-		    if (!empty($pageData['lang'])) {
+	foreach ($db->query($languages) as $lang) {
+	    $options .= '<option value="' . strtolower($lang['iso-2']) . '">' . $lang['lngeng'] . '</option>';
+	}
 
-		    	echo '<option value="' . $pageData['lang'] . '">' . $pageData['lang'] . '</option>';
+	$select_language->set('options', $options);
 
-		    } else {
+	$form->set('fields', $select_language->output());
 
-		    	echo '<option value="">Leave empty</option>'; // update language
+	echo $form->output();
 
-			}
+    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+}
 
-		    $languages = "SELECT * FROM languages ORDER BY lngeng";
+if ($action == 'tags') {
+    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
+        redirect_to("./?isset=ap_noaccess");
+    }
 
-		    foreach ($db->query($languages) as $lang) {
-		        echo '<option value="' . strtolower($lang['iso-2']) . '">' . $lang['lngeng'] . '</option>';
-		    }
+    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-		    echo '</select>';
+    /**
+     * Get page data
+     */
+    $tag_field = new PageGen('forms/input.tpl');
+    $tag_field->set('label_value', 'Tags');
+    $tag_field->set('label_for', 'tags');
+    $tag_field->set('input_name', 'tags');
+    $tag_field->set('input_id', 'tags');
+    $tag_field->set('input_type', 'text');
+    $tag_field->set('input_value', $page_editor->page_tags($id));
 
-		    echo '<button type="submit" class="btn btn-primary">' . $localization->string('save') . '</button>
+    $form = new PageGen('forms/form.tpl');
+    $form->set('action', 'files.php?action=savetags&amp;id=' . $id);
+    $form->set('method', 'post');
+    $form->set('fields', $tag_field->output());
 
-	    </form>';
+    echo $form->output();
 
-    echo '</div>';
+}
 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
-} 
-
+echo '<p>';
 if ($action != "new" && ($users->check_permissions('pageedit', 'insert') || $users->is_administrator())) {
     echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $localization->string('newpage') . '</a>';
-} 
-if ($users->is_administrator() && ($action == 'edit' || $action == 'show')) {
-    echo '<a href="files.php?action=pagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
-} 
+}
 if ($users->is_administrator(101)) {
     echo '<a href="files.php?action=mainmeta" class="btn btn-outline-primary sitelink">Head (meta) tags on all pages</a>';
 } // update lang
 if ($users->is_administrator()) {
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">Search</a>';
+    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('search') . '</a>';
 } 
 if (!empty($action)) {
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngpage') . '</a>';
-} 
-if ($action != "faq") {
-    // echo '<br /><img src="../images/img/faq.gif" alt=""> <a href="files.php?action=faq">' . $localization->string('faq') . '</a>';
 }
+
+echo '</p>';
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
