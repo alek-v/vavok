@@ -3,50 +3,55 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   26.07.2020. 17:37:18
+* Updated:   06.08.2020. 0:02:30
 */
 
 require_once"../include/startup.php";
-
-$current_page->page_title = 'Change Photo'; // update lang
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
-
-?>
-<style type="text/css">
-	.photo img {
-		max-width: 320px;
-		max-height: 320px;
-		overflow: hidden;
-	}
-	</style>
-<?php
 
 if (!empty($_GET['action'])) {
     $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
-} 
+}
+
+$current_page->append_head_tags('<style type="text/css">
+.photo img {
+    max-width: 320px;
+    max-height: 320px;
+    overflow: hidden;
+}
+</style>');
+
+$current_page->page_title = 'Change Photo'; // update lang
+require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_reg()) {
     if (empty($action)) {
         $chk_photo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'photo');
 
-        if (!empty($localization->string('photo'))) {
+        if (!empty($chk_photo['photo'])) {
             echo '<div class="photo">';
-            echo '<h4>Your photo</h4><br /><img src="../' . $localization->string('photo') . '" alt="" /><br>';
+            echo '<h1>Your photo</h1><br /><img src="../' . $chk_photo['photo'] . '" alt="" />';
             echo '</div>';
-            echo '<div class="break"></div>';
-        } 
+        }
 
-        echo '<form action="photo.php?action=photo" method="post" name="form" enctype="multipart/form-data">';
-        echo '<br>Change your profile photography: <br>';
-        echo '<input type="file" name="file" /><br><br>';
-        echo '<input type="submit" value="' . $localization->string('upload') . '" /></form>';
-        echo '<div class="break"></div>';
-        echo '<div class="break"></div>';
+        $form = new PageGen('forms/form_upload.tpl');
+        $form->set('form_action', 'photo.php?action=photo');
+        $form->set('form_method', 'post');
+        $form->set('form_name', 'form');
+
+        $input = new PageGen('forms/input.tpl');
+        $input->set('label_for', 'file');
+        $input->set('label_value', 'Change your profile photography:');
+        $input->set('input_type', 'file');
+        $input->set('input_name', 'file');
+
+        $form->set('fields', $input->output());
+
+        echo $form->output();
 
 
-    } 
+    }
     // choose photo
     if ($action == "photo") {
         $avat_size = $_FILES['file']['size'];
@@ -71,7 +76,7 @@ if ($users->is_reg()) {
                             unlink("../used/dataphoto/" . $users->user_id . ".gif");
                         } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".jpeg")) {
                             unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
-                        } 
+                        }
                         // add new photo
                         copy($_FILES['file']['tmp_name'], "../used/dataphoto/" . $users->user_id . "." . $av_string . "");
                         $ch = $_FILES['file']['tmp_name'];
@@ -85,19 +90,19 @@ if ($users->is_reg()) {
                         echo '</div>';
                     } else {
                         echo 'Error uploading photography<br>';
-                    } 
+                    }
                 } else {
                     echo $localization->string('badfileext') . '<br>';
-                } 
+                }
             } else {
                 echo 'Photography must be under 1024 px<br>';
-            } 
+            }
         } else {
             echo $localization->string('filemustb') . ' under 5 MB<br>';
-        } 
+        }
 
-        echo '<a href="photo.php">' . $localization->string('back') . '</a><br>';
-    } 
+        echo '<p><a href="photo.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+    }
     if ($action == 'remove') {
         if (file_exists("../used/dataphoto/" . $users->user_id . ".jpg")) {
             unlink("../used/dataphoto/" . $users->user_id . ".jpg");
@@ -107,22 +112,24 @@ if ($users->is_reg()) {
             unlink("../used/dataphoto/" . $users->user_id . ".gif");
         } elseif (file_exists("../used/dataphoto/" . $users->user_id . ".jpeg")) {
             unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
-        } 
+        }
 
         $db->update('vavok_about', 'photo', "", "uid='{$users->user_id}'");
 
-        echo '<p>Your photography successfully deleted!</p><br />'; // update lang
+        echo '<p>Your photography successfully deleted!</p>'; // update lang
 
-        echo '<a href="profile.php">' . $localization->string('back') . '</a><br />';
-    } 
+        echo '<p><a href="profile.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+    }
 } else {
-    echo '<br>' . $localization->string('notloged') . '<br><br><br>';
-} 
+    echo '<p>' . $localization->string('notloged') . '</p>';
+}
 
+echo '<p>';
 if (empty($action)) {
-    echo '<a href="../pages/profile.php">' . $localization->string('back') . '</a><br />';
+    echo '<a href="../pages/profile.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo '</p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
