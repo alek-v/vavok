@@ -4,7 +4,7 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   04.08.2020. 19:32:59
+* Updated:   05.08.2020. 15:57:26
 */
 
 class Page {
@@ -72,8 +72,8 @@ class Page {
 	}
 
 	/*
-	Update, insert and delete informations
-	*/
+	 * Update, insert and delete informations
+	 */
 
 	// insert new page
 	function insert($values) {
@@ -83,6 +83,35 @@ class Page {
 	// delete page
 	function delete($id) {
 		$this->db->delete($this->table_prefix . 'pages', "id='{$id}'");
+	}
+
+	/**
+	 * Update page tags
+	 *
+	 * @param integer $id
+	 * @param string $tags
+	 * @return void
+	 */
+	public function update_tags($id, $tags)
+	{
+		/**
+		 * Delete current tags
+		 */
+		$this->db->delete($this->table_prefix . 'tags', "page_id = '{$id}'");
+
+		/**
+		 * Insert new tags
+		 */
+		if (substr_count($tags, ' ') == 0) $tags = array($tags); 
+		else { $tags = explode(' ', $tags); }
+
+		foreach ($tags as $key => $value) {
+			$values = array(
+				'page_id' => $id,
+				'tag_name' => $value
+			);
+			$this->db->insert_data($this->table_prefix . 'tags', $values);
+		}
 	}
 
 	// update page
@@ -166,18 +195,17 @@ class Page {
 	}
 
 	/*
-	Read data
-	*/
+	 * Read data
+	 */
 
 	// Show page content
-	public function show_page() {
-
+	public function show_page()
+	{
 		echo $this->page_content;
-
 	}
 
 	// return total number of pages
-	function total_pages($creator = '') {
+	public function total_pages($creator = '') {
 		$where = '';
 
 		if (!empty($creator)) {
@@ -188,8 +216,8 @@ class Page {
 	}
 
 	// select page by id - get page data
-	function select_page($id , $fields = '*') {
-
+	public function select_page($id , $fields = '*')
+	{
 		// update visitor counter if page is vewed by visitor
 		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
 
@@ -198,7 +226,6 @@ class Page {
 
 		// return page data
 		return $this->db->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
-
 	}
 
 	// Load page
@@ -346,12 +373,30 @@ class Page {
 	}
 
 	/**
-	 * Page gead tags
+	 * Page tags (keywords)
+	 *
+	 * @param integer $id
+	 * @return string
+	 */
+	public function page_tags($id)
+	{
+		$tags = '';
+
+		$sql = $this->db->query("SELECT * FROM tags WHERE page_id = '{$id}' ORDER BY id ASC");
+		foreach ($sql as $key => $value) {
+			$tags .= ' ' . $value['tag_name'];
+		}
+		return trim($tags);
+	}
+
+	/**
+	 * Head tags for all pages
 	 *
 	 * @param string $tags
 	 * @return string
 	 */
-	private function get_head_tags() {
+	private function get_head_tags()
+	{
 		$tags = file_get_contents(BASEDIR . 'used/headmeta.dat');
 
         $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'");

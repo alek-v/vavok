@@ -460,3 +460,12 @@ INSERT INTO `settings` (`name`  , `keypass`, `webtheme`, `quarantine`, `showtime
                        ('system', ''       , ''        , 0           , 0         , 0            , 0         , 0           , ''         , ''          , '0'       , ''     , ''       , 0             , ''                , NULL         , NULL         , NULL         , 0          , 0         , 0              , NULL       , NULL           , NULL            , 'english'        , ''      , 0            , NULL        , 50             , 120       , 0           , 0        , 0           , 0        , 0            , 0            , 0            , 43200);
 
 
+
+CREATE TABLE IF NOT EXISTS `tags` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `page_id` int(11) NOT NULL,
+  `tag_name` varchar(2255) NOT NULL,
+  UNIQUE KEY `UNIQUE` (`id`),
+  KEY `page_id` (`page_id`),
+  KEY `tag_name` (`tag_name`(250))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
