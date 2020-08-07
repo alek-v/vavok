@@ -1,13 +1,12 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   05.08.2020. 21:50:17
+* Updated:   07.08.2020. 19:42:50
 */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.5.beta6');
+define('VERSION', '1.5.5.beta7');
 
 /**
  * Root dir for including system files
@@ -38,7 +37,7 @@ if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
 	$current_page = new Page();
 	$localization = new Localization();
     new Manageip();
-    new Counter();
+    $counter = new Counter();
     new Referer();
 }
 

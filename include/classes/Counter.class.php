@@ -1,16 +1,21 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   03.08.2020. 2:12:17
+* Updated:   07.08.2020. 19:42:27
 */
 
 class Counter {
     private $db;
     private $users;
     private $vavok;
+    public $counter_online;
+    public $counter_reg;
+    public $counter_host;
+    public $counter_all;
+    public $counter_hits;
+    public $counter_allhits;
 
     function __construct()
     {
@@ -140,14 +145,14 @@ class Counter {
         unset($fields, $values);
 
         // show stats
-        $counter_online = $this->db->count_row(DB_PREFIX . 'online');
-        $counter_reg = $this->db->count_row(DB_PREFIX . 'online', "user > 0");
+        $this->counter_online = $this->db->count_row(DB_PREFIX . 'online');
+        $this->counter_reg = $this->db->count_row(DB_PREFIX . 'online', "user > 0");
 
-        $counter_host = $new_visits_today;
-        $counter_all = $new_total_visits;
+        $this->counter_host = $new_visits_today;
+        $this->counter_all = $new_total_visits;
 
-        $counter_hits = $new_clicks_today;
-        $counter_allhits = $new_total_clicks;
+        $this->counter_hits = $new_clicks_today;
+        $this->counter_allhits = $new_total_clicks;
 
     }
 
