@@ -84,7 +84,7 @@ class PageGen {
         /**
          * Remove keys that are not set
          */
-        $output = preg_replace('/{@(.*)}}/' , '', $output);
+        $output = preg_replace('/{@(.*?)}}/' , '', $output);
 
         return $output;
     }
