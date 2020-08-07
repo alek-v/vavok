@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 23:33:05
+* Updated:   07.08.2020. 19:42:12
 */
 
 class Vavok {
@@ -694,28 +694,32 @@ class Vavok {
 	    } 
 	}
 
-	// Show counter
-	function show_counter() {
-	    global $counter_host, $counter_all, $counter_hits, $counter_allhits;
+	/**
+	 * Show counter
+	 *
+	 * @return string
+	 */
+	function show_counter()
+	{
+	    global $counter;
 
 	    if (!empty($this->get_configuration('showCounter')) && $this->get_configuration('showCounter') != "6") {
 	        if ($this->get_configuration('showCounter') == 1) {
-	            $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_all . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_host . ' | ' . $counter->counter_all . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 2) {
-	            $counter = '<a href="/pages/counter.php">' . $counter_hits . ' | ' . $counter_allhits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_hits . ' | ' . $counter->counter_allhits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 3) {
-	            $counter = '<a href="/pages/counter.php">' . $counter_host . ' | ' . $counter_hits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_host . ' | ' . $counter->counter_hits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 4) {
-	            $counter = '<a href="/pages/counter.php">' . $counter_all . ' | ' . $counter_allhits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_all . ' | ' . $counter->counter_allhits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 5) {
-	            $counter = '<a href="/pages/counter.php"><img src="/gallery/count.php" alt=""></a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php"><img src="/gallery/count.php" alt=""></a>';
 	        }
-
-	        return $counter;
+	        return $info;
 	    }
 	}
 
