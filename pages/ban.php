@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:06:52
+* Updated:   07.08.2020. 15:05:19
 */
 
 require_once"../include/startup.php";
@@ -34,7 +34,7 @@ if ($time_ban > 0) {
     echo '<b><font color="#FF0000">' . $localization->string('bandesc') . ': ' . $bandesc . '</font></b>';
     //echo '<strong>You are logged out</strong>'; TODO - update lang and show message
 
-    echo '<br>' . $localization->string('timetoend') . ' ' . formattime($time_ban);
+    echo '<br>' . $localization->string('timetoend') . ' ' . $vavok->formattime($time_ban);
 
     echo '<br><br>' . $localization->string('banno') . ': <b>' . (int)$allban . '</b><br>';
     echo $localization->string('becarefnr') . '<br /><br />';
