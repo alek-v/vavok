@@ -1,9 +1,8 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   02.08.2020. 3:06:11
+* Updated:   07.08.2020. 16:06:59
 */
 
 require_once"../include/startup.php";
@@ -56,30 +55,40 @@ if ($action == 'resendkey') {
 $current_page->page_title = $localization->string('confreg');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-// enter registration key
 if (empty($action)) {
-
     if ($users->is_reg()) {
-
-        echo $localization->string('wellcome') . ', <b>' . $users->show_username() . '!</b><br>';
-        echo $localization->string('confinfo') . '<br>';
-
+        echo '<p>' . $localization->string('wellcome') . ', <b>' . $users->show_username() . '!</b><br>';
+        echo $localization->string('confinfo') . '</p>';
     }
 
-    echo '<form method="post" action="key.php?action=inkey"><br>';
-    echo $localization->string('key') . ':<br>';
-    echo '<input name="key" maxlength="20" /><br><br>';
-    echo '<button class="btn btn-primary" type="submit">' . $localization->string('confirm') . '</button>
-    </form>';
+    /**
+     * Confirm code
+     */
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'key.php?action=inkey');
 
-    echo '
-    <form method="post" action="key.php?action=resendkey&amp;uid=' . $recipient_id . '">
-		<button type="submit" class="btn btn-primary sitelink">' . $localization->string('resend') . '</button>
-	</form>
-	<hr>
-    ';
+    $input = new PageGen('forms/input.tpl');
+    $input->set('label_for', 'key');
+    $input->set('label_value', $localization->string('key'));
+    $input->set('input_name', 'key');
+    $input->set('input_id', 'key');
+    $input->set('input_maxlength', 20);
 
-    echo $localization->string('actinfodel') . '<br />';
+    $form->set('website_language[save]', $localization->string('confirm'));
+    $form->set('fields', $input->output());
+    echo $form->output();
+
+    /**
+     * Resend code
+     */
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'key.php?action=resendkey&amp;uid=' . $recipient_id);
+    $form->set('website_language[save]', $localization->string('resend'));
+    echo $form->output();
+
+    echo '<p>' . $localization->string('actinfodel') . '</p>';
 
 }
 
@@ -106,7 +115,7 @@ if ($action == "inkey") {
             echo '<p>' . $localization->string('keyok') . '!</p>';
 
 
-            echo '<pr><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $localization->string('login') . '</a></p>';
+            echo '<p><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $localization->string('login') . '</a></p>';
 
 
         }
@@ -122,7 +131,7 @@ if ($action == "inkey") {
 
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt="Home page" /> ' . $localization->string('home') . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

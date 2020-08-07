@@ -1,15 +1,14 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:04:19
+* Updated:   07.08.2020. 18:52:33
 */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || !$users->is_administrator(101)) {
-    $vavok->redirect_to("../pages/error.php?error=401");
+    $vavok->redirect_to("../pages/error.php?error=auth");
 }
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
@@ -298,211 +297,358 @@ if (empty($action)) {
     echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $localization->string('other') . '</a>';
 } 
 
-if ($_SESSION['permissions'] == 101 && $users->is_administrator()) {
+// main settings
+if ($action == "setone") {
+    echo '<h1>' . $localization->string('mainset') . '</h1>';
 
-    // main settings
-    if ($action == "setone") {
-        echo '<h1>' . $localization->string('mainset') . '</h1>';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editone');
 
-        echo '<form method="post" action="settings.php?action=editone">';
-
-        echo '<p>' . $localization->string('language') . ':<br /><select name="conf_set47"><option value="' . $vavok->get_configuration('siteDefaultLang') . '">' . $vavok->get_configuration('siteDefaultLang') . '</option>';
-
-        $dir = opendir(BASEDIR . "include/lang");
-        while ($file = readdir($dir)) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $vavok->get_configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
-                echo '<option value="' . $file . '">' . $file . '</option>';
-            } 
+    $options = '<option value="' . $vavok->get_configuration('siteDefaultLang') . '">' . $vavok->get_configuration('siteDefaultLang') . '</option>';
+    $dir = opendir(BASEDIR . "include/lang");
+    while ($file = readdir($dir)) {
+        if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $vavok->get_configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+            $options .= '<option value="' . $file . '">' . $file . '</option>';
         } 
-        echo '</select></p>';
-        closedir($dir);
+    }
 
-        $config_themes_show = str_replace("web_", "", $vavok->get_configuration('webtheme'));
-        $config_themes_show = str_replace("wap_", "", $config_themes_show);
-        $config_themes_show = ucfirst($config_themes_show);
-        echo '<p>' . $localization->string('webskin') . ':<br /><select name="conf_set2"><option value="' . $vavok->get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
+    $select_lang = new PageGen('forms/select.tpl');
+    $select_lang->set('label_for', 'conf_set47');
+    $select_lang->set('label_value', $localization->string('language'));
+    $select_lang->set('select_id', 'conf_set47');
+    $select_lang->set('select_name', 'conf_set47');
+    $select_lang->set('options', $options);
 
-        $dir = opendir ("../themes");
-        while ($file = readdir ($dir)) {
-            if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $vavok->get_configuration('webtheme') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
-                $nfile = str_replace("web_", "", $file);
-                $nfile = str_replace("wap_", "", $nfile);
-                $nfile = ucfirst($nfile);
-                echo '<option value="' . $file . '">' . $nfile . '</option>';
-            } 
-        } 
-        echo '</select></p>';
-        closedir ($dir);
+    $config_themes_show = str_replace("web_", "", $vavok->get_configuration('webtheme'));
+    $config_themes_show = ucfirst($config_themes_show);
 
-        // this will be admin username or system username
-        echo '<p>' . $localization->string('adminusername') . ':<br /><input name="conf_set8" maxlength="20" value="' . $vavok->get_configuration('adminNick') . '" /></p>';
+    $options = '<option value="' . $vavok->get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
+    $dir = opendir ("../themes");
+    while ($file = readdir ($dir)) {
+        if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $vavok->get_configuration('webtheme') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && $file != "templates") {
+            $nfile = str_replace("web_", "", $file);
+            $nfile = ucfirst($nfile);
+            $options .= '<option value="' . $file . '">' . $nfile . '</option>';
+        }
+    }
 
-        echo '<p>' . $localization->string('adminemail') . ':<br /><input name="conf_set9" maxlength="50" value="' . $vavok->get_configuration('adminEmail') . '" /></p>';
-        echo '<p>' . $localization->string('timezone') . ':<br /><input name="conf_set10" maxlength="3" value="' . $vavok->get_configuration('timeZone') . '" /></p>';
-        echo '<p>' . $localization->string('pagetitle') . ':<br /><input name="conf_set11" maxlength="100" value="' . $vavok->get_configuration('title') . '" /></p>';
-        echo '<p>' . $localization->string('siteurl') . ':<br /><input name="conf_set14" maxlength="50" value="' . $vavok->get_configuration('homeUrl') . '" /></p>';
-        echo '<p>' . $localization->string('floodtime') . ':<br /><input name="conf_set29" maxlength="3" value="' . $vavok->get_configuration('floodTime') . '" /></p>';
-        echo '<p>' . $localization->string('passkey') . ':<br /><input name="conf_set1" maxlength="25" value="' . $vavok->get_configuration('keypass') . '" /></p>';
+    $select_theme = new PageGen('forms/select.tpl');
+    $select_theme->set('label_for', 'conf_set2');
+    $select_theme->set('label_value', $localization->string('webskin'));
+    $select_theme->set('select_id', 'conf_set2');
+    $select_theme->set('select_name', 'conf_set2');
+    $select_theme->set('options', $options);
 
-        // quarantine time
-        echo '<p>' . $localization->string('quarantinetime') . ':<br /><select name="conf_set3">';
+    // this will be admin username or system username
+    $input8 = new PageGen('forms/input.tpl');
+    $input8->set('label_for', 'conf_set8');
+    $input8->set('label_value', $localization->string('adminusername'));
+    $input8->set('input_id', 'conf_set8');
+    $input8->set('input_name', 'conf_set8');
+    $input8->set('input_value', $vavok->get_configuration('adminNick'));
+    $input8->set('input_maxlength', 20);
 
-        $quarantine = array(0 => "" . $localization->string('disabled') . "", 21600 => "6 " . $localization->string('hours') . "", 43200 => "12 " . $localization->string('hours') . "", 86400 => "24 " . $localization->string('hours') . "", 129600 => "36 " . $localization->string('hours') . "", 172800 => "48 " . $localization->string('hours') . "");
+    $input9 = new PageGen('forms/input.tpl');
+    $input9->set('label_for', 'conf_set9');
+    $input9->set('label_value', $localization->string('adminemail'));
+    $input9->set('input_id', 'conf_set9');
+    $input9->set('input_name', 'conf_set9');
+    $input9->set('input_value', $vavok->get_configuration('adminEmail'));
+    $input9->set('input_maxlength', 50);
 
-        echo '<option value="' . $vavok->get_configuration('quarantine') . '">' . $quarantine[$vavok->get_configuration('quarantine')] . '</option>';
+    $input10 = new PageGen('forms/input.tpl');
+    $input10->set('label_for', 'conf_set10');
+    $input10->set('label_value', $localization->string('timezone'));
+    $input10->set('input_id', 'conf_set10');
+    $input10->set('input_name', 'conf_set10');
+    $input10->set('input_value', $vavok->get_configuration('timeZone'));
+    $input10->set('input_maxlength', 3);
 
-        foreach($quarantine as $k => $v) {
-            if ($k != $vavok->get_configuration('quarantine')) {
-                echo '<option value="' . $k . '">' . $v . '</option>';
-            } 
-        } 
-        echo '</select></p>';
+    $input11 = new PageGen('forms/input.tpl');
+    $input11->set('label_for', 'conf_set11');
+    $input11->set('label_value', $localization->string('pagetitle'));
+    $input11->set('input_id', 'conf_set11');
+    $input11->set('input_name', 'conf_set11');
+    $input11->set('input_value', $vavok->get_configuration('title'));
+    $input11->set('input_maxlength', 100);
 
-        // transfer protocol
-        echo '<p>Transfer protocol:<br /><select name="conf_set21">';
+    $input14 = new PageGen('forms/input.tpl');
+    $input14->set('label_for', 'conf_set14');
+    $input14->set('label_value', $localization->string('siteurl'));
+    $input14->set('input_id', 'conf_set14');
+    $input14->set('input_name', 'conf_set14');
+    $input14->set('input_value', $vavok->get_configuration('homeUrl'));
+    $input14->set('input_maxlength', 50);
 
-        $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
+    $input29 = new PageGen('forms/input.tpl');
+    $input29->set('label_for', 'conf_set29');
+    $input29->set('label_value', $localization->string('floodtime'));
+    $input29->set('input_id', 'conf_set29');
+    $input29->set('input_name', 'conf_set29');
+    $input29->set('input_value', $vavok->get_configuration('floodTime'));
+    $input29->set('input_maxlength', 3);
 
-        $transfer_protocol = $vavok->get_configuration('transferProtocol');
-        if (empty($vavok->get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
-        
-        echo '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
+    $input1 = new PageGen('forms/input.tpl');
+    $input1->set('label_for', 'conf_set1');
+    $input1->set('label_value', $localization->string('passkey'));
+    $input1->set('input_id', 'conf_set1');
+    $input1->set('input_name', 'conf_set1');
+    $input1->set('input_value', $vavok->get_configuration('keypass'));
+    $input1->set('input_maxlength', 25);
 
-        foreach($tProtocol as $k => $v) {
-            if ($k != $transfer_protocol) {
-                echo '<option value="' . $k . '">' . $v . '</option>';
-            } 
-        } 
-        echo '</select></p>';
+    // quarantine time
+    $quarantine = array(0 => "" . $localization->string('disabled') . "", 21600 => "6 " . $localization->string('hours') . "", 43200 => "12 " . $localization->string('hours') . "", 86400 => "24 " . $localization->string('hours') . "", 129600 => "36 " . $localization->string('hours') . "", 172800 => "48 " . $localization->string('hours') . "");
 
-        // Registration opened or closed
-        echo '<p>' . $localization->string('openreg') . ': <br />' . $localization->string('yes') . '';
-        if ($vavok->get_configuration('openReg') == 1) {
-            echo '<input name="conf_set61" type="radio" value="1" checked>';
-        } else {
-            echo '<input name="conf_set61" type="radio" value="1" />';
-        } 
-        echo ' &nbsp; &nbsp; ';
-        if ($vavok->get_configuration('openReg') == 0) {
-            echo '<input name="conf_set61" type="radio" value="0" checked>';
-        } else {
-            echo '<input name="conf_set61" type="radio" value="0" />';
-        } 
-        echo $localization->string('no') . '</p>';
+    $options = '<option value="' . $vavok->get_configuration('quarantine') . '">' . $quarantine[$vavok->get_configuration('quarantine')] . '</option>';
+    foreach($quarantine as $k => $v) {
+        if ($k != $vavok->get_configuration('quarantine')) {
+            $options .= '<option value="' . $k . '">' . $v . '</option>';
+        }
+    }
 
-        // Does user need to confirm registration
-        echo '<p>' . $localization->string('confregs') . ': <br />' . $localization->string('yes') . '';
-        if ($vavok->get_configuration('regConfirm') == 1) {
-            echo '<input name="conf_set62" type="radio" value="1" checked>';
-        } else {
-            echo '<input name="conf_set62" type="radio" value="1" />';
-        } 
-        echo ' &nbsp; &nbsp; ';
-        if ($vavok->get_configuration('regConfirm') == 0) {
-            echo '<input name="conf_set62" type="radio" value="0" checked>';
-        } else {
-            echo '<input name="conf_set62" type="radio" value="0" />';
-        } 
-        echo $localization->string('no') . '</p>';
+    $select_set3 = new PageGen('forms/select.tpl');
+    $select_set3->set('label_for', 'conf_set3');
+    $select_set3->set('label_value', $localization->string('quarantinetime'));
+    $select_set3->set('select_id', 'conf_set3');
+    $select_set3->set('select_name', 'conf_set3');
+    $select_set3->set('options', $options);
 
-        // Maintenance mode
-        echo '<p>Maintenance: <br />' . $localization->string('yes') . ''; // update lang
-        if ($vavok->get_configuration('siteOff') == 1) {
-            echo '<input name="conf_set63" type="radio" value="1" checked>';
-        } else {
-            echo '<input name="conf_set63" type="radio" value="1" />';
-        } 
-        echo ' &nbsp; &nbsp; ';
-        if ($vavok->get_configuration('siteOff') == 0) {
-            echo '<input name="conf_set63" type="radio" value="0" checked>';
-        } else {
-            echo '<input name="conf_set63" type="radio" value="0" />';
-        } 
-        echo $localization->string('no') . '</p>';
+    // transfer protocol
+    $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
 
-        echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-        echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
-    } 
-} 
+    $transfer_protocol = $vavok->get_configuration('transferProtocol');
+    if (empty($vavok->get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
+    
+    $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
+
+    foreach($tProtocol as $k => $v) {
+        if ($k != $transfer_protocol) {
+            $options .= '<option value="' . $k . '">' . $v . '</option>';
+        }
+    }
+
+    $select_set21 = new PageGen('forms/select.tpl');
+    $select_set21->set('label_for', 'conf_set21');
+    $select_set21->set('label_value', 'Transfer protocol');
+    $select_set21->set('select_id', 'conf_set21');
+    $select_set21->set('select_name', 'conf_set21');
+    $select_set21->set('options', $options);
+
+    // Registration opened or closed
+    $input_radio61_yes = new PageGen('forms/radio_inline.tpl');
+    $input_radio61_yes->set('label_for', 'conf_set61');
+    $input_radio61_yes->set('label_value', $localization->string('openreg') . ': ' . $localization->string('yes'));
+    $input_radio61_yes->set('input_id', 'conf_set61');
+    $input_radio61_yes->set('input_name', 'conf_set61');
+    $input_radio61_yes->set('input_value', 1);
+    if ($vavok->get_configuration('openReg') == 1) {
+        $input_radio61_yes->set('input_status', 'checked');
+    }
+
+    $input_radio61_no = new PageGen('forms/radio_inline.tpl');
+    $input_radio61_no->set('label_for', 'conf_set61');
+    $input_radio61_no->set('label_value', $localization->string('openreg') . ': ' . $localization->string('no'));
+    $input_radio61_no->set('input_id', 'conf_set61');
+    $input_radio61_no->set('input_name', 'conf_set61');
+    $input_radio61_no->set('input_value', 0);
+    if ($vavok->get_configuration('openReg') == 0) {
+        $input_radio61_no->set('input_status', 'checked');
+    }
+
+    $radio_group_one = new PageGen('forms/radio_group.tpl');
+    $radio_group_one->set('radio_group', $radio_group_one->merge(array($input_radio61_yes, $input_radio61_no)));
+
+    // Does user need to confirm registration
+    $input_radio62_yes = new PageGen('forms/radio_inline.tpl');
+    $input_radio62_yes->set('label_for', 'conf_set62');
+    $input_radio62_yes->set('label_value', $localization->string('confregs') . ': ' . $localization->string('yes'));
+    $input_radio62_yes->set('input_id', 'conf_set62');
+    $input_radio62_yes->set('input_name', 'conf_set62');
+    $input_radio62_yes->set('input_value', 1);
+    if ($vavok->get_configuration('regConfirm') == 1) {
+        $input_radio62_yes->set('input_status', 'checked');
+    }
+
+    $input_radio62_no = new PageGen('forms/radio_inline.tpl');
+    $input_radio62_no->set('label_for', 'conf_set62');
+    $input_radio62_no->set('label_value', $localization->string('confregs') . ': ' . $localization->string('no'));
+    $input_radio62_no->set('input_id', 'conf_set62');
+    $input_radio62_no->set('input_name', 'conf_set62');
+    $input_radio62_no->set('input_value', 0);
+    if ($vavok->get_configuration('regConfirm') == 0) {
+        $input_radio62_no->set('input_status', 'checked');
+    }
+
+    $radio_group_two = new PageGen('forms/radio_group.tpl');
+    $radio_group_two->set('radio_group', $radio_group_two->merge(array($input_radio62_yes, $input_radio62_no)));
+
+    // Maintenance mode
+    $input_radio63_yes = new PageGen('forms/radio_inline.tpl');
+    $input_radio63_yes->set('label_for', 'conf_set63');
+    $input_radio63_yes->set('label_value', 'Maintenance: ' . $localization->string('yes'));
+    $input_radio63_yes->set('input_id', 'conf_set63');
+    $input_radio63_yes->set('input_name', 'conf_set63');
+    $input_radio63_yes->set('input_value', 1);
+    if ($vavok->get_configuration('siteOff') == 1) {
+        $input_radio63_yes->set('input_status', 'checked');
+    }
+
+    $input_radio63_no = new PageGen('forms/radio_inline.tpl');
+    $input_radio63_no->set('label_for', 'conf_set63');
+    $input_radio63_no->set('label_value', 'Maintenance: ' . $localization->string('no'));
+    $input_radio63_no->set('input_id', 'conf_set63');
+    $input_radio63_no->set('input_name', 'conf_set63');
+    $input_radio63_no->set('input_value', 0);
+    if ($vavok->get_configuration('siteOff') == 0) {
+        $input_radio63_no->set('input_status', 'checked');
+    }
+
+    $radio_group_three = new PageGen('forms/radio_group.tpl');
+    $radio_group_three->set('radio_group', $radio_group_three->merge(array($input_radio63_yes, $input_radio63_no)));
+
+    $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $input29, $input1, $select_set3, $select_set21, $radio_group_one, $radio_group_two, $radio_group_three)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+}
+
 if ($action == "settwo") {
     echo '<h1>' . $localization->string('shwinfo') . '</h1>';
 
     echo '<form method="post" action="settings.php?action=edittwo">';
 
-    echo '<p>' . $localization->string('showclock') . ': <br />' . $localization->string('yes') . '';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=edittwo');
+
+    /**
+     * Show clock
+     */
+    $_4_yes = new PageGen('forms/radio_inline.tpl');
+    $_4_yes->set('label_for', 'conf_set4');
+    $_4_yes->set('label_value', $localization->string('showclock') . ': ' . $localization->string('yes'));
+    $_4_yes->set('input_id', 'conf_set4');
+    $_4_yes->set('input_name', 'conf_set4');
+    $_4_yes->set('input_value', 1);
     if ($vavok->get_configuration('showtime') == 1) {
-        echo '<input name="conf_set4" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set4" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_4_yes->set('input_status', 'checked');
+    }
+
+    $_4_no = new PageGen('forms/radio_inline.tpl');
+    $_4_no->set('label_for', 'conf_set4');
+    $_4_no->set('label_value',  $localization->string('showclock') . ': ' . $localization->string('no'));
+    $_4_no->set('input_id', 'conf_set4');
+    $_4_no->set('input_name', 'conf_set4');
+    $_4_no->set('input_value', 0);
     if ($vavok->get_configuration('showtime') == 0) {
-        echo '<input name="conf_set4" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set4" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_4_no->set('input_status', 'checked');
+    }
 
-    echo '<p>' . $localization->string('pagegen') . ': <br />' . $localization->string('yes') . '';
+    $show_clock = new PageGen('forms/radio_group.tpl');
+    $show_clock->set('radio_group', $show_clock->merge(array($_4_yes, $_4_no)));
+
+    /**
+     * Show page generatioin time
+     */
+    $_5_yes = new PageGen('forms/radio_inline.tpl');
+    $_5_yes->set('label_for', 'conf_set5');
+    $_5_yes->set('label_value', $localization->string('pagegen') . ': ' . $localization->string('yes'));
+    $_5_yes->set('input_id', 'conf_set5');
+    $_5_yes->set('input_name', 'conf_set5');
+    $_5_yes->set('input_value', 1);
     if ($vavok->get_configuration('pageGenTime') == 1) {
-        echo '<input name="conf_set5" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set5" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_5_yes->set('input_status', 'checked');
+    }
+
+    $_5_no = new PageGen('forms/radio_inline.tpl');
+    $_5_no->set('label_for', 'conf_set5');
+    $_5_no->set('label_value',  $localization->string('pagegen') . ': ' . $localization->string('no'));
+    $_5_no->set('input_id', 'conf_set5');
+    $_5_no->set('input_name', 'conf_set5');
+    $_5_no->set('input_value', 0);
     if ($vavok->get_configuration('pageGenTime') == 0) {
-        echo '<input name="conf_set5" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set5" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_5_no->set('input_status', 'checked');
+    }
 
+    $page_gen = new PageGen('forms/radio_group.tpl');
+    $page_gen->set('radio_group', $page_gen->merge(array($_5_yes, $_5_no)));
 
-    echo '<p>' . $localization->string('showonline') . ': <br />' . $localization->string('yes') . '';
+    /**
+     * Show online
+     */
+    $_7_yes = new PageGen('forms/radio_inline.tpl');
+    $_7_yes->set('label_for', 'conf_set7');
+    $_7_yes->set('label_value', $localization->string('showonline') . ': ' . $localization->string('yes'));
+    $_7_yes->set('input_id', 'conf_set7');
+    $_7_yes->set('input_name', 'conf_set7');
+    $_7_yes->set('input_value', 1);
     if ($vavok->get_configuration('showOnline') == 1) {
-        echo '<input name="conf_set7" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set7" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_7_yes->set('input_status', 'checked');
+    }
+
+    $_7_no = new PageGen('forms/radio_inline.tpl');
+    $_7_no->set('label_for', 'conf_set7');
+    $_7_no->set('label_value',  $localization->string('showonline') . ': ' . $localization->string('no'));
+    $_7_no->set('input_id', 'conf_set7');
+    $_7_no->set('input_name', 'conf_set7');
+    $_7_no->set('input_value', 0);
     if ($vavok->get_configuration('showOnline') == 0) {
-        echo '<input name="conf_set7" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set7" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_7_no->set('input_status', 'checked');
+    }
 
-	// cookie consent
-	echo '<p>Cookie consent: <br />' . $localization->string('yes') . '';
+    $show_online = new PageGen('forms/radio_group.tpl');
+    $show_online->set('radio_group', $show_online->merge(array($_7_yes, $_7_no)));
+
+    /**
+     * Show cookie consent
+     */
+    $_32_yes = new PageGen('forms/radio_inline.tpl');
+    $_32_yes->set('label_for', 'conf_set32');
+    $_32_yes->set('label_value', 'Cookie consent: ' . $localization->string('yes'));
+    $_32_yes->set('input_id', 'conf_set32');
+    $_32_yes->set('input_name', 'conf_set32');
+    $_32_yes->set('input_value', 1);
     if ($vavok->get_configuration('cookieConsent') == 1) {
-        echo '<input name="conf_set32" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set32" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_32_yes->set('input_status', 'checked');
+    }
+
+    $_32_no = new PageGen('forms/radio_inline.tpl');
+    $_32_no->set('label_for', 'conf_set32');
+    $_32_no->set('label_value',  'Cookie consent: ' . $localization->string('no'));
+    $_32_no->set('input_id', 'conf_set32');
+    $_32_no->set('input_name', 'conf_set32');
+    $_32_no->set('input_value', 0);
     if ($vavok->get_configuration('cookieConsent') == 0) {
-        echo '<input name="conf_set32" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set32" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_32_no->set('input_status', 'checked');
+    }
 
+    $cookie_consent = new PageGen('forms/radio_group.tpl');
+    $cookie_consent->set('radio_group', $cookie_consent->merge(array($_32_yes, $_32_no)));
 
-    echo '<p>' . $localization->string('countlook') . ':<br /><select name="conf_set74">';
-
+    /**
+     * Show counter
+     */
     $incounters = array(6 => "" . $localization->string('dontshow') . "", 1 => "" . $localization->string('vsttotalvst') . "", 2 => "" . $localization->string('clicktotalclick') . "", 3 => "" . $localization->string('clickvisits') . "", 4 => "" . $localization->string('totclicktotvst'));
 
-    echo '<option value="' . $vavok->get_configuration('showCounter') . '">' . $incounters[$vavok->get_configuration('showCounter')] . '</option>';
-
+    $options = '<option value="' . $vavok->get_configuration('showCounter') . '">' . $incounters[$vavok->get_configuration('showCounter')] . '</option>';
     foreach($incounters as $k => $v) {
         if ($k != $vavok->get_configuration('showCounter')) {
-            echo '<option value="' . $k . '">' . $v . '</option>';
+            $options .= '<option value="' . $k . '">' . $v . '</option>';
         }
-    } 
-    echo '</select></p>';
+    }
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    $show_counter = new PageGen('forms/select.tpl');
+    $show_counter->set('label_for', 'conf_set74');
+    $show_counter->set('label_value', $localization->string('countlook'));
+    $show_counter->set('select_id', 'conf_set74');
+    $show_counter->set('select_name', 'conf_set74');
+    $show_counter->set('options', $options);
+
+    $form->set('fields', $form->merge(array($show_clock, $page_gen, $show_online, $cookie_consent, $show_counter)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 if ($action == "setthree") {

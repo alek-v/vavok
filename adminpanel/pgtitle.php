@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:24:24
+* Updated:   07.08.2020. 15:41:54
 */
 
 require_once"../include/startup.php";
@@ -158,24 +158,55 @@ if ($act == "edit") {
 
     $page_title = $db->get_data(DB_PREFIX . 'pages', "file='" . $pgfile . "'", 'tname, pname');
 
-    echo '<form action="pgtitle.php?act=addedit" method="POST">';
-    echo '<input type="hidden" name="tfile" value="' . $pgfile . '"><br />';
-    echo 'Page title:<br />'; // update lang
-    echo '<textarea cols="50" rows="3" name="msg">' . $page_title['tname'] . '</textarea><br />';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_action', 'pgtitle.php?act=addedit');
+    $form->set('form_method', 'POST');
 
-    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
+    $input = new PageGen('forms/input.tpl');
+    $input->set('input_type', 'hidden');
+    $input->set('input_name', 'tfile');
+    $input->set('input_value', $pgfile);
+
+    $input_2 = new PageGen('forms/input.tpl');
+    $input_2->set('label_for', 'msg');
+    $input_2->set('label_value', 'Page title:');
+    $input_2->set('input_name', 'msg');
+    $input_2->set('input_id', 'msg');
+    $input_2->set('input_value', $page_title['tname']);
+
+    $form->set('fields', $form->merge(array($input, $input_2)));
+    echo $form->output();
+
+    echo '<hr>';
 
     echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
 } 
 
 if ($act == "addnew") {
-    echo '<form action="pgtitle.php?act=savenew" method="POST">';
-    echo 'Page: <input type="text" name="tpage" value=""><br />'; // update lang
-    echo 'Page title: <input type="text" name="msg" value=""><br />';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_action', 'pgtitle.php?act=savenew');
+    $form->set('form_method', 'POST');
 
-    echo '<br /><input type="submit" value="' . $localization->string('save') . '"></form><hr>';
+    $input = new PageGen('forms/input.tpl');
+    $input->set('label_for', 'tpage');
+    $input->set('label_value', 'Page:');
+    $input->set('input_type', 'text');
+    $input->set('input_name', 'tpage');
+    $input->set('input_id', 'tpage');
 
-    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    $input_2 = new PageGen('forms/input.tpl');
+    $input_2->set('label_for', 'msg');
+    $input_2->set('label_value', 'Page title:');
+    $input_2->set('input_type', 'text');
+    $input_2->set('input_name', 'msg');
+    $input_2->set('input_id', 'msg');
+
+    $form->set('fields', $form->merge(array($input, $input_2)));
+    echo $form->output();
+
+    echo '<hr />';
+
+    echo '<p><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';

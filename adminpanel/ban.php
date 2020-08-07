@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:04:48
+* Updated:   07.08.2020. 15:17:09
 */
 
 require_once"../include/startup.php";
@@ -60,19 +60,33 @@ if ($users->is_reg()) {
                 echo ' <a href="ban.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $localization->string('forw') . ' &gt;</a>';
             } else {
                 echo' ' . $localization->string('forw') . ' &gt;';
-            } 
-
-            echo '<hr><form method="post" action="process.php?action=zaban&amp;start=' . $start . '">';
-            echo '' . $localization->string('iptoblock') . ':<br><input name="ips" /><br><br>';
-            echo '<input value="' . $localization->string('confirm') . '" type="submit" /></form>';
+            }
 
             echo '<hr>';
-            echo '' . $localization->string('ipbanexam') . '<br><br>';
-            echo '<br>' . $localization->string('allbanips') . ': ' . $total . '<br><br><br>';
+
+            $form = new PageGen('forms/form.tpl');
+            $form->set('form_method', 'post');
+            $form->set('form_action', 'process.php?action=zaban&amp;start=' . $start);
+
+            $input = new PageGen('forms/input.tpl');
+            $input->set('label_for', 'ips');
+            $input->set('label_value', $localization->string('iptoblock'));
+            $input->set('input_name', 'ips');
+            $input->set('input_id', 'ips');
+
+            $form->set('website_language[save]', $localization->string('confirm'));
+            $form->set('fields', $input->output());
+            echo $form->output();
+
+            echo '<hr>';
+
+            echo '<p>' . $localization->string('ipbanexam') . '</p>';
+            echo '<p>' . $localization->string('allbanips') . ': ' . $total . '</p>';
+
             if ($total > 1) {
-                echo'<br><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $localization->string('dellist') . '</a>';
-            } 
-        } 
+                echo'<p><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $localization->string('dellist') . '</a></p>';
+            }
+        }
 
         echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
         echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';

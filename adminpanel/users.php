@@ -3,7 +3,7 @@
 * (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 19:25:19
+* Updated:   07.08.2020. 15:54:39
 */
 
 require_once"../include/startup.php";
@@ -26,10 +26,20 @@ $users_id = $users->getidfromnick($user);
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if (empty($action)) {
-    echo '<form method="post" action="users.php?action=edit">';
-    echo $localization->string('chooseuser') . ':<br>';
-    echo '<input type="text" name="users" maxlength="20" /><br><br>';
-    echo '<input value="' . $localization->string('showdata') . '" type="submit" /></form><hr>';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'users.php?action=edit');
+
+    $input_users = new PageGen('forms/input.tpl');
+    $input_users->set('label_for', 'users');
+    $input_users->set('label_value', $localization->string('chooseuser') . ':');
+    $input_users->set('input_name', 'users');
+    $input_users->set('input_id', 'users');
+    $input_users->set('input_maxlength', 20);
+
+    $form->set('website_language[save]', $localization->string('showdata'));
+    $form->set('fields', $input_users->output());
+    echo $form->output();
 }
 
 // change profile
@@ -97,7 +107,6 @@ if ($action == "edit") {
                 echo $localization->string('aboutyou') . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
                 echo $localization->string('yemail') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
                 echo $localization->string('site') . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
-                // echo $localization->string('regdate') . ':<br><input name="udd6" value="' . $vavok->date_fixed($vavok->check($userx_profil[1]), "d.m.Y") . '" /><br>';
                 echo $localization->string('browser') . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
                 echo $localization->string('name') . ':<br><input name="udd29" value="' . $about_userx['rname'] . '" /><br>';
                 echo $localization->string('perstatus') . ':<br><input name="udd40" value="' . $userx_profil['perstat'] . '" /><br>';
@@ -118,7 +127,7 @@ if ($action == "edit") {
                 echo $localization->string('lastvst') . ': <b>' . $vavok->date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
                 echo 'IP: <b>' . $show_userx['ipadd'] . '</b><br>';
 
-                echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form><hr>';
+                echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form>';
 
                 if ($userx_access < 101 || $userx_access > 105) {
                     echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('deluser') . '</a></b>';
@@ -133,7 +142,7 @@ if ($action == "edit") {
         echo $localization->string('usrnoexist') . '!';
     } 
 
-    echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    echo '<p><a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 // update changes
@@ -201,7 +210,6 @@ if ($action == "upgrade") {
 
                 }
 
-
                 $db->update('vavok_users', 'browsers', $vavok->no_br($vavok->check($udd13)), "id='{$users_id}'");
 
                 $fields = array('city', 'about', 'email', 'site', 'rname');
@@ -256,7 +264,6 @@ if ($action == "deluser") {
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
 echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
-
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 ?>

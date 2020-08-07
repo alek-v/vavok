@@ -22,21 +22,31 @@ if (!empty($_GET['page'])) {
 } 
 
 if ($action == "tpc") {
-    $current_page->page_title = 'Search';
+    $current_page->page_title = $localization->string('search');
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-    echo'<form action="filesearch.php?action=stpc" method="POST">';
-    echo 'Page name:<br><input name="stext" maxlength="30" /><br>';
-    echo "<br>";
-    echo '<input type="submit" value="Search"></form><br><br>';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'filesearch.php?action=stpc');
 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    $input = new PageGen('forms/input.tpl');
+    $input->set('label_for', 'stext');
+    $input->set('label_value', 'Page name:');
+    $input->set('input_name', 'stext');
+    $input->set('input_id', 'stext');
+    $input->set('input_maxlength', 30);
+
+    $form->set('fields', $input->output());
+    echo $form->output();
+
+    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
     echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
+    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
     require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 } else if ($action == "stpc") {
     $stext = $vavok->check($_POST["stext"]);
+
     $current_page->page_title = 'Search';
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 

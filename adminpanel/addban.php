@@ -1,9 +1,8 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:02:44
+* Updated:   07.08.2020. 13:58:17
 */
 
 require_once"../include/startup.php";
@@ -28,14 +27,27 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
  
 
-    echo '<img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('banunban') . '</b><br /><br />';
+    echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('banunban') . '</b></p>';
 
     if (empty($action)) {
-        echo $localization->string('chooseuser') . ':<br />';
+        $form = new PageGen('forms/form.tpl');
+        $form->set('form_method', 'post');
+        $form->set('form_action', 'addban.php?action=edit');
 
-        echo '<form method="post" action="addban.php?action=edit">';
-        echo '<input name="users" maxlength="20" /><br /><br />';
-        echo '<input value="' . $localization->string('confirm') . '" type="submit" /></form><hr>';
+        $input = new PageGen('forms/input.tpl');
+        $input->set('label_for', 'users');
+        $input->set('label_value', $localization->string('chooseuser'));
+        $input->set('input_type', 'text');
+        $input->set('input_name', 'users');
+        $input->set('input_id', 'users');
+        $input->set('maxlength', 20);
+
+        $form->set('website_language[save]', $localization->string('confirm'));
+        $form->set('fields', $input->output());
+
+        echo $form->output();
+
+        echo '<hr>';
     } 
     // edit profile
     if ($action == "edit") {
@@ -73,24 +85,58 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                 	} else { $ost_time = $time; }
 
                     if ($show_user['banned'] < 1 || $show_prof['bantime'] < $time) {
-                        echo '<form method="post" action="addban.php?action=banuser&amp;users=' . $users_nick . '">';
-                        echo $localization->string('banduration') . ':<br /><input name="duration" /><br />';
+                        $form = new PageGen('forms/form.tpl');
+                        $form->set('form_method', 'post');
+                        $form->set('form_action', 'addban.php?action=banuser&amp;users=' . $users_nick);
 
-                        echo '<input name="bform" type="radio" value="min" checked> ' . $localization->string('minutes') . '<br />';
-                        echo '<input name="bform" type="radio" value="chas"> ' . $localization->string('hours') . '<br />';
-                        echo '<input name="bform" type="radio" value="sut"> ' . $localization->string('days') . '<br />';
+                        $input_duration = new PageGen('forms/input.tpl');
+                        $input_duration->set('label_for', 'duration');
+                        $input_duration->set('label_value', $localization->string('banduration') . ':');
+                        $input_duration->set('input_id', 'duration');
+                        $input_duration->set('input_name', 'duration');
 
-                        echo $localization->string('bandesc') . ':<br /><textarea name="udd39" cols="25" rows="3"></textarea><br />';
-                        echo '<input value="' . $localization->string('confirm') . '" type="submit"></form><hr>';
+                        $input_radio_1 = new PageGen('forms/radio.tpl');
+                        $input_radio_1->set('label_for', 'bform');
+                        $input_radio_1->set('label_value', $localization->string('minutes'));
+                        $input_radio_1->set('input_id', 'bform');
+                        $input_radio_1->set('input_name', 'bform');
+                        $input_radio_1->set('input_value', 'min');
+                        $input_radio_1->set('input_status', 'checked');
 
-                        echo $localization->string('maxbantime') . ' ' . formattime(round($vavok->get_configuration('maxBanTime') * 60)) . '<br />';
+                        $input_radio_2 = new PageGen('forms/radio.tpl');
+                        $input_radio_2->set('label_for', 'bform');
+                        $input_radio_2->set('label_value', $localization->string('hours'));
+                        $input_radio_2->set('input_id', 'bform');
+                        $input_radio_2->set('input_name', 'bform');
+                        $input_radio_2->set('input_value', 'chas');
+
+                        $input_radio_3 = new PageGen('forms/radio.tpl');
+                        $input_radio_3->set('label_for', 'bform');
+                        $input_radio_3->set('label_value', $localization->string('days'));
+                        $input_radio_3->set('input_id', 'bform');
+                        $input_radio_3->set('input_name', 'bform');
+                        $input_radio_3->set('input_value', 'sut');
+
+                        $input_textarea = new PageGen('forms/textarea.tpl');
+                        $input_textarea->set('label_for', 'udd39');
+                        $input_textarea->set('label_value', $localization->string('bandesc'));
+                        $input_textarea->set('textarea_id', 'udd39');
+                        $input_textarea->set('textarea_name', 'udd39');
+
+                        $form->set('website_language[save]', $localization->string('confirm'));
+                        $form->set('fields', $form->merge(array($input_duration, $input_radio_1, $input_radio_2, $input_radio_3, $input_textarea)));
+                        echo $form->output();
+
+                        echo '<hr>';
+
+                        echo $localization->string('maxbantime') . ' ' . $vavok->formattime(round($vavok->get_configuration('maxBanTime') * 60)) . '<br />';
                         echo $localization->string('bandesc1') . '<br />';
                     } else {
                         echo '<b><font color="#FF0000">' . $localization->string('confban') . '</font></b><br />';
                         if (ctype_digit($show_prof['lastban'])) {
                             echo '' . $localization->string('bandate') . ': ' . $vavok->date_fixed($show_prof['lastban']) . '<br />';
                         } 
-                        echo $localization->string('banend') . ' ' . formattime($ost_time) . '<br />';
+                        echo $localization->string('banend') . ' ' . $vavok->formattime($ost_time) . '<br />';
                         echo $localization->string('bandesc') . ': ' . $vavok->check($show_prof['bandesc']) . '<br />'; 
                         echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('delban') . '</a><hr>';
                     } 
