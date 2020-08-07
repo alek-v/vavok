@@ -16,6 +16,10 @@ nav {
 	margin-bottom: 80px;
 }
 
+form {
+	margin: 40px 0px;
+}
+
 /* homepage link */
 .homepage {
 	margin: 5px;
