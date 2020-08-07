@@ -1,8 +1,9 @@
-# Vavok v1.5.5.beta4
+# Vavok v1.5.5.beta7
 - System functions moved to Vavok.class.php
 - Created class Counter.class.php
 - Created class Manageip.class.php
 - Created class Referer.class.php
+- Created form templates
 - Updated localization files
 - Updated site installation
 - Updated cookie management
