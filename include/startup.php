@@ -36,8 +36,8 @@ $users = new Users();
 if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
 	$current_page = new Page();
 	$localization = new Localization();
-    new Manageip();
     $counter = new Counter();
+    new Manageip();
     new Referer();
 }
 
