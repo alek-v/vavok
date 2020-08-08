@@ -1,5 +1,9 @@
 <?php 
-// (c) vavok.net
+/*
+* Author:    Aleksandar Vranešević
+* URI:       https://vavok.net
+* Updated:   08.08.2020. 9:25:11
+*/
 
 require_once"../include/startup.php";
 
@@ -82,48 +86,170 @@ $show_user = $db->get_data('vavok_users', "id='{$users->user_id}'", 'skin, banne
 
 echo '<div class="col-sm">';
 
-    echo '<form method="post" action="profile.php?action=save">';
-    echo $localization->string('name') . ':<br /><input name="my_name" value="' . $about_user['rname'] . '" /><br />';
-    echo $localization->string('surname') . ':<br /><input name="surname" value="' . $about_user['surname'] . '" /><br />';
-    echo $localization->string('city') . ':<br /><input name="otkel" value="' . $about_user['city'] . '" /><br />';
-    echo $localization->string('street') . ':<br /><input name="street" value="' . $about_user['address'] . '" /><br />';
-    echo $localization->string('postal') . ':<br /><input name="zip" value="' . $about_user['zip'] . '" /><br />';
-    echo $localization->string('aboutyou') . ':<br /><input name="infa" value="' . $about_user['about'] . '" /><br />';
-    echo $localization->string('yemail') . ':<br /><input name="email" value="' . $about_user['email'] . '" /><br />';
-    echo $localization->string('site') . ':<br /><input name="site" value="' . $about_user['site'] . '" /><br />'; 
-    echo $localization->string('birthday') . ' (dd.mm.yyyy):<br /><input name="happy" value="' . $about_user['birthday'] . '" /><br />';
+    echo '<h1>' . $localization->string('profsettings') . '</h1>';
 
-    echo $localization->string('sex') . ':<br />';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'profile.php?action=save');
 
-    echo $localization->string('male') . ' ';
+    /**
+     * Name
+     */
+    $my_name = new PageGen('forms/input.tpl');
+    $my_name->set('label_for', 'my_name');
+    $my_name->set('label_value', $localization->string('name'));
+    $my_name->set('input_id', 'my_name');
+    $my_name->set('input_name', 'my_name');
+    $my_name->set('input_value', $about_user['rname']);
 
-    if ($about_user['sex'] == "M") {
-        echo '<input name="pol" type="radio" value="M" checked>';
-    } else {
-        echo '<input name="pol" type="radio" value="M" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($about_user['sex'] == "Z") {
-        echo'<input name="pol" type="radio" value="Z" checked>';
-    } else {
-        echo'<input name="pol" type="radio" value="Z" />';
-    } 
-    echo ' ' . $localization->string('female') . '<br /><br />';
+    /**
+     * Last name
+     */
+    $surname = new PageGen('forms/input.tpl');
+    $surname->set('label_for', 'surname');
+    $surname->set('label_value', $localization->string('surname'));
+    $surname->set('input_id', 'surname');
+    $surname->set('input_name', 'surname');
+    $surname->set('input_value', $about_user['surname']);
 
+    /**
+     * City
+     */
+    $otkel = new PageGen('forms/input.tpl');
+    $otkel->set('label_for', 'otkel');
+    $otkel->set('label_value', $localization->string('city'));
+    $otkel->set('input_id', 'otkel');
+    $otkel->set('input_name', 'otkel');
+    $otkel->set('input_value', $about_user['city']);
 
-    echo'<input value="' . $localization->string('save') . '" type="submit" />
+    /**
+     * Street
+     */
+    $street = new PageGen('forms/input.tpl');
+    $street->set('label_for', 'street');
+    $street->set('label_value', $localization->string('street'));
+    $street->set('input_id', 'street');
+    $street->set('input_name', 'street');
+    $street->set('input_value', $about_user['address']);
 
-    </form>';
+    /**
+     * Postal code
+     */
+    $zip = new PageGen('forms/input.tpl');
+    $zip->set('label_for', 'zip');
+    $zip->set('label_value', $localization->string('postal'));
+    $zip->set('input_id', 'zip');
+    $zip->set('input_name', 'zip');
+    $zip->set('input_value', $about_user['zip']);
 
-    // change password
+    /**
+     * About user
+     */
+    $infa = new PageGen('forms/input.tpl');
+    $infa->set('label_for', 'infa');
+    $infa->set('label_value', $localization->string('aboutyou'));
+    $infa->set('input_id', 'infa');
+    $infa->set('input_name', 'infa');
+    $infa->set('input_value', $about_user['about']);
+
+    /**
+     * Email
+     */
+    $email = new PageGen('forms/input.tpl');
+    $email->set('label_for', 'email');
+    $email->set('label_value', $localization->string('yemail'));
+    $email->set('input_id', 'email');
+    $email->set('input_name', 'email');
+    $email->set('input_value', $about_user['email']);
+
+    /**
+     * Site
+     */
+    $site = new PageGen('forms/input.tpl');
+    $site->set('label_for', 'site');
+    $site->set('label_value', $localization->string('site'));
+    $site->set('input_id', 'site');
+    $site->set('input_name', 'site');
+    $site->set('input_value', $about_user['site']);
+
+    /**
+     * Site
+     */
+    $birthday = new PageGen('forms/input.tpl');
+    $birthday->set('label_for', 'happy');
+    $birthday->set('label_value', $localization->string('birthday') . ' (dd.mm.yyyy)');
+    $birthday->set('input_id', 'happy');
+    $birthday->set('input_name', 'happy');
+    $birthday->set('input_value', $about_user['birthday']);
+
+    /**
+     * Gender
+     */
+    $gender_m = new PageGen('forms/radio_inline.tpl');
+    $gender_m->set('label_for', 'pol');
+    $gender_m->set('label_value', $localization->string('sex') . ': ' . $localization->string('male'));
+    $gender_m->set('input_id', 'pol');
+    $gender_m->set('input_name', 'pol');
+    $gender_m->set('input_value', 'm');
+    if ($about_user['sex'] == 'm') {
+        $gender_m->set('input_status', 'checked');
+    }
+
+    $gender_f = new PageGen('forms/radio_inline.tpl');
+    $gender_f->set('label_for', 'pol');
+    $gender_f->set('label_value',  $localization->string('sex') . ': ' . $localization->string('female'));
+    $gender_f->set('input_id', 'pol');
+    $gender_f->set('input_name', 'pol');
+    $gender_f->set('input_value', 'z');
+    if ($about_user['sex'] == 'z') {
+        $gender_f->set('input_status', 'checked');
+    }
+
+    $gender = new PageGen('forms/radio_group.tpl');
+    $gender->set('radio_group', $gender->merge(array($gender_m, $gender_f)));
+
+    $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $infa, $email, $site, $birthday, $gender)));
+    echo $form->output();
+
+    /**
+     * Change password
+     */
     echo '<hr>';
-    echo '<form method="post" action="newpass.php">';
-    echo $localization->string('newpass') . ':<br /><input name="newpar" /><br />';
-    echo $localization->string('passagain') . ':<br /><input name="newpar2" /><br />';
-    echo $localization->string('oldpass') . ':<br /><input name="oldpar" /><br />';
-    echo '<br /><input value="' . $localization->string('save') . '" type="submit" />
-    </form>
-    <hr>';
+
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'newpass.php');
+
+    /**
+     * New pass
+     */
+    $newpar = new PageGen('forms/input.tpl');
+    $newpar->set('label_for', 'newpar');
+    $newpar->set('label_value', $localization->string('newpass'));
+    $newpar->set('input_id', 'newpar');
+    $newpar->set('input_name', 'newpar');
+
+    /**
+     * New pass agin
+     */
+    $newpar2 = new PageGen('forms/input.tpl');
+    $newpar2->set('label_for', 'newpar2');
+    $newpar2->set('label_value', $localization->string('passagain'));
+    $newpar2->set('input_id', 'newpar2');
+    $newpar2->set('input_name', 'newpar2');
+
+    /**
+     * Current password
+     */
+    $oldpar = new PageGen('forms/input.tpl');
+    $oldpar->set('label_for', 'oldpar');
+    $oldpar->set('label_value', $localization->string('oldpass'));
+    $oldpar->set('input_id', 'oldpar');
+    $oldpar->set('input_name', 'oldpar');
+
+    $form->set('fields', $form->merge(array($newpar, $newpar2, $oldpar)));
+    echo $form->output();
+
 
 echo '</div>';
 
@@ -131,11 +257,11 @@ echo '<div class="col-sm">';
     echo '<div class="photo">';
     if (!empty($about_user['photo'])) {
         echo '<img src="../' . $about_user['photo'] . '" alt=""><br /> ';
-        echo '<img src="../images/img/edit.gif" alt="" /> <a href="photo.php">Change photo</a><br />';
-        echo '<img src="../images/img/close.gif" alt="" /> <a href="photo.php?action=remove">Remove photo</a>'; // update lang
+        echo '<img src="../images/img/edit.gif" alt="" /> <a href="photo.php" class="btn btn-primary sitelink">Change photo</a><br />';
+        echo '<img src="../images/img/close.gif" alt="" /> <a href="photo.php?action=remove" class="btn btn-primary sitelink">Remove photo</a>'; // update lang
     } else {
         echo '<img src="../images/img/no_picture.jpg" alt="" /><br /> ';
-        echo '<a href="photo.php">Change photo</a>'; // update lang
+        echo '<a href="photo.php" class="btn btn-primary sitelink">Change photo</a>'; // update lang
     } 
     echo '</div>';
 
@@ -143,7 +269,7 @@ echo '</div>';
 
 echo '</div>';
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

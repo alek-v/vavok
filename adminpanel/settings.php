@@ -2,7 +2,7 @@
 /*
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   07.08.2020. 18:52:33
+* Updated:   08.08.2020. 8:18:44
 */
 
 require_once"../include/startup.php";
@@ -84,8 +84,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
- 
-} 
+}
 
 if ($action == "edittwo") {
 
@@ -150,8 +149,6 @@ if ($action == "editfour") {
 
     // Update main config
     $fields = array(
-        'customPages',
-        'photoList',
         'photoFileSize',
         'maxPhotoPixels',
         'forumAccess',
@@ -159,8 +156,6 @@ if ($action == "editfour") {
     );
 
     $values = array(
-        (int)$_POST['conf_set37'],
-        (int)$_POST['conf_set38'],
         (int)$_POST['conf_set38'] * 1024,
         (int)$_POST['conf_set39'],
         (int)$_POST['conf_set49'],
@@ -172,22 +167,22 @@ if ($action == "editfour") {
 
     // update gallery settings
     $gallery_file = file(BASEDIR . "used/dataconfig/gallery.dat");
-    if ($gallery_file) {
-        $gallery_data = explode("|", $gallery_file[0]);
+    if (empty($gallery_file)) $gallery_file = '||||||||||';
+    $gallery_data = explode("|", $gallery_file[0]);
 
-        $gallery_data[0] = (int)$_POST['gallery_set0'];
-        $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
-        $gallery_data[5] = (int)$_POST['screen_width'];
-        $gallery_data[6] = (int)$_POST['screen_height'];
-        $gallery_data[7] = (int)$_POST['media_buttons'];
+    $gallery_data[0] = (int)$_POST['gallery_set0']; // users can upload
+    $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
+    $gallery_data[5] = (int)$_POST['screen_width'];
+    $gallery_data[6] = (int)$_POST['screen_height'];
+    $gallery_data[7] = (int)$_POST['media_buttons'];
 
-        for ($u = 0; $u < $vavok->get_configuration('configKeys'); $u++) {
-            $gallery_text .= $gallery_data[$u] . '|';
-        }
+    $gallery_text = '';
+    for ($u = 0; $u < 10; $u++) {
+        $gallery_text .= $gallery_data[$u] . '|';
+    }
 
-        if (isset($gallery_data[0])) {
-            file_put_contents(BASEDIR . "used/dataconfig/gallery.dat", $gallery_text);
-        }
+    if (isset($gallery_text)) {
+        file_put_contents(BASEDIR . "used/dataconfig/gallery.dat", $gallery_text);
     }
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
@@ -195,7 +190,6 @@ if ($action == "editfour") {
 }
 
 if ($action == "editfive") {
-
 	if (!isset($_POST['conf_set30'])) {
         $vavok->redirect_to("settings.php?action=setfive&isset=mp_nosset");
     }
@@ -205,7 +199,6 @@ if ($action == "editfive") {
 	$db->update(DB_PREFIX . 'settings', 'pvtLimit', (int)$_POST['conf_set30']);
 
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
-
 }
 
 if ($action == "editseven") {
@@ -249,7 +242,7 @@ if ($action == "editseven") {
     $values = array(
         $_POST['conf_set6'],
         $_POST['conf_set28'],
-        $_POST['conf_set51'],
+        (int)$_POST['conf_set51'],
         $_POST['conf_set70']
     );
 
@@ -516,8 +509,6 @@ if ($action == "setone") {
 if ($action == "settwo") {
     echo '<h1>' . $localization->string('shwinfo') . '</h1>';
 
-    echo '<form method="post" action="settings.php?action=edittwo">';
-
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
     $form->set('form_action', 'settings.php?action=edittwo');
@@ -654,28 +645,73 @@ if ($action == "settwo") {
 if ($action == "setthree") {
     echo '<h1>' . $localization->string('gbnewschatset') . '</h1>';
 
-    echo '<form method="post" action="settings.php?action=editthree">';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editthree');
 
-    echo '<p>' . $localization->string('allowguestingb') . ': <br />' . $localization->string('yes');
+    /**
+     * Allow guests to write in guestbook
+     */
+    $_20_yes = new PageGen('forms/radio_inline.tpl');
+    $_20_yes->set('label_for', 'conf_set20');
+    $_20_yes->set('label_value', $localization->string('allowguestingb') . ': ' . $localization->string('yes'));
+    $_20_yes->set('input_id', 'conf_set20');
+    $_20_yes->set('input_name', 'conf_set20');
+    $_20_yes->set('input_value', 1);
     if ($vavok->get_configuration('bookGuestAdd') == 1) {
-        echo '<input name="conf_set20" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set20" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_20_yes->set('input_status', 'checked');
+    }
+
+    $_20_no = new PageGen('forms/radio_inline.tpl');
+    $_20_no->set('label_for', 'conf_set20');
+    $_20_no->set('label_value',  $localization->string('allowguestingb') . ': ' . $localization->string('no'));
+    $_20_no->set('input_id', 'conf_set20');
+    $_20_no->set('input_name', 'conf_set20');
+    $_20_no->set('input_value', 0);
     if ($vavok->get_configuration('bookGuestAdd') == 0) {
-        echo '<input name="conf_set20" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set20" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_20_no->set('input_status', 'checked');
+    }
 
-    echo '<p>' . $localization->string('maxinchat') . ':<br /><input name="conf_set22" maxlength="4" value="' . $vavok->get_configuration('maxPostChat') . '" /></p>';
-    echo '<p>' . $localization->string('maxnews') . ':<br /><input name="conf_set24" maxlength="5" value="' . $vavok->get_configuration('maxPostNews') . '" /></p>';
-    echo '<p>' . $localization->string('onepassmail') . ':<br /><input name="conf_set56" maxlength="3" value="' . $vavok->get_configuration('subMailPacket') . '" /></p>';
+    $gb_write = new PageGen('forms/radio_group.tpl');
+    $gb_write->set('radio_group', $gb_write->merge(array($_20_yes, $_20_no)));
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    /**
+     * Max chat posts
+     */
+    $input22 = new PageGen('forms/input.tpl');
+    $input22->set('label_for', 'conf_set22');
+    $input22->set('label_value', $localization->string('maxinchat'));
+    $input22->set('input_id', 'conf_set22');
+    $input22->set('input_name', 'conf_set22');
+    $input22->set('input_value', $vavok->get_configuration('maxPostChat'));
+    $input22->set('input_maxlength', 4);
+
+    /**
+     * Max news posts
+     */
+    $input24 = new PageGen('forms/input.tpl');
+    $input24->set('label_for', 'conf_set24');
+    $input24->set('label_value', $localization->string('maxnews'));
+    $input24->set('input_id', 'conf_set24');
+    $input24->set('input_name', 'conf_set24');
+    $input24->set('input_value', $vavok->get_configuration('maxPostNews'));
+    $input24->set('input_maxlength', 5);
+
+    /**
+     * Mails in one package
+     */
+    $input56 = new PageGen('forms/input.tpl');
+    $input56->set('label_for', 'conf_set56');
+    $input56->set('label_value', $localization->string('onepassmail'));
+    $input56->set('input_id', 'conf_set56');
+    $input56->set('input_name', 'conf_set56');
+    $input56->set('input_value', $vavok->get_configuration('subMailPacket'));
+    $input56->set('input_maxlength', 3);
+
+    $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 if ($action == "setfour") {
@@ -685,168 +721,304 @@ if ($action == "setfour") {
     // forum settings
     echo '<h1>' . $localization->string('forumandgalset') . '</h1>';
 
-    echo '<form method="post" action="settings.php?action=editfour">';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editfour');
 
-    echo '<br /><img src="../images/img/forums.gif" alt=""/> Forum settings<br /><br />';
-    echo '<p>' . $localization->string('forumon') . ': <br />' . $localization->string('yes') . '';
+    /**
+     * Allow access to forum
+     */
+    $_49_yes = new PageGen('forms/radio_inline.tpl');
+    $_49_yes->set('label_for', 'conf_set49');
+    $_49_yes->set('label_value', $localization->string('forumon') . ': ' . $localization->string('yes'));
+    $_49_yes->set('input_id', 'conf_set49');
+    $_49_yes->set('input_name', 'conf_set49');
+    $_49_yes->set('input_value', 1);
     if ($vavok->get_configuration('forumAccess') == 1) {
-        echo '<input name="conf_set49" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set49" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_49_yes->set('input_status', 'checked');
+    }
+
+    $_49_no = new PageGen('forms/radio_inline.tpl');
+    $_49_no->set('label_for', 'conf_set49');
+    $_49_no->set('label_value',  $localization->string('forumon') . ': ' . $localization->string('no'));
+    $_49_no->set('input_id', 'conf_set49');
+    $_49_no->set('input_name', 'conf_set49');
+    $_49_no->set('input_value', 0);
     if ($vavok->get_configuration('forumAccess') == 0) {
-        echo '<input name="conf_set49" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set49" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
-    
-        echo '<p>Show language dropdown: <br />' . $localization->string('yes');
+        $_49_no->set('input_status', 'checked');
+    }
+
+    $forum_access = new PageGen('forms/radio_group.tpl');
+    $forum_access->set('radio_group', $forum_access->merge(array($_49_yes, $_49_no)));
+
+    /**
+     * Forum language dropdown
+     */
+    $_68_yes = new PageGen('forms/radio_inline.tpl');
+    $_68_yes->set('label_for', 'conf_set68');
+    $_68_yes->set('label_value', 'Show language dropdown: ' . $localization->string('yes'));
+    $_68_yes->set('input_id', 'conf_set68');
+    $_68_yes->set('input_name', 'conf_set68');
+    $_68_yes->set('input_value', 1);
     if ($vavok->get_configuration('forumChLang') == 1) {
-        echo '<input name="conf_set68" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="conf_set68" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
+        $_68_yes->set('input_status', 'checked');
+    }
+
+    $_68_no = new PageGen('forms/radio_inline.tpl');
+    $_68_no->set('label_for', 'conf_set68');
+    $_68_no->set('label_value',  'Show language dropdown: ' . $localization->string('no'));
+    $_68_no->set('input_id', 'conf_set68');
+    $_68_no->set('input_name', 'conf_set68');
+    $_68_no->set('input_value', 0);
     if ($vavok->get_configuration('forumChLang') == 0) {
-        echo '<input name="conf_set68" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="conf_set68" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+        $_68_no->set('input_status', 'checked');
+    }
 
+    $forum_dropdown = new PageGen('forms/radio_group.tpl');
+    $forum_dropdown->set('radio_group', $forum_dropdown->merge(array($_68_yes, $_68_no)));
 
-    // gallery settings
+    /**
+     * Gallery settings
+     */
     $gallery_config = file(BASEDIR . "used/dataconfig/gallery.dat");
-    if ($gallery_config) {
+    if (!empty($gallery_config)) {
         $gallery_data = explode("|", $gallery_config[0]);
     } else {
         $gallery_data = explode("|", '|||||||||||||');
     }
-    echo '<br /><img src="../images/img/forums.gif" alt=""/> Gallery settings<br /><br />';
-    echo '<p>' . $localization->string('photosperpg') . ':<br /><input name="gallery_set8" maxlength="2" value="' . $gallery_data[8] . '" /></p>';
-    echo '<p>Maximum width in gallery:<br /><input name="screen_width" maxlength="5" value="' . $gallery_data[5] . '" /></p>';
-    echo '<p>Maximum height in gallery:<br /><input name="screen_height" maxlength="5" value="' . $gallery_data[6] . '" /></p>';
-    echo '<p>Social media like buttons in gallery <br />' . $localization->string('yes'); // update lang
-    if ($gallery_data[7] == "1") {
-        echo '<input name="media_buttons" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="media_buttons" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($gallery_data[7] == "0") {
-        echo '<input name="media_buttons" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="media_buttons" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
 
+    /**
+     * Gallery photos per page
+     */
+    $gallery_set8 = new PageGen('forms/input.tpl');
+    $gallery_set8->set('label_for', 'gallery_set8');
+    $gallery_set8->set('label_value', $localization->string('photosperpg'));
+    $gallery_set8->set('input_id', 'gallery_set8');
+    $gallery_set8->set('input_name', 'gallery_set8');
+    $gallery_set8->set('input_value', $gallery_data[8]);
+    $gallery_set8->set('input_maxlength', 2);
 
-    echo '<br /><img src="../images/img/forums.gif" alt=""/> Uploading in gallery<br /><br />';
+    /**
+     * Gallery max screen width
+     */
+    $screen_width = new PageGen('forms/input.tpl');
+    $screen_width->set('label_for', 'screen_width');
+    $screen_width->set('label_value', 'Maximum width in gallery');
+    $screen_width->set('input_id', 'screen_width');
+    $screen_width->set('input_name', 'screen_width');
+    $screen_width->set('input_value', $gallery_data[5]);
+    $screen_width->set('input_maxlength', 5);
 
-    echo '<p>' . $localization->string('photomaxkb') . ':<br /><input name="conf_set38" maxlength="8" value="' . (int)$kbs . '" /></p>';
-    echo '<p>' . $localization->string('photopx') . ':<br /><input name="conf_set39" maxlength="4" value="' . $vavok->get_configuration('maxPhotoPixels') . '" /></p>';
-    echo '<p>Users can upload? <br />' . $localization->string('yes') . '';
-    if ($gallery_data[0] == "1") {
-        echo '<input name="gallery_set0" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="gallery_set0" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($gallery_data[0] == "0") {
-        echo '<input name="gallery_set0" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="gallery_set0" type="radio" value="0" />';
-    } 
-    echo $localization->string('no') . '</p>';
+    /**
+     * Gallery max screen height
+     */
+    $screen_height = new PageGen('forms/input.tpl');
+    $screen_height->set('label_for', 'screen_height');
+    $screen_height->set('label_value', 'Maximum height in gallery');
+    $screen_height->set('input_id', 'screen_height');
+    $screen_height->set('input_name', 'screen_height');
+    $screen_height->set('input_value', $gallery_data[6]);
+    $screen_height->set('input_maxlength', 5);
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
-}
+    /**
+     * Gallery social network buttons
+     */
+    $media_buttons_yes = new PageGen('forms/radio_inline.tpl');
+    $media_buttons_yes->set('label_for', 'media_buttons');
+    $media_buttons_yes->set('label_value', 'Social media like buttons in gallery: ' . $localization->string('yes'));
+    $media_buttons_yes->set('input_id', 'media_buttons');
+    $media_buttons_yes->set('input_name', 'media_buttons');
+    $media_buttons_yes->set('input_value', 1);
+    if ($gallery_data[7] == 1) {
+        $media_buttons_yes->set('input_status', 'checked');
+    }
 
-if ($action == "setfive") {
-    echo '<h1>' . $localization->string('downandinbxsets') . '</h1>';
+    $media_buttons_no = new PageGen('forms/radio_inline.tpl');
+    $media_buttons_no->set('label_for', 'media_buttons');
+    $media_buttons_no->set('label_value',  'Social media like buttons in gallery: ' . $localization->string('no'));
+    $media_buttons_no->set('input_id', 'media_buttons');
+    $media_buttons_no->set('input_name', 'media_buttons');
+    $media_buttons_no->set('input_value', 0);
+    if ($gallery_data[7] == 0) {
+        $media_buttons_no->set('input_status', 'checked');
+    }
 
-    echo '<form method="post" action="settings.php?action=editfive">';
+    $sn_buttons = new PageGen('forms/radio_group.tpl');
+    $sn_buttons->set('radio_group', $sn_buttons->merge(array($media_buttons_yes, $media_buttons_no)));
 
-    echo '<p>' . $localization->string('maxinbxmsgs') . ':<br /><input name="conf_set30" maxlength="5" value="' . $vavok->get_configuration('pvtLimit') . '" /></p>';
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    /**
+     * Gallery max upload size
+     */
+    $conf_set38 = new PageGen('forms/input.tpl');
+    $conf_set38->set('label_for', 'conf_set38');
+    $conf_set38->set('label_value', $localization->string('photomaxkb'));
+    $conf_set38->set('input_id', 'conf_set38');
+    $conf_set38->set('input_name', 'conf_set38');
+    $conf_set38->set('input_value', (int)$kbs);
+    $conf_set38->set('input_maxlength', 8);
+
+    /**
+     * Gallery max upload pixel size
+     */
+    $conf_set39 = new PageGen('forms/input.tpl');
+    $conf_set39->set('label_for', 'conf_set39');
+    $conf_set39->set('label_value', $localization->string('photopx'));
+    $conf_set39->set('input_id', 'conf_set39');
+    $conf_set39->set('input_name', 'conf_set39');
+    $conf_set39->set('input_value', (int)$vavok->get_configuration('maxPhotoPixels'));
+    $conf_set39->set('input_maxlength', 4);
+
+    /**
+     * Gallery uploads
+     */
+    $gallery_set0_yes = new PageGen('forms/radio_inline.tpl');
+    $gallery_set0_yes->set('label_for', 'gallery_set0');
+    $gallery_set0_yes->set('label_value', 'Users can upload: ' . $localization->string('yes'));
+    $gallery_set0_yes->set('input_id', 'gallery_set0');
+    $gallery_set0_yes->set('input_name', 'gallery_set0');
+    $gallery_set0_yes->set('input_value', 1);
+    if ($gallery_data[0] == 1) {
+        $gallery_set0_yes->set('input_status', 'checked');
+    }
+
+    $gallery_set0_no = new PageGen('forms/radio_inline.tpl');
+    $gallery_set0_no->set('label_for', 'gallery_set0');
+    $gallery_set0_no->set('label_value',  'Users can upload: ' . $localization->string('no'));
+    $gallery_set0_no->set('input_id', 'gallery_set0');
+    $gallery_set0_no->set('input_name', 'gallery_set0');
+    $gallery_set0_no->set('input_value', 0);
+    if ($gallery_data[0] == 0) {
+        $gallery_set0_no->set('input_status', 'checked');
+    }
+
+    $gallery_uploads = new PageGen('forms/radio_group.tpl');
+    $gallery_uploads->set('radio_group', $gallery_uploads->merge(array($gallery_set0_yes, $gallery_set0_no)));
+
+    $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 if ($action == "setseven") {
     echo '<h1>' . $localization->string('pagessets') . '</h1>';
 
-    echo '<form method="post" action="settings.php?action=editseven">';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editseven');
 
-    echo '<div class="form-group">';
-        echo '<label for="custom-pages">' . $localization->string('customPageUrl') . '</label>';
-        echo '<input class="form-control" name="conf_set28" id="custom-pages" value="' . $vavok->get_configuration('customPages') . '" />';
-    echo '</div>';
+    /**
+     * Custom pages
+     */
+    $conf_set28 = new PageGen('forms/input.tpl');
+    $conf_set28->set('label_for', 'custom-pages');
+    $conf_set28->set('label_value', $localization->string('customPageUrl'));
+    $conf_set28->set('input_id', 'custom-pages');
+    $conf_set28->set('input_name', 'conf_set28');
+    $conf_set28->set('input_value', $vavok->get_configuration('customPages'));
 
-    echo '<div class="form-group">';
-        echo '<label for="referals">' . $localization->string('maxrefererdata') . '</label>';
-        echo '<input class="form-control" name="conf_set51" id="referals" maxlength="3" value="' . $vavok->get_configuration('refererLog') . '" />';
-    echo '</div>';
+    /**
+     * Max referer data
+     */
+    $conf_set51 = new PageGen('forms/input.tpl');
+    $conf_set51->set('label_for', 'referals');
+    $conf_set51->set('label_value', $localization->string('maxrefererdata'));
+    $conf_set51->set('input_id', 'referals');
+    $conf_set51->set('input_name', 'conf_set51');
+    $conf_set51->set('input_value', $vavok->get_configuration('refererLog'));
+    $conf_set51->set('input_maxlength', 3);
 
-    echo '<p>' . $localization->string('showrefpage') . ': </p>';
-    echo '<div class="form-group form-check form-check-inline">';
+    /**
+     * Show referal page
+     */
+    $conf_set70yes = new PageGen('forms/radio_inline.tpl');
+    $conf_set70yes->set('label_for', 'referal-yes');
+    $conf_set70yes->set('label_value', $localization->string('showrefpage') . ': ' . $localization->string('yes'));
+    $conf_set70yes->set('input_id', 'referal-yes');
+    $conf_set70yes->set('input_name', 'conf_set70');
+    $conf_set70yes->set('input_value', 1);
+    if ($vavok->get_configuration('showRefPage') == 1) {
+        $conf_set70yes->set('input_status', 'checked');
+    }
 
-       if ($vavok->get_configuration('showRefPage') == 1) {
-            echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" checked>';
-        } else {
-            echo '<input class="form-check-input" id="referal-yes" name="conf_set70" type="radio" value="1" />';
-        } 
-        echo '<label class="form-check-label" for="referal-yes">' . $localization->string('yes') . '</label>';
+    $conf_set70no = new PageGen('forms/radio_inline.tpl');
+    $conf_set70no->set('label_for', 'referal-no');
+    $conf_set70no->set('label_value',  $localization->string('showrefpage') . ': ' . $localization->string('no'));
+    $conf_set70no->set('input_id', 'referal-no');
+    $conf_set70no->set('input_name', 'conf_set70');
+    $conf_set70no->set('input_value', 0);
+    if ($vavok->get_configuration('showRefPage') == 0) {
+        $conf_set70no->set('input_status', 'checked');
+    }
 
-    echo '</div>';
+    $show_refpage = new PageGen('forms/radio_group.tpl');
+    $show_refpage->set('radio_group', $show_refpage->merge(array($conf_set70yes, $conf_set70no)));
 
-    echo '<div class="form-check form-check-inline">';
-        if ($vavok->get_configuration('showRefPage') == 0) {
-            echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" checked>';
-        } else {
-            echo '<input class="form-check-input" id="referal-no" name="conf_set70" type="radio" value="0" />';
-        } 
-        echo '<label class="form-check-label" for="referal-no">' . $localization->string('no') . '</label>';
-    echo '</div>';
+    /**
+     * Allow Facebook comments on pages
+     */
+    $conf_set6yes = new PageGen('forms/radio_inline.tpl');
+    $conf_set6yes->set('label_for', 'fb_comm_yes');
+    $conf_set6yes->set('label_value', 'Facebook comments on pages: ' . $localization->string('yes'));
+    $conf_set6yes->set('input_id', 'fb_comm_yes');
+    $conf_set6yes->set('input_name', 'conf_set6');
+    $conf_set6yes->set('input_value', 1);
+    if ($vavok->get_configuration('pgFbComm') == 1) {
+        $conf_set6yes->set('input_status', 'checked');
+    }
 
-    echo '<p>Facebook comments on pages:</p>'; // update lang
-    echo '<div class="form-group form-check form-check-inline">';
+    $conf_set6no = new PageGen('forms/radio_inline.tpl');
+    $conf_set6no->set('label_for', 'fb_comm_no');
+    $conf_set6no->set('label_value',  'Facebook comments on pages: ' . $localization->string('no'));
+    $conf_set6no->set('input_id', 'fb_comm_no');
+    $conf_set6no->set('input_name', 'conf_set6');
+    $conf_set6no->set('input_value', 0);
+    if ($vavok->get_configuration('pgFbComm') == 0) {
+        $conf_set6no->set('input_status', 'checked');
+    }
 
-        if ($vavok->get_configuration('pgFbComm') == 1) {
-            echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" checked>';
-        } else {
-            echo '<input class="form-check-input" id="referal-yes" name="conf_set6" type="radio" value="1" />';
-        } 
-        echo '<label class="form-check-label" for="referal-yes">' . $localization->string('yes') . '</label>';
-    echo '</div>';
+    $fb_comm = new PageGen('forms/radio_group.tpl');
+    $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
 
-    echo '<div class="form-check form-check-inline">';
-        if ($vavok->get_configuration('pgFbComm') == 0) {
-            echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" checked>';
-        } else {
-            echo '<input class="form-check-input" id="referal-no" name="conf_set6" type="radio" value="0" />';
-        } 
-        echo '<label class="form-check-label" for="referal-no">' . $localization->string('no') . '</label>';
-    echo '</div>';
+    $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));
+    echo $form->output();
 
-    echo '<div class="col-sm-10">';
-    echo '<button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></div>
-    </form>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 if ($action == "seteight") {
     echo '<h1>' . $localization->string('other') . '</h1>';
 
-    echo '<form method="post" action="settings.php?action=editeight">';
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editeight');
 
-    echo '<p>' . $localization->string('maxlogfile') . ':<br /><input name="conf_set58" maxlength="3" value="' . $vavok->get_configuration('maxLogData') . '" /></p>';
-    echo '<p>' . $localization->string('maxbantime') . ':<br /><input name="conf_set76" maxlength="3" value="' . round($vavok->get_configuration('maxBanTime') / 1440) . '" /></p>';
+    /**
+     * Max error logs in file
+     */
+    $conf_set58 = new PageGen('forms/input.tpl');
+    $conf_set58->set('label_for', 'conf_set58');
+    $conf_set58->set('label_value', $localization->string('maxlogfile'));
+    $conf_set58->set('input_id', 'conf_set58');
+    $conf_set58->set('input_name', 'conf_set58');
+    $conf_set58->set('input_value', $vavok->get_configuration('maxLogData'));
+    $conf_set58->set('input_maxlength', 3);
 
-    echo '<br /><button class="btn btn-primary" type="submit" />' . $localization->string('save') . '</button></form><hr>';
-    echo '<br /><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+    /**
+     * Max ban time
+     */
+    $conf_set76 = new PageGen('forms/input.tpl');
+    $conf_set76->set('label_for', 'conf_set76');
+    $conf_set76->set('label_value', $localization->string('maxbantime'));
+    $conf_set76->set('input_id', 'conf_set76');
+    $conf_set76->set('input_name', 'conf_set76');
+    $conf_set76->set('input_value', round($vavok->get_configuration('maxBanTime') / 1440));
+    $conf_set76->set('input_maxlength', 3);
+
+    $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
