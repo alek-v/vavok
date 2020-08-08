@@ -457,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `settings` (`name`  , `keypass`, `webtheme`, `quarantine`, `showtime`, `pageGenTime`, `pgFbComm`, `showOnline`, `adminNick`, `adminEmail`, `timeZone`, `title`, `homeUrl`, `bookGuestAdd`, `transferProtocol`, `maxPostChat`, `maxPostNews`, `customPages`, `floodTime`, `pvtLimit`, `cookieConsent`, `photoList`, `photoFileSize`, `maxPhotoPixels`, `siteDefaultLang`, `mPanel`, `forumAccess`, `refererLog`, `subMailPacket`, `dosLimit`, `maxLogData`, `openReg`, `regConfirm`, `siteOff`, `forumChLang`, `showRefPage`, `showCounter`, `maxBanTime`) VALUES
-                       ('system', ''       , ''        , 0           , 0         , 0            , 0         , 0           , ''         , ''          , '0'       , ''     , ''       , 0             , ''                , NULL         , NULL         , NULL         , 0          , 0         , 0              , NULL       , NULL           , NULL            , 'english'        , ''      , 0            , NULL        , 50             , 120       , 0           , 0        , 0           , 0        , 0            , 0            , 0            , 43200);
+                       ('system', ''       , ''        , 0           , 0         , 0            , 0         , 0           , ''         , ''          , '0'       , ''     , ''       , 0             , ''                , NULL         , NULL         , ''           , 0          , 0         , 0              , NULL       , NULL           , NULL            , 'english'        , ''      , 0            , NULL        , 50             , 120       , 0           , 0        , 0           , 0        , 0            , 0            , 0            , 43200);
 
 
 
