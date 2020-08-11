@@ -1,4 +1,4 @@
-# Vavok v1.5.5.beta8
+# Vavok v1.5.5.beta9
 - System functions moved to Vavok.class.php
 - Created class Counter.class.php
 - Created class Manageip.class.php
@@ -12,6 +12,7 @@
 - Updated setting additional head tags
 - Updated pages: Separate presentation from logic
 - Updated Db.class.php
+- Updated default template: Use Sass and minify CSS
 - Added page tags
 - Added form templates
 - Removed file include/cookies.php
