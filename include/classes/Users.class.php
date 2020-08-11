@@ -1,18 +1,17 @@
 <?php
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   01.08.2020. 19:10:55
+* Updated:   11.08.2020. 13:09:38
 */
-
 
 class Users {
 
 	public $user_id;
 	public $vavok;
 	public $db;
+	public $username;
 
 	function __construct() {
 		global $db, $vavok;
@@ -65,12 +64,8 @@ class Users {
 		    } 
 		}
 
-		// User's id
-		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : '';
-		
 		// Get user data
 		if (!empty($this->user_id)) {
-
 			// Get data
 		    $vavok_users = $db->get_data('vavok_users', "id='{$this->user_id}'");
 		    $user_profil = $db->get_data('vavok_profil', "uid='{$this->user_id}'", 'regche');
@@ -113,6 +108,9 @@ class Users {
 		    if (empty($_SESSION['lang'])) $this->change_language();
 
 		}
+
+		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : ''; // User's id
+		$this->username = isset($_SESSION['log']) ? $_SESSION['log'] : '';
 
 		// if skin not found
 		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
