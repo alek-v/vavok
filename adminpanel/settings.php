@@ -2,7 +2,7 @@
 /*
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   08.08.2020. 8:18:44
+* Updated:   11.08.2020. 14:32:29
 */
 
 require_once"../include/startup.php";
@@ -431,7 +431,7 @@ if ($action == "setone") {
     // Registration opened or closed
     $input_radio61_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio61_yes->set('label_for', 'conf_set61');
-    $input_radio61_yes->set('label_value', $localization->string('openreg') . ': ' . $localization->string('yes'));
+    $input_radio61_yes->set('label_value', $localization->string('yes'));
     $input_radio61_yes->set('input_id', 'conf_set61');
     $input_radio61_yes->set('input_name', 'conf_set61');
     $input_radio61_yes->set('input_value', 1);
@@ -441,7 +441,7 @@ if ($action == "setone") {
 
     $input_radio61_no = new PageGen('forms/radio_inline.tpl');
     $input_radio61_no->set('label_for', 'conf_set61');
-    $input_radio61_no->set('label_value', $localization->string('openreg') . ': ' . $localization->string('no'));
+    $input_radio61_no->set('label_value', $localization->string('no'));
     $input_radio61_no->set('input_id', 'conf_set61');
     $input_radio61_no->set('input_name', 'conf_set61');
     $input_radio61_no->set('input_value', 0);
@@ -450,12 +450,13 @@ if ($action == "setone") {
     }
 
     $radio_group_one = new PageGen('forms/radio_group.tpl');
+    $radio_group_one->set('description', $localization->string('openreg'));
     $radio_group_one->set('radio_group', $radio_group_one->merge(array($input_radio61_yes, $input_radio61_no)));
 
     // Does user need to confirm registration
     $input_radio62_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio62_yes->set('label_for', 'conf_set62');
-    $input_radio62_yes->set('label_value', $localization->string('confregs') . ': ' . $localization->string('yes'));
+    $input_radio62_yes->set('label_value', $localization->string('yes'));
     $input_radio62_yes->set('input_id', 'conf_set62');
     $input_radio62_yes->set('input_name', 'conf_set62');
     $input_radio62_yes->set('input_value', 1);
@@ -465,7 +466,7 @@ if ($action == "setone") {
 
     $input_radio62_no = new PageGen('forms/radio_inline.tpl');
     $input_radio62_no->set('label_for', 'conf_set62');
-    $input_radio62_no->set('label_value', $localization->string('confregs') . ': ' . $localization->string('no'));
+    $input_radio62_no->set('label_value', $localization->string('no'));
     $input_radio62_no->set('input_id', 'conf_set62');
     $input_radio62_no->set('input_name', 'conf_set62');
     $input_radio62_no->set('input_value', 0);
@@ -474,12 +475,13 @@ if ($action == "setone") {
     }
 
     $radio_group_two = new PageGen('forms/radio_group.tpl');
+    $radio_group_two->set('description', $localization->string('confregs'));
     $radio_group_two->set('radio_group', $radio_group_two->merge(array($input_radio62_yes, $input_radio62_no)));
 
     // Maintenance mode
     $input_radio63_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio63_yes->set('label_for', 'conf_set63');
-    $input_radio63_yes->set('label_value', 'Maintenance: ' . $localization->string('yes'));
+    $input_radio63_yes->set('label_value', $localization->string('yes'));
     $input_radio63_yes->set('input_id', 'conf_set63');
     $input_radio63_yes->set('input_name', 'conf_set63');
     $input_radio63_yes->set('input_value', 1);
@@ -489,7 +491,7 @@ if ($action == "setone") {
 
     $input_radio63_no = new PageGen('forms/radio_inline.tpl');
     $input_radio63_no->set('label_for', 'conf_set63');
-    $input_radio63_no->set('label_value', 'Maintenance: ' . $localization->string('no'));
+    $input_radio63_no->set('label_value', $localization->string('no'));
     $input_radio63_no->set('input_id', 'conf_set63');
     $input_radio63_no->set('input_name', 'conf_set63');
     $input_radio63_no->set('input_value', 0);
@@ -498,6 +500,7 @@ if ($action == "setone") {
     }
 
     $radio_group_three = new PageGen('forms/radio_group.tpl');
+    $radio_group_three->set('description', 'Maintenance');
     $radio_group_three->set('radio_group', $radio_group_three->merge(array($input_radio63_yes, $input_radio63_no)));
 
     $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $input29, $input1, $select_set3, $select_set21, $radio_group_one, $radio_group_two, $radio_group_three)));
@@ -518,7 +521,7 @@ if ($action == "settwo") {
      */
     $_4_yes = new PageGen('forms/radio_inline.tpl');
     $_4_yes->set('label_for', 'conf_set4');
-    $_4_yes->set('label_value', $localization->string('showclock') . ': ' . $localization->string('yes'));
+    $_4_yes->set('label_value', $localization->string('yes'));
     $_4_yes->set('input_id', 'conf_set4');
     $_4_yes->set('input_name', 'conf_set4');
     $_4_yes->set('input_value', 1);
@@ -528,7 +531,7 @@ if ($action == "settwo") {
 
     $_4_no = new PageGen('forms/radio_inline.tpl');
     $_4_no->set('label_for', 'conf_set4');
-    $_4_no->set('label_value',  $localization->string('showclock') . ': ' . $localization->string('no'));
+    $_4_no->set('label_value',  $localization->string('no'));
     $_4_no->set('input_id', 'conf_set4');
     $_4_no->set('input_name', 'conf_set4');
     $_4_no->set('input_value', 0);
@@ -537,6 +540,7 @@ if ($action == "settwo") {
     }
 
     $show_clock = new PageGen('forms/radio_group.tpl');
+    $show_clock->set('description', $localization->string('showclock'));
     $show_clock->set('radio_group', $show_clock->merge(array($_4_yes, $_4_no)));
 
     /**
@@ -544,7 +548,7 @@ if ($action == "settwo") {
      */
     $_5_yes = new PageGen('forms/radio_inline.tpl');
     $_5_yes->set('label_for', 'conf_set5');
-    $_5_yes->set('label_value', $localization->string('pagegen') . ': ' . $localization->string('yes'));
+    $_5_yes->set('label_value', $localization->string('yes'));
     $_5_yes->set('input_id', 'conf_set5');
     $_5_yes->set('input_name', 'conf_set5');
     $_5_yes->set('input_value', 1);
@@ -554,7 +558,7 @@ if ($action == "settwo") {
 
     $_5_no = new PageGen('forms/radio_inline.tpl');
     $_5_no->set('label_for', 'conf_set5');
-    $_5_no->set('label_value',  $localization->string('pagegen') . ': ' . $localization->string('no'));
+    $_5_no->set('label_value', $localization->string('no'));
     $_5_no->set('input_id', 'conf_set5');
     $_5_no->set('input_name', 'conf_set5');
     $_5_no->set('input_value', 0);
@@ -563,6 +567,7 @@ if ($action == "settwo") {
     }
 
     $page_gen = new PageGen('forms/radio_group.tpl');
+    $page_gen->set('description', $localization->string('pagegen'));
     $page_gen->set('radio_group', $page_gen->merge(array($_5_yes, $_5_no)));
 
     /**
@@ -570,7 +575,7 @@ if ($action == "settwo") {
      */
     $_7_yes = new PageGen('forms/radio_inline.tpl');
     $_7_yes->set('label_for', 'conf_set7');
-    $_7_yes->set('label_value', $localization->string('showonline') . ': ' . $localization->string('yes'));
+    $_7_yes->set('label_value', $localization->string('yes'));
     $_7_yes->set('input_id', 'conf_set7');
     $_7_yes->set('input_name', 'conf_set7');
     $_7_yes->set('input_value', 1);
@@ -580,7 +585,7 @@ if ($action == "settwo") {
 
     $_7_no = new PageGen('forms/radio_inline.tpl');
     $_7_no->set('label_for', 'conf_set7');
-    $_7_no->set('label_value',  $localization->string('showonline') . ': ' . $localization->string('no'));
+    $_7_no->set('label_value',  $localization->string('no'));
     $_7_no->set('input_id', 'conf_set7');
     $_7_no->set('input_name', 'conf_set7');
     $_7_no->set('input_value', 0);
@@ -589,6 +594,7 @@ if ($action == "settwo") {
     }
 
     $show_online = new PageGen('forms/radio_group.tpl');
+    $show_online->set('description', $localization->string('showonline'));
     $show_online->set('radio_group', $show_online->merge(array($_7_yes, $_7_no)));
 
     /**
@@ -596,7 +602,7 @@ if ($action == "settwo") {
      */
     $_32_yes = new PageGen('forms/radio_inline.tpl');
     $_32_yes->set('label_for', 'conf_set32');
-    $_32_yes->set('label_value', 'Cookie consent: ' . $localization->string('yes'));
+    $_32_yes->set('label_value', $localization->string('yes'));
     $_32_yes->set('input_id', 'conf_set32');
     $_32_yes->set('input_name', 'conf_set32');
     $_32_yes->set('input_value', 1);
@@ -606,7 +612,7 @@ if ($action == "settwo") {
 
     $_32_no = new PageGen('forms/radio_inline.tpl');
     $_32_no->set('label_for', 'conf_set32');
-    $_32_no->set('label_value',  'Cookie consent: ' . $localization->string('no'));
+    $_32_no->set('label_value', $localization->string('no'));
     $_32_no->set('input_id', 'conf_set32');
     $_32_no->set('input_name', 'conf_set32');
     $_32_no->set('input_value', 0);
@@ -615,6 +621,7 @@ if ($action == "settwo") {
     }
 
     $cookie_consent = new PageGen('forms/radio_group.tpl');
+    $cookie_consent->set('description', 'Cookie consent');
     $cookie_consent->set('radio_group', $cookie_consent->merge(array($_32_yes, $_32_no)));
 
     /**
@@ -654,7 +661,7 @@ if ($action == "setthree") {
      */
     $_20_yes = new PageGen('forms/radio_inline.tpl');
     $_20_yes->set('label_for', 'conf_set20');
-    $_20_yes->set('label_value', $localization->string('allowguestingb') . ': ' . $localization->string('yes'));
+    $_20_yes->set('label_value', $localization->string('yes'));
     $_20_yes->set('input_id', 'conf_set20');
     $_20_yes->set('input_name', 'conf_set20');
     $_20_yes->set('input_value', 1);
@@ -664,7 +671,7 @@ if ($action == "setthree") {
 
     $_20_no = new PageGen('forms/radio_inline.tpl');
     $_20_no->set('label_for', 'conf_set20');
-    $_20_no->set('label_value',  $localization->string('allowguestingb') . ': ' . $localization->string('no'));
+    $_20_no->set('label_value', $localization->string('no'));
     $_20_no->set('input_id', 'conf_set20');
     $_20_no->set('input_name', 'conf_set20');
     $_20_no->set('input_value', 0);
@@ -673,6 +680,7 @@ if ($action == "setthree") {
     }
 
     $gb_write = new PageGen('forms/radio_group.tpl');
+    $gb_write->set('description', $localization->string('allowguestingb'));
     $gb_write->set('radio_group', $gb_write->merge(array($_20_yes, $_20_no)));
 
     /**
@@ -730,7 +738,7 @@ if ($action == "setfour") {
      */
     $_49_yes = new PageGen('forms/radio_inline.tpl');
     $_49_yes->set('label_for', 'conf_set49');
-    $_49_yes->set('label_value', $localization->string('forumon') . ': ' . $localization->string('yes'));
+    $_49_yes->set('label_value', $localization->string('yes'));
     $_49_yes->set('input_id', 'conf_set49');
     $_49_yes->set('input_name', 'conf_set49');
     $_49_yes->set('input_value', 1);
@@ -740,7 +748,7 @@ if ($action == "setfour") {
 
     $_49_no = new PageGen('forms/radio_inline.tpl');
     $_49_no->set('label_for', 'conf_set49');
-    $_49_no->set('label_value',  $localization->string('forumon') . ': ' . $localization->string('no'));
+    $_49_no->set('label_value', $localization->string('no'));
     $_49_no->set('input_id', 'conf_set49');
     $_49_no->set('input_name', 'conf_set49');
     $_49_no->set('input_value', 0);
@@ -749,6 +757,7 @@ if ($action == "setfour") {
     }
 
     $forum_access = new PageGen('forms/radio_group.tpl');
+    $forum_access->set('description', $localization->string('forumon'));
     $forum_access->set('radio_group', $forum_access->merge(array($_49_yes, $_49_no)));
 
     /**
@@ -756,7 +765,7 @@ if ($action == "setfour") {
      */
     $_68_yes = new PageGen('forms/radio_inline.tpl');
     $_68_yes->set('label_for', 'conf_set68');
-    $_68_yes->set('label_value', 'Show language dropdown: ' . $localization->string('yes'));
+    $_68_yes->set('label_value', $localization->string('yes'));
     $_68_yes->set('input_id', 'conf_set68');
     $_68_yes->set('input_name', 'conf_set68');
     $_68_yes->set('input_value', 1);
@@ -766,7 +775,7 @@ if ($action == "setfour") {
 
     $_68_no = new PageGen('forms/radio_inline.tpl');
     $_68_no->set('label_for', 'conf_set68');
-    $_68_no->set('label_value',  'Show language dropdown: ' . $localization->string('no'));
+    $_68_no->set('label_value', $localization->string('no'));
     $_68_no->set('input_id', 'conf_set68');
     $_68_no->set('input_name', 'conf_set68');
     $_68_no->set('input_value', 0);
@@ -775,6 +784,7 @@ if ($action == "setfour") {
     }
 
     $forum_dropdown = new PageGen('forms/radio_group.tpl');
+    $forum_dropdown->set('description', 'Show language dropdown');
     $forum_dropdown->set('radio_group', $forum_dropdown->merge(array($_68_yes, $_68_no)));
 
     /**
@@ -825,7 +835,7 @@ if ($action == "setfour") {
      */
     $media_buttons_yes = new PageGen('forms/radio_inline.tpl');
     $media_buttons_yes->set('label_for', 'media_buttons');
-    $media_buttons_yes->set('label_value', 'Social media like buttons in gallery: ' . $localization->string('yes'));
+    $media_buttons_yes->set('label_value', $localization->string('yes'));
     $media_buttons_yes->set('input_id', 'media_buttons');
     $media_buttons_yes->set('input_name', 'media_buttons');
     $media_buttons_yes->set('input_value', 1);
@@ -835,7 +845,7 @@ if ($action == "setfour") {
 
     $media_buttons_no = new PageGen('forms/radio_inline.tpl');
     $media_buttons_no->set('label_for', 'media_buttons');
-    $media_buttons_no->set('label_value',  'Social media like buttons in gallery: ' . $localization->string('no'));
+    $media_buttons_no->set('label_value', $localization->string('no'));
     $media_buttons_no->set('input_id', 'media_buttons');
     $media_buttons_no->set('input_name', 'media_buttons');
     $media_buttons_no->set('input_value', 0);
@@ -844,6 +854,7 @@ if ($action == "setfour") {
     }
 
     $sn_buttons = new PageGen('forms/radio_group.tpl');
+    $sn_buttons->set('description', 'Social media like buttons in gallery');
     $sn_buttons->set('radio_group', $sn_buttons->merge(array($media_buttons_yes, $media_buttons_no)));
 
     /**
@@ -873,7 +884,7 @@ if ($action == "setfour") {
      */
     $gallery_set0_yes = new PageGen('forms/radio_inline.tpl');
     $gallery_set0_yes->set('label_for', 'gallery_set0');
-    $gallery_set0_yes->set('label_value', 'Users can upload: ' . $localization->string('yes'));
+    $gallery_set0_yes->set('label_value', $localization->string('yes'));
     $gallery_set0_yes->set('input_id', 'gallery_set0');
     $gallery_set0_yes->set('input_name', 'gallery_set0');
     $gallery_set0_yes->set('input_value', 1);
@@ -883,7 +894,7 @@ if ($action == "setfour") {
 
     $gallery_set0_no = new PageGen('forms/radio_inline.tpl');
     $gallery_set0_no->set('label_for', 'gallery_set0');
-    $gallery_set0_no->set('label_value',  'Users can upload: ' . $localization->string('no'));
+    $gallery_set0_no->set('label_value', $localization->string('no'));
     $gallery_set0_no->set('input_id', 'gallery_set0');
     $gallery_set0_no->set('input_name', 'gallery_set0');
     $gallery_set0_no->set('input_value', 0);
@@ -892,6 +903,7 @@ if ($action == "setfour") {
     }
 
     $gallery_uploads = new PageGen('forms/radio_group.tpl');
+    $gallery_uploads->set('description', 'Users can upload');
     $gallery_uploads->set('radio_group', $gallery_uploads->merge(array($gallery_set0_yes, $gallery_set0_no)));
 
     $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
@@ -933,7 +945,7 @@ if ($action == "setseven") {
      */
     $conf_set70yes = new PageGen('forms/radio_inline.tpl');
     $conf_set70yes->set('label_for', 'referal-yes');
-    $conf_set70yes->set('label_value', $localization->string('showrefpage') . ': ' . $localization->string('yes'));
+    $conf_set70yes->set('label_value', $localization->string('yes'));
     $conf_set70yes->set('input_id', 'referal-yes');
     $conf_set70yes->set('input_name', 'conf_set70');
     $conf_set70yes->set('input_value', 1);
@@ -943,7 +955,7 @@ if ($action == "setseven") {
 
     $conf_set70no = new PageGen('forms/radio_inline.tpl');
     $conf_set70no->set('label_for', 'referal-no');
-    $conf_set70no->set('label_value',  $localization->string('showrefpage') . ': ' . $localization->string('no'));
+    $conf_set70no->set('label_value', $localization->string('no'));
     $conf_set70no->set('input_id', 'referal-no');
     $conf_set70no->set('input_name', 'conf_set70');
     $conf_set70no->set('input_value', 0);
@@ -952,6 +964,7 @@ if ($action == "setseven") {
     }
 
     $show_refpage = new PageGen('forms/radio_group.tpl');
+    $show_refpage->set('description', $localization->string('showrefpage'));
     $show_refpage->set('radio_group', $show_refpage->merge(array($conf_set70yes, $conf_set70no)));
 
     /**
@@ -959,7 +972,7 @@ if ($action == "setseven") {
      */
     $conf_set6yes = new PageGen('forms/radio_inline.tpl');
     $conf_set6yes->set('label_for', 'fb_comm_yes');
-    $conf_set6yes->set('label_value', 'Facebook comments on pages: ' . $localization->string('yes'));
+    $conf_set6yes->set('label_value', $localization->string('yes'));
     $conf_set6yes->set('input_id', 'fb_comm_yes');
     $conf_set6yes->set('input_name', 'conf_set6');
     $conf_set6yes->set('input_value', 1);
@@ -969,7 +982,7 @@ if ($action == "setseven") {
 
     $conf_set6no = new PageGen('forms/radio_inline.tpl');
     $conf_set6no->set('label_for', 'fb_comm_no');
-    $conf_set6no->set('label_value',  'Facebook comments on pages: ' . $localization->string('no'));
+    $conf_set6no->set('label_value', $localization->string('no'));
     $conf_set6no->set('input_id', 'fb_comm_no');
     $conf_set6no->set('input_name', 'conf_set6');
     $conf_set6no->set('input_value', 0);
@@ -978,6 +991,7 @@ if ($action == "setseven") {
     }
 
     $fb_comm = new PageGen('forms/radio_group.tpl');
+    $fb_comm->set('description', 'Facebook comments on pages');
     $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
 
     $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));

@@ -1,9 +1,8 @@
 <?php
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:00:03
+* Updated:   08.08.2020. 12:51:01
 */
 
 require_once"../include/startup.php";
@@ -16,17 +15,13 @@ $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 // Save settings
 if ($action == 'save') {
-
-	$skins = isset($_POST['skins']) ? $vavok->check($_POST['skins']) : '';
-	$mskin = isset($_POST['mskin']) ? $vavok->check($_POST['mskin']) : '';
 	$lang = isset($_POST['lang']) ? $vavok->check($_POST['lang']) : '';
 	$user_timezone = isset($_POST['timezone']) ? $vavok->check($_POST['timezone']) : 0;
 	$subnews = isset($_POST['subnews']) ? $vavok->check($_POST['subnews']) : '';
 	$inbox_notification = isset($_POST['inbnotif']) ? $vavok->check($_POST['inbnotif']) : '';
 		
-	$getinfo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'email');
+	$email = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'email')['email'];
 	$notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'email');
-	$email = $getinfo['email'];
 
 	if (empty($lang)) {
 	    header ("Location: settings.php?isset=incorrect");
@@ -39,77 +34,55 @@ if ($action == 'save') {
 	if (preg_match("/[^0-9+-]/", $user_timezone)) {
 	    header ("Location: settings.php?isset=incorrect");
 	    exit;
-	} 
+	}
 
-	if (!file_exists(BASEDIR . "themes/$skins/index.php")) {
-	    $skins = "default";
-	} 
-
-	$_SESSION['my_themes'] = "";
-	unset($_SESSION['my_themes']); 
-
-
-	// site news
-	if ($subnews == "yes") {
-	    $email_check = $db->get_data('subs', "user_mail='{$getinfo['email']}'", 'user_mail');
-	    
+	/**
+	 * Site newsletter
+	 */
+	if ($subnews == 1) {
+	    $email_check = $db->get_data('subs', "user_mail='{$email}'", 'user_mail');
 
 	    if (!empty($email_check['user_mail'])) {
 	        $result = 'error2'; // Error! Email already exist in database!
 	        
-	        $subnewss = "1";
-	        $randkey = generate_password();
+	        $subnewss = 1;
+	        $randkey = $vavok->generate_password();
 	    } 
 
-
-	    if ($result == "") {
-	        if ($email == "") {
-	            $email = $getinfo['email'];
-	        }
-
-	        $randkey = generate_password();
+	    if (empty($result)) {
+	        $randkey = $vavok->generate_password();
 	        
 	        $db->insert_data('subs', array('user_id' => $users->user_id, 'user_mail' => $email, 'user_pass' => $randkey));
 
 	        $result = 'ok'; // sucessfully subscribed to site news!
-	        $subnewss = "1";
+	        $subnewss = 1;
 	    } 
 	}
-	if ($subnews == "no") {
+	else {
 	    $email_check = $db->get_data('subs', "user_id='{$users->user_id}'", 'user_mail');
 
-
-	    if ($email_check['user_mail'] == "") {
+	    if (empty($email_check['user_mail'])) {
 	        $result = 'error';
-	        $subnewss = 0;
+	        $subnews = 0;
 	        $randkey = "";
 	    } else {
 	    	// unsub
 	        $db->delete('subs', "user_id='{$users->user_id}'");
 	    	
 	        $result = 'no';
-	        $subnewss = 0;
+	        $subnews = 0;
 	        $randkey = "";
 	    } 
-	} 
-	if (empty($subnews) || $subnews == '') {
-		$subnewss = $get_profilx['subscri'];
-		$randkey = generate_password();
 	}
-
 
 	// update changes
 	$fields = array();
-	$fields[] = 'skin';
 	$fields[] = 'ipadd';
 	$fields[] = 'timezone';
-	$fields[] = 'mskin';
 
 	$values = array();
-	$values[] = $skins;
 	$values[] = $users->find_ip();
 	$values[] = $user_timezone;
-	$values[] = $mskin;
 	 
 	$db->update('vavok_users', $fields, $values, "id='{$users->user_id}'");
 	unset($fields, $values);
@@ -124,7 +97,7 @@ if ($action == 'save') {
 	$fields[] = 'lastvst';
 	 
 	$values = array();
-	$values[] = $subnewss;
+	$values[] = $subnews;
 	$values[] = $randkey;
 	$values[] = time();
 	 
@@ -158,63 +131,86 @@ if ($users->is_reg()) {
 	$user_profil = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'subscri');
 	$inbox_notif = $db->get_data('notif', "uid='{$users->user_id}' AND type='inbox'", 'active');
 
-	echo '<br><form method="post" action="settings.php?action=save">';
-    
-	echo $localization->string('lang') . ':<br><select name="lang"><option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
+	$form = new PageGen('forms/form.tpl');
+	$form->set('form_method', 'post');
+	$form->set('form_action', 'settings.php?action=save');
 
+	$options = '<option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
     $dir = opendir(BASEDIR . "include/lang");
     while ($file = readdir ($dir)) {
         if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $show_user['lang']) && strlen($file) > 2) {
-            echo '<option value="' . $file . '">' . $file . '</option>';
+            $options .= '<option value="' . $file . '">' . $file . '</option>';
         } 
-    } 
-    echo '</select><br />';
-    closedir($dir);
-    
-	$config_themes_show = str_replace("web_", "", $show_user['skin']);
-	$config_themes_show = str_replace("wap_", "", $config_themes_show);
-	$config_themes_show = ucfirst($config_themes_show);
+    }
+    $choose_lang = new PageGen('forms/select.tpl');
+    $choose_lang->set('label_for', 'lang');
+    $choose_lang->set('label_value', $localization->string('lang'));
+    $choose_lang->set('select_id', 'lang');
+    $choose_lang->set('select_name', 'lang');
+    $choose_lang->set('options', $options);
 
-	echo '<input name="skins" type="hidden" value="' . $show_user['skin'] . '" />';
+    /**
+     * Subscribe to site newsletter
+     */
+    $subnews_yes = new PageGen('forms/radio_inline.tpl');
+    $subnews_yes->set('label_for', 'subnews');
+    $subnews_yes->set('label_value', $localization->string('yes'));
+    $subnews_yes->set('input_id', 'subnews');
+    $subnews_yes->set('input_name', 'subnews');
+    $subnews_yes->set('input_value', 1);
+    if ($user_profil['subscri'] == 1) {
+        $subnews_yes->set('input_status', 'checked');
+    }
 
-    // echo 'Time zone (+1 -1):<br><input name="sdvig" value="'.$udata[30].'" /><br />';
+    $subnews_no = new PageGen('forms/radio_inline.tpl');
+    $subnews_no->set('label_for', 'subnews');
+    $subnews_no->set('label_value', $localization->string('no'));
+    $subnews_no->set('input_id', 'subnews');
+    $subnews_no->set('input_name', 'subnews');
+    $subnews_no->set('input_value', 0);
+    if ($user_profil['subscri'] == 0 || empty($user_profil['subscri'])) {
+        $subnews_no->set('input_status', 'checked');
+    }
 
-    echo $localization->string('subscribetonews') . ': <br />Yes';
-    if ($user_profil['subscri'] == "1") {
-        echo '<input name="subnews" type="radio" value="yes" checked>';
-    } else {
-        echo '<input name="subnews" type="radio" value="yes" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($user_profil['subscri'] == "0" || empty($user_profil['subscri'])) {
-        echo '<input name="subnews" type="radio" value="no" checked>';
-    } else {
-        echo '<input name="subnews" type="radio" value="no" />';
-    } 
-    echo 'No<br />';
+    $subnews = new PageGen('forms/radio_group.tpl');
+    $subnews->set('description', $localization->string('subscribetonews'));
+    $subnews->set('radio_group', $subnews->merge(array($subnews_yes, $subnews_no)));
 
-    echo 'Receive new message notification: <br />Yes';
-    if ($inbox_notif['active'] == 1 || empty($inbox_notif['active'])) {
-        echo '<input name="inbnotif" type="radio" value="1" checked>';
-    } else {
-        echo '<input name="inbnotif" type="radio" value="1" />';
-    } 
-    echo ' &nbsp; &nbsp; ';
-    if ($inbox_notif['active'] == 0) {
-        echo '<input name="inbnotif" type="radio" value="0" checked>';
-    } else {
-        echo '<input name="inbnotif" type="radio" value="0" />';
-    } 
-    echo 'No<br />';
+    /**
+     * Receive new message notification
+     */
+    $msgnotif_yes = new PageGen('forms/radio_inline.tpl');
+    $msgnotif_yes->set('label_for', 'inbnotif');
+    $msgnotif_yes->set('label_value', $localization->string('yes'));
+    $msgnotif_yes->set('input_id', 'inbnotif');
+    $msgnotif_yes->set('input_name', 'inbnotif');
+    $msgnotif_yes->set('input_value', 1);
+    if ($inbox_notif['active'] == 1) {
+        $msgnotif_yes->set('input_status', 'checked');
+    }
 
-    echo '<br><br><input value="' . $localization->string('save') . '" type="submit" /></form>';
+    $msgnotif_no = new PageGen('forms/radio_inline.tpl');
+    $msgnotif_no->set('label_for', 'inbnotif');
+    $msgnotif_no->set('label_value', $localization->string('no'));
+    $msgnotif_no->set('input_id', 'inbnotif');
+    $msgnotif_no->set('input_name', 'inbnotif');
+    $msgnotif_no->set('input_value', 0);
+    if ($inbox_notif['active'] == 0 || empty($inbox_notif['active'])) {
+        $msgnotif_no->set('input_status', 'checked');
+    }
 
+    $msgnotif = new PageGen('forms/radio_group.tpl');
+    $msgnotif->set('description', 'Receive new message notification');
+    $msgnotif->set('radio_group', $msgnotif->merge(array($msgnotif_yes, $msgnotif_no)));
+
+    $form->set('fields', $form->merge(array($choose_lang, $subnews, $msgnotif)));
+    echo $form->output();
 
 } else {
-    echo $localization->string('notloged') . '<br>';
+    echo '<p>' . $localization->string('notloged') . '</p>';
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
+echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";

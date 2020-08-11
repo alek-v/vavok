@@ -1,9 +1,8 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   07.08.2020. 15:54:39
+* Updated:   11.08.2020. 14:31:41
 */
 
 require_once"../include/startup.php";
@@ -73,61 +72,136 @@ if ($action == "edit") {
                 } 
                 $casenick = strcasecmp($user, $users->show_username());
                 if ($casenick == 0) {
-                    echo '<b><font color="red">' . $localization->string('myprofile') . '!</font></b><br><br>';
-                } 
+                    echo '<p><b><font color="red">' . $localization->string('myprofile') . '!</font></b></p>';
+                }
 
-                echo '<form method="post" action="users.php?action=upgrade&amp;users=' . $user . '">';
+                if ($show_userx['banned'] == 1) {
+                    echo '<p><font color="#FF0000"><b>' . $localization->string('confban') . '</b></font></p>';
+                }
+
+                if ($userx_profil['regche'] == 1) {
+                    echo '<p><font color="#FF0000"><b>' . $localization->string('notactivated') . '</b></font></p>';
+                }
+
+                $form = new PageGen('forms/form.tpl');
+                $form->set('form_method', 'post');
+                $form->set('form_action', 'users.php?action=upgrade&amp;users=' . $user);
 
                 $userx_access = (int)$show_userx['perm'];
 
                 if ($_SESSION['permissions'] == 101 && $users->show_username() == $vavok->get_configuration('adminNick')) {
-                    $array_dostup = array(101 => "" . $localization->string('access101') . "", 102 => "" . $localization->string('access102') . "", 103 => "" . $localization->string('access103') . "", 105 => "" . $localization->string('access105') . "", 106 => "" . $localization->string('access106') . "", 107 => "" . $localization->string('access107') . "");
-                    if ($userx_access == "0" || empty($userx_access)) {
-                        $userx_access = "107";
-                    } 
+                    $array_dostup = array(101 => $localization->string('access101'), 102 => $localization->string('access102'), 103 => $localization->string('access103'), 105 => $localization->string('access105'), 106 => $localization->string('access106'), 107 => $localization->string('access107'));
+                    if ($userx_access == 0 || empty($userx_access)) {
+                        $userx_access = 107;
+                    }
 
-                    echo $localization->string('accesslevel') . ':<br>';
-                    echo '<select name="udd7"><option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
+                    $options = '<option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
 
                     foreach($array_dostup as $k => $v) {
                         if ($k != $userx_access) {
-                            echo '<option value="' . $k . '">' . $v . '</option>';
-                        } 
-                    } 
-                    echo '</select><br>';
-                } 
+                            $options .= '<option value="' . $k . '">' . $v . '</option>';
+                        }
+                    }
+                }
+                $udd7 = new PageGen('forms/select.tpl');
+                $udd7->set('label_for', 'udd7');
+                $udd7->set('label_value', $localization->string('accesslevel'));
+                $udd7->set('select_id', 'udd7');
+                $udd7->set('select_name', 'udd7');
+                $udd7->set('options', $options);
 
                 // website permitions for various sections
                 if (file_exists('specperm.php')) {
                     echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Special permitions</a><br />';
                 }
 
-                echo $localization->string('newpassinfo') . ':<br><input name="udd1" /><br>';
-                echo $localization->string('city') . ':<br><input name="udd2" value="' . $about_userx['city'] . '" /><br>';
-                echo $localization->string('aboutyou') . ':<br><input name="udd3" value="' . $about_userx['about'] . '" /><br>';
-                echo $localization->string('yemail') . ':<br><input name="udd4" value="' . $about_userx['email'] . '" /><br>';
-                echo $localization->string('site') . ':<br><input name="udd5" value="' . $about_userx['site'] . '" /><br>'; 
-                echo $localization->string('browser') . ':<br><input name="udd13" value="' . $show_userx['browsers'] . '" /><br>';
-                echo $localization->string('name') . ':<br><input name="udd29" value="' . $about_userx['rname'] . '" /><br>';
-                echo $localization->string('perstatus') . ':<br><input name="udd40" value="' . $userx_profil['perstat'] . '" /><br>';
+                $udd1 = new PageGen('forms/input.tpl');
+                $udd1->set('label_for', 'udd1');
+                $udd1->set('label_value', $localization->string('newpassinfo'));
+                $udd1->set('input_id', 'udd1');
+                $udd1->set('input_name', 'udd1');
 
-                echo $localization->string('sitenews') . ': ';
-                if ($userx_profil['subscri'] == "1") {
-                    echo '<b>' . $localization->string('subscribed') . '</b><br>';
+                $udd2 = new PageGen('forms/input.tpl');
+                $udd2->set('label_for', 'udd2');
+                $udd2->set('label_value', $localization->string('city'));
+                $udd2->set('input_id', 'udd2');
+                $udd2->set('input_name', 'udd2');
+                $udd2->set('input_value', $about_userx['city']);
+
+                $udd3 = new PageGen('forms/input.tpl');
+                $udd3->set('label_for', 'udd3');
+                $udd3->set('label_value', $localization->string('aboutyou'));
+                $udd3->set('input_id', 'udd3');
+                $udd3->set('input_name', 'udd3');
+                $udd3->set('input_value', $about_userx['about']);
+
+                $udd4 = new PageGen('forms/input.tpl');
+                $udd4->set('label_for', 'udd4');
+                $udd4->set('label_value', $localization->string('yemail'));
+                $udd4->set('input_id', 'udd4');
+                $udd4->set('input_name', 'udd4');
+                $udd4->set('input_value', $about_userx['email']);
+
+                $udd5 = new PageGen('forms/input.tpl');
+                $udd5->set('label_for', 'udd5');
+                $udd5->set('label_value', $localization->string('site'));
+                $udd5->set('input_id', 'udd5');
+                $udd5->set('input_name', 'udd5');
+                $udd5->set('input_value', $about_userx['site']);
+
+                $udd13 = new PageGen('forms/input.tpl');
+                $udd13->set('label_for', 'udd13');
+                $udd13->set('label_value', $localization->string('browser'));
+                $udd13->set('input_id', 'udd13');
+                $udd13->set('input_name', 'udd13');
+                $udd13->set('input_value', $show_userx['browsers']);
+
+                $udd29 = new PageGen('forms/input.tpl');
+                $udd29->set('label_for', 'udd29');
+                $udd29->set('label_value', $localization->string('name'));
+                $udd29->set('input_id', 'udd29');
+                $udd29->set('input_name', 'udd29');
+                $udd29->set('input_value', $about_userx['rname']);
+
+                $udd40 = new PageGen('forms/input.tpl');
+                $udd40->set('label_for', 'udd40');
+                $udd40->set('label_value', $localization->string('perstatus'));
+                $udd40->set('input_id', 'udd40');
+                $udd40->set('input_name', 'udd40');
+                $udd40->set('input_value', $userx_profil['perstat']);
+ 
+                if ($userx_profil['subscri'] == 1) {
+                    $value = $localization->string('subscribed');
                 } else {
-                    echo '<b>' . $localization->string('notsubed') . '</b><br>';
-                } 
-                if ($show_userx['banned'] == "1") {
-                    echo '<font color="#FF0000"><b>' . $localization->string('confban') . '</b></font><br>';
-                } 
-                if ($userx_profil['regche'] == "1") {
-                    echo '<font color="#FF0000"><b>' . $localization->string('notactivated') . '</b></font><br>';
-                } 
-                echo $localization->string('numbbans') . ': <b>' . (int)$userx_profil['allban'] . '</b><br>';
-                echo $localization->string('lastvst') . ': <b>' . $vavok->date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i') . '</b><br>';
-                echo 'IP: <b>' . $show_userx['ipadd'] . '</b><br>';
+                    $value = $localization->string('notsubed');
+                }
+                $subscribed = new PageGen('forms/input_readonly.tpl');
+                $subscribed->set('label_for', 'subscribed');
+                $subscribed->set('label_value', $localization->string('sitenews'));
+                $subscribed->set('input_id', 'subscribed');
+                $subscribed->set('input_name', 'subscribed');
+                $subscribed->set('input_placeholder', $value);
 
-                echo '<br><input value="' . $localization->string('save') . '" type="submit" /></form>';
+                $allban = new PageGen('forms/input_readonly.tpl');
+                $allban->set('label_for', 'allban');
+                $allban->set('label_value', $localization->string('numbbans'));
+                $allban->set('input_id', 'allban');
+                $allban->set('input_placeholder', (int)$userx_profil['allban']);
+
+                $lastvst = new PageGen('forms/input_readonly.tpl');
+                $lastvst->set('label_for', 'lastvst');
+                $lastvst->set('label_value', $localization->string('lastvst'));
+                $lastvst->set('input_id', 'lastvst');
+                $lastvst->set('input_placeholder', $vavok->date_fixed($userx_profil['lastvst'], 'j.m.Y. / H:i'));
+
+                $ip = new PageGen('forms/input_readonly.tpl');
+                $ip->set('label_for', 'ip');
+                $ip->set('label_value', 'IP');
+                $ip->set('input_id', 'ip');
+                $ip->set('input_placeholder', $show_userx['ipadd']);
+
+                $form->set('fields', $form->merge(array($udd7, $udd1, $udd2, $udd3, $udd4, $udd5, $udd13, $udd29, $udd40, $subscribed, $allban, $lastvst, $ip)));
+                echo $form->output();
 
                 if ($userx_access < 101 || $userx_access > 105) {
                     echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $localization->string('deluser') . '</a></b>';
@@ -213,10 +287,10 @@ if ($action == "upgrade") {
                 $db->update('vavok_users', 'browsers', $vavok->no_br($vavok->check($udd13)), "id='{$users_id}'");
 
                 $fields = array('city', 'about', 'email', 'site', 'rname');
-                $values = array(no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
+                $values = array($vavok->no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
                 $db->update('vavok_about', $fields, $values, "uid='" . $users_id . "'");
                 
-                $db->update('vavok_profil', 'perstat', no_br($vavok->check($udd40)), "uid='{$users_id}'");
+                $db->update('vavok_profil', 'perstat', $vavok->no_br($vavok->check($udd40)), "uid='{$users_id}'");
 
                 echo $localization->string('usrdataupd') . '!<br>';
 

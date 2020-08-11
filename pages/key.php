@@ -2,7 +2,7 @@
 /*
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   07.08.2020. 16:06:59
+* Updated:   11.08.2020. 13:24:56
 */
 
 require_once"../include/startup.php";
@@ -13,7 +13,6 @@ $recipient_id = isset($_GET['uid']) ? $vavok->check($_GET['uid']) : '';
 
 // resend registration email with key
 if ($action == 'resendkey') {
-
 	// if user id is not in url, get it from submited email
 	if (empty($recipient_id)) {
     	$recipient_id = $users->get_id_from_mail($recipient_mail);
@@ -23,7 +22,6 @@ if ($action == 'resendkey') {
     $check = $db->count_row('vavok_profil', "uid = '{$recipient_id}' AND regche = 1");
 
     if ($check > 0) {
-
     	// Get user's email if it is not submited
     	if (empty($recipient_mail)) {
     		$recipient_mail = $users->get_user_info($recipient_id, 'email');
@@ -48,8 +46,7 @@ if ($action == 'resendkey') {
 
     }
 
-    $vavok->redirect_to('key.php?uid=' . $recipient_id);
-
+    $vavok->redirect_to('key.php?uid=' . $recipient_id . '&isset=mail');
 }
 
 $current_page->page_title = $localization->string('confreg');
@@ -66,7 +63,7 @@ if (empty($action)) {
      */
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
-    $form->set('form_action', 'key.php?action=inkey');
+    $form->set('form_action', 'key.php?action=inkey&uid=' . $recipient_id);
 
     $input = new PageGen('forms/input.tpl');
     $input->set('label_for', 'key');
@@ -94,41 +91,27 @@ if (empty($action)) {
 
 // check comfirmation code
 if ($action == "inkey") {
-
     if (isset($_GET['key'])) {
         $key = $vavok->check(trim($_GET['key']));
     } else {
         $key = $vavok->check(trim($_POST['key']));
-    } 
+    }
 
     if (!empty($key)) {
-
         if (!$db->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) {
-
             echo '<p>' . $localization->string('keynotok') . '!</p>';
 
-            echo '<p><a href="../pages/key.php"><img src="../images/img/back.gif" alt="Back"> ' . $localization->string('back') . '</a></p>';
-
-
+            echo '<p><a href="' . HOMEDIR . 'pages/key.php?uid=' . $recipient_id . '" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
         } else {
-
             echo '<p>' . $localization->string('keyok') . '!</p>';
 
-
-            echo '<p><a href="../pages/login.php"><img src="../images/img/reload.gif" alt="Login"> ' . $localization->string('login') . '</a></p>';
-
-
+            echo '<p><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $localization->string('login') . '</a></p>';
         }
-
-
     } else {
-
         echo '<p>' . $localization->string('nokey') . '!</p>';
 
-        echo '<p><a href="key.php"><img src="../images/img/back.gif" alt="Back" /> ' . $localization->string('back') . '</a></p>';
-
-    } 
-
+        echo '<p><a href="' . HOMEDIR . 'pages/key.php?uid=' . $recipient_id . '" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+    }
 }
 
 echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
