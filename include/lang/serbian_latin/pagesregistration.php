@@ -1,8 +1,12 @@
 <?php
-// modified: 22.07.2020. 20:44:41
+/*
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   11.08.2020. 13:26:20
+*/
 
 $lang_reg['registration'] = "Registracija";
-$lang_reg['againreg'] = "registrovani ste, ne možete registrovati više od jednog naloga";
+$lang_reg['againreg'] = "već ste se registrovali.";
 $lang_reg['passagain'] = "Ponovite šifru";
 $lang_reg['reginfo'] = "Sva polja moraju biti popunjena. Više informacija o sebi možete dodati posle registracije.<br>Na email adresu će vam biti poslati podaci<br>";
 $lang_reg['keyinfo'] = "i ključ koji vam je potreban da biste završili registraciju";

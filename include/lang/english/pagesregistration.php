@@ -1,9 +1,12 @@
 <?php
-// modified: 22.07.2020. 20:44:03
-// (c) vavok.net
+/*
+* Author:    Aleksandar Vranešević
+* URL:       http://vavok.net
+* Updated:   11.08.2020. 13:24:25
+*/
 
 $lang_reg['registration'] = "Registration";
-$lang_reg['againreg'] = "You have already been registered,you cannot register more than once";
+$lang_reg['againreg'] = "you have already been registered.";
 $lang_reg['passagain'] = "Repeat password";
 $lang_reg['reginfo'] = "You must complete all the fields. You can add more information about yourself after you register.<br />You will receive information via your email address<br />";
 $lang_reg['keyinfo'] = "including the keycode you need to finish registration";

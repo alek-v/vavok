@@ -108,7 +108,8 @@ $lang_page['settings'] = "Settings";
 $lang_page['mailoruser'] = "E-mail or username";
 $lang_page['registerHere'] = 'You don\'t have an account yet? Register here';
 $lang_page['subscribetonews'] = "Subscribe to site news";
-
+$lang_page['yes'] = "Yes";
+$lang_page['no'] = "No";
 
 $lang_home = array_merge($lang_home, $lang_page);
 
