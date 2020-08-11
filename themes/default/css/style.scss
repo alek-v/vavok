@@ -1,4 +1,3 @@
-/* blog index <h1>, <h2>, <h3> */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
 
 textarea {
@@ -60,16 +59,18 @@ form {
 .services_element {
 	display: inline-block;
 	margin: 0px 60px;
-}
 
-.services_element a {
-	display: block;
-	width: 100%;
-	height: 100%;
-}
+	a {
+		display: block;
+		width: 100%;
+		height: 100%;
 
-.services_element a:hover {
-	opacity: 0.3;
+		&:hover {
+			opacity: 0.3;
+		}
+	}
+
+
 }
 
 .footer {
@@ -92,16 +93,15 @@ form {
 .services_element {
 	display: block;
 	margin: 40px 0px;
-}
 
-.services_element a {
-	display: flex;
-	justify-content: center;
+	a {
+		display: flex;
+		justify-content: center;
+	}
 }
 
 nav {
 	margin-bottom: 10px;
 }
-
   
 }

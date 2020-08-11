@@ -1,15 +1,15 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   04.08.2020. 18:18:16
+* Updated:   11.08.2020. 14:50:24
 */
 
-// custom page templates directory is named "templates" and it must be under template main folder
-// default page templates directory is /themes/templates/
+/**
+ * Custom page templates directory is named "templates" and it must be under template main folder
+ * default page templates directory is /themes/templates/
+ */
 
-// header
 header("Content-type:text/html; charset=utf-8");
 ?>
 <!DOCTYPE html>
@@ -20,8 +20,8 @@ header("Content-type:text/html; charset=utf-8");
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/bootstrap/css/bootstrap.min.css" />
 <script src="<?php echo HOMEDIR; ?>themes/default/js/jquery-3.5.1.min.js"></script>
 <script src="<?php echo HOMEDIR; ?>themes/default/bootstrap/js/bootstrap.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/framework.css?v=<?php echo filemtime(BASEDIR . 'themes/default/framework.css'); ?>" />
-<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/style.css?v=<?php echo filemtime(BASEDIR . 'themes/default/style.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/framework.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/framework.min.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/style.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/style.min.css'); ?>" />
 <?php
 /**
  * Load data for header
