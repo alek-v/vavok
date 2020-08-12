@@ -1,6 +1,5 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Updated:   02.08.2020. 2:48:28
@@ -15,8 +14,8 @@ if ($db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'") > 0) $db
 
 // Header data
 $current_page->append_head_tags('<meta name="robots" content="noindex">
-<script src="/js/inbox.js"></script>
-<script src="/js/ajax.js"></script>
+<script src="' . HOMEDIR . 'include/js/inbox.js"></script>
+<script src="' . HOMEDIR . 'include/js/ajax.js"></script>
 ');
 
 $current_page->page_title = $localization->string('inbox');

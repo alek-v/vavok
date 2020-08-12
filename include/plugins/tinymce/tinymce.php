@@ -1,4 +1,4 @@
-<script src='{@BASEDIR}js/tinymce/tinymce.min.js'></script>
+<script src='{@BASEDIR}include/plugins/tinymce/tinymce.min.js'></script>
 <script>
 	tinymce.init({
 		selector: '#selector',
