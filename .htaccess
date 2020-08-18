@@ -167,9 +167,9 @@ RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1 [NC,L]
 # end of website blog pages
 
 # website content - tag search
-RewriteRule ^search\/([^\/]+)\/page=([0-9]*)$ search.php?item=$1&page=$2 [NC,L]
-RewriteRule ^search\/([^\/]+)\/?$ search.php?item=$1 [NC,L]
-RewriteRule ^search$ search.php [NC,L]
+RewriteRule ^search\/$ pages/search.php [NC,L]
+RewriteRule ^search\/([^\/]+)\/?$ pages/search.php?item=$1 [NC,L]
+RewriteRule ^search\/([^\/]+)\/page=([0-9]*)\/?$ pages/search.php?item=$1&page=$2 [NC,L]
 # end of website content - tag search
 
 # website custom pages
