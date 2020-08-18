@@ -1,14 +1,12 @@
 <?php
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for managing pages
-* Updated:   05.08.2020. 15:57:26
+* Updated:   12.08.2020. 18:40:37
 */
 
 class Page {
-
 	public $page_name;         // Page name
 	public $page_language;     // Page language
 	public $page_title;        // Title
@@ -20,7 +18,10 @@ class Page {
 	private $vavok;
 	private $users;
 
-	// class constructor
+	/**
+	 * @param string $page_name
+	 * @param string $page_language
+	 */
 	function __construct($page_name = '', $page_language = '') {
 		global $db, $users, $vavok;
 
@@ -71,7 +72,7 @@ class Page {
 
 	}
 
-	/*
+	/**
 	 * Update, insert and delete informations
 	 */
 
@@ -359,11 +360,15 @@ class Page {
 		return $website . $r;
 	}
 
-	// get title for page
+	/**
+	 * Get title for page
+	 *
+	 * @return string
+	 */
 	public function page_title() {
 		if (!empty($this->page_title)) { return $this->page_title; }
 
-	    $page_title = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'", 'tname')['tname'];
+	    $page_title = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname')['tname'];
 
 	    if (!empty($page_title)) {
 	        return $page_title;
@@ -399,7 +404,7 @@ class Page {
 	{
 		$tags = file_get_contents(BASEDIR . 'used/headmeta.dat');
 
-        $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $_SERVER['PHP_SELF'] . "'");
+        $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
         if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
 
 		/**
