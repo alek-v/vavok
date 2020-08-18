@@ -1,15 +1,16 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   05.08.2020. 15:57:40
+* Updated:   13.08.2020. 21:52:41
 */
 
 require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
 
-// checking access permitions
+/**
+ * Checking access permitions
+ */
 if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
@@ -915,11 +916,12 @@ if ($action == "new") {
      * Allow unicode url checkbox
      */
     $checkbox_allow_unicode = new PageGen('forms/checkbox.tpl');
-    $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
-    $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
     $checkbox_allow_unicode->set('label_for', 'allow-unicode');
     $checkbox_allow_unicode->set('label_value', $localization->string('allowUnicodeUrl'));
-    $checkbox_allow_unicode->set('website_language[save]', $localization->string('newpage'));
+    $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
+    $checkbox_allow_unicode->set('checkbox_name', 'allow_unicode');
+    $checkbox_allow_unicode->set('checkbox_value', 'on');
+
 
     /**
      * All form fields
@@ -939,6 +941,7 @@ if ($action == "new") {
     /**
      * Show form
      */
+    $form->set('website_language[save]', $localization->string('newpage'));
     echo $form->output();
 
 } 
@@ -1029,8 +1032,8 @@ if ($action == 'tags') {
     $tag_field->set('input_value', $page_editor->page_tags($id));
 
     $form = new PageGen('forms/form.tpl');
-    $form->set('action', 'files.php?action=savetags&amp;id=' . $id);
-    $form->set('method', 'post');
+    $form->set('form_action', 'files.php?action=savetags&amp;id=' . $id);
+    $form->set('form_method', 'post');
     $form->set('fields', $tag_field->output());
 
     echo $form->output();
