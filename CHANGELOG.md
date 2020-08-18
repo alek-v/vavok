@@ -1,3 +1,9 @@
+# Vavok v1.5.6.beta1
+- Updated form templates
+- Site search improvements
+
+
+
 # Vavok v1.5.5
 - System functions moved to Vavok.class.php
 - Created class Counter.class.php
