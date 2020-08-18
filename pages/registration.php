@@ -2,20 +2,19 @@
 /*
 * Author:    Aleksandar Vranešević
 * URL:       http://vavok.net
-* Updated:   11.08.2020. 12:54:17
+* Updated:   14.08.2020. 0:40:30
 */
 
 require_once"../include/startup.php";
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+$log = isset($_POST['log']) ? $vavok->check($_POST['log']) : '';
+$pass = isset($_POST['par']) ? $vavok->check($_POST['par']) : '';
+$pass2 = isset($_POST['pars']) ? $vavok->check($_POST['pars']) : '';
+$meil = isset($_POST['meil']) ? $vavok->check($_POST['meil']) : '';
+$pagetoload = isset($_POST['ptl']) ? $vavok->check($_POST['ptl']) : '';
 
 if ($action == 'reguser') {
-    $log = isset($_POST['log']) ? $vavok->check($_POST['log']) : '';
-    $pass = isset($_POST['par']) ? $vavok->check($_POST['par']) : '';
-    $pass2 = isset($_POST['pars']) ? $vavok->check($_POST['pars']) : '';
-    $meil = isset($_POST['meil']) ? $vavok->check($_POST['meil']) : '';
-    $pagetoload = isset($_POST['ptl']) ? $vavok->check($_POST['ptl']) : '';
-
     $str1 = mb_strlen($log);
     $str2 = mb_strlen($pass);
 
@@ -148,22 +147,22 @@ if ($action == 'reguser') {
 
                                 echo '<p><b>' . $localization->string('enterkeymessage') . '</b></p>';
                             } else {
-                            	echo '<p>' . $localization->string('loginnow') . '<br /></p>';
+                            	echo '<p>' . $localization->string('loginnow') . '</p>';
                             }
                         } else {
-                            echo $localization->string('badcaptcha') . '!<br />';
+                            echo '<p>' . $localization->string('badcaptcha') . '</p>';
                         }
                     } else {
-                        echo $localization->string('badmail') . "<br />";
+                        echo '<p>' . $localization->string('badmail') . "</p>";
                     }
             } else {
-                echo $localization->string('userexists') . "<br />";
+                echo '<p>' . $localization->string('userexists') . "</p>";
             }
         } else {
-            echo $localization->string('emailexists') . '<br />';
+            echo '<p>' . $localization->string('emailexists') . '</p>';
         }
     } else {
-        echo $localization->string('toomuchslashes') . '<br />';
+        echo '<p>' . $localization->string('toomuchslashes') . '</p>';
     }
 
     // Show back link if registration is not completed
