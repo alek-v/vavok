@@ -1,37 +1,48 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* Updated:   01.08.2020. 19:10:49
+* URI:       https://vavok.net
+* Updated:   18.08.2020. 0:01:46
 */
 
 
 class Mailer {
 	private $vavok;
 
-	function __construct() {
+	function __construct()
+	{
 		global $vavok;
 
 		$this->vavok = $vavok;
 	}
 
-	// send email
-	function send($usermail, $subject, $msg, $mail = "", $name = "") {
-
+	/**
+	 * Send email
+	 *
+	 * @param string $usermail
+	 * @param string $subject
+	 * @param string $msg
+	 * @param string $mail
+	 * @param string $name
+	 * @return bool
+	 */
+	function send($usermail, $subject, $msg, $mail = "", $name = "")
+	{
+		/**
+		 * Generate default email
+		 */
 	    if (empty($mail)) {
-
 	        $mail = $_SERVER['HTTP_HOST'];
-	        if (substr($mail, 2) == 'm.') {
-	            $mail = substr($mail, 2);
-	        } 
-	        if (substr($mail, 4) == 'www.') {
-	            $mail = substr($mail, 4);
-	        }
-	        $mail = 'no_reply@' . $mail;
-	        $name = $this->vavok->get_configuration('title');
+	        if (substr($mail, 0, 2) == 'm.') $mail = substr($mail, 2);
+	        if (substr($mail, 0, 4) == 'www.') $mail = substr($mail, 4);
 
+	        $mail = 'no_reply@' . $mail;
 	    }
+
+	    /**
+	     * Default name
+	     */
+	    if (empty($name)) $name = $this->vavok->get_configuration('title');
 
 	    // support for unicode emails
 	    if ($this->vavok->is_unicode($usermail) && function_exists('idn_to_ascii')) {
@@ -55,12 +66,8 @@ class Mailer {
 
 	    $result = mail($usermail, $subject, $msg, $adds);
 	    
-	    if (!$result) {
-    		return false;
-		} else {
-			return true;
-		}
-
+	    if (!$result) return false;
+		else return true;
 	}
 
 	// add to queue
