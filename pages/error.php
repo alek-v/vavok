@@ -1,9 +1,8 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   01.08.2020. 0:24:38
+* Updated:   19.08.2020. 0:22:35
 */
 
 if (!defined('BASEDIR')) {
@@ -12,19 +11,15 @@ if (!defined('BASEDIR')) {
         $folder_level .= "../";
     } 
     define("BASEDIR", $folder_level);
-} 
+}
 
 require_once BASEDIR . "include/startup.php";
 
 $ip = $users->find_ip();
 
-if (isset($_GET['error'])) {
-    $error = $vavok->check($_GET['error']);
-} 
+if (isset($_GET['error'])) { $error = $vavok->check($_GET['error']); } 
 
-if ($error == '404') {
-    header("HTTP/1.0 404 Not Found");
-} 
+if ($error == '404') { header("HTTP/1.0 404 Not Found"); } 
 
 include_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
@@ -48,34 +43,34 @@ if (empty($_SESSION['log'])) {
 if ($error == '401') {
     echo $localization->string('err401') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error401.dat";
-    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '402') {
     echo $localization->string('err402') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error402.dat";
-    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '403') {
     echo $localization->string('err403') . '.<br>';
 
-    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
     echo $localization->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $localization->string('filenotfound') . '.<br>';
 
-    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
     echo $localization->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $localization->string('notfonserver') . '.<br>';
 
-    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
 } elseif ($error == '500') {
     echo $localization->string('err500') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error500.dat";
-    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '502') {
     echo $localization->string('err502') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error502.dat";
-    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == "db") {
     $line = 0;
     $file = file(BASEDIR . "used/datalog/dberror.dat");
@@ -90,7 +85,7 @@ if ($error == '401') {
         $subject = 'Database down';
         $mailtext = $localization->string('dbdownmail') . " " . $dberdate . " " . $dbertime . "\n";
         sendmail($vavok->get_configuration('adminEmail'), $subject, $mailtext); // email to me
-    } 
+    }
 
     if ($timeresult > 28800) { // 28800 = 8 hours
         $text = 'dberror:|:' . $nowtime . ':|:';
@@ -110,14 +105,14 @@ if ($error == '401') {
             fflush ($fp);
             flock ($fp, LOCK_UN);
             fclose($fp);
-        } 
-    } 
+        }
+    }
 
     echo '<b>' . $localization->string('dberrmsg') . '</b><br>';
 } else {
     $logdat = BASEDIR . "used/datalog/error.dat";
     $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
-} 
+}
 
 if (isset($write) && !empty($logdat)) {
     $fp = fopen($logdat, "a+");
@@ -137,8 +132,8 @@ if (isset($write) && !empty($logdat)) {
         fputs($fp, implode("", $file));
         flock ($fp, LOCK_UN);
         fclose($fp);
-    } 
-} 
+    }
+}
 
 echo '<p><a href="/" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
