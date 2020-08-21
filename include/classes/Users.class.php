@@ -7,7 +7,6 @@
 */
 
 class Users {
-
 	public $user_id;
 	public $vavok;
 	public $db;
