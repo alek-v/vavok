@@ -95,7 +95,7 @@ class Manageip {
                     $logdat = BASEDIR . "used/datalog/ban.dat";
                     $hostname = gethostbyaddr($ip);
 
-                    $write = '|Blocked access for IP|' . $_SERVER['PHP_SELF'] . $config_requri . '|' . time() . '|' . $ip . '|' . $hostname . '|' . $this->users->user_browser() . '|' . $http_referer . '|' . $username . '|';
+                    $write = ':|:Blocked access for IP:|:' . $_SERVER['PHP_SELF'] . REQUEST_URI . ':|:' . time() . ':|:' . $ip . ':|:' . $hostname . ':|:' . $this->users->user_browser() . ':|:' . $http_referer . ':|:' . $username . ':|:';
 
                     $fp = fopen($logdat, "a+");
                     flock ($fp, LOCK_EX);
