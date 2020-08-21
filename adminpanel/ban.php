@@ -1,9 +1,8 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   07.08.2020. 15:17:09
+* Updated:   21.08.2020. 22:55:46
 */
 
 require_once"../include/startup.php";
@@ -26,7 +25,7 @@ if ($users->is_reg()) {
         echo '<img src="../images/img/menu.gif" alt=""> <b>IP ban panel</b><br><br>';
 
         if (empty($action)) {
-            $file = file("../used/ban.dat");
+            $file = $vavok->get_data_file('ban.dat');
             $total = count($file);
             if (empty($_GET['start'])) $start = 0;
             else $start = $_GET['start'];
@@ -36,7 +35,7 @@ if ($users->is_reg()) {
                 $end = $start + 10;
             } 
             for ($i = $start; $i < $end; $i++) {
-                $file = file("../used/ban.dat");
+                $file = $vavok->get_data_file('ban.dat');
                 $file = array_reverse($file);
                 $data = explode("|", $file[$i]);
                 $i2 = round($i + 1);

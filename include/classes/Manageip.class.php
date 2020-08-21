@@ -76,7 +76,7 @@ class Manageip {
                 
                 unlink($logfiles);
 
-                $banlines = file(BASEDIR . "used/ban.dat");
+                $banlines = $vavok->get_data_file('ban.dat');
                 $banarray = '';
 
                 foreach($banlines as $banvalue) {
@@ -121,7 +121,7 @@ class Manageip {
         	}
 
         	// ban
-        	$old_ips = file(BASEDIR . "used/ban.dat");
+        	$old_ips = $vavok->get_data_file('ban.dat');
         	foreach($old_ips as $old_ip_line) {
         	    $ip_arr = explode("|", $old_ip_line);
 

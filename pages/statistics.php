@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 2:59:09
+* Updated:   21.08.2020. 23:07:22
 */
 
 require_once"../include/startup.php";
@@ -12,13 +11,13 @@ include_once BASEDIR . "include/lang/" . $users->get_user_language() . "/pagesco
 $current_page->page_title = $localization->string('statistics');
 require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
-$pcount = file(BASEDIR . "used/datacounter/host.dat");
+$pcount = $vavok->get_data_file('datacounter/host.dat');
 $pcount = explode("|", $pcount[0]);
 $pcounter_host = $pcount[1];
 $pcounter_all = $pcount[2];
 $pcounter_hourhost = $pcount[4];
 
-$phcount = file(BASEDIR . "used/datacounter/hits.dat");
+$phcount = $vavok->get_data_file('datacounter/hits.dat');
 $phcount = explode("|", $phcount[0]);
 $pcounter_hits = $phcount[1];
 $pcounter_allhits = $phcount[2];

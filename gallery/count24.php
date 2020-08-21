@@ -1,7 +1,7 @@
 <?php
 require_once"../include/startup.php";
 
-$p24_hits = file(BASEDIR . "used/datacounter/24_hits.dat");
+$p24_hits = $vavok->get_data_file('datacounter/24_hits.dat');
 $p24_hitsarr = explode("|", $p24_hits[0]);
 
 foreach($p24_hitsarr as $k) {
@@ -9,7 +9,7 @@ foreach($p24_hitsarr as $k) {
     $hour_data[] = $p24datadays[1];
 } 
 
-$p24_host = file(BASEDIR . "used/datacounter/24_host.dat");
+$p24_host = $vavok->get_data_file('datacounter/24_host.dat');
 $p24_hostarr = explode("|", $p24_host[0]);
 
 foreach($p24_hostarr as $k) {

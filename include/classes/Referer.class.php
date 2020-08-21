@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   03.08.2020. 8:35:45
+* Updated:   21.08.2020. 23:02:15
 */
 
 class Referer {
@@ -28,7 +27,7 @@ class Referer {
             $ref_from = $this->vavok->check($ref_from);
             // do not add my site to referer list
             if ($ref_from != 'm.' . $this->vavok->get_configuration('homeBase') && $ref_from != 'www.' . $this->vavok->get_configuration('homeBase') && $ref_from != $this->vavok->get_configuration('homeBase')) {
-                $lines = file(BASEDIR . "used/referer.dat");
+                $lines = $vavok->get_data_file('referer.dat');
                 $count = count($lines);
                 for ($rb = 0; $rb < $count; $rb++) {
                     $dt = explode("|", $lines[$rb]);
@@ -43,7 +42,7 @@ class Referer {
 
                         $t = $ref_from . '|' . time() . '|' . $this->users->find_ip() . '|' . $ref_count . '|';
 
-                        $reffile = file(BASEDIR . "used/referer.dat");
+                        $reffile = $vavok->get_data_file('referer.dat');
                         $fp = fopen(BASEDIR . "used/referer.dat", "a+");
                         flock ($fp, LOCK_EX);
                         ftruncate ($fp, 0);
@@ -66,7 +65,7 @@ class Referer {
                         flock ($fp, LOCK_UN);
                         fclose($fp);
 
-                        $reffile = file(BASEDIR . "used/referer.dat");
+                        $reffile = $vavok->get_data_file('referer.dat');
                         $ri = count($reffile);
                         if ($ri >= $this->vavok->get_configuration('refererLog')) {
                             $fp = fopen(BASEDIR . "used/referer.dat", "w");

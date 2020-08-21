@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   07.08.2020. 19:42:12
+* Updated:   21.08.2020. 23:13:59
 */
 
 class Vavok {
@@ -204,6 +203,17 @@ class Vavok {
 	    } 
 
 	    return $count_lines;
+	}
+
+	/**
+	 * Read file from data directory
+	 *
+	 * @param string $filename
+	 * @return array
+	 */
+	public function get_data_file($filename)
+	{
+		return file(BASEDIR . 'used/' . $filename);
 	}
 
 	/**
@@ -561,7 +571,7 @@ class Vavok {
 
 	// antiflood
 	function flooder($ip, $phpself = '') {
-	    $old_db = file(BASEDIR . "used/flood.dat");
+	    $old_db = $this->get_data_file('flood.dat');
 	    $new_db = fopen(BASEDIR . "used/flood.dat", "w");
 	    flock ($new_db, LOCK_EX);
 	    $result = false;

@@ -34,7 +34,7 @@ if ($action == "acadd") {
     flock ($fp, LOCK_UN);
     fclose($fp);
 
-    $file = file("../used/adminchat.dat");
+    $file = $vavok->get_data_file('adminchat.dat');
     $i = count($file);
     if ($i >= 300) {
         $fp = fopen("../used/adminchat.dat", "w");
@@ -106,7 +106,7 @@ if ($action == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permis
 
     if (isset($id)) {
 
-        $file = file("../used/ban.dat");
+        $file = $vavok->get_data_file('ban.dat');
         $fp = fopen("../used/ban.dat", "w");
         flock ($fp, LOCK_EX);
         for ($i = 0;$i < sizeof($file);$i++) {
@@ -134,7 +134,7 @@ if ($action == "delallip" && ($_SESSION['permissions'] == 101 or $_SESSION['perm
 
 if ($action == "delbw" && $_SESSION['permissions'] == 101) {
 	$stroka = $vavok->check($_GET['stroka']);
-    $file = file('../used/antiword.dat');
+    $file = $vavok->get_data_file('antiword.dat');
     $filestr = explode("|", $file[0]);
     unset($filestr[$stroka]);
     $str = implode("|", $filestr);

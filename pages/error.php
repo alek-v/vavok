@@ -2,7 +2,7 @@
 /**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   19.08.2020. 0:22:35
+* Updated:   21.08.2020. 23:06:24
 */
 
 if (!defined('BASEDIR')) {
@@ -73,7 +73,7 @@ if ($error == '401') {
     $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == "db") {
     $line = 0;
-    $file = file(BASEDIR . "used/datalog/dberror.dat");
+    $file = $vavok->get_data_file('datalog/dberror.dat');
     $file = explode(":|:", $file[0]); // dberror:|:time error start:|:
     $dberrorstart = $file[1];
     $nowtime = time();
@@ -91,7 +91,7 @@ if ($error == '401') {
         $text = 'dberror:|:' . $nowtime . ':|:';
 
         if (isset($line)) {
-            $file = file(BASEDIR . "used/datalog/dberror.dat");
+            $file = $vavok->get_data_file('datalog/dberror.dat');
             $fp = fopen(BASEDIR . "used/datalog/dberror.dat", "a+");
             flock ($fp, LOCK_EX);
             ftruncate ($fp, 0);

@@ -1,9 +1,8 @@
 <?php 
 /*
-* (c) Aleksandar Vranešević
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:05:01
+* Updated:   21.08.2020. 22:55:58
 */
 
 require_once"../include/startup.php";
@@ -37,7 +36,7 @@ if (empty($action)) {
 
     echo'<input type="submit" value="' . $localization->string('save') . '" /></form><hr>';
 
-    $file = file("../used/adminchat.dat");
+    $file = $vavok->get_data_file('adminchat.dat');
     $file = array_reverse($file);
     $total = count($file);
     if ($total < 1) {

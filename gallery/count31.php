@@ -2,7 +2,7 @@
 require_once"../include/startup.php";
 
 
-$p31_hits = file(BASEDIR . "used/datacounter/31_hits.dat");
+$p31_hits = $vavok->get_data_file('datacounter/31_hits.dat');
 $p31_hitsarr = explode("|", $p31_hits[0]);
 
 foreach($p31_hitsarr as $k) {
@@ -10,7 +10,7 @@ foreach($p31_hitsarr as $k) {
     $hour_data[] = $p31datadays[1];
 } 
 
-$p31_host = file(BASEDIR . "used/datacounter/31_host.dat");
+$p31_host = $vavok->get_data_file('datacounter/31_host.dat');
 $p31_hostarr = explode("|", $p31_host[0]);
 
 foreach($p31_hostarr as $k) {

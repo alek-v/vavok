@@ -1,9 +1,8 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:06:33
+* Updated:   21.08.2020. 23:05:24
 */
 
 require_once"../include/startup.php";
@@ -61,10 +60,10 @@ if ($action == "count24") {
     exit;
     echo'<img src="../images/img/partners.gif" alt="" /> <b>' . $localization->string('statbyhour') . '</b><br /><br />';
 
-    $p24_hits = file(BASEDIR . "used/datacounter/24_hits.dat");
+    $p24_hits = $vavok->get_data_file('datacounter/24_hits.dat');
     $p24_hits = explode("|", $p24_hits[0]);
 
-    $p24_host = file(BASEDIR . "used/datacounter/24_host.dat");
+    $p24_host = $vavok->get_data_file('datacounter/24_host.dat');
     $p24_host = explode("|", $p24_host[0]);
 
     echo $localization->string('vstin24hgraph') . '<br />';
@@ -106,10 +105,10 @@ if ($action == "count31") {
     exit;
     echo '<img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('statbyday') . '</b><br /><br />';
 
-    $p31_hits = file(BASEDIR . "used/datacounter/31_hits.dat");
+    $p31_hits = $vavok->get_data_file('datacounter/31_hits.dat');
     $p31_hits = explode("|", $p31_hits[0]);
 
-    $p31_host = file(BASEDIR . "used/datacounter/31_host.dat");
+    $p31_host = $vavok->get_data_file('datacounter/31_host.dat');
     $p31_host = explode("|", $p31_host[0]);
 
     echo 'This month<br />';

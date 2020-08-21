@@ -92,7 +92,7 @@ if ($users->is_reg()) {
 } 
 
 echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage"><img src="../images/img/homepage.gif" alt=""> ' . $localization->string('home') . '</a></p>';
+echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
 
 require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

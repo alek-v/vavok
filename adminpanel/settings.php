@@ -1,8 +1,8 @@
 <?php 
-/*
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   11.08.2020. 14:32:29
+* Updated:   21.08.2020. 22:58:44
 */
 
 require_once"../include/startup.php";
@@ -166,7 +166,7 @@ if ($action == "editfour") {
     $db->update(DB_PREFIX . 'settings', $fields, $values);
 
     // update gallery settings
-    $gallery_file = file(BASEDIR . "used/dataconfig/gallery.dat");
+    $gallery_file = $vavok->get_data_file('dataconfig/gallery.dat');
     if (empty($gallery_file)) $gallery_file = '||||||||||';
     $gallery_data = explode("|", $gallery_file[0]);
 
@@ -790,7 +790,7 @@ if ($action == "setfour") {
     /**
      * Gallery settings
      */
-    $gallery_config = file(BASEDIR . "used/dataconfig/gallery.dat");
+    $gallery_config = $vavok->get_data_file('dataconfig/gallery.dat');
     if (!empty($gallery_config)) {
         $gallery_data = explode("|", $gallery_config[0]);
     } else {

@@ -1,9 +1,8 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   02.08.2020. 3:05:13
+* Updated:   21.08.2020. 23:06:57
 */
 
 require_once"../include/startup.php";
@@ -22,7 +21,7 @@ if (empty($_GET['page']) || $_GET['page'] < 1) {
 
 if ($vavok->get_configuration('showRefPage') == 1 || $users->is_administrator()) {
 
-    $file = file("../used/referer.dat");
+    $file = $vavok->get_data_file('referer.dat');
     $file = array_reverse($file);
     $total = count($file);
 

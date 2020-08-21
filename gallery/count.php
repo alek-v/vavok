@@ -1,5 +1,5 @@
 <?php
-// modified: 9.11.2011 2:40:09
+// modified: 21.08.2020. 22:59:28
 require_once"../include/startup.php";
 
 
@@ -16,12 +16,12 @@ $substr_count = $pcounter_guest;
 $counter_online = $pcounter_online;
 $counter_reg = $counter_online - $substr_count;
 
-$count = file(BASEDIR . "used/datacounter/host.dat");
+$count = $vavok->get_data_file('datacounter/host.dat');
 $count = explode("#", $count[0]);
 $counter_host = $count[1];
 $counter_all = $count[2];
 
-$hcount = file(BASEDIR . "used/datacounter/hits.dat");
+$hcount = $vavok->get_data_file('datacounter/hits.dat');
 $hcount = explode("#", $hcount[0]);
 $counter_hits = $hcount[1];
 $counter_allhits = $hcount[2];
