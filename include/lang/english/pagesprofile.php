@@ -1,6 +1,4 @@
 <?php
-// (c) vavok . net
-// modified: 26.07.2020. 23:08:13
 
 $lang_profil['profsettings'] = "Profile settings";
 $lang_profil['city'] = "City";
@@ -26,6 +24,8 @@ $lang_profil['passagain'] = "Repeat password";
 $lang_profil['oldpass'] = "Old password";
 $lang_profil['street'] = "Street address";
 $lang_profil['postal'] = "Postal code (ZIP)";
+$lang_profil['deleteProfile'] = "Delete profile";
+$lang_profil['deleteConfirm'] = "Are you sure you want to delete profile?";
 
 $lang_home = array_merge($lang_home, $lang_profil);
 

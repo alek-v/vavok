@@ -1,6 +1,4 @@
 <?php
-// (c) vavok . net
-// modified: 26.07.2020. 23:10:13
 
 $lang_profil['profsettings'] = "Podešavanja profila";
 $lang_profil['city'] = "Grad";
@@ -26,6 +24,8 @@ $lang_profil['passagain'] = "Ponovite šifru";
 $lang_profil['oldpass'] = "Stara šifra";
 $lang_profil['street'] = "Ulica i broj";
 $lang_profil['postal'] = "Poštanski broj";
+$lang_profil['deleteProfile'] = "Obriši profil";
+$lang_profil['deleteConfirm'] = "Da li ste sigurni da želite obrisati profil?";
 
 $lang_home = array_merge($lang_home, $lang_profil);
 
