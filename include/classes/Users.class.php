@@ -1,9 +1,9 @@
 <?php
-/*
+/**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   11.08.2020. 13:09:38
+* Updated:   21.08.2020. 20:37:13
 */
 
 class Users {
@@ -11,12 +11,14 @@ class Users {
 	public $vavok;
 	public $db;
 	public $username;
+	private $db_prefix;
 
 	function __construct() {
 		global $db, $vavok;
 
 		$this->db = $db;
 		$this->vavok = $vavok;
+		$this->db_prefix = DB_PREFIX;
 
 		// Session
 		session_name("sid");
@@ -37,11 +39,10 @@ class Users {
 			$cookie_id = $this->getidfromnick($unlog);
 
 		    // get user's data
-			$cookie_check = $this->db->get_data('vavok_users', "id='" . $cookie_id . "'", 'name, pass, perm, lang');
+			$cookie_check = $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$cookie_id}'", 'name, pass, perm, lang');
 
 		    // if user exists
 		    if (!empty($cookie_check['name'])) {
-
 		        // check is password correct
 		        if ($this->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name']) {
 
@@ -57,8 +58,8 @@ class Users {
 		            $_SESSION['lang'] = $cookie_check['lang'];
 		            
 		            // update ip address and last visit time
-		            $db->update('vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
-		            $db->update('vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
+		            $db->update($this->db_prefix . 'vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
+		            $db->update($this->db_prefix . 'vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
 		        }
 		    } 
 		}
@@ -66,10 +67,10 @@ class Users {
 		// Get user data
 		if (!empty($this->user_id)) {
 			// Get data
-		    $vavok_users = $db->get_data('vavok_users', "id='{$this->user_id}'");
-		    $user_profil = $db->get_data('vavok_profil', "uid='{$this->user_id}'", 'regche');
+		    $vavok_users = $db->get_data($this->db_prefix . 'vavok_users', "id='{$this->user_id}'");
+		    $user_profil = $db->get_data($this->db_prefix . 'vavok_profil', "uid='{$this->user_id}'", 'regche');
 
-		    $db->update('vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
+		    $db->update($this->db_prefix . 'vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
 
 		    // Theme
 		    $config_themes = $vavok_users['skin'];
@@ -90,13 +91,11 @@ class Users {
 
 		 	// activate account
 		    if ($user_profil['regche'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/key.php')) {
-
 		        setcookie('cookpass', '');
 		        setcookie('cooklog', '');
 		        setcookie(session_name(), '');
 		        unset($_SESSION['log']);
 		        session_destroy();
-
 		    }
 
 		} else {
@@ -112,13 +111,11 @@ class Users {
 		$this->username = isset($_SESSION['log']) ? $_SESSION['log'] : '';
 
 		// if skin not found
-		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) {
-		    $config_themes = 'default';
-		}
+		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) $config_themes = 'default';
 
-		/*
-		Count visited pages and time on site
-		*/
+		/**
+		 * Count visited pages and time on site
+		 */
 
 		if (empty($_SESSION['currs'])) {
 		    $_SESSION['currs'] = time();
@@ -136,9 +133,9 @@ class Users {
 		// visitor's time on the site
 		$this->time_on_site = $this->vavok->maketime(round(time() - $_SESSION['currs']));
 
-		/*
-		User settings
-		*/
+		/**
+		 * User settings
+		 */
 
 		// Current theme
 		define("MY_THEME", $config_themes);
@@ -159,7 +156,7 @@ class Users {
 
 	        if (!empty($this->user_id)) {
 
-	            $show_user = $this->db->get_data('vavok_users', "id='{$this->user_id}'", 'name, perm');
+	            $show_user = $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$this->user_id}'", 'name, perm');
 
 	            // Check if permissions are changed
 	            if ($this->vavok->check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
@@ -186,7 +183,7 @@ class Users {
 	 */
 	public function logout($user_id)
 	{
-	    $this->db->delete('online', "user = '{$this->user_id}'");
+	    $this->db->delete($this->db_prefix . 'online', "user = '{$this->user_id}'");
 
 	    // destroy cookies
 	    setcookie('cooklog', "", time() - 3600);
@@ -208,7 +205,7 @@ class Users {
 	        // First we delete old attempts from the table
 	        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
 	        $oldest = date("Y-m-d H:i:s", $oldest);
-	        $this->db->delete('login_attempts', "`datetime` < '" . $oldest . "'");
+	        $this->db->delete($this->db_prefix . 'login_attempts', "`datetime` < '{$oldest}'");
 	        
 	        // Next we insert this attempt into the table
 	        $values = array(
@@ -216,7 +213,7 @@ class Users {
 	        'datetime' =>  date("Y-m-d H:i:s"),
 	        'username' => $username
 	        );
-	        $this->db->insert_data('login_attempts', $values);
+	        $this->db->insert_data($this->db_prefix . 'login_attempts', $values);
 	        
 	        // Finally we count the number of recent attempts from this ip address  
 	        $attempts = $this->db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
@@ -244,13 +241,13 @@ class Users {
 	        'newmsg' => 0,
 	        'lang' => $this->vavok->get_configuration('siteDefaultLang')
 	    );
-	    $this->db->insert_data('vavok_users', $values);
+	    $this->db->insert_data($this->db_prefix . 'vavok_users', $values);
 
-	    $user_id = $this->db->get_data('vavok_users', "name='{$name}'", 'id')['id'];
+	    $user_id = $this->db->get_data($this->db_prefix . 'vavok_users', "name='{$name}'", 'id')['id'];
 
-	    $this->db->insert_data('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
-	    $this->db->insert_data('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
-	    $this->db->insert_data('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
+	    $this->db->insert_data($this->db_prefix . 'vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
+	    $this->db->insert_data($this->db_prefix . 'vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
+	    $this->db->insert_data($this->db_prefix . 'notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
 	    // send private message
 	    $msg = $localization->string('autopmreg');
@@ -283,7 +280,7 @@ class Users {
 			$_SESSION['lang'] = $language;
 
 			// Update language if user is registered
-			if ($this->is_reg()) { $this->db->update('vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
+			if ($this->is_reg()) { $this->db->update($this->db_prefix . 'vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
 		}
 	}
 
@@ -297,15 +294,15 @@ class Users {
 	        $users_id = $this->getidfromnick($users);
 	    }
 
-	    $this->db->delete("vavok_users", "id = '{$users_id}'");
-	    $this->db->delete("vavok_profil", "uid = '{$users_id}'");
-	    $this->db->delete("vavok_about", "uid = '{$users_id}'");
-	    $this->db->delete("inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
-	    $this->db->delete("ignore", "target = '{$users_id}' OR name = '{$users_id}'");
-	    $this->db->delete("buddy", "target = '{$users_id}' OR name = '{$users_id}'");
-	    $this->db->delete("subs", "user_id = '{$users_id}'");
-	    $this->db->delete("notif", "uid = '{$users_id}'");
-	    $this->db->delete("specperm", "uid = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "vavok_users", "id = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "vavok_profil", "uid = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "vavok_about", "uid = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "ignore", "target = '{$users_id}' OR name = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "buddy", "target = '{$users_id}' OR name = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "subs", "user_id = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "notif", "uid = '{$users_id}'");
+	    $this->db->delete($this->db_prefix . "specperm", "uid = '{$users_id}'");
 
 	    return $users;
 	}
@@ -317,20 +314,20 @@ class Users {
 	// private messages
 	public function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row($this->db_prefix . 'inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
-	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->db->count_row($this->db_prefix . 'inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "str") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
+	        $nopm = $this->db->count_row($this->db_prefix . 'inbox', "touid='" . $uid . "' AND starred='1'");
 	    } elseif ($view == "urd") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
+	        $nopm = $this->db->count_row($this->db_prefix . 'inbox', "touid='" . $uid . "' AND unread='1'");
 	    } 
 	    return $nopm;
-	} 
+	}
 
 	// get number of unread pms
 	function getunreadpm($uid) {
-	    return $this->db->count_row('inbox', "touid='" . $uid . "' AND unread='1'")[0];
+	    return $this->db->count_row($this->db_prefix . 'inbox', "touid='" . $uid . "' AND unread='1'")[0];
 	}
 
 	// number of private msg's
@@ -344,7 +341,7 @@ class Users {
 	}
 
 	public function isstarred($pmid) {
-	    $strd = $this->db->get_data('inbox', "id='" . $pmid . "'", 'starred');
+	    $strd = $this->db->get_data($this->db_prefix . 'inbox', "id='{$pmid}'", 'starred');
 	    if ($strd['starred'] == "1") {
 	        return true;
 	    } else {
@@ -374,23 +371,23 @@ class Users {
 
 		$time = time();
 
-        $this->db->insert_data('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
+        $this->db->insert_data($this->db_prefix . 'inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
-        $user_profile = $this->db->get_data('vavok_profil', "uid='{$who}'", 'lastvst');
-        $last_notif = $this->db->get_data('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
+        $user_profile = $this->db->get_data($this->db_prefix . 'vavok_profil', "uid='{$who}'", 'lastvst');
+        $last_notif = $this->db->get_data($this->db_prefix . 'notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
-            $this->db->insert_data('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
+            $this->db->insert_data($this->db_prefix . 'notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
         } 
         $notif_expired = $last_notif['lstinb'] + 864000;
 
         if (($user_profile['lastvst'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
-            $user_mail = $this->db->get_data('vavok_about', "uid='{$who}'", 'email');
+            $user_mail = $this->db->get_data($this->db_prefix . 'vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
             $send_mail->send($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $users->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl')); // update lang
 
-            $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
+            $this->db->update($this->db_prefix . 'notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
 
 	}
@@ -412,7 +409,7 @@ class Users {
 	 	'timesent' => time()
 		);
 
-		$this->db->insert_data('inbox', $values);
+		$this->db->insert_data($this->db_prefix . 'inbox', $values);
 	}
 
 	/*
@@ -428,19 +425,19 @@ class Users {
 
 	// get user nick from user id number
 	public function getnickfromid($uid) {
-	    $unick = $this->db->get_data('vavok_users', "id='{$uid}'", 'name');
+	    $unick = $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$uid}'", 'name');
 	    return $unick['name'];
 	}
 
 	// get vavok_users user id from nickname
 	public function getidfromnick($nick) {
-	    $uid = $this->db->get_data('vavok_users', "name='{$nick}'", 'id');
+	    $uid = $this->db->get_data($this->db_prefix . 'vavok_users', "name='{$nick}'", 'id');
 	    return $uid['id'];
 	}
 
 	// get vavok_users user id from email
 	public function get_id_from_mail($mail) {
-	    $uid = $this->db->get_data('vavok_about', "email='{$mail}'", 'uid');
+	    $uid = $this->db->get_data($this->db_prefix . 'vavok_about', "email='{$mail}'", 'uid');
 	    return $uid['uid'];
 	}
 
@@ -483,15 +480,15 @@ class Users {
 	public function get_user_info($users_id, $info) {
 
 	    if ($info == 'email') {
-	        return $this->db->get_data('vavok_about', "uid='{$users_id}'", 'email')['email'];
+	        return $this->db->get_data($this->db_prefix . 'vavok_about', "uid='{$users_id}'", 'email')['email'];
 	    } elseif ($info == 'full_name') {
-	    	$uinfo = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'rname, surname');
+	    	$uinfo = $this->db->get_data($this->db_prefix . 'vavok_about', "uid='{$users_id}'", 'rname, surname');
 
 	    	$full_name = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
 
 	    	return $full_name;
 	    } elseif ('language') {
-	    	return $this->db->get_data('vavok_users', "id='{$users_id}'", 'lang')['lang'];
+	    	return $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$users_id}'", 'lang')['lang'];
 	    } else { return false; }
 
 	}
@@ -528,7 +525,7 @@ class Users {
 	    $xuser = $this->getidfromnick($login);
 	    $statwho = '<font color="#CCCCCC">[Off]</font>';
 
-	    $result = $this->db->count_row('online', 'user="' . $xuser . '"');
+	    $result = $this->db->count_row($this->db_prefix . 'online', 'user="{$xuser}"');
 
 	    if ($result > 0 && $xuser > 0) {
 	        $statwho = '<font color="#00FF00">[On]</font>';
@@ -558,11 +555,11 @@ class Users {
 	        return true;
 	    }
 
-	    $check = $this->db->count_row(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
+	    $check = $this->db->count_row($this->db_prefix . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
 
 	    if ($check > 0) {
 	    	
-	        $check_data = $this->db->get_data(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
+	        $check_data = $this->db->get_data($this->db_prefix . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
 	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
@@ -597,7 +594,7 @@ class Users {
 
 	// number of registered members
 	function regmemcount() {
-	    $rmc = $this->db->count_row('vavok_users');
+	    $rmc = $this->db->count_row($this->db_prefix . 'vavok_users');
 	    return $rmc;
 	}
 
@@ -624,8 +621,8 @@ class Users {
 	 */
 
 	// username validation
-	function validate_username($username) {
-
+	function validate_username($username)
+	{
 		if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) {
 			return true;
 		} else { return false; }
@@ -661,7 +658,7 @@ class Users {
 	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->db->get_data('vavok_users', "id='{$id}'", 'perm');
+	    $chk_adm = $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$id}'", 'perm');
 	    $perm = intval($chk_adm['perm']);
 	    
 	    if ($perm === $num) {
@@ -679,7 +676,7 @@ class Users {
 	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->db->get_data('vavok_users', "id='{$id}'", 'perm');
+	    $chk_adm = $this->db->get_data($this->db_prefix . 'vavok_users', "id='{$id}'", 'perm');
 	    $perm = intval($chk_adm['perm']);
 
 	    if ($perm === $num) {
@@ -693,7 +690,7 @@ class Users {
 
 	// is ignored
 	function isignored($tid, $uid) {
-	    $ign = $this->db->count_row('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
+	    $ign = $this->db->count_row($this->db_prefix . '`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    } 
@@ -726,7 +723,7 @@ class Users {
 
 	// is buddy
 	function isbuddy($tid, $uid) {
-	    $ign = $this->db->count_row('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
+	    $ign = $this->db->count_row($this->db_prefix . 'buddy', "target='" . $tid . "' AND name='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    } 
@@ -740,16 +737,14 @@ class Users {
 	*/
 
 	// user's password encription
-	function password_encrypt($password) {
-
+	function password_encrypt($password)
+	{
 		return password_hash($password, PASSWORD_BCRYPT);
-
 	}
 
-	function password_check($password, $hash) {
-
+	function password_check($password, $hash)
+	{
 		return password_verify($password, $hash);
-
 	}
 
 	public function get_prefered_language($language = '', $format = '') {
@@ -793,7 +788,6 @@ class Users {
 		return strtolower($language);
 
 	}
-
 
 }
 

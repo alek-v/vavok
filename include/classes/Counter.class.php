@@ -3,19 +3,19 @@
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   07.08.2020. 19:42:27
+* Updated:   21.08.2020. 20:54:11
 */
 
 class Counter {
-    private $db;
-    private $users;
-    private $vavok;
     public $counter_online;
     public $counter_reg;
     public $counter_host;
     public $counter_all;
     public $counter_hits;
     public $counter_allhits;
+    private $db;
+    private $users;
+    private $vavok;
 
     function __construct()
     {
@@ -53,8 +53,8 @@ class Counter {
         // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
         $this->db->delete(DB_PREFIX . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
 
-        if ($this->db->count_row(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'") > 0) {
-            while ($bz_row = $this->db->get_data(DB_PREFIX . 'online', "usr_chck = '" . $xmatch . "'")) {
+        if ($this->db->count_row(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'") > 0) {
+            while ($bz_row = $this->db->get_data(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'")) {
                 if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
                     $fields = array();
                     $fields[] = 'date';
@@ -64,7 +64,7 @@ class Counter {
                     $values[] = $bz_date;
                     $values[] = $_SERVER['PHP_SELF'];
                      
-                    $this->db->update(DB_PREFIX . 'online', $fields, $values, "usr_chck = '" . $xmatch . "'");
+                    $this->db->update(DB_PREFIX . 'online', $fields, $values, "usr_chck = '{$xmatch}'");
                     unset($fields, $values);
                     
                     $found = 1;
@@ -95,24 +95,24 @@ class Counter {
             unset($values);
         } 
 
-            // counter
-            $counts = $this->db->get_data(DB_PREFIX . 'counter');
+        // counter
+        $counts = $this->db->get_data(DB_PREFIX . 'counter');
 
-            $current_day = $counts['day'];
-            $clicks_today = $counts['clicks_today'];
-            $total_clicks = $counts['clicks_total'];
-            $new_visits_today = $counts['visits_today']; // visits today
-        	$new_total_visits = $counts['visits_total']; // total visits
+        $current_day = $counts['day'];
+        $clicks_today = $counts['clicks_today'];
+        $total_clicks = $counts['clicks_total'];
+        $new_visits_today = $counts['visits_today']; // visits today
+    	$new_total_visits = $counts['visits_total']; // total visits
 
-            // current day
-            if (empty($current_day) || !isset($current_day)) {
-            	$current_day = $day;
-        	}
-        	if ($current_day != $day) {
-        		$current_day = $day;
-        		$clicks_today = 0;
-        		$new_visits_today = 0;
-        	}
+        // current day
+        if (empty($current_day) || !isset($current_day)) {
+        	$current_day = $day;
+    	}
+    	if ($current_day != $day) {
+    		$current_day = $day;
+    		$clicks_today = 0;
+    		$new_visits_today = 0;
+    	}
 
         // clicks
         $new_clicks_today = $clicks_today + 1; // clicks today
@@ -120,8 +120,8 @@ class Counter {
 
         // visits
         if ($found == 0) {
-        $new_visits_today = $new_visits_today + 1; // visits today
-        $new_total_visits = $counts['visits_total'] + 1; // total visits
+            $new_visits_today = $new_visits_today + 1; // visits today
+            $new_total_visits = $counts['visits_total'] + 1; // total visits
         }
 
         // update data

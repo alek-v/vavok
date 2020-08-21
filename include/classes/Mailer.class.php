@@ -2,7 +2,7 @@
 /**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   18.08.2020. 0:01:46
+* Updated:   21.08.2020. 20:57:29
 */
 
 
@@ -71,7 +71,8 @@ class Mailer {
 	}
 
 	// add to queue
-	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "") {
+	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "")
+	{
 		global $db, $users;
 
 		$data = array(
@@ -85,13 +86,14 @@ class Mailer {
 			'timeadded' => date("Y-m-d H:i:s")
 		);
 
-		$db->insert_data('email_queue', $data);
+		$db->insert_data(DB_PREFIX . 'email_queue', $data);
 
 	}
 
 	// get subscription options
 	// while adding new subscription it can be added without option (blank) or with one from the list
-	function email_sub_options () {
+	function email_sub_options ()
+	{
 		$subs = file_get_contents(BASEDIR . 'used/subnames.dat');
 
 		return array_filter(explode('||', $subs));
