@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   26.08.2020. 22:49:59
+ * Updated:   26.08.2020. 23:24:16
  */
 
 include"../include/startup.php";
@@ -76,7 +76,7 @@ switch ($pg) {
 		/**
 		 * Page tags
 		 */
-		$sql = $db->query("SELECT * FROM " . DB_PREFIX . "tags WHERE page_id='{$current_page->page_id}'");
+		$sql = $db->query("SELECT * FROM " . DB_PREFIX . "tags WHERE page_id='{$current_page->page_id}' ORDER BY id ASC");
 		$tags = '';
 
 		foreach ($sql as $key => $value) {
