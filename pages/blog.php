@@ -1,15 +1,13 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   03.08.2020. 10:33:13
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   26.08.2020. 22:49:59
+ */
 
 include"../include/startup.php";
 
 $pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : ''; // blog page
-
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1; // page number
 
 $items_per_page = 5; // How many blog posts to show per page
@@ -18,7 +16,6 @@ $comments_per_page = 0; // How many comments to show per page
 switch ($pg) {
 
 	case isset($pg):
-
 		// Get page id
 		// Redirect to blog main page if page does not exist
 		$page_id = !empty($current_page->page_id) or $vavok->redirect_to(HOMEDIR . 'blog/');
@@ -50,7 +47,7 @@ switch ($pg) {
 		$comments = new Comments();
 
 		// Number of comments
-		$total_comments = $comments->count_comments($page_id);
+		$total_comments = $comments->count_comments($current_page->page_id);
 
 		// Show all comments
 		if ($comments_per_page == 0) { $comments_per_page = $total_comments; }
@@ -58,7 +55,7 @@ switch ($pg) {
 		// Start navigation
 		$navi = new Navigation($items_per_page, $total_comments, $page);
 
-		$all_comments = $comments->load_comments($page_id, $navi->start()['start'], $comments_per_page);
+		$all_comments = $comments->load_comments($current_page->page_id, $navi->start()['start'], $comments_per_page);
 
 		// merge blog comments and output from object
 		$merge_all = PageGen::merge($all_comments);
@@ -66,17 +63,30 @@ switch ($pg) {
 		$show_comments = new PageGen('pages/blog/all_comments.tpl');
 
 		if ($users->is_reg()) {
-
 			$add_comment = new PageGen('pages/blog/add_comment.tpl');
-			$add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
+			$add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $current_page->page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
 
 			$post->set('add_comment', $add_comment->output());
-
 		}
 
 		$show_comments->set('all_comments', $merge_all);
 
 		$post->set('comments', $show_comments->output());
+
+		/**
+		 * Page tags
+		 */
+		$sql = $db->query("SELECT * FROM " . DB_PREFIX . "tags WHERE page_id='{$current_page->page_id}'");
+		$tags = '';
+
+		foreach ($sql as $key => $value) {
+			$tag_link = new PageGen('pages/blog/tag_link.tpl');
+			$tag_link->set('tag_link', HOMEDIR . 'search/' . $value['tag_name'] . '/');
+			$tag_link->set('tag_link_name', str_replace('_', ' ', $value['tag_name']));
+			$tags .= $tag_link->output();
+		}
+
+		$post->set('tags', $tags);
 
 		// page header
 		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
@@ -90,7 +100,6 @@ switch ($pg) {
 		break;
 	
 	default:
-
 		// page title
 		$current_page->page_title = 'Blog';
 		
@@ -100,32 +109,29 @@ switch ($pg) {
 		// load index template
 		$showPage = new PageGen("pages/blog/index.tpl");
 
-		// page navigation
-		$total_posts = $db->count_row('pages', "type='post'");
-
+		/**
+		 * Count total posts
+		 */
+		$total_posts = $db->count_row('pages', "type='post' AND published = '2'");
 
 		// if there is no posts
 		if ($total_posts < 1) {
-
 			echo '<p><img src="../images/img/reload.gif" alt="" /> There is nothing here</p>';
 
 			// page footer
 			require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 			break;
-
 		}
 
 		// start navigation
 		$navi = new Navigation($items_per_page, $total_posts, $page);
 
 		// get blog posts
-		foreach ($db->query("SELECT * FROM pages WHERE type = 'post' ORDER BY id DESC LIMIT {$navi->start()['start']}, {$items_per_page}") as $key) {
-
+		foreach ($db->query("SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY id DESC LIMIT {$navi->start()['start']}, {$items_per_page}") as $key) {
 			// load template
 			$page_posts = new PageGen('pages/blog/blog_post.tpl');
-			$page_posts->set('post_name', '<a href="' . $key['pname'] . '/">' . $key['tname'] . '</a>');
-
+			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
 
 			$content = $key['content'];
 
@@ -151,10 +157,8 @@ switch ($pg) {
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
 			$page_posts->set('read_more_title', $localization->string('readmore'));
 
-
 			// blog post objects
 			$all_posts[] = $page_posts;
-
 		}
 
 		// merge blog posts and output from object
@@ -176,7 +180,6 @@ switch ($pg) {
 		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 
 		break;
-
 }
 
 

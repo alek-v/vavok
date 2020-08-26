@@ -15,12 +15,14 @@
 		{@website_language[published]}}: {@created_date}}
 	</div>
 
+	<div id="tags_area">
+		{@tags}} <!-- tags -->
+	</div>
+
 	<div id="comment_area">
+		{@comments}} <!-- Comments -->
 
-		{@comments}} <!-- #comments -->
-
-		{@add_comment}} <!-- add comment -->
-
+		{@add_comment}} <!-- Add comment -->
 	</div>
 
 	<div>

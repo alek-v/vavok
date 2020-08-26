@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   06.08.2020. 0:02:30
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   22.08.2020. 0:20:51
+ */
 
 require_once"../include/startup.php";
 
@@ -27,7 +26,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 if ($users->is_reg()) {
     if (empty($action)) {
-        $chk_photo = $db->get_data('vavok_about', "uid='{$users->user_id}'", 'photo');
+        $chk_photo = $db->get_data(DB_PREFIX . 'vavok_about', "uid='{$users->user_id}'", 'photo');
 
         if (!empty($chk_photo['photo'])) {
             echo '<div class="photo">';
@@ -114,7 +113,7 @@ if ($users->is_reg()) {
             unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
         }
 
-        $db->update('vavok_about', 'photo', "", "uid='{$users->user_id}'");
+        $db->update(DB_PREFIX . 'vavok_about', 'photo', "", "uid='{$users->user_id}'");
 
         echo '<p>Your photography successfully deleted!</p>'; // update lang
 
