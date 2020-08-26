@@ -1,8 +1,9 @@
-# Vavok v1.5.6.beta2
+# Vavok v1.5.6.beta3
 - Updated form templates
 - Updated localization
 - Site search improvements
 - Added option to delete profile
+- Addes page tags
 
 
 
