@@ -1,3 +1,6 @@
+# Disable directory listing
+Options -Indexes
+
 DirectoryIndex index.php index.html
 
 AddDefaultCharset UTF-8
@@ -157,16 +160,16 @@ RewriteRule ^([a-zA-Z]{2})\b/?$ index.php?ln=$1 [QSA]
 # RewriteCond %{HTTPS}s ^on(s)|
 # RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# website pages
+# Website pages
 RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
 # end of website pages
 
-# website blog pages
-RewriteRule ^blog\/$ pages/blog.php
+# Website blog pages
+RewriteRule ^blog\/?$ pages/blog.php
 RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1 [NC,L]
 # end of website blog pages
 
-# website content - tag search
+# Website content - tag search
 RewriteRule ^search\/$ pages/search.php [NC,L]
 RewriteRule ^search\/([^\/]+)\/?$ pages/search.php?item=$1 [NC,L]
 RewriteRule ^search\/([^\/]+)\/page=([0-9]*)\/?$ pages/search.php?item=$1&page=$2 [NC,L]
