@@ -2,7 +2,7 @@
 /**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   21.08.2020. 22:58:44
+* Updated:   22.08.2020. 0:04:23
 */
 
 require_once"../include/startup.php";
@@ -182,7 +182,7 @@ if ($action == "editfour") {
     }
 
     if (isset($gallery_text)) {
-        file_put_contents(BASEDIR . "used/dataconfig/gallery.dat", $gallery_text);
+        $vavok->write_data_file('dataconfig/gallery.dat', $gallery_text);
     }
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
