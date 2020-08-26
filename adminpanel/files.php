@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   13.08.2020. 21:52:41
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   22.08.2020. 0:35:06
+ */
 
 require_once"../include/startup.php";
 require_once"../include/htmlbbparser.php";
@@ -82,14 +82,13 @@ if ($action == 'savetags') {
 
     $vavok->redirect_to("files.php?action=tags&id={$id}&isset=mp_editfiles");
 }
+
 // update head tags on all pages
 if ($action == 'editmainhead') {
-    if (!$users->is_administrator(101)) {
-        $vavok->redirect_to("../?isset=ap_noaccess");
-    } 
+    if (!$users->is_administrator(101)) $vavok->redirect_to("../?isset=ap_noaccess");
 
     // update header data
-    file_put_contents("../used/headmeta.dat", $text_files);
+    $vavok->write_data_file('headmeta.dat', $text_files);
 
     $vavok->redirect_to("files.php?action=mainmeta&isset=mp_editfiles");
 }
