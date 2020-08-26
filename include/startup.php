@@ -1,12 +1,12 @@
 <?php 
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   18.08.2020. 18:28:21
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   26.08.2020. 22:57:57
+ */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.6.beta2');
+define('VERSION', '1.5.6.beta3');
 
 /**
  * Root dir for including system files
