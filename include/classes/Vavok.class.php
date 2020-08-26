@@ -1,9 +1,9 @@
 <?php
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 23:13:59
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   26.08.2020. 22:36:02
+ */
 
 class Vavok {
 
@@ -214,6 +214,23 @@ class Vavok {
 	public function get_data_file($filename)
 	{
 		return file(BASEDIR . 'used/' . $filename);
+	}
+
+	/**
+	 * Write to file from data directory
+	 *
+	 * @param string $filename
+	 * @param string $data
+	 * @param integer $newline, 1 is to append new line
+	 * @return void
+	 */
+	public function write_data_file($filename, $data, $newline = '')
+	{
+		if ($newline == 1) {
+			file_put_contents(BASEDIR . 'used/' . $filename, $data, FILE_APPEND);
+			return;
+		}
+		file_put_contents(BASEDIR . 'used/' . $filename, $data, LOCK_EX);
 	}
 
 	/**
@@ -433,8 +450,13 @@ class Vavok {
 	    return $r;
 	}
 
+	/**
+	 * Parse bb code
+	 *
+	 * @param string $r
+	 * @return string
+	 */
 	function getbbcode($r) {
-	    $r = str_replace("\r\n", "<br />", $r);
 	    $r = str_replace("[br]", "<br />", $r);
 	    $r = preg_replace('#\[b\](.*?)\[/b\]#si', '<b>\1</b>', $r);
 	    $r = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\1</i>', $r);
@@ -479,6 +501,7 @@ class Vavok {
 	    $r = $this->setlinks($r, "mailto:"); 
 	    // //links
 	    $r = trim($r);
+
 	    return $r;
 	}
 
