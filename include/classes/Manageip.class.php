@@ -85,25 +85,14 @@ class Manageip {
                 } 
 
                 if (!in_array($ip, $banarray)) {
-                    $fp = fopen(BASEDIR . "used/ban.dat", "a+");
-                    flock ($fp, LOCK_EX);
-                    fputs($fp, "|$ip|\r\n");
-                    fflush ($fp);
-                    flock ($fp, LOCK_UN);
-                    fclose($fp);
+                    $vavok->write_data_file('ban.dat', "|$ip|" . PHP_EOL, 1);
 
                     $logdat = BASEDIR . "used/datalog/ban.dat";
                     $hostname = gethostbyaddr($ip);
 
                     $write = ':|:Blocked access for IP:|:' . $_SERVER['PHP_SELF'] . REQUEST_URI . ':|:' . time() . ':|:' . $ip . ':|:' . $hostname . ':|:' . $this->users->user_browser() . ':|:' . $http_referer . ':|:' . $username . ':|:';
 
-                    $fp = fopen($logdat, "a+");
-                    flock ($fp, LOCK_EX);
-                    fputs($fp, "$write\r\n");
-                    flock ($fp, LOCK_UN);
-                    fclose($fp);
-                    chmod ($fp, 0666);
-                    chmod ($logdat, 0666);
+                    $vavok->write_data_file('datalog/ban.dat', $write . PHP_EOL, 1);
 
                     $file = file($logdat);
                     $i = count($file);
