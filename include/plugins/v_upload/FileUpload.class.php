@@ -1,14 +1,17 @@
 <?php
 
 class FileUpload {
+	private $db;
+	private $localization;
+	private $vavok;
 
 	function __construct() {
 
-		global $db, $localization;
+		global $db, $localization, $vavok;
 
 		$this->db = $db;
 		$this->lang_admin = $localization->show_strings();
-
+		$this->vavok = $vavok;
 	}
 
 
@@ -176,13 +179,13 @@ HEAD;
 
 
     if (isset($_POST['width']) && !empty($_POST['width'])) {
-        $width = $vavok->check($_POST['width']);
+        $width = $this->vavok->check($_POST['width']);
     }
     if (isset($_POST['rename']) && !empty($_POST['rename'])) {
-        $rename = $vavok->check($_POST['rename']);
+        $rename = $this->vavok->check($_POST['rename']);
     } 
     if (isset($_POST['lowercase']) && !empty($_POST['lowercase'])) {
-        $lowercase = $vavok->check($_POST['lowercase']);
+        $lowercase = $this->vavok->check($_POST['lowercase']);
     } else {
     	$lowercase = '';
     }
@@ -289,11 +292,9 @@ HEAD;
 	    }
 	}
 
-    return array('file_address' => $vavok->website_home_address() . $upload_URL);
+    return array('file_address' => $this->vavok->website_home_address() . $upload_URL);
 
 	}
-
-
 }
 
 
