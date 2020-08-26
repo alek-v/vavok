@@ -137,12 +137,16 @@ class Page {
 		return true;
 	}
 
-	// update cache file
-	function updateCached($file, $content) {
-		$fileLocation = BASEDIR . 'used/datamain/' . $file;
-
-		file_put_contents($fileLocation, $content, LOCK_EX);
-
+	/**
+	 * Update cached file
+	 *
+	 * @param string $file
+	 * @param string $content
+	 * @return bool
+	 */
+	function updateCached($file, $content)
+	{
+		$this->vavok->write_data_file('datamain/' . $file, $content);
 		return true;
 	}
 
