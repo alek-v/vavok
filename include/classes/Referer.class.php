@@ -2,7 +2,7 @@
 /**
 * Author:    Aleksandar Vranešević
 * URI:       https://vavok.net
-* Updated:   21.08.2020. 23:02:15
+* Updated:   22.08.2020. 0:16:55
 */
 
 class Referer {
@@ -58,12 +58,7 @@ class Referer {
                         fclose($fp);
                     } else {
                         $t = $ref_from . '|' . time() . '|' . $this->users->find_ip() . '|1|';
-                        $fp = fopen(BASEDIR . "used/referer.dat", "a+");
-                        flock ($fp, LOCK_EX);
-                        fputs($fp, "$t\r\n");
-                        fflush ($fp);
-                        flock ($fp, LOCK_UN);
-                        fclose($fp);
+                        $vavok->write_data_file('referer.dat', $t . PHP_EOL, 1);
 
                         $reffile = $vavok->get_data_file('referer.dat');
                         $ri = count($reffile);
