@@ -520,16 +520,20 @@ class Users {
 		return htmlspecialchars(stripslashes($ip));
 	}
 
-	// user online status
-	function user_online($login) {
+	/**
+	 * Check if user is online
+	 *
+	 * @param string $login
+	 * @return string
+	 */
+	public function user_online($login)
+	{
 	    $xuser = $this->getidfromnick($login);
 	    $statwho = '<font color="#CCCCCC">[Off]</font>';
 
-	    $result = $this->db->count_row($this->db_prefix . 'online', 'user="{$xuser}"');
+	    $result = $this->db->count_row($this->db_prefix . 'online', "user='{$xuser}'");
 
-	    if ($result > 0 && $xuser > 0) {
-	        $statwho = '<font color="#00FF00">[On]</font>';
-	    } 
+	    if ($result > 0 && $xuser > 0) $statwho = '<font color="#00FF00">[On]</font>';
 
 	    return $statwho;
 	}
