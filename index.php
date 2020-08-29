@@ -1,17 +1,16 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   01.08.2020. 2:10:31
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   28.08.2020. 16:57:26
+ */
 
 require_once "include/startup.php";
 
 /**
  * Page header
  */
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 /**
  * Page content
@@ -21,6 +20,6 @@ $current_page->show_page();
 /**
  * Page footer
  */
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>
