@@ -1,9 +1,9 @@
 <?php
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
 * Package:   Class for user management
-* Updated:   21.08.2020. 20:37:13
+ * Updated:   21.08.2020. 20:37:13
 */
 
 class Users {

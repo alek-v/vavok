@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   22.08.2020. 0:35:06
+ * Updated:   29.08.2020. 15:17:31
  */
 
 require_once"../include/startup.php";
@@ -336,7 +336,7 @@ $current_page->page_title = 'Files'; // current page title
 
 if (empty($action)) {
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<h1>' . $localization->string('filelist') . '</h1>';
 
@@ -375,8 +375,7 @@ if (empty($action)) {
 
         if (empty($edit_only_own_pages)) {
 
-            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b>';
-
+            echo $vavok->sitelink('files.php?action=show&amp;file=' . $page_info['file'], $filename, '<b>', '</b>');
             // Check for permissions to edit pages
             if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator() || $page_info['crtdby'] == $users->user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
@@ -401,12 +400,10 @@ if (empty($action)) {
             echo '<hr />';
 
         } else {
-
-            echo '<b><a href="files.php?action=show&amp;file=' . $page_info['file'] . '" class="btn btn-primary sitelink">' . $filename . '</a></b>';
+            echo $vavok->sitelink('files.php?action=show&amp;file=' . $page_info['file'], $filename, '<b>', '</b>');
             echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
             echo ' ' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
-
         } 
     
     unset($page_info);
@@ -441,7 +438,7 @@ if ($action == "show") {
 
         $showname = $page_info['pname'];
 
-        require_once BASEDIR . "themes/" . MY_THEME . "/index.php"; 
+        $vavok->require_header(); 
 
         echo '<p>' . $localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
         echo '<p>' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']);
@@ -518,7 +515,7 @@ if ($action == "edit") {
             exit;
         } 
 
-        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+        $vavok->require_header();
 
         $datamainfile = htmlspecialchars($page_info['content']);
 
@@ -581,7 +578,7 @@ if ($action == "edit") {
         echo '<a href="files.php?action=tags&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Tags</a></p>'; // update lang
 
     } else {
-        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+        $vavok->require_header();
         echo '<p>' . $localization->string('file') . ' ' . $file . ' ' . $localization->string('noexist') . '</p>';
     } 
 
@@ -599,7 +596,7 @@ if ($action == "headtag") {
         exit;
     } 
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     ?>
 
@@ -744,7 +741,7 @@ if ($action == "headtag") {
 if ($action == 'mainmeta') {
     if (!$users->is_administrator(101)) { $vavok->redirect_to("../?isset=ap_noaccess"); }
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<img src="/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
@@ -777,7 +774,7 @@ if ($action == 'renamepg') {
 
     $pg = $vavok->check($_GET['pg']);
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<h1>Rename page</h1>'; // update lang
 
@@ -850,7 +847,7 @@ if ($action == "new") {
 	</style>
     ');
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<h1>' . $localization->string('newfile') . '</h1>';
 
@@ -952,7 +949,7 @@ if ($action == "poddel") {
         exit;
     } 
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     if (!empty($file)) {
         if ($file != "index.php") {
@@ -977,7 +974,7 @@ if ($action == "updpagelang") {
     // get page data
     $pageData = $page_editor->select_page($id);
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
 	$form = new PageGen('forms/form.tpl');
 	$form->set('form_method', 'post');
@@ -1017,7 +1014,7 @@ if ($action == 'tags') {
         redirect_to("./?isset=ap_noaccess");
     }
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     /**
      * Get page data
@@ -1056,8 +1053,8 @@ if (!empty($action)) {
 echo '</p>';
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

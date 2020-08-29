@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 3:03:08
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   28.08.2020. 17:16:06
+ */
 
 require_once"../include/startup.php";
 
@@ -44,7 +43,7 @@ if (empty($action)) {
 
     $current_page->page_title = $localization->string('contact');
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     // generate page
     $showPage = new PageGen("mail/mail_index.tpl");
@@ -70,6 +69,6 @@ if (empty($action)) {
 // show page
 echo $showPage->output();
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

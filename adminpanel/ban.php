@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 22:55:46
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:16:23
+ */
 
 require_once"../include/startup.php";
 
@@ -20,7 +20,7 @@ if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
 
         $current_page->page_title = "IP ban";
-        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+        $vavok->require_header();
 
         echo '<img src="../images/img/menu.gif" alt=""> <b>IP ban panel</b><br><br>';
 
@@ -88,7 +88,7 @@ if ($users->is_reg()) {
         }
 
         echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-        echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+        echo $vavok->homelink() . '</p>';
     } else {
         header ("Location: ../index.php?error");
         exit;
@@ -98,6 +98,6 @@ if ($users->is_reg()) {
     exit;
 } 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

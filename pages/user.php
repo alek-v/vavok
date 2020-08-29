@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 2:58:33
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 18:16:09
+ */
 
 require_once"../include/startup.php";
 
@@ -26,7 +25,7 @@ if (!empty($uz)) {
 } else { $vavok->redirect_to("../"); }
 
 $current_page->page_title = $localization->string('profile') . " " . $uz;
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 $checkIfExist = $db->count_row('vavok_users', "id='{$users_id}'");
 $about_user = $db->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site');
@@ -44,9 +43,9 @@ if ($checkIfExist < 1 || $users_id == 0) {
     echo '<div class="break"></div>';
     echo '<div class="clear"></div>';
 
-    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+    echo $vavok->homelink('<p>', '</p>');
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+    $vavok->require_footer();
     exit;
 }
 
@@ -209,9 +208,9 @@ if (!empty($about_user['photo'])) {
     $showPage->set('userPhoto', '');
 }
 
-$showPage->set('homepage', '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>');
+$showPage->set('homepage', $vavok->homelink());
 
 echo $showPage->output(); 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 ?>

@@ -1,8 +1,8 @@
 <?php
-/*
-* Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
-* Updated:   11.08.2020. 13:26:20
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   11.08.2020. 13:26:20
 */
 
 $lang_reg['registration'] = "Registracija";

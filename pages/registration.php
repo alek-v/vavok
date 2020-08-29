@@ -1,9 +1,9 @@
 <?php
-/*
-* Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
-* Updated:   14.08.2020. 0:40:30
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 2:09:27
+ */
 
 require_once"../include/startup.php";
 
@@ -35,7 +35,7 @@ if ($action == 'reguser') {
     $current_page->page_title = $localization->string('registration');
 
     // load theme header
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     // check email
     $check_mail = $db->count_row('vavok_about', "email='{$meil}'");
@@ -168,9 +168,9 @@ if ($action == 'reguser') {
     // Show back link if registration is not completed
     if (!isset($completed)) { echo '<p><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>'; }
 
-    echo '<p><a href="' . HOMEDIR . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+    echo $vavok->homelink('<p>', '</p>');
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+    $vavok->require_footer();
     exit;
 }
 
@@ -179,7 +179,7 @@ $current_page->append_head_tags('<meta name="robots" content="noindex">');
 $current_page->append_head_tags('<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/pages/registration/register.css">');
 
 $current_page->page_title = $localization->string('registration');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if ($vavok->get_configuration('openReg') == 1) {
 	if ($users->is_reg()) {
@@ -206,7 +206,6 @@ if ($vavok->get_configuration('openReg') == 1) {
 		}
 
 		echo $current_page->output();
-		
 		}
 
 } else {
@@ -217,6 +216,6 @@ if ($vavok->get_configuration('openReg') == 1) {
 	echo $current_page->output();
 }
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

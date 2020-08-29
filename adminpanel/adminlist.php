@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 3:04:55
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:16:02
+ */
 
 require_once"../include/startup.php";
 
@@ -28,7 +27,7 @@ if (!empty($_GET['view'])) {
 
 $current_page->page_title = $localization->string('modlist');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
  
 
@@ -57,8 +56,8 @@ if (empty($action)) {
 
 } 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

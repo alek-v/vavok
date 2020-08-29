@@ -1,10 +1,14 @@
 <?php 
-// modified: 02.08.2020. 3:03:43
-// (c) vavok.net
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   28.08.2020. 17:16:35
+ */
+
 require_once"../include/startup.php";
 
 $current_page->page_title = "CHMOD";
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
     $mode = 777;
@@ -47,6 +51,6 @@ if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
     header ("Location: index.php");
 } 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

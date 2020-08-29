@@ -1,9 +1,9 @@
 <?php 
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 1:29:10
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:33:34
+ */
 
 require_once"../include/startup.php";
 
@@ -77,16 +77,16 @@ switch ($action) {
 		}
 
 		$current_page->page_title = $localization->string('deleteProfile');
-		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+		$vavok->require_header();
 
 		echo '<p>' . $localization->string('deleteConfirm') . '</p>';
 
 		echo '<p><a href="profile.php?action=delete_profile&confirmed=yes" class="btn btn-danger">' . $localization->string('deleteProfile') . '</a></p>';
 		echo '<p><a href="profile.php" class="btn btn-primary">' . $localization->string('back') . '</a></p>';
 
-		echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+		echo $vavok->homelink('<p>', '</p>');
 
-		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+		$vavok->require_footer();
 
 		break;
 
@@ -102,7 +102,7 @@ switch ($action) {
 		');
 
 		$current_page->page_title = $localization->string('profsettings');
-		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+		$vavok->require_header();
 
 		echo '<div class="row">';
 
@@ -290,21 +290,21 @@ switch ($action) {
 		    echo '<div class="photo">';
 		    if (!empty($about_user['photo'])) {
 		        echo '<img src="../' . $about_user['photo'] . '" alt=""><br /> ';
-		        echo '<img src="../images/img/edit.gif" alt="" /> <a href="photo.php" class="btn btn-primary sitelink">Change photo</a><br />';
-		        echo '<img src="../images/img/close.gif" alt="" /> <a href="photo.php?action=remove" class="btn btn-primary sitelink">Remove photo</a>'; // update lang
+		        echo $vavok->sitelink('photo.php', 'Change photo') . '<br />';
+				echo $vavok->sitelink('photo.php?action=remove', 'Remove photo'); // update lang
 		    } else {
 		        echo '<img src="../images/img/no_picture.jpg" alt="" /><br /> ';
-		        echo '<a href="photo.php" class="btn btn-primary sitelink">Change photo</a>'; // update lang
-		    } 
+		        echo $vavok->sitelink('photo.php', 'Change photo');
+		    }
 		    echo '</div>';
 
 		echo '</div>';
 
 		echo '</div>';
 
-		echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+		$vavok->homelink('<p>', '</p>');
 
-		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+		$vavok->require_footer();
 
 		break;
 }

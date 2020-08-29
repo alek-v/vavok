@@ -1,9 +1,8 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   07.08.2020. 15:41:54
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   07.08.2020. 15:41:54
 */
 
 require_once"../include/startup.php";
@@ -111,7 +110,7 @@ if ($act == "del") {
     $vavok->redirect_to("pgtitle.php");
 } 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
  
 
@@ -209,9 +208,9 @@ if ($act == "addnew") {
     echo '<p><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
 }
 
-echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

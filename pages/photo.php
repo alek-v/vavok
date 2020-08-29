@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   22.08.2020. 0:20:51
+ * Updated:   29.08.2020. 2:23:39
  */
 
 require_once"../include/startup.php";
@@ -22,7 +22,7 @@ $current_page->append_head_tags('<style type="text/css">
 </style>');
 
 $current_page->page_title = 'Change Photo'; // update lang
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if ($users->is_reg()) {
     if (empty($action)) {
@@ -48,8 +48,6 @@ if ($users->is_reg()) {
         $form->set('fields', $input->output());
 
         echo $form->output();
-
-
     }
     // choose photo
     if ($action == "photo") {
@@ -100,7 +98,7 @@ if ($users->is_reg()) {
             echo $localization->string('filemustb') . ' under 5 MB<br>';
         }
 
-        echo '<p><a href="photo.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+        echo $vavok->sitelink('photo.php', $localization->string('back'), '<p>', '</p>');
     }
     if ($action == 'remove') {
         if (file_exists("../used/dataphoto/" . $users->user_id . ".jpg")) {
@@ -113,11 +111,11 @@ if ($users->is_reg()) {
             unlink("../used/dataphoto/" . $users->user_id . ".jpeg");
         }
 
-        $db->update(DB_PREFIX . 'vavok_about', 'photo', "", "uid='{$users->user_id}'");
+        $db->update(DB_PREFIX . 'vavok_about', 'photo', '', "uid='{$users->user_id}'");
 
         echo '<p>Your photography successfully deleted!</p>'; // update lang
 
-        echo '<p><a href="profile.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+        echo $vavok->sitelink('profile.php', $localization->string('back'), '<p>', '</p>');
     }
 } else {
     echo '<p>' . $localization->string('notloged') . '</p>';
@@ -125,11 +123,11 @@ if ($users->is_reg()) {
 
 echo '<p>';
 if (empty($action)) {
-    echo '<a href="../pages/profile.php" class="btn btn-primary sitelink">' . $localization->string('back') . '</a><br />';
-} 
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+    echo $vavok->sitelink(HOMEDIR . 'pages/profile.php', $localization->string('back')) . '<br />';
+}
+echo $vavok->homelink();
 echo '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

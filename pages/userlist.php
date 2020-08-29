@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 2:58:20
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 18:16:32
+ */
 
 require_once"../include/startup.php";
  
@@ -42,7 +41,7 @@ if ($view == "name") {
 }
 
 $current_page->page_title = $localization->string('userlist');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if ($num_items > 0) {
 
@@ -69,9 +68,9 @@ echo $navigation->get_navigation();
 echo '</p>';
 
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a>';
+echo $vavok->homelink();
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>
 

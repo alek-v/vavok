@@ -4,7 +4,7 @@
 require_once"../include/startup.php";
 
 $current_page->page_title = 'Cookies Policy';
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 ?>
 
 <h1>Cookies Policy</h1>
@@ -76,7 +76,7 @@ require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
 
 
 <?php
-echo '<p><a href="' . $vavok->transfer_protocol() . $_SERVER['HTTP_HOST'] . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 ?>

@@ -1,8 +1,8 @@
 <?php
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   22.08.2020. 0:16:55
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   22.08.2020. 0:16:55
 */
 
 class Referer {

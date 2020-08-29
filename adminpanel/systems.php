@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   26.07.2020. 14:47:13
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:21:48
+ */
 
 require_once"../include/startup.php";
 
@@ -21,7 +20,7 @@ function prev_dir($string) {
 if ($users->is_reg()) {
     if ($_SESSION['permissions'] == 101) {
         
-        require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+        $vavok->require_header();
 
         switch ($action) {
             default:
@@ -164,8 +163,8 @@ if ($users->is_reg()) {
                 break;
         } 
 
-        echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>
-		<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br>';
+        echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>
+		' . $vavok->homelink() . '</p>';
     } else {
         header("Location: ../index.php?error");
         exit;
@@ -175,6 +174,6 @@ if ($users->is_reg()) {
     exit;
 } 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

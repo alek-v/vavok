@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   07.08.2020. 13:58:17
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:15:19
+ */
 
 require_once"../include/startup.php";
 
@@ -24,7 +24,7 @@ if (!$users->is_reg()) { $vavok->redirect_to("../?error"); }
 
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $current_page->page_title = $localization->string('banning');
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
  
 
     echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('banunban') . '</b></p>';
@@ -240,11 +240,11 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     } 
 
     echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+    echo $vavok->homelink() . '</p>';
 } else {
     $vavok->redirect_to("../?error");
 } 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

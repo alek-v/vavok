@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   29.07.2020. 19:48:23
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.07.2020. 19:48:23
 */
 
 class Comments {

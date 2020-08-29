@@ -1,13 +1,12 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   26.07.2020. 17:13:30
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:35:12
+ */
 
 require_once"../include/startup.php";
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 $code = !empty($_GET['subdel']) ? $vavok->check($_GET['subdel']) : '';
 $subscriptionName = !empty($_GET['sn']) ? $vavok->check($_GET['sn']) : '';
@@ -35,8 +34,8 @@ if (!empty($code)) {
     echo '<p>' . $localization->string('unsubfail') . '!</p>'; // code 
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

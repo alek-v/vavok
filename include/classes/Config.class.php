@@ -1,10 +1,9 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
 * Package:   Class for managing website configuration
-* Updated:   01.08.2020. 19:11:47
+ * Updated:   01.08.2020. 19:11:47
 */
 
 class Config {

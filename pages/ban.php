@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   07.08.2020. 15:05:19
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:30:38
+ */
 
 require_once"../include/startup.php";
 
@@ -28,7 +27,7 @@ if ($time_ban > 0) {
     $users->logout($users->user_id);
 
     // headers could not be send before cookies, so we load it here
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<img src="../images/img/error.gif" alt=""> <b>' . $localization->string('banned1') . '</b><br /><br />';
     echo '<b><font color="#FF0000">' . $localization->string('bandesc') . ': ' . $bandesc . '</font></b>';
@@ -40,8 +39,7 @@ if ($time_ban > 0) {
     echo $localization->string('becarefnr') . '<br /><br />';
 
 } else {
-
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     echo '<p><img src="../images/img/open.gif" alt=""> ' . $localization->string('wasbanned') . '</p>';
 
@@ -53,11 +51,10 @@ if ($time_ban > 0) {
 
     $db->update('vavok_users', 'banned', 0, "id='{$users->user_id}'");
     $db->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='{$users->user_id}'");
-
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

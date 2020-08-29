@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   26.08.2020. 23:24:16
+ * Updated:   29.08.2020. 2:58:50
  */
 
 include"../include/startup.php";
@@ -89,13 +89,13 @@ switch ($pg) {
 		$post->set('tags', $tags);
 
 		// page header
-		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+		$vavok->require_header();
 
 		// show page content
 		echo $post->output();
 
 		// page footer
-		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+		$vavok->require_footer();
 
 		break;
 	
@@ -104,7 +104,7 @@ switch ($pg) {
 		$current_page->page_title = 'Blog';
 		
 		// page header
-		require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+		$vavok->require_header();
 
 		// load index template
 		$showPage = new PageGen("pages/blog/index.tpl");
@@ -119,7 +119,7 @@ switch ($pg) {
 			echo '<p><img src="../images/img/reload.gif" alt="" /> There is nothing here</p>';
 
 			// page footer
-			require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+			$vavok->require_footer();
 
 			break;
 		}
@@ -172,17 +172,12 @@ switch ($pg) {
 		
 		$showPage->set('navigation', $navigation->get_navigation());
 
-
 		echo $showPage->output();
 
-
 		// page footer
-		require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+		$vavok->require_footer();
 
 		break;
 }
-
-
-
 
 ?>

@@ -1,22 +1,22 @@
 <?php 
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 23:05:24
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:30:28
+ */
 
 require_once"../include/startup.php";
 
 if ($vavok->get_configuration('showCounter') == 6 && !$users->is_administrator()) { $vavok->redirect_to("../"); }
 
 $current_page->page_title = $localization->string('statistics');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if (!empty($_GET['action'])) {
     $action = $vavok->check($_GET["action"]);
 } else {
     $action = '';
-} 
+}
 
 $hour = (int)date("H", time());
 $hday = date("j", time())-1;
@@ -72,7 +72,7 @@ if ($action == "count24") {
     if ($hour > 0) {
         echo '<b>' . $localization->string('vstdpages') . '</b><br />';
 
-        for($i = 0;$i < $hour;$i++) {
+        for ($i = 0;$i < $hour;$i++) {
             $p24_hitshour = explode("-", $p24_hits[$i]);
 
             $tekhour = (date("H:i", $p24_hitshour[0]));
@@ -80,8 +80,8 @@ if ($action == "count24") {
 
             if ($tekhour != "" && $tekhour2 != "") {
                 echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hitshour[1] . '</b> ' . $localization->string('views') . '<br />';
-            } 
-        } 
+            }
+        }
 
         echo '<br /><b>' . $localization->string('uniquevsts') . '</b><br />';
 
@@ -92,14 +92,15 @@ if ($action == "count24") {
 
             if ($tekhour != "" && $tekhour2 != "") {
                 echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p24_hosthour[1] . '</b> ' . $localization->string('visitss') . '<br />';
-            } 
-        } 
+            }
+        }
     } else {
         echo $localization->string('statnotformed') . '<br />';
-    } 
+    }
 
-    echo'<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
-} 
+    echo '<br /><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a>';
+}
+
 // statistics for a month
 if ($action == "count31") {
     exit;
@@ -125,10 +126,10 @@ if ($action == "count31") {
 
             if ($tekhour != "" && $tekhour2 != "") {
                 echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hitshour[1] . '</b> ' . $localization->string('views') . '<br />';
-            } 
-        } 
+            }
+        }
 
-        echo '<br /><b>' . $localization->string('uniquevsts') . '</b><br />';
+        echo '<p><b>' . $localization->string('uniquevsts') . '</b></p>';
 
         for($i = 0;$i < $hday;$i++) {
             $p31_hosthour = explode("-", $p31_host[$i]);
@@ -138,17 +139,17 @@ if ($action == "count31") {
 
             if ($tekhour != "" && $tekhour2 != "") {
                 echo $tekhour2 . '-' . $tekhour . ' - <b>' . (int)$p31_hosthour[1] . '</b> ' . $localization->string('visitss') . '<br />';
-            } 
-        } 
+            }
+        }
     } else {
         echo '<p>' . $localization->string('statnotformed') . '</p>';
-    } 
+    }
 
-    echo '<p><a href="counter.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
-} 
+    echo $vavok->sitelink('counter.php', $localization->string('back'), '<p>', '</p>');
+}
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

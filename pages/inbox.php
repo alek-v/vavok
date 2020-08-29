@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 2:48:28
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:30:13
+ */
 
 require_once"../include/startup.php";
 
@@ -19,7 +19,7 @@ $current_page->append_head_tags('<meta name="robots" content="noindex">
 ');
 
 $current_page->page_title = $localization->string('inbox');
-require_once BASEDIR . "themes/" . MY_THEME. "/index.php";
+$vavok->require_header();
 
 $action = isset($_GET['action']) ? $vavok->check($_GET["action"]) : '';
 $page = isset($_GET['page']) ? $vavok->check($_GET["page"]) : '';
@@ -72,16 +72,15 @@ if (empty($action)) {
     // navigation    
     echo $navigation->get_navigation();
 
-
     } else {
         echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('nopmsgs') . '<br /><br />';
-    } 
+    }
 
-    echo '<a href="inbox.php?action=sendto" class="btn btn-primary sitelink">' . $localization->string('sendmsg') . '</a><br />';
+    echo $vavok->sitelink('inbox.php?action=sendto', $localization->string('sendmsg')) . '<br />';
 
 } else if ($action == "dialog") {
 
-    if (empty($who) || empty($users->getnickfromid($who))) { $vavok->show_error('User does not exist'); require_once BASEDIR . "themes/" . MY_THEME . "/foot.php"; exit; }
+    if (empty($who) || empty($users->getnickfromid($who))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
 
     $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
@@ -145,10 +144,10 @@ else if ($action == "sendto") {
 
 }
 
-if (!empty($action)) echo '<p><a href="inbox.php" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a></p>';
+if (!empty($action)) echo $vavok->sitelink('inbox.php', $localization->string('inbox'), '<p>', '</p>');
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   01.08.2020. 19:21:21
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   01.08.2020. 19:21:21
 */
 
 require_once"../include/startup.php";

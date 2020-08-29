@@ -1,10 +1,9 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 2:48:53
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:53:23
+ */
 
 require_once"../include/startup.php";
 
@@ -17,7 +16,7 @@ $current_page->page_title = $localization->string('lostpass');
 
 $current_page->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if (empty($page) || $page == 'index') {
 	
@@ -29,7 +28,6 @@ if (empty($page) || $page == 'index') {
 
 // Send mail
 if ($page == 'send') {
-
     if (!empty($logus) && !empty($mailsus)) {
 
         $userx_id = $users->getidfromnick($logus);
@@ -74,8 +72,8 @@ if ($page == 'send') {
     } 
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

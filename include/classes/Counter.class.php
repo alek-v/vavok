@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
 * Online, hit & click counter
-* Updated:   21.08.2020. 20:54:11
+ * Updated:   21.08.2020. 20:54:11
 */
 
 class Counter {

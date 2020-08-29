@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       http://vavok.net
-* Updated:   02.08.2020. 2:54:54
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 0:53:34
+ */
 
 require_once"../include/startup.php";
 
@@ -58,12 +57,12 @@ $max_attempts = 5;
 if (empty($action) && !empty($log)) {
 
 	if ($users->login_attempt_count($max_time_in_seconds, $log, $users->find_ip()) > $max_attempts) {
-	    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+	    $vavok->require_header();
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
 	    Try again in " . explode(':', maketime($max_time_in_seconds))[0] . " minutes.</p>"; // update lang
 
-	    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+	    $vavok->require_footer();
 	    exit;
 	}
 

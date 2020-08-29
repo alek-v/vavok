@@ -1,9 +1,9 @@
 <?php
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   08.08.2020. 12:51:01
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:32:04
+ */
 
 require_once"../include/startup.php";
 
@@ -122,7 +122,7 @@ if ($action == 'save') {
 }
 
 $current_page->page_title = $localization->string('settings');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if ($users->is_reg()) {
 
@@ -210,9 +210,8 @@ if ($users->is_reg()) {
     echo '<p>' . $localization->string('notloged') . '</p>';
 } 
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

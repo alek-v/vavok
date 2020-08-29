@@ -1,17 +1,16 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 3:03:53
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   02.08.2020. 3:03:53
+ */
 
 require_once"../include/startup.php";
 
 if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
 
 $current_page->page_title = $localization->string('sitestats');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 echo '<p><img src="../images/img/webstats.png" alt="">  ' . $localization->string('sitestats') . '<br /><br /></p>';
 
@@ -20,8 +19,8 @@ echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' 
 
 echo '<p><br /><br />
 <a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

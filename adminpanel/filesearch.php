@@ -23,7 +23,7 @@ if (!empty($_GET['page'])) {
 
 if ($action == "tpc") {
     $current_page->page_title = $localization->string('search');
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -41,14 +41,14 @@ if ($action == "tpc") {
 
     echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
     echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+    echo $vavok->homelink() . '</p>';
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+    $vavok->require_footer();
 } else if ($action == "stpc") {
     $stext = $vavok->check($_POST["stext"]);
 
     $current_page->page_title = 'Search';
-    require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+    $vavok->require_header();
 
     if (empty($stext)) {
         echo "<br>Please fill all fields";
@@ -92,11 +92,11 @@ if ($action == "tpc") {
 
     } 
 
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<p><a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
     echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-    echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a><br />';
+    echo $vavok->homelink() . '</p>';
 
-    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+    $vavok->require_footer();
     exit;
 } 
 

@@ -1,9 +1,8 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   03.08.2020. 9:23:25
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   03.08.2020. 9:23:25
 */
 
 $language = 'serbian_latin';

@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 3:04:34
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:32:57
+ */
 
 require_once"../include/startup.php";
 
@@ -13,7 +12,6 @@ if (!$users->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 if ($action == 'refver') {
-
     $vavokStableVersionURL = "http://www.vavok.net/cms/version.txt";
     $key = 'stableversion'; // key to save cache with    
 
@@ -47,7 +45,7 @@ if ($action == 'refver') {
 }
 
 $current_page->page_title = $localization->string('admpanel');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
  
 if (empty($action)) {
 
@@ -223,8 +221,8 @@ if (!empty($action)) {
 	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a></p>';
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

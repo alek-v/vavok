@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   11.08.2020. 14:50:24
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 20:00:26
+ */
 
 /**
  * Custom page templates directory is named "templates" and it must be under template main folder
@@ -50,18 +50,17 @@ if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "i
 				<?php
 
 				if ($users->is_reg()) {
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/inbox.php" class="btn btn-primary sitelink">' . $localization->string('inbox') . ' (' . $users->user_mail($users->user_id) . ')</a></li>';
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/mymenu.php" class="btn btn-primary sitelink">' . $localization->string('mymenu') . '</a></li>';
+				    echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . 'pages/inbox.php', $localization->string('inbox') . ' (' . $users->user_mail($users->user_id) . ')') . '</li>';
+				    echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . 'pages/mymenu.php', $localization->string('mymenu')) . '</li>';
 				    if ($users->is_administrator()) {
-				        echo'<li class="nav-item"><a href="' . HOMEDIR . $vavok->get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $localization->string('admpanel') . '</a></li>';
+				    	echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . $vavok->get_configuration('mPanel') . '/', $localization->string('admpanel')) . '</li>';
 				    } 
 				    if ($users->is_moderator()) {
-				        echo '<li class="nav-item"><a href="' . HOMEDIR . $vavok->get_configuration('mPanel') . '/" class="btn btn-primary sitelink">' . $localization->string('modpanel') . '</a></li>';
+				    	echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . $vavok->get_configuration('mPanel') . '/', $localization->string('modpanel')) . '</li>';
 				    } 
 				} else {
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $localization->string('login') . '</a></li>';
-				    echo '<li class="nav-item"><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-primary sitelink">' . $localization->string('register') . '</a></li>';
-				    //echo '<li class="nav-item"><a href="' . HOMEDIR . 'mail/lostpassword.php" class="btn btn-primary sitelink">' . $localization->string('lostpass') . '</a></li>';
+				    echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . 'pages/login.php', $localization->string('login')) . '</li>';
+				    echo '<li class="nav-item">' . $vavok->sitelink(HOMEDIR . 'pages/registration.php', $localization->string('register')) . '</li>';
 				} 
 
 				?>

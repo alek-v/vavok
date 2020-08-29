@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 22:55:58
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:15:41
+ */
 
 require_once"../include/startup.php";
 
@@ -23,7 +23,7 @@ $times = date("H:i");
 
 $current_page->page_title = $localization->string('adminchat');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 echo '<img src="../images/img/menu.gif" alt=""> <b>' . $localization->string('adminchat') . '</b><br><br>';
 
@@ -126,10 +126,10 @@ if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION
 } 
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
 
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

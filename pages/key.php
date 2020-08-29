@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
-* Updated:   11.08.2020. 13:24:56
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:30:05
+ */
 
 require_once"../include/startup.php";
 
@@ -43,14 +43,13 @@ if ($action == 'resendkey') {
         if ($result == true) {
             $db->update('email_queue', $fields, $values, 'id = ' . $email['id']);
         }
-
     }
 
     $vavok->redirect_to('key.php?uid=' . $recipient_id . '&isset=mail');
 }
 
 $current_page->page_title = $localization->string('confreg');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if (empty($action)) {
     if ($users->is_reg()) {
@@ -86,7 +85,6 @@ if (empty($action)) {
     echo $form->output();
 
     echo '<p>' . $localization->string('actinfodel') . '</p>';
-
 }
 
 // check comfirmation code
@@ -101,21 +99,21 @@ if ($action == "inkey") {
         if (!$db->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) {
             echo '<p>' . $localization->string('keynotok') . '!</p>';
 
-            echo '<p><a href="' . HOMEDIR . 'pages/key.php?uid=' . $recipient_id . '" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+            echo $vavok->sitelink(HOMEDIR . 'pages/key.php?uid=' . $recipient_id, $localization->string('back')) . '</p>';
         } else {
             echo '<p>' . $localization->string('keyok') . '!</p>';
 
-            echo '<p><a href="' . HOMEDIR . 'pages/login.php" class="btn btn-primary sitelink">' . $localization->string('login') . '</a></p>';
+            echo $vavok->sitelink(HOMEDIR . 'pages/login.php', $localization->string('login'), '<p>', '</p>');
         }
     } else {
         echo '<p>' . $localization->string('nokey') . '!</p>';
 
-        echo '<p><a href="' . HOMEDIR . 'pages/key.php?uid=' . $recipient_id . '" class="btn btn-primary sitelink">' . $localization->string('back') . '</a></p>';
+        echo $vavok->sitelink(HOMEDIR . 'pages/key.php?uid=' . $recipient_id, $localization->string('back'), '<p>', '</p>');
     }
 }
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

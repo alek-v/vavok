@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 3:04:41
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:17:04
+ */
 
 require_once"../include/startup.php";
 
@@ -29,7 +28,7 @@ if (!$users->is_reg() || (!$users->is_administrator() && !$users->is_moderator(1
 } 
 
 $current_page->page_title = $localization->string('banlist');
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $localization->string('banlist') . '</b></p>'; 
 
@@ -58,8 +57,8 @@ if ($noi > 0) {
 echo $navigation->get_navigation();
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

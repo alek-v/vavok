@@ -1,9 +1,9 @@
 <?php 
-/*
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   11.08.2020. 14:31:41
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:22:06
+ */
 
 require_once"../include/startup.php";
 
@@ -22,7 +22,7 @@ if (!empty($_POST['users'])) {
 
 $users_id = $users->getidfromnick($user);
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if (empty($action)) {
     $form = new PageGen('forms/form.tpl');
@@ -61,13 +61,13 @@ if ($action == "edit") {
 
                 if ($users->show_username() != $vavok->get_configuration('adminNick') && $user == $vavok->get_configuration('adminNick')) {
                     echo '<br>' . $localization->string('noauthtoedit') . '!<br>';
-                    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+                    $vavok->require_footer();
                     exit;
                 } 
 
                 if (($users->show_username() != $vavok->get_configuration('adminNick')) && ($show_userx['perm'] == 101 || $show_userx['perm'] == 102 || $show_userx['perm'] == 103 || $show_userx['perm'] == 105) && $users->show_username() != $user) {
                     echo '<br>' . $localization->string('noauthtoban') . '!<br>';
-                    require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+                    $vavok->require_footer();
                     exit;
                 } 
                 $casenick = strcasecmp($user, $users->show_username());
@@ -337,7 +337,7 @@ if ($action == "deluser") {
 } 
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 ?>

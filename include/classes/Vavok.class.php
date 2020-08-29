@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   26.08.2020. 22:36:02
+ * Updated:   29.08.2020. 2:03:45
  */
 
 class Vavok {
@@ -56,7 +56,6 @@ class Vavok {
 
 		    if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
 		}
-
 	}
 
 	/**
@@ -102,7 +101,7 @@ class Vavok {
 	 * @param string $myzone
 	 * @return string
 	 */
-	function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
+	public function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
 	    $timezone = $this->get_configuration('timeZone');
 
 	    if (empty($timestamp)) {
@@ -125,7 +124,7 @@ class Vavok {
 	        $clock = floatval($clock);
 	        $seconds = $clock * 3600; // number of seconds
 	        $rdate = date($format, $timestamp + ($seconds)); // return date
-	    } 
+	    }
 
 	    return $rdate;
 	}
@@ -136,7 +135,7 @@ class Vavok {
 	        $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
 	    } else {
 	        $string = sprintf("%02d:%02d:%02d", (int)($string / 3600) % 24, (int)($string / 60) % 60, $string % 60);
-	    } 
+	    }
 	    return $string;
 	}
 
@@ -189,8 +188,8 @@ class Vavok {
 	        if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
 	            if (is_dir($dir . "/" . $file_name)) $size = read_dir($dir . "/" . $file_name);
 	            else $size += filesize($dir . "/" . $file_name);
-	        } 
-	    } 
+	        }
+	    }
 	    return $size;
 	}
 
@@ -200,7 +199,7 @@ class Vavok {
 	    if (file_exists($files)) {
 	        $lines = file($files);
 	        $count_lines = count($lines);
-	    } 
+	    }
 
 	    return $count_lines;
 	}
@@ -231,6 +230,26 @@ class Vavok {
 			return;
 		}
 		file_put_contents(BASEDIR . 'used/' . $filename, $data, LOCK_EX);
+	}
+
+	/**
+	 * Require header
+	 */
+	public function require_header()
+	{
+		global $current_page, $users, $localization;
+		$vavok = $this;
+		require_once BASEDIR . 'themes/' . MY_THEME . '/index.php';
+	}
+
+	/**
+	 * Require footer
+	 */
+	public function require_footer()
+	{
+		global $current_page, $users, $localization;
+		$vavok = $this;
+		require_once BASEDIR . 'themes/' . MY_THEME . '/foot.php';
 	}
 
 	/**
@@ -341,13 +360,13 @@ class Vavok {
 
 	    );
 
-	    $text = mb_strtolower(strtr($text, $tr)); // other languages 
+	    $text = mb_strtolower(strtr($text, $tr)); // other languages
 
 	    return $text;
 	}
 
 	// no new line
-	function no_br($msg, $replace = "") { 
+	function no_br($msg, $replace = "") {
 	    // convert to unix new lines
 	    $msg = preg_replace("/\r\n/", "\n", $msg); 
 	    // remove extra new lines
@@ -366,7 +385,7 @@ class Vavok {
 	        $file_size = round($file_size / 1024 * 100) / 100 . " KB";
 	    } else {
 	        $file_size = $file_size . " b";
-	    } 
+	    }
 	    return $file_size;
 	}
 
@@ -378,8 +397,8 @@ class Vavok {
 	    foreach($wordlist as $value) {
 	        if (!empty($value)) {
 	            $string = preg_replace("/$value/i", "***", $string);
-	        } 
-	    } 
+	        }
+	    }
 	    return $string;
 	}
 
@@ -515,7 +534,7 @@ class Vavok {
 	 * @param string $str
 	 * @return string
 	 */
-	function check($str) {
+	public function check($str) {
 	    if (get_magic_quotes_gpc()) { $str = stripslashes($str); } // strip all slashes
 	    $str = str_replace("|", "&#124;", $str);
 	    $str = htmlspecialchars($str);
@@ -581,7 +600,7 @@ class Vavok {
 	} 
 
 	// generate password
-	function generate_password() {
+	public function generate_password() {
 	    $length = rand(10, 12);
 	    $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
 	    $len = strlen($salt);
@@ -607,9 +626,9 @@ class Vavok {
 
 	            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
 	                $result = true;
-	            } 
-	        } 
-	    } 
+	            }
+	        }
+	    }
 
 	    fflush($new_db);
 	    flock ($new_db, LOCK_UN);
@@ -623,7 +642,7 @@ class Vavok {
 	 */
 
 	// check URL
-	function validateURL($URL) {
+	public function validateURL($URL) {
 	    $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
 	    return (bool)preg_match($v, $URL);
 	}
@@ -655,13 +674,13 @@ class Vavok {
 	*/
 
 	// Show fatal error and stop script execution
-	function fatal_error($error) {
+	public function fatal_error($error) {
 	    echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
 	    exit;
 	}
 
 	// Show error
-	function show_error($error) {
+	public function show_error($error) {
 	    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 	}
 
@@ -718,7 +737,7 @@ class Vavok {
 	}
 
 	// Show online
-	function show_online() {
+	public function show_online() {
 	    global $counter_reg, $counter_online;
 
 	    if ($this->get_configuration('showOnline') == 1) {
@@ -732,7 +751,7 @@ class Vavok {
 	 *
 	 * @return string
 	 */
-	function show_counter()
+	public function show_counter()
 	{
 	    global $counter;
 
@@ -757,7 +776,7 @@ class Vavok {
 	}
 
 	// show page generation time
-	function show_gentime() {
+	public function show_gentime() {
 	    global $localization;
 
 	    if ($this->get_configuration('pageGenTime') == 1) {
@@ -842,7 +861,7 @@ class Vavok {
 	 * @param string $url
 	 * @return mixed
 	 */
-	function redirect_to($url) {
+	public function redirect_to($url) {
 	    if (!headers_sent()) { // Can not redirect if headers are already sent
 	        header('Location: ' . $url);
 	        exit; // protects from code being executed after redirect request
@@ -852,7 +871,7 @@ class Vavok {
 	}
 
 	// get transfer protocol https or http
-	function transfer_protocol() {
+	public function transfer_protocol() {
 	    if (empty($this->get_configuration('transferProtocol')) || $this->get_configuration('transferProtocol') == 'auto') {
 	        if (!empty($_SERVER['HTTPS'])) {
 	            $connectionProtocol = 'https://';
@@ -869,15 +888,18 @@ class Vavok {
 	}
 
 	// complete dynamic website address
-	function website_home_address() {
+	public function website_home_address()
+	{
 	    return $this->transfer_protocol() . $_SERVER['HTTP_HOST'];
 	}
 
-	function compress_output_gzip($output) {
+	function compress_output_gzip($output)
+	{
 	    return gzcompress($output, 3);
 	} 
 
-	function compress_output_deflate($output) {
+	function compress_output_deflate($output)
+	{
 	    return gzdeflate($output, 3);
 	}
 
@@ -965,9 +987,34 @@ class Vavok {
 	    }
 
 	    return $searchbot;
-
 	}
 
+	/**
+	 * Home link
+	 *
+	 * @param string $before
+	 * @param string $after
+	 * @return string
+	 */
+	public function homelink($before = '', $after = '')
+	{
+		global $localization;
+		return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a>' . $after;
+	}
+
+	/**
+	 * Sitelink
+	 *
+	 * @param string $href
+	 * @param string $link_name
+	 * @param string $before
+	 * @param string $after
+	 * @return string
+	 */
+	public function sitelink($href, $link_name, $before = '', $after = '')
+	{
+		return $before . '<a href="' . $href . '" class="btn btn-primary sitelink">' . $link_name . '</a>' . $after;
+	}
 }
 
 ?>

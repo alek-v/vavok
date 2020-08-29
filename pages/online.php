@@ -1,10 +1,9 @@
 <?php 
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   02.08.2020. 2:21:17
-*/
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 1:33:47
+ */
 
 require_once"../include/startup.php";
 
@@ -14,7 +13,7 @@ if ($vavok->get_configuration('showOnline') == 0 && (!$users->is_reg() && !$user
 $data_on_page = 10; // online users per page
 
 $current_page->page_title = 'Online';
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $localization->string('whoisonline') . '</b></p>';
 
@@ -69,20 +68,20 @@ if ($list == "full") {
             echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $localization->string('time') . ': ' . $time . ')<br />';
             if ($users->is_moderator() || $users->is_administrator()) {
                 echo '<small><font color="#CC00CC">(<a href="../' . $vavok->get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
-            } 
+            }
             echo '<hr />';
-        } 
-    } 
+        }
+    }
 } else {
     $total = $totalreg;
 
     if ($total < 1) {
         echo '<br /><img src="../images/img/reload.gif" alt=""> <b>' . $localization->string('noregd') . '!</b><br />';
-    } 
+    }
 
     $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
 
-    $start = $navigation->start()['start']; // starting point  
+    $start = $navigation->start()['start']; // starting point
 
     $full_query = "SELECT * FROM " . DB_PREFIX . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
@@ -92,21 +91,21 @@ if ($list == "full") {
         echo '<b><a href="../pages/user.php?uz=' . $item['user'] . '">' . $users->getnickfromid($item['user']) . '</a></b> (' . $localization->string('time') . ': ' . $time . ')<br />';
         if ($users->is_moderator() || $users->is_administrator()) {
             echo '<small><font color="#CC00CC">(<a href="../' . $vavok->get_configuration('mPanel') . '/ip-informations.php?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
-        } 
+        }
         echo '<hr />';
-    } 
-} 
+    }
+}
 
 echo $navigation->get_navigation();
 
-if ($list != "full") {
-    echo'<p><a href="online.php?list=full" class="btn btn-outline-primary sitelink">' . $localization->string('showguest') . '</a></p>';
+if ($list != 'full') {
+    echo $vavok->sitelink(HOMEDIR . 'pages/online.php?list=full', $localization->string('showguest'), '<p>', '</p>');
 } else {
-    echo'<p><a href="online.php?list=reg" class="btn btn-outline-primary sitelink">' . $localization->string('hideguest') . '</a></p>';
-} 
+    echo $vavok->sitelink(HOMEDIR . 'pages/online.php?list=reg', $localization->string('hideguest'), '<p>', '</p>');
+}
 
-echo '<p><a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>

@@ -1,9 +1,9 @@
 <?php 
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   21.08.2020. 23:06:24
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:23:50
+ */
 
 if (!defined('BASEDIR')) {
     $folder_level = "";
@@ -21,7 +21,7 @@ if (isset($_GET['error'])) { $error = $vavok->check($_GET['error']); }
 
 if ($error == '404') { header("HTTP/1.0 404 Not Found"); } 
 
-include_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $vavok->check($_SERVER['HTTP_REFERER']) : 'No referer';
 
@@ -135,7 +135,7 @@ if (isset($write) && !empty($logdat)) {
     }
 }
 
-echo '<p><a href="/" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink('<p>', '</p>');
 
 include_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
 

@@ -1,9 +1,9 @@
 <?php 
 /**
-* Author:    Aleksandar Vranešević
-* URI:       https://vavok.net
-* Updated:   22.08.2020. 0:04:23
-*/
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   29.08.2020. 15:20:52
+ */
 
 require_once"../include/startup.php";
 
@@ -277,7 +277,7 @@ if ($action == "editeight") {
 
 $current_page->page_title = "Settings";
 
-require_once BASEDIR . "themes/" . MY_THEME . "/index.php";
+$vavok->require_header();
 
 if (empty($action)) {
     echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $localization->string('mainset') . '</a>';
@@ -1036,8 +1036,8 @@ if ($action == "seteight") {
 }
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
-echo '<a href="../" class="btn btn-primary homepage">' . $localization->string('home') . '</a></p>';
+echo $vavok->homelink() . '</p>';
 
-require_once BASEDIR . "themes/" . MY_THEME . "/foot.php";
+$vavok->require_footer();
 
 ?>
