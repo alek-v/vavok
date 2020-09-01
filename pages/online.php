@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 1:33:47
+ * Updated:   31.08.2020. 21:57:18
  */
 
 require_once"../include/startup.php";
@@ -42,8 +42,7 @@ if (isset($_GET['start'])) {
 echo $localization->string('totonsite') . ': <b>' . (int)$total . '</b><br />' . $localization->string('registered') . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
 
 if ($list == "full") {
-
-    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
+    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?list=full&'); // start navigation
 
     $start = $navigation->start()['start']; // starting point 
 
@@ -76,7 +75,7 @@ if ($list == "full") {
     $total = $totalreg;
 
     if ($total < 1) {
-        echo '<br /><img src="../images/img/reload.gif" alt=""> <b>' . $localization->string('noregd') . '!</b><br />';
+        echo '<p><img src="../images/img/reload.gif" alt=""> <b>' . $localization->string('noregd') . '!</b></p>';
     }
 
     $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
