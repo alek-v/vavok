@@ -2,19 +2,17 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   22.08.2020. 0:16:55
-*/
+ * Updated:   02.09.2020. 22:07:33
+ */
 
 class Referer {
     private $vavok;
-    private $users;
 
     function __construct()
     {
-        global $vavok, $users;
+        global $vavok;
 
         $this->vavok = $vavok;
-        $this->users = $users;
 
         if (!empty($_SERVER['HTTP_REFERER'])) { $ref_from = $_SERVER['HTTP_REFERER']; }
 
@@ -40,7 +38,7 @@ class Referer {
                     if (isset($rlinn) && $rlinn > 0) {
                         $ref_count = $ref_count + 1;
 
-                        $t = $ref_from . '|' . time() . '|' . $this->users->find_ip() . '|' . $ref_count . '|';
+                        $t = $ref_from . '|' . time() . '|' . $this->vavok->go('users')->find_ip() . '|' . $ref_count . '|';
 
                         $reffile = $vavok->get_data_file('referer.dat');
                         $fp = fopen(BASEDIR . "used/referer.dat", "a+");
@@ -57,7 +55,7 @@ class Referer {
                         flock ($fp, LOCK_UN);
                         fclose($fp);
                     } else {
-                        $t = $ref_from . '|' . time() . '|' . $this->users->find_ip() . '|1|';
+                        $t = $ref_from . '|' . time() . '|' . $this->vavok->go('users')->find_ip() . '|1|';
                         $vavok->write_data_file('referer.dat', $t . PHP_EOL, 1);
 
                         $reffile = $vavok->get_data_file('referer.dat');

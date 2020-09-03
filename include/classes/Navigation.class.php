@@ -1,16 +1,21 @@
 <?php
-// (c) Aleksandar Vranešević - vavok.net
-// Updated: 26.07.2020. 3:02:22
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   02.09.2020. 22:36:16
+ */
 
 class Navigation {
-	
 	public $items_per_page;
 	public $total_items;
 	public $page;
 	public $link;
+	private $vavok;
 
 	public function __construct($items_per_page, $total_items, $page, $link = '') {
+		global $vavok;
 
+		$this->vavok = $vavok;
 		$this->items_per_page = $items_per_page; // items per page
 		$this->total_items = $total_items; // total items
 		$this->total_pages = $this->total_pages($this->total_items, $this->items_per_page); // total pages
@@ -60,8 +65,6 @@ class Navigation {
 
 	// site navigaton
 	public function get_navigation($link = '', $lnks = 3) {
-		global $localization;
-
 		$page = $this->current_page;
 		$total = $this->total_items;
 		$link = $this->link;
@@ -70,13 +73,13 @@ class Navigation {
 
 	    // prev link
 	    if ($page > 1 && $this->total_pages > 1 && $page != 2) {
-	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $localization->string('prev') . '</a>';
+	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $this->vavok->go('localization')->string('prev') . '</a>';
 	    } elseif ($page == 2) {
 	    	$linkx = rtrim($link, '&amp;');
 	        $linkx = rtrim($linkx, '?');
-	    	$navigation .= '<a href="' . $linkx . '">' . $localization->string('prev') . '</a>';
+	    	$navigation .= '<a href="' . $linkx . '">' . $this->vavok->go('localization')->string('prev') . '</a>';
 	    } else {
-	        $navigation .= '<span class="next_v_pagination">' . $localization->string('prev') . '</span>';
+	        $navigation .= '<span class="next_v_pagination">' . $this->vavok->go('localization')->string('prev') . '</span>';
 	    } 
 
 	    if ($total > 0) {
@@ -125,9 +128,9 @@ class Navigation {
 	    } 
 	    // forward link
 	    if ($total > ($this->items_per_page * $page)) {
-	        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $localization->string('next') . '</a>';
+	        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $this->vavok->go('localization')->string('next') . '</a>';
 	    } else {
-	        $navigation .= '<span class="next_v_pagination">' . $localization->string('next') . '</span>';
+	        $navigation .= '<span class="next_v_pagination">' . $this->vavok->go('localization')->string('next') . '</span>';
 	    } 
 
 	    $navigation .= '</div>';
@@ -137,15 +140,13 @@ class Navigation {
 
 	// numerical navigaton - deprecated 26.04.2020. 22:07:47
 	public static function numbNavigation($link, $items_per_page, $page, $total, $lnks = 3) {
-		global $localization;
-
 	    $navigation = '<div id="v_pagination">';
 
 	    // prev link
 	    if ($page > 1 && $items_per_page > $total) {
-	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $localization->string('prev') . '</a>';
+	        $navigation .= '<a href="' . $link . 'page=' . ($page - 1) . '">' . $this->vavok->go('localization')->string('prev') . '</a>';
 	    } else {
-	        $navigation .= '<span class="next_v_pagination">' . $localization->string('prev') . '</span>';
+	        $navigation .= '<span class="next_v_pagination">' . $this->vavok->go('localization')->string('prev') . '</span>';
 	    } 
 
 
@@ -195,9 +196,9 @@ class Navigation {
 	    } 
 	    // forward link
 	    if ($total > ($items_per_page * $page)) {
-	        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $localization->string('next') . '</a>';
+	        $navigation .= '<a href="' . $link . 'page=' . ($page + 1) . '">' . $this->vavok->go('localization')->string('next') . '</a>';
 	    } else {
-	        $navigation .= '<span class="next_v_pagination">' . $localization->string('next') . '</span>';
+	        $navigation .= '<span class="next_v_pagination">' . $this->vavok->go('localization')->string('next') . '</span>';
 	    } 
 
 	    $navigation .= '</div>';

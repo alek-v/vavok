@@ -2,11 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   26.08.2020. 22:57:57
+ * Updated:   03.09.2020. 2:45:58
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.6.beta4');
+define('VERSION', '1.5.6.beta5');
 
 /**
  * Root dir for including system files

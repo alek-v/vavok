@@ -2,11 +2,19 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
-* Package:   Class for managing website configuration
- * Updated:   01.08.2020. 19:11:47
-*/
+ * Package:   Class for managing website configuration
+ * Updated:   02.09.2020. 22:26:50
+ */
 
 class Config {
+	private $vavok;
+
+	public function __construct()
+	{
+		global $vavok;
+
+		$this->vavok = $vavok;
+	}
 
 	// update configuration
 	function update($data) {
@@ -49,9 +57,8 @@ class Config {
 		}
 	}
 
-	public function update_config_data($data) {
-		global $db;
-
+	public function update_config_data($data)
+	{
 		$fields = array(); $values = array();
 
 		foreach ($data as $key => $value) {
@@ -59,7 +66,7 @@ class Config {
 			$values[] .= $value;
 		}
 
-		$db->update(DB_PREFIX . 'settings', $fields, $values);
+		$this->vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
 	}
 

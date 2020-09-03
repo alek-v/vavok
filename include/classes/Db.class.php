@@ -1,11 +1,9 @@
 <?php
-/*
-* (c) Aleksandar Vranešević
-* Author:    Aleksandar Vranešević
-* URL:       http://vavok.net
- * Updated:   03.08.2020. 1:15:17
-*/
-
+/**
+ * Author:    Aleksandar Vranešević
+ * URL:       http://vavok.net
+ * Updated:   02.09.2020. 22:05:05
+ */
 
 /**
  * Database class
@@ -29,7 +27,10 @@ class Db extends PDO {
         } 
         catch (PDOException $e) {
             echo 'Database error: ' . $this->error = $e->getMessage();
-        } 
+        }
+
+        global $vavok;
+        $vavok->add_global(array('db' => $this));
     }
 
     private function debug() {

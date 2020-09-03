@@ -2,9 +2,9 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
-* Online, hit & click counter
- * Updated:   21.08.2020. 20:54:11
-*/
+ * Online, hit & click counter
+ * Updated:   02.09.2020. 22:18:47
+ */
 
 class Counter {
     public $counter_online;
@@ -13,16 +13,12 @@ class Counter {
     public $counter_all;
     public $counter_hits;
     public $counter_allhits;
-    private $db;
-    private $users;
     private $vavok;
 
     function __construct()
     {
-        global $db, $users, $vavok;
+        global $vavok;
 
-        $this->db = $db;
-        $this->users = $users;
         $this->vavok = $vavok;
 
         $day = date("d");
@@ -43,18 +39,18 @@ class Counter {
 
         $bz_date = time();
 
-        if (!$this->users->is_reg()) {
+        if (!$this->vavok->go('users')->is_reg()) {
             $user_id = 0;
-        } else { $user_id = $this->users->user_id; }
+        } else { $user_id = $this->vavok->go('users')->user_id; }
 
-        $bz_ip = $this->users->find_ip();
-        $xmatch = $user_id . '-' . $this->users->find_ip() . '-' . $this->users->user_browser();
+        $bz_ip = $this->vavok->go('users')->find_ip();
+        $xmatch = $user_id . '-' . $this->vavok->go('users')->find_ip() . '-' . $this->vavok->go('users')->user_browser();
 
         // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
-        $this->db->delete(DB_PREFIX . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
+        $this->vavok->go('db')->delete(DB_PREFIX . 'online',  "date + " . $bz_seconds . " < " . $bz_date);
 
-        if ($this->db->count_row(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'") > 0) {
-            while ($bz_row = $this->db->get_data(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'")) {
+        if ($this->vavok->go('db')->count_row(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'") > 0) {
+            while ($bz_row = $this->vavok->go('db')->get_data(DB_PREFIX . 'online', "usr_chck = '{$xmatch}'")) {
                 if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
                     $fields = array();
                     $fields[] = 'date';
@@ -64,7 +60,7 @@ class Counter {
                     $values[] = $bz_date;
                     $values[] = $_SERVER['PHP_SELF'];
                      
-                    $this->db->update(DB_PREFIX . 'online', $fields, $values, "usr_chck = '{$xmatch}'");
+                    $this->vavok->go('db')->update(DB_PREFIX . 'online', $fields, $values, "usr_chck = '{$xmatch}'");
                     unset($fields, $values);
                     
                     $found = 1;
@@ -78,7 +74,7 @@ class Counter {
                     'usr_chck' => $xmatch,
                     'bot' => $this->vavok->detect_bot()
                     );
-                    $this->db->insert_data(DB_PREFIX . 'online', $values);
+                    $this->vavok->go('db')->insert_data(DB_PREFIX . 'online', $values);
                     unset($values);
                 } 
             } 
@@ -91,12 +87,12 @@ class Counter {
             'usr_chck' => $xmatch,
             'bot' => $this->vavok->detect_bot()
             );
-            $this->db->insert_data(DB_PREFIX . 'online', $values);
+            $this->vavok->go('db')->insert_data(DB_PREFIX . 'online', $values);
             unset($values);
         } 
 
         // counter
-        $counts = $this->db->get_data(DB_PREFIX . 'counter');
+        $counts = $this->vavok->go('db')->get_data(DB_PREFIX . 'counter');
 
         $current_day = $counts['day'];
         $clicks_today = $counts['clicks_today'];
@@ -141,12 +137,12 @@ class Counter {
         $values[] = $new_visits_today;
         $values[] = $new_total_visits;
 
-        $this->db->update(DB_PREFIX . 'counter', $fields, $values);
+        $this->vavok->go('db')->update(DB_PREFIX . 'counter', $fields, $values);
         unset($fields, $values);
 
         // show stats
-        $this->counter_online = $this->db->count_row(DB_PREFIX . 'online');
-        $this->counter_reg = $this->db->count_row(DB_PREFIX . 'online', "user > 0");
+        $this->counter_online = $this->vavok->go('db')->count_row(DB_PREFIX . 'online');
+        $this->counter_reg = $this->vavok->go('db')->count_row(DB_PREFIX . 'online', "user > 0");
 
         $this->counter_host = $new_visits_today;
         $this->counter_all = $new_total_visits;

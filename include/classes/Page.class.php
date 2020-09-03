@@ -2,9 +2,9 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
-* Package:   Class for managing pages
- * Updated:   12.08.2020. 18:40:37
-*/
+ * Package:   Class for managing pages
+ * Updated:   02.09.2020. 22:16:18
+ */
 
 class Page {
 	public $page_name;         // Page name
@@ -16,35 +16,32 @@ class Page {
 	public $page_created_date; // Page created date
 	public $head_tags;         // Head tags
 	private $vavok;
-	private $users;
 
 	/**
 	 * @param string $page_name
 	 * @param string $page_language
 	 */
 	function __construct($page_name = '', $page_language = '') {
-		global $db, $users, $vavok;
+		global $vavok;
 
 		$this->table_prefix = DB_PREFIX; // Table prefix
 		$this->transfer_protocol = $vavok->transfer_protocol(); // Transfer protocol
-		$this->db = $db; // database
 		$this->vavok = $vavok;
-		$this->users = $users;
-		$this->user_id = $users->current_user_id(); // User id with active login
+		$this->user_id = $this->vavok->go('users')->current_user_id(); // User id with active login
 		if (isset($_GET['pg'])) $this->page_name = $this->vavok->check($_GET['pg']); // Requested page name
 		if (isset($_GET['ln']) || $_SERVER['PHP_SELF'] == '/index.php') { $this->page_name = 'index'; }
 		if (isset($_GET['ln'])) $this->page_language = $this->vavok->check($_GET['ln']);
 		if (isset($_GET['pg'])) $this->page_language = $this->get_page_language($this->vavok->check($_GET['pg']));
 
 		// Update user's language
-		if (!empty($this->page_language) && strtolower($this->page_language) != $users->get_prefered_language($_SESSION['lang'], 'short')) { $users->change_language(strtolower($this->page_language)); }
+		if (!empty($this->page_language) && strtolower($this->page_language) != $this->vavok->go('users')->get_prefered_language($_SESSION['lang'], 'short')) { $this->vavok->go('users')->change_language(strtolower($this->page_language)); }
 
 		// Load main page
 		if ($this->page_name == 'index') {
 
 			// Redirect to root dir if visitor is using site default language and this language is requested in url
 			// Example: default website language is english and user is opening www.example.com/en/
-			if (isset($_GET['ln']) && $this->vavok->get_configuration('siteDefaultLang') == $this->users->get_prefered_language($this->page_language) && !empty($this->users->get_prefered_language($this->page_language)) && file_exists(BASEDIR . "include/lang/" . $this->users->get_prefered_language($this->page_language) . "/index.php")) {
+			if (isset($_GET['ln']) && $this->vavok->get_configuration('siteDefaultLang') == $this->vavok->go('users')->get_prefered_language($this->page_language) && !empty($this->vavok->go('users')->get_prefered_language($this->page_language)) && file_exists(BASEDIR . "include/lang/" . $this->vavok->go('users')->get_prefered_language($this->page_language) . "/index.php")) {
 				$this->vavok->redirect_to(HOMEDIR);
 			}
 
@@ -53,8 +50,8 @@ class Page {
 			  language is not in URL (www.example.com/en/)
 			  and page with users's language exists
 			*/
-			if ($vavok->get_configuration('siteDefaultLang') != $this->users->get_user_language() && empty($_GET['ln'])) {
-				$vavok->redirect_to("/" .  $this->users->get_prefered_language($users->get_user_language(), 'short') . "/");
+			if ($vavok->get_configuration('siteDefaultLang') != $this->vavok->go('users')->get_user_language() && empty($_GET['ln'])) {
+				$vavok->redirect_to("/" .  $this->vavok->go('users')->get_prefered_language($this->vavok->go('users')->get_user_language(), 'short') . "/");
 			}
 
 		}
@@ -62,7 +59,7 @@ class Page {
 	    /**
 	     * Show website maintenance page
 	     */
-	    if ($this->vavok->get_configuration('siteOff') == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/maintenance.php') && !strstr($_SERVER['PHP_SELF'], 'pages/input.php') && !$this->users->is_administrator() && !strstr($_SERVER['PHP_SELF'], 'pages/login.php')) {
+	    if ($this->vavok->get_configuration('siteOff') == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/maintenance.php') && !strstr($_SERVER['PHP_SELF'], 'pages/input.php') && !$this->vavok->go('users')->is_administrator() && !strstr($_SERVER['PHP_SELF'], 'pages/login.php')) {
 	        $this->vavok->redirect_to($this->vavok->website_home_address() . "/pages/maintenance.php");
 	    }
 
@@ -78,12 +75,12 @@ class Page {
 
 	// insert new page
 	function insert($values) {
-		$this->db->insert_data($this->table_prefix . 'pages', $values);
+		$this->vavok->go('db')->insert_data($this->table_prefix . 'pages', $values);
 	}
 
 	// delete page
 	function delete($id) {
-		$this->db->delete($this->table_prefix . 'pages', "id='{$id}'");
+		$this->vavok->go('db')->delete($this->table_prefix . 'pages', "id='{$id}'");
 	}
 
 	/**
@@ -98,7 +95,7 @@ class Page {
 		/**
 		 * Delete current tags
 		 */
-		$this->db->delete($this->table_prefix . 'tags', "page_id = '{$id}'");
+		$this->vavok->go('db')->delete($this->table_prefix . 'tags', "page_id = '{$id}'");
 
 		/**
 		 * Insert new tags
@@ -111,7 +108,7 @@ class Page {
 				'page_id' => $id,
 				'tag_name' => $value
 			);
-			$this->db->insert_data($this->table_prefix . 'tags', $values);
+			$this->vavok->go('db')->insert_data($this->table_prefix . 'tags', $values);
 		}
 	}
 
@@ -125,11 +122,11 @@ class Page {
 	    $values[] = time();
 	    $values[] = $this->user_id;
 
-	    $this->db->update($this->table_prefix . 'pages', $fields, $values, "`id`='" . $id . "'");
+	    $this->vavok->go('db')->update($this->table_prefix . 'pages', $fields, $values, "`id`='" . $id . "'");
 
 		// update cached index and menu pages
 		// this pages must be cached other pages are not cached
-		$file = $this->db->get_data($this->table_prefix . 'pages', "id = '{$id}'", 'file')['file'];
+		$file = $this->vavok->go('db')->get_data($this->table_prefix . 'pages', "id = '{$id}'", 'file')['file'];
 		if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
 			$this->updateCached($file, $content);
 		}
@@ -166,29 +163,27 @@ class Page {
 	    $values[] = $pageName;
 	    $values[] = $newName;
 
-	    $this->db->update($this->table_prefix . 'pages', $fields, $values, "`id`='{$id}'");
+	    $this->vavok->go('db')->update($this->table_prefix . 'pages', $fields, $values, "`id`='{$id}'");
 	}
 
 	// page visibility. publish or unpubilsh for visitors
 	function visibility($id, $visibility) {
         $values = array($visibility, time());
 
-
         $fields = array('published', 'pubdate');
 
-        $this->db->update($this->table_prefix . 'pages', $fields, $values, "id='" . $id . "'");
+        $this->vavok->go('db')->update($this->table_prefix . 'pages', $fields, $values, "id='" . $id . "'");
 	}
 
 	// update page language
 	function language($id, $lang) {
 		$pageData = $this->select_page($id);
 	    // update database data
-	    $this->db->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
+	    $this->vavok->go('db')->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
 	}
 
 	// update head tags
 	function head_data($id, $data) {
-
 		// get database fields
         $fields = array_keys($data);
 
@@ -196,7 +191,7 @@ class Page {
         $values = array_values($data);
 
         // update page data
-        $this->db->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
+        $this->vavok->go('db')->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
 	}
 
 	/*
@@ -217,7 +212,7 @@ class Page {
 			$where = " WHERE crtdby = '{$creator}'";
 		}
 
-		return $this->db->count_row($this->table_prefix . "pages" . $where);
+		return $this->vavok->go('db')->count_row($this->table_prefix . "pages" . $where);
 	}
 
 	// select page by id - get page data
@@ -226,11 +221,11 @@ class Page {
 		// update visitor counter if page is vewed by visitor
 		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
 
-			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE id = '{$id}'");
+			$this->vavok->go('db')->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE id = '{$id}'");
 		}
 
 		// return page data
-		return $this->db->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
+		return $this->vavok->go('db')->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
 	}
 
 	// Load page
@@ -244,16 +239,16 @@ class Page {
 		// Update visitor counter if page is vewed by visitor
 		if (stristr($_SERVER['PHP_SELF'], '/pages/pages.php') || stristr($_SERVER['PHP_SELF'], '/pages/blog.php')) {
 
-			$this->db->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '" . $this->page_name . "'{$language}");
+			$this->vavok->go('db')->query("UPDATE {$this->table_prefix}pages SET views = views + 1 WHERE pname = '" . $this->page_name . "'{$language}");
 
 		}
 
 		// Get data
-		$page_data = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'{$language}");
+		$page_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'{$language}");
 
 		// When language is set and page does not exsist try to find page without language
 		if (empty($page_data) && !empty($this->page_language)) {
-			$page_data = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'");
+			$page_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . $this->page_name . "'");
 		}
 
 		// return false if there is no data
@@ -293,13 +288,11 @@ class Page {
 	 * Return page header tags
 	 */
 	public function load_head_tags() {
-
 		// include head tags specified for current page
 		echo $this->head_tags;
 
 		echo "\r\n<!-- Vavok CMS http://www.vavok.net -->
 		<title>{$this->page_title}</title>\r\n";
-
 	}
 
 	/**
@@ -310,16 +303,16 @@ class Page {
 	 */
 	private function get_page_language($page)
 	{
-		$lang = $this->db->get_data(DB_PREFIX . 'pages', "pname = '{$page}'", 'lang')['lang'];
+		$lang = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname = '{$page}'", 'lang')['lang'];
 		if (empty($lang)) return false;
 		return $lang;
 	}
 
 	// check if page exists
 	function page_exists($file = '', $where = '') {
-		if (!empty($file) && $this->db->count_row($this->table_prefix . 'pages', "file='{$file}'") > 0) {
+		if (!empty($file) && $this->vavok->go('db')->count_row($this->table_prefix . 'pages', "file='{$file}'") > 0) {
 			return $this->get_page_id("file='" . $file . "'");
-		} elseif (!empty($where) && ($this->db->count_row($this->table_prefix . 'pages', $where) > 0)) {
+		} elseif (!empty($where) && ($this->vavok->go('db')->count_row($this->table_prefix . 'pages', $where) > 0)) {
 			return $this->get_page_id($where);
 		} else {
 			return false;
@@ -328,7 +321,7 @@ class Page {
 
 	// get page id
 	function get_page_id($where) {
-		return $this->db->get_data($this->table_prefix . 'pages', $where, 'id')['id'];
+		return $this->vavok->go('db')->get_data($this->table_prefix . 'pages', $where, 'id')['id'];
 	}
 
 	// load page editor program
@@ -372,7 +365,7 @@ class Page {
 	public function page_title() {
 		if (!empty($this->page_title)) { return $this->page_title; }
 
-	    $page_title = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname')['tname'];
+	    $page_title = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname')['tname'];
 
 	    if (!empty($page_title)) {
 	        return $page_title;
@@ -391,7 +384,7 @@ class Page {
 	{
 		$tags = '';
 
-		$sql = $this->db->query("SELECT * FROM tags WHERE page_id = '{$id}' ORDER BY id ASC");
+		$sql = $this->vavok->go('db')->query("SELECT * FROM tags WHERE page_id = '{$id}' ORDER BY id ASC");
 		foreach ($sql as $key => $value) {
 			$tags .= ' ' . $value['tag_name'];
 		}
@@ -408,7 +401,7 @@ class Page {
 	{
 		$tags = file_get_contents(BASEDIR . 'used/headmeta.dat');
 
-        $vk_page = $this->db->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
+        $vk_page = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
         if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
 
 		/**

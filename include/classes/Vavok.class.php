@@ -2,13 +2,14 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 2:03:45
+ * Updated:   02.09.2020. 19:15:32
  */
 
 class Vavok {
+	public $globals;
 
-	public function __construct() {
-
+	public function __construct()
+	{
 		/**
 		 * Error reporting
 		 */
@@ -66,9 +67,7 @@ class Vavok {
 	 * @return mixed
 	 */
 	public function get_configuration($data = '', $full_configuration = false) {
-	    global $db;
-
-	    $config = $db->get_data(DB_PREFIX . 'settings');
+	    $config = $this->go('db')->get_data(DB_PREFIX . 'settings');
 
 	    // Additional settings
 	    $config['rssIcon'] = 0; // RSS icon
@@ -141,15 +140,14 @@ class Vavok {
 
 	// Format time into days and minutes
 	function formattime($file_time) {
-	    global $localization;
 	    if ($file_time >= 86400) {
-	        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $localization->string('days');
+	        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' ' . $this->go('localization')->string('days');
 	    } elseif ($file_time >= 3600) {
-	        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $localization->string('hours');
+	        $file_time = round(($file_time / 60) / 60, 1) . ' ' . $this->go('localization')->string('hours');
 	    } elseif ($file_time >= 60) {
-	        $file_time = round($file_time / 60) . ' ' . $localization->string('minutes');
+	        $file_time = round($file_time / 60) . ' ' . $this->go('localization')->string('minutes');
 	    } else {
-	        $file_time = round($file_time) . ' ' . $localization->string('secs');
+	        $file_time = round($file_time) . ' ' . $this->go('localization')->string('secs');
 	    } 
 	    return $file_time;
 	}
@@ -716,24 +714,20 @@ class Vavok {
 	 * @return string
 	 */
 	public function get_isset($msg = '') {
-		global $users;
 	    if (!empty($msg)) {
 	        $isset = $msg;
 	    } elseif (isset($_GET['isset'])) {
 	        $isset = $this->check($_GET['isset']);
 	    }
 
-	    include_once BASEDIR . "include/lang/" . $users->get_user_language() . "/isset.php";
+	    include_once BASEDIR . "include/lang/" . $this->go('users')->get_user_language() . "/isset.php";
 
 	    if (isset($isset) && !empty($issetLang[$isset])) {
-
 	        $isset_msg = new PageGen('pages/isset.tpl');
 	        $isset_msg->set('message', $issetLang[$isset]);
 	        
 	        return $isset_msg->output();
-	        
 	    }
-
 	}
 
 	// Show online
@@ -777,12 +771,10 @@ class Vavok {
 
 	// show page generation time
 	public function show_gentime() {
-	    global $localization;
-
 	    if ($this->get_configuration('pageGenTime') == 1) {
 	        $end_time = microtime(true);
 	        $gen_time = $end_time - START_TIME;
-	        $pagegen = $localization->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
+	        $pagegen = $this->go('localization')->string('pggen') . ' ' . round($gen_time, 4) . ' s.<br />';
 
 	        return $pagegen;
 	    }
@@ -998,8 +990,7 @@ class Vavok {
 	 */
 	public function homelink($before = '', $after = '')
 	{
-		global $localization;
-		return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">' . $localization->string('home') . '</a>' . $after;
+		return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">' . $this->go('localization')->string('home') . '</a>' . $after;
 	}
 
 	/**
@@ -1014,6 +1005,33 @@ class Vavok {
 	public function sitelink($href, $link_name, $before = '', $after = '')
 	{
 		return $before . '<a href="' . $href . '" class="btn btn-primary sitelink">' . $link_name . '</a>' . $after;
+	}
+
+	/**
+	 * Add globals
+	 *
+	 * @param object $object
+	 * @return void
+	 */
+	public function add_global($object)
+	{
+		if (!isset($this->globals)) $this->globals = array();
+		array_push($this->globals, $object);
+	}
+
+	/**
+	 * Return global
+	 *
+	 * @param string
+	 * @return object
+	 */
+	public function go($go)
+	{
+		foreach ($this->globals as $key => $value) {
+			if (isset($value[$go])) {
+				return $value[$go];
+			}
+		}
 	}
 }
 

@@ -1,16 +1,21 @@
 <?php
-// (c) vavok.net
-// generate page from template
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Package:   Class for managing pages
+ * Updated:   02.09.2020. 22:34:07
+ */
 
 class PageGen {
-
     protected $file;
     protected $values = array();
-    private $localization;
+    private $vavok;
 
     public function __construct($file)
     {
-        global $localization;
+        global $vavok;
+
+        $this->vavok = $vavok;
 
         /**
          * Get template
@@ -20,11 +25,6 @@ class PageGen {
         } else {
         	$this->file = BASEDIR . "themes/templates/" . $file;
     	}
-
-        /**
-         * Page localization
-         */
-        $this->localization = $localization;
     } 
 
     /**
@@ -43,7 +43,7 @@ class PageGen {
      */
     public function parse_language($content)
     {
-        $all = $this->localization->show_strings();
+        $all = $this->vavok->go('localization')->show_strings();
 
         $search = array();
         foreach($all as $key => $val) {
@@ -61,10 +61,10 @@ class PageGen {
     public function output()
     {
         /**
-        * Tries to verify if the file exists.
-        * If it doesn't return with an error message.
-        * Anything else loads the file contents and loops through the array replacing every key for its value.
-        */
+         * Try to verify if the file exists.
+         * If it doesn't return with an error message.
+         * Anything else loads the file contents and loops through the array replacing every key for its value.
+         */
         if (!file_exists($this->file)) {
             return "Error loading template file ($this->file).<br />";
         }
@@ -90,18 +90,18 @@ class PageGen {
     }
 
     /**
-    * Merges the content from an array of templates and separates it with $separator.
-    * 
-    * @param array $templates
-    * @param string $separator
-    * @return string 
-    */
+     * Merge content from an array of templates and separates it with $separator.
+     * 
+     * @param array $templates
+     * @param string $separator
+     * @return string 
+     */
     static public function merge($templates, $separator = "\n")
     {
         /*
-        * Loops through the array concatenating the outputs from each template, separating with $separator.
-        * If a type different from PageGen is found we provide an error message.
-        */
+         * Loop through the array concatenating the outputs from each template, separating with $separator.
+         * If a type different from PageGen is found we provide an error message.
+         */
         $output = "";
 
         foreach ($templates as $PageGen) {
@@ -117,7 +117,7 @@ class PageGen {
     /**
      * Facebook comments
      *
-     * @return string;
+     * @return string
      */
     function facebook_comments()
     {

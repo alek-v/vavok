@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   21.08.2020. 20:57:29
+ * Updated:   02.09.2020. 22:09:56
 */
 
 
@@ -73,10 +73,8 @@ class Mailer {
 	// add to queue
 	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "")
 	{
-		global $db, $users;
-
 		$data = array(
-			'uad' => $users->user_id,
+			'uad' => $this->vavok->go('users')->user_id,
 			'sender' => $senderName,
 			'sender_mail' => $senderMail,
 			'recipient' => $usermail,
@@ -86,7 +84,7 @@ class Mailer {
 			'timeadded' => date("Y-m-d H:i:s")
 		);
 
-		$db->insert_data(DB_PREFIX . 'email_queue', $data);
+		$this->vavok->go('db')->insert_data(DB_PREFIX . 'email_queue', $data);
 
 	}
 
@@ -98,9 +96,6 @@ class Mailer {
 
 		return array_filter(explode('||', $subs));
 	}
-
-
-
 }
 
 

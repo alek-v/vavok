@@ -1,14 +1,17 @@
 <?php 
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   02.09.2020. 22:33:57
+ */
 
 class Manageip {
-    private $users;
     private $vavok;
 
     public function __construct()
     {
-        global $users, $vavok;
+        global $vavok;
 
-        $this->users = $users;
         $this->vavok = $vavok;
 
         if (empty(REQUEST_URI)) {
@@ -27,7 +30,7 @@ class Manageip {
             $username = 'Guest';
         }
 
-        $ip = $this->users->find_ip();
+        $ip = $this->vavok->go('users')->find_ip();
         $hostname = gethostbyaddr($ip);
 
         if ($opendir = opendir(BASEDIR . "used/datados")) {
@@ -53,17 +56,15 @@ class Manageip {
             $logfiles = BASEDIR . "used/datados/" . $ip . ".dat";
 
             if (file_exists($logfiles)) {
-
                 $file_dos_time = file($logfiles);
                 $file_dos_str = explode("|", $file_dos_time[0]);
 
                 if ($file_dos_str[1] < ($this->vavok->get_configuration('siteTime')-60)) {
                     unlink($logfiles);
                 }
-
             } 
 
-            $write = '|' . $this->vavok->get_configuration('siteTime') . '|Time: ' . date("Y-m-d / H:i:s", $this->vavok->get_configuration('siteTime')) . '|Browser: ' . $this->users->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
+            $write = '|' . $this->vavok->get_configuration('siteTime') . '|Time: ' . date("Y-m-d / H:i:s", $this->vavok->get_configuration('siteTime')) . '|Browser: ' . $this->vavok->go('users')->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
             $fp = fopen($logfiles, "a+");
             flock ($fp, LOCK_EX);
             fputs($fp, "$write\r\n");
@@ -76,7 +77,7 @@ class Manageip {
                 
                 unlink($logfiles);
 
-                $banlines = $vavok->get_data_file('ban.dat');
+                $banlines = $this->vavok->get_data_file('ban.dat');
                 $banarray = '';
 
                 foreach($banlines as $banvalue) {
@@ -85,14 +86,14 @@ class Manageip {
                 } 
 
                 if (!in_array($ip, $banarray)) {
-                    $vavok->write_data_file('ban.dat', "|$ip|" . PHP_EOL, 1);
+                    $this->vavok->write_data_file('ban.dat', "|$ip|" . PHP_EOL, 1);
 
                     $logdat = BASEDIR . "used/datalog/ban.dat";
                     $hostname = gethostbyaddr($ip);
 
-                    $write = ':|:Blocked access for IP:|:' . $_SERVER['PHP_SELF'] . REQUEST_URI . ':|:' . time() . ':|:' . $ip . ':|:' . $hostname . ':|:' . $this->users->user_browser() . ':|:' . $http_referer . ':|:' . $username . ':|:';
+                    $write = ':|:Blocked access for IP:|:' . $_SERVER['PHP_SELF'] . REQUEST_URI . ':|:' . time() . ':|:' . $ip . ':|:' . $hostname . ':|:' . $this->vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $username . ':|:';
 
-                    $vavok->write_data_file('datalog/ban.dat', $write . PHP_EOL, 1);
+                    $this->vavok->write_data_file('datalog/ban.dat', $write . PHP_EOL, 1);
 
                     $file = file($logdat);
                     $i = count($file);
@@ -125,7 +126,7 @@ class Manageip {
         	    } 
 
         	    if ($ip_check_matches == 4) {
-        	        if ($this->users->is_administrator() == false) {
+        	        if ($this->vavok->go('users')->is_administrator() == false) {
         	            header ("Location: " . BASEDIR . "pages/banip.php");
         	            exit;
         	        } 

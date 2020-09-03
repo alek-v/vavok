@@ -2,33 +2,33 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.08.2020. 9:20:52
-*/
+ * Updated:   02.09.2020. 21:16:09
+ */
 
 class Localization {
-
 	private $language_data;
 	private $strings;
 	private $all;
-	private $users;
+	private $vavok;
 
 	function __construct() {
-		global $users;
+		global $vavok;
 
-		$this->users = $users;
+		$this->vavok = $vavok;
 
 		/**
 		 * Load localization files
 		 */
-		if (!file_exists(BASEDIR . "include/lang/" . $this->users->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
+		if (!file_exists(BASEDIR . "include/lang/" . $this->vavok->go('users')->get_user_language() . "/index.php")) { $_SESSION['lang'] = 'english'; }
 
-		include_once BASEDIR . "include/lang/" . $this->users->get_user_language() . "/index.php";
+		include_once BASEDIR . "include/lang/" . $this->vavok->go('users')->get_user_language() . "/index.php";
 
 		// Language data
 		$this->language_data = $language_data;
 		$this->strings = $lang_home;
 		$this->all = array_merge($this->language_data, $this->strings);
 
+        $vavok->add_global(array('localization' => $this));
 	}
 
 	// Return single string
