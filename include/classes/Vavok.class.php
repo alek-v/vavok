@@ -2,7 +2,6 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.09.2020. 19:15:32
  */
 
 class Vavok {
@@ -235,7 +234,6 @@ class Vavok {
 	 */
 	public function require_header()
 	{
-		global $current_page, $users, $localization;
 		$vavok = $this;
 		require_once BASEDIR . 'themes/' . MY_THEME . '/index.php';
 	}
@@ -245,7 +243,6 @@ class Vavok {
 	 */
 	public function require_footer()
 	{
-		global $current_page, $users, $localization;
 		$vavok = $this;
 		require_once BASEDIR . 'themes/' . MY_THEME . '/foot.php';
 	}
@@ -665,11 +662,9 @@ class Vavok {
 	    }
 	}
 
-	/*
-
-	Show informations
-
-	*/
+	/**
+	 * Show informations
+	 */
 
 	// Show fatal error and stop script execution
 	public function fatal_error($error) {
@@ -713,14 +708,15 @@ class Vavok {
 	 * @param string $msg
 	 * @return string
 	 */
-	public function get_isset($msg = '') {
+	public function get_isset($msg = '')
+	{
 	    if (!empty($msg)) {
 	        $isset = $msg;
 	    } elseif (isset($_GET['isset'])) {
 	        $isset = $this->check($_GET['isset']);
 	    }
 
-	    include_once BASEDIR . "include/lang/" . $this->go('users')->get_user_language() . "/isset.php";
+	    include_once BASEDIR . 'include/lang/' . $this->go('users')->get_user_language() . '/isset.php';
 
 	    if (isset($isset) && !empty($issetLang[$isset])) {
 	        $isset_msg = new PageGen('pages/isset.tpl');
