@@ -1,9 +1,9 @@
 <?php 
 // (c) vavok.net
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg() || (!$users->is_moderator() && !$users->is_administrator())) {
+if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_moderator() && !$vavok->go('users')->is_administrator())) {
     $vavok->redirect_to("../pages/input.php?action=exit");
 }
 
@@ -33,7 +33,7 @@ function geo_check_ip($ip) {
 
 $ipData = geo_check_ip($ip);
 
-$current_page->page_title = 'IP Informations';
+$vavok->go('current_page')->page_title = 'IP Informations';
 $vavok->require_header();
 
 ?>
@@ -43,14 +43,15 @@ $vavok->require_header();
 <div class="b">
 
 <?php
-
 echo 'IP Address: ' . $ip . '<br />';
-echo 'Country: ' . $ipData['country'] . '<br />';
-echo 'State/Region: ' . $ipData['regionName'] . '<br />';
-echo 'City/Town: ' . $ipData['city'] . '<br />';
+if (!empty($ipData)) {
+	echo 'Country: ' . $ipData['country'] . '<br />';
+	echo 'State/Region: ' . $ipData['regionName'] . '<br />';
+	echo 'City/Town: ' . $ipData['city'] . '<br />';
+}
 echo '</div>';
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

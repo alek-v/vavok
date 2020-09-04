@@ -2,34 +2,33 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 1:30:13
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg()) $vavok->redirect_to("../pages/login.php?ptl=pages/inbox.php");
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../pages/login.php?ptl=pages/inbox.php");
 
 // Update notification data
-if ($db->count_row('notif', "uid='{$users->user_id}' AND type='inbox'") > 0) $db->update('notif', 'lstinb', 0, "uid='{$users->user_id}' AND type='inbox'");
+if ($vavok->go('db')->count_row('notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'") > 0) $vavok->go('db')->update('notif', 'lstinb', 0, "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
 
 // Header data
-$current_page->append_head_tags('<meta name="robots" content="noindex">
+$vavok->go('current_page')->append_head_tags('<meta name="robots" content="noindex">
 <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
 <script src="' . HOMEDIR . 'include/js/ajax.js"></script>
 ');
 
-$current_page->page_title = $localization->string('inbox');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('inbox');
 $vavok->require_header();
 
 $action = isset($_GET['action']) ? $vavok->check($_GET["action"]) : '';
 $page = isset($_GET['page']) ? $vavok->check($_GET["page"]) : '';
 $pmid = isset($_GET['pmid']) ? $vavok->check($_GET["pmid"]) : '';
 $who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
-if (empty($who) && isset($_POST['who'])) $who = $users->getidfromnick($vavok->check($_POST['who']));
+if (empty($who) && isset($_POST['who'])) $who = $vavok->go('users')->getidfromnick($vavok->check($_POST['who']));
 
 if (empty($action)) {
 
-    $num_items = $users->getpmcount($users->user_id);
+    $num_items = $vavok->go('users')->getpmcount($vavok->go('users')->user_id);
     $items_per_page = 10;
 
     // navigation
@@ -41,14 +40,14 @@ if (empty($action)) {
     $sql = "SELECT
     a.name, b.id, b.byuid, b.unread, b.starred FROM vavok_users a
     JOIN inbox b ON a.id = b.byuid
-    WHERE b.touid='{$users->user_id}' AND (deleted IS NULL OR deleted <> '{$users->user_id}')
+    WHERE b.touid='{$vavok->go('users')->user_id}' AND (deleted IS NULL OR deleted <> '{$vavok->go('users')->user_id}')
     ORDER BY b.timesent DESC
     LIMIT $limit_start, $items_per_page";
 
 
     $senders = array();
     $i = 0;
-    foreach ($db->query($sql) as $item) {
+    foreach ($vavok->go('db')->query($sql) as $item) {
 
         // don't list user twice
         if (!in_array($item['name'], $senders)) {
@@ -73,16 +72,16 @@ if (empty($action)) {
     echo $navigation->get_navigation();
 
     } else {
-        echo '<img src="../images/img/reload.gif" alt=""> ' . $localization->string('nopmsgs') . '<br /><br />';
+        echo '<img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('nopmsgs') . '<br /><br />';
     }
 
-    echo $vavok->sitelink('inbox.php?action=sendto', $localization->string('sendmsg')) . '<br />';
+    echo $vavok->sitelink('inbox.php?action=sendto', $vavok->go('localization')->string('sendmsg')) . '<br />';
 
 } else if ($action == "dialog") {
 
-    if (empty($who) || empty($users->getnickfromid($who))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
+    if (empty($who) || empty($vavok->go('users')->getnickfromid($who))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
 
-    $pms = $db->count_row('inbox', "(byuid='" . $users->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
+    $pms = $vavok->go('db')->count_row('inbox', "(byuid='" . $vavok->go('users')->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
     $num_items = $pms; //changable
     $items_per_page = 50;
@@ -96,32 +95,32 @@ if (empty($action)) {
         $read_only = 'readonly';
     }
 
-    $db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $users->user_id . "'");
+    $vavok->go('db')->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "'");
 
     echo '<form id="message-form" method="post" action="send_pm.php?who=' . $who . '">';
     echo '<div class="form-group">';
     echo '<label for="chatbarText"></label>';
-    echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $localization->string('message') . '..." ' . $read_only . ' />';
+    echo '<input name="pmtext" class="send_pm form-control" id="chatbarText" placeholder="' . $vavok->go('localization')->string('message') . '..." ' . $read_only . ' />';
     echo '</div>';
     echo '<input type="hidden" name="who" id="who" value="' . $who . '" class="send_pm" />';
 
     echo '<input type="hidden" name="lastid" id="lastid" value="' . $who . '" />';
-    echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $localization->string('send') . '</button>';
+    echo '<button type="submit" class="btn btn-primary" onclick="send_message(); return false;">' . $vavok->go('localization')->string('send') . '</button>';
     echo '</form><br />'; // update lang
 
     echo '<div id="message_box" class="message_box" style="overflow-y: scroll; height:400px;overflow-x: hidden;">';
 
     echo '<p id="outputList" class="outputList"></p>'; // ajax messages
 
-    $pms = "SELECT * FROM inbox WHERE (byuid = '" . $users->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $users->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
-    foreach ($db->query($pms) as $pm) {
+    $pms = "SELECT * FROM inbox WHERE (byuid = '" . $vavok->go('users')->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
+    foreach ($vavok->go('db')->query($pms) as $pm) {
 
-        $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $users->getnickfromid($pm['byuid']) . "</a> ";
+        $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $vavok->go('users')->getnickfromid($pm['byuid']) . "</a> ";
         echo $bylnk;
         $tmopm = date("d m y - h:i:s", $pm['timesent']);
         echo "$tmopm<br />";
 
-        echo $users->parsepm($pm['text']);
+        echo $vavok->go('users')->parsepm($pm['text']);
 
         echo '<hr />';
 
@@ -135,16 +134,16 @@ else if ($action == "sendto") {
 
     echo '<form method="post" action="inbox.php?action=dialog">';
     echo '<div class="form-group">';
-    echo '<label for="who">' . $localization->string('sendpmto') . ':</label>';
+    echo '<label for="who">' . $vavok->go('localization')->string('sendpmto') . ':</label>';
     echo '<input type="text" name="who" id="who" class="form-control" />';
     echo '</div>';
-    echo '<button type="submit" class="btn btn-primary">' . $localization->string('confirm') . '</button>
+    echo '<button type="submit" class="btn btn-primary">' . $vavok->go('localization')->string('confirm') . '</button>
     </form>
     <hr>';
 
 }
 
-if (!empty($action)) echo $vavok->sitelink('inbox.php', $localization->string('inbox'), '<p>', '</p>');
+if (!empty($action)) echo $vavok->sitelink('inbox.php', $vavok->go('localization')->string('inbox'), '<p>', '</p>');
 
 echo $vavok->homelink('<p>', '</p>');
 

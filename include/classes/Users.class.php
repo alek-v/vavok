@@ -3,7 +3,7 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for user management
- * Updated:   02.09.2020. 18:34:53
+ * Updated:   04.09.2020. 23:19:53
  */
 
 class Users {
@@ -59,6 +59,9 @@ class Users {
 		    }
 		}
 
+		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : ''; // User's id
+		$this->username = isset($_SESSION['log']) ? $_SESSION['log'] : '';
+
 		// Get user data
 		if (!empty($this->user_id)) {
 			// Get data
@@ -80,7 +83,7 @@ class Users {
 		    } 
 
 		    // Check if user is banned
-		    if ($vavok_users['banned'] == "1" && !strstr($_SERVER['PHP_SELF'], 'pages/ban.php')) $this->vavok->redirect_to(BASEDIR . "pages/ban.php");
+		    if ($vavok_users['banned'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/ban.php')) $this->vavok->redirect_to(BASEDIR . "pages/ban.php");
 
 		 	// activate account
 		    if ($user_profil['regche'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/key.php')) {
@@ -90,16 +93,12 @@ class Users {
 		        unset($_SESSION['log']);
 		        session_destroy();
 		    }
-
 		} else {
 			// User's site theme
 		    $config_themes = $this->vavok->get_configuration('webtheme');
 
 		    if (empty($_SESSION['lang'])) $this->change_language();
 		}
-
-		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : ''; // User's id
-		$this->username = isset($_SESSION['log']) ? $_SESSION['log'] : '';
 
 		// if skin not found
 		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) $config_themes = 'default';
@@ -114,7 +113,7 @@ class Users {
 
 		if (empty($_SESSION['counton'])) {
 		    $_SESSION['counton'] = 0;
-		} 
+		}
 
 		$_SESSION['counton']++;
 
@@ -375,7 +374,7 @@ class Users {
             $user_mail = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
-            $send_mail->send($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $users->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl')); // update lang
+            $send_mail->send($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl')); // update lang
 
             $this->vavok->go('db')->update(DB_PREFIX . 'notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -699,7 +698,7 @@ class Users {
 	        return 0;
 	    } 
 	    /*
-	  if ($users->is_moderator($tid)) {
+	  if ($vavok->go('users')->is_moderator($tid)) {
 	    //you cant ignore staff members
 	    return 0;
 	  }

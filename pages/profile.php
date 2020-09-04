@@ -2,12 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 1:33:34
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg()) $vavok->redirect_to("../?isset=inputoff");
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../?isset=inputoff");
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
@@ -16,7 +15,7 @@ switch ($action) {
 		if (!empty($_POST['site']) && !$vavok->validateURL($_POST['site'])) $vavok->redirect_to("profile.php?isset=insite");
 
 		// check email
-		if (!empty($_POST['email']) && !$users->validate_email($_POST['email'])) $vavok->redirect_to("profile.php?isset=noemail");
+		if (!empty($_POST['email']) && !$vavok->go('users')->validate_email($_POST['email'])) $vavok->redirect_to("profile.php?isset=noemail");
 
 		// check birthday
 		// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
@@ -29,8 +28,8 @@ switch ($action) {
 		$infa = $vavok->no_br($vavok->check($_POST['infa']));
 		$email = htmlspecialchars(strtolower($_POST['email']));
 		$site = $vavok->no_br($vavok->check($_POST['site']));
-		$browser = $vavok->no_br($vavok->check($users->user_browser()));
-		$ip = $vavok->no_br($vavok->check($users->find_ip()));
+		$browser = $vavok->no_br($vavok->check($vavok->go('users')->user_browser()));
+		$ip = $vavok->no_br($vavok->check($vavok->go('users')->find_ip()));
 		$sex = $vavok->no_br($vavok->check($_POST['pol']));
 		$happy = $vavok->no_br($vavok->check($_POST['happy']));
 
@@ -58,7 +57,7 @@ switch ($action) {
 		$values[] = $street;
 		$values[] = $zip;
 
-		$db->update('vavok_about', $fields, $values, "uid='{$users->user_id}'");
+		$vavok->go('db')->update('vavok_about', $fields, $values, "uid='{$vavok->go('users')->user_id}'");
 
 		$vavok->redirect_to("./profile.php?isset=editprofil");
 		break;
@@ -68,21 +67,21 @@ switch ($action) {
 		$confirmed = isset($_GET['confirmed']) ? $vavok->check($_GET['confirmed']) : '';
 
 		if ($confirmed == 'yes') {
-			$delete_id = $users->user_id;
+			$delete_id = $vavok->go('users')->user_id;
 
-			$users->logout($delete_id);
-			$users->delete_user($delete_id);
+			$vavok->go('users')->logout($delete_id);
+			$vavok->go('users')->delete_user($delete_id);
 
 			$vavok->redirect_to(HOMEDIR);
 		}
 
-		$current_page->page_title = $localization->string('deleteProfile');
+		$vavok->go('current_page')->page_title = $vavok->go('localization')->string('deleteProfile');
 		$vavok->require_header();
 
-		echo '<p>' . $localization->string('deleteConfirm') . '</p>';
+		echo '<p>' . $vavok->go('localization')->string('deleteConfirm') . '</p>';
 
-		echo '<p><a href="profile.php?action=delete_profile&confirmed=yes" class="btn btn-danger">' . $localization->string('deleteProfile') . '</a></p>';
-		echo '<p><a href="profile.php" class="btn btn-primary">' . $localization->string('back') . '</a></p>';
+		echo '<p><a href="profile.php?action=delete_profile&confirmed=yes" class="btn btn-danger">' . $vavok->go('localization')->string('deleteProfile') . '</a></p>';
+		echo '<p><a href="profile.php" class="btn btn-primary">' . $vavok->go('localization')->string('back') . '</a></p>';
 
 		echo $vavok->homelink('<p>', '</p>');
 
@@ -91,7 +90,7 @@ switch ($action) {
 		break;
 
 	default:
-		$current_page->append_head_tags('
+		$vavok->go('current_page')->append_head_tags('
 		<style type="text/css">
 		    .photo img {
 		        max-width: 100px;
@@ -101,20 +100,20 @@ switch ($action) {
 		</style>
 		');
 
-		$current_page->page_title = $localization->string('profsettings');
+		$vavok->go('current_page')->page_title = $vavok->go('localization')->string('profsettings');
 		$vavok->require_header();
 
 		echo '<div class="row">';
 
-		$about_user = $db->get_data('vavok_about', "uid='{$users->user_id}'");
-		$user_profil = $db->get_data('vavok_profil', "uid='{$users->user_id}'", 'subscri');
-		$show_user = $db->get_data('vavok_users', "id='{$users->user_id}'", 'skin, banned, browsers');
+		$about_user = $vavok->go('db')->get_data('vavok_about', "uid='{$vavok->go('users')->user_id}'");
+		$user_profil = $vavok->go('db')->get_data('vavok_profil', "uid='{$vavok->go('users')->user_id}'", 'subscri');
+		$show_user = $vavok->go('db')->get_data('vavok_users', "id='{$vavok->go('users')->user_id}'", 'skin, banned, browsers');
 
 		echo '<div class="col-sm">';
 
 			echo '<div class="row">';
 
-			    echo '<h1>' . $localization->string('profsettings') . '</h1>';
+			    echo '<h1>' . $vavok->go('localization')->string('profsettings') . '</h1>';
 
 			    $form = new PageGen('forms/form.tpl');
 			    $form->set('form_method', 'post');
@@ -125,7 +124,7 @@ switch ($action) {
 			     */
 			    $my_name = new PageGen('forms/input.tpl');
 			    $my_name->set('label_for', 'my_name');
-			    $my_name->set('label_value', $localization->string('name'));
+			    $my_name->set('label_value', $vavok->go('localization')->string('name'));
 			    $my_name->set('input_id', 'my_name');
 			    $my_name->set('input_name', 'my_name');
 			    $my_name->set('input_value', $about_user['rname']);
@@ -135,7 +134,7 @@ switch ($action) {
 			     */
 			    $surname = new PageGen('forms/input.tpl');
 			    $surname->set('label_for', 'surname');
-			    $surname->set('label_value', $localization->string('surname'));
+			    $surname->set('label_value', $vavok->go('localization')->string('surname'));
 			    $surname->set('input_id', 'surname');
 			    $surname->set('input_name', 'surname');
 			    $surname->set('input_value', $about_user['surname']);
@@ -145,7 +144,7 @@ switch ($action) {
 			     */
 			    $otkel = new PageGen('forms/input.tpl');
 			    $otkel->set('label_for', 'otkel');
-			    $otkel->set('label_value', $localization->string('city'));
+			    $otkel->set('label_value', $vavok->go('localization')->string('city'));
 			    $otkel->set('input_id', 'otkel');
 			    $otkel->set('input_name', 'otkel');
 			    $otkel->set('input_value', $about_user['city']);
@@ -155,7 +154,7 @@ switch ($action) {
 			     */
 			    $street = new PageGen('forms/input.tpl');
 			    $street->set('label_for', 'street');
-			    $street->set('label_value', $localization->string('street'));
+			    $street->set('label_value', $vavok->go('localization')->string('street'));
 			    $street->set('input_id', 'street');
 			    $street->set('input_name', 'street');
 			    $street->set('input_value', $about_user['address']);
@@ -165,7 +164,7 @@ switch ($action) {
 			     */
 			    $zip = new PageGen('forms/input.tpl');
 			    $zip->set('label_for', 'zip');
-			    $zip->set('label_value', $localization->string('postal'));
+			    $zip->set('label_value', $vavok->go('localization')->string('postal'));
 			    $zip->set('input_id', 'zip');
 			    $zip->set('input_name', 'zip');
 			    $zip->set('input_value', $about_user['zip']);
@@ -175,7 +174,7 @@ switch ($action) {
 			     */
 			    $infa = new PageGen('forms/input.tpl');
 			    $infa->set('label_for', 'infa');
-			    $infa->set('label_value', $localization->string('aboutyou'));
+			    $infa->set('label_value', $vavok->go('localization')->string('aboutyou'));
 			    $infa->set('input_id', 'infa');
 			    $infa->set('input_name', 'infa');
 			    $infa->set('input_value', $about_user['about']);
@@ -185,7 +184,7 @@ switch ($action) {
 			     */
 			    $email = new PageGen('forms/input.tpl');
 			    $email->set('label_for', 'email');
-			    $email->set('label_value', $localization->string('yemail'));
+			    $email->set('label_value', $vavok->go('localization')->string('yemail'));
 			    $email->set('input_id', 'email');
 			    $email->set('input_name', 'email');
 			    $email->set('input_value', $about_user['email']);
@@ -195,7 +194,7 @@ switch ($action) {
 			     */
 			    $site = new PageGen('forms/input.tpl');
 			    $site->set('label_for', 'site');
-			    $site->set('label_value', $localization->string('site'));
+			    $site->set('label_value', $vavok->go('localization')->string('site'));
 			    $site->set('input_id', 'site');
 			    $site->set('input_name', 'site');
 			    $site->set('input_value', $about_user['site']);
@@ -205,7 +204,7 @@ switch ($action) {
 			     */
 			    $birthday = new PageGen('forms/input.tpl');
 			    $birthday->set('label_for', 'happy');
-			    $birthday->set('label_value', $localization->string('birthday') . ' (dd.mm.yyyy)');
+			    $birthday->set('label_value', $vavok->go('localization')->string('birthday') . ' (dd.mm.yyyy)');
 			    $birthday->set('input_id', 'happy');
 			    $birthday->set('input_name', 'happy');
 			    $birthday->set('input_value', $about_user['birthday']);
@@ -215,7 +214,7 @@ switch ($action) {
 			     */
 			    $gender_m = new PageGen('forms/radio_inline.tpl');
 			    $gender_m->set('label_for', 'pol');
-			    $gender_m->set('label_value', $localization->string('sex') . ': ' . $localization->string('male'));
+			    $gender_m->set('label_value', $vavok->go('localization')->string('sex') . ': ' . $vavok->go('localization')->string('male'));
 			    $gender_m->set('input_id', 'pol');
 			    $gender_m->set('input_name', 'pol');
 			    $gender_m->set('input_value', 'm');
@@ -225,7 +224,7 @@ switch ($action) {
 
 			    $gender_f = new PageGen('forms/radio_inline.tpl');
 			    $gender_f->set('label_for', 'pol');
-			    $gender_f->set('label_value',  $localization->string('sex') . ': ' . $localization->string('female'));
+			    $gender_f->set('label_value',  $vavok->go('localization')->string('sex') . ': ' . $vavok->go('localization')->string('female'));
 			    $gender_f->set('input_id', 'pol');
 			    $gender_f->set('input_name', 'pol');
 			    $gender_f->set('input_value', 'z');
@@ -253,7 +252,7 @@ switch ($action) {
 			     */
 			    $newpar = new PageGen('forms/input.tpl');
 			    $newpar->set('label_for', 'newpar');
-			    $newpar->set('label_value', $localization->string('newpass'));
+			    $newpar->set('label_value', $vavok->go('localization')->string('newpass'));
 			    $newpar->set('input_id', 'newpar');
 			    $newpar->set('input_name', 'newpar');
 
@@ -262,7 +261,7 @@ switch ($action) {
 			     */
 			    $newpar2 = new PageGen('forms/input.tpl');
 			    $newpar2->set('label_for', 'newpar2');
-			    $newpar2->set('label_value', $localization->string('passagain'));
+			    $newpar2->set('label_value', $vavok->go('localization')->string('passagain'));
 			    $newpar2->set('input_id', 'newpar2');
 			    $newpar2->set('input_name', 'newpar2');
 
@@ -271,7 +270,7 @@ switch ($action) {
 			     */
 			    $oldpar = new PageGen('forms/input.tpl');
 			    $oldpar->set('label_for', 'oldpar');
-			    $oldpar->set('label_value', $localization->string('oldpass'));
+			    $oldpar->set('label_value', $vavok->go('localization')->string('oldpass'));
 			    $oldpar->set('input_id', 'oldpar');
 			    $oldpar->set('input_name', 'oldpar');
 
@@ -281,7 +280,7 @@ switch ($action) {
 			echo '</div>';
 
 			echo '<div class="row">';
-				echo '<p><a href="profile.php?action=delete_profile" class="btn btn-danger">' . $localization->string('deleteProfile') . '</a></p>';
+				echo '<p><a href="profile.php?action=delete_profile" class="btn btn-danger">' . $vavok->go('localization')->string('deleteProfile') . '</a></p>';
 			echo '</div>';
 
 		echo '</div>';

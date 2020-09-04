@@ -2,12 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 15:20:52
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg() || !$users->is_administrator(101)) {
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator(101)) {
     $vavok->redirect_to("../pages/error.php?error=auth");
 }
 
@@ -41,7 +40,7 @@ if ($action == "editone") {
     );
 
     // Update settings
-    $db->update(DB_PREFIX . 'settings', $fields, $values);
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     // update .htaccess file
     // dont force https
@@ -109,7 +108,7 @@ if ($action == "edittwo") {
     );
 
     // Update data
-	$db->update(DB_PREFIX . 'settings', $fields, $values);
+	$vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 	
@@ -135,7 +134,7 @@ if ($action == "editthree") {
         (int)$_POST['conf_set56']
     );
 
-    $db->update(DB_PREFIX . 'settings', $fields, $values);
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
@@ -163,7 +162,7 @@ if ($action == "editfour") {
     );
 
     // Update
-    $db->update(DB_PREFIX . 'settings', $fields, $values);
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     // update gallery settings
     $gallery_file = $vavok->get_data_file('dataconfig/gallery.dat');
@@ -196,7 +195,7 @@ if ($action == "editfive") {
 
 	$udata[30] = (int)$_POST['conf_set30'];
 
-	$db->update(DB_PREFIX . 'settings', 'pvtLimit', (int)$_POST['conf_set30']);
+	$vavok->go('db')->update(DB_PREFIX . 'settings', 'pvtLimit', (int)$_POST['conf_set30']);
 
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 }
@@ -246,7 +245,7 @@ if ($action == "editseven") {
         $_POST['conf_set70']
     );
 
-    $db->update(DB_PREFIX . 'settings', $fields, $values);
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
@@ -269,30 +268,30 @@ if ($action == "editeight") {
     );
 
     // Update data
-    $db->update(DB_PREFIX . 'settings', $fields, $values);
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
 
-$current_page->page_title = "Settings";
+$vavok->go('current_page')->page_title = "Settings";
 
 $vavok->require_header();
 
 if (empty($action)) {
-    echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $localization->string('mainset') . '</a>';
-    echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $localization->string('shwinfo') . '</a>';
-    echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $localization->string('bookchatnews') . '</a>';
-    echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $localization->string('forumgallery') . '</a>';
-    // echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $localization->string('inbox') . '</a>';
-    // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $localization->string('advert') . '</a><br />';
-    echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $localization->string('pagemanage') . '</a>';
-    echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $localization->string('other') . '</a>';
+    echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mainset') . '</a>';
+    echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('shwinfo') . '</a>';
+    echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('bookchatnews') . '</a>';
+    echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forumgallery') . '</a>';
+    // echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('inbox') . '</a>';
+    // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('advert') . '</a><br />';
+    echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagemanage') . '</a>';
+    echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('other') . '</a>';
 } 
 
 // main settings
 if ($action == "setone") {
-    echo '<h1>' . $localization->string('mainset') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('mainset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -308,7 +307,7 @@ if ($action == "setone") {
 
     $select_lang = new PageGen('forms/select.tpl');
     $select_lang->set('label_for', 'conf_set47');
-    $select_lang->set('label_value', $localization->string('language'));
+    $select_lang->set('label_value', $vavok->go('localization')->string('language'));
     $select_lang->set('select_id', 'conf_set47');
     $select_lang->set('select_name', 'conf_set47');
     $select_lang->set('options', $options);
@@ -328,7 +327,7 @@ if ($action == "setone") {
 
     $select_theme = new PageGen('forms/select.tpl');
     $select_theme->set('label_for', 'conf_set2');
-    $select_theme->set('label_value', $localization->string('webskin'));
+    $select_theme->set('label_value', $vavok->go('localization')->string('webskin'));
     $select_theme->set('select_id', 'conf_set2');
     $select_theme->set('select_name', 'conf_set2');
     $select_theme->set('options', $options);
@@ -336,7 +335,7 @@ if ($action == "setone") {
     // this will be admin username or system username
     $input8 = new PageGen('forms/input.tpl');
     $input8->set('label_for', 'conf_set8');
-    $input8->set('label_value', $localization->string('adminusername'));
+    $input8->set('label_value', $vavok->go('localization')->string('adminusername'));
     $input8->set('input_id', 'conf_set8');
     $input8->set('input_name', 'conf_set8');
     $input8->set('input_value', $vavok->get_configuration('adminNick'));
@@ -344,7 +343,7 @@ if ($action == "setone") {
 
     $input9 = new PageGen('forms/input.tpl');
     $input9->set('label_for', 'conf_set9');
-    $input9->set('label_value', $localization->string('adminemail'));
+    $input9->set('label_value', $vavok->go('localization')->string('adminemail'));
     $input9->set('input_id', 'conf_set9');
     $input9->set('input_name', 'conf_set9');
     $input9->set('input_value', $vavok->get_configuration('adminEmail'));
@@ -352,7 +351,7 @@ if ($action == "setone") {
 
     $input10 = new PageGen('forms/input.tpl');
     $input10->set('label_for', 'conf_set10');
-    $input10->set('label_value', $localization->string('timezone'));
+    $input10->set('label_value', $vavok->go('localization')->string('timezone'));
     $input10->set('input_id', 'conf_set10');
     $input10->set('input_name', 'conf_set10');
     $input10->set('input_value', $vavok->get_configuration('timeZone'));
@@ -360,7 +359,7 @@ if ($action == "setone") {
 
     $input11 = new PageGen('forms/input.tpl');
     $input11->set('label_for', 'conf_set11');
-    $input11->set('label_value', $localization->string('pagetitle'));
+    $input11->set('label_value', $vavok->go('localization')->string('pagetitle'));
     $input11->set('input_id', 'conf_set11');
     $input11->set('input_name', 'conf_set11');
     $input11->set('input_value', $vavok->get_configuration('title'));
@@ -368,7 +367,7 @@ if ($action == "setone") {
 
     $input14 = new PageGen('forms/input.tpl');
     $input14->set('label_for', 'conf_set14');
-    $input14->set('label_value', $localization->string('siteurl'));
+    $input14->set('label_value', $vavok->go('localization')->string('siteurl'));
     $input14->set('input_id', 'conf_set14');
     $input14->set('input_name', 'conf_set14');
     $input14->set('input_value', $vavok->get_configuration('homeUrl'));
@@ -376,7 +375,7 @@ if ($action == "setone") {
 
     $input29 = new PageGen('forms/input.tpl');
     $input29->set('label_for', 'conf_set29');
-    $input29->set('label_value', $localization->string('floodtime'));
+    $input29->set('label_value', $vavok->go('localization')->string('floodtime'));
     $input29->set('input_id', 'conf_set29');
     $input29->set('input_name', 'conf_set29');
     $input29->set('input_value', $vavok->get_configuration('floodTime'));
@@ -384,14 +383,14 @@ if ($action == "setone") {
 
     $input1 = new PageGen('forms/input.tpl');
     $input1->set('label_for', 'conf_set1');
-    $input1->set('label_value', $localization->string('passkey'));
+    $input1->set('label_value', $vavok->go('localization')->string('passkey'));
     $input1->set('input_id', 'conf_set1');
     $input1->set('input_name', 'conf_set1');
     $input1->set('input_value', $vavok->get_configuration('keypass'));
     $input1->set('input_maxlength', 25);
 
     // quarantine time
-    $quarantine = array(0 => "" . $localization->string('disabled') . "", 21600 => "6 " . $localization->string('hours') . "", 43200 => "12 " . $localization->string('hours') . "", 86400 => "24 " . $localization->string('hours') . "", 129600 => "36 " . $localization->string('hours') . "", 172800 => "48 " . $localization->string('hours') . "");
+    $quarantine = array(0 => "" . $vavok->go('localization')->string('disabled') . "", 21600 => "6 " . $vavok->go('localization')->string('hours') . "", 43200 => "12 " . $vavok->go('localization')->string('hours') . "", 86400 => "24 " . $vavok->go('localization')->string('hours') . "", 129600 => "36 " . $vavok->go('localization')->string('hours') . "", 172800 => "48 " . $vavok->go('localization')->string('hours') . "");
 
     $options = '<option value="' . $vavok->get_configuration('quarantine') . '">' . $quarantine[$vavok->get_configuration('quarantine')] . '</option>';
     foreach($quarantine as $k => $v) {
@@ -402,7 +401,7 @@ if ($action == "setone") {
 
     $select_set3 = new PageGen('forms/select.tpl');
     $select_set3->set('label_for', 'conf_set3');
-    $select_set3->set('label_value', $localization->string('quarantinetime'));
+    $select_set3->set('label_value', $vavok->go('localization')->string('quarantinetime'));
     $select_set3->set('select_id', 'conf_set3');
     $select_set3->set('select_name', 'conf_set3');
     $select_set3->set('options', $options);
@@ -431,7 +430,7 @@ if ($action == "setone") {
     // Registration opened or closed
     $input_radio61_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio61_yes->set('label_for', 'conf_set61');
-    $input_radio61_yes->set('label_value', $localization->string('yes'));
+    $input_radio61_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $input_radio61_yes->set('input_id', 'conf_set61');
     $input_radio61_yes->set('input_name', 'conf_set61');
     $input_radio61_yes->set('input_value', 1);
@@ -441,7 +440,7 @@ if ($action == "setone") {
 
     $input_radio61_no = new PageGen('forms/radio_inline.tpl');
     $input_radio61_no->set('label_for', 'conf_set61');
-    $input_radio61_no->set('label_value', $localization->string('no'));
+    $input_radio61_no->set('label_value', $vavok->go('localization')->string('no'));
     $input_radio61_no->set('input_id', 'conf_set61');
     $input_radio61_no->set('input_name', 'conf_set61');
     $input_radio61_no->set('input_value', 0);
@@ -450,13 +449,13 @@ if ($action == "setone") {
     }
 
     $radio_group_one = new PageGen('forms/radio_group.tpl');
-    $radio_group_one->set('description', $localization->string('openreg'));
+    $radio_group_one->set('description', $vavok->go('localization')->string('openreg'));
     $radio_group_one->set('radio_group', $radio_group_one->merge(array($input_radio61_yes, $input_radio61_no)));
 
     // Does user need to confirm registration
     $input_radio62_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio62_yes->set('label_for', 'conf_set62');
-    $input_radio62_yes->set('label_value', $localization->string('yes'));
+    $input_radio62_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $input_radio62_yes->set('input_id', 'conf_set62');
     $input_radio62_yes->set('input_name', 'conf_set62');
     $input_radio62_yes->set('input_value', 1);
@@ -466,7 +465,7 @@ if ($action == "setone") {
 
     $input_radio62_no = new PageGen('forms/radio_inline.tpl');
     $input_radio62_no->set('label_for', 'conf_set62');
-    $input_radio62_no->set('label_value', $localization->string('no'));
+    $input_radio62_no->set('label_value', $vavok->go('localization')->string('no'));
     $input_radio62_no->set('input_id', 'conf_set62');
     $input_radio62_no->set('input_name', 'conf_set62');
     $input_radio62_no->set('input_value', 0);
@@ -475,13 +474,13 @@ if ($action == "setone") {
     }
 
     $radio_group_two = new PageGen('forms/radio_group.tpl');
-    $radio_group_two->set('description', $localization->string('confregs'));
+    $radio_group_two->set('description', $vavok->go('localization')->string('confregs'));
     $radio_group_two->set('radio_group', $radio_group_two->merge(array($input_radio62_yes, $input_radio62_no)));
 
     // Maintenance mode
     $input_radio63_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio63_yes->set('label_for', 'conf_set63');
-    $input_radio63_yes->set('label_value', $localization->string('yes'));
+    $input_radio63_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $input_radio63_yes->set('input_id', 'conf_set63');
     $input_radio63_yes->set('input_name', 'conf_set63');
     $input_radio63_yes->set('input_value', 1);
@@ -491,7 +490,7 @@ if ($action == "setone") {
 
     $input_radio63_no = new PageGen('forms/radio_inline.tpl');
     $input_radio63_no->set('label_for', 'conf_set63');
-    $input_radio63_no->set('label_value', $localization->string('no'));
+    $input_radio63_no->set('label_value', $vavok->go('localization')->string('no'));
     $input_radio63_no->set('input_id', 'conf_set63');
     $input_radio63_no->set('input_name', 'conf_set63');
     $input_radio63_no->set('input_value', 0);
@@ -506,11 +505,11 @@ if ($action == "setone") {
     $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $input29, $input1, $select_set3, $select_set21, $radio_group_one, $radio_group_two, $radio_group_three)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == "settwo") {
-    echo '<h1>' . $localization->string('shwinfo') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('shwinfo') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -521,7 +520,7 @@ if ($action == "settwo") {
      */
     $_4_yes = new PageGen('forms/radio_inline.tpl');
     $_4_yes->set('label_for', 'conf_set4');
-    $_4_yes->set('label_value', $localization->string('yes'));
+    $_4_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_4_yes->set('input_id', 'conf_set4');
     $_4_yes->set('input_name', 'conf_set4');
     $_4_yes->set('input_value', 1);
@@ -531,7 +530,7 @@ if ($action == "settwo") {
 
     $_4_no = new PageGen('forms/radio_inline.tpl');
     $_4_no->set('label_for', 'conf_set4');
-    $_4_no->set('label_value',  $localization->string('no'));
+    $_4_no->set('label_value',  $vavok->go('localization')->string('no'));
     $_4_no->set('input_id', 'conf_set4');
     $_4_no->set('input_name', 'conf_set4');
     $_4_no->set('input_value', 0);
@@ -540,7 +539,7 @@ if ($action == "settwo") {
     }
 
     $show_clock = new PageGen('forms/radio_group.tpl');
-    $show_clock->set('description', $localization->string('showclock'));
+    $show_clock->set('description', $vavok->go('localization')->string('showclock'));
     $show_clock->set('radio_group', $show_clock->merge(array($_4_yes, $_4_no)));
 
     /**
@@ -548,7 +547,7 @@ if ($action == "settwo") {
      */
     $_5_yes = new PageGen('forms/radio_inline.tpl');
     $_5_yes->set('label_for', 'conf_set5');
-    $_5_yes->set('label_value', $localization->string('yes'));
+    $_5_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_5_yes->set('input_id', 'conf_set5');
     $_5_yes->set('input_name', 'conf_set5');
     $_5_yes->set('input_value', 1);
@@ -558,7 +557,7 @@ if ($action == "settwo") {
 
     $_5_no = new PageGen('forms/radio_inline.tpl');
     $_5_no->set('label_for', 'conf_set5');
-    $_5_no->set('label_value', $localization->string('no'));
+    $_5_no->set('label_value', $vavok->go('localization')->string('no'));
     $_5_no->set('input_id', 'conf_set5');
     $_5_no->set('input_name', 'conf_set5');
     $_5_no->set('input_value', 0);
@@ -567,7 +566,7 @@ if ($action == "settwo") {
     }
 
     $page_gen = new PageGen('forms/radio_group.tpl');
-    $page_gen->set('description', $localization->string('pagegen'));
+    $page_gen->set('description', $vavok->go('localization')->string('pagegen'));
     $page_gen->set('radio_group', $page_gen->merge(array($_5_yes, $_5_no)));
 
     /**
@@ -575,7 +574,7 @@ if ($action == "settwo") {
      */
     $_7_yes = new PageGen('forms/radio_inline.tpl');
     $_7_yes->set('label_for', 'conf_set7');
-    $_7_yes->set('label_value', $localization->string('yes'));
+    $_7_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_7_yes->set('input_id', 'conf_set7');
     $_7_yes->set('input_name', 'conf_set7');
     $_7_yes->set('input_value', 1);
@@ -585,7 +584,7 @@ if ($action == "settwo") {
 
     $_7_no = new PageGen('forms/radio_inline.tpl');
     $_7_no->set('label_for', 'conf_set7');
-    $_7_no->set('label_value',  $localization->string('no'));
+    $_7_no->set('label_value',  $vavok->go('localization')->string('no'));
     $_7_no->set('input_id', 'conf_set7');
     $_7_no->set('input_name', 'conf_set7');
     $_7_no->set('input_value', 0);
@@ -594,7 +593,7 @@ if ($action == "settwo") {
     }
 
     $show_online = new PageGen('forms/radio_group.tpl');
-    $show_online->set('description', $localization->string('showonline'));
+    $show_online->set('description', $vavok->go('localization')->string('showonline'));
     $show_online->set('radio_group', $show_online->merge(array($_7_yes, $_7_no)));
 
     /**
@@ -602,7 +601,7 @@ if ($action == "settwo") {
      */
     $_32_yes = new PageGen('forms/radio_inline.tpl');
     $_32_yes->set('label_for', 'conf_set32');
-    $_32_yes->set('label_value', $localization->string('yes'));
+    $_32_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_32_yes->set('input_id', 'conf_set32');
     $_32_yes->set('input_name', 'conf_set32');
     $_32_yes->set('input_value', 1);
@@ -612,7 +611,7 @@ if ($action == "settwo") {
 
     $_32_no = new PageGen('forms/radio_inline.tpl');
     $_32_no->set('label_for', 'conf_set32');
-    $_32_no->set('label_value', $localization->string('no'));
+    $_32_no->set('label_value', $vavok->go('localization')->string('no'));
     $_32_no->set('input_id', 'conf_set32');
     $_32_no->set('input_name', 'conf_set32');
     $_32_no->set('input_value', 0);
@@ -627,7 +626,7 @@ if ($action == "settwo") {
     /**
      * Show counter
      */
-    $incounters = array(6 => "" . $localization->string('dontshow') . "", 1 => "" . $localization->string('vsttotalvst') . "", 2 => "" . $localization->string('clicktotalclick') . "", 3 => "" . $localization->string('clickvisits') . "", 4 => "" . $localization->string('totclicktotvst'));
+    $incounters = array(6 => "" . $vavok->go('localization')->string('dontshow') . "", 1 => "" . $vavok->go('localization')->string('vsttotalvst') . "", 2 => "" . $vavok->go('localization')->string('clicktotalclick') . "", 3 => "" . $vavok->go('localization')->string('clickvisits') . "", 4 => "" . $vavok->go('localization')->string('totclicktotvst'));
 
     $options = '<option value="' . $vavok->get_configuration('showCounter') . '">' . $incounters[$vavok->get_configuration('showCounter')] . '</option>';
     foreach($incounters as $k => $v) {
@@ -638,7 +637,7 @@ if ($action == "settwo") {
 
     $show_counter = new PageGen('forms/select.tpl');
     $show_counter->set('label_for', 'conf_set74');
-    $show_counter->set('label_value', $localization->string('countlook'));
+    $show_counter->set('label_value', $vavok->go('localization')->string('countlook'));
     $show_counter->set('select_id', 'conf_set74');
     $show_counter->set('select_name', 'conf_set74');
     $show_counter->set('options', $options);
@@ -646,11 +645,11 @@ if ($action == "settwo") {
     $form->set('fields', $form->merge(array($show_clock, $page_gen, $show_online, $cookie_consent, $show_counter)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == "setthree") {
-    echo '<h1>' . $localization->string('gbnewschatset') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('gbnewschatset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -661,7 +660,7 @@ if ($action == "setthree") {
      */
     $_20_yes = new PageGen('forms/radio_inline.tpl');
     $_20_yes->set('label_for', 'conf_set20');
-    $_20_yes->set('label_value', $localization->string('yes'));
+    $_20_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_20_yes->set('input_id', 'conf_set20');
     $_20_yes->set('input_name', 'conf_set20');
     $_20_yes->set('input_value', 1);
@@ -671,7 +670,7 @@ if ($action == "setthree") {
 
     $_20_no = new PageGen('forms/radio_inline.tpl');
     $_20_no->set('label_for', 'conf_set20');
-    $_20_no->set('label_value', $localization->string('no'));
+    $_20_no->set('label_value', $vavok->go('localization')->string('no'));
     $_20_no->set('input_id', 'conf_set20');
     $_20_no->set('input_name', 'conf_set20');
     $_20_no->set('input_value', 0);
@@ -680,7 +679,7 @@ if ($action == "setthree") {
     }
 
     $gb_write = new PageGen('forms/radio_group.tpl');
-    $gb_write->set('description', $localization->string('allowguestingb'));
+    $gb_write->set('description', $vavok->go('localization')->string('allowguestingb'));
     $gb_write->set('radio_group', $gb_write->merge(array($_20_yes, $_20_no)));
 
     /**
@@ -688,7 +687,7 @@ if ($action == "setthree") {
      */
     $input22 = new PageGen('forms/input.tpl');
     $input22->set('label_for', 'conf_set22');
-    $input22->set('label_value', $localization->string('maxinchat'));
+    $input22->set('label_value', $vavok->go('localization')->string('maxinchat'));
     $input22->set('input_id', 'conf_set22');
     $input22->set('input_name', 'conf_set22');
     $input22->set('input_value', $vavok->get_configuration('maxPostChat'));
@@ -699,7 +698,7 @@ if ($action == "setthree") {
      */
     $input24 = new PageGen('forms/input.tpl');
     $input24->set('label_for', 'conf_set24');
-    $input24->set('label_value', $localization->string('maxnews'));
+    $input24->set('label_value', $vavok->go('localization')->string('maxnews'));
     $input24->set('input_id', 'conf_set24');
     $input24->set('input_name', 'conf_set24');
     $input24->set('input_value', $vavok->get_configuration('maxPostNews'));
@@ -710,7 +709,7 @@ if ($action == "setthree") {
      */
     $input56 = new PageGen('forms/input.tpl');
     $input56->set('label_for', 'conf_set56');
-    $input56->set('label_value', $localization->string('onepassmail'));
+    $input56->set('label_value', $vavok->go('localization')->string('onepassmail'));
     $input56->set('input_id', 'conf_set56');
     $input56->set('input_name', 'conf_set56');
     $input56->set('input_value', $vavok->get_configuration('subMailPacket'));
@@ -719,7 +718,7 @@ if ($action == "setthree") {
     $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == "setfour") {
@@ -727,7 +726,7 @@ if ($action == "setfour") {
     $kbs = $vavok->get_configuration('photoFileSize') / 1024;
 
     // forum settings
-    echo '<h1>' . $localization->string('forumandgalset') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('forumandgalset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -738,7 +737,7 @@ if ($action == "setfour") {
      */
     $_49_yes = new PageGen('forms/radio_inline.tpl');
     $_49_yes->set('label_for', 'conf_set49');
-    $_49_yes->set('label_value', $localization->string('yes'));
+    $_49_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_49_yes->set('input_id', 'conf_set49');
     $_49_yes->set('input_name', 'conf_set49');
     $_49_yes->set('input_value', 1);
@@ -748,7 +747,7 @@ if ($action == "setfour") {
 
     $_49_no = new PageGen('forms/radio_inline.tpl');
     $_49_no->set('label_for', 'conf_set49');
-    $_49_no->set('label_value', $localization->string('no'));
+    $_49_no->set('label_value', $vavok->go('localization')->string('no'));
     $_49_no->set('input_id', 'conf_set49');
     $_49_no->set('input_name', 'conf_set49');
     $_49_no->set('input_value', 0);
@@ -757,7 +756,7 @@ if ($action == "setfour") {
     }
 
     $forum_access = new PageGen('forms/radio_group.tpl');
-    $forum_access->set('description', $localization->string('forumon'));
+    $forum_access->set('description', $vavok->go('localization')->string('forumon'));
     $forum_access->set('radio_group', $forum_access->merge(array($_49_yes, $_49_no)));
 
     /**
@@ -765,7 +764,7 @@ if ($action == "setfour") {
      */
     $_68_yes = new PageGen('forms/radio_inline.tpl');
     $_68_yes->set('label_for', 'conf_set68');
-    $_68_yes->set('label_value', $localization->string('yes'));
+    $_68_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $_68_yes->set('input_id', 'conf_set68');
     $_68_yes->set('input_name', 'conf_set68');
     $_68_yes->set('input_value', 1);
@@ -775,7 +774,7 @@ if ($action == "setfour") {
 
     $_68_no = new PageGen('forms/radio_inline.tpl');
     $_68_no->set('label_for', 'conf_set68');
-    $_68_no->set('label_value', $localization->string('no'));
+    $_68_no->set('label_value', $vavok->go('localization')->string('no'));
     $_68_no->set('input_id', 'conf_set68');
     $_68_no->set('input_name', 'conf_set68');
     $_68_no->set('input_value', 0);
@@ -802,7 +801,7 @@ if ($action == "setfour") {
      */
     $gallery_set8 = new PageGen('forms/input.tpl');
     $gallery_set8->set('label_for', 'gallery_set8');
-    $gallery_set8->set('label_value', $localization->string('photosperpg'));
+    $gallery_set8->set('label_value', $vavok->go('localization')->string('photosperpg'));
     $gallery_set8->set('input_id', 'gallery_set8');
     $gallery_set8->set('input_name', 'gallery_set8');
     $gallery_set8->set('input_value', $gallery_data[8]);
@@ -835,7 +834,7 @@ if ($action == "setfour") {
      */
     $media_buttons_yes = new PageGen('forms/radio_inline.tpl');
     $media_buttons_yes->set('label_for', 'media_buttons');
-    $media_buttons_yes->set('label_value', $localization->string('yes'));
+    $media_buttons_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $media_buttons_yes->set('input_id', 'media_buttons');
     $media_buttons_yes->set('input_name', 'media_buttons');
     $media_buttons_yes->set('input_value', 1);
@@ -845,7 +844,7 @@ if ($action == "setfour") {
 
     $media_buttons_no = new PageGen('forms/radio_inline.tpl');
     $media_buttons_no->set('label_for', 'media_buttons');
-    $media_buttons_no->set('label_value', $localization->string('no'));
+    $media_buttons_no->set('label_value', $vavok->go('localization')->string('no'));
     $media_buttons_no->set('input_id', 'media_buttons');
     $media_buttons_no->set('input_name', 'media_buttons');
     $media_buttons_no->set('input_value', 0);
@@ -862,7 +861,7 @@ if ($action == "setfour") {
      */
     $conf_set38 = new PageGen('forms/input.tpl');
     $conf_set38->set('label_for', 'conf_set38');
-    $conf_set38->set('label_value', $localization->string('photomaxkb'));
+    $conf_set38->set('label_value', $vavok->go('localization')->string('photomaxkb'));
     $conf_set38->set('input_id', 'conf_set38');
     $conf_set38->set('input_name', 'conf_set38');
     $conf_set38->set('input_value', (int)$kbs);
@@ -873,7 +872,7 @@ if ($action == "setfour") {
      */
     $conf_set39 = new PageGen('forms/input.tpl');
     $conf_set39->set('label_for', 'conf_set39');
-    $conf_set39->set('label_value', $localization->string('photopx'));
+    $conf_set39->set('label_value', $vavok->go('localization')->string('photopx'));
     $conf_set39->set('input_id', 'conf_set39');
     $conf_set39->set('input_name', 'conf_set39');
     $conf_set39->set('input_value', (int)$vavok->get_configuration('maxPhotoPixels'));
@@ -884,7 +883,7 @@ if ($action == "setfour") {
      */
     $gallery_set0_yes = new PageGen('forms/radio_inline.tpl');
     $gallery_set0_yes->set('label_for', 'gallery_set0');
-    $gallery_set0_yes->set('label_value', $localization->string('yes'));
+    $gallery_set0_yes->set('label_value', $vavok->go('localization')->string('yes'));
     $gallery_set0_yes->set('input_id', 'gallery_set0');
     $gallery_set0_yes->set('input_name', 'gallery_set0');
     $gallery_set0_yes->set('input_value', 1);
@@ -894,7 +893,7 @@ if ($action == "setfour") {
 
     $gallery_set0_no = new PageGen('forms/radio_inline.tpl');
     $gallery_set0_no->set('label_for', 'gallery_set0');
-    $gallery_set0_no->set('label_value', $localization->string('no'));
+    $gallery_set0_no->set('label_value', $vavok->go('localization')->string('no'));
     $gallery_set0_no->set('input_id', 'gallery_set0');
     $gallery_set0_no->set('input_name', 'gallery_set0');
     $gallery_set0_no->set('input_value', 0);
@@ -909,11 +908,11 @@ if ($action == "setfour") {
     $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == "setseven") {
-    echo '<h1>' . $localization->string('pagessets') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('pagessets') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -924,7 +923,7 @@ if ($action == "setseven") {
      */
     $conf_set28 = new PageGen('forms/input.tpl');
     $conf_set28->set('label_for', 'custom-pages');
-    $conf_set28->set('label_value', $localization->string('customPageUrl'));
+    $conf_set28->set('label_value', $vavok->go('localization')->string('customPageUrl'));
     $conf_set28->set('input_id', 'custom-pages');
     $conf_set28->set('input_name', 'conf_set28');
     $conf_set28->set('input_value', $vavok->get_configuration('customPages'));
@@ -934,7 +933,7 @@ if ($action == "setseven") {
      */
     $conf_set51 = new PageGen('forms/input.tpl');
     $conf_set51->set('label_for', 'referals');
-    $conf_set51->set('label_value', $localization->string('maxrefererdata'));
+    $conf_set51->set('label_value', $vavok->go('localization')->string('maxrefererdata'));
     $conf_set51->set('input_id', 'referals');
     $conf_set51->set('input_name', 'conf_set51');
     $conf_set51->set('input_value', $vavok->get_configuration('refererLog'));
@@ -945,7 +944,7 @@ if ($action == "setseven") {
      */
     $conf_set70yes = new PageGen('forms/radio_inline.tpl');
     $conf_set70yes->set('label_for', 'referal-yes');
-    $conf_set70yes->set('label_value', $localization->string('yes'));
+    $conf_set70yes->set('label_value', $vavok->go('localization')->string('yes'));
     $conf_set70yes->set('input_id', 'referal-yes');
     $conf_set70yes->set('input_name', 'conf_set70');
     $conf_set70yes->set('input_value', 1);
@@ -955,7 +954,7 @@ if ($action == "setseven") {
 
     $conf_set70no = new PageGen('forms/radio_inline.tpl');
     $conf_set70no->set('label_for', 'referal-no');
-    $conf_set70no->set('label_value', $localization->string('no'));
+    $conf_set70no->set('label_value', $vavok->go('localization')->string('no'));
     $conf_set70no->set('input_id', 'referal-no');
     $conf_set70no->set('input_name', 'conf_set70');
     $conf_set70no->set('input_value', 0);
@@ -964,7 +963,7 @@ if ($action == "setseven") {
     }
 
     $show_refpage = new PageGen('forms/radio_group.tpl');
-    $show_refpage->set('description', $localization->string('showrefpage'));
+    $show_refpage->set('description', $vavok->go('localization')->string('showrefpage'));
     $show_refpage->set('radio_group', $show_refpage->merge(array($conf_set70yes, $conf_set70no)));
 
     /**
@@ -972,7 +971,7 @@ if ($action == "setseven") {
      */
     $conf_set6yes = new PageGen('forms/radio_inline.tpl');
     $conf_set6yes->set('label_for', 'fb_comm_yes');
-    $conf_set6yes->set('label_value', $localization->string('yes'));
+    $conf_set6yes->set('label_value', $vavok->go('localization')->string('yes'));
     $conf_set6yes->set('input_id', 'fb_comm_yes');
     $conf_set6yes->set('input_name', 'conf_set6');
     $conf_set6yes->set('input_value', 1);
@@ -982,7 +981,7 @@ if ($action == "setseven") {
 
     $conf_set6no = new PageGen('forms/radio_inline.tpl');
     $conf_set6no->set('label_for', 'fb_comm_no');
-    $conf_set6no->set('label_value', $localization->string('no'));
+    $conf_set6no->set('label_value', $vavok->go('localization')->string('no'));
     $conf_set6no->set('input_id', 'fb_comm_no');
     $conf_set6no->set('input_name', 'conf_set6');
     $conf_set6no->set('input_value', 0);
@@ -997,11 +996,11 @@ if ($action == "setseven") {
     $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == "seteight") {
-    echo '<h1>' . $localization->string('other') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('other') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -1012,7 +1011,7 @@ if ($action == "seteight") {
      */
     $conf_set58 = new PageGen('forms/input.tpl');
     $conf_set58->set('label_for', 'conf_set58');
-    $conf_set58->set('label_value', $localization->string('maxlogfile'));
+    $conf_set58->set('label_value', $vavok->go('localization')->string('maxlogfile'));
     $conf_set58->set('input_id', 'conf_set58');
     $conf_set58->set('input_name', 'conf_set58');
     $conf_set58->set('input_value', $vavok->get_configuration('maxLogData'));
@@ -1023,7 +1022,7 @@ if ($action == "seteight") {
      */
     $conf_set76 = new PageGen('forms/input.tpl');
     $conf_set76->set('label_for', 'conf_set76');
-    $conf_set76->set('label_value', $localization->string('maxbantime'));
+    $conf_set76->set('label_value', $vavok->go('localization')->string('maxbantime'));
     $conf_set76->set('input_id', 'conf_set76');
     $conf_set76->set('input_name', 'conf_set76');
     $conf_set76->set('input_value', round($vavok->get_configuration('maxBanTime') / 1440));
@@ -1032,10 +1031,10 @@ if ($action == "seteight") {
     $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

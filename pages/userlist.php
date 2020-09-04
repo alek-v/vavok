@@ -2,10 +2,9 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 18:16:32
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
  
 if (!empty($_GET['action'])) {
     $action = $vavok->check($_GET["action"]);
@@ -26,7 +25,7 @@ if (empty($view)) {
     $view = "name";
 }
 
-$num_items = $users->regmemcount() - 1; // no. reg. members minus system
+$num_items = $vavok->go('users')->regmemcount() - 1; // no. reg. members minus system
 $items_per_page = 10;
 
 $navigation = new Navigation($items_per_page, $num_items, $page, 'userlist.php?'); // start navigation
@@ -40,18 +39,18 @@ if ($view == "name") {
     $sql = "SELECT id, name FROM vavok_users ORDER BY regdate DESC LIMIT $limit_start, $items_per_page";
 }
 
-$current_page->page_title = $localization->string('userlist');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('userlist');
 $vavok->require_header();
 
 if ($num_items > 0) {
 
-    foreach ($db->query($sql) as $item) {
+    foreach ($vavok->go('db')->query($sql) as $item) {
 
         if ($item['id'] == 0 || $item['name'] == 'System') {
             continue;
         }
         
-        $profile = $db->get_data('vavok_profil', "uid='{$item['id']}'");
+        $profile = $vavok->go('db')->get_data('vavok_profil', "uid='{$item['id']}'");
 
         echo '<div class="a">';
         echo '<a href="../pages/user.php?uz=' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $vavok->date_fixed($profile["regdate"], 'd.m.Y.'); // update lang

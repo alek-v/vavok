@@ -3,7 +3,6 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing pages
- * Updated:   02.09.2020. 22:16:18
  */
 
 class Page {
@@ -67,6 +66,10 @@ class Page {
 		$this->load_page();
 		$this->page_title = $this->page_title();
 
+		/**
+		 * Register global object
+		 */
+		$this->vavok->add_global(array('current_page' => $this));
 	}
 
 	/**

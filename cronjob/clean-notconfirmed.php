@@ -1,19 +1,17 @@
 <?php
-// modified: 25.07.2020. 21:20:45
 // (c) vavok.net
 
-include"../include/startup.php";
-//include"/home/vavoknet/public_html/include/startup.php";
+require_once '../include/startup.php';
 
 // hours user have to confirm registration
 $confirmationHours = 24;
 
-$confirmationTime = $confirmationHours * 60 * 60;
+$confirmationTime = $confirmationHours * 3600;
 
-foreach ($db->query("SELECT `regdate`, `uid` FROM `vavok_profil` WHERE `regche`='1'") as $userCheck) {
+foreach ($vavok->go('db')->query("SELECT `regdate`, `uid` FROM `vavok_profil` WHERE `regche` = '1'") as $userCheck) {
 	if (($userCheck['regdate'] + $confirmationTime) < time()) {
 		// delete user if he didn't confirmed registration within $confirmationHours
-		$users->delete_user($userCheck['uid']);
+		$vavok->go('users')->delete_user($userCheck['uid']);
 	}
 }
 

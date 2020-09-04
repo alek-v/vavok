@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   01.08.2020. 19:21:33
+ * Updated:   04.09.2020. 23:16:35
  */
 
 include"../include/startup.php";
@@ -13,7 +13,7 @@ $pid = isset($_GET['pid']) ? $vavok->check($_GET['pid']) : ''; // Page id - wher
 $ptl = isset($_GET['ptl']) ? ltrim($vavok->check($_GET['ptl']), '/') : ''; // Return page
 
 // In case data is missing
-if ($action == 'save' && $users->is_reg() && (empty($comment) || empty($pid))) { $vavok->redirect_to(HOMEDIR . $ptl . '?isset=msgshort'); }
+if ($action == 'save' && $vavok->go('users')->is_reg() && (empty($comment) || empty($pid))) { $vavok->redirect_to(HOMEDIR . $ptl . '?isset=msgshort'); }
 
 $comments = new Comments();
 

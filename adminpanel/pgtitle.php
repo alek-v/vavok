@@ -2,10 +2,10 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   07.08.2020. 15:41:54
+ * Updated:   04.09.2020. 23:22:50
 */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
 $act = '';
 if (isset($_GET['act'])) {
@@ -14,7 +14,7 @@ if (isset($_GET['act'])) {
 	$act = $vavok->check($_POST['act']);
 }
 
-if (!$users->is_administrator() || !$users->is_reg()) {
+if (!$vavok->go('users')->is_administrator() || !$vavok->go('users')->is_reg()) {
     $vavok->redirect_to("../?error");
 } 
 
@@ -24,7 +24,7 @@ if ($act == "addedit") {
     $msg = $vavok->no_br($_POST['msg']);
 
     // get page data
-    $pageData = $db->get_data(DB_PREFIX . 'pages', "file='{$tfile}'", 'file, headt');
+    $pageData = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "file='{$tfile}'", 'file, headt');
 
     $headData = $pageData['headt'];
 
@@ -46,7 +46,7 @@ if ($act == "addedit") {
 
     $fields = array('tname', 'headt');
     $values = array($msg, $headData);
-    $db->update(DB_PREFIX . 'pages', $fields, $values, "file='{$tfile}'");
+    $vavok->go('db')->update(DB_PREFIX . 'pages', $fields, $values, "file='{$tfile}'");
 
 
     $vavok->redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
@@ -60,7 +60,7 @@ if ($act == "savenew") {
 
     $msg = $vavok->no_br($_POST['msg']);
 
-    $last_notif = $db->get_data(DB_PREFIX . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
+    $last_notif = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
     $headData = $last_notif['headt'];
 
@@ -87,13 +87,13 @@ if ($act == "savenew") {
             'tname' => $msg,
             'file' => $tpage
         );
-        $db->insert_data(DB_PREFIX . 'pages', $values);
+        $vavok->go('db')->insert_data(DB_PREFIX . 'pages', $values);
 
         $PBPage = false;
     } else {
         $fields = array('tname', 'headt');
         $values = array($msg, $headData);
-        $db->insert_data(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
+        $vavok->go('db')->insert_data(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
 
         $PBPage = true;
     } 
@@ -105,7 +105,7 @@ if ($act == "savenew") {
 if ($act == "del") {
     $tid = $vavok->check($_GET['tid']);
 
-    $db->delete(DB_PREFIX . 'pages', "pname = '" . $tid . "'");
+    $vavok->go('db')->delete(DB_PREFIX . 'pages', "pname = '" . $tid . "'");
 
     $vavok->redirect_to("pgtitle.php");
 } 
@@ -116,7 +116,7 @@ $vavok->require_header();
 
 if (!isset($act) || empty($act)) {
 
-    $nitems = $db->count_row(DB_PREFIX . 'pages');
+    $nitems = $vavok->go('db')->count_row(DB_PREFIX . 'pages');
     $total = $nitems;
 
     if ($total < 1) {
@@ -127,7 +127,7 @@ if (!isset($act) || empty($act)) {
         $page = $vavok->check($_GET['page']);
     } else { $page = ''; }
 
-    $nitems = $db->count_row(DB_PREFIX . 'pages', 'tname is not null');
+    $nitems = $vavok->go('db')->count_row(DB_PREFIX . 'pages', 'tname is not null');
     $num_items = $nitems;
 
     $items_per_page = 30;
@@ -140,7 +140,7 @@ if (!isset($act) || empty($act)) {
     $sql = "SELECT id, pname, tname, file FROM " . DB_PREFIX . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
-        foreach ($db->query($sql) as $item) {
+        foreach ($vavok->go('db')->query($sql) as $item) {
             $lnk = $item['pname'] . " <img src=\"../images/img/edit.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=edit&amp;pgfile=" . $item['file'] . "\">" . $item['tname'] . "</a> | <img src=\"../images/img/edit.gif\" alt=\"\" /> <a href=\"files.php?action=headtag&amp;file=" . $item['file'] . "\">[Edit Meta]</a> | <img src=\"../images/img/close.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=del&amp;tid=" . $item['pname'] . "\">[DEL]</a>"; 
             // echo " <small>joined: $jdt</small>";
             echo "$lnk<br />";
@@ -155,7 +155,7 @@ if (!isset($act) || empty($act)) {
 if ($act == "edit") {
     $pgfile = $vavok->check($_GET['pgfile']);
 
-    $page_title = $db->get_data(DB_PREFIX . 'pages', "file='" . $pgfile . "'", 'tname, pname');
+    $page_title = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "file='" . $pgfile . "'", 'tname, pname');
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_action', 'pgtitle.php?act=addedit');
@@ -178,7 +178,7 @@ if ($act == "edit") {
 
     echo '<hr>';
 
-    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
 } 
 
 if ($act == "addnew") {
@@ -205,10 +205,10 @@ if ($act == "addnew") {
 
     echo '<hr />';
 
-    echo '<p><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

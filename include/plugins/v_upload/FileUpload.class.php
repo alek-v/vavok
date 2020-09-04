@@ -10,7 +10,7 @@ class FileUpload {
 		global $db, $localization, $vavok;
 
 		$this->db = $db;
-		$this->lang_admin = $localization->show_strings();
+		$this->lang_admin = $vavok->go('localization')->show_strings();
 		$this->vavok = $vavok;
 	}
 

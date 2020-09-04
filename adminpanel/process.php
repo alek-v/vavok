@@ -1,19 +1,19 @@
 <?php 
 // (c) vavok.net
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
 if (isset($_GET['action'])) {$action = $vavok->check($_GET['action']);}
 
-if (!$users->is_reg()) {
+if (!$vavok->go('users')->is_reg()) {
     $vavok->redirect_to(BASEDIR . "pages/error.php?isset=nologin");
 }
 
 // add to admin chat
 if ($action == "acadd") {
-    if (!$users->is_reg() || !$users->check_permissions('adminchat')) $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
+    if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions('adminchat')) $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
 
-    $brow = $vavok->check($users->user_browser());
+    $brow = $vavok->check($vavok->go('users')->user_browser());
     $msg = $vavok->check(wordwrap($_POST['msg'], 150, ' ', 1));
     $msg = substr($msg, 0, 1200);
     $msg = $vavok->check($msg);
@@ -22,7 +22,7 @@ if ($action == "acadd") {
     $msg = $vavok->smiles($msg);
     $msg = $vavok->no_br($msg, '<br />');
 
-    $text = $msg . '|' . $users->show_username() . '|' . $vavok->date_fixed(time(), "d.m.y") . '|' . $vavok->date_fixed(time(), "H:i") . '|' . $brow . '|' . $users->find_ip() . '|';
+    $text = $msg . '|' . $vavok->go('users')->show_username() . '|' . $vavok->date_fixed(time(), "d.m.y") . '|' . $vavok->date_fixed(time(), "H:i") . '|' . $brow . '|' . $vavok->go('users')->find_ip() . '|';
     $text = $vavok->no_br($text);
 
     $vavok->write_data_file('adminchat.dat', $text . PHP_EOL, 1);
@@ -54,14 +54,14 @@ if ($action == "acdel") {
 
 if ($action == "delmail" && $_SESSION['permissions'] == 101) {
     $users_id = $vavok->check($_GET['users']);
-    //$users_id = $users->getidfromnick($users);
+    //$users_id = $vavok->go('users')->getidfromnick($users);
     if ($users_id != "") {
 
             $fields = array('subscri', 'newscod');
             $values = array('', '');
-            $db->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+            $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
 
-            $db->delete('subs', "user_id='" . $users_id . "'");
+            $vavok->go('db')->delete('subs', "user_id='" . $users_id . "'");
 
         header ("Location: subscribe.php?start=$start&isset=mp_delsubmail");
         exit;
@@ -73,7 +73,7 @@ if ($action == "delmail" && $_SESSION['permissions'] == 101) {
 
 if ($action == "delallsub" && $_SESSION['permissions'] == 101) {
     $sql = "TRUNCATE TABLE subs";
-    $db->query($sql);
+    $vavok->go('db')->query($sql);
     header ("Location: subscribe.php?isset=mp_delsuball");
     exit;
 }

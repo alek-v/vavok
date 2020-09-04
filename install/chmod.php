@@ -2,15 +2,14 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   28.08.2020. 17:16:35
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-$current_page->page_title = "CHMOD";
+$vavok->go('current_page')->page_title = "CHMOD";
 $vavok->require_header();
 
-if ($users->is_administrator() == true && $_SESSION['permissions'] == 101) {
+if ($vavok->go('users')->is_administrator() == true && $_SESSION['permissions'] == 101) {
     $mode = 777;
     echo "<br><div class='b'>Change CHMOD:</div>";
 

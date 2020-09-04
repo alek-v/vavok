@@ -2,12 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 1:32:57
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../"); }
+if (!$vavok->go('users')->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../"); }
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
@@ -44,7 +43,7 @@ if ($action == 'refver') {
     exit;
 }
 
-$current_page->page_title = $localization->string('admpanel');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('admpanel');
 $vavok->require_header();
  
 if (empty($action)) {
@@ -53,26 +52,26 @@ if (empty($action)) {
 	Moderator access level or bigger
 	*/
 
-	echo '<a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $localization->string('admchat') . '</a>';
-	echo '<a href="adminlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('modlist') . '</a>';
-	echo '<a href="reglist.php" class="btn btn-outline-primary sitelink">' . $localization->string('notconf') . '</a>';
+	echo '<a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admchat') . '</a>';
+	echo '<a href="adminlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('modlist') . '</a>';
+	echo '<a href="reglist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('notconf') . '</a>';
 
-    $totalUsers = $db->count_row('vavok_users') - 1; // - 1 - do not count "System"
-    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('userlist') . ' (' . $totalUsers . ')</a>';
+    $totalUsers = $vavok->go('db')->count_row('vavok_users') - 1; // - 1 - do not count "System"
+    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('userlist') . ' (' . $totalUsers . ')</a>';
 
     /*
     Super moderator access level or bigger
     */
 
-    if ($users->is_moderator(103) || $users->is_moderator(105) || $users->is_administrator()) {
+    if ($vavok->go('users')->is_moderator(103) || $vavok->go('users')->is_moderator(105) || $vavok->go('users')->is_administrator()) {
 
     	if (file_exists('reports.php')) {
-        	echo '<a href="reports.php" class="btn btn-outline-primary sitelink">' . $localization->string('usrcomp') . '</a>';
+        	echo '<a href="reports.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('usrcomp') . '</a>';
     	}
 
         if (file_exists('upload.php')) {
-        	echo '<a href="upload.php" class="btn btn-outline-primary sitelink">' . $localization->string('upload') . '</a>';
-        	echo '<a href="uploaded_files.php" class="btn btn-outline-primary sitelink">' . $localization->string('uplFiles') . '</a>';
+        	echo '<a href="upload.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('upload') . '</a>';
+        	echo '<a href="uploaded_files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('uplFiles') . '</a>';
             echo '<a href="search_uploads.php" class="btn btn-outline-primary sitelink">Search uploaded files</a>'; // update lang
         }
 
@@ -86,8 +85,8 @@ if (empty($action)) {
 
         echo '<hr>';
 
-        echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $localization->string('banunban') . '</a>';
-        echo '<a href="banlist.php" class="btn btn-outline-primary sitelink">' . $localization->string('banlist') . '</a>';
+        echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('banunban') . '</a>';
+        echo '<a href="banlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('banlist') . '</a>';
 
     } 
 
@@ -95,53 +94,53 @@ if (empty($action)) {
     Administrator access level or bigger
     */
 
-    if ($users->is_administrator()) {
+    if ($vavok->go('users')->is_administrator()) {
 
         echo '<hr>';
 
         if (file_exists('forumadmin.php')) {
-	        echo '<a href="forumadmin.php?action=fcats" class="btn btn-outline-primary sitelink">' . $localization->string('forumcat') . '</a>';
-	        echo '<a href="forumadmin.php?action=forums" class="btn btn-outline-primary sitelink">' . $localization->string('forums') . '</a>';
+	        echo '<a href="forumadmin.php?action=fcats" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forumcat') . '</a>';
+	        echo '<a href="forumadmin.php?action=forums" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forums') . '</a>';
         }
         if (file_exists('gallery/manage_gallery.php')) {
-            echo'<a href="gallery/manage_gallery.php" class="btn btn-outline-primary sitelink">' . $localization->string('gallery') . '</a>';
+            echo'<a href="gallery/manage_gallery.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('gallery') . '</a>';
         } 
         if (file_exists('votes.php')) {
-            echo'<a href="votes.php" class="btn btn-outline-primary sitelink">' . $localization->string('pools') . '</a>';
+            echo'<a href="votes.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pools') . '</a>';
         }
         if (file_exists("antiword.php")) {
-        	echo '<a href="antiword.php" class="btn btn-outline-primary sitelink">' . $localization->string('badword') . '</a>';
+        	echo '<a href="antiword.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('badword') . '</a>';
         }
 
-        echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $localization->string('statistics') . '</a>';
-        echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngprof') . '</a>';
+        echo '<a href="statistics.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('statistics') . '</a>';
+        echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mngprof') . '</a>';
 
     }
 
-    if (file_exists('news.php') && ($users->is_administrator() || $users->check_permissions('news', 'show'))) {
-        echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $localization->string('sitenews') . '</a>';
+    if (file_exists('news.php') && ($vavok->go('users')->is_administrator() || $vavok->go('users')->check_permissions('news', 'show'))) {
+        echo '<a href="news.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('sitenews') . '</a>';
     } 
 
-    if (file_exists('files.php') && ($users->is_administrator() || $users->check_permissions('pageedit'))) {
-        echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngpage') . '</a>';
+    if (file_exists('files.php') && ($vavok->go('users')->is_administrator() || $vavok->go('users')->check_permissions('pageedit'))) {
+        echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mngpage') . '</a>';
     }
 
     /*
     Head administrator access level
     */
 
-    if ($users->is_administrator(101)) {
+    if ($vavok->go('users')->is_administrator(101)) {
 
         echo '<hr>';
 
-        echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $localization->string('syssets') . '</a>';
-        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $localization->string('ipbanp') . ' (' . $vavok->counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
+        echo '<a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('syssets') . '</a>';
+        echo '<a href="ban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('ipbanp') . ' (' . $vavok->counter_string(BASEDIR . 'used/ban.dat') . ')</a>';
         if (file_exists('subscribe.php')) {
-            echo '<a href="subscribe.php" class="btn btn-outline-primary sitelink">' . $localization->string('subscriptions') . '</a>';
+            echo '<a href="subscribe.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('subscriptions') . '</a>';
         } 
-        echo '<a href="index.php?action=sysmng" class="btn btn-outline-primary sitelink">' . $localization->string('sysmng') . '</a>';
+        echo '<a href="index.php?action=sysmng" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('sysmng') . '</a>';
         if (file_exists('logfiles.php')) {
-            echo '<a href="logfiles.php" class="btn btn-outline-primary sitelink">' . $localization->string('logcheck') . '</a>';
+            echo '<a href="logfiles.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('logcheck') . '</a>';
         }
         if (file_exists('email-queue.php')) {
             echo '<a href="email-queue.php" class="btn btn-outline-primary sitelink">Add to email queue</a>';
@@ -150,32 +149,32 @@ if (empty($action)) {
 
 }
 
-if ($action == 'clear' && $users->is_administrator(101)) {
+if ($action == 'clear' && $vavok->go('users')->is_administrator(101)) {
 
 	echo '<p>';
 	if (file_exists('delusers.php')) {
-    	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $localization->string('cleanusers') . '</a>';
+    	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleanusers') . '</a>';
 	}
-    echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $localization->string('cleanmodlog') . '</a>';
+    echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleanmodlog') . '</a>';
 
 	echo '</p>';
 
 } 
 
-if ($action == "clrmlog" && $users->is_administrator(101)) {
+if ($action == "clrmlog" && $vavok->go('users')->is_administrator(101)) {
     $sql = "DELETE FROM mlog";
-    $db->query($sql);
+    $vavok->go('db')->query($sql);
 
-    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $localization->string('mlogcleaned') . '</p>';
+    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $vavok->go('localization')->string('mlogcleaned') . '</p>';
 
 } 
 
-if ($action == "sysmng" && $users->is_administrator(101)) {
+if ($action == "sysmng" && $vavok->go('users')->is_administrator(101)) {
     echo '<p>';
-    echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $localization->string('chksystem') . '</a>';
-    echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $localization->string('cleansys') . '</a>';
+    echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('chksystem') . '</a>';
+    echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleansys') . '</a>';
     if (file_exists('backup.php')) {
-        echo '<a href="backup.php" class="btn btn-outline-primary sitelink">' . $localization->string('backup') . '</a>';
+        echo '<a href="backup.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('backup') . '</a>';
     }
     echo '<a href="serverbenchmark.php" class="btn btn-outline-primary sitelink">Server benchmark</a>';
     // update
@@ -184,13 +183,13 @@ if ($action == "sysmng" && $users->is_administrator(101)) {
     
 } 
 
-if ($action == "opttbl" && $users->is_administrator(101)) {
+if ($action == "opttbl" && $vavok->go('users')->is_administrator(101)) {
     $alltables = mysql_query("SHOW TABLES");
 
     while ($table = mysql_fetch_assoc($alltables)) {
         foreach ($table as $db => $tablename) {
             $sql = "OPTIMIZE TABLE `" . $tablename . "`";
-            $db->query($sql);
+            $vavok->go('db')->query($sql);
         } 
     } 
 
@@ -203,14 +202,14 @@ $version = $vavok_version;
 $key = 'checkver'; // key to save cache with 
 // get cached data from file cache, also check if cached data is not old
 
-    echo '<div class="b">Vavok CMS ' . $localization->string('version') . ': <b>' . $vavok_version . '</b>';
+    echo '<div class="b">Vavok CMS ' . $vavok->go('localization')->string('version') . ': <b>' . $vavok_version . '</b>';
 
     if ($version != $last_ver && !empty($last_ver)) {
-        echo '<p><img src="../images/img/close.gif" alt="" /> ' . $localization->string('newver') . '!</p>';
+        echo '<p><img src="../images/img/close.gif" alt="" /> ' . $vavok->go('localization')->string('newver') . '!</p>';
         echo '<p><img src="../images/img/reload.gif" alt="" /> Latest version: ' . $last_ver . '</p>';
         echo '<a href="index.php?action=refver" class="btn btn-outline-primary sitelink">Refresh</a>';
     } else {
-        echo '<p><img src="../images/img/reload.gif" alt=""> ' . $localization->string('hnewver') . '!</p>';
+        echo '<p><img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('hnewver') . '!</p>';
     } 
 
     echo '</div>';
@@ -218,7 +217,7 @@ $key = 'checkver'; // key to save cache with
 }
 
 if (!empty($action)) {
-	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a></p>';
+	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a></p>';
 }
 
 echo $vavok->homelink('<p>', '</p>');

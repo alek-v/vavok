@@ -1,8 +1,8 @@
 <?php 
 // (c) vavok.net
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg() || !$users->is_administrator()) {
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) {
     header("Location: ./");
     exit;
 } 
@@ -22,7 +22,7 @@ if (!empty($_GET['page'])) {
 } 
 
 if ($action == "tpc") {
-    $current_page->page_title = $localization->string('search');
+    $vavok->go('current_page')->page_title = $vavok->go('localization')->string('search');
     $vavok->require_header();
 
     $form = new PageGen('forms/form.tpl');
@@ -39,15 +39,15 @@ if ($action == "tpc") {
     $form->set('fields', $input->output());
     echo $form->output();
 
-    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
-    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
     echo $vavok->homelink() . '</p>';
 
     $vavok->require_footer();
 } else if ($action == "stpc") {
     $stext = $vavok->check($_POST["stext"]);
 
-    $current_page->page_title = 'Search';
+    $vavok->go('current_page')->page_title = 'Search';
     $vavok->require_header();
 
     if (empty($stext)) {
@@ -60,7 +60,7 @@ if ($action == "tpc") {
         $select_fields = "*";
         $ord_fields = "pubdate DESC";
 
-        $noi = $db->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
+        $noi = $vavok->go('db')->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $noi, $page, 'filesearch.php?'); // start navigation
@@ -69,7 +69,7 @@ if ($action == "tpc") {
 
         $sql = "SELECT " . $select_fields . " FROM " . $where_table . " WHERE pname LIKE '%" . $stext . "%' OR tname LIKE '%" . $stext . "%' ORDER BY " . $ord_fields . " LIMIT $limit_start, $items_per_page";
 
-        foreach ($db->query($sql) as $item) {
+        foreach ($vavok->go('db')->query($sql) as $item) {
             $tname = $item['tname'];
             if (empty($tname)) {
                 $tname = $item['pname'];
@@ -92,8 +92,8 @@ if ($action == "tpc") {
 
     } 
 
-    echo '<p><a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
-    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+    echo '<p><a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+    echo '<a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
     echo $vavok->homelink() . '</p>';
 
     $vavok->require_footer();

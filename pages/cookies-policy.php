@@ -1,9 +1,9 @@
 <?php 
 // (c) vavok.net
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-$current_page->page_title = 'Cookies Policy';
+$vavok->go('current_page')->page_title = 'Cookies Policy';
 $vavok->require_header();
 ?>
 

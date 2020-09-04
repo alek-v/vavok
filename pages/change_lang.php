@@ -2,10 +2,10 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   01.08.2020. 19:21:21
+ * Updated:   04.09.2020. 23:17:17
 */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
 $language = isset($_GET['lang']) ? $vavok->check($_GET['lang']) : ''; // get language
 
@@ -14,15 +14,15 @@ if (empty($language) && !empty($_POST['lang'])) { $language = $vavok->check($_PO
 // page to load after changing language
 $ptl = isset($_GET['ptl']) && !empty($_GET['ptl']) ? urldecode($_GET['ptl']) : ''; 
 
-if (!file_exists(BASEDIR . "include/lang/" . $users->get_prefered_language($language) . "/index.php")) {
+if (!file_exists(BASEDIR . "include/lang/" . $vavok->go('users')->get_prefered_language($language) . "/index.php")) {
 	$vavok->redirect_to(HOMEDIR . "index.php?error=no_lang");
 } else {
-	include_once BASEDIR . 'include/lang/' . $users->get_prefered_language($language) . '/index.php';
+	include_once BASEDIR . 'include/lang/' . $vavok->go('users')->get_prefered_language($language) . '/index.php';
 }
 
 if (!empty($language)) {
 	// Set new language
-	$users->change_language($language);
+	$vavok->go('users')->change_language($language);
 
 }
 

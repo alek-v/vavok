@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.08.2020. 1:42:55
+ * Updated:   04.09.2020. 23:18:55
 */
 
 if (isset($_GET['step'])) {
@@ -14,7 +14,6 @@ if (isset($_GET['step'])) {
 $my_title = 'Install';
 
 if ($step == 'second') {
-
     require_once "include/header.php";
 
     $con = mysqli_connect($_GET['host'], $_GET['user'], $_GET['pass'], $_GET['db']);
@@ -70,13 +69,12 @@ if ($step == 'second') {
 } 
 
 if ($step == 'third') {
-
     require_once "../include/startup.php";
     require_once "include/header.php";
 
     echo '<p><img src="../images/img/partners.gif" alt="" /> This will make you register as an administrator of this website.<br>After successful registration, delete folder "install"<br></p>';
         // check if website and admin already exists (crossdomain website)
-    if ($users->regmemcount() > 1) {
+    if ($vavok->go('users')->regmemcount() > 1) {
 		echo '<p>It seems that you are configuring crossdomain website.<br />
 		Please enter main website admin username and password</p>';
     }
@@ -115,7 +113,7 @@ if ($step == "regadmin") {
 
     // check if website and admin already exists (crossdomain website)
     $crossDomainInstall = 0;
-    if ($users->regmemcount() > 1) {
+    if ($vavok->go('users')->regmemcount() > 1) {
     	$crossDomainInstall = 1;
     }
 
@@ -132,18 +130,18 @@ if ($step == "regadmin") {
     if ($name != "" && $password != "" && $email != "" && $osite != "") {
         if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
             if ($password == $password2) {
-                if ($users->validate_email($email)) {
+                if ($vavok->go('users')->validate_email($email)) {
                     if ($vavok->validateURL($osite)) {
                         $osite_name = ucfirst(str_replace("http://", "", $osite));
                         $osite_name = str_replace("https://", "", $osite_name);
 
                     	// check is everything ok if this is crossdomain website
                     	if ($crossDomainInstall == 1) {
-                        	$adminId = $users->getidfromnick($name);
+                        	$adminId = $vavok->go('users')->getidfromnick($name);
 
-                        	$adminPass = $db->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
+                        	$adminPass = $vavok->go('db')->get_data('vavok_users', "id='" . $adminId . "'", 'pass');
 
-                        	if (!$users->is_administrator(101, $adminId) || !$users->password_check($password, $adminPass['pass'])) {
+                        	if (!$vavok->go('users')->is_administrator(101, $adminId) || !$vavok->go('users')->password_check($password, $adminPass['pass'])) {
                         		echo '<p>You are configuring cross-domain website.<br />
                         		Please enter main website administrator username and password</p>';
                         		echo '<p><a href="finish.php?step=third">Back</a></p>';
@@ -190,9 +188,9 @@ if ($step == "regadmin") {
                         // insert data to database if it is not crossdomain
                         if ($crossDomainInstall == 0) {
                             // write to database
-                            $users->register($name, $password, 0, '', 'default', $email); // register user
-                            $user_id = $users->getidfromnick($name);
-                            $db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+                            $vavok->go('users')->register($name, $password, 0, '', 'default', $email); // register user
+                            $user_id = $vavok->go('users')->getidfromnick($name);
+                            $vavok->go('db')->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
                     	}
 
                         echo '<p>Installation competed successfully<br></p>';

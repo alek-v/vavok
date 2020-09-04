@@ -2,12 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 15:16:02
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg() || !$users->check_permissions(basename(__FILE__))) $vavok->redirect_to("../pages/input.php?action=exit");
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to("../pages/input.php?action=exit");
 
 if (!empty($_GET['action'])) {
     $action = $vavok->check($_GET["action"]);
@@ -25,7 +24,7 @@ if (!empty($_GET['view'])) {
     $view = '';
 } 
 
-$current_page->page_title = $localization->string('modlist');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('modlist');
 
 $vavok->require_header();
 
@@ -33,9 +32,9 @@ $vavok->require_header();
 
 if (empty($action)) {
 
-    echo '<img src="../images/img/user.gif" alt=""> <b>' . $localization->string('adminlistl') . '</b><br><br>'; 
+    echo '<img src="../images/img/user.gif" alt=""> <b>' . $vavok->go('localization')->string('adminlistl') . '</b><br><br>'; 
 
-    $num_items = $db->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
+    $num_items = $vavok->go('db')->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
     $items_per_page = 10;
 
     $navigation = new Navigation($items_per_page, $num_items, $page, 'adminlist.php?'); // start navigation
@@ -44,9 +43,9 @@ if (empty($action)) {
     $end = $navigation->start()['end']; // ending point
 
     if ($num_items > 0) {
-        foreach ($db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
+        foreach ($vavok->go('db')->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
             if ($item['perm'] == '101' or $item['perm'] == '102' or $item['perm'] == '103' or $item['perm'] == '105' or $item['perm'] == '106') {
-                $lnk = "<div class=\"a\"><a href=\"../pages/user.php?uz=" . $item['id'] . "\" class=\"sitelink\">" . $item['name'] . "</a> - " . $users->user_status($item['perm']) . "</div>";
+                $lnk = "<div class=\"a\"><a href=\"../pages/user.php?uz=" . $item['id'] . "\" class=\"sitelink\">" . $item['name'] . "</a> - " . $vavok->go('users')->user_status($item['perm']) . "</div>";
                 echo $lnk . "<br>";
             } 
         } 
@@ -55,7 +54,7 @@ if (empty($action)) {
     echo $navigation->get_navigation();
 
 } 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

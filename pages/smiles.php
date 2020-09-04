@@ -2,14 +2,13 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 1:31:53
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
 
-$current_page->page_title = $localization->string('smile');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('smile');
 $vavok->require_header();
 
 $dir = opendir (BASEDIR . "images/smiles");
@@ -50,7 +49,7 @@ echo '</p>';
 
 echo $navigation->get_navigation();
 
-echo '<p>' . $localization->string('totsmiles') . ': <b>' . (int)$total . '</b></p>';
+echo '<p>' . $vavok->go('localization')->string('totsmiles') . ': <b>' . (int)$total . '</b></p>';
 echo $vavok->homelink('<p>', '</p>');
 
 $vavok->require_footer();

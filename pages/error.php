@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 15:23:50
+ * Updated:   04.09.2020. 23:16:23
  */
 
 if (!defined('BASEDIR')) {
@@ -15,7 +15,7 @@ if (!defined('BASEDIR')) {
 
 require_once BASEDIR . "include/startup.php";
 
-$ip = $users->find_ip();
+$ip = $vavok->go('users')->find_ip();
 
 if (isset($_GET['error'])) { $error = $vavok->check($_GET['error']); } 
 
@@ -41,36 +41,36 @@ if (empty($_SESSION['log'])) {
 }
 
 if ($error == '401') {
-    echo $localization->string('err401') . '.<br>';
+    echo $vavok->go('localization')->string('err401') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error401.dat";
-    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 401:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '402') {
-    echo $localization->string('err402') . '.<br>';
+    echo $vavok->go('localization')->string('err402') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error402.dat";
-    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 402:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '403') {
-    echo $localization->string('err403') . '.<br>';
+    echo $vavok->go('localization')->string('err403') . '.<br>';
 
-    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 403:|:' . $phpself . '' . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error403.dat";
 } elseif ($error == '404') {
-    echo $localization->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $localization->string('filenotfound') . '.<br>';
+    echo $vavok->go('localization')->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . '<br>' . $vavok->go('localization')->string('filenotfound') . '.<br>';
 
-    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 404:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error404.dat";
 } elseif ($error == '406') {
-    echo $localization->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $localization->string('notfonserver') . '.<br>';
+    echo $vavok->go('localization')->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $vavok->go('localization')->string('notfonserver') . '.<br>';
 
-    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:406 - Not acceptable:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
     $logdat = BASEDIR . "used/datalog/error406.dat";
 } elseif ($error == '500') {
-    echo $localization->string('err500') . '.<br>';
+    echo $vavok->go('localization')->string('err500') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error500.dat";
-    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:500 - Internal server error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == '502') {
-    echo $localization->string('err502') . '.<br>';
+    echo $vavok->go('localization')->string('err502') . '.<br>';
     $logdat = BASEDIR . "used/datalog/error502.dat";
-    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+    $write = ':|:Error 502:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
 } elseif ($error == "db") {
     $line = 0;
     $file = $vavok->get_data_file('datalog/dberror.dat');
@@ -83,7 +83,7 @@ if ($error == '401') {
         $dberdate = $vavok->date_fixed($dberrorstart, 'd-M-Y', '');
         $dbertime = $vavok->date_fixed($dberrorstart, 'H-i-s', '');
         $subject = 'Database down';
-        $mailtext = $localization->string('dbdownmail') . " " . $dberdate . " " . $dbertime . "\n";
+        $mailtext = $vavok->go('localization')->string('dbdownmail') . " " . $dberdate . " " . $dbertime . "\n";
         sendmail($vavok->get_configuration('adminEmail'), $subject, $mailtext); // email to me
     }
 
@@ -108,10 +108,10 @@ if ($error == '401') {
         }
     }
 
-    echo '<b>' . $localization->string('dberrmsg') . '</b><br>';
+    echo '<b>' . $vavok->go('localization')->string('dberrmsg') . '</b><br>';
 } else {
     $logdat = BASEDIR . "used/datalog/error.dat";
-    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $users->user_browser() . ':|:' . $http_referer . ':|:' . $users->show_username() . ':|:';
+    $write = ':|:Unknown error:|:' . $phpself . $request_uri . ':|:' . $datetime . ':|:' . $ip . ':|:' . $hostname . ':|:' . $vavok->go('users')->user_browser() . ':|:' . $http_referer . ':|:' . $vavok->go('users')->show_username() . ':|:';
 }
 
 if (isset($write) && !empty($logdat)) {

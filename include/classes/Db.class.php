@@ -2,7 +2,6 @@
 /**
  * Author:    Aleksandar Vranešević
  * URL:       http://vavok.net
- * Updated:   02.09.2020. 22:05:05
  */
 
 /**
@@ -203,7 +202,7 @@ class Db extends PDO {
 
     /*
     // updating one item
-    $db->update('table', 'field', 'value', 'id = 1');
+    $vavok->go('db')->update('table', 'field', 'value', 'id = 1');
      
     //updating multiple items
     $fields[] = 'name';
@@ -212,7 +211,7 @@ class Db extends PDO {
     $values[] = $_POST['name'];
     $values[] = $_POST['description'];
      
-    $db->update('table', $fields, $values, 'something = "value"');
+    $vavok->go('db')->update('table', $fields, $values, 'something = "value"');
     */
     function update($table, $fields, $values, $where = '') {
         if (!empty($where)) {

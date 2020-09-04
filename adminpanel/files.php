@@ -2,16 +2,15 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   29.08.2020. 15:17:31
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 require_once"../include/htmlbbparser.php";
 
 /**
  * Checking access permitions
  */
-if (!$users->is_reg() || (!$users->is_administrator() && !$users->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
+if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
@@ -51,9 +50,9 @@ if ($action == "editfile") {
     if (!empty($file) && !empty($text_files)) {
         $page_info = $page_editor->select_page($page_id, 'crtdby, published');
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
+        if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -74,7 +73,7 @@ if ($action == "editfile") {
 }
 
 if ($action == 'savetags') {
-    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+    if (!$vavok->go('users')->check_permissions('pageedit', 'insert') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
 
     $tags = isset($_POST['tags']) ? $vavok->check($_POST['tags']) : '';
 
@@ -85,7 +84,7 @@ if ($action == 'savetags') {
 
 // update head tags on all pages
 if ($action == 'editmainhead') {
-    if (!$users->is_administrator(101)) $vavok->redirect_to("../?isset=ap_noaccess");
+    if (!$vavok->go('users')->is_administrator(101)) $vavok->redirect_to("../?isset=ap_noaccess");
 
     // update header data
     $vavok->write_data_file('headmeta.dat', $text_files);
@@ -105,10 +104,10 @@ if ($action == "editheadtag") {
         $page_info = $page_editor->select_page($page_id, 'crtdby');
 
         // check can user see page
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+        if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
 
         // check can user edit page
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
+        if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
         // update db data
         $data = array(
@@ -132,11 +131,11 @@ if ($action == "save_renamed") {
     if (!empty($pg) && !empty($file)) {
         $page_info = $page_editor->select_page($page_id, 'crtdby');
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
+        if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
+        if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -152,7 +151,7 @@ if ($action == "save_renamed") {
 }
 
 if ($action == "addnew") {
-    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
+    if (!$vavok->go('users')->check_permissions('pageedit', 'insert') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
 
     $newfile = isset($_POST['newfile']) ? $vavok->check($_POST['newfile']) : '';
     $type = isset($_POST['type']) ? $vavok->check($_POST['type']) : '';
@@ -217,9 +216,9 @@ if ($action == "addnew") {
         'lang' => $pagelang,
         'created' => time(),
         'lastupd' => time(),
-        'lstupdby' => $users->user_id,
+        'lstupdby' => $vavok->go('users')->user_id,
         'file' => $newfiles,
-        'crtdby' => $users->user_id,
+        'crtdby' => $vavok->go('users')->user_id,
         'published' => '1',
         'pubdate' => '0',
         'tname' => $page_title,
@@ -240,7 +239,7 @@ if ($action == "addnew") {
 }
 
 if ($action == "del") {
-    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator()) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'del') && !$vavok->go('users')->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
@@ -254,7 +253,7 @@ if ($action == "del") {
 if ($action == "publish") {
     if (!empty($page_id)) {
 
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
+        if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -270,7 +269,7 @@ if ($action == "publish") {
 if ($action == "unpublish") {
     if (!empty($page_id)) {
 
-        if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
+        if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         }
@@ -284,7 +283,7 @@ if ($action == "unpublish") {
 
 // update page language
 if ($action == 'pagelang') {
-    if (!$users->is_administrator()) { $vavok->redirect_to("../?isset=ap_noaccess"); }
+    if (!$vavok->go('users')->is_administrator()) { $vavok->redirect_to("../?isset=ap_noaccess"); }
 
     $pageId = $vavok->check($_GET['id']);
     $lang = $vavok->check($_POST['lang']);
@@ -322,28 +321,28 @@ if ($edmode == 'visual') {
     $textEditor = str_replace('#selector', '#text_files', $loadTextEditor);
 
     // add to page header
-    $current_page->append_head_tags($textEditor);
+    $vavok->go('current_page')->append_head_tags($textEditor);
 }
 
 // check if user can edit only pages that are made by themself or have permitions to edit all pages
-if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator()) {
+if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator()) {
     $edit_only_own_pages = 'yes';
 } else {
     $edit_only_own_pages = '';
 }
 
-$current_page->page_title = 'Files'; // current page title
+$vavok->go('current_page')->page_title = 'Files'; // current page title
 
 if (empty($action)) {
 
     $vavok->require_header();
 
-    echo '<h1>' . $localization->string('filelist') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('filelist') . '</h1>';
 
     $total_pages = $page_editor->total_pages();
 
     if ($edit_only_own_pages == 'yes') {
-        $total_pages = $page_editor->total_pages($users->user_id);
+        $total_pages = $page_editor->total_pages($vavok->go('users')->user_id);
     } 
 
     // start navigation
@@ -351,12 +350,12 @@ if (empty($action)) {
 
 
     if ($edit_only_own_pages == 'yes') {
-        $sql = "SELECT * FROM " . DB_PREFIX . "pages WHERE crtdby='{$users->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM " . DB_PREFIX . "pages WHERE crtdby='{$vavok->go('users')->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } else {
         $sql = "SELECT * FROM " . DB_PREFIX . "pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     }
 
-    foreach ($db->query($sql) as $page_info) {
+    foreach ($vavok->go('db')->query($sql) as $page_info) {
 
         if (empty($page_info['file'][0]) || $page_info['file'][0] == '/') {
             continue;
@@ -377,32 +376,32 @@ if (empty($action)) {
 
             echo $vavok->sitelink('files.php?action=show&amp;file=' . $page_info['file'], $filename, '<b>', '</b>');
             // Check for permissions to edit pages
-            if ($users->check_permissions('pageedit', 'edit') || $users->is_administrator() || $page_info['crtdby'] == $users->user_id || ($users->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+            if ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator() || $page_info['crtdby'] == $vavok->go('users')->user_id || ($vavok->go('users')->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                 echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
             }
 
             // Check for permissions to delete pages
-            if ($users->check_permissions('pageedit', 'del') || $users->is_administrator()) {
+            if ($vavok->go('users')->check_permissions('pageedit', 'del') || $vavok->go('users')->is_administrator()) {
                 echo ' | <a href="files.php?action=poddel&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
             }
 
             // Check for permissions to publish and unpublish pages
-            if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
+            if ($page_info['published'] == 1 && ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator())) {
                 echo ' | <a href="files.php?action=publish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
             } 
 
-            if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
+            if ($page_info['published'] != 1 && ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator())) {
                 echo ' | <a href="files.php?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
             }
 
             // Informations about page
-            echo ' ' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $vavok->go('localization')->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['crtdby']) . ' | ' . $vavok->go('localization')->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
 
         } else {
             echo $vavok->sitelink('files.php?action=show&amp;file=' . $page_info['file'], $filename, '<b>', '</b>');
             echo '<a href="files.php?action=edit&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
-            echo ' ' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']) . ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+            echo ' ' . $vavok->go('localization')->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['crtdby']) . ' | ' . $vavok->go('localization')->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['lstupdby']);
             echo '<hr />';
         } 
     
@@ -414,10 +413,10 @@ if (empty($action)) {
     $navigation = new Navigation($config_editfiles, $total_pages, $page, 'files.php?');
     echo $navigation->get_navigation();
 
-    echo '<br />' . $localization->string('totpages') . ': <b>' . (int)$total_pages . '</b><br />';
+    echo '<br />' . $vavok->go('localization')->string('totpages') . ': <b>' . (int)$total_pages . '</b><br />';
     echo '<div>&nbsp;</div>';
     if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a><br />';
+        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a><br />';
     } 
 } 
 
@@ -428,11 +427,11 @@ if ($action == "show") {
         $pageData = new Page();
         $page_info = $pageData->select_page($page_id);
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
+        if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) {
             $vavok->redirect_to("index.php?isset=ap_noaccess");
         } 
 
-        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) {
             $vavok->redirect_to("index.php?isset=ap_noaccess");
         } 
 
@@ -440,24 +439,24 @@ if ($action == "show") {
 
         $vavok->require_header(); 
 
-        echo '<p>' . $localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
-        echo '<p>' . $localization->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['crtdby']);
-        echo ' | ' . $localization->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $localization->string('by') . ' ' . $users->getnickfromid($page_info['lstupdby']);
+        echo '<p>' . $vavok->go('localization')->string('shwingpage') . ' <b>' . $showname . '</b></p>';
+        echo '<p>' . $vavok->go('localization')->string('created') . ': ' . $vavok->date_fixed($page_info['created'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['crtdby']);
+        echo ' | ' . $vavok->go('localization')->string('lastupdate') . ' ' . $vavok->date_fixed($page_info['lastupd'], 'd.m.y.') . ' ' . $vavok->go('localization')->string('by') . ' ' . $vavok->go('users')->getnickfromid($page_info['lstupdby']);
         
         // post type
         $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
         echo ' | Page type: ' . $post_type;
 
-        if ($page_info['published'] == 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
+        if ($page_info['published'] == 1 && ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator())) {
             echo ' | <a href="files.php?action=publish&amp;file=' . $file . '">[Publish]</a>';
         } 
-        if ($page_info['published'] != 1 && ($users->check_permissions('pageedit', 'edit') || $users->is_administrator())) {
+        if ($page_info['published'] != 1 && ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator())) {
             echo ' | <a href="files.php?action=unpublish&amp;file=' . $file . '">[Unpublish]</a>';
         }
         echo '</p>';
 
         echo '<p>';
-        echo $localization->string('pgaddress') . ': ';
+        echo $vavok->go('localization')->string('pgaddress') . ': ';
 
         // if it is index doesnt show this page like other pages
         if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
@@ -481,14 +480,14 @@ if ($action == "show") {
         echo '</p>';
 
 
-        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('edit') . '</a><br />';
-        if ($users->check_permissions('pageedit', 'del') || $users->is_administrator()) {
-        echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a><br />';
+        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('edit') . '</a><br />';
+        if ($vavok->go('users')->check_permissions('pageedit', 'del') || $vavok->go('users')->is_administrator()) {
+        echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delete') . '</a><br />';
         }
     } 
 
     if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a><br />';
+        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a><br />';
     }
 
 } 
@@ -508,9 +507,9 @@ if ($action == "edit") {
     if ($checkPage == true) {
         $page_info = $page_editor->select_page($page_id);
 
-        if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
+        if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $users->user_id && !$users->check_permissions('pageedit', 'edit') && (!$users->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$users->is_administrator()) {
+        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
         } 
@@ -572,26 +571,26 @@ if ($action == "edit") {
         echo '<hr>';
         echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
 
-        echo '<p><a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('pagetitle') . '</a>';
+        echo '<p><a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a>';
         echo '<a href="files.php?action=updpagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
         echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
         echo '<a href="files.php?action=tags&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Tags</a></p>'; // update lang
 
     } else {
         $vavok->require_header();
-        echo '<p>' . $localization->string('file') . ' ' . $file . ' ' . $localization->string('noexist') . '</p>';
+        echo '<p>' . $vavok->go('localization')->string('file') . ' ' . $file . ' ' . $vavok->go('localization')->string('noexist') . '</p>';
     } 
 
 } 
 // edit meta tags
 if ($action == "headtag") {
-    if (!$users->check_permissions('pageedit', 'show') && !$users->is_administrator()) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
     $page_info = $page_editor->select_page($page_id);
 
-    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -739,7 +738,7 @@ if ($action == "headtag") {
 } 
 
 if ($action == 'mainmeta') {
-    if (!$users->is_administrator(101)) { $vavok->redirect_to("../?isset=ap_noaccess"); }
+    if (!$vavok->go('users')->is_administrator(101)) { $vavok->redirect_to("../?isset=ap_noaccess"); }
 
     $vavok->require_header();
 
@@ -763,11 +762,11 @@ if ($action == 'mainmeta') {
 
     echo '<hr>';
 
-    echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
 } 
 
 if ($action == 'renamepg') {
-    if (!$users->is_administrator()) {
+    if (!$vavok->go('users')->is_administrator()) {
         header("Location: ../?isset=ap_noaccess");
         exit;
     }
@@ -802,15 +801,15 @@ if ($action == 'renamepg') {
 
     echo '<hr />';
 
-    echo '<p><a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 } 
 
 if ($action == "new") {
-    if (!$users->check_permissions('pageedit', 'insert') && !$users->is_administrator()) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'insert') && !$vavok->go('users')->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     }
 
-    $current_page->append_head_tags('
+    $vavok->go('current_page')->append_head_tags('
 	<style type="text/css">
 		.tooltip {
 			border-bottom: 1px dotted #000000; color: #000000; outline: none;
@@ -849,7 +848,7 @@ if ($action == "new") {
 
     $vavok->require_header();
 
-    echo '<h1>' . $localization->string('newfile') . '</h1>';
+    echo '<h1>' . $vavok->go('localization')->string('newfile') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
@@ -860,7 +859,7 @@ if ($action == "new") {
      */
     $input_new_file = new PageGen('forms/input.tpl');
     $input_new_file->set('label_for', 'newfile');
-    $input_new_file->set('label_value', $localization->string('pagename') . ':');
+    $input_new_file->set('label_value', $vavok->go('localization')->string('pagename') . ':');
     $input_new_file->set('input_type', 'text');
     $input_new_file->set('input_name', 'newfile');
     $input_new_file->set('input_id', 'newfile');
@@ -872,13 +871,13 @@ if ($action == "new") {
     $languages = "SELECT * FROM languages ORDER BY lngeng";
 
     $options = '<option value="">Don\'t set</option>';
-    foreach ($db->query($languages) as $lang) {
+    foreach ($vavok->go('db')->query($languages) as $lang) {
         $options .= "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
     }
 
     $select_language = new PageGen('forms/select.tpl');
     $select_language->set('label_for', 'language');
-    $select_language->set('label_value', $localization->string('language') . ' (optional):');
+    $select_language->set('label_value', $vavok->go('localization')->string('language') . ' (optional):');
     $select_language->set('select_id', 'language');
     $select_language->set('select_name', 'lang');
     $select_language->set('options', $options);
@@ -904,7 +903,7 @@ if ($action == "new") {
 	    $select_structure->set('select_id', 'page_structure');
 	    $select_structure->set('select_name', 'page_structure');
 	    $select_structure->set('options', '<option value="">/page/new-page/</option>
-	    <option value="' . $vavok->get_configuration('customPages') . '">/' . $vavok->get_configuration('customPages') . '/' . $localization->string('new-page') . '/</option>');
+	    <option value="' . $vavok->get_configuration('customPages') . '">/' . $vavok->get_configuration('customPages') . '/' . $vavok->go('localization')->string('new-page') . '/</option>');
 
     } else { $select_structure = ''; }
 
@@ -913,7 +912,7 @@ if ($action == "new") {
      */
     $checkbox_allow_unicode = new PageGen('forms/checkbox.tpl');
     $checkbox_allow_unicode->set('label_for', 'allow-unicode');
-    $checkbox_allow_unicode->set('label_value', $localization->string('allowUnicodeUrl'));
+    $checkbox_allow_unicode->set('label_value', $vavok->go('localization')->string('allowUnicodeUrl'));
     $checkbox_allow_unicode->set('checkbox_id', 'allow_unicode');
     $checkbox_allow_unicode->set('checkbox_name', 'allow_unicode');
     $checkbox_allow_unicode->set('checkbox_value', 'on');
@@ -937,14 +936,14 @@ if ($action == "new") {
     /**
      * Show form
      */
-    $form->set('website_language[save]', $localization->string('newpage'));
+    $form->set('website_language[save]', $vavok->go('localization')->string('newpage'));
     echo $form->output();
 
 } 
 
 // confirm that you want to delete a page
 if ($action == "poddel") {
-    if (!$users->check_permissions('pageedit', 'del') && !$users->is_administrator()) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'del') && !$vavok->go('users')->is_administrator()) {
         header("Location: index.php?isset=ap_noaccess");
         exit;
     } 
@@ -953,19 +952,19 @@ if ($action == "poddel") {
 
     if (!empty($file)) {
         if ($file != "index.php") {
-            echo $localization->string('confdelfile') . ' <b>' . $file . '</b><br />';
-            echo '<b><a href="files.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $localization->string('delete') . '</a></b><br />';
+            echo $vavok->go('localization')->string('confdelfile') . ' <b>' . $file . '</b><br />';
+            echo '<b><a href="files.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delete') . '</a></b><br />';
         } else {
-            echo $localization->string('indexnodel') . '!<br />';
+            echo $vavok->go('localization')->string('indexnodel') . '!<br />';
         } 
     } else {
-        echo $localization->string('nofiletodel') . '<br />';
+        echo $vavok->go('localization')->string('nofiletodel') . '<br />';
     } 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a><br />';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
 } 
 
 if ($action == "updpagelang") {
-    if (!$users->is_administrator()) {
+    if (!$vavok->go('users')->is_administrator()) {
         $vavok->redirect_to("index.php?isset=ap_noaccess");
     } 
 
@@ -982,7 +981,7 @@ if ($action == "updpagelang") {
 
 	$select_language = new PageGen('forms/select.tpl');
 	$select_language->set('label_for', 'lang');
-	$select_language->set('label_value', $localization->string('language'));
+	$select_language->set('label_value', $vavok->go('localization')->string('language'));
 	$select_language->set('select_name', 'lang');
 	$select_language->set('select_id', 'lang');
 
@@ -996,7 +995,7 @@ if ($action == "updpagelang") {
 
 	$languages = "SELECT * FROM languages ORDER BY lngeng";
 
-	foreach ($db->query($languages) as $lang) {
+	foreach ($vavok->go('db')->query($languages) as $lang) {
 	    $options .= '<option value="' . strtolower($lang['iso-2']) . '">' . $lang['lngeng'] . '</option>';
 	}
 
@@ -1006,11 +1005,11 @@ if ($action == "updpagelang") {
 
 	echo $form->output();
 
-    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('back') . '</a></p>';
+    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
 if ($action == 'tags') {
-    if (!$users->check_permissions('pageedit', 'edit') && !$users->is_administrator() && $page_info['crtdby'] != $users->user_id) {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) {
         redirect_to("./?isset=ap_noaccess");
     }
 
@@ -1037,22 +1036,22 @@ if ($action == 'tags') {
 }
 
 echo '<p>';
-if ($action != "new" && ($users->check_permissions('pageedit', 'insert') || $users->is_administrator())) {
-    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $localization->string('newpage') . '</a>';
+if ($action != "new" && ($vavok->go('users')->check_permissions('pageedit', 'insert') || $vavok->go('users')->is_administrator())) {
+    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('newpage') . '</a>';
 }
-if ($users->is_administrator(101)) {
+if ($vavok->go('users')->is_administrator(101)) {
     echo '<a href="files.php?action=mainmeta" class="btn btn-outline-primary sitelink">Head (meta) tags on all pages</a>';
 } // update lang
-if ($users->is_administrator()) {
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $localization->string('search') . '</a>';
+if ($vavok->go('users')->is_administrator()) {
+    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('search') . '</a>';
 } 
 if (!empty($action)) {
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $localization->string('mngpage') . '</a>';
+    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mngpage') . '</a>';
 }
 
 echo '</p>';
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br />';
+echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

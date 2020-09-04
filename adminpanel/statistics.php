@@ -2,23 +2,22 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.08.2020. 3:03:53
  */
 
-require_once"../include/startup.php";
+require_once '../include/startup.php';
 
-if (!$users->is_reg() || (!$users->is_administrator(101) && !$users->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
+if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator(101) && !$vavok->go('users')->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
 
-$current_page->page_title = $localization->string('sitestats');
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('sitestats');
 $vavok->require_header();
 
-echo '<p><img src="../images/img/webstats.png" alt="">  ' . $localization->string('sitestats') . '<br /><br /></p>';
+echo '<p><img src="../images/img/webstats.png" alt="">  ' . $vavok->go('localization')->string('sitestats') . '<br /><br /></p>';
 
-echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"> ' . $localization->string('visitstats') . '</a><br />';
-echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $localization->string('usronline') . '</a></p>';
+echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"> ' . $vavok->go('localization')->string('visitstats') . '</a><br />';
+echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $vavok->go('localization')->string('usronline') . '</a></p>';
 
 echo '<p><br /><br />
-<a href="./" class="btn btn-outline-primary sitelink">' . $localization->string('admpanel') . '</a><br>';
+<a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();
