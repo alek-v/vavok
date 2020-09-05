@@ -13,18 +13,18 @@ $vavok->require_header();
 $cookName = isset($_COOKIE['cookname']) ? $cookName = $_COOKIE['cookname'] : $cookName = '';
 
 // page template
-$current_page = new PageGen('pages/login/login.tpl');
+$login = new PageGen('pages/login/login.tpl');
 
 if (!empty($cookName)) {
-	$vavok->go('current_page')->set('username', $vavok->check($cookName));
+	$login->set('username', $vavok->check($cookName));
 }
 
 if (!empty($_GET['ptl'])) {
-	$vavok->go('current_page')->set('page_to_load', $vavok->check($_GET['ptl']));
+	$login->set('page_to_load', $vavok->check($_GET['ptl']));
 }
 
 // Show page
-echo $vavok->go('current_page')->output();
+echo $login->output();
 
 $vavok->require_footer();
 ?>
