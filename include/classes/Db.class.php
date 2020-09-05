@@ -45,8 +45,8 @@ class Db extends PDO {
                 foreach($backtrace as $info) {
                     if ($info["file"] != __FILE__)
                         $error["Backtrace"] = $info["file"] . " at line " . $info["line"];
-                } 
-            } 
+                }
+            }
 
             $msg = "";
             if ($this->errorMsgFormat == "html") {
@@ -67,16 +67,12 @@ class Db extends PDO {
             $func = $this->errorCallbackFunction;
             $func($msg);
         } 
-    } 
-    // execute query deprecated! 21.7.2017. 2:57:24
-    public function run_query($query) {
-        $this->exec($query);
-    } 
+    }
 
     public function delete($table, $where, $bind = "") {
         $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
         $this->run($sql, $bind);
-    } 
+    }
 
     private function filter($table, $info) {
         $driver = $this->getAttribute(PDO::ATTR_DRIVER_NAME);
@@ -89,16 +85,16 @@ class Db extends PDO {
         } else {
             $sql = "SELECT column_name FROM information_schema.columns WHERE table_name = '" . $table . "';";
             $key = "column_name";
-        } 
+        }
 
         if (false !== ($list = $this->run($sql))) {
             $fields = array();
             foreach($list as $record)
             $fields[] = $record[$key];
             return array_values(array_intersect($fields, array_keys($info)));
-        } 
+        }
         return array();
-    } 
+    }
 
     private function cleanup($bind) {
         if (!is_array($bind)) {
@@ -106,18 +102,8 @@ class Db extends PDO {
                 $bind = array($bind);
             else
                 $bind = array();
-        } 
+        }
         return $bind;
-    } 
-
-    // deprecated!
-    public function insert($table, $info) {
-        $fields = $this->filter($table, $info);
-        $sql = "INSERT INTO " . $table . " (" . implode($fields, ", ") . ") VALUES (:" . implode($fields, ", :") . ");";
-        $bind = array();
-        foreach($fields as $field)
-        $bind[":$field"] = $info[$field];
-        return $this->run($sql, $bind);
     }
 
     function insert_data($table, $values = array()) {
@@ -154,7 +140,7 @@ class Db extends PDO {
             $this->error = $e->getMessage();
             $this->debug();
             return false;
-        } 
+        }
     }
 
     // get data
@@ -164,19 +150,10 @@ class Db extends PDO {
             $sql .= " WHERE " . $where;
         $sql .= ";";
         return $this->run($sql, $bind);
-    } 
-    // select() is deprecated! use get_data() - 25.5.2017. 0:20:32
-    public function select($table, $where = "", $bind = "", $fields = "*") {
-        $sql = "SELECT " . $fields . " FROM " . $table;
-        if (!empty($where))
-            $sql .= " WHERE " . $where;
-        $sql .= ";";
-        return $this->run($sql, $bind);
-    } 
+    }
 
     // count number of rows
     public function count_row($table, $where = "") {
-
         $sql = "SELECT count(*) FROM " . $table;
         if (!empty($where))
             $sql .= " WHERE " . $where;
@@ -185,7 +162,7 @@ class Db extends PDO {
         $result = $this->query($sql);
         $row = $result->fetch(PDO::FETCH_NUM);
         return $row[0];
-    } 
+    }
 
     public function setErrorCallbackFunction($errorCallbackFunction, $errorMsgFormat = "html") { 
         // Variable functions for won't work with language constructs such as echo and print, so these are replaced with print_r.
@@ -197,8 +174,8 @@ class Db extends PDO {
             if (!in_array(strtolower($errorMsgFormat), array("html", "text")))
                 $errorMsgFormat = "html";
             $this->errorMsgFormat = $errorMsgFormat;
-        } 
-    } 
+        }
+    }
 
     /*
     // updating one item
@@ -236,7 +213,6 @@ class Db extends PDO {
 
             //we are only updating one field
             $buildSQL .= $fields.' = :value';
-            
         }
 
         $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
@@ -251,11 +227,9 @@ class Db extends PDO {
         //record and print any DB error that may be given
         $error = $prepareUpdate->errorInfo();
         if ($error[1]) { print_r($error); } else { return $prepareUpdate->rowCount(); }
-
     }
 
     function table_exists($table) {
-
         // Try a select statement against the table
         // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
         try {
@@ -271,19 +245,12 @@ class Db extends PDO {
         } 
         // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
         return $result !== false;
-
     }
 
-
-    function copy_table($table, $prefix) {
-
+    function copy_table($table, $prefix)
+    {
         $this->query("CREATE TABLE " . $prefix . $table . " LIKE " . $table);
-
     }
-
-
-} 
-
-
+}
 
 ?>
