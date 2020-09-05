@@ -182,37 +182,37 @@ $vavok->require_header();
 
 if ($vavok->get_configuration('openReg') == 1) {
 	if ($vavok->go('users')->is_reg()) {
-		$current_page = new PageGen('pages/registration/already_registered.tpl');
+		$this_page = new PageGen('pages/registration/already_registered.tpl');
 
-		$vavok->go('current_page')->set('message', $vavok->go('users')->username . ', ' . $vavok->go('localization')->string('againreg'));
+		$this_page->set('message', $vavok->go('users')->username . ', ' . $vavok->go('localization')->string('againreg'));
 
-		echo $vavok->go('current_page')->output();
+		echo $this_page->output();
 	} else {
-		$current_page = new PageGen('pages/registration/register.tpl');
+		$this_page = new PageGen('pages/registration/register.tpl');
 
 		if (!empty($_GET['ptl'])) {
-			$vavok->go('current_page')->set('page_to_load', $vavok->check($_GET['ptl']));
+			$this_page->set('page_to_load', $vavok->check($_GET['ptl']));
 		}
 
-		$vavok->go('current_page')->set('registration_info', $vavok->go('localization')->string('reginfo'));
+		$this_page->set('registration_info', $vavok->go('localization')->string('reginfo'));
 
 		if ($vavok->get_configuration('regConfirm') == "1") {
-			$vavok->go('current_page')->set('registration_key_info', $vavok->go('localization')->string('keyinfo'));
+			$this_page->set('registration_key_info', $vavok->go('localization')->string('keyinfo'));
 		}
 
 		if ($vavok->get_configuration('quarantine') > 0) {
-			$vavok->go('current_page')->set('quarantine_info', $vavok->go('localization')->string('quarantine1') . ' ' . round($vavok->get_configuration('quarantine') / 3600) . ' ' . $vavok->go('localization')->string('quarantine2'));
+			$this_page->set('quarantine_info', $vavok->go('localization')->string('quarantine1') . ' ' . round($vavok->get_configuration('quarantine') / 3600) . ' ' . $vavok->go('localization')->string('quarantine2'));
 		}
 
-		echo $vavok->go('current_page')->output();
+		echo $this_page->output();
 		}
 
 } else {
-	$current_page = new PageGen('pages/registration/registration_stopped.tpl');
+	$this_page = new PageGen('pages/registration/registration_stopped.tpl');
 
-	$vavok->go('current_page')->set('message', $vavok->go('localization')->string('regstoped'));
+	$this_page->set('message', $vavok->go('localization')->string('regstoped'));
 
-	echo $vavok->go('current_page')->output();
+	echo $this_page->output();
 }
 
 $vavok->require_footer();
