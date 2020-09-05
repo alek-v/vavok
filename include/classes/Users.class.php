@@ -3,7 +3,6 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for user management
- * Updated:   04.09.2020. 23:19:53
  */
 
 class Users {
@@ -41,17 +40,15 @@ class Users {
 		    if (!empty($cookie_check['name'])) {
 		        // check is password correct
 		        if ($this->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name']) {
-
 		            $pr_ip = explode(".", $this->find_ip());
 		            $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
 
 		            // write current session data
 		            $_SESSION['log'] = $unlog;
 		            $_SESSION['permissions'] = $cookie_check['perm'];
-		            $_SESSION['my_ip'] = $my_ip;
-		            $_SESSION['my_brow'] = $this->user_browser();
+		            $_SESSION['uid'] = $cookie_id;
 		            $_SESSION['lang'] = $cookie_check['lang'];
-		            
+
 		            // update ip address and last visit time
 		            $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
 		            $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
@@ -80,7 +77,7 @@ class Users {
 		    if (!empty($vavok_users['lang'])) {
 		        // Update language in session if it is not language from prifile
 		        if (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang']) $_SESSION['lang'] = $vavok_users['lang'];
-		    } 
+		    }
 
 		    // Check if user is banned
 		    if ($vavok_users['banned'] == 1 && !strstr($_SERVER['PHP_SELF'], 'pages/ban.php')) $this->vavok->redirect_to(BASEDIR . "pages/ban.php");
@@ -143,12 +140,9 @@ class Users {
 	 */
 	public function is_reg()
 	{
-	    if (!empty($_SESSION['log']) && !empty($_SESSION['permissions'])) {
-
+	    if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
 	        if (!empty($this->user_id)) {
-
 	            $show_user = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$this->user_id}'", 'name, perm');
-
 	            // Check if permissions are changed
 	            if ($this->vavok->check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
 	                return true; // everything is ok
@@ -160,7 +154,6 @@ class Users {
 	        } else {
 	            return false;
 	        }
-
 	    } else {
 	    	return false;
 	    }
@@ -241,7 +234,6 @@ class Users {
 	    // send private message
 	    $msg = $this->vavok->go('localization')->string('autopmreg');
 	    $this->autopm($msg, $user_id);
-
 	}
 
 	/**
@@ -262,7 +254,7 @@ class Users {
 		// Update language if it is changed and if language is installed
 		if ($current_session != $language && file_exists(BASEDIR . 'include/lang/' . $language . '/index.php')) {
 			// unset current language
-			$_SESSION['lang'] = "";
+			$_SESSION['lang'] = '';
 			unset($_SESSION['lang']);
 
 			// set new language
@@ -331,12 +323,12 @@ class Users {
 
 	public function isstarred($pmid) {
 	    $strd = $this->vavok->go('db')->get_data(DB_PREFIX . 'inbox', "id='{$pmid}'", 'starred');
-	    if ($strd['starred'] == "1") {
+	    if ($strd['starred'] == 1) {
 	        return true;
 	    } else {
 	        return false;
-	    } 
-	} 
+	    }
+	}
 
 	public function parsepm($text) {
 		// decode
@@ -348,14 +340,13 @@ class Users {
 	    // strip slashes
 	    if (get_magic_quotes_gpc()) {
 	        $text = stripslashes($text);
-	    } 
+	    }
 
 	    return $text;
-	} 
+	}
 
 	// send private message
 	public function send_pm($pmtext, $user_id, $who) {
-
 		$pmtext = base64_encode($pmtext);
 
 		$time = time();
@@ -378,12 +369,10 @@ class Users {
 
             $this->vavok->go('db')->update(DB_PREFIX . 'notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
-
 	}
 
 	// Private message by system
 	public function autopm($msg, $who, $sys = '') {
-
 	    if (!empty($sys)) {
 	        $sysid = $sys;
 	    } else {
@@ -401,11 +390,9 @@ class Users {
 		$this->vavok->go('db')->insert_data(DB_PREFIX . 'inbox', $values);
 	}
 
-	/*
-
-	Informations about users
-
-	*/
+	/**
+	 * Informations about users
+	 */
 
 	// Show username
 	public function show_username() {
@@ -463,7 +450,7 @@ class Users {
 	        } 
 	    } 
 	    return $rage;
-	} 
+	}
 
 	// Get informations about user from database
 	public function get_user_info($users_id, $info) {
@@ -479,7 +466,6 @@ class Users {
 	    } elseif ('language') {
 	    	return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang')['lang'];
 	    } else { return false; }
-
 	}
 
 	// User's language
@@ -567,10 +553,9 @@ class Users {
 	        } else {
 	            return false;
 	        }
-
 	    } else {
 	        return false;
-	    } 
+	    }
 	}
 
 	// Current user id
@@ -618,20 +603,17 @@ class Users {
 		if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) {
 			return true;
 		} else { return false; }
-
 	}
 
 	// email validation with support for unicode emails
 	function validate_email($email) {
 		// check unicode email
 		if ($this->vavok->is_unicode($email)) {
-
 		    if (preg_match("/^(?!\.)((?!.*\.{2})[a-zA-Z0-9\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}\.!#$%&'*+-\/=?^_`{|}~\-\d]+)@(?!\.)([a-zA-Z0-9\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}\-\.\d]+)((\.([a-zA-Z\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}]){2,63})+)$/u", $email)) {
 				return true; 
 			} else {
 				return false; 
 			}
-
 		} else {
 
 			if (filter_var($email, FILTER_VALIDATE_EMAIL)) { // non-unicode email
@@ -639,9 +621,7 @@ class Users {
 		    } else {
 		        return false;
 		    }
-
 		}
-
 	}
 
 	// check if user is moderator
@@ -659,7 +639,7 @@ class Users {
 	        return true;
 	    } else {
 	        return false;
-	    } 
+	    }
 	}
 
 	// check if user is administrator
@@ -685,48 +665,46 @@ class Users {
 	    $ign = $this->vavok->go('db')->count_row(DB_PREFIX . '`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
-	    } 
+	    }
 	    return false;
 	}
 
 	// ignore result
-	function ignoreres($uid, $tid) { 
+	function ignoreres($uid, $tid) {
 	    // 0 user can't ignore the target
 	    // 1 yes can ignore
 	    // 2 already ignored
 	    if ($uid == $tid) {
 	        return 0;
-	    } 
-	    /*
-	  if ($vavok->go('users')->is_moderator($tid)) {
-	    //you cant ignore staff members
-	    return 0;
-	  }
-	  if (arebuds($tid, $uid)) {
-	    //why the hell would anyone ignore his bud? o.O
-	    return 0;
-	  }
-	  */
+	    }
+		/*
+		if ($vavok->go('users')->is_moderator($tid)) {
+		//you cant ignore staff members
+		return 0;
+		}
+		if (arebuds($tid, $uid)) {
+		//why the hell would anyone ignore his bud? o.O
+		return 0;
+		}
+		*/
 	    if ($this->isignored($tid, $uid)) {
 	        return 2; // the target is already ignored by the user
-	    } 
+	    }
 	    return 1;
-	} 
+	}
 
 	// is buddy
 	function isbuddy($tid, $uid) {
 	    $ign = $this->vavok->go('db')->count_row(DB_PREFIX . 'buddy', "target='" . $tid . "' AND name='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
-	    } 
+	    }
 	    return false;
 	}
 
-	/*
-
-	Other
-
-	*/
+	/**
+	 * Other
+	 */
 
 	// user's password encription
 	function password_encrypt($password)
@@ -774,11 +752,9 @@ class Users {
 			if ($language == 'serbian_latin' || $language == 'serbian_cyrillic') {
 				$language = 'sr';
 			}
-
 		}
 
 		return strtolower($language);
-
 	}
 
 }

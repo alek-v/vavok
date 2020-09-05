@@ -2,7 +2,6 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   04.09.2020. 23:16:23
  */
 
 if (!defined('BASEDIR')) {
@@ -34,10 +33,10 @@ $hostname = str_replace(":|:", "|", $hostname);
 
 $datetime = time();
 
-if (empty($_SESSION['log'])) {
+if (empty($this->vavok->go('users')->user_id)) {
     $log = 'Guest';
 } else {
-    $log = $_SESSION['log'];
+    $log = $this->vavok->go('users')->user_id;
 }
 
 if ($error == '401') {

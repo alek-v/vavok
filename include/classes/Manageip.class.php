@@ -2,7 +2,6 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.09.2020. 22:33:57
  */
 
 class Manageip {
@@ -24,8 +23,8 @@ class Manageip {
             $http_referer = "No referer";
         }
 
-        if (isset($_SESSION['log'])) {
-            $username = $_SESSION['log'];
+        if (isset($this->vavok->go('users')->user_id)) {
+            $username = $this->vavok->go('users')->user_id;
         } else {
             $username = 'Guest';
         }
@@ -34,23 +33,16 @@ class Manageip {
         $hostname = gethostbyaddr($ip);
 
         if ($opendir = opendir(BASEDIR . "used/datados")) {
-
             while (false !== ($doslog = readdir($opendir))) {
-
                 if ($doslog != "." and $doslog != "..") {
-
                     $file_array_filemtime = @filemtime(BASEDIR . "used/datados/$doslog");
 
                     if ($file_array_filemtime < (time() - 60)) {
-
                         if (file_exists(BASEDIR . "used/datados/$doslog")) {
                             @unlink(BASEDIR . "used/datados/$doslog");
                         }
-
                     }
-
                 }
-
             }
 
             $logfiles = BASEDIR . "used/datados/" . $ip . ".dat";
