@@ -1,7 +1,8 @@
 <?php 
 // (c) vavok.net
-// modified: 4.7.2015. 12:41:02
-require_once"../include/startup.php";
+
+require_once '../include/startup.php';
+
 $uz = $vavok->check($_GET['uz']);
 
 if (file_exists(BASEDIR . "used/dataphoto/" . $uz . ".jpg")) {
