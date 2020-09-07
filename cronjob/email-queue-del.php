@@ -2,9 +2,9 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
-*/
+ */
 
-include "../include/startup.php";
+require_once '../include/startup.php';
 
 /**
  * Delete emails that has been sent
