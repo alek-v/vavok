@@ -5,6 +5,8 @@
  * Send emails in the queue
  */
 
+require_once '../include/startup.php';
+
 /**
  * New package should be sent every $diff_time minutes
  */
@@ -17,8 +19,6 @@ $time_sent = intval(file_get_contents(BASEDIR . 'used/email_queue_sent.dat'));
 if ($diff_time * 60 + $time_sent > time()) { exit; /*/ is is too early to send /*/ }
 
 $new_time = time(); // time new package is sent, every second is important :-)
-
-require_once '../include/startup.php';
 
 $sendMail = new Mailer();
 
