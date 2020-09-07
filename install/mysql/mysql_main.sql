@@ -469,3 +469,15 @@ CREATE TABLE IF NOT EXISTS `tags` (
   KEY `page_id` (`page_id`),
   KEY `tag_name` (`tag_name`(250))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE IF NOT EXISTS `email_confirm` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL COMMENT 'user id',
+  `type` varchar(255) NOT NULL COMMENT 'confirmation type',
+  `content` text NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `expiration_time` datetime NOT NULL COMMENT 'time until token is valid',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;

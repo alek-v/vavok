@@ -36,7 +36,6 @@ switch ($action) {
 		$fields = array();
 		$fields[] = 'city';
 		$fields[] = 'about';
-		$fields[] = 'email';
 		$fields[] = 'site';
 		$fields[] = 'sex';
 		$fields[] = 'birthday';
@@ -48,7 +47,6 @@ switch ($action) {
 		$values = array();
 		$values[] = $city;
 		$values[] = $infa;
-		$values[] = $email;
 		$values[] = $site;
 		$values[] = $sex;
 		$values[] = $happy;
@@ -57,9 +55,48 @@ switch ($action) {
 		$values[] = $street;
 		$values[] = $zip;
 
+		/**
+		 * Update profile data
+		 */
 		$vavok->go('db')->update('vavok_about', $fields, $values, "uid='{$vavok->go('users')->user_id}'");
 
-		$vavok->redirect_to("./profile.php?isset=editprofil");
+		/**
+		 * Send email confirmation link if it is changed and save data into database
+		 */
+		if ($vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'email') != $email && $vavok->go('db')->count_row(DB_PREFIX . 'email_confirm', "uid = '{$vavok->go('users')->user_id}' AND content = '{$email}'") < 1) {
+			/**
+			 * Insert data to database
+			 */
+			$token = $vavok->generate_password();
+
+			$now = new DateTime();
+			$now->add(new DateInterval("P1D"));
+			$new_time = $now->format('Y-m-d H:i:s');
+
+			$data = array(
+				'uid' => $vavok->go('users')->user_id,
+				'type' => 'email',
+				'content' => $email,
+				'token' => $token,
+				'expiration_time' => $new_time
+			);
+
+			$vavok->go('db')->insert_data(DB_PREFIX . 'email_confirm', $data);
+
+			/**
+			 * Add email to the queue
+			 */
+			$mailQueue = new Mailer;
+
+			$msg = "Hello {$vavok->go('users')->username}\r\n
+In order to add this email to your profile at site {$vavok->website_home_address()}
+please confirm this address by going to confirmation link " . $vavok->website_home_address() . "/pages/confirm_email.php?token=" . $token;
+			$msg .= "\r\n\r\n\r\nIf you received this email by mistake please ignore it.";
+
+			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
+		}
+
+		$vavok->redirect_to("./profile.php?isset=editprofile");
 		break;
 
 	case 'delete_profile':
