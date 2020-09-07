@@ -2,8 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.09.2020. 22:09:56
-*/
+ */
 
 
 class Mailer {
@@ -33,6 +32,7 @@ class Mailer {
 		 */
 	    if (empty($mail)) {
 	        $mail = $_SERVER['HTTP_HOST'];
+
 	        if (substr($mail, 0, 2) == 'm.') $mail = substr($mail, 2);
 	        if (substr($mail, 0, 4) == 'www.') $mail = substr($mail, 4);
 
@@ -52,17 +52,17 @@ class Mailer {
 
 	    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
 
-	    $adds = "From: " . $name . " <" . $mail . ">\n";
-	    $adds .= "X-sender: " . $name . " <" . $mail . ">\n";
+	    $adds = "From: " . $name . " <" . $mail . ">\r\n";
+	    $adds .= "X-sender: " . $name . " <" . $mail . ">\r\n";
 	    // is it html or plain text
 	    if (stristr($msg, '<html') == true) {
-	    	$adds .= "Content-Type: text/html; charset=utf-8\n";
+	    	$adds .= "Content-Type: text/html; charset=utf-8\r\n";
 	    } else {
-	    	$adds .= "Content-Type: text/plain; charset=utf-8\n";
+	    	$adds .= "Content-Type: text/plain; charset=utf-8\r\n";
 		}
-	    $adds .= "MIME-Version: 1.0\n";
-	    $adds .= "Content-Transfer-Encoding: 8bit\n";
-	    $adds .= "X-Mailer: PHP v." . phpversion();
+	    $adds .= "MIME-Version: 1.0\r\n";
+	    $adds .= "Content-Transfer-Encoding: 8bit\r\n";
+	    $adds .= "X-Mailer: VavokMailer/1.0\r\n";
 
 	    $result = mail($usermail, $subject, $msg, $adds);
 	    
@@ -85,7 +85,6 @@ class Mailer {
 		);
 
 		$this->vavok->go('db')->insert_data(DB_PREFIX . 'email_queue', $data);
-
 	}
 
 	// get subscription options
