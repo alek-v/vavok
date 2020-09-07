@@ -150,6 +150,7 @@ class Counter {
         $this->counter_hits = $new_clicks_today;
         $this->counter_allhits = $new_total_clicks;
 
+        $this->vavok->add_global(array('counter' => $this));
     }
 
 }

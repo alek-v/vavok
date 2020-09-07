@@ -26,16 +26,16 @@ spl_autoload_register(function ($class) {
 });
 
 $vavok = new Vavok();
-$db = new Db();
-$users = new Users();
+new Db();
+new Users();
 
 /**
  * We don't need this data if this is system request
  */
 if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
-	$current_page = new Page();
-	$localization = new Localization();
-    $counter = new Counter();
+	new Page();
+	new Localization();
+    new Counter();
     new Manageip();
     new Referer();
 }

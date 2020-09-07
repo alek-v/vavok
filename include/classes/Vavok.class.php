@@ -726,12 +726,15 @@ class Vavok {
 	    }
 	}
 
-	// Show online
-	public function show_online() {
-	    global $counter_reg, $counter_online;
-
+	/**
+	 * Show number of visitors online
+	 *
+	 * @return string
+	 */
+	public function show_online()
+	{
 	    if ($this->get_configuration('showOnline') == 1) {
-	        $online = '<a href="/pages/online.php">[Online: ' . $counter_reg . '/' . $counter_online . ']</a>';
+	        $online = '<a href="/pages/online.php">[ Online: ' . $this->go('counter')->counter_reg . ' / ' . $this->go('counter')->counter_online . ' ]</a>';
 	        return $online;
 	    } 
 	}
@@ -743,23 +746,21 @@ class Vavok {
 	 */
 	public function show_counter()
 	{
-	    global $counter;
-
 	    if (!empty($this->get_configuration('showCounter')) && $this->get_configuration('showCounter') != "6") {
 	        if ($this->get_configuration('showCounter') == 1) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_host . ' | ' . $counter->counter_all . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_host . ' | ' . $this->go('counter')->counter_all . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 2) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_hits . ' | ' . $counter->counter_allhits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_hits . ' | ' . $this->go('counter')->counter_allhits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 3) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_host . ' | ' . $counter->counter_hits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_host . ' | ' . $this->go('counter')->counter_hits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 4) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $counter->counter_all . ' | ' . $counter->counter_allhits . '</a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_all . ' | ' . $this->go('counter')->counter_allhits . '</a>';
 	        } 
 	        if ($this->get_configuration('showCounter') == 5) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php"><img src="/gallery/count.php" alt=""></a>';
+	            $info = '<a href="' . HOMEDIR . 'pages/counter.php"><img src="' . HOMEDIR . 'gallery/count.php" alt=""></a>';
 	        }
 	        return $info;
 	    }
