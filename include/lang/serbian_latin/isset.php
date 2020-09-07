@@ -15,7 +15,7 @@ $issetLang = array(
 "fullmail" => 'Sanduče korisnika prepunjeno, ne možete mu pisati dok ne oslobodi mesta u sandučetu',
 
 // settings
-"editprofil" => 'Profil uspešno izmenjen',
+"editprofile" => 'Profil uspešno izmenjen',
 "editpass" => 'Šifra uspešno izmenjena',
 "editsetting" => 'Podešavanja uspešno izmenjena',
 "noemail" => 'Nepravilna email adresa',
@@ -38,6 +38,7 @@ $issetLang = array(
 "noreg" => 'Nedozvoljeni znakovi u korisničkom imenu ili šifri<br />Koristite samo latinicu i brojeve',
 "antirega" => 'Već ste registrovani',
 "nopassword" => 'Niste upisali šifru ili je nepravilna',
+"notoken" => 'Token ne postoji',
 
 // admin panel isset
 "mp_yesset" => 'Podešavanja sistema uspešno sačuvana',

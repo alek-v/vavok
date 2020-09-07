@@ -15,7 +15,7 @@ $issetLang = array(
 "fullmail" => 'You can not send message to the user(s), because they do not have space in their inbox',
 
 // settings
-"editprofil" => 'Profile successfully changed',
+"editprofile" => 'Profile successfully changed',
 "editpass" => 'Password successfully changed',
 "editsetting" => 'Settings successfully changed',
 "noemail" => 'Incorrect email address',
@@ -38,6 +38,7 @@ $issetLang = array(
 "noreg" => 'Please use only letters and numbers',
 "antirega" => 'You are already registered',
 "nopassword" => 'Please enter your password',
+"notoken" => 'Token does not exist',
 
 // admin panel isset
 "mp_yesset" => 'Settings successfully saved',
