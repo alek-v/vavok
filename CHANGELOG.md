@@ -1,4 +1,4 @@
-# Vavok v1.5.6.beta6
+# Vavok v1.5.6.beta7
 - Updated form templates
 - Updated localization
 - Updated site links
@@ -6,6 +6,9 @@
 - Site search improvements
 - Added option to delete profile
 - Addes page tags
+- Added cronjob to send email from queue
+- Added cronjob to delete email from queue
+- New option for email confirmation
 
 
 
