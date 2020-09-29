@@ -33,10 +33,10 @@ $hostname = str_replace(":|:", "|", $hostname);
 
 $datetime = time();
 
-if (empty($this->vavok->go('users')->user_id)) {
+if (empty($vavok->go('users')->user_id)) {
     $log = 'Guest';
 } else {
-    $log = $this->vavok->go('users')->user_id;
+    $log = $vavok->go('users')->user_id;
 }
 
 if ($error == '401') {
