@@ -106,7 +106,14 @@ class Db extends PDO {
         return $bind;
     }
 
-    function insert_data($table, $values = array()) {
+    /**
+     * Insert data into database
+     *
+     * @param string $table
+     * @param array $values
+     * @return void
+     */
+    public function insert($table, $values = array()) {
         foreach ($values as $field => $v)
             $ins[] = ':' . $field;
 
@@ -119,6 +126,11 @@ class Db extends PDO {
                 $sth->bindValue(':' . $f, $v);
             }
             $sth->execute();
+    }
+
+    // Deprecated 29.09.2020. 15:40:17
+    public function insert_data($table, $values = array()) {
+        $this->insert($table, $values);
     }
 
     public function run($sql, $bind = "") {
