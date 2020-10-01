@@ -481,3 +481,13 @@ CREATE TABLE IF NOT EXISTS `email_confirm` (
   `expiration_time` datetime NOT NULL COMMENT 'time until token is valid',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+
+
+CREATE TABLE IF NOT EXISTS `group_members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL COMMENT 'user id',
+  `group_name` varchar(500) NOT NULL,
+  `date_joined` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
