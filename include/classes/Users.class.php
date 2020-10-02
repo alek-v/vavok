@@ -284,6 +284,7 @@ class Users {
 	    $this->vavok->go('db')->delete(DB_PREFIX . "subs", "user_id = '{$users_id}'");
 	    $this->vavok->go('db')->delete(DB_PREFIX . "notif", "uid = '{$users_id}'");
 	    $this->vavok->go('db')->delete(DB_PREFIX . "specperm", "uid = '{$users_id}'");
+	    if ($this->vavok->go('db')->table_exists(DB_PREFIX . 'group_members')) $this->vavok->go('db')->delete(DB_PREFIX . 'group_members', "uid = '{$users_id}'");
 
 	    return $users;
 	}
