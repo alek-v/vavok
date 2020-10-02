@@ -202,7 +202,7 @@ class Db extends PDO {
      
     $vavok->go('db')->update('table', $fields, $values, 'something = "value"');
     */
-    function update($table, $fields, $values, $where = '') {
+    public function update($table, $fields, $values, $where = '') {
         if (!empty($where)) {
             $where = ' WHERE ' . $where;
         }
@@ -241,7 +241,7 @@ class Db extends PDO {
         if ($error[1]) { print_r($error); } else { return $prepareUpdate->rowCount(); }
     }
 
-    function table_exists($table) {
+    public function table_exists($table) {
         // Try a select statement against the table
         // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
         try {
@@ -259,7 +259,7 @@ class Db extends PDO {
         return $result !== false;
     }
 
-    function copy_table($table, $prefix)
+    public function copy_table($table, $prefix)
     {
         $this->query("CREATE TABLE " . $prefix . $table . " LIKE " . $table);
     }
