@@ -430,14 +430,19 @@ class Vavok {
 	    } 
 	    $r = str_replace("<br />" . $prefix, "<br />\n" . $prefix, $r);
 	    $r = str_replace(" " . $prefix, " \n" . $prefix, $r);
+
+	    /**
+	     * Add target to links
+	     */
+        if ($prefix != 'mailto:') {
+            $target = ' target="_blank"';
+        } else {
+            $target = '';
+        }
+
 	    while (strpos($r, "\n" . $prefix) !== false) {
 	        list($r1, $r2) = explode("\n" . $prefix, $r, 2);
 	        if (strpos($r2, " ") === false && strpos($r2, "<br />") === false) {
-	            if ($prefix != "mailto:") {
-	                $target = ' target="_blank"';
-	            } else {
-	                $target = "";
-	            } 
 	            if (strpos($r2, ".") > 1 && strpos($r2, ".") < strlen($r2) && $this->badlink($r2, $prefix) != 1) {
 	                $r = $r1 . '<a href="' . $prefix . $r2 . '"' . $target . '>' . $prefix . $r2 . '</a>';
 	            } else {
@@ -471,6 +476,7 @@ class Vavok {
 	 * @return string
 	 */
 	function getbbcode($r) {
+		$r = str_replace("\r\n", '<br />', $r);
 	    $r = str_replace("[br]", "<br />", $r);
 	    $r = preg_replace('#\[b\](.*?)\[/b\]#si', '<b>\1</b>', $r);
 	    $r = preg_replace('#\[i\](.*?)\[/i\]#si', '<i>\1</i>', $r);
@@ -775,6 +781,21 @@ class Vavok {
 
 	        return $pagegen;
 	    }
+	}
+
+	/**
+	 * Groups
+	 */
+
+	/**
+	 * Get group members number
+	 *
+	 * @param string $group_name
+	 * @return int
+	 */
+	public function count_group_members($group_name)
+	{
+		return $this->go('db')->count_row(DB_PREFIX . 'group_members', "group_name = '{$group_name}'");
 	}
 
 	/**
