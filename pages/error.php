@@ -36,7 +36,7 @@ $datetime = time();
 if (empty($vavok->go('users')->user_id)) {
     $log = 'Guest';
 } else {
-    $log = $vavok->go('users')->user_id;
+    $log = $vavok->go('users')->username;
 }
 
 if ($error == '401') {
