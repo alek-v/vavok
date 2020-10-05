@@ -1,19 +1,15 @@
 <?php
 
 class FileUpload {
-	private $db;
-	private $localization;
 	private $vavok;
 
-	function __construct() {
+	function __construct()
+	{
+		global $vavok;
 
-		global $db, $localization, $vavok;
-
-		$this->db = $db;
-		$this->lang_admin = $vavok->go('localization')->show_strings();
 		$this->vavok = $vavok;
+		$this->lang_admin = $vavok->go('localization')->show_strings();
 	}
-
 
 	public function get_header_data() {
 
@@ -285,7 +281,7 @@ HEAD;
 				'fulldir' => $upload_URL
 			);
 
-			$this->db->insert_data('uplfiles', $values);
+			$this->vavok->go('db')->insert_data('uplfiles', $values);
 
 	    } else {
 	    	$upload_URL = $directory . $upload_Name;
