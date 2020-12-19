@@ -1,4 +1,4 @@
-# Vavok v1.5.6.beta7
+# Vavok v1.5.6
 - Updated form templates
 - Updated localization
 - Updated site links
