@@ -16,23 +16,19 @@ $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 if ($action == "editone") {
 
 	// Check fields
-    if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set2']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
+    if (!isset($_POST['conf_set2']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
         $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
     }
 
-    $fields = array('keypass','webtheme','quarantine','adminNick','adminEmail','timeZone','title','homeUrl','transferProtocol','floodTime','siteDefaultLang','openReg','regConfirm','siteOff');
+    $fields = array('webtheme','adminNick','adminEmail','timeZone','title','homeUrl','siteDefaultLang','openReg','regConfirm','siteOff');
 
     $values = array(
-        $vavok->check($_POST['conf_set1']),
         $vavok->check($_POST['conf_set2']),
-        $vavok->check($_POST['conf_set3']),
         $vavok->check($_POST['conf_set8']),
         htmlspecialchars(stripslashes(trim($_POST['conf_set9']))),
         $vavok->check($_POST['conf_set10']),
         $vavok->check($_POST['conf_set11']),
         $vavok->check($_POST['conf_set14']),
-        $vavok->check($_POST['conf_set21']),
-        (int)$_POST['conf_set29'],
         $vavok->check($_POST['conf_set47']),
         (int)$_POST['conf_set61'],
         (int)$_POST['conf_set62'],
@@ -41,45 +37,6 @@ if ($action == "editone") {
 
     // Update settings
     $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
-
-    // update .htaccess file
-    // dont force https
-$htaccess_tp_nos = '# force https protocol
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
-
-        // force https
-$htaccess_tp_s = '# force https protocol
-RewriteCond %{HTTPS} !=on
-RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
-
-    if ($vavok->get_configuration('transferProtocol') == 'HTTPS' && ($_POST['conf_set21'] == 'auto' || $_POST['conf_set21'] == 'HTTP')) {
-
-        // Disable forcing HTTPS in .htaccess
-
-        $file = file_get_contents('../.htaccess');
-
-        $start = strpos($file, '# force https protocol');
-        $strlen = mb_strlen($htaccess_tp_s); // find string length
-
-        $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
-
-        file_put_contents('../.htaccess', $file);
-
-    } elseif ($_POST['conf_set21'] == 'HTTPS' && ($vavok->get_configuration('transferProtocol') == 'HTTP' || $vavok->get_configuration('transferProtocol') == 'auto')) {
-        
-        // Enable forcing HTTPS in .htaccess
-
-        $file = file_get_contents('../.htaccess');
-
-        $start = strpos($file, '# force https protocol');
-        $strlen = mb_strlen($htaccess_tp_nos); // find string length
-
-
-        $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
-
-        file_put_contents('../.htaccess', $file);
-    }
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
@@ -252,7 +209,6 @@ if ($action == "editseven") {
 }
 
 if ($action == "editeight") {
-
     if (!isset($_POST['conf_set58']) || !isset($_POST['conf_set76'])) {
         $vavok->redirect_to("settings.php?action=seteight&isset=mp_nosset");
     }
@@ -271,7 +227,64 @@ if ($action == "editeight") {
     $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
+}
 
+/**
+ * Site security options
+ */
+if ($action == "editsecurity") {
+	// Check fields
+    if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29'])) {
+        $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
+    }
+
+    $fields = array('keypass','quarantine','transferProtocol','floodTime');
+
+    $values = array(
+        $vavok->check($_POST['conf_set1']),
+        $vavok->check($_POST['conf_set3']),
+        $vavok->check($_POST['conf_set21']),
+        (int)$_POST['conf_set29']
+    );
+
+    // Update settings
+    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+
+    // update .htaccess file
+    // dont force https
+$htaccess_tp_nos = '# force https protocol
+#RewriteCond %{HTTPS} !=on
+#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+        // force https
+$htaccess_tp_s = '# force https protocol
+RewriteCond %{HTTPS} !=on
+RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+
+    if ($vavok->get_configuration('transferProtocol') == 'HTTPS' && ($_POST['conf_set21'] == 'auto' || $_POST['conf_set21'] == 'HTTP')) {
+        // Disable forcing HTTPS in .htaccess
+
+        $file = file_get_contents('../.htaccess');
+
+        $start = strpos($file, '# force https protocol');
+        $strlen = mb_strlen($htaccess_tp_s); // find string length
+
+        $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
+
+        file_put_contents('../.htaccess', $file);
+    } elseif ($_POST['conf_set21'] == 'HTTPS' && ($vavok->get_configuration('transferProtocol') == 'HTTP' || $vavok->get_configuration('transferProtocol') == 'auto')) {
+        // Enable forcing HTTPS in .htaccess
+        $file = file_get_contents('../.htaccess');
+
+        $start = strpos($file, '# force https protocol');
+        $strlen = mb_strlen($htaccess_tp_nos); // find string length
+
+        $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
+
+        file_put_contents('../.htaccess', $file);
+    }
+
+    $vavok->redirect_to("settings.php?action=security&isset=mp_yesset");
 }
 
 $vavok->go('current_page')->page_title = "Settings";
@@ -283,11 +296,10 @@ if (empty($action)) {
     echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('shwinfo') . '</a>';
     echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('bookchatnews') . '</a>';
     echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forumgallery') . '</a>';
-    // echo '<a href="settings.php?action=setfive" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('inbox') . '</a>';
-    // echo '<a href="settings.php?action=setsix" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('advert') . '</a><br />';
     echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagemanage') . '</a>';
+    echo '<a href="settings.php?action=security" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('security') . '</a>';
     echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('other') . '</a>';
-} 
+}
 
 // main settings
 if ($action == "setone") {
@@ -373,60 +385,6 @@ if ($action == "setone") {
     $input14->set('input_value', $vavok->get_configuration('homeUrl'));
     $input14->set('input_maxlength', 50);
 
-    $input29 = new PageGen('forms/input.tpl');
-    $input29->set('label_for', 'conf_set29');
-    $input29->set('label_value', $vavok->go('localization')->string('floodtime'));
-    $input29->set('input_id', 'conf_set29');
-    $input29->set('input_name', 'conf_set29');
-    $input29->set('input_value', $vavok->get_configuration('floodTime'));
-    $input29->set('input_maxlength', 3);
-
-    $input1 = new PageGen('forms/input.tpl');
-    $input1->set('label_for', 'conf_set1');
-    $input1->set('label_value', $vavok->go('localization')->string('passkey'));
-    $input1->set('input_id', 'conf_set1');
-    $input1->set('input_name', 'conf_set1');
-    $input1->set('input_value', $vavok->get_configuration('keypass'));
-    $input1->set('input_maxlength', 25);
-
-    // quarantine time
-    $quarantine = array(0 => "" . $vavok->go('localization')->string('disabled') . "", 21600 => "6 " . $vavok->go('localization')->string('hours') . "", 43200 => "12 " . $vavok->go('localization')->string('hours') . "", 86400 => "24 " . $vavok->go('localization')->string('hours') . "", 129600 => "36 " . $vavok->go('localization')->string('hours') . "", 172800 => "48 " . $vavok->go('localization')->string('hours') . "");
-
-    $options = '<option value="' . $vavok->get_configuration('quarantine') . '">' . $quarantine[$vavok->get_configuration('quarantine')] . '</option>';
-    foreach($quarantine as $k => $v) {
-        if ($k != $vavok->get_configuration('quarantine')) {
-            $options .= '<option value="' . $k . '">' . $v . '</option>';
-        }
-    }
-
-    $select_set3 = new PageGen('forms/select.tpl');
-    $select_set3->set('label_for', 'conf_set3');
-    $select_set3->set('label_value', $vavok->go('localization')->string('quarantinetime'));
-    $select_set3->set('select_id', 'conf_set3');
-    $select_set3->set('select_name', 'conf_set3');
-    $select_set3->set('options', $options);
-
-    // transfer protocol
-    $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
-
-    $transfer_protocol = $vavok->get_configuration('transferProtocol');
-    if (empty($vavok->get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
-    
-    $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
-
-    foreach($tProtocol as $k => $v) {
-        if ($k != $transfer_protocol) {
-            $options .= '<option value="' . $k . '">' . $v . '</option>';
-        }
-    }
-
-    $select_set21 = new PageGen('forms/select.tpl');
-    $select_set21->set('label_for', 'conf_set21');
-    $select_set21->set('label_value', 'Transfer protocol');
-    $select_set21->set('select_id', 'conf_set21');
-    $select_set21->set('select_name', 'conf_set21');
-    $select_set21->set('options', $options);
-
     // Registration opened or closed
     $input_radio61_yes = new PageGen('forms/radio_inline.tpl');
     $input_radio61_yes->set('label_for', 'conf_set61');
@@ -502,7 +460,7 @@ if ($action == "setone") {
     $radio_group_three->set('description', 'Maintenance');
     $radio_group_three->set('radio_group', $radio_group_three->merge(array($input_radio63_yes, $input_radio63_no)));
 
-    $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $input29, $input1, $select_set3, $select_set21, $radio_group_one, $radio_group_two, $radio_group_three)));
+    $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $radio_group_one, $radio_group_two, $radio_group_three)));
     echo $form->output();
 
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
@@ -1029,6 +987,73 @@ if ($action == "seteight") {
     $conf_set76->set('input_maxlength', 3);
 
     $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
+    echo $form->output();
+
+    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+}
+
+if ($action == "security") {
+    echo '<h1>' . $vavok->go('localization')->string('security') . '</h1>';
+
+    $form = new PageGen('forms/form.tpl');
+    $form->set('form_method', 'post');
+    $form->set('form_action', 'settings.php?action=editsecurity');
+
+    $input29 = new PageGen('forms/input.tpl');
+    $input29->set('label_for', 'conf_set29');
+    $input29->set('label_value', $vavok->go('localization')->string('floodtime'));
+    $input29->set('input_id', 'conf_set29');
+    $input29->set('input_name', 'conf_set29');
+    $input29->set('input_value', $vavok->get_configuration('floodTime'));
+    $input29->set('input_maxlength', 3);
+
+    $input1 = new PageGen('forms/input.tpl');
+    $input1->set('label_for', 'conf_set1');
+    $input1->set('label_value', $vavok->go('localization')->string('passkey'));
+    $input1->set('input_id', 'conf_set1');
+    $input1->set('input_name', 'conf_set1');
+    $input1->set('input_value', $vavok->get_configuration('keypass'));
+    $input1->set('input_maxlength', 25);
+
+    // quarantine time
+    $quarantine = array(0 => "" . $vavok->go('localization')->string('disabled') . "", 21600 => "6 " . $vavok->go('localization')->string('hours') . "", 43200 => "12 " . $vavok->go('localization')->string('hours') . "", 86400 => "24 " . $vavok->go('localization')->string('hours') . "", 129600 => "36 " . $vavok->go('localization')->string('hours') . "", 172800 => "48 " . $vavok->go('localization')->string('hours') . "");
+
+    $options = '<option value="' . $vavok->get_configuration('quarantine') . '">' . $quarantine[$vavok->get_configuration('quarantine')] . '</option>';
+    foreach($quarantine as $k => $v) {
+        if ($k != $vavok->get_configuration('quarantine')) {
+            $options .= '<option value="' . $k . '">' . $v . '</option>';
+        }
+    }
+
+    $select_set3 = new PageGen('forms/select.tpl');
+    $select_set3->set('label_for', 'conf_set3');
+    $select_set3->set('label_value', $vavok->go('localization')->string('quarantinetime'));
+    $select_set3->set('select_id', 'conf_set3');
+    $select_set3->set('select_name', 'conf_set3');
+    $select_set3->set('options', $options);
+
+    // transfer protocol
+    $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
+
+    $transfer_protocol = $vavok->get_configuration('transferProtocol');
+    if (empty($vavok->get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
+    
+    $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
+
+    foreach($tProtocol as $k => $v) {
+        if ($k != $transfer_protocol) {
+            $options .= '<option value="' . $k . '">' . $v . '</option>';
+        }
+    }
+
+    $select_set21 = new PageGen('forms/select.tpl');
+    $select_set21->set('label_for', 'conf_set21');
+    $select_set21->set('label_value', 'Transfer protocol');
+    $select_set21->set('select_id', 'conf_set21');
+    $select_set21->set('select_name', 'conf_set21');
+    $select_set21->set('options', $options);
+
+    $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21)));
     echo $form->output();
 
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
