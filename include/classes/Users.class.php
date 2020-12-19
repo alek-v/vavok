@@ -16,8 +16,28 @@ class Users {
 
 		$this->vavok = $vavok;
 
-		// Session
-		session_name("sid");
+        /**
+         * With '.' session is accessible from all subdomains
+         */
+        $rootDomain = '.' . $this->vavok->clean_domain();
+
+		/**
+		 * Session
+		 */
+
+        /**
+         * Get cookie params and set root domain
+         */
+        $currentCookieParams = session_get_cookie_params();
+        session_set_cookie_params(
+            $currentCookieParams["lifetime"],
+            $currentCookieParams["path"],
+            $rootDomain,
+            $currentCookieParams["secure"],
+            $currentCookieParams["httponly"]
+        );
+
+		session_name('sid');
 		session_start();
 
 		/**
@@ -169,17 +189,36 @@ class Users {
 	{
 	    $this->vavok->go('db')->delete(DB_PREFIX . 'online', "user = '{$this->user_id}'");
 
+        /**
+         * With '.' session is accessible from all subdomains
+         */
+        $rootDomain = '.' . $this->vavok->clean_domain();
+
 	    // destroy cookies
-	    setcookie('cooklog', "", time() - 3600);
-	    setcookie('cookpass', "", time() - 3600);
-	    setcookie(session_name(), "", time() - 3600);
+	    setcookie('cooklog', '', time() - 3600);
+	    setcookie('cookpass', '', time() - 3600);
+	    setcookie(session_name(), '', time() - 3600);
 
 	    // if user is logged in from root dir
-	    setcookie("cooklog", '', 1, '/');
-	    setcookie("cookpass", '', 1, '/');
+	    setcookie("cooklog", '', 1, '/', $rootDomain);
+	    setcookie("cookpass", '', 1, '/', $rootDomain);
+	    setcookie(session_name(), "", time() - 3600, $rootDomain);
 
-	    // destoy session
-	    session_destroy();
+	    /**
+	     * Destoy session
+	     */
+	    $this->destroy_current_session();
+	}
+
+	/**
+	 * Destroy session
+	 */
+	public function destroy_current_session()
+	{
+        session_unset();
+        session_destroy();
+        session_write_close();
+        setcookie(session_name(), '', 0, '/');
 	}
 
 	// count login attempts
