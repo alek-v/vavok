@@ -443,7 +443,7 @@ class Vavok {
 	    while (strpos($r, "\n" . $prefix) !== false) {
 	        list($r1, $r2) = explode("\n" . $prefix, $r, 2);
 	        if (strpos($r2, " ") === false && strpos($r2, "<br />") === false) {
-	            if (strpos($r2, ".") > 1 && strpos($r2, ".") < strlen($r2) && $this->badlink($r2, $prefix) != 1) {
+	            if (strpos($r2, ".") > 0 && strpos($r2, ".") < strlen($r2) && $this->badlink($r2, $prefix) != 1) {
 	                $r = $r1 . '<a href="' . $prefix . $r2 . '"' . $target . '>' . $prefix . $r2 . '</a>';
 	            } else {
 	                $r = $r1 . $prefix . $r2;
@@ -458,7 +458,7 @@ class Vavok {
 	                } 
 	            } else {
 	                list($r2, $r3) = explode(" ", $r2, 2);
-	                if (strpos($r2, ".") > 1 && strpos($r2, ".") < strlen($r2) && $this->badlink($r2, $prefix) != 1) {
+	                if (strpos($r2, ".") > 0 && strpos($r2, ".") < strlen($r2) && $this->badlink($r2, $prefix) != 1) {
 	                    $r = $r1 . '<a href="' . $prefix . $r2 . '"' . $target . '>' . $prefix . $r2 . '</a> ' . $r3;
 	                } else {
 	                    $r = $r1 . $prefix . $r2 . ' ' . $r3;
@@ -1050,6 +1050,16 @@ class Vavok {
 				return $value[$go];
 			}
 		}
+	}
+
+	/**
+	 * Return website domain
+	 *
+	 * @return string
+	 */
+	public function clean_domain()
+	{
+		return str_replace('www.', '', $_SERVER['SERVER_NAME']);
 	}
 }
 
