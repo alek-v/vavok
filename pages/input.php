@@ -40,10 +40,6 @@ if (isset($_POST['ptl'])) {
 	$pagetoload = '';
 }
 
-if ($log == 'System') { // cannot login as a System
-    unset($log);
-}
-
 // meta tag for this page
 $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noindex">');
 
@@ -52,12 +48,12 @@ $max_time_in_seconds = 600;
 $max_attempts = 5;
 
 // login
-if (empty($action) && !empty($log)) {
+if (empty($action) && !empty($log) && $log != 'System') {
 	if ($vavok->go('users')->login_attempt_count($max_time_in_seconds, $log, $vavok->go('users')->find_ip()) > $max_attempts) {
 	    $vavok->require_header();
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
-	    Try again in " . explode(':', maketime($max_time_in_seconds))[0] . " minutes.</p>"; // update lang
+	    Try again in " . explode(':', $vavok->maketime($max_time_in_seconds))[0] . " minutes.</p>"; // update lang
 
 	    $vavok->require_footer();
 	    exit;
@@ -84,9 +80,14 @@ if (empty($action) && !empty($log)) {
             $cookiePass = $vavok->xoft_encode($pass, $vavok->get_configuration('keypass'));
             $cookieUsername = $vavok->xoft_encode($show_userx['name'], $vavok->get_configuration('keypass'));
 
+            /**
+             * With '.' session is accessible from all subdomains
+             */
+            $rootDomain = '.' . $vavok->clean_domain();
+
             // save cookie
-            SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/"); // one year
-            SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365, "/"); // one year
+            SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/", $rootDomain); // one year
+            SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365, "/", $rootDomain); // one year
         }
 
         $_SESSION['log'] = $log;
@@ -95,7 +96,10 @@ if (empty($action) && !empty($log)) {
 
         unset($_SESSION['lang']); // use language settings from profile
 
-        session_regenerate_id(); // get new session id to prevent session fixation
+        /**
+         * Get new session id to prevent session fixation
+         */
+        session_regenerate_id();
 
         // update data in profile
         $vavok->go('db')->update('vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
