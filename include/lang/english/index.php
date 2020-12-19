@@ -91,6 +91,7 @@ $lang_home['resend'] = "Resend";
 $lang_home['differentImage'] = "Different image";
 $lang_home['author'] = "Author";
 $lang_home['published'] = "Published";
+$lang_home['security'] = "Security";
 
 // cookie consent
 $lang_home['cookies'] = "Cookies."; // Title

@@ -91,6 +91,7 @@ $lang_home['resend'] = "Pošalji ponovo";
 $lang_home['differentImage'] = "Promeni sliku";
 $lang_home['author'] = "Autor";
 $lang_home['published'] = "Objavljeno";
+$lang_home['security'] = "Bezbednost";
 
 // cookie consent
 $lang_home['cookies'] = "Kolačići."; // Title
