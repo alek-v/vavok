@@ -44,10 +44,12 @@ $vavok->require_header();
 
 <?php
 echo 'IP Address: ' . $ip . '<br />';
-if (!empty($ipData)) {
+if (!empty($ipData) && isset($ipData['country'])) {
 	echo 'Country: ' . $ipData['country'] . '<br />';
 	echo 'State/Region: ' . $ipData['regionName'] . '<br />';
 	echo 'City/Town: ' . $ipData['city'] . '<br />';
+} else {
+    echo '<p>No data available</p>';
 }
 echo '</div>';
 
