@@ -2,9 +2,10 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
+ * Updated:   03.03.2021. 20:36:53
  */
 
-include"../include/startup.php";
+require_once '../include/startup.php';
 
 $pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : ''; // blog page
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1; // page number
@@ -76,6 +77,7 @@ switch ($pg) {
 		 * Page tags
 		 */
 		$sql = $vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "tags WHERE page_id='{$vavok->go('current_page')->page_id}' ORDER BY id ASC");
+
 		$tags = '';
 
 		foreach ($sql as $key => $value) {

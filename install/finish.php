@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   04.09.2020. 23:18:55
+ * Updated:   03.03.2021. 20:36:20
 */
 
 if (isset($_GET['step'])) {
@@ -69,7 +69,7 @@ if ($step == 'second') {
 } 
 
 if ($step == 'third') {
-    require_once "../include/startup.php";
+    require_once '../include/startup.php';
     require_once "include/header.php";
 
     echo '<p><img src="../images/img/partners.gif" alt="" /> This will make you register as an administrator of this website.<br>After successful registration, delete folder "install"<br></p>';
@@ -106,7 +106,7 @@ if ($step == 'third') {
 // instalation results
 if ($step == "regadmin") {
 
-    require_once "../include/startup.php";
+    require_once '../include/startup.php';
     require_once "include/header.php";
 
     echo '<p><img src="../images/img/partners.gif" alt="" /> Installation results</p>';

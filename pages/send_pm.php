@@ -1,6 +1,11 @@
 <?php
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ * Updated:   03.03.2021. 20:37:08
+ */
 
-include"../include/startup.php";
+require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to("../pages/login.php"); }
 

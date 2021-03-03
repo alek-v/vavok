@@ -2,10 +2,10 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   04.09.2020. 23:16:35
+ * Updated:   03.03.2021. 20:36:29
  */
 
-include"../include/startup.php";
+require_once '../include/startup.php';
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 $comment = isset($_POST['comment']) ? $vavok->check($_POST['comment']) : '';
