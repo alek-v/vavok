@@ -1,3 +1,8 @@
+# Vavok v1.5.6.1
+- Updated localization
+
+
+
 # Vavok v1.5.6
 - Updated form templates
 - Updated localization
