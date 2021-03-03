@@ -2,8 +2,8 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.08.2020. 9:23:09
-*/
+ * Updated:   03.03.2021. 20:41:10
+ */
 
 $language = 'english';
 $ln_loc = 'en';
@@ -92,6 +92,7 @@ $lang_home['differentImage'] = "Different image";
 $lang_home['author'] = "Author";
 $lang_home['published'] = "Published";
 $lang_home['security'] = "Security";
+$lang_home['backtoblog'] = "Back to blog";
 
 // cookie consent
 $lang_home['cookies'] = "Cookies."; // Title

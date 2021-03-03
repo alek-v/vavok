@@ -27,7 +27,7 @@
 
 	<div>
 		<p>
-			<a href="/blog/" class="btn btn-primary">{@website_language[back]}}</a>
+			<a href="/blog/" class="btn btn-primary">{@website_language[backtoblog]}}</a>
 		</p>
 	</div>
 </div>
