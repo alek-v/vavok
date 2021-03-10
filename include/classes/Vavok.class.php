@@ -66,7 +66,14 @@ class Vavok {
 	 * @return mixed
 	 */
 	public function get_configuration($data = '', $full_configuration = false) {
-	    $config = $this->go('db')->get_data(DB_PREFIX . 'settings');
+
+		$no_rows = $this->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'system'");
+
+		$config = array();
+
+		foreach ($this->go('db')->query("SELECT * FROM settings WHERE setting_group = 'system' LIMIT 0, $no_rows") as $item) {
+			$config[$item['setting_name']] = $item['value'];
+		}
 
 	    // Additional settings
 	    $config['rssIcon'] = 0; // RSS icon
@@ -283,8 +290,13 @@ class Vavok {
 	    return strtr($str, $win1251utf8);
 	}
 
-	// make safe url for urlrewriting - link generating
-	// convert non-latin chars to latin and remove special
+	/**
+	 * Make safe url for urlrewriting - link generating
+	 * convert non-latin chars to latin and remove special
+	 *
+	 * @param string $str
+	 * @return string
+	 */
 	function trans($str) {
 	    $sr_latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
 	    $sr_cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
@@ -332,16 +344,15 @@ class Vavok {
 	    
 	    // money
 	    "£" => "pounds", "$" => "dollars", "€" => "euros"
-
 	    );
-	    
-	    $text = str_replace($sr_cyrillic, $sr_latin, $str); // serbian cyrillic
-	    $text = strtr($text, $tr); // other languages 
-	    $text = preg_replace('/[^A-Za-z0-9_\-]/', '', $text); // replace special chars
-	    $text = str_replace("---", "-", $text);
-	    $text = strtolower(str_replace("--", "-", $text));
 
-	    return $text;
+	    $str = str_replace($sr_cyrillic, $sr_latin, $str); // serbian cyrillic
+	    $str = strtr($str, $tr); // other languages 
+	    $str = preg_replace('/[^A-Za-z0-9_\-]/', '', $str); // replace special chars
+	    $str = str_replace("---", "-", $str);
+	    $str = strtolower(str_replace("--", "-", $str));
+
+	    return $str;
 	}
 
 	// remove unwanted characters from Unicode URL-s

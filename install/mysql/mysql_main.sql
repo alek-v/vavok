@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `vavok_users` (
   `id` int(100) NOT NULL auto_increment,             -- member id
   `name` varchar(40) NOT NULL,                       -- nick
-  `pass` varchar(120) NOT NULL,						           -- pass
+  `pass` varchar(120) NOT NULL,                      -- pass
   `perm` int(4) NOT NULL default '0',                -- permissions (accessr)
   `skin` varchar(30) NOT NULL default 'default',     -- skin
   `browsers` varchar(50) NOT NULL default '',        -- browser
@@ -48,17 +48,17 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
 CREATE TABLE IF NOT EXISTS `vavok_about` (
   `id` int(100) NOT NULL auto_increment,
   `uid` int(100) NOT NULL default '0',
-  `birthday` varchar(40) NOT NULL default '',		-- birthday
-  `sex` char(1) NOT NULL default 'n',				    -- sex
-  `email` varchar(80) NOT NULL default '',			-- email
-  `site` varchar(50) NOT NULL default '',			  -- site
-  `city` varchar(100) NOT NULL default '',			-- location
-  `about` tinytext,				                      -- about yourself
-  `rname` varchar(150) NOT NULL default '',			-- real name
-  `surname` varchar(150) NOT NULL default '',		-- surname
-  `photo` varchar(30) NOT NULL default '',			-- photo
-  `address` varchar(100) NOT NULL default '',		-- street address
-  `zip` varchar(20) NOT NULL default '',			  -- postal address
+  `birthday` varchar(40) NOT NULL default '',       -- birthday
+  `sex` char(1) NOT NULL default 'n',               -- sex
+  `email` varchar(80) NOT NULL default '',          -- email
+  `site` varchar(50) NOT NULL default '',           -- site
+  `city` varchar(100) NOT NULL default '',          -- location
+  `about` tinytext,                                 -- about yourself
+  `rname` varchar(150) NOT NULL default '',         -- real name
+  `surname` varchar(150) NOT NULL default '',       -- surname
+  `photo` varchar(30) NOT NULL default '',          -- photo
+  `address` varchar(100) NOT NULL default '',       -- street address
+  `zip` varchar(20) NOT NULL default '',            -- postal address
   `country` varchar(75) NOT NULL default '',
   `phone` varchar(30) NOT NULL default '',
  PRIMARY KEY  (`id`),
@@ -218,7 +218,6 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `iso-2` varchar(35) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
-
 
 INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
 (1, 'Abkhazian', 'AB'),
@@ -413,51 +412,55 @@ CREATE TABLE IF NOT EXISTS `comments` (
 
 -- Site settings
 CREATE TABLE IF NOT EXISTS `settings` (
-  `name` varchar(60) NOT NULL DEFAULT 'system',
-  `keypass` varchar(255) NOT NULL,
-  `webtheme` varchar(255) NOT NULL,
-  `quarantine` int(3) NOT NULL DEFAULT 0,
-  `showtime` int(1) NOT NULL DEFAULT 0,
-  `pageGenTime` int(1) NOT NULL DEFAULT 0,
-  `pgFbComm` int(1) NOT NULL DEFAULT 0,
-  `showOnline` int(1) NOT NULL DEFAULT 0,
-  `adminNick` varchar(255) NOT NULL,
-  `adminEmail` varchar(255) NOT NULL,
-  `timeZone` varchar(3) NOT NULL DEFAULT '0',
-  `title` varchar(255) NOT NULL,
-  `homeUrl` varchar(255) NOT NULL,
-  `bookGuestAdd` int(1) NOT NULL DEFAULT 0,
-  `transferProtocol` varchar(10) NOT NULL,
-  `maxPostChat` int(5) DEFAULT NULL,
-  `maxPostNews` int(5) DEFAULT NULL,
-  `customPages` varchar(255) DEFAULT NULL,
-  `floodTime` int(2) NOT NULL DEFAULT 0,
-  `pvtLimit` int(5) NOT NULL DEFAULT 0,
-  `cookieConsent` int(1) NOT NULL DEFAULT 0,
-  `photoList` int(3) DEFAULT NULL,
-  `photoFileSize` int(6) DEFAULT NULL,
-  `maxPhotoPixels` int(6) DEFAULT NULL,
-  `siteDefaultLang` varchar(255) NOT NULL,
-  `mPanel` varchar(255) NOT NULL,
-  `forumAccess` int(1) NOT NULL DEFAULT 0,
-  `refererLog` int(6) DEFAULT NULL,
-  `subMailPacket` int(5) DEFAULT 50,
-  `dosLimit` int(4) NOT NULL,
-  `maxLogData` int(5) NOT NULL,
-  `openReg` int(1) NOT NULL DEFAULT 0,
-  `regConfirm` int(1) NOT NULL DEFAULT 0,
-  `siteOff` int(1) NOT NULL DEFAULT 0,
-  `forumChLang` int(1) NOT NULL DEFAULT 0,
-  `showRefPage` int(1) NOT NULL DEFAULT 0,
-  `showCounter` int(1) NOT NULL DEFAULT 0,
-  `maxBanTime` int(6) NOT NULL DEFAULT 43200,
-  PRIMARY KEY (`name`),
-  UNIQUE KEY `UNIQUE` (`name`),
-  KEY `settings` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `setting_name` varchar(255) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `options` varchar(255) DEFAULT NULL,
+  `setting_group` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `setting_name` (`setting_name`(250)),
+  KEY `setting_group` (`setting_group`(250))
+) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `settings` (`name`  , `keypass`, `webtheme`, `quarantine`, `showtime`, `pageGenTime`, `pgFbComm`, `showOnline`, `adminNick`, `adminEmail`, `timeZone`, `title`, `homeUrl`, `bookGuestAdd`, `transferProtocol`, `maxPostChat`, `maxPostNews`, `customPages`, `floodTime`, `pvtLimit`, `cookieConsent`, `photoList`, `photoFileSize`, `maxPhotoPixels`, `siteDefaultLang`, `mPanel`, `forumAccess`, `refererLog`, `subMailPacket`, `dosLimit`, `maxLogData`, `openReg`, `regConfirm`, `siteOff`, `forumChLang`, `showRefPage`, `showCounter`, `maxBanTime`) VALUES
-                       ('system', ''       , ''        , 0           , 0         , 0            , 0         , 0           , ''         , ''          , '0'       , ''     , ''       , 0             , ''                , NULL         , NULL         , ''           , 0          , 0         , 0              , NULL       , NULL           , NULL            , 'english'        , ''      , 0            , NULL        , 50             , 120       , 0           , 0        , 0           , 0        , 0            , 0            , 0            , 43200);
+INSERT INTO `settings` (`id`, `setting_name`, `value`, `options`, `setting_group`) VALUES
+(1, 'keypass', NULL, NULL, 'system'),
+(2, 'webtheme', NULL, NULL, 'system'),
+(3, 'quarantine', '0', NULL, 'system'),
+(4, 'showtime', '0', NULL, 'system'),
+(5, 'pageGenTime', '0', NULL, 'system'),
+(6, 'pgFbComm', '0', NULL, 'system'),
+(7, 'showOnline', '0', NULL, 'system'),
+(8, 'adminNick', NULL, NULL, 'system'),
+(9, 'adminEmail', NULL, NULL, 'system'),
+(10, 'timeZone', '0', NULL, 'system'),
+(11, 'title', NULL, NULL, 'system'),
+(12, 'homeUrl', NULL, NULL, 'system'),
+(13, 'bookGuestAdd', '0', NULL, 'system'),
+(14, 'transferProtocol', NULL, NULL, 'system'),
+(15, 'maxPostChat', NULL, NULL, 'system'),
+(16, 'maxPostNews', NULL, NULL, 'system'),
+(17, 'customPages', NULL, NULL, 'system'),
+(18, 'floodTime', '0', NULL, 'system'),
+(19, 'pvtLimit', '0', NULL, 'system'),
+(20, 'cookieConsent', '0', NULL, 'system'),
+(21, 'photoList', NULL, NULL, 'system'),
+(22, 'photoFileSize', NULL, NULL, 'system'),
+(23, 'maxPhotoPixels', NULL, NULL, 'system'),
+(24, 'siteDefaultLang', 'english', NULL, 'system'),
+(25, 'mPanel', NULL, NULL, 'system'),
+(26, 'forumAccess', '0', NULL, 'system'),
+(27, 'refererLog', NULL, NULL, 'system'),
+(28, 'subMailPacket', '50', NULL, 'system'),
+(29, 'dosLimit', '120', NULL, 'system'),
+(30, 'maxLogData', '0', NULL, 'system'),
+(31, 'openReg', '0', NULL, 'system'),
+(32, 'regConfirm', '0', NULL, 'system'),
+(33, 'siteOff', '0', NULL, 'system'),
+(34, 'forumChLang', '0', NULL, 'system'),
+(35, 'showRefPage', '0', NULL, 'system'),
+(36, 'showCounter', '0', NULL, 'system'),
+(37, 'maxBanTime', '43200', NULL, 'system');
+COMMIT;
 
 
 

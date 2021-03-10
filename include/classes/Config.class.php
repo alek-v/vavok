@@ -3,7 +3,7 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing website configuration
- * Updated:   02.09.2020. 22:26:50
+ * Updated:   07.03.2021. 15:30:57
  */
 
 class Config {
@@ -16,7 +16,9 @@ class Config {
 		$this->vavok = $vavok;
 	}
 
-	// update configuration
+	/**
+	 * Update configuration
+	 */
 	function update($data) {
 		// load configuration
 	    $udata = $this->config;
@@ -39,7 +41,9 @@ class Config {
 	    return true;
 	}
 
-	// Update .env configuration
+	/**
+	 * Update .env configuration
+	 */
 	public function update_config_file($data) {
 		if (!empty($data)) {
 			$file = file(BASEDIR . '.env');
@@ -53,23 +57,21 @@ class Config {
 
 			// Save data
 			file_put_contents(BASEDIR . '.env', $file);
-
 		}
 	}
 
+	/**
+	 * Update main website configuration
+	 *
+	 * @param array $data
+	 * @return void
+	 */
 	public function update_config_data($data)
 	{
-		$fields = array(); $values = array();
-
 		foreach ($data as $key => $value) {
-			$fields[] .= $key;
-			$values[] .= $value;
+			$this->vavok->go('db')->update(DB_PREFIX . 'settings', array('value'), array($value), "setting_name = '{$key}'");
 		}
-
-		$this->vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
-
 	}
-
 }
 
 ?>

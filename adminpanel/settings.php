@@ -12,15 +12,19 @@ if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator(101
 
 $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
-// Мain settings update
-if ($action == "editone") {
+$site_configuration = new Config();
+
+/**
+ * Мain settings update
+ */
+if ($action == 'editone') {
 
 	// Check fields
     if (!isset($_POST['conf_set2']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
         $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
     }
 
-    $fields = array('webtheme','adminNick','adminEmail','timeZone','title','homeUrl','siteDefaultLang','openReg','regConfirm','siteOff');
+    $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
 
     $values = array(
         $vavok->check($_POST['conf_set2']),
@@ -35,8 +39,10 @@ if ($action == "editone") {
         (int)$_POST['conf_set63']
     );
 
-    // Update settings
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
@@ -64,11 +70,12 @@ if ($action == "edittwo") {
         (int)$_POST['conf_set74']
     );
 
-    // Update data
-	$vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
 
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
-	
 } 
 
 if ($action == "editthree") {
@@ -91,8 +98,10 @@ if ($action == "editthree") {
         (int)$_POST['conf_set56']
     );
 
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
-
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
@@ -118,8 +127,10 @@ if ($action == "editfour") {
         (int)$_POST['conf_set68']
     );
 
-    // Update
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
 
     // update gallery settings
     $gallery_file = $vavok->get_data_file('dataconfig/gallery.dat');
@@ -145,14 +156,15 @@ if ($action == "editfour") {
 
 }
 
-if ($action == "editfive") {
+if ($action == 'editfive') {
 	if (!isset($_POST['conf_set30'])) {
         $vavok->redirect_to("settings.php?action=setfive&isset=mp_nosset");
     }
 
-	$udata[30] = (int)$_POST['conf_set30'];
-
-	$vavok->go('db')->update(DB_PREFIX . 'settings', 'pvtLimit', (int)$_POST['conf_set30']);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine(array('pvtLimit'), array((int)$_POST['conf_set30'])));
 
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 }
@@ -202,8 +214,10 @@ if ($action == "editseven") {
         $_POST['conf_set70']
     );
 
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
-
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 
 }
@@ -223,8 +237,10 @@ if ($action == "editeight") {
         round($_POST['conf_set76'] * 1440)
     );
 
-    // Update data
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
 
     $vavok->redirect_to("settings.php?isset=mp_yesset");
 }
@@ -247,8 +263,10 @@ if ($action == "editsecurity") {
         (int)$_POST['conf_set29']
     );
 
-    // Update settings
-    $vavok->go('db')->update(DB_PREFIX . 'settings', $fields, $values);
+    /**
+     * Update settings
+     */
+    $site_configuration->update_config_data(array_combine($fields, $values));
 
     // update .htaccess file
     // dont force https
@@ -324,7 +342,7 @@ if ($action == "setone") {
     $select_lang->set('select_name', 'conf_set47');
     $select_lang->set('options', $options);
 
-    $config_themes_show = str_replace("web_", "", $vavok->get_configuration('webtheme'));
+    $config_themes_show = str_replace('web_', '', $vavok->get_configuration('webtheme'));
     $config_themes_show = ucfirst($config_themes_show);
 
     $options = '<option value="' . $vavok->get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
