@@ -1,5 +1,6 @@
-# Vavok v1.5.6.1
+# Vavok v1.5.7
 - Updated localization
+- Updated how settings are stored in database
 
 
 
