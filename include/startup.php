@@ -2,11 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   10.03.2021. 23:01:53
+ * Updated:   21.03.2021. 11:05:49
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.7');
+define('VERSION', '1.5.7.1');
 
 /**
  * Root dir for including system files
@@ -22,7 +22,7 @@ if (!defined('BASEDIR')) {
 /**
  * Autoload classes
  */
-spl_autoload_register(function ($class) {
+spl_autoload_register(function($class) {
     include BASEDIR . "include/classes/{$class}.class.php";
 });
 
@@ -31,7 +31,7 @@ new Db();
 new Users();
 
 /**
- * We don't need this data if this is system request
+ * We don't need this data for system requests
  */
 if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
 	new Page();
