@@ -56,6 +56,21 @@ if ($step == 'first_end') {
         define("BASEDIR", $folder_level);
     }
 
+    /**
+     * Create configuration .env file
+     */
+$config_data = 'DB_HOST=localhost
+DB_USERNAME=root
+DB_PASSWORD=root
+DB_DATABASE=database
+DB_PREFIX=null
+
+SITE_STAGE=null';
+
+    if (!file_exists('../.env')) {
+        file_put_contents('../.env', $config_data);
+    }
+
     include "../include/classes/Config.class.php";
 
     $values = array(
