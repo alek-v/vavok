@@ -1,6 +1,8 @@
-# Vavok v1.5.7
+# Vavok v1.5.7.1
 - Updated localization
 - Updated how settings are stored in database
+- Bugfix: Update links stored in header when page link is renamed
+- Create configuration .env file when CMS installation is started
 
 
 
