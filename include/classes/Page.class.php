@@ -3,6 +3,7 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing pages
+ * Updated:   21.03.2021. 11:06:14
  */
 
 class Page {
@@ -150,16 +151,42 @@ class Page {
 		return true;
 	}
 
-	// rename page
-	function rename($newName, $id) {
-		// set page name
+	/**
+ 	 * Rename page
+ 	 *
+ 	 * @param string $newName
+ 	 * @param integer $id
+ 	 * @return void
+ 	 */
+	function rename($newName, $id)
+	{
+		/**
+		 * Set page name
+		 */
 		$pageName = str_replace('.php', '', $newName); // page name (without extension (.php))
-	    // remove language data from page name
+
+	    /**
+	     * Remove language data from page name
+	     */
 	    if (stristr($pageName, '!.')) {
 	        $pageName = preg_replace("/(.*)!.(.*)!/", "$1", $pageName);
-	    } 
+	    }
 
-	    // update database
+	    /**
+	     * Update URL tags in header data
+	     */
+	    $header_data = $this->select_page($id, 'headt, pname');
+
+	    $updated_links = str_replace($header_data['pname'], $pageName, $header_data['headt']);
+
+        $new_data = array(
+            'headt' => $updated_links
+        );
+        $this->head_data($id, $new_data);
+
+	    /**
+	     * Update other data in database
+	     */
 	    $fields[] = 'pname';
 	    $fields[] = 'file';
 
@@ -185,19 +212,29 @@ class Page {
 	    $this->vavok->go('db')->query("UPDATE " . $this->table_prefix . "pages SET lang='" . $lang . "', file='" . $pageData['pname'] . "!." . $lang . "!.php' WHERE `id`='" . $id . "'");
 	}
 
-	// update head tags
-	function head_data($id, $data) {
-		// get database fields
+	/**
+	 * Update head tags
+	 *
+	 * @param integer $id
+	 * @param array $data
+	 * @return void
+	 */
+	function head_data($id, $data)
+	{
+		/**
+		 * Get database fields
+		 */
         $fields = array_keys($data);
 
-        // get data for fields
+        /**
+         * Get database values
+         */
         $values = array_values($data);
 
-        // update page data
-        $this->vavok->go('db')->update($this->table_prefix . "pages", $fields, $values, "id='{$id}'");
+        $this->vavok->go('db')->update($this->table_prefix . 'pages', $fields, $values, "id='{$id}'");
 	}
 
-	/*
+	/**
 	 * Read data
 	 */
 
