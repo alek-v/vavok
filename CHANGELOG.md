@@ -1,7 +1,11 @@
 # Vavok v1.5.7.2
+- Update: Images will not have float by default
+
+
+
+# Vavok v1.5.7.1
 - Updated localization
 - Updated how settings are stored in database
-- Update: Images will not have float by default
 - Bugfix: Update links stored in header when page link is renamed
 - Create configuration .env file when CMS installation is started
 
