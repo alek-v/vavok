@@ -183,7 +183,7 @@ textarea {
   max-width: 850px;
   text-align: justify;
 }
-.blog-page img {
+.blog-page .blogimg-f-left {
   float: left;
   padding: 10px 15px;
 }
