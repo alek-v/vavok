@@ -1,4 +1,4 @@
-# Vavok v1.5.7.1
+# Vavok v1.5.7.2
 - Updated localization
 - Updated how settings are stored in database
 - Update: Images will not have float by default
