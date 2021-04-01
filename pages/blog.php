@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.03.2021. 20:36:53
+ * Updated:   01.04.2021. 21:34:27
  */
 
 require_once '../include/startup.php';
@@ -14,7 +14,6 @@ $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
 
 switch ($pg) {
-
 	case isset($pg):
 		// Get page id
 		// Redirect to blog main page if page does not exist
@@ -31,17 +30,37 @@ switch ($pg) {
 		$author_link = '<a href="' . HOMEDIR . 'pages/user.php?uz=' . $vavok->go('current_page')->page_author . '">' . $author_name . '</a>';
 		$post->set('author_link', $author_link);
 
-		// Time created
+		/**
+		 * Time created
+		 */
 		$post->set('created_date', $vavok->date_fixed($vavok->go('current_page')->page_created_date, 'd.m.Y.'));
 
-		// content
+		/**
+		 * Time published
+		 */
+		$post->set('published_date', $vavok->date_fixed($vavok->go('current_page')->page_published_date, 'd.m.Y.'));
+
+		/**
+		 * Content
+		 */
 		$post->set('content', $vavok->getbbcode($vavok->go('current_page')->page_content));
 
-		// day created
+		/**
+		 * Day and month when post is created
+		 */
 		$post->set('date-created-day', date('d', $vavok->go('current_page')->page_created_date));
-
-		// month created
 		$post->set('date-created-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $vavok->go('current_page')->page_created_date) - 1], 0, 3));
+
+		/**
+		 * Day and month when post is published
+		 */
+		$post->set('date-published-day', date('d', $vavok->go('current_page')->page_published_date));
+		$post->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $vavok->go('current_page')->page_published_date) - 1], 0, 3));
+
+		/**
+		 * Page URL
+		 */
+		$post->set('page-link', $vavok->go('current_page')->media_page_url());
 
 		// comments
 		$comments = new Comments();
@@ -129,7 +148,7 @@ switch ($pg) {
 		$navi = new Navigation($items_per_page, $total_posts, $page);
 
 		// get blog posts
-		foreach ($vavok->go('db')->query("SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY id DESC LIMIT {$navi->start()['start']}, {$items_per_page}") as $key) {
+		foreach ($vavok->go('db')->query("SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}") as $key) {
 			// load template
 			$page_posts = new PageGen('pages/blog/blog_post.tpl');
 			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
@@ -148,11 +167,22 @@ switch ($pg) {
 			// replace html headings
 			$content = preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '<h3>${2}</h3>', $content);
 
-			// day created
+			/**
+			 * Day and month created
+			 */
 			$page_posts->set('date-created-day', date('d', $key['created']));
-
-			// month created
 			$page_posts->set('date-created-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['created']) - 1], 0, 3));
+
+			/**
+			 * Day and month when article is published
+			 */
+			$page_posts->set('date-published-day', date('d', $key['pubdate']));
+			$page_posts->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['pubdate']) - 1], 0, 3));
+
+			/**
+			 * Page URL
+			 */
+			$page_posts->set('page-link', $vavok->go('current_page')->media_page_url());
 
 			$page_posts->set('post_text', $content);
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');

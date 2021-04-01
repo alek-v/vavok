@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-sm">
 			<div class="rounded-circle blog-date">
-				{@date-created-day}}<br />{@date-created-month}}
+				{@date-published-day}}<br />{@date-published-month}}
 			</div>
 		</div>
 	</div>
@@ -12,7 +12,7 @@
 
 	<div class="col-sm blog-author"> <!-- Author and date -->
 		{@website_language[author]}}: {@author_link}}<br />
-		{@website_language[published]}}: {@created_date}}
+		{@website_language[published]}}: {@published_date}}
 	</div>
 
 	<div id="tags_area">

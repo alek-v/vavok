@@ -3,18 +3,19 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing pages
- * Updated:   21.03.2021. 11:06:14
+ * Updated:   01.04.2021. 21:25:44
  */
 
 class Page {
-	public $page_name;         // Page name
-	public $page_language;     // Page language
-	public $page_title;        // Title
-	public $page_content;      // Content
-	public $published;         // Visitors can see page
-	public $page_author;       // Page author
-	public $page_created_date; // Page created date
-	public $head_tags;         // Head tags
+	public $page_name;             // Page name
+	public $page_language;         // Page language
+	public $page_title;            // Title
+	public $page_content;          // Content
+	public $published;             // Visitors can see page
+	public $page_author;           // Page author
+	public $page_created_date;     // Page created date
+	public $head_tags;             // Head tags
+	public $page_published_date;   // Date when post is published
 	private $vavok;
 
 	/**
@@ -304,20 +305,35 @@ class Page {
 			// Page content
 			$this->page_content = $page_data['content'];
 
-			// Published
+			/**
+			 * Published status
+			 */
 			$this->published = $page_data['published'];
 
-			// Published
+			/**
+			 * Page id
+			 */
 			$this->page_id = $page_data['id'];
 
-			// Published
+			/**
+			 * Author
+			 */
 			$this->page_author = $page_data['crtdby'];
 
-			// Created date
+			/**
+			 * Date created
+			 */
 			$this->page_created_date = $page_data['created'];
 
-			// Head tags
+			/**
+			 * Head tags
+			 */
 			$this->head_tags = $this->append_head_tags($page_data['headt']);
+
+			/**
+			 * Published date
+			 */
+			$this->page_published_date = $page_data['pubdate'];
 
 			return $page_data;
 
