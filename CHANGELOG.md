@@ -1,6 +1,8 @@
-# Vavok v1.5.7.3
+# Vavok v1.5.7.5
 - Update: Images will not have float by default
 - Update: Show blog post published date instead of page creation date
+- Bugfix: Show current date for blog post when page is not published
+- Bugfix: PHP notice fix
 
 
 
