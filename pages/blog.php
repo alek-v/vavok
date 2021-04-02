@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   01.04.2021. 21:34:27
+ * Updated:   02.04.2021. 21:52:23
  */
 
 require_once '../include/startup.php';
@@ -37,8 +37,13 @@ switch ($pg) {
 
 		/**
 		 * Time published
+		 * If article is not published and page is viewed by administrator use current time
 		 */
-		$post->set('published_date', $vavok->date_fixed($vavok->go('current_page')->page_published_date, 'd.m.Y.'));
+		if (!empty($vavok->go('current_page')->page_published_date)) {
+			$post->set('published_date', $vavok->date_fixed($vavok->go('current_page')->page_published_date, 'd.m.Y.'));
+		} else {
+			$post->set('published_date', $vavok->date_fixed(time(), 'd.m.Y.'));
+		}
 
 		/**
 		 * Content
@@ -53,9 +58,15 @@ switch ($pg) {
 
 		/**
 		 * Day and month when post is published
+		 * If article is not published and page is viewed by administrator use current time
 		 */
-		$post->set('date-published-day', date('d', $vavok->go('current_page')->page_published_date));
-		$post->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $vavok->go('current_page')->page_published_date) - 1], 0, 3));
+		if (!empty($vavok->go('current_page')->page_published_date)) {
+			$post->set('date-published-day', date('d', $vavok->go('current_page')->page_published_date));
+			$post->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $vavok->go('current_page')->page_published_date) - 1], 0, 3));
+		} else {
+			$post->set('date-published-day', date('d', time()));
+			$post->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', time()) - 1], 0, 3));
+		}
 
 		/**
 		 * Page URL
