@@ -190,7 +190,7 @@ class Vavok {
 	    if ($path = opendir($dir)) while ($file_name = readdir($path)) {
 	        $size = 0;
 	        if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
-	            if (is_dir($dir . "/" . $file_name)) $size = read_dir($dir . "/" . $file_name);
+	            if (is_dir($dir . "/" . $file_name)) $size = $this->read_dir($dir . "/" . $file_name);
 	            else $size += filesize($dir . "/" . $file_name);
 	        }
 	    }
