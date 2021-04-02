@@ -2,21 +2,21 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   01.04.2021. 21:50:43
+ * Updated:   03.04.2021. 0:55:16
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.7.3');
+define('VERSION', '1.5.7.5');
 
 /**
  * Root dir for including system files
  */
 if (!defined('BASEDIR')) {
-    $folder_level = "";
-    while (!file_exists($folder_level . "robots.txt")) {
-        $folder_level .= "../";
-    } 
-    define("BASEDIR", $folder_level);
+    $folder_level = '';
+    while (!file_exists($folder_level . 'robots.txt')) {
+        $folder_level .= '../';
+    }
+    define('BASEDIR', $folder_level);
 }
 
 /**
