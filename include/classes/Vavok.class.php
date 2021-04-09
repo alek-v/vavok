@@ -20,18 +20,13 @@ class Vavok {
 		 */
 		date_default_timezone_set('UTC');
 
-		/**
+		/**********
 		 * Configuration
 		 */
 
 		define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
+		define('CLEAN_REQUEST_URI', $this->clean_request_uri(REQUEST_URI)); // Clean URL (REQUEST_URI)
 		define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
-
-		// Clean URL (REQUEST_URI)
-		$clean_requri = explode('&fb_action_ids', REQUEST_URI)[0]; // facebook
-		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
-		$clean_requri = explode('?isset', $clean_requri)[0];
-		define('CLEAN_REQUEST_URI', $clean_requri);
 
 		// For links, images and other mod rewriten directories
 		if (!defined('HOMEDIR')) {
@@ -94,7 +89,7 @@ class Vavok {
 	    }
 	}
 
-	/**
+	/**********
 	 * Date and time
 	 */
 
@@ -158,7 +153,7 @@ class Vavok {
 	    return $file_time;
 	}
 
-	/**
+	/**********
 	 * File manipulation
 	 */
 
@@ -254,7 +249,7 @@ class Vavok {
 		require_once BASEDIR . 'themes/' . MY_THEME . '/foot.php';
 	}
 
-	/**
+	/**********
 	 * String and text manipulation
 	 */
 
@@ -537,6 +532,21 @@ class Vavok {
 	}
 
 	/**
+	 * Clean request URI from unwanted data in url
+	 *
+	 * @param string $uri
+	 * @return strig $clean_requri
+	 */
+	public function clean_request_uri($uri)
+	{
+		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
+		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
+		$clean_requri = explode('?isset', $clean_requri)[0];
+
+		return $clean_requri;
+	}
+
+	/**********
 	 * Security
 	 */
 
@@ -649,7 +659,7 @@ class Vavok {
 	    return $result;
 	}
 
-	/**
+	/**********
 	 * Validations
 	 */
 
@@ -679,7 +689,7 @@ class Vavok {
 	    }
 	}
 
-	/**
+	/**********
 	 * Show informations
 	 */
 
@@ -794,7 +804,7 @@ class Vavok {
 	    }
 	}
 
-	/**
+	/**********
 	 * Groups
 	 */
 
@@ -809,7 +819,7 @@ class Vavok {
 		return $this->go('db')->count_row(DB_PREFIX . 'group_members', "group_name = '{$group_name}'");
 	}
 
-	/**
+	/**********
 	 * Other
 	 */
 
