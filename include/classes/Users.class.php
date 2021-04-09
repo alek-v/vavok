@@ -85,10 +85,10 @@ class Users {
 		    $vavok_users = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$this->user_id}'");
 		    $user_profil = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$this->user_id}'", 'regche');
 
+		    /**
+		     * Update last visit
+		     */
 		    $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
-
-		    // Theme
-		    $config_themes = $vavok_users['skin'];
 
 		 	// Time zone
 		    if (!empty($vavok_users['timezone'])) define('MY_TIMEZONE', $vavok_users['timezone']);
@@ -111,14 +111,8 @@ class Users {
 		        session_destroy();
 		    }
 		} else {
-			// User's site theme
-		    $config_themes = $this->vavok->get_configuration('webtheme');
-
 		    if (empty($_SESSION['lang'])) $this->change_language();
 		}
-
-		// if skin not found
-		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php")) $config_themes = 'default';
 
 		/**
 		 * Count visited pages and time on site
@@ -144,11 +138,21 @@ class Users {
 		 * User settings
 		 */
 
-		// Current theme
-		define("MY_THEME", $config_themes);
-
 		// If timezone is not defined use default
 		if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->vavok->get_configuration('timeZone'));
+
+		/**
+		 * Site theme
+		 */
+	    $config_themes = $this->vavok->get_configuration('webtheme');
+
+		/**
+		 * If theme does not exist use default theme
+		 * For admin panel use default theme
+		 */
+		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php") || strpos($this->vavok->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+
+		define('MY_THEME', $config_themes);
 
 		$this->vavok->add_global(array('users' => $this));
 	}
