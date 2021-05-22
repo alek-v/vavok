@@ -10,16 +10,6 @@
 
 
 
-# Vavok v1.5.7.6
-- Update: Images will not have float by default
-- Update: Show blog post published date instead of page creation date
-- Update: Use default theme for admin panel
-- Created new function clean_request_uri
-- Bugfix: Show current date for blog post when page is not published
-- Bugfix: PHP notice fix
-
-
-
 # Vavok v1.5.7.1
 - Updated localization
 - Updated how settings are stored in database
