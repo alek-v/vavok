@@ -2,7 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   02.04.2021. 21:52:23
+ * Updated:   17.04.2021. 14:23:13
  */
 
 require_once '../include/startup.php';
@@ -131,6 +131,11 @@ switch ($pg) {
 		break;
 	
 	default:
+		/**
+		 * Add meta tags
+		 */
+		$vavok->go('current_page')->append_head_tags('<meta name="robots" content="noindex, follow" />' . "\r\n");
+
 		// page title
 		$vavok->go('current_page')->page_title = 'Blog';
 		
