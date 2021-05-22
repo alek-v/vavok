@@ -3,6 +3,10 @@
 - Check if functon get_magic_quotes_gpc() exists
 - Default theme updated
 - Added website search
+- Show blog post published date instead of page creation date
+- Show current date for blog post when page is not published
+- Created new function clean_request_uri()
+- Use default theme for admin panel
 
 
 
