@@ -10,11 +10,4 @@ if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) 
 if (empty($action)) {
 	phpinfo();
 }
-if ($action == 'magic_quotes_check') {
-	if (get_magic_quotes_gpc()) {
-		echo "Magic quotes are enabled";
-	} else {
-		echo "Magic quotes are disabled";
-	}
-}
 ?>

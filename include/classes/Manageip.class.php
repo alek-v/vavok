@@ -62,8 +62,6 @@ class Manageip {
             fputs($fp, "$write\r\n");
             flock ($fp, LOCK_UN);
             fclose($fp);
-            @chmod ($fp, 0666);
-            @chmod ($logfiles, 0666);
 
             if (count(file($logfiles)) > $this->vavok->get_configuration('dosLimit') && $this->vavok->get_configuration('dosLimit') > 0) {
                 

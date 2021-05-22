@@ -59,7 +59,7 @@ if ($action == "editfile") {
 
         // bug when magic quotes are on and '\' sign
         // if magic quotes are on we don't want ' to become \'
-        if (get_magic_quotes_gpc()) {
+        if (function_exists('get_magic_quotes_gpc')) {
             // strip all slashes
             $text_files = stripslashes($text_files);
         }
@@ -99,7 +99,6 @@ if ($action == "editheadtag") {
 
     // update header tags
     if (!empty($file)) {
-
         // who created page
         $page_info = $page_editor->select_page($page_id, 'crtdby');
 
@@ -109,7 +108,9 @@ if ($action == "editheadtag") {
         // check can user edit page
         if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
-        // update db data
+        /**
+         * Update data in database
+         */
         $data = array(
             'headt' => $text_files,
             'default_img' => $image
@@ -118,14 +119,15 @@ if ($action == "editheadtag") {
 
         // redirect
         $vavok->redirect_to("files.php?action=headtag&file=$file&isset=mp_editfiles");
-
     } 
     // fields must not be empty
     $vavok->redirect_to("files.php?action=headtag&file=$file&isset=mp_noeditfiles");
 }
 
-// rename page
-if ($action == "save_renamed") {
+/**
+ * Rename page
+ */
+if ($action == 'save_renamed') {
     $pg = $vavok->check($_POST['pg']); // new file name
 
     if (!empty($pg) && !empty($file)) {
@@ -138,7 +140,7 @@ if ($action == "save_renamed") {
         if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator() && $page_info['crtdby'] != $vavok->go('users')->user_id) {
             header("Location: index.php?isset=ap_noaccess");
             exit;
-        } 
+        }
 
         // rename page
         $page_editor->rename($pg, $page_id);

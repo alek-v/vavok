@@ -556,8 +556,8 @@ class Vavok {
 	 * @param string $str
 	 * @return string
 	 */
-	public function check($str) {
-	    if (get_magic_quotes_gpc()) { $str = stripslashes($str); } // strip all slashes
+	public function check($str)
+	{
 	    $str = str_replace("|", "&#124;", $str);
 	    $str = htmlspecialchars($str);
 	    $str = str_replace("'", "&#39;", $str);

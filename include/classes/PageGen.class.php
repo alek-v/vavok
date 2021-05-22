@@ -3,7 +3,6 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing pages
- * Updated:   02.09.2020. 22:34:07
  */
 
 class PageGen {
@@ -32,7 +31,7 @@ class PageGen {
      */
     public function set($key, $value)
     {
-        $this->values{$key} = $value;
+        $this->values[$key] = $value;
     } 
 
     /**

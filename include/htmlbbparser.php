@@ -290,7 +290,7 @@ if (!empty($GLOBALS['do_debug'])) { debug("\n\n".'cbparser outgoing [$html2bb]: 
 
 // add slashes to a string, or don't..
 function slash_it($string) {
-	if (get_magic_quotes_gpc()) { 
+	if (function_exists('get_magic_quotes_gpc')) { 
 		return stripslashes($string);
 	} else {
 		return $string;

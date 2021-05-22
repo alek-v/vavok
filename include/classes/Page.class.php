@@ -3,7 +3,7 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for managing pages
- * Updated:   01.04.2021. 21:25:44
+ * Updated:   22.05.2021. 15:14:50
  */
 
 class Page {
@@ -364,10 +364,16 @@ class Page {
 		return $lang;
 	}
 
-	// check if page exists
+	/**
+	 * Check if page exists
+	 *
+	 * @param $file string
+	 * @param $where string
+	 * @return mix int|bool
+	 */
 	function page_exists($file = '', $where = '') {
 		if (!empty($file) && $this->vavok->go('db')->count_row($this->table_prefix . 'pages', "file='{$file}'") > 0) {
-			return $this->get_page_id("file='" . $file . "'");
+			return $this->get_page_id("file='{$file}'");
 		} elseif (!empty($where) && ($this->vavok->go('db')->count_row($this->table_prefix . 'pages', $where) > 0)) {
 			return $this->get_page_id($where);
 		} else {
@@ -375,9 +381,16 @@ class Page {
 		}
 	}
 
-	// get page id
-	function get_page_id($where) {
-		return $this->vavok->go('db')->get_data($this->table_prefix . 'pages', $where, 'id')['id'];
+	/**
+	 * Return page id
+	 *
+	 * @param string
+	 * @return bool
+	 */
+	function get_page_id($where)
+	{
+		$page_id = $this->vavok->go('db')->get_data($this->table_prefix . 'pages', $where, 'id');
+		return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
 	}
 
 	// load page editor program
@@ -421,7 +434,8 @@ class Page {
 	public function page_title() {
 		if (!empty($this->page_title)) { return $this->page_title; }
 
-	    $page_title = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname')['tname'];
+	    $page_title = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname');
+	    $page_title = !empty($page_title) ? $page_title['tname'] : '';
 
 	    if (!empty($page_title)) {
 	        return $page_title;

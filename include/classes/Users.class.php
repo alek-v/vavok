@@ -3,6 +3,7 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for user management
+ * Updated:   22.05.2021. 15:24:45
  */
 
 class Users {
@@ -382,7 +383,7 @@ class Users {
 	    $text = $this->vavok->getbbcode($this->vavok->smiles($this->vavok->antiword($text)));
 
 	    // strip slashes
-	    if (get_magic_quotes_gpc()) {
+	    if (function_exists('get_magic_quotes_gpc')) {
 	        $text = stripslashes($text);
 	    }
 
@@ -443,10 +444,16 @@ class Users {
 		return isset($_SESSION['log']) ? $_SESSION['log'] : '';
 	}
 
-	// get user nick from user id number
-	public function getnickfromid($uid) {
+	/**
+	 * Get user nick from user id number
+	 *
+	 * @param bool $uid
+	 * @return str $unick
+	 */
+	public function getnickfromid($uid)
+	{
 	    $unick = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$uid}'", 'name');
-	    return $unick['name'];
+	    return $unick = !empty($unick['name']) ? $unick['name'] : '';
 	}
 
 	// get vavok_users user id from nickname
@@ -623,16 +630,17 @@ class Users {
     	return BrowserDetection::userDevice();
 	}
 
-	// visitor's browser
-	function user_browser() {
+	/**
+	 * Return visitor's browser
+	 *
+	 * @return string
+	 */
+	function user_browser()
+	{
+		$detectBrowser = new BrowserDetection();
+		$userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
 
-		if(ini_get("browscap")) {
-			$userBrowser = get_browser(null, true);
-		} else {
-			$detectBrowser = new BrowserDetection();
-			$userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
-		}
-		if (empty($userBrowser)) { $userBrowser = 'Not detected'; }
+		$userBrowser = !empty($userBrowser) ? $userBrowser : 'Browser not detected';
 
 		return $userBrowser;
 	}
