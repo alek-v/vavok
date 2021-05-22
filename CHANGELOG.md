@@ -1,3 +1,11 @@
+# Vavok v1.5.8
+- Vavok CMS in now fully compatible with PHP 8
+- Check if functon get_magic_quotes_gpc() exists
+- Default theme updated
+- Added website search
+
+
+
 # Vavok v1.5.7.6
 - Update: Images will not have float by default
 - Update: Show blog post published date instead of page creation date
