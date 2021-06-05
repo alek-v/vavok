@@ -100,7 +100,7 @@ final class Cache {
 	*
 	* \return Serialized-Cached-Data
 	*/
-    final private static function isCached($file, $ttl=0) {
+    static function isCached($file, $ttl=0) {
 
         $createdTime = @filemtime($file);
         if(!$createdTime)
@@ -123,7 +123,7 @@ final class Cache {
 	*
 	* \return full-path-to-cache-directory
 	*/
-    final private static function getPath($key, $group=NULL) {
+    static function getPath($key, $group=NULL) {
         $hash = self::hash($key);
         $hashFolder = self::hashFolder($hash);
 
@@ -143,7 +143,7 @@ final class Cache {
 	*
 	* \return hash-value
 	*/
-    final private static function hash($key) {
+    static function hash($key) {
         $count = 0;
         $hash = 0;
         $keyLen = strlen($key);
@@ -159,7 +159,7 @@ final class Cache {
 	*
 	* \return hash-folder-name-(numeric)
 	*/
-    final private static function hashFolder($hash) {
+    static function hashFolder($hash) {
         $hash >>= 3;
         $hash %= 1000;
         return $hash;
@@ -173,7 +173,7 @@ final class Cache {
 	*
 	* \return group-folder-name
 	*/
-    final private static function getGroupPath($group, $hash) {
+    static function getGroupPath($group, $hash) {
         return $group.(1+($hash % 8));
     }
 
@@ -184,7 +184,7 @@ final class Cache {
 	*
 	* \return void
 	*/
-    final private static function removeDir($dir) {
+    static function removeDir($dir) {
         $files = glob( $dir . '*', GLOB_MARK );
         foreach( $files as $file ){
             if( substr( $file, -1 ) == '/' )
