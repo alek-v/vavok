@@ -35,7 +35,7 @@ class Page {
 		if (isset($_GET['pg'])) $this->page_language = $this->get_page_language($this->vavok->check($_GET['pg']));
 
 		// Update user's language
-		if (!empty($this->page_language) && strtolower($this->page_language) != $this->vavok->go('users')->get_prefered_language($_SESSION['lang'], 'short')) { $this->vavok->go('users')->change_language(strtolower($this->page_language)); }
+		if (!empty($this->page_language['lang']) && strtolower($this->page_language['lang']) != $this->vavok->go('users')->get_prefered_language($_SESSION['lang'], 'short')) { $this->vavok->go('users')->change_language(strtolower($this->page_language['lang'])); }
 
 		// Load main page
 		if ($this->page_name == 'index') {
@@ -269,10 +269,15 @@ class Page {
 		return $this->vavok->go('db')->get_data($this->table_prefix . 'pages', "id='{$id}'", $fields);
 	}
 
-	// Load page
-	public function load_page() {
+	/**
+	 * Load page
+	 * 
+	 * @return array $page_data
+	 */
+	public function load_page()
+	{
 		// Load page with requested language
-		$language = !empty($this->page_language) ? " AND lang='" . $this->page_language . "'" : '';
+		$language = is_string($this->page_language) && !empty($this->page_language) ? " AND lang='" . $this->page_language . "'" : '';
 
 		// Load main page only from main page
 		if (isset($_GET['pg']) && $_GET['pg'] == 'index') return false;
@@ -359,8 +364,10 @@ class Page {
 	 */
 	private function get_page_language($page)
 	{
-		$lang = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname = '{$page}'", 'lang')['lang'];
-		if (empty($lang)) return false;
+		$lang = $this->vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname = '{$page}'", 'lang');
+
+		if (!isset($lang['lang']) || empty($lang['lang'])) return false;
+
 		return $lang;
 	}
 
