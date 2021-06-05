@@ -3,7 +3,6 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Package:   Class for user management
- * Updated:   22.05.2021. 15:24:45
  */
 
 class Users {
@@ -456,10 +455,18 @@ class Users {
 	    return $unick = !empty($unick['name']) ? $unick['name'] : '';
 	}
 
-	// get vavok_users user id from nickname
-	public function getidfromnick($nick) {
+	/**
+	 * Get vavok_users user id from nickname
+	 * 
+	 * @param string $nick
+	 * @return int
+	 */
+	public function getidfromnick($nick)
+	{
 	    $uid = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "name='{$nick}'", 'id');
-	    return $uid['id'];
+	    $id = !empty($uid['id']) ? $uid['id'] : 0;
+
+	    return $id;
 	}
 
 	// get vavok_users user id from email
@@ -676,14 +683,21 @@ class Users {
 		}
 	}
 
-	// check if user is moderator
-	function is_moderator($num = '', $id = '') {
+	/**
+	 * Check if user is moderator
+	 * 
+	 * @param int $num
+	 * @param int $id
+	 * @return bool
+	 */
+	function is_moderator($num = '', $id = '')
+	{
 	    if (empty($id) && !empty($this->user_id)) {
 	        $id = $this->user_id;
 	    }
 
 	    $chk_adm = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$id}'", 'perm');
-	    $perm = intval($chk_adm['perm']);
+	    $perm = isset($chk_adm['perm']) ? intval($chk_adm['perm']) : 0;
 	    
 	    if ($perm === $num) {
 	        return true;
@@ -694,14 +708,21 @@ class Users {
 	    }
 	}
 
-	// check if user is administrator
-	function is_administrator($num = '', $id = '') {
+	/**
+	 * Check if user is administrator
+	 * 
+	 * @param int $num
+	 * @param int $id
+	 * @return bool
+	 */
+	function is_administrator($num = '', $id = '')
+	{
 	    if (empty($id) && !empty($this->user_id)) {
 	        $id = $this->user_id;
 	    }
 
 	    $chk_adm = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$id}'", 'perm');
-	    $perm = intval($chk_adm['perm']);
+	    $perm = isset($chk_adm['perm']) ? intval($chk_adm['perm']) : 0;
 
 	    if ($perm === $num) {
 	        return true;
