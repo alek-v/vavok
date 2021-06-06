@@ -2,13 +2,13 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   17.04.2021. 14:23:13
  */
 
 require_once '../include/startup.php';
 
 $pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : ''; // blog page
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1; // page number
+$current_category = isset($_GET['category']) ? $vavok->check($_GET['category']) : ''; // blog category
 
 $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
@@ -143,16 +143,17 @@ switch ($pg) {
 		$vavok->require_header();
 
 		// load index template
-		$showPage = new PageGen("pages/blog/index.tpl");
+		$show_page = new PageGen("pages/blog/index.tpl");
 
 		/**
 		 * Count total posts
 		 */
-		$total_posts = $vavok->go('db')->count_row('pages', "type='post' AND published = '2'");
+		$total_posts = empty($current_category) ? $vavok->go('db')->count_row('pages', "type='post' AND published = '2'") : $vavok->go('db')->count_row('tags', "tag_name='{$current_category}'");
 
 		// if there is no posts
 		if ($total_posts < 1) {
-			echo '<p><img src="../images/img/reload.gif" alt="" /> There is nothing here</p>';
+			echo '<p><img src="' . HOMEDIR . 'images/img/reload.gif" alt="Nothing here" /> There is nothing here</p>';
+			echo '<p><a href="' . HOMEDIR . 'blog/" class="btn btn-primary sitelink">' . $vavok->go('localization')->string('backtoblog') . '</a></p>';
 
 			// page footer
 			$vavok->require_footer();
@@ -163,10 +164,49 @@ switch ($pg) {
 		// start navigation
 		$navi = new Navigation($items_per_page, $total_posts, $page);
 
-		// get blog posts
-		foreach ($vavok->go('db')->query("SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}") as $key) {
+		/**
+		 * Get blog category names
+		 */
+		foreach ($vavok->go('db')->query("SELECT * FROM settings WHERE setting_group = 'blog_category'") as $category) {
+			$page_category = new PageGen('pages/blog/blog_category.tpl');
+
+			/**
+			 * Set category name
+			 */
+			$page_category->set('category_name', $category['setting_name']);
+
+			/**
+			 * Set category link
+			 */
+			$page_category->set('category_link', HOMEDIR . 'blog/category/' . $category['value'] . '/');
+
+			$all_categories[] = $page_category;
+		}
+
+		/**
+		 * Don't show <div> with categories if there is no category
+		 */
+		if (empty($all_categories)) $show_page->set('bc_style_options', ' display-none');
+
+		/**
+		 * Merge categories and output from object
+		 */
+		if (isset($all_categories)) $show_page->set('category-list', PageGen::merge($all_categories));
+
+		/**
+		 * Get blog posts
+		 */
+
+		/**
+		 * Query when category is not set and when it is set
+		 */		
+		$page_sql_query = empty($current_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content FROM pages INNER JOIN tags ON tags.tag_name='{$current_category}' AND tags.page_id = pages.id  ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+
+		foreach ($vavok->go('db')->query($page_sql_query) as $key) {
 			// load template
 			$page_posts = new PageGen('pages/blog/blog_post.tpl');
+
 			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
 
 			$content = $key['content'];
@@ -208,18 +248,17 @@ switch ($pg) {
 			$all_posts[] = $page_posts;
 		}
 
-		// merge blog posts and output from object
-		$merge_all = PageGen::merge($all_posts);
-
-		// show page
-		$showPage->set('posts', $merge_all);
+		/**
+		 * Merge blog posts and output from object
+		 */
+		$show_page->set('posts', PageGen::merge($all_posts));
 
 		// page navigation
 		$navigation = new Navigation($items_per_page, $total_posts, $page, './?');
 		
-		$showPage->set('navigation', $navigation->get_navigation());
+		$show_page->set('navigation', $navigation->get_navigation());
 
-		echo $showPage->output();
+		echo $show_page->output();
 
 		// page footer
 		$vavok->require_footer();

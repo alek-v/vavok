@@ -2,7 +2,6 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.03.2021. 20:41:52
  */
 
 $language = 'serbian_latin';
@@ -93,6 +92,7 @@ $lang_home['author'] = "Autor";
 $lang_home['published'] = "Objavljeno";
 $lang_home['security'] = "Bezbednost";
 $lang_home['backtoblog'] = "Nazad na blog";
+$lang_home['category'] = "Kategorija";
 
 // cookie consent
 $lang_home['cookies'] = "Kolačići."; // Title

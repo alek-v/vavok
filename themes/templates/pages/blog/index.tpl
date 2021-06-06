@@ -1,5 +1,10 @@
 <div class="blog-index">
 
+	<div class="blog-category{@bc_style_options}}">
+		<span class="category_text">{@website_language[category]}}:</span>
+		<span>{@category-list}}</span>
+	</div>
+
 	<div class="blog-posts">
 		{@posts}}
 	</div>

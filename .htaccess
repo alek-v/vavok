@@ -166,6 +166,7 @@ RewriteRule ^page\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]
 
 # Website blog pages
 RewriteRule ^blog\/?$ pages/blog.php
+RewriteRule ^blog/category\/([^\/]+)\/?$ pages/blog.php?category=$1 [NC,L]
 RewriteRule ^blog\/([^\/]+)\/?$ pages/blog.php?pg=$1 [NC,L]
 # end of website blog pages
 
