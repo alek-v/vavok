@@ -1,3 +1,8 @@
+# Vavok v1.5.9
+- Added support for blog categories
+
+
+
 # Vavok v1.5.8
 - Vavok CMS in now fully compatible with PHP 8
 - Check if functon get_magic_quotes_gpc() exists
