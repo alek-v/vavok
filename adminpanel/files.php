@@ -77,7 +77,7 @@ if ($action == 'savetags') {
 
     $tags = isset($_POST['tags']) ? $vavok->check($_POST['tags']) : '';
 
-    if (!empty($tags)) { $page_editor->update_tags($id, $tags); }
+    if (isset($tags)) { $page_editor->update_tags($id, $tags); }
 
     $vavok->redirect_to("files.php?action=tags&id={$id}&isset=mp_editfiles");
 }
@@ -182,11 +182,10 @@ if ($action == "addnew") {
         $pagelang = $vavok->check($_POST['lang']);
 
         $pagelang_file = '!.' . $pagelang . '!';
-
     } else {
-
         $pagelang = '';
 
+        $pagelang_file = '';
     }
 
     if (!empty($newfile)) {
