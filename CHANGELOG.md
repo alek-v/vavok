@@ -1,5 +1,6 @@
-# Vavok v1.5.9
+# Vavok v1.5.9.1
 - Added support for blog categories
+- Updated Bootstrap to v5 for default theme
 
 
 
