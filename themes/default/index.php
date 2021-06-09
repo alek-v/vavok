@@ -20,7 +20,7 @@ header("Content-type:text/html; charset=utf-8");
 <script src="<?php echo HOMEDIR; ?>themes/default/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo HOMEDIR; ?>themes/default/node_modules/jquery/dist/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/framework.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/framework.min.css'); ?>" />
-<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/style.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/style.css'); ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/style.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/style.min.css'); ?>" />
 <?php
 /**
  * Load data for header
@@ -64,8 +64,8 @@ if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "i
 						<?php echo $vavok->go('localization')->string('lang'); ?>
 					</button>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /></a></li>
-						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /></a></li>
+						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /> English</a></li>
+						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /> Српски</a></li>
 					</ul>
 				</div>
 			</div>
