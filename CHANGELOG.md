@@ -1,6 +1,7 @@
-# Vavok v1.5.9.1
+# Vavok v1.5.9.2
 - Added support for blog categories
 - Updated Bootstrap to v5 for default theme
+- Use PHPMailer for sending emails
 
 
 
