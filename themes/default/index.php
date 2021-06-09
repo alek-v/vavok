@@ -34,7 +34,6 @@ if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "i
 ?>
 </head>
 <body class="d-flex flex-column">
-
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="<?php echo HOMEDIR; ?>"><img src="/themes/default/images/logo.png" width="30" height="30" alt="Logo"></a>
@@ -60,21 +59,18 @@ if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "i
 				?>
 			  </ul>
 			  <span><a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $vavok->go('localization')->string('contact'); ?></a></span>
-
-				<div class="nav-item dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-				    <?php echo $vavok->go('localization')->string('lang'); ?>
-				  </button>
-				  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-				    <li><a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /></a></li>
-				    <li><a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /></a></li>
-				  </ul>
+				<div class="btn-group dropstart">
+					<button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+						<?php echo $vavok->go('localization')->string('lang'); ?>
+					</button>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /></a></li>
+						<li><a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /></a></li>
+					</ul>
 				</div>
-
 			</div>
 		</div>
 	</nav>
-
 <div class="container">
 
 <?php echo $vavok->get_isset(); /* get message from url */ ?>

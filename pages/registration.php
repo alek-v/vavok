@@ -74,14 +74,14 @@ if ($action == 'reguser') {
                             $vavok->go('users')->register($log, $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
                              
                             // send email with reg. data
-                            if ($vavok->get_configuration('regConfirm') == "1") {
-                                $needkey = "\r\n\r\n" . $vavok->go('localization')->string('emailpart5') . "\r\n" . $vavok->go('localization')->string('yourkey') . ": " . $registration_key . "\r\n" . $vavok->go('localization')->string('emailpart6') . ":\r\n\r\n" . $vavok->website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $vavok->go('localization')->string('emailpart7') . "\r\n\r\n";
+                            if ($vavok->get_configuration('regConfirm') == '1') {
+                                $needkey = "\r\n" . $vavok->go('localization')->string('emailpart5') . "\r\n" . $vavok->go('localization')->string('yourkey') . ": " . $registration_key . "\r\n" . $vavok->go('localization')->string('emailpart6') . ":\r\n\r\n" . $vavok->website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "\r\n\r\n" . $vavok->go('localization')->string('emailpart7') . "\r\n\r\n";
                             } else {
-                                $needkey = "\r\n\r\n";
+                                $needkey = "\r\n";
                             } 
 
                             $subject = $vavok->go('localization')->string('regonsite') . ' ' . $vavok->get_configuration('title');
-                            $regmail = $vavok->go('localization')->string('hello') . " " . $log . "\r\n" . $vavok->go('localization')->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . " \r\n" . $vavok->go('localization')->string('emailpart2') . ":\r\n\r\n" . $vavok->go('localization')->string('username') . ": " . $log . "\r\n" . $needkey . "" . $vavok->go('localization')->string('emailpart3') . "\r\n" . $vavok->go('localization')->string('emailpart4') . "";
+                            $regmail = $vavok->go('localization')->string('hello') . " " . $log . "\r\n\r\n" . $vavok->go('localization')->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . " \r\n" . $vavok->go('localization')->string('emailpart2') . ":\r\n\r\n" . $vavok->go('localization')->string('username') . ": " . $log . "\r\n" . $needkey . "" . $vavok->go('localization')->string('emailpart3') . "\r\n" . $vavok->go('localization')->string('emailpart4') . "";
 
                             // Send confirmation email
                             $newMail = new Mailer;

@@ -4,6 +4,11 @@
  * URI:       https://vavok.net
  */
 
+// Import the PHPMailer class into the global namespace
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+
+require BASEDIR . 'vendor/autoload.php';
 
 class Mailer {
 	private $vavok;
@@ -21,22 +26,22 @@ class Mailer {
 	 * @param string $usermail
 	 * @param string $subject
 	 * @param string $msg
-	 * @param string $mail
+	 * @param string $mailfrom
 	 * @param string $name
 	 * @return bool
 	 */
-	function send($usermail, $subject, $msg, $mail = "", $name = "")
+	function send($usermail, $subject, $msg, $mailfrom = '', $name = '')
 	{
 		/**
 		 * Generate default email
 		 */
-	    if (empty($mail)) {
-	        $mail = $_SERVER['HTTP_HOST'];
+	    if (empty($mailfrom)) {
+	        $mailfrom = $_SERVER['HTTP_HOST'];
 
-	        if (substr($mail, 0, 2) == 'm.') $mail = substr($mail, 2);
-	        if (substr($mail, 0, 4) == 'www.') $mail = substr($mail, 4);
+	        if (substr($mailfrom, 0, 2) == 'm.') $mailfrom = substr($mailfrom, 2);
+	        if (substr($mailfrom, 0, 4) == 'www.') $mailfrom = substr($mailfrom, 4);
 
-	        $mail = 'no_reply@' . $mail;
+	        $mailfrom = 'no_reply@' . $mailfrom;
 	    }
 
 	    /**
@@ -50,28 +55,78 @@ class Mailer {
 	    	$usermail = idn_to_ascii($usermail);
 	    }
 
-	    $subject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
+	    $available_authentication = false;
 
-	    $adds = "From: " . $name . " <" . $mail . ">\r\n";
-	    $adds .= "X-sender: " . $name . " <" . $mail . ">\r\n";
-	    // is it html or plain text
-	    if (stristr($msg, '<html') == true) {
-	    	$adds .= "Content-Type: text/html; charset=utf-8\r\n";
-	    } else {
-	    	$adds .= "Content-Type: text/plain; charset=utf-8\r\n";
+	    require BASEDIR . 'include/.available_emails.php';
+
+	    /**
+	     * Check if data for authentication exists for email we use to send email
+	     */
+		foreach ($available_mails as $key) {
+			if (in_array($mailfrom, $key)) {
+				$available_authentication = true; // Use authentication, data for authentication is available
+
+				$mail_username = $key['username'];
+				$mail_password = $key['password'];
+				$mail_port = $key['port'];
+				$mail_host = $key['host'];
+			}
 		}
-	    $adds .= "MIME-Version: 1.0\r\n";
-	    $adds .= "Content-Transfer-Encoding: 8bit\r\n";
-	    $adds .= "X-Mailer: VavokMailer/1.0\r\n";
 
-	    $result = mail($usermail, $subject, $msg, $adds);
-	    
-	    if (!$result) return false;
-		else return true;
+		//Create a new PHPMailer instance
+		$mail = new PHPMailer();
+
+	    /**
+	     * First try to send with authentication if authentication data exists
+	     */
+	    if (!$available_authentication) {
+			//Set who the message is to be sent from
+			$mail->setFrom($mailfrom, $name);
+		} else {
+			//Tell PHPMailer to use SMTP
+			$mail->isSMTP();
+			//Enable SMTP debugging
+			//SMTP::DEBUG_OFF = off (for production use)
+			//SMTP::DEBUG_CLIENT = client messages
+			//SMTP::DEBUG_SERVER = client and server messages
+			//$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+			//Set the hostname of the mail server
+			$mail->Host = $mail_host;
+			//Set the SMTP port number - likely to be 25, 465 or 587
+			$mail->Port = $mail_port;
+			//Whether to use SMTP authentication
+			$mail->SMTPAuth = true;
+			//Username to use for SMTP authentication
+			$mail->Username = $mail_username;
+			//Password to use for SMTP authentication
+			$mail->Password = $mail_password;
+			//Set who the message is to be sent from
+			$mail->setFrom($mail_username, $name);
+		}
+
+		//Set who the message is to be sent to
+		$mail->addAddress($usermail);
+		//Set the subject line
+		$mail->Subject = $subject;
+		// Convert to HTML if message is plain text
+		if ($this->vavok->is_html($msg)) {
+			$mail->msgHTML($msg);
+		} else {
+			$mail->msgHTML($this->vavok->getbbcode($msg));
+		}
+		//Replace the plain text body with one created manually
+		$mail->AltBody = $msg;
+
+		//send the message
+		if (!$mail->send()) {
+		    return false;
+		} else {
+		    return true;
+		}
 	}
 
 	// add to queue
-	function queue_email($usermail, $subject, $msg, $senderMail = "", $senderName = "")
+	function queue_email($usermail, $subject, $msg, $senderMail = '', $senderName = '')
 	{
 		$data = array(
 			'uad' => $this->vavok->go('users')->user_id,
