@@ -546,6 +546,19 @@ class Vavok {
 		return $clean_requri;
 	}
 
+	/**
+	 * Check if text is HTML or plain text
+	 * 
+	 * @param string $text
+	 * @return bool
+	 */
+	function is_html($text)
+	{
+	   $processed = htmlentities($text);
+	   if($processed == $text) return false;
+	   return true; 
+	}
+
 	/**********
 	 * Security
 	 */
