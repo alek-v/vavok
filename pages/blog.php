@@ -221,7 +221,7 @@ switch ($pg) {
 			}
 
 			// replace html headings
-			$content = preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '<h3>${2}</h3>', $content);
+			$content = preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $content);
 
 			/**
 			 * Day and month created
