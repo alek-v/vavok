@@ -30,7 +30,7 @@ if ($action == 'go') {
 
     // Send email
     $mail = new Mailer();
-    $mail->send($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration("title"), $body . "\r\n\r\n\r\n-----------------------------------------\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i', $vavok->get_configuration("siteTime")), $umail, $name);
+    $mail->queue_email($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration("title"), $body . "\r\n\r\n\r\n-----------------------------------------\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i'), $umail, $name, 'normal');
 
     // Email sent
     $vavok->redirect_to('./?isset=mail');

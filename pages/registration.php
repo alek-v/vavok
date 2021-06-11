@@ -85,21 +85,9 @@ if ($action == 'reguser') {
 
                             // Send confirmation email
                             $newMail = new Mailer;
-                            $newMail->send($mail, $subject, $regmail);
 
-                            // Add to email queue and mark as send. Use it to resend email if requested
-                            $values = array(
-                            	'uad' => 1,
-                            	'recipient' => $mail,
-                            	'subject' => $subject,
-                            	'content' => $regmail,
-                            	'sent' => 1,
-                            	'timesent' => date("Y-m-d H:i:s"),
-                            	'timeadded' => date("Y-m-d H:i:s"),
-                                'sender' => ''
-
-                            );
-                            $vavok->go('db')->insert_data('email_queue', $values);
+                            // Add to the email queue
+                            $newMail->queue_email($mail, $subject, $regmail, '', '', $priority = 'high');
 
                             // Registration completed successfully
                             $completed = 'successfully';

@@ -409,7 +409,7 @@ class Users {
             $user_mail = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
-            $send_mail->send($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl')); // update lang
+            $send_mail->queue_email($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl'), '', '', 'normal'); // update lang
 
             $this->vavok->go('db')->update(DB_PREFIX . 'notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }

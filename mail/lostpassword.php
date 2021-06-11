@@ -42,10 +42,10 @@ if ($page == 'send') {
                 $new = $vavok->go('users')->password_encrypt($newpas);
 
                 $subject = $vavok->go('localization')->string('newpassfromsite') . ' ' . $vavok->get_configuration('title');
-                $mail = $vavok->go('localization')->string('hello') . " " . $logus . "\r\n" . $vavok->go('localization')->string('yournewdata') . " " . $vavok->get_configuration('homeUrl') . "\n" . $vavok->go('localization')->string('username') . ": " . $logus . "\n" . $vavok->go('localization')->string('pass') . ": " . $newpas . "\r\n\r\n" . $vavok->go('localization')->string('lnkforautolog') . ":\r\n" . $vavok->get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $vavok->go('localization')->string('ycchngpass')  . "\r\n";
+                $mail = $vavok->go('localization')->string('hello') . " " . $logus . "\r\n" . $vavok->go('localization')->string('yournewdata') . " " . $vavok->get_configuration('homeUrl') . "\r\n" . $vavok->go('localization')->string('username') . ": " . $logus . "\r\n" . $vavok->go('localization')->string('pass') . ": " . $newpas . "\r\n\r\n" . $vavok->go('localization')->string('lnkforautolog') . ":\r\n" . $vavok->get_configuration('homeUrl') . "/pages/input.php?log=" . $logus . "&pass=" . $newpas . "&cookietrue=1\r\n" . $vavok->go('localization')->string('ycchngpass')  . "\r\n";
 
 				$send_mail = new Mailer();
-				$send_mail->send($mailsus, $subject, $mail);
+				$send_mail->queue_email($mailsus, $subject, $mail);
 
                 // Update user's profile
                 $vavok->go('db')->update('vavok_users', 'pass', $new, "id='{$userx_id}'");

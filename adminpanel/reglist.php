@@ -22,11 +22,9 @@ if ($action == 'conf' && !empty($usr)) {
 
     $message = $vavok->go('localization')->string('hello') . " " . $vav_name . "!\r\n\r\n" . $vavok->go('localization')->string('sitemod') . " " . $vavok->get_configuration('homeBase') . " " . $vavok->go('localization')->string('confirmedreg') . ".\r\n" . $vavok->go('localization')->string('youcanlog') . ".\r\n\r\n" . $vavok->go('localization')->string('bye') . "!\r\n\r\n\r\n\r\n" . $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) . "\r\n" . ucfirst($vavok->get_configuration('homeBase'));
     $newMail = new Mailer;
-    $newMail->send($about_user['email'], $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration('title'), $message);
+    $newMail->queue_email($about_user['email'], $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration('title'), $message, '', '', 'high');
 
-
-    header("Location: reglist.php?isset=mp_ydelconf");
-    exit;
+    $vavok->redirect_to('reglist.php?isset=mp_ydelconf');
 }
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('uncomfreg');
@@ -62,7 +60,7 @@ if (empty($action)) {
         } 
     } else {
         echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';
-    } 
+    }
 
     $navigation = new Navigation($items_per_page, $num_items, $page, 'reglist.php?');
 
