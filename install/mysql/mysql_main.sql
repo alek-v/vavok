@@ -394,6 +394,7 @@ CREATE TABLE IF NOT EXISTS `email_queue` (
   `sent` tinyint(1) NOT NULL,
   `timesent` datetime DEFAULT NULL,
   `timeadded` datetime NOT NULL,
+  `priority` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 

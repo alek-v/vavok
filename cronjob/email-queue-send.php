@@ -16,13 +16,16 @@ $diff_time = 1;
 $time_sent = intval(file_get_contents(BASEDIR . 'used/email_queue_sent.dat'));
 
 // check if sending of new package is too early
-if ($diff_time * 60 + $time_sent > time()) { exit; /*/ is is too early to send /*/ }
+if ($diff_time * 60 + $time_sent > time()) { exit; /*/ It is too early to send /*/ }
 
 $new_time = time(); // time new package is sent, every second is important :-)
 
 $sendMail = new Mailer();
 
-$sql = "SELECT * FROM " . DB_PREFIX . "email_queue WHERE sent = 0 LIMIT 0, " . $vavok->get_configuration('subMailPacket');
+$sql = "SELECT * FROM " . DB_PREFIX . "email_queue WHERE sent = 0 ORDER BY FIELD(priority,
+        'high',
+        'normal',
+        'low') LIMIT 0, " . $vavok->get_configuration('subMailPacket');
 
 $i = 0;
 foreach ($vavok->go('db')->query($sql) as $email) {
@@ -32,7 +35,7 @@ foreach ($vavok->go('db')->query($sql) as $email) {
 	// update sent status
     $fields = array('sent', 'timesent');
     $values = array(1, date("Y-m-d H:i:s"));
-    
+
     // update data if email is sent
     if ($result == true) {
     	$vavok->go('db')->update(DB_PREFIX . 'email_queue', $fields, $values, 'id = ' . $email['id']);

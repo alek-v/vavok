@@ -125,18 +125,29 @@ class Mailer {
 		}
 	}
 
-	// add to queue
-	function queue_email($usermail, $subject, $msg, $senderMail = '', $senderName = '')
+	/**
+	 * Add email to the queue
+	 * 
+	 * @param string $usermail
+	 * @param string $subject
+	 * @param string $message
+	 * @param string $sender_mail
+	 * @param string $sender_name
+	 * @param string $priority
+	 * @return void
+	 */
+	function queue_email($usermail, $subject, $message, $sender_mail = '', $sender_name = '', $priority = '')
 	{
 		$data = array(
 			'uad' => $this->vavok->go('users')->user_id,
-			'sender' => $senderName,
-			'sender_mail' => $senderMail,
+			'sender' => $sender_name,
+			'sender_mail' => $sender_mail,
 			'recipient' => $usermail,
 			'subject' => $subject,
-			'content' => $msg,
+			'content' => $message,
 			'sent' => 0,
-			'timeadded' => date("Y-m-d H:i:s")
+			'timeadded' => date("Y-m-d H:i:s"),
+			'priority' => $priority
 		);
 
 		$this->vavok->go('db')->insert_data(DB_PREFIX . 'email_queue', $data);
