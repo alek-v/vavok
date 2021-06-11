@@ -1,7 +1,9 @@
-# Vavok v1.5.9.2
+# Vavok v1.5.9.3
 - Added support for blog categories
+- Added priority levels for email queue
 - Updated Bootstrap to v5 for default theme
 - Use PHPMailer for sending emails
+- Use email queue for sending most of the mails from the site
 
 
 
