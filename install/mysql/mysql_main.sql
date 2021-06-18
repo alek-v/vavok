@@ -453,7 +453,7 @@ INSERT INTO `settings` (`id`, `setting_name`, `value`, `options`, `setting_group
 (27, 'refererLog', NULL, NULL, 'system'),
 (28, 'subMailPacket', '50', NULL, 'system'),
 (29, 'dosLimit', '120', NULL, 'system'),
-(30, 'maxLogData', '0', NULL, 'system'),
+(30, 'maxLogData', '200', NULL, 'system'),
 (31, 'openReg', '0', NULL, 'system'),
 (32, 'regConfirm', '0', NULL, 'system'),
 (33, 'siteOff', '0', NULL, 'system'),
