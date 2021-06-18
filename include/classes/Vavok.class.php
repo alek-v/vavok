@@ -31,8 +31,8 @@ class Vavok {
 		// For links, images and other mod rewriten directories
 		if (!defined('HOMEDIR')) {
 		    $path = $_SERVER['HTTP_HOST'] . CLEAN_REQUEST_URI;
-		    $patharray = explode("/", $path);
-		    $pathindex = "";
+		    $patharray = explode('/', $path);
+		    $pathindex = './';
 
 		    for ($i = count($patharray); $i > 2; $i--) {
 		        $pathindex .= '../';
@@ -204,6 +204,28 @@ class Vavok {
 	}
 
 	/**
+	 * Limit number of lines in file
+	 * 
+	 * @param string $file_name
+	 * @param integer $max
+	 * @return void
+	 */
+	function limit_file_lines($file_name, $max = 100)
+	{
+	    $file = file($file_name);
+	    $i = count($file);
+	    if ($i >= $max) {
+	        $fp = fopen($file_name, "w");
+	        flock ($fp, LOCK_EX);
+	        unset($file[0]);
+	        unset($file[1]);
+	        fputs($fp, implode('', $file));
+	        flock ($fp, LOCK_UN);
+	        fclose($fp);
+	    }
+	}
+
+	/**
 	 * Read file from data directory
 	 *
 	 * @param string $filename
@@ -215,16 +237,16 @@ class Vavok {
 	}
 
 	/**
-	 * Write to file from data directory
+	 * Write to file in data directory
 	 *
 	 * @param string $filename
 	 * @param string $data
-	 * @param integer $newline, 1 is to append new line
+	 * @param integer $append_data, 1 is to append new data
 	 * @return void
 	 */
-	public function write_data_file($filename, $data, $newline = '')
+	public function write_data_file($filename, $data, $append_data = '')
 	{
-		if ($newline == 1) {
+		if ($append_data == 1) {
 			file_put_contents(BASEDIR . 'used/' . $filename, $data, FILE_APPEND);
 			return;
 		}
