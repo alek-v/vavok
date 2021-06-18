@@ -28,6 +28,20 @@ if ($action == 'resendkey') {
 
         $email = $vavok->go('db')->get_data('email_queue', "recipient='{$recipient_mail}'");
 
+        /**
+         * Check if it is too early to resend email
+         */
+
+        // Get time when message is sent, if it is empty use current time
+        $time_key_sent = !empty($email['timesent']) ? $email['timesent'] : date("Y-m-d H:i:s");
+
+        $origin = new DateTime($time_key_sent);
+        $target = new DateTime(date("Y-m-d H:i:s")); // Current time
+        $interval = $origin->diff($target);
+
+        // Redirect if it is too early to send new message
+        if ((int)$interval->format('%i') < 2) $vavok->redirect_to('key.php?uid=' . $recipient_id . '&isset=tooearly');
+
         // resend confirmation email
         $sendMail = new Mailer();
 
@@ -87,12 +101,8 @@ if (empty($action)) {
 }
 
 // check comfirmation code
-if ($action == "inkey") {
-    if (isset($_GET['key'])) {
-        $key = $vavok->check(trim($_GET['key']));
-    } else {
-        $key = $vavok->check(trim($_POST['key']));
-    }
+if ($action == 'inkey') {
+    $key = isset($_GET['key']) ? $vavok->check(trim($_GET['key'])) : $vavok->check(trim($_POST['key']));
 
     if (!empty($key)) {
         if (!$vavok->go('db')->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) {
