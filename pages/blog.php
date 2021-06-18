@@ -214,10 +214,10 @@ switch ($pg) {
 			// length of blog text
 			$content_length = mb_strlen($key['content']);
 
-			// if there is more then 120 words
-			if (count(explode(' ', $key['content'])) > 120) {
-				// show first 120 words
-				$content = $vavok->getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 120))) . '...';
+			// if there is more then 45 words
+			if (count(explode(' ', $key['content'])) > 45) {
+				// show first 45 words
+				$content = $vavok->getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 45))) . '...';
 			}
 
 			// replace html headings
