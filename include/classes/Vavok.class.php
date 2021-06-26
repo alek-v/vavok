@@ -60,13 +60,11 @@ class Vavok {
 	 * @param bool $full_configuration
 	 * @return mixed
 	 */
-	public function get_configuration($data = '', $full_configuration = false) {
-
-		$no_rows = $this->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'system'");
-
+	public function get_configuration($data = '', $full_configuration = false)
+	{
 		$config = array();
 
-		foreach ($this->go('db')->query("SELECT * FROM settings WHERE setting_group = 'system' LIMIT 0, $no_rows") as $item) {
+		foreach ($this->go('db')->query("SELECT * FROM settings WHERE setting_group = 'system'") as $item) {
 			$config[$item['setting_name']] = $item['value'];
 		}
 
@@ -82,7 +80,7 @@ class Vavok {
 	        return $config;
 	    }
 
-	    if (!empty($data)) {
+	    if (!empty($data) && isset($config[$data])) {
 	        return $config[$data];
 	    } else {
 	        return false;
@@ -101,7 +99,8 @@ class Vavok {
 	 * @param string $myzone
 	 * @return string
 	 */
-	public function date_fixed($timestamp = "", $format = "d.m.Y.", $myzone = "") {
+	public function date_fixed($timestamp = '', $format = 'd.m.Y.', $myzone = '')
+	{
 	    $timezone = $this->get_configuration('timeZone');
 
 	    if (empty($timestamp)) {
@@ -692,6 +691,20 @@ class Vavok {
 	    fclose($new_db);
 
 	    return $result;
+	}
+
+	/**
+	 * Get reCAPTCHA validation response
+	 * 
+	 * @param string $captcha
+	 * @return bool
+	 */
+	public function recaptcha_response($captcha)
+	{
+	    // Post request to Google, check captcha code
+	    $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->get_configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
+	    $response = file_get_contents($url);
+	    return $responseKeys = json_decode($response, true);
 	}
 
 	/**********

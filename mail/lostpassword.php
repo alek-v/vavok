@@ -9,16 +9,23 @@ require_once '../include/startup.php';
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
 $logus = isset($_POST['logus']) ? $vavok->check($_POST['logus']) : '';
 $mailsus = isset($_POST['mailsus']) ? $vavok->check($_POST['mailsus']) : '';
+$captcha = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : ''; // Captcha code
 
 // Page settings
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('lostpass');
 
 $vavok->go('current_page')->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />');
 
+// Add data to page <head> to show Google reCAPTCHA
+$vavok->go('current_page')->append_head_tags('<script src="https://www.google.com/recaptcha/api.js" async defer></script>');
+
 $vavok->require_header();
 
 if (empty($page) || $page == 'index') {
 	$this_page = new PageGen('pages/registration/lost_password.tpl');
+
+    // Show reCAPTCHA
+    $this_page->set('security_code', '<div class="g-recaptcha" data-sitekey="' . $vavok->get_configuration('recaptcha_sitekey') . '"></div>');
 
 	echo $this_page->output();
 }
@@ -26,17 +33,13 @@ if (empty($page) || $page == 'index') {
 // Send mail
 if ($page == 'send') {
     if (!empty($logus) && !empty($mailsus)) {
-
         $userx_id = $vavok->go('users')->getidfromnick($logus);
         $show_userx = $vavok->go('db')->get_data('vavok_about', "uid='" . $userx_id . "'", 'email');
 
         $checkmail = trim($show_userx['email']);
 
         if ($mailsus == $checkmail) {
-			require_once BASEDIR . 'include/plugins/securimage/securimage.php';
-			$securimage = new Securimage();
-
-			if ($securimage->check($_POST['captcha_code']) == true) {
+			if ($vavok->recaptcha_response($captcha)['success'] == true) {
 
                 $newpas = generate_password();
                 $new = $vavok->go('users')->password_encrypt($newpas);

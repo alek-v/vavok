@@ -10,6 +10,7 @@ $action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 $name = isset($_POST['name']) ? $vavok->check($_POST['name']) : '';
 $body = isset($_POST['body']) ? $vavok->check($_POST['body']) : '';
 $umail = isset($_POST['umail']) ? $vavok->check($_POST['umail']) : '';
+$captcha = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : ''; // Captcha code
 
 if ($action == 'go') {
     // Check name
@@ -21,12 +22,8 @@ if ($action == 'go') {
     // Validate email address
     if (!$vavok->go('users')->validate_email($umail)) { $vavok->redirect_to('./?isset=noemail'); }
 
-    // Captcha code
-    require BASEDIR . 'include/plugins/securimage/securimage.php';
-    $securimage = new Securimage();
-
-    // Check captcha code
-    if (!$securimage->check($_POST['captcha_code'])) { $vavok->redirect_to('./?isset=vrcode'); }
+    // Redirect if response is false
+    if ($vavok->recaptcha_response($captcha)['success'] == false) { $vavok->redirect_to('./?isset=vrcode'); }
 
     // Send email
     $mail = new Mailer();
@@ -37,7 +34,11 @@ if ($action == 'go') {
 }
 
 if (empty($action)) {
+    // Page title
     $vavok->go('current_page')->page_title = $vavok->go('localization')->string('contact');
+
+    // Add data to page <head> to show Google reCAPTCHA
+    $vavok->go('current_page')->append_head_tags('<script src="https://www.google.com/recaptcha/api.js" async defer></script>');
 
     $vavok->require_header();
 
@@ -56,6 +57,9 @@ if (empty($action)) {
 
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     }
+
+    // Show reCAPTCHA
+    $showPage->set('security_code', '<div class="g-recaptcha" data-sitekey="' . $vavok->get_configuration('recaptcha_sitekey') . '"></div>');
 } 
 
 // show page

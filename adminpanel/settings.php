@@ -248,19 +248,21 @@ if ($action == "editeight") {
 /**
  * Site security options
  */
-if ($action == "editsecurity") {
+if ($action == 'editsecurity') {
 	// Check fields
     if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29'])) {
         $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
     }
 
-    $fields = array('keypass','quarantine','transferProtocol','floodTime');
+    $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
 
     $values = array(
         $vavok->check($_POST['conf_set1']),
         $vavok->check($_POST['conf_set3']),
         $vavok->check($_POST['conf_set21']),
-        (int)$_POST['conf_set29']
+        (int)$_POST['conf_set29'],
+        $vavok->check($_POST['recaptcha_sitekey']),
+        $vavok->check($_POST['recaptcha_secretkey'])
     );
 
     /**
@@ -1010,7 +1012,7 @@ if ($action == "seteight") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "security") {
+if ($action == 'security') {
     echo '<h1>' . $vavok->go('localization')->string('security') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -1071,7 +1073,25 @@ if ($action == "security") {
     $select_set21->set('select_name', 'conf_set21');
     $select_set21->set('options', $options);
 
-    $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21)));
+    // reCAPTCHA site key
+    $captcha_sitekey = new PageGen('forms/input.tpl');
+    $captcha_sitekey->set('label_for', 'recaptcha_sitekey');
+    $captcha_sitekey->set('label_value', 'reCAPTCHA site key');
+    $captcha_sitekey->set('input_id', 'recaptcha_sitekey');
+    $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
+    $captcha_sitekey->set('input_value', $vavok->get_configuration('recaptcha_sitekey'));
+    $captcha_sitekey->set('input_maxlength', 50);
+
+    // reCAPTCHA secret key
+    $captcha_secret = new PageGen('forms/input.tpl');
+    $captcha_secret->set('label_for', 'recaptcha_secretkey');
+    $captcha_secret->set('label_value', 'reCAPTCHA secret key');
+    $captcha_secret->set('input_id', 'recaptcha_secretkey');
+    $captcha_secret->set('input_name', 'recaptcha_secretkey');
+    $captcha_secret->set('input_value', $vavok->get_configuration('recaptcha_secretkey'));
+    $captcha_secret->set('input_maxlength', 50);
+
+    $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
     echo $form->output();
 
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';

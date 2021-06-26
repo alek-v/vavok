@@ -460,7 +460,9 @@ INSERT INTO `settings` (`id`, `setting_name`, `value`, `options`, `setting_group
 (34, 'forumChLang', '0', NULL, 'system'),
 (35, 'showRefPage', '0', NULL, 'system'),
 (36, 'showCounter', '0', NULL, 'system'),
-(37, 'maxBanTime', '43200', NULL, 'system');
+(37, 'maxBanTime', '43200', NULL, 'system'),
+(38, 'recaptcha_sitekey', NULL, NULL, 'system'),
+(39, 'recaptcha_secretkey', NULL, NULL, 'system');
 COMMIT;
 
 
