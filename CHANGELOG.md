@@ -1,13 +1,17 @@
-# Vavok v1.5.9.5
+# Vavok v1.5.9.6
 - Added support for blog categories
 - Added priority levels for email queue
 - Added limit_file_lines() method in Vavok.class.php
 - Added minimal time between emails while resending email for registration confirmation code
+- Added reCAPTCHA
 - Updated Bootstrap to v5 for default theme
 - Updated contact form to include sender's email and name in email text
 - Updated error logging
 - Use PHPMailer for sending emails
 - Use email queue for sending most of the mails from the site
+- Removed securimage plugin
+- Template updates
+- Localization updates
 - HOMEDIR constant bugfix
 
 
