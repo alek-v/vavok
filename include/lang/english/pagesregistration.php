@@ -2,14 +2,13 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   11.08.2020. 13:24:25
-*/
+ */
 
 $lang_reg['registration'] = "Registration";
 $lang_reg['againreg'] = "you have already been registered.";
 $lang_reg['passagain'] = "Repeat password";
-$lang_reg['reginfo'] = "You must complete all the fields. You can add more information about yourself after you register.<br />You will receive information via your email address<br />";
-$lang_reg['keyinfo'] = "including the keycode you need to finish registration";
+$lang_reg['reginfo'] = "All fields are required to register.<br />You will receive informations about registration to your email address";
+$lang_reg['keyinfo'] = " including the keycode you need to finish registration";
 $lang_reg['quarantine1'] = "New members cannot write messages exactly";
 $lang_reg['quarantine2'] = "hours after registration";
 $lang_reg['siterules'] = "Site rules";
@@ -18,7 +17,7 @@ $lang_reg['registration'] = "Registration";
 $lang_reg['userexists'] = "Selected username is already in use, please choose another username";
 $lang_reg['regonsite'] = "Registration on site";
 $lang_reg['yourkey'] = "Your key";
-$lang_reg['emailpart1'] = "You're now registered member of this site";
+$lang_reg['emailpart1'] = "You're now registered member of site";
 $lang_reg['emailpart2'] = "Your information for accessing the site";
 $lang_reg['emailpart3'] = "We hope you will continue visiting us!";
 $lang_reg['emailpart4'] = "Respectfully, site administration";
