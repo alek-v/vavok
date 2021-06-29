@@ -30,13 +30,13 @@ header("Content-type:text/html; charset=utf-8");
 		/**
 		 * Cookie consent
 		 */
-		if ($vavok->get_configuration('cookieConsent') == 1) { include_once BASEDIR . "include/plugins/cookie-consent/cookie-consent.php"; }
+		if ($vavok->get_configuration('cookieConsent') == 1) include_once BASEDIR . 'include/plugins/cookie-consent/cookie-consent.php';
 		?>
 	</head>
 	<body class="d-flex flex-column">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="<?php echo HOMEDIR; ?>"><img src="/themes/default/images/logo.png" width="30" height="30" alt="Logo"></a>
+				<a class="navbar-brand" href="<?php echo HOMEDIR; ?>"><img src="<?php echo HOMEDIR; ?>themes/default/images/logo.png" width="30" height="30" alt="Logo"></a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				  <span class="navbar-toggler-icon"></span>
 				</button>
@@ -63,11 +63,11 @@ header("Content-type:text/html; charset=utf-8");
 							<?php echo $vavok->go('localization')->string('lang'); ?>
 						</button>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="/pages/change_lang.php?lang=en" rel="nofollow"><img src="/themes/default/images/flag_great_britain_32.png" alt="english language" /> English</a></li>
-							<li><a class="dropdown-item" href="/pages/change_lang.php?lang=sr" rel="nofollow"><img src="/themes/default/images/serbia_flag_32.png" alt="српски језик" /> Српски</a></li>
+							<li><a class="dropdown-item" href="<?php echo HOMEDIR; ?>pages/change_lang.php?lang=en" rel="nofollow"><img src="<?php echo HOMEDIR; ?>themes/default/images/flag_great_britain_32.png" alt="english language" /> English</a></li>
+							<li><a class="dropdown-item" href="<?php echo HOMEDIR; ?>pages/change_lang.php?lang=sr" rel="nofollow"><img src="<?php echo HOMEDIR; ?>themes/default/images/serbia_flag_32.png" alt="српски језик" /> Српски</a></li>
 						</ul>
 					</div>
-					<span><a class="btn btn-primary sitelink navi-contact" href="/mail/"><?php echo $vavok->go('localization')->string('contact'); ?></a></span>
+					<span><a class="btn btn-primary sitelink navi-contact" href="<?php echo HOMEDIR; ?>mail/"><?php echo $vavok->go('localization')->string('contact'); ?></a></span>
 				</div>
 			</div>
 		</nav>
