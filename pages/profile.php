@@ -90,7 +90,7 @@ switch ($action) {
 
 			$msg = "Hello {$vavok->go('users')->username}\r\n
 In order to add this email to your profile at site {$vavok->website_home_address()}
-please confirm this address by going to confirmation link " . $vavok->website_home_address() . "/pages/confirm_email.php?token=" . $token;
+please confirm this address here visiting confirmation link " . $vavok->website_home_address() . "/pages/confirm_email.php?token=" . $token;
 			$msg .= "\r\n\r\n\r\nIf you received this email by mistake please ignore it.";
 
 			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
@@ -333,12 +333,10 @@ please confirm this address by going to confirmation link " . $vavok->website_ho
 		        echo $vavok->sitelink('photo.php', 'Change photo');
 		    }
 		    echo '</div>';
-
+		echo '</div>';
 		echo '</div>';
 
-		echo '</div>';
-
-		$vavok->homelink('<p>', '</p>');
+		echo $vavok->homelink('<p>', '</p>');
 
 		$vavok->require_footer();
 
