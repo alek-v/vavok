@@ -47,13 +47,7 @@ if ($step == 'first_end') {
     /**
      * Root dir for including system files
      */
-    if (!defined('BASEDIR')) {
-        $folder_level = "";
-        while (!file_exists($folder_level . "robots.txt")) {
-            $folder_level .= "../";
-        } 
-        define("BASEDIR", $folder_level);
-    }
+    if (!defined('BASEDIR')) define('BASEDIR', __DIR__ . '/../');
 
     /**
      * Create configuration .env file
@@ -69,6 +63,21 @@ SITE_STAGE=null
 EOD;
 
     if (!file_exists('../.env')) file_put_contents('../.env', $config_data);
+
+    include "../include/classes/Config.class.php";
+
+    $values = array(
+	    'DB_HOST' => $_POST['dbhost'],
+	    'DB_USERNAME' => $_POST['dbusername'],
+	    'DB_PASSWORD' => $_POST['dbpass'],
+	    'DB_DATABASE' => $_POST['database']
+    );
+
+    $myconfig = new Config();
+    $myconfig->update_config_file($values);
+
+    // Create local files
+    include "include/main_data.php";
 
     /**
      * Create email authentication file .available_emails.php
@@ -95,22 +104,7 @@ $available_mails = array(
 ?>
 EOT;
 
-    if (!file_exists('../include/.available_emails.php')) file_put_contents('../include/.available_emails.php', $available_emails);
-
-    include "../include/classes/Config.class.php";
-
-    $values = array(
-	    'DB_HOST' => $_POST['dbhost'],
-	    'DB_USERNAME' => $_POST['dbusername'],
-	    'DB_PASSWORD' => $_POST['dbpass'],
-	    'DB_DATABASE' => $_POST['database']
-    );
-
-    $myconfig = new Config();
-    $myconfig->update_config_file($values);
-
-    // Create local files
-    include "include/main_data.php";
+    if (!file_exists('../used/.available_emails.php')) file_put_contents('../used/.available_emails.php', $available_emails);
 
     // prepare to import mysql data
     // MySQL host

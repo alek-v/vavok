@@ -57,7 +57,7 @@ class Mailer {
 
 	    $available_authentication = false;
 
-	    require BASEDIR . 'include/.available_emails.php';
+	    require BASEDIR . 'used/.available_emails.php';
 
 	    /**
 	     * Check if data for authentication exists for email we use to send email
