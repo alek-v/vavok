@@ -34,13 +34,10 @@ $show_user = $vavok->go('db')->get_data('vavok_users', "id='{$users_id}'");
 $showPage = new PageGen("pages/user-profile/user-profile.tpl");
 
 // if user doesn't exist show error page
-if ($checkIfExist < 1 || $users_id == 0) {
-    
+if ($checkIfExist < 1 || $users_id == 1) {
 	echo '<div class="user_profile">';
-    echo '<img src="../images/img/error.gif" alt="error.gif"> ' . $vavok->go('localization')->string('usrnoexist') . '';
-    echo '</div>';
-    echo '<div class="break"></div>';
-    echo '<div class="clear"></div>';
+    echo '<p><img src="../images/img/error.gif" alt="error.gif"> ' . $vavok->go('localization')->string('usrnoexist');
+    echo '</p></div>';
 
     echo $vavok->homelink('<p>', '</p>');
 
