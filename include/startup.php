@@ -5,18 +5,12 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.9.6');
+define('VERSION', '1.5.9.7');
 
 /**
  * Root dir for including system files
  */
-if (!defined('BASEDIR')) {
-    $folder_level = '';
-    while (!file_exists($folder_level . 'robots.txt')) {
-        $folder_level .= '../';
-    }
-    define('BASEDIR', $folder_level);
-}
+if (!defined('BASEDIR')) define('BASEDIR', __DIR__ . '/../');
 
 /**
  * Autoload classes
@@ -30,15 +24,14 @@ new Db();
 new Users();
 
 /**
- * We don't need this data for system requests
+ * Stop application here for system requests
  */
 if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
-	new Page();
-	new Localization();
+    new Page();
+    new Localization();
     new Counter();
     new Manageip();
     new Referer();
 }
-
 
 ?>
