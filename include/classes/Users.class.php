@@ -43,36 +43,29 @@ class Users {
 		/**
 		 * Set session from cookie data
 		 */
-		if (empty($_SESSION['log']) && !empty($_COOKIE['cookpass']) && !empty($_COOKIE['cooklog']) && !empty($this->vavok->get_configuration('keypass'))) {
-		    // decode username from cookie
-		    $unlog = $this->vavok->xoft_decode($_COOKIE['cooklog'], $this->vavok->get_configuration('keypass'));
+		if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
+		    // Search for token in database and get tokend data if exists
+			$cookie_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'tokens', "token = '{$vavok->check($_COOKIE['cookie_login'])}'", 'uid, token');
+			$cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
+			$token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
 
-		    // decode password from cookie
-		    $unpar = $this->vavok->xoft_decode($_COOKIE['cookpass'], $this->vavok->get_configuration('keypass'));
-		    
-		    // search for username provided in cookie
-			$cookie_id = $this->getidfromnick($unlog);
+		    // Get user's data
+			$cookie_check = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
 
-		    // get user's data
-			$cookie_check = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$cookie_id}'", 'name, pass, perm, lang');
-
-		    // if user exists
-		    if (!empty($cookie_check['name'])) {
-		        // check is password correct
-		        if ($this->password_check($unpar, $cookie_check['pass']) && $unlog == $cookie_check['name']) {
-		            $pr_ip = explode(".", $this->find_ip());
-		            $my_ip = $pr_ip[0] . $pr_ip[1] . $pr_ip[2];
-
+		    // If user exists write session data
+		    if (isset($cookie_check['name']) && !empty($cookie_check['name']) && ($_COOKIE['cookie_login'] === $token_value)) {
 		            // write current session data
-		            $_SESSION['log'] = $unlog;
+		            $_SESSION['log'] = $cookie_check['name'];
 		            $_SESSION['permissions'] = $cookie_check['perm'];
 		            $_SESSION['uid'] = $cookie_id;
 		            $_SESSION['lang'] = $cookie_check['lang'];
 
-		            // update ip address and last visit time
+		            // Update ip address
 		            $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
-		            $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', 'lastvst', time(), "uid = '{$cookie_id}'");
-		        }
+		    } else {
+		    	// Token from cookie is not valid or it is expired, delete cookie
+		    	setcookie('cookie_login', '', time() - 3600);
+		    	setcookie('cookie_login', '', 1, '/', $this->vavok->clean_domain());
 		    }
 		}
 
@@ -199,19 +192,21 @@ class Users {
         $rootDomain = '.' . $this->vavok->clean_domain();
 
 	    // destroy cookies
-	    setcookie('cooklog', '', time() - 3600);
-	    setcookie('cookpass', '', time() - 3600);
+	    setcookie('cookie_login', '', time() - 3600);
 	    setcookie(session_name(), '', time() - 3600);
 
 	    // if user is logged in from root dir
-	    setcookie("cooklog", '', 1, '/', $rootDomain);
-	    setcookie("cookpass", '', 1, '/', $rootDomain);
-	    setcookie(session_name(), "", time() - 3600, $rootDomain);
+	    setcookie('cookie_login', '', 1, '/', $rootDomain);
+	    setcookie(session_name(), '', time() - 3600, $rootDomain);
 
-	    /**
-	     * Destoy session
-	     */
+	    // Destoy session
 	    $this->destroy_current_session();
+
+	    // Start new session
+	    session_start();
+
+	    // Generate new session id
+	    session_regenerate_id();
 	}
 
 	/**

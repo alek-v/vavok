@@ -8,6 +8,8 @@ require_once '../include/startup.php';
 
 if (!empty($_GET['action'])) { $action = $vavok->check($_GET["action"]); } else { $action = ''; }
 
+
+// Username
 if (isset($_POST['log'])) {
     $log = $vavok->check($_POST['log']);
 } else if (isset($_GET['log'])) {
@@ -16,6 +18,8 @@ if (isset($_POST['log'])) {
 	$log = '';
 }
 
+
+// Password
 if (isset($_POST['pass'])) {
     $pass = $vavok->check($_POST['pass']);
 } else if (isset($_GET['pass'])) {
@@ -24,6 +28,8 @@ if (isset($_POST['pass'])) {
 	$pass = '';
 }
 
+
+//  Remember login data on this device
 if (isset($_POST['cookietrue'])) {
     $cookietrue = $vavok->check($_POST['cookietrue']);
 } else if (isset($_GET['cookietrue'])) {
@@ -32,6 +38,8 @@ if (isset($_POST['cookietrue'])) {
 	$cookietrue = '';
 }
 
+
+// Page to load after login
 if (isset($_POST['ptl'])) {
     $pagetoload = $vavok->check($_POST['ptl']);
 } else if (isset($_GET['ptl'])) {
@@ -61,7 +69,7 @@ if (empty($action) && !empty($log) && $log != 'System') {
 
     // user is logging in with email
     if ($vavok->go('users')->validate_email($log)) {
-        $userx_about = $vavok->go('db')->get_data('vavok_about', "email='{$log}'", 'uid');
+        $userx_about = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$log}'", 'uid');
         $userx_id = $userx_about['uid'];
         $log = $vavok->go('users')->getnickfromid($userx_id);
     } else {
@@ -69,25 +77,33 @@ if (empty($action) && !empty($log) && $log != 'System') {
         $userx_id = $vavok->go('users')->getidfromnick($log);
     }
 
-    $show_userx = $vavok->go('db')->get_data('vavok_users', "id='{$userx_id}'", 'name, pass, banned, perm');
-    $user_profil = $vavok->go('db')->get_data('vavok_profil', "uid='{$userx_id}'", 'regche');
+    $show_userx = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$userx_id}'", 'name, pass, banned, perm');
+    $user_profil = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$userx_id}'", 'regche');
 
     // compare sent data and data from database
     if ($vavok->go('users')->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
         // user want to remember login
         if ($cookietrue == 1) {
-            // encrypt data to save in cookie
-            $cookiePass = $vavok->xoft_encode($pass, $vavok->get_configuration('keypass'));
-            $cookieUsername = $vavok->xoft_encode($show_userx['name'], $vavok->get_configuration('keypass'));
+            // Encrypt data to save in cookie
+            $token = $vavok->latin_letters_numbers($vavok->go('users')->password_encrypt($pass . $vavok->generate_password()));
 
             /**
-             * With '.' session is accessible from all subdomains
+             * Save token in database
              */
+
+            // Set token expire time
+            $now = new DateTime();
+            $now->add(new DateInterval("P1Y"));
+            $new_time = $now->format('Y-m-d H:i:s');
+
+            // Insert token
+            $vavok->go('db')->insert(DB_PREFIX . 'tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
+
+            // With '.' session is accessible from all subdomains
             $rootDomain = '.' . $vavok->clean_domain();
 
-            // save cookie
-            SetCookie("cookpass", $cookiePass, time() + 3600 * 24 * 365, "/", $rootDomain); // one year
-            SetCookie("cooklog", $cookieUsername, time() + 3600 * 24 * 365, "/", $rootDomain); // one year
+            // Save cookie with token in users's device
+            SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', $rootDomain); // one year
         }
 
         $_SESSION['log'] = $log;
@@ -102,7 +118,7 @@ if (empty($action) && !empty($log) && $log != 'System') {
         session_regenerate_id();
 
         // update data in profile
-        $vavok->go('db')->update('vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
+        $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
 
         if ($user_profil['regche'] == 1) {
             $vavok->redirect_to(HOMEDIR . "pages/key.php?log=$log");
@@ -120,13 +136,14 @@ if (empty($action) && !empty($log) && $log != 'System') {
     }
 }
 
-// logout
-if ($vavok->go('users')->is_reg() && $action == "exit") {
-    // log out
+// Logout
+if ($vavok->go('users')->is_reg() && $action == 'exit') {
+    // Logout
     $vavok->go('users')->logout($vavok->go('users')->user_id);
 
-    $vavok->redirect_to("../?isset=exit");
+    // Redirect to main page
+    $vavok->redirect_to('../?isset=exit');
 }
 
-$vavok->redirect_to("../?isset=inputoff");
+$vavok->redirect_to('../?isset=inputoff');
 ?>

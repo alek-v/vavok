@@ -580,6 +580,17 @@ class Vavok {
 	   return true; 
 	}
 
+	/**
+	 * Leave only latin letters and numbers
+	 * 
+	 * @param $string
+	 * @return $string
+	 */
+	public function latin_letters_numbers($string)
+	{
+		return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
+	}
+
 	/**********
 	 * Security
 	 */
