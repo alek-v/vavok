@@ -1,4 +1,4 @@
-# Vavok v1.5.9.6
+# Vavok v1.5.10
 - Added support for blog categories
 - Added priority levels for email queue
 - Added limit_file_lines() method in Vavok.class.php
@@ -9,6 +9,7 @@
 - Updated error logging
 - Use PHPMailer for sending emails
 - Use email queue for sending most of the mails from the site
+- Use token for cookie remember me function
 - Removed securimage plugin
 - Template updates
 - Localization updates
