@@ -78,5 +78,5 @@ $vavok->require_header();
 <?php
 echo $vavok->homelink('<p>', '</p>');
 
-$vavok->require_header();
+$vavok->require_footer();
 ?>
