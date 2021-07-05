@@ -184,10 +184,14 @@ class Users {
 	 */
 	public function logout($user_id)
 	{
+		// Remove user from online list
 	    $this->vavok->go('db')->delete(DB_PREFIX . 'online', "user = '{$this->user_id}'");
 
+	    // Remove login token from database if token exists
+	    if ($this->vavok->go('db')->count_row(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->vavok->go('db')->delete(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'");
+
         /**
-         * With '.' session is accessible from all subdomains
+         * Root domain, with dot '.' session is accessible from all subdomains
          */
         $rootDomain = '.' . $this->vavok->clean_domain();
 
