@@ -623,48 +623,17 @@ class Vavok {
 	    return $str;
 	}
 
-	// CHMOD function
-	function permissions($filez) {
-	    $filez = decoct(fileperms("$filez")) % 1000;
-	    return $filez;
-	} 
-
-	function safe_encode($string) {
-	    $data = base64_encode($string);
-	    $data = str_replace(array('+', '/', '='), array('_', '-', ''), $data);
-	    return $data;
-	} 
-
-	function safe_decode($string) {
-	    $string = str_replace(array('_', '-'), array('+', '/'), $string);
-	    $data = base64_decode($string);
-	    return $data;
+	/**
+	 * Read file permissions CHMOD
+	 * 
+	 * @param string $file
+	 * @return $file
+	 */
+	public function permissions($file)
+	{
+	    $file = decoct(fileperms("$file")) % 1000;
+	    return $file;
 	}
-
-	// encode using key
-	function xoft_encode($string, $key) {
-	    $result = "";
-	    for($i = 1; $i <= strlen($string); $i++) {
-	        $char = substr($string, $i-1, 1);
-	        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-	        $char = chr(ord($char) + ord($keychar));
-	        $result .= $char;
-	    } 
-	    return $this->safe_encode($result);
-	} 
-
-	// decode using key
-	function xoft_decode($string, $key) {
-	    $string = $this->safe_decode($string);
-	    $result = "";
-	    for($i = 1; $i <= strlen($string); $i++) {
-	        $char = substr($string, $i - 1, 1);
-	        $keychar = substr($key, ($i % strlen($key)) - 1, 1);
-	        $char = chr(ord($char) - ord($keychar));
-	        $result .= $char;
-	    } 
-	    return $result;
-	} 
 
 	// generate password
 	public function generate_password() {
