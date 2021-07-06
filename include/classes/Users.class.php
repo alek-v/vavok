@@ -349,9 +349,15 @@ class Users {
 	    return $nopm;
 	}
 
-	// get number of unread pms
-	function getunreadpm($uid) {
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='" . $uid . "' AND unread='1'")[0];
+	/**
+	 * Get number of unread pms
+	 * 
+	 * @param integer $uid
+	 * @return integer
+	 */
+	function getunreadpm($uid)
+	{
+	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='{$uid}' AND unread='1'");
 	}
 
 	// number of private msg's
@@ -414,17 +420,21 @@ class Users {
         }
 	}
 
-	// Private message by system
-	public function autopm($msg, $who, $sys = '') {
-	    if (!empty($sys)) {
-	        $sysid = $sys;
-	    } else {
-	        $sysid = $this->getidfromnick('System');
-	    }
+	/**
+	 *  Private message by system
+	 * 
+	 * @param string $msg
+	 * @param integer $who
+	 * @param integer $sender_id
+	 * @return void
+	 */
+	public function autopm($msg, $who, $sender_id = '')
+	{
+		$sender = !empty($sender_id) ? $sender_id : 0;
 
 	 	$values = array(
 	 	'text' => base64_encode($msg),
-	 	'byuid' => $sysid,
+	 	'byuid' => $sender,
 	 	'touid' => $who,
 	 	'unread' => '1',
 	 	'timesent' => time()

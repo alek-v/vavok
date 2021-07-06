@@ -681,6 +681,9 @@ class Vavok {
 	 */
 	public function recaptcha_response($captcha)
 	{
+		// Return success if there is no secret key or disabled reCAPTCHA
+		if (empty($this->get_configuration('recaptcha_secretkey'))) return array('success' => true);
+
 	    // Post request to Google, check captcha code
 	    $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->get_configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
 	    $response = file_get_contents($url);

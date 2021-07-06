@@ -27,7 +27,6 @@ $who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
 if (empty($who) && isset($_POST['who'])) $who = $vavok->go('users')->getidfromnick($vavok->check($_POST['who']));
 
 if (empty($action)) {
-
     $num_items = $vavok->go('users')->getpmcount($vavok->go('users')->user_id);
     $items_per_page = 10;
 
@@ -36,37 +35,32 @@ if (empty($action)) {
 	$limit_start = $navigation->start()['start']; // starting point
 
     if ($num_items > 0) {
-
-    $sql = "SELECT
-    a.name, b.id, b.byuid, b.unread, b.starred FROM vavok_users a
-    JOIN inbox b ON a.id = b.byuid
-    WHERE b.touid='{$vavok->go('users')->user_id}' AND (deleted IS NULL OR deleted <> '{$vavok->go('users')->user_id}')
-    ORDER BY b.timesent DESC
+    $sql = "SELECT * FROM inbox
+    WHERE touid='{$vavok->go('users')->user_id}' AND (deleted IS NULL OR deleted <> '{$vavok->go('users')->user_id}')
+    ORDER BY timesent DESC
     LIMIT $limit_start, $items_per_page";
-
 
     $senders = array();
     $i = 0;
     foreach ($vavok->go('db')->query($sql) as $item) {
+        // Get name of user
+        $item['name'] = $item['byuid'] == 0 ? 'System' : $vavok->go('users')->getnickfromid($item['byuid']);
 
         // don't list user twice
         if (!in_array($item['name'], $senders)) {
-
             $i = $i++;
 
             // add user to list
             array_push($senders, $item['name']);
 
-            if ($item['unread'] == "1") {
+            if ($item['unread'] == 1) {
                 $iml = '<img src="../images/img/new.gif" alt="New message" />';
             } else { $iml = ''; }
 
             $lnk = '<a href="inbox.php?action=dialog&amp;who=' . $item['byuid'] . '" class="btn btn-outline-primary sitelink">' . $iml . ' ' . $item['name'] . '</a>';
-            echo $lnk . "<br />";
+            echo '<p>' . $lnk . '</p>';
         }
     }
-
-    echo '<br /><br/>';
 
     // navigation    
     echo $navigation->get_navigation();
@@ -77,23 +71,17 @@ if (empty($action)) {
 
     echo $vavok->sitelink('inbox.php?action=sendto', $vavok->go('localization')->string('sendmsg')) . '<br />';
 
-} else if ($action == "dialog") {
-
-    if (empty($who) || empty($vavok->go('users')->getnickfromid($who))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
+} else if ($action == 'dialog') {
+    if (!isset($who) || ($who > 0 && empty($vavok->go('users')->getnickfromid($who)))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
 
     $pms = $vavok->go('db')->count_row('inbox', "(byuid='" . $vavok->go('users')->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 
-    $num_items = $pms; //changable
+    $num_items = $pms;
     $items_per_page = 50;
     $limit_start = $num_items - $items_per_page;
-    if ($limit_start < 0) {
-        $limit_start = 0;
-    }
+    if ($limit_start < 0) $limit_start = 0;
 
-    $read_only = '';
-    if ($who == 1) {
-        $read_only = 'readonly';
-    }
+    $read_only = $who == 0 ? 'readonly' : '';
 
     $vavok->go('db')->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "'");
 
@@ -114,8 +102,8 @@ if (empty($action)) {
 
     $pms = "SELECT * FROM inbox WHERE (byuid = '" . $vavok->go('users')->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
     foreach ($vavok->go('db')->query($pms) as $pm) {
-
-        $bylnk = "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $vavok->go('users')->getnickfromid($pm['byuid']) . "</a> ";
+        $sender_nick = $pm['byuid'] == 0 ? 'System' : $vavok->go('users')->getnickfromid($pm['byuid']);
+        $bylnk = $pm['byuid'] == 0 ? 'System ' : "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $sender_nick . "</a> ";
         echo $bylnk;
         $tmopm = date("d m y - h:i:s", $pm['timesent']);
         echo "$tmopm<br />";
@@ -123,24 +111,20 @@ if (empty($action)) {
         echo $vavok->go('users')->parsepm($pm['text']);
 
         echo '<hr />';
-
     } 
 
     echo '</div>'; // end of #message-box
 
 }
 
-else if ($action == "sendto") {
-
+else if ($action == 'sendto') {
     echo '<form method="post" action="inbox.php?action=dialog">';
     echo '<div class="form-group">';
     echo '<label for="who">' . $vavok->go('localization')->string('sendpmto') . ':</label>';
     echo '<input type="text" name="who" id="who" class="form-control" />';
     echo '</div>';
     echo '<button type="submit" class="btn btn-primary">' . $vavok->go('localization')->string('confirm') . '</button>
-    </form>
-    <hr>';
-
+    </form>';
 }
 
 if (!empty($action)) echo $vavok->sitelink('inbox.php', $vavok->go('localization')->string('inbox'), '<p>', '</p>');
