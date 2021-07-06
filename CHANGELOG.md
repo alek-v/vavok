@@ -1,3 +1,12 @@
+# Vavok v1.5.11.a
+- Removed xoft_encode method from Vavok.class.php
+- Removed xoft_decode method from Vavok.class.php
+- Removed safe_encode method from Vavok.class.php
+- Removed safe_decode method from Vavok.class.php
+- Remove saved token when user logout
+
+
+
 # Vavok v1.5.10
 - Added support for blog categories
 - Added priority levels for email queue
