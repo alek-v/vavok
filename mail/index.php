@@ -6,34 +6,28 @@
 
 require_once '../include/startup.php';
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
-$name = isset($_POST['name']) ? $vavok->check($_POST['name']) : '';
-$body = isset($_POST['body']) ? $vavok->check($_POST['body']) : '';
-$umail = isset($_POST['umail']) ? $vavok->check($_POST['umail']) : '';
-$captcha = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : ''; // Captcha code
-
-if ($action == 'go') {
+if ($vavok->post_and_get('action') == 'go') {
     // Check name
-    if (empty($name)) { $vavok->redirect_to('./?isset=noname'); }
+    if (empty($vavok->post_and_get('name'))) { $vavok->redirect_to('./?isset=noname'); }
 
     // Check email body
-    if (empty($body)) { $vavok->redirect_to('./?isset=nobody'); }
+    if (empty($vavok->post_and_get('body'))) { $vavok->redirect_to('./?isset=nobody'); }
 
     // Validate email address
-    if (!$vavok->go('users')->validate_email($umail)) { $vavok->redirect_to('./?isset=noemail'); }
+    if (!$vavok->go('users')->validate_email($vavok->post_and_get('umail'))) { $vavok->redirect_to('./?isset=noemail'); }
 
     // Redirect if response is false
-    if ($vavok->recaptcha_response($captcha)['success'] == false) { $vavok->redirect_to('./?isset=vrcode'); }
+    if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == false) { $vavok->redirect_to('./?isset=vrcode'); }
 
     // Send email
     $mail = new Mailer();
-    $mail->queue_email($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration("title"), $body . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$name}\r\nSender's email: {$umail}\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+    $mail->queue_email($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration("title"), $vavok->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$vavok->post_and_get('name')}\r\nSender's email: {$vavok->post_and_get('umail')}\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
     // Email sent
     $vavok->redirect_to('./?isset=mail');
 }
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     // Page title
     $vavok->go('current_page')->page_title = $vavok->go('localization')->string('contact');
 

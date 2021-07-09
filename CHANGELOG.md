@@ -4,6 +4,7 @@
 - Removed safe_encode method from Vavok.class.php
 - Removed safe_decode method from Vavok.class.php
 - Remove saved token when user logout
+- Implemented handling of POST and GET data
 
 
 

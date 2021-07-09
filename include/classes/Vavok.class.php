@@ -1105,6 +1105,28 @@ class Vavok {
 	}
 
 	/**
+	 * Return POST and GET variables or single variable
+	 *
+	 * @param string $return_key
+	 * @return array|string
+	 */
+	public function post_and_get($return_key = '')
+	{
+		$arrays = array_merge($_POST, $_GET);
+
+		$return_array = array();
+		foreach ($arrays as $key => $value) {
+			$return_array[$key] = $this->check($value);
+		}
+
+		$return = $return_array;
+
+		if (!empty($return_key)) $return = isset($return_array[$return_key]) ? $return_array[$return_key] : '';
+
+		return $return;
+	}
+
+	/**
 	 * Return website domain
 	 *
 	 * @return string
