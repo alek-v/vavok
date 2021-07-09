@@ -6,9 +6,6 @@
 
 require_once '../include/startup.php';
 
-if (!empty($_GET['action'])) { $action = $vavok->check($_GET["action"]); } else { $action = ''; }
-
-
 // Username
 if (isset($_POST['log'])) {
     $log = $vavok->check($_POST['log']);
@@ -17,7 +14,6 @@ if (isset($_POST['log'])) {
 } else {
 	$log = '';
 }
-
 
 // Password
 if (isset($_POST['pass'])) {
@@ -28,7 +24,6 @@ if (isset($_POST['pass'])) {
 	$pass = '';
 }
 
-
 //  Remember login data on this device
 if (isset($_POST['cookietrue'])) {
     $cookietrue = $vavok->check($_POST['cookietrue']);
@@ -37,7 +32,6 @@ if (isset($_POST['cookietrue'])) {
 } else {
 	$cookietrue = '';
 }
-
 
 // Page to load after login
 if (isset($_POST['ptl'])) {
@@ -53,10 +47,10 @@ $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noind
 
 // check login attempts
 $max_time_in_seconds = 600;
-$max_attempts = 5;
+$max_attempts = 10;
 
 // login
-if (empty($action) && !empty($log) && $log != 'System') {
+if (empty($vavok->post_and_get('action')) && !empty($log) && $log != 'System') {
 	if ($vavok->go('users')->login_attempt_count($max_time_in_seconds, $log, $vavok->go('users')->find_ip()) > $max_attempts) {
 	    $vavok->require_header();
 
@@ -81,7 +75,7 @@ if (empty($action) && !empty($log) && $log != 'System') {
     $user_profil = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$userx_id}'", 'regche');
 
     // compare sent data and data from database
-    if ($vavok->go('users')->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
+    if (isset($show_userx['name']) && $vavok->go('users')->password_check($pass, $show_userx['pass']) && $log == $show_userx['name']) {
         // user want to remember login
         if ($cookietrue == 1) {
             // Encrypt data to save in cookie
@@ -137,7 +131,7 @@ if (empty($action) && !empty($log) && $log != 'System') {
 }
 
 // Logout
-if ($vavok->go('users')->is_reg() && $action == 'exit') {
+if ($vavok->go('users')->is_reg() && $vavok->post_and_get('action') == 'exit') {
     // Logout
     $vavok->go('users')->logout($vavok->go('users')->user_id);
 

@@ -2,18 +2,12 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   04.09.2020. 23:20:44
  */
 
 require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) { $vavok->redirect_to('./?error=noauth'); }
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-} 
 if (!empty($_POST['users'])) {
     $user = $vavok->check($_POST['users']);
 } elseif (!empty($_GET['users'])) {
@@ -24,7 +18,7 @@ $users_id = $vavok->go('users')->getidfromnick($user);
 
 $vavok->require_header();
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
     $form->set('form_action', 'users.php?action=edit');
@@ -42,7 +36,7 @@ if (empty($action)) {
 }
 
 // change profile
-if ($action == "edit") {
+if ($vavok->post_and_get('action') == "edit") {
 
     if (!empty($user)) {
 
@@ -220,7 +214,7 @@ if ($action == "edit") {
 }
 
 // update changes
-if ($action == "upgrade") {
+if ($vavok->post_and_get('action') == "upgrade") {
 
     $udd1 = isset($_POST['udd1']) ? $vavok->check($_POST['udd1']) : '';
     $udd2 = isset($_POST['udd2']) ? $vavok->check($_POST['udd2']) : '';
@@ -311,7 +305,7 @@ if ($action == "upgrade") {
 } 
 
 // confirm delete
-if ($action == "poddel") {
+if ($vavok->post_and_get('action') == "poddel") {
     echo $vavok->go('localization')->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
     echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b>';
 
@@ -319,7 +313,7 @@ if ($action == "poddel") {
 } 
 
 // delete user
-if ($action == "deluser") {
+if ($vavok->post_and_get('action') == "deluser") {
     if ($user != $vavok->get_configuration('adminNick')) {
         $userx_id = $vavok->go('users')->getidfromnick($user);
         $show_userx = $vavok->go('db')->get_data('vavok_users', "id='" . $userx_id . "'", 'perm');

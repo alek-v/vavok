@@ -2,12 +2,9 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.04.2021. 0:41:35
  */
 
 require_once '../include/startup.php';
-
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 
 function prev_dir($string) {
     $d1 = strrpos($string, "/");
@@ -15,13 +12,13 @@ function prev_dir($string) {
     $string = str_replace($d2, "", $string);
 
     return $string;
-} 
+}
 
 if ($vavok->go('users')->is_reg()) {
     if ($_SESSION['permissions'] == 101) {
         $vavok->require_header();
 
-        switch ($action) {
+        switch ($vavok->post_and_get('action')) {
             default:
 
                 echo '<img src="../images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('checksys') . '<hr>';

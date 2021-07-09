@@ -2,13 +2,11 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   17.04.2021. 14:20:03
  */
 
 require_once '../include/startup.php';
 
 $page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
-$item = isset($_GET['item']) ? $vavok->check($_GET['item']) : '';
 
 if (!function_exists('cyr_to_lat')) {
 	function cyr_to_lat($str) {
@@ -33,12 +31,12 @@ if (!function_exists('lat_to_cyr')) {
 	}
 }
 
-$itemCyr = lat_to_cyr(htmlspecialchars_decode($item)); // translate to cyrillic to search for cyrillic post
-$itemLat = cyr_to_lat(htmlspecialchars_decode($item)); // translate to latin to search for latin post
+$itemCyr = lat_to_cyr(htmlspecialchars_decode($vavok->post_and_get('item'))); // translate to cyrillic to search for cyrillic post
+$itemLat = cyr_to_lat(htmlspecialchars_decode($vavok->post_and_get('item'))); // translate to latin to search for latin post
 
 // redirect if url is not rewriten
 if (stristr(CLEAN_REQUEST_URI, 'search.php')) {
-	$vavok->redirect_to(HOMEDIR . 'search/' . $item . '/');
+	$vavok->redirect_to(HOMEDIR . 'search/' . $vavok->post_and_get('item') . '/');
 }
 
 /**
@@ -46,7 +44,7 @@ if (stristr(CLEAN_REQUEST_URI, 'search.php')) {
  */
 $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noindex, follow" />' . "\r\n");
 
-if (empty($item)) {
+if (empty($vavok->post_and_get('item'))) {
 	$vavok->go('current_page')->page_title = $vavok->go('localization')->string('search');
 
 	$vavok->require_header();
@@ -60,7 +58,7 @@ if (empty($item)) {
 		$orderBy = ' ';
 	}
 
-	$clean_search_item = str_replace('_', ' ', $item);
+	$clean_search_item = str_replace('_', ' ', $vavok->post_and_get('item'));
 
 	$vavok->go('current_page')->page_title = $clean_search_item;
 	$vavok->require_header();
@@ -73,7 +71,7 @@ if (empty($item)) {
 	/**
 	 * Count pages by tags
 	 */
-	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$item}'";
+	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$vavok->post_and_get('item')}'";
 	foreach ($vavok->go('db')->query($prep) as $resultItem) {
 		if (!in_array($resultItem['page_id'], $page_ids)) array_push($page_ids, $resultItem['page_id']);
 	}
@@ -108,7 +106,7 @@ if (empty($item)) {
 	/**
 	 * Search tags
 	 */
-	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$item}' LIMIT {$thisPageNav->start()['start']}, 20";
+	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$vavok->post_and_get('item')}' LIMIT {$thisPageNav->start()['start']}, 20";
 	foreach ($vavok->go('db')->query($prep) as $resultItem) {
 		/**
 		 * Page data
