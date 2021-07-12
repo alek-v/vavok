@@ -6,12 +6,11 @@
 
 require_once '../include/startup.php';
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
 $recipient_mail = isset($_POST['recipient']) ? $vavok->check($_POST['recipient']) : '';
 $recipient_id = isset($_GET['uid']) ? $vavok->check($_GET['uid']) : '';
 
 // resend registration email with key
-if ($action == 'resendkey') {
+if ($vavok->post_and_get('action') == 'resendkey') {
 	// if user id is not in url, get it from submited email
 	if (empty($recipient_id)) {
     	$recipient_id = $vavok->go('users')->get_id_from_mail($recipient_mail);
@@ -64,7 +63,7 @@ if ($action == 'resendkey') {
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('confreg');
 $vavok->require_header();
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     if ($vavok->go('users')->is_reg()) {
         echo '<p>' . $vavok->go('localization')->string('wellcome') . ', <b>' . $vavok->go('users')->show_username() . '!</b><br>';
         echo $vavok->go('localization')->string('confinfo') . '</p>';
@@ -101,7 +100,7 @@ if (empty($action)) {
 }
 
 // check comfirmation code
-if ($action == 'inkey') {
+if ($vavok->post_and_get('action') == 'inkey') {
     $key = isset($_GET['key']) ? $vavok->check(trim($_GET['key'])) : $vavok->check(trim($_POST['key']));
 
     if (!empty($key)) {

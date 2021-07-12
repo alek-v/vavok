@@ -1114,14 +1114,16 @@ class Vavok {
 	{
 		$arrays = array_merge($_POST, $_GET);
 
-		$return_array = array();
+		$return = array();
 		foreach ($arrays as $key => $value) {
-			$return_array[$key] = $this->check($value);
+			$return[$key] = $this->check($value);
 		}
 
-		$return = $return_array;
+		// Handle page number
+		if (!isset($return['page']) || empty($return['page']) || $return['page'] < 1) $return['page'] = 1;
 
-		if (!empty($return_key)) $return = isset($return_array[$return_key]) ? $return_array[$return_key] : '';
+		// Return requested key
+		if (!empty($return_key)) $return = isset($return[$return_key]) ? $return[$return_key] : '';
 
 		return $return;
 	}

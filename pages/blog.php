@@ -6,14 +6,12 @@
 
 require_once '../include/startup.php';
 
-$pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : ''; // blog page
-$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1; // page number
-$current_category = isset($_GET['category']) ? $vavok->check($_GET['category']) : ''; // blog category
+$pg = $vavok->post_and_get('pg'); // blog page
 
 $items_per_page = 5; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
 
-switch ($pg) {
+switch ($vavok->post_and_get('pg')) {
 	case isset($pg):
 		// Get page id
 		// Redirect to blog main page if page does not exist
@@ -83,7 +81,7 @@ switch ($pg) {
 		if ($comments_per_page == 0) { $comments_per_page = $total_comments; }
 
 		// Start navigation
-		$navi = new Navigation($items_per_page, $total_comments, $page);
+		$navi = new Navigation($items_per_page, $total_comments, $vavok->post_and_get('page'));
 
 		$all_comments = $comments->load_comments($vavok->go('current_page')->page_id, $navi->start()['start'], $comments_per_page);
 
@@ -148,7 +146,7 @@ switch ($pg) {
 		/**
 		 * Count total posts
 		 */
-		$total_posts = empty($current_category) ? $vavok->go('db')->count_row('pages', "type='post' AND published = '2'") : $vavok->go('db')->count_row('tags', "tag_name='{$current_category}'");
+		$total_posts = empty($vavok->post_and_get('category')) ? $vavok->go('db')->count_row('pages', "type='post' AND published = '2'") : $vavok->go('db')->count_row('tags', "tag_name='{$vavok->post_and_get('category')}'");
 
 		// if there is no posts
 		if ($total_posts < 1) {
@@ -162,7 +160,7 @@ switch ($pg) {
 		}
 
 		// start navigation
-		$navi = new Navigation($items_per_page, $total_posts, $page);
+		$navi = new Navigation($items_per_page, $total_posts, $vavok->post_and_get('page'));
 
 		/**
 		 * Get blog category names
@@ -200,8 +198,8 @@ switch ($pg) {
 		/**
 		 * Query when category is not set and when it is set
 		 */		
-		$page_sql_query = empty($current_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
-		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content FROM pages INNER JOIN tags ON tags.tag_name='{$current_category}' AND tags.page_id = pages.id  ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+		$page_sql_query = empty($vavok->post_and_get('category')) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content FROM pages INNER JOIN tags ON tags.tag_name='{$vavok->post_and_get('category')}' AND tags.page_id = pages.id  ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
 
 		foreach ($vavok->go('db')->query($page_sql_query) as $key) {
 			// load template
@@ -254,7 +252,7 @@ switch ($pg) {
 		$show_page->set('posts', PageGen::merge($all_posts));
 
 		// page navigation
-		$navigation = new Navigation($items_per_page, $total_posts, $page, './?');
+		$navigation = new Navigation($items_per_page, $total_posts, $vavok->post_and_get('page'), './?');
 		
 		$show_page->set('navigation', $navigation->get_navigation());
 

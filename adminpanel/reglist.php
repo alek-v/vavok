@@ -8,17 +8,13 @@ require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) { $vavok->redirect_to("../index.php?error"); } 
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
-$usr = isset($_GET['usr']) ? $vavok->check($_GET['usr']) : '';
-$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : '';
-
-if ($action == 'conf' && !empty($usr)) {
+if ($vavok->post_and_get('action') == 'conf' && !empty($vavok->post_and_get('usr'))) {
     $fields = array('regche', 'regkey');
     $values = array('', '');
-    $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $usr . "'");
+    $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $vavok->post_and_get('usr') . "'");
 
-    $about_user = $vavok->go('db')->get_data('vavok_about', "uid='" . $usr . "'", 'email');
-    $vav_name = $vavok->go('users')->getnickfromid($usr);
+    $about_user = $vavok->go('db')->get_data('vavok_about', "uid='" . $vavok->post_and_get('usr') . "'", 'email');
+    $vav_name = $vavok->go('users')->getnickfromid($vavok->post_and_get('usr'));
 
     $message = $vavok->go('localization')->string('hello') . " " . $vav_name . "!\r\n\r\n" . $vavok->go('localization')->string('sitemod') . " " . $vavok->get_configuration('homeBase') . " " . $vavok->go('localization')->string('confirmedreg') . ".\r\n" . $vavok->go('localization')->string('youcanlog') . ".\r\n\r\n" . $vavok->go('localization')->string('bye') . "!\r\n\r\n\r\n\r\n" . $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) . "\r\n" . ucfirst($vavok->get_configuration('homeBase'));
     $newMail = new Mailer;
@@ -31,14 +27,13 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('unc
 
 $vavok->require_header();
 
-if (empty($action)) {
-    if ($page == "" || $page <= 0)$page = 1;
+if (empty($vavok->post_and_get('action'))) {
     $noi = $vavok->go('db')->count_row('vavok_profil', "regche='1' OR regche='2'");
     $num_items = $noi; //changable
     $items_per_page = 20;
     $num_pages = ceil($num_items / $items_per_page);
-    if (($page > $num_pages) && $page != 1)$page = $num_pages;
-    $limit_start = ($page-1) * $items_per_page;
+    if (($vavok->post_and_get('page') > $num_pages) && $vavok->post_and_get('page') != 1)$vavok->post_and_get('page') = $num_pages;
+    $limit_start = ($vavok->post_and_get('page')-1) * $items_per_page;
     if ($limit_start < 0) {
         $limit_start = 0;
     } 
@@ -62,7 +57,7 @@ if (empty($action)) {
         echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';
     }
 
-    $navigation = new Navigation($items_per_page, $num_items, $page, 'reglist.php?');
+    $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'reglist.php?');
 
     echo '<p>';
         echo $navigation->get_navigation();

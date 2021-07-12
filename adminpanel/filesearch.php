@@ -4,13 +4,10 @@ require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) $vavok->redirect_to('./');
 
-$action = !empty($_GET['action']) ? $vavok->check($_GET['action']) : 'tpc';
-$page = !empty($_GET['page']) ? $vavok->check($_GET['page']) : '';
-
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('search');
 $vavok->require_header();
 
-if ($action == 'tpc') {
+if (empty($vavok->post_and_get('action'))) {
     $form = new PageGen('forms/form.tpl');
     $form->set('form_method', 'post');
     $form->set('form_action', 'filesearch.php?action=stpc');
@@ -27,7 +24,7 @@ if ($action == 'tpc') {
     echo $form->output();
 
     echo $vavok->sitelink('files.php', $vavok->go('localization')->string('back'), '<p>', '<br />');
-} else if ($action == 'stpc') {
+} else if ($vavok->post_and_get('action') == 'stpc') {
     $stext = $vavok->check($_POST['stext']);
 
     if (empty($stext)) {
@@ -43,7 +40,7 @@ if ($action == 'tpc') {
         $noi = $vavok->go('db')->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $noi, $page, 'filesearch.php?'); // start navigation
+        $navigation = new Navigation($items_per_page, $noi, $vavok->post_and_get('page'), 'filesearch.php?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 

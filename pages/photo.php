@@ -6,12 +6,6 @@
 
 require_once '../include/startup.php';
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-}
-
 $vavok->go('current_page')->append_head_tags('<style type="text/css">
 .photo img {
     max-width: 320px;
@@ -24,7 +18,7 @@ $vavok->go('current_page')->page_title = 'Change Photo'; // update lang
 $vavok->require_header();
 
 if ($vavok->go('users')->is_reg()) {
-    if (empty($action)) {
+    if (empty($vavok->post_and_get('action'))) {
         $chk_photo = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$vavok->go('users')->user_id}'", 'photo');
 
         if (!empty($chk_photo['photo'])) {
@@ -49,7 +43,7 @@ if ($vavok->go('users')->is_reg()) {
         echo $form->output();
     }
     // choose photo
-    if ($action == "photo") {
+    if ($vavok->post_and_get('action') == "photo") {
         $avat_size = $_FILES['file']['size'];
         $avat_name = $_FILES['file']['name'];
         $size = GetImageSize($_FILES['file']['tmp_name']);
@@ -99,7 +93,7 @@ if ($vavok->go('users')->is_reg()) {
 
         echo $vavok->sitelink('photo.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
     }
-    if ($action == 'remove') {
+    if ($vavok->post_and_get('action') == 'remove') {
         if (file_exists("../used/dataphoto/" . $vavok->go('users')->user_id . ".jpg")) {
             unlink("../used/dataphoto/" . $vavok->go('users')->user_id . ".jpg");
         } elseif (file_exists("../used/dataphoto/" . $vavok->go('users')->user_id . ".png")) {
@@ -121,9 +115,7 @@ if ($vavok->go('users')->is_reg()) {
 }
 
 echo '<p>';
-if (empty($action)) {
-    echo $vavok->sitelink(HOMEDIR . 'pages/profile.php', $vavok->go('localization')->string('back')) . '<br />';
-}
+if (empty($vavok->post_and_get('action'))) echo $vavok->sitelink(HOMEDIR . 'pages/profile.php', $vavok->go('localization')->string('back')) . '<br />';
 echo $vavok->homelink();
 echo '</p>';
 

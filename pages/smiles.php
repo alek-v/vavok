@@ -6,8 +6,6 @@
 
 require_once '../include/startup.php';
 
-$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
-
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('smile');
 $vavok->require_header();
 
@@ -23,7 +21,7 @@ sort($a);
 $smilesPerPage = 15;
 $total = count($a);
 
-$navigation = new Navigation($smilesPerPage, $total, $page, 'smiles.php?'); // start navigation
+$navigation = new Navigation($smilesPerPage, $total, $vavok->post_and_get('page'), 'smiles.php?'); // start navigation
 
 $limit_start = $navigation->start()['start']; // starting point
 $end = $navigation->start()['end']; // ending point
@@ -33,7 +31,7 @@ echo '<p>';
 for ($i = $limit_start; $i < $end; $i++) {
     $smkod = str_replace(".gif", "", $a[$i]);
 
-    echo '<img src="' . BASEDIR . 'images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" /> ';
+    echo '<img src="' . HOMEDIR . 'images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" /> ';
 
     if ($smkod == ')' || $smkod == '(' || $smkod == 'D' || $smkod == 'E' || $smkod == 'P') {
       echo '- :' . $smkod . '<br>';

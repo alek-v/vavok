@@ -6,11 +6,6 @@
 
 require_once '../include/startup.php';
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-} 
 if (isset($_POST['users'])) {
     $user = $vavok->check($_POST['users']);
 } elseif (isset($_GET['users'])) {
@@ -24,11 +19,10 @@ if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to("../?error"); }
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banning');
     $vavok->require_header();
- 
 
     echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banunban') . '</b></p>';
 
-    if (empty($action)) {
+    if (empty($vavok->post_and_get('action'))) {
         $form = new PageGen('forms/form.tpl');
         $form->set('form_method', 'post');
         $form->set('form_action', 'addban.php?action=edit');
@@ -47,9 +41,10 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         echo $form->output();
 
         echo '<hr>';
-    } 
+    }
+
     // edit profile
-    if ($action == "edit") {
+    if ($vavok->post_and_get('action') == 'edit') {
         if (!empty($user)) {
             if (ctype_digit($user) === false) {
                 $userx_id = $vavok->go('users')->getidfromnick($user);
@@ -149,7 +144,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
     } 
 
-    if ($action == "banuser") {
+    if ($vavok->post_and_get('action') == 'banuser') {
         $bform = $vavok->check($_POST['bform']);
         $udd38 = $vavok->check($_POST['duration']);
         $users_id = $vavok->go('users')->getidfromnick($user);
@@ -202,7 +197,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
     } 
 
-    if ($action == "deleteban") {
+    if ($vavok->post_and_get('action') == 'deleteban') {
         $users_id = $vavok->go('users')->getidfromnick($user);
 
         if ($users_id != "") {
@@ -229,7 +224,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
         echo'<p><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></a>';
     } 
     // delete user
-    if ($action == "deluser") {
+    if ($vavok->post_and_get('action') == 'deluser') {
         $user = $vavok->check($user);
         $vavok->go('users')->delete_user($user);
 

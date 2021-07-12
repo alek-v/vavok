@@ -20,13 +20,11 @@ $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noind
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('inbox');
 $vavok->require_header();
 
-$action = isset($_GET['action']) ? $vavok->check($_GET["action"]) : '';
 $page = isset($_GET['page']) ? $vavok->check($_GET["page"]) : '';
-$pmid = isset($_GET['pmid']) ? $vavok->check($_GET["pmid"]) : '';
 $who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
 if (empty($who) && isset($_POST['who'])) $who = $vavok->go('users')->getidfromnick($vavok->check($_POST['who']));
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     $num_items = $vavok->go('users')->getpmcount($vavok->go('users')->user_id);
     $items_per_page = 10;
 
@@ -71,7 +69,7 @@ if (empty($action)) {
 
     echo $vavok->sitelink('inbox.php?action=sendto', $vavok->go('localization')->string('sendmsg')) . '<br />';
 
-} else if ($action == 'dialog') {
+} else if ($vavok->post_and_get('action') == 'dialog') {
     if (!isset($who) || ($who > 0 && empty($vavok->go('users')->getnickfromid($who)))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
 
     $pms = $vavok->go('db')->count_row('inbox', "(byuid='" . $vavok->go('users')->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
@@ -117,7 +115,7 @@ if (empty($action)) {
 
 }
 
-else if ($action == 'sendto') {
+else if ($vavok->post_and_get('action') == 'sendto') {
     echo '<form method="post" action="inbox.php?action=dialog">';
     echo '<div class="form-group">';
     echo '<label for="who">' . $vavok->go('localization')->string('sendpmto') . ':</label>';
@@ -127,7 +125,7 @@ else if ($action == 'sendto') {
     </form>';
 }
 
-if (!empty($action)) echo $vavok->sitelink('inbox.php', $vavok->go('localization')->string('inbox'), '<p>', '</p>');
+if (!empty($vavok->post_and_get('action'))) echo $vavok->sitelink('inbox.php', $vavok->go('localization')->string('inbox'), '<p>', '</p>');
 
 echo $vavok->homelink('<p>', '</p>');
 

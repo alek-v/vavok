@@ -8,9 +8,7 @@ require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../?isset=inputoff");
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
-
-switch ($action) {
+switch ($vavok->post_and_get('action')) {
 	case 'save':
 		if (!empty($_POST['site']) && !$vavok->validateURL($_POST['site'])) $vavok->redirect_to("profile.php?isset=insite");
 

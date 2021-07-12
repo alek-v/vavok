@@ -6,15 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) {
-    $vavok->redirect_to("../pages/input.php?action=exit");
-}
-
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-} 
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to("../pages/input.php?action=exit");
 
 $rand = rand(100, 999);
 $dates = date("d.m.y");
@@ -26,7 +18,7 @@ $vavok->require_header();
 
 echo '<img src="../images/img/menu.gif" alt=""> <b>' . $vavok->go('localization')->string('adminchat') . '</b><br><br>';
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     echo '<a href="#down"><img src="../images/img/downs.gif" alt=""></a> ';
     echo '<a href="adminchat.php?r=' . $rand . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('refresh') . '</a><br>';
 
@@ -59,24 +51,24 @@ if (empty($action)) {
 
         if ($dates == $data[2]) {
             $data[2] = '<font color="#FF0000">' . $vavok->go('localization')->string('today') . '</font>';
-        } 
+        }
 
         echo'<small> (' . $data[2] . ' / ' . $data[3] . ')</small></div>' . $data_text . '<br><small><font color="#CC00CC">[' . $data[4] . ', ' . $data[5] . ']</font></small>';
         echo'<br>';
     } 
 
-    echo'<hr>';
+    echo '<hr>';
     if ($start != 0) {
         echo '<a href="adminchat.php?start=' . ($start - 10) . '" class="btn btn-outline-primary sitelink">&lt; ' . $vavok->go('localization')->string('back') . '</a> ';
     } else {
         echo'&lt; ' . $vavok->go('localization')->string('back') . '';
     } 
-    echo'|';
+    echo '|';
     if ($total > $start + 10) {
         echo ' <a href="adminchat.php?start=' . ($start + 10) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forw') . ' &gt;</a>';
     } else {
         echo'' . $vavok->go('localization')->string('forw') . ' &gt;';
-    } 
+    }
 
     if ($total > 0) {
         $ba = ceil($total / 10);
@@ -105,15 +97,15 @@ if (empty($action)) {
         } 
         if ($asd2 < $total) {
             echo ' ... <a href="adminchat.php?start=' . $ba2 . '" class="btn btn-outline-primary sitelink">' . $ba . '</a>';
-        } 
-    } 
+        }
+    }
 
     echo '<br><br>';
 
     echo '<a href="../pages/smiles.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('smile') . '</a>';
-} 
+}
 
-if ($action == "prodel") {
+if ($vavok->post_and_get('action') == 'prodel') {
     echo '<br>' . $vavok->go('localization')->string('delacmsgs') . '?<br>';
     echo '<b><a href="process.php?action=acdel" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('yessure') . '!</a></b><br>';
 
@@ -126,8 +118,6 @@ if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
 echo $vavok->homelink() . '</p>';
-
-
 
 $vavok->require_footer();
 

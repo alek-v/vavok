@@ -6,15 +6,6 @@
 
 require_once '../include/startup.php';
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-} 
-if (isset($_GET['start'])) {
-    $start = $vavok->check($_GET['start']);
-} 
-
 if ($vavok->go('users')->is_reg()) {
     if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
 
@@ -23,7 +14,7 @@ if ($vavok->go('users')->is_reg()) {
 
         echo '<img src="../images/img/menu.gif" alt=""> <b>IP ban panel</b><br><br>';
 
-        if (empty($action)) {
+        if (empty($vavok->post_and_get('action'))) {
             $file = $vavok->get_data_file('ban.dat');
             $total = count($file);
             if (empty($_GET['start'])) $start = 0;

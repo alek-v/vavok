@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to("../"); } 
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../');
 
 $vavok_userx = $vavok->go('db')->get_data('vavok_users', "id='{$vavok->go('users')->user_id}'", 'banned');
 $show_prof = $vavok->go('db')->get_data('vavok_profil', "uid='{$vavok->go('users')->user_id}'", 'bantime, bandesc, allban');
@@ -21,7 +21,6 @@ $time_ban = round($bantime - time());
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banned');
 
 if ($time_ban > 0) {
-
     // remove session - logout user
     $vavok->go('users')->logout($vavok->go('users')->user_id);
 
@@ -36,7 +35,6 @@ if ($time_ban > 0) {
 
     echo '<br><br>' . $vavok->go('localization')->string('banno') . ': <b>' . (int)$allban . '</b><br>';
     echo $vavok->go('localization')->string('becarefnr') . '<br /><br />';
-
 } else {
     $vavok->require_header();
 

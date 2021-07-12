@@ -6,18 +6,14 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator(101)) {
-    $vavok->redirect_to("../pages/error.php?error=auth");
-}
-
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator(101)) $vavok->redirect_to("../pages/error.php?error=auth");
 
 $site_configuration = new Config();
 
 /**
  * Мain settings update
  */
-if ($action == 'editone') {
+if ($vavok->post_and_get('action') == 'editone') {
 
 	// Check fields
     if (!isset($_POST['conf_set2']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
@@ -48,7 +44,7 @@ if ($action == 'editone') {
 
 }
 
-if ($action == "edittwo") {
+if ($vavok->post_and_get('action') == "edittwo") {
 
 	if (!isset($_POST['conf_set4']) || !isset($_POST['conf_set5']) || !isset($_POST['conf_set7']) || !isset($_POST['conf_set32']) || !isset($_POST['conf_set74'])) {
         $vavok->redirect_to("settings.php?action=settwo&isset=mp_nosset");
@@ -78,7 +74,7 @@ if ($action == "edittwo") {
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 } 
 
-if ($action == "editthree") {
+if ($vavok->post_and_get('action') == "editthree") {
 
     if (!isset($_POST['conf_set20']) || !isset($_POST['conf_set22']) || !isset($_POST['conf_set24']) || !isset($_POST['conf_set56'])) {
         $vavok->redirect_to("settings.php?action=setthree&isset=mp_nosset");
@@ -106,7 +102,7 @@ if ($action == "editthree") {
 
 }
 
-if ($action == "editfour") {
+if ($vavok->post_and_get('action') == "editfour") {
 
     if (!isset($_POST['conf_set38']) || !isset($_POST['conf_set39']) || !isset($_POST['conf_set49'])) {
         $vavok->redirect_to("settings.php?action=setfour&isset=mp_nosset");
@@ -156,7 +152,7 @@ if ($action == "editfour") {
 
 }
 
-if ($action == 'editfive') {
+if ($vavok->post_and_get('action') == 'editfive') {
 	if (!isset($_POST['conf_set30'])) {
         $vavok->redirect_to("settings.php?action=setfive&isset=mp_nosset");
     }
@@ -169,7 +165,7 @@ if ($action == 'editfive') {
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 }
 
-if ($action == "editseven") {
+if ($vavok->post_and_get('action') == "editseven") {
 
     if (!isset($_POST['conf_set6']) || !isset($_POST['conf_set51']) || !isset($_POST['conf_set70'])) {
         $vavok->redirect_to("settings.php?action=setseven&isset=mp_nosset");
@@ -222,7 +218,7 @@ if ($action == "editseven") {
 
 }
 
-if ($action == "editeight") {
+if ($vavok->post_and_get('action') == "editeight") {
     if (!isset($_POST['conf_set58']) || !isset($_POST['conf_set76'])) {
         $vavok->redirect_to("settings.php?action=seteight&isset=mp_nosset");
     }
@@ -248,7 +244,7 @@ if ($action == "editeight") {
 /**
  * Site security options
  */
-if ($action == 'editsecurity') {
+if ($vavok->post_and_get('action') == 'editsecurity') {
 	// Check fields
     if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29'])) {
         $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
@@ -311,7 +307,7 @@ $vavok->go('current_page')->page_title = "Settings";
 
 $vavok->require_header();
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mainset') . '</a>';
     echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('shwinfo') . '</a>';
     echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('bookchatnews') . '</a>';
@@ -322,7 +318,7 @@ if (empty($action)) {
 }
 
 // main settings
-if ($action == "setone") {
+if ($vavok->post_and_get('action') == "setone") {
     echo '<h1>' . $vavok->go('localization')->string('mainset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -486,7 +482,7 @@ if ($action == "setone") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "settwo") {
+if ($vavok->post_and_get('action') == "settwo") {
     echo '<h1>' . $vavok->go('localization')->string('shwinfo') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -626,7 +622,7 @@ if ($action == "settwo") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "setthree") {
+if ($vavok->post_and_get('action') == "setthree") {
     echo '<h1>' . $vavok->go('localization')->string('gbnewschatset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -699,7 +695,7 @@ if ($action == "setthree") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "setfour") {
+if ($vavok->post_and_get('action') == "setfour") {
 
     $kbs = $vavok->get_configuration('photoFileSize') / 1024;
 
@@ -889,7 +885,7 @@ if ($action == "setfour") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "setseven") {
+if ($vavok->post_and_get('action') == "setseven") {
     echo '<h1>' . $vavok->go('localization')->string('pagessets') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -977,7 +973,7 @@ if ($action == "setseven") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == "seteight") {
+if ($vavok->post_and_get('action') == "seteight") {
     echo '<h1>' . $vavok->go('localization')->string('other') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');
@@ -1012,7 +1008,7 @@ if ($action == "seteight") {
     echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
 }
 
-if ($action == 'security') {
+if ($vavok->post_and_get('action') == 'security') {
     echo '<h1>' . $vavok->go('localization')->string('security') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');

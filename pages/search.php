@@ -6,8 +6,6 @@
 
 require_once '../include/startup.php';
 
-$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
-
 if (!function_exists('cyr_to_lat')) {
 	function cyr_to_lat($str) {
 	    $latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
@@ -98,7 +96,7 @@ if (empty($vavok->post_and_get('item'))) {
 		$items += $vavok->go('db')->count_row(DB_PREFIX . "ftopics", "name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0)");
 	}
 
-	$thisPageNav = new Navigation(20, $items, $page);
+	$thisPageNav = new Navigation(20, $items, $vavok->post_and_get('page'));
 
 	$searchItems = array();
 	$page_ids = array();
@@ -191,7 +189,7 @@ if (empty($vavok->post_and_get('item'))) {
 	$resultsPage->set('allResults', $resultsPage->merge($searchItems));
 	echo $resultsPage->output();
 
-	$navigation = new Navigation(20, $items, $page, "./");
+	$navigation = new Navigation(20, $items, $vavok->post_and_get('page'), "./");
 	echo $navigation->get_navigation();
 }
 

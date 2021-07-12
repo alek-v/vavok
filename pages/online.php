@@ -32,8 +32,6 @@ if ($list != 'full' && $list != 'reg') {
     $list = 'full';
 }
 
-$page = isset($_GET['page']) ? $vavok->check($_GET['page']) : 1;
-
 if (isset($_GET['start'])) {
     $start = $vavok->check($_GET['start']);
 } 
@@ -41,7 +39,7 @@ if (isset($_GET['start'])) {
 echo $vavok->go('localization')->string('totonsite') . ': <b>' . (int)$total . '</b><br />' . $vavok->go('localization')->string('registered') . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
 
 if ($list == "full") {
-    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?list=full&'); // start navigation
+    $navigation = new Navigation($data_on_page, $total, $vavok->post_and_get('page'), 'online.php?list=full&'); // start navigation
 
     $start = $navigation->start()['start']; // starting point 
 
@@ -77,7 +75,7 @@ if ($list == "full") {
         echo '<p><img src="../images/img/reload.gif" alt=""> <b>' . $vavok->go('localization')->string('noregd') . '!</b></p>';
     }
 
-    $navigation = new Navigation($data_on_page, $total, $page, 'online.php?'); // start navigation
+    $navigation = new Navigation($data_on_page, $total, $vavok->post_and_get('page'), 'online.php?'); // start navigation
 
     $start = $navigation->start()['start']; // starting point
 

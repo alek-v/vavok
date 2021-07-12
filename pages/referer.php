@@ -12,18 +12,12 @@ $data_on_page = 10; // referere links per page
 $vavok->go('current_page')->page_title = "Referer";
 $vavok->require_header();
 
-if (empty($_GET['page']) || $_GET['page'] < 1) {
-    $page = 1;
-} else {
-    $page = $vavok->check($_GET['page']);
-}
-
 if ($vavok->get_configuration('showRefPage') == 1 || $vavok->go('users')->is_administrator()) {
     $file = $vavok->get_data_file('referer.dat');
     $file = array_reverse($file);
     $total = count($file);
 
-    $navigation = new Navigation($data_on_page, $total, $page, 'referer.php?'); // start navigation
+    $navigation = new Navigation($data_on_page, $total, $vavok->post_and_get('page'), 'referer.php?'); // start navigation
 
     $start = $navigation->start()['start']; // starting point
     $end = $navigation->start()['end']; // ending point

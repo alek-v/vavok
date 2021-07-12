@@ -2,8 +2,7 @@
 /**
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
- * Updated:   03.03.2021. 20:36:20
-*/
+ */
 
 if (isset($_GET['step'])) {
     $step = $_GET['step'];

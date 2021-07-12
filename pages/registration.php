@@ -6,25 +6,17 @@
 
 require_once '../include/startup.php';
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
-$log = isset($_POST['log']) ? $vavok->check($_POST['log']) : '';
-$pass = isset($_POST['par']) ? $vavok->check($_POST['par']) : '';
-$pass2 = isset($_POST['pars']) ? $vavok->check($_POST['pars']) : '';
-$meil = isset($_POST['meil']) ? $vavok->check($_POST['meil']) : '';
-$pagetoload = isset($_POST['ptl']) ? $vavok->check($_POST['ptl']) : '';
-$captcha = isset($_POST['g-recaptcha-response']) ? $_POST['g-recaptcha-response'] : ''; // Captcha code
-
-if ($action == 'reguser') {
-    $str1 = mb_strlen($log);
-    $str2 = mb_strlen($pass);
+if ($vavok->post_and_get('action') == 'reguser') {
+    $str1 = mb_strlen($vavok->post_and_get('log'));
+    $str2 = mb_strlen($vavok->post_and_get('par'));
 
     if ($str1 > 20 || $str2 > 20) {
         $vavok->redirect_to('registration.php?isset=biginfo');
     } elseif ($str1 < 3 || $str2 < 3) {
         $vavok->redirect_to('registration.php?isset=smallinfo');
-    } elseif (!$vavok->go('users')->validate_username($log)) {
+    } elseif (!$vavok->go('users')->validate_username($vavok->post_and_get('log'))) {
         $vavok->redirect_to('registration.php?isset=useletter');
-    } elseif ($pass !== $pass2) {
+    } elseif ($vavok->post_and_get('par') !== $vavok->post_and_get('pars')) {
         $vavok->redirect_to('registration.php?isset=nopassword');
     }
 
@@ -38,24 +30,23 @@ if ($action == 'reguser') {
     $vavok->require_header();
 
     // check email
-    $check_mail = $vavok->go('db')->count_row('vavok_about', "email='{$meil}'");
+    $check_mail = $vavok->go('db')->count_row('vavok_about', "email='{$vavok->post_and_get('meil')}'");
     if ($check_mail > 0) $check_mail = 'no';
 
     // check nick
-    $check_users = $vavok->go('db')->count_row('vavok_users', "name='{$log}'");
+    $check_users = $vavok->go('db')->count_row('vavok_users', "name='{$vavok->post_and_get('log')}'");
     if ($check_users > 0) $check_users = 'no';
 
     // check for '-'
-    $substr_log = substr_count($log, '-');
+    $substr_log = substr_count($vavok->post_and_get('log'), '-');
 
     if ($substr_log < 3) {
         if ($check_mail != 'no') {
             if ($check_users != 'no') {
-                    if ($vavok->go('users')->validate_email($meil)) {
-                        if ($vavok->recaptcha_response($captcha)['success'] == true) {
-                            $password = $vavok->check($pass);
-
-                            $mail = htmlspecialchars(stripslashes(strtolower($meil)));
+                    if ($vavok->go('users')->validate_email($vavok->post_and_get('meil'))) {
+                        if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == true) {
+                            $password = $vavok->check($vavok->post_and_get('par'));
+                            $mail = htmlspecialchars(stripslashes(strtolower($vavok->post_and_get('meil'))));
 
                             if ($vavok->get_configuration('regConfirm') == 1) {
                                 $registration_key = time() + 24 * 60 * 60;
@@ -64,7 +55,7 @@ if ($action == 'reguser') {
                             }
 
                             // register user
-                            $vavok->go('users')->register($log, $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
+                            $vavok->go('users')->register($vavok->post_and_get('log'), $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
                              
                             // Send email with registration data
                             if ($vavok->get_configuration('regConfirm') == 1) {
@@ -78,10 +69,10 @@ if ($action == 'reguser') {
                             }
 
                             $subject = $vavok->go('localization')->string('regonsite') . ' ' . $vavok->get_configuration('title');
-                            $regmail = "<p>" . $vavok->go('localization')->string('hello') . " " . $log . "!</p>
+                            $regmail = "<p>" . $vavok->go('localization')->string('hello') . " " . $vavok->post_and_get('log') . "!</p>
                             <p>" . $vavok->go('localization')->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . "</p>
                             <p>" . $vavok->go('localization')->string('emailpart2') . ":</p>
-                            <p>" . $vavok->go('localization')->string('username') . ": " . $log . "</p>
+                            <p>" . $vavok->go('localization')->string('username') . ": " . $vavok->post_and_get('log') . "</p>
                             <p>" . $needkey . "" . $vavok->go('localization')->string('emailpart3') . "</p>
                             <p>" . $vavok->go('localization')->string('emailpart4') . "</p>";
 
@@ -95,7 +86,7 @@ if ($action == 'reguser') {
                             $completed = 'successfully';
 
                             // registration successfully, show info
-                            echo '<p>' . $vavok->go('localization')->string('regoknick') . ': <b>' . $log . '</b> <br /><br /></p>';
+                            echo '<p>' . $vavok->go('localization')->string('regoknick') . ': <b>' . $vavok->post_and_get('log') . '</b> <br /><br /></p>';
 
                             if ($vavok->get_configuration('regConfirm') == 1) {
                                 /**
@@ -182,9 +173,7 @@ if ($vavok->get_configuration('openReg') == 1) {
 	} else {
 		$this_page = new PageGen('pages/registration/register.tpl');
 
-		if (!empty($_GET['ptl'])) {
-			$this_page->set('page_to_load', $vavok->check($_GET['ptl']));
-		}
+		if (!empty($vavok->post_and_get('ptl'))) $this_page->set('page_to_load', $vavok->check($_GET['ptl']));
 
 		$this_page->set('registration_info', $vavok->go('localization')->string('reginfo'));
 
@@ -201,7 +190,6 @@ if ($vavok->get_configuration('openReg') == 1) {
 
 		echo $this_page->output();
 		}
-
 } else {
 	$this_page = new PageGen('pages/registration/registration_stopped.tpl');
 

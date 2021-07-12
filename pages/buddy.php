@@ -6,56 +6,36 @@
 
 require_once '../include/startup.php';
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-}
-if (!empty($_GET['page'])) {
-    $page = $vavok->check($_GET["page"]);
-} else {
-    $page = '';
-}
-$uz = isset($_POST['uz']) ? $vavok->check($_POST['uz']) : '';
-
-if (!isset($config_kontaktlist)) {
-    $config_kontaktlist = '10';
-}
-
 if ($vavok->go('users')->is_reg()) {
-    if ($action == 'ign') {
-        $todo = $vavok->check($_GET["todo"]);
-        $who = $vavok->check($_GET["who"]); 
-        $tnick = $vavok->go('users')->getnickfromid($who);
+    if ($vavok->post_and_get('action') == 'ign') {
+        $tnick = $vavok->go('users')->getnickfromid($vavok->post_and_get('who'));
 
-        if ($todo == "add") {
-            if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $who) == 1 && !$vavok->go('users')->isbuddy($who, $vavok->go('users')->user_id)) {
-                $vavok->go('db')->insert_data('buddy', array('name' => $vavok->go('users')->user_id, 'target' => $who));
+        if ($vavok->post_and_get('todo') == 'add') {
+            if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $vavok->post_and_get('who')) == 1 && !$vavok->go('users')->isbuddy($vavok->post_and_get('who'), $vavok->go('users')->user_id)) {
+                $vavok->go('db')->insert_data('buddy', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
 
                 header ("Location: buddy.php?isset=kontakt_add");
                 exit;
             } else {
-                header ("Location: buddy.php?start=$start&isset=kontakt_noadd");
+                header ("Location: buddy.php?isset=kontakt_noadd");
                 exit;
             }
-        } elseif ($todo = "del") {
-            $vavok->go('db')->delete('buddy', "name='{$vavok->go('users')->user_id}' AND target='" . $who . "'");
+        } elseif ($vavok->post_and_get('todo') = "del") {
+            $vavok->go('db')->delete('buddy', "name='{$vavok->go('users')->user_id}' AND target='" . $vavok->post_and_get('who') . "'");
 
-            header ("Location: buddy.php?start=$start&isset=kontakt_del");
+            header ("Location: buddy.php?isset=kontakt_del");
             exit;
         }
     }
 
-    if (empty($action)) {
+    if (empty($vavok->post_and_get('action'))) {
         $vavok->go('current_page')->page_title = $vavok->go('localization')->string('contacts');
         $vavok->require_header();
-
-        if (empty($page) || $page <= 0) $page = 1;
 
         $num_items = $vavok->go('db')->count_row('buddy', "name='{$vavok->go('users')->user_id}'");
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $num_items, $page, 'buddy.php?'); // start navigation
+        $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'buddy.php?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 

@@ -8,9 +8,7 @@ require_once '../include/startup.php';
 
 if (!$vavok->go('users')->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../"); }
 
-$action = isset($_GET['action']) ? $vavok->check($_GET['action']) : '';
-
-if ($action == 'refver') {
+if ($vavok->post_and_get('action') == 'refver') {
     $vavokStableVersionURL = "http://www.vavok.net/cms/version.txt";
     $key = 'stableversion'; // key to save cache with    
 
@@ -46,7 +44,7 @@ if ($action == 'refver') {
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('admpanel');
 $vavok->require_header();
  
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
 
 	/*
 	Moderator access level or bigger
@@ -95,7 +93,6 @@ if (empty($action)) {
     */
 
     if ($vavok->go('users')->is_administrator()) {
-
         echo '<hr>';
 
         if (file_exists('forumadmin.php')) {
@@ -149,8 +146,7 @@ if (empty($action)) {
 
 }
 
-if ($action == 'clear' && $vavok->go('users')->is_administrator(101)) {
-
+if ($vavok->post_and_get('action') == 'clear' && $vavok->go('users')->is_administrator(101)) {
 	echo '<p>';
 	if (file_exists('delusers.php')) {
     	echo '<a href="delusers.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleanusers') . '</a>';
@@ -158,18 +154,15 @@ if ($action == 'clear' && $vavok->go('users')->is_administrator(101)) {
     echo '<a href="./?action=clrmlog" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleanmodlog') . '</a>';
 
 	echo '</p>';
-
 } 
 
-if ($action == "clrmlog" && $vavok->go('users')->is_administrator(101)) {
-    $sql = "DELETE FROM mlog";
-    $vavok->go('db')->query($sql);
+if ($vavok->post_and_get('action') == 'clrmlog' && $vavok->go('users')->is_administrator(101)) {
+    $vavok->go('db')->query("DELETE FROM mlog");
 
     echo '<p><img src="../images/img/open.gif" alt="" /> ' . $vavok->go('localization')->string('mlogcleaned') . '</p>';
-
 } 
 
-if ($action == "sysmng" && $vavok->go('users')->is_administrator(101)) {
+if ($vavok->post_and_get('action') == "sysmng" && $vavok->go('users')->is_administrator(101)) {
     echo '<p>';
     echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('chksystem') . '</a>';
     echo '<a href="./?action=clear" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('cleansys') . '</a>';
@@ -183,10 +176,10 @@ if ($action == "sysmng" && $vavok->go('users')->is_administrator(101)) {
     
 } 
 
-if ($action == "opttbl" && $vavok->go('users')->is_administrator(101)) {
-    $alltables = mysql_query("SHOW TABLES");
+if ($vavok->post_and_get('action') == "opttbl" && $vavok->go('users')->is_administrator(101)) {
+    $alltables = mysqli_query("SHOW TABLES");
 
-    while ($table = mysql_fetch_assoc($alltables)) {
+    while ($table = mysqli_fetch_assoc($alltables)) {
         foreach ($table as $db => $tablename) {
             $sql = "OPTIMIZE TABLE `" . $tablename . "`";
             $vavok->go('db')->query($sql);
@@ -197,7 +190,7 @@ if ($action == "opttbl" && $vavok->go('users')->is_administrator(101)) {
 }
 
 // check vavok cms version
-if ($action == 'version') {
+if ($vavok->post_and_get('action') == 'version') {
 $version = $vavok_version;
 $key = 'checkver'; // key to save cache with 
 // get cached data from file cache, also check if cached data is not old
@@ -213,12 +206,9 @@ $key = 'checkver'; // key to save cache with
     } 
 
     echo '</div>';
-
 }
 
-if (!empty($action)) {
-	echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a></p>';
-}
+if (!empty($vavok->post_and_get('action'))) echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a></p>';
 
 echo $vavok->homelink('<p>', '</p>');
 

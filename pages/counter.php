@@ -11,16 +11,10 @@ if ($vavok->get_configuration('showCounter') == 6 && !$vavok->go('users')->is_ad
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('statistics');
 $vavok->require_header();
 
-if (!empty($_GET['action'])) {
-    $action = $vavok->check($_GET["action"]);
-} else {
-    $action = '';
-}
-
 $hour = (int)date("H", time());
 $hday = date("j", time())-1;
 
-if (empty($action)) {
+if (empty($vavok->post_and_get('action'))) {
     $pcounter_guest = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user='0'");
 
     $pcounter_online = $vavok->go('db')->count_row(DB_PREFIX . 'online');
