@@ -394,13 +394,17 @@ class Page {
 		return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
 	}
 
-	// load page editor program
-	function loadPageEditor () {
+	/**
+	 * Load page editor program
+	 */
+	function loadPageEditor ()
+	{
 		// load page editor
-		$pageEditor = @file_get_contents(BASEDIR . "/include/plugins/tinymce/tinymce.php");
+		$pageEditor = @file_get_contents(HOMEDIR . 'vendor/tinymce/tinymce/tinymce.vavok.php');
 
 		// set base dir
 		$pageEditor = str_replace('{@BASEDIR}', BASEDIR, $pageEditor);
+		$pageEditor = str_replace('{@HOMEDIR}', HOMEDIR, $pageEditor);
 
 		return $pageEditor;
 	}
