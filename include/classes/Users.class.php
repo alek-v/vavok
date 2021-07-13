@@ -190,7 +190,7 @@ class Users {
 	    $this->vavok->go('db')->delete(DB_PREFIX . 'online', "user = '{$user_id}'");
 
 	    // Remove login token from database if token exists
-	    if ($this->vavok->go('db')->count_row(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->vavok->go('db')->delete(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'");
+	    if (isset($_COOKIE['cookie_login']) && $this->vavok->go('db')->count_row(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->vavok->go('db')->delete(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'");
 
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
