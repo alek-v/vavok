@@ -20,7 +20,6 @@ $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noind
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('inbox');
 $vavok->require_header();
 
-$page = isset($_GET['page']) ? $vavok->check($_GET["page"]) : '';
 $who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
 if (empty($who) && isset($_POST['who'])) $who = $vavok->go('users')->getidfromnick($vavok->check($_POST['who']));
 
@@ -29,7 +28,7 @@ if (empty($vavok->post_and_get('action'))) {
     $items_per_page = 10;
 
     // navigation
-    $navigation = new Navigation($items_per_page, $num_items, $page, 'inbox.php?');
+    $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'inbox.php?');
 	$limit_start = $navigation->start()['start']; // starting point
 
     if ($num_items > 0) {

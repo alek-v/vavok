@@ -6,20 +6,13 @@
 
 require_once '../include/startup.php';
 
-if (isset($_POST['uz'])) {
-    $uz = $vavok->check($_POST['uz']);
-} elseif (isset($_GET['uz'])) {
-    $uz = $vavok->check($_GET['uz']);
-} 
-
-if (!empty($uz)) {
-    if (is_numeric($uz)) {
-        $users_id = $uz;
-        $uz = $vavok->go('users')->getnickfromid($uz);
+if (!empty($vavok->post_and_get('uz'))) {
+    if (is_numeric($vavok->post_and_get('uz'))) {
+        $users_id = $vavok->post_and_get('uz');
+        $uz = $vavok->go('users')->getnickfromid($vavok->post_and_get('uz'));
     } else {
-        $users_id = $uz;
-        $uz = $vavok->go('users')->getidfromnick($uz);
-        $vavok->redirect_to("user.php?uz=" . $uz);
+        $users_id = $vavok->go('users')->getidfromnick($vavok->post_and_get('uz'));
+        $uz = $vavok->post_and_get('uz');
     } 
 } else { $vavok->redirect_to("../"); }
 
@@ -34,7 +27,7 @@ $show_user = $vavok->go('db')->get_data('vavok_users', "id='{$users_id}'");
 $showPage = new PageGen("pages/user-profile/user-profile.tpl");
 
 // if user doesn't exist show error page
-if ($checkIfExist < 1 || $users_id == 1) {
+if ($checkIfExist < 1) {
 	echo '<div class="user_profile">';
     echo '<p><img src="../images/img/error.gif" alt="error.gif"> ' . $vavok->go('localization')->string('usrnoexist');
     echo '</p></div>';
@@ -56,7 +49,7 @@ if ($about_user['sex'] == "N" || $about_user['sex'] == "n" || empty($about_user[
 $showPage->set('profile-nick', $vavok->go('localization')->string('profile') . ' ' . $uz);
 $showPage->set('user-online', $vavok->go('users')->user_online($uz));
 
-if ($user_profil['regche'] == "1") {
+if ($user_profil['regche'] == 1) {
     $showPage->set('regCheck', '<b><font color="#FF0000">' . $vavok->go('localization')->string('notconfirmedreg') . '!</font></b><br>');
 } else {
     $showPage->set('regCheck', '');

@@ -4,19 +4,14 @@
  * URI:       https://vavok.net
  */
 
-include_once"../include/startup.php";
+include_once '../include/startup.php';
 
-// Page name
-$pg = isset($_GET['pg']) ? $vavok->check($_GET['pg']) : '';
-
-/*
-    redirect to url_rewrite url
-    when user is redirected from http:// to https:// page
-    it redirect to non-rewriten url
-*/
-if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) {
-	$vavok->redirect_to(BASEDIR . 'page/' . $pg . '/');
-}
+/**
+ * redirect to url_rewrite url
+ * when user is redirected from http:// to https:// page
+ * it redirect to non-rewriten url
+ */
+if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) $vavok->redirect_to(BASEDIR . 'page/' . $vavok->post_and_get('pg') . '/');
 
 /* Page not found */
 if (empty($vavok->go('current_page')->page_content)) {
@@ -26,7 +21,6 @@ if (empty($vavok->go('current_page')->page_content)) {
 header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 
 $vavok->require_header();
-
 ?>
 
 <p>Error 404 - Page not found<br /></p>

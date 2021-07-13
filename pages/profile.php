@@ -99,9 +99,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 
 	case 'delete_profile':
 
-		$confirmed = isset($_GET['confirmed']) ? $vavok->check($_GET['confirmed']) : '';
-
-		if ($confirmed == 'yes') {
+		if ($vavok->post_and_get('confirmed') == 'yes') {
 			$delete_id = $vavok->go('users')->user_id;
 
 			$vavok->go('users')->logout($delete_id);

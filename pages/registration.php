@@ -173,17 +173,13 @@ if ($vavok->get_configuration('openReg') == 1) {
 	} else {
 		$this_page = new PageGen('pages/registration/register.tpl');
 
-		if (!empty($vavok->post_and_get('ptl'))) $this_page->set('page_to_load', $vavok->check($_GET['ptl']));
+		if (!empty($vavok->post_and_get('ptl'))) $this_page->set('page_to_load', $vavok->check($vavok->post_and_get('ptl')));
 
 		$this_page->set('registration_info', $vavok->go('localization')->string('reginfo'));
 
-		if ($vavok->get_configuration('regConfirm') == 1) {
-			$this_page->set('registration_key_info', $vavok->go('localization')->string('keyinfo'));
-		}
+		if ($vavok->get_configuration('regConfirm') == 1) $this_page->set('registration_key_info', $vavok->go('localization')->string('keyinfo'));
 
-		if ($vavok->get_configuration('quarantine') > 0) {
-			$this_page->set('quarantine_info', $vavok->go('localization')->string('quarantine1') . ' ' . round($vavok->get_configuration('quarantine') / 3600) . ' ' . $vavok->go('localization')->string('quarantine2'));
-		}
+		if ($vavok->get_configuration('quarantine') > 0) $this_page->set('quarantine_info', $vavok->go('localization')->string('quarantine1') . ' ' . round($vavok->get_configuration('quarantine') / 3600) . ' ' . $vavok->go('localization')->string('quarantine2'));
 
         // Show reCAPTCHA
         $this_page->set('security_code', '<div class="g-recaptcha" data-sitekey="' . $vavok->get_configuration('recaptcha_sitekey') . '"></div>');
@@ -192,9 +188,7 @@ if ($vavok->get_configuration('openReg') == 1) {
 		}
 } else {
 	$this_page = new PageGen('pages/registration/registration_stopped.tpl');
-
 	$this_page->set('message', $vavok->go('localization')->string('regstoped'));
-
 	echo $this_page->output();
 }
 

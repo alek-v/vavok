@@ -176,13 +176,11 @@ if ($vavok->post_and_get('action') == "addnew") {
 
     // page language
     if (isset($_POST['lang']) && !empty($_POST['lang'])) {
-
         $pagelang = $vavok->check($_POST['lang']);
 
         $pagelang_file = '!.' . $pagelang . '!';
     } else {
         $pagelang = '';
-
         $pagelang_file = '';
     }
 
@@ -234,13 +232,10 @@ if ($vavok->post_and_get('action') == "addnew") {
     } else {
         $vavok->redirect_to("files.php?action=new&isset=mp_noyesfiles");
     }
-
 }
 
-if ($vavok->post_and_get('action') == "del") {
-    if (!$vavok->go('users')->check_permissions('pageedit', 'del') && !$vavok->go('users')->is_administrator()) {
-        $vavok->redirect_to("index.php?isset=ap_noaccess");
-    }
+if ($vavok->post_and_get('action') == 'del') {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'del') && !$vavok->go('users')->is_administrator()) $vavok->redirect_to("index.php?isset=ap_noaccess");
 
     // delete page
     $page_editor->delete($page_id);
@@ -249,9 +244,8 @@ if ($vavok->post_and_get('action') == "del") {
 }
 
 // publish page; page will be avaliable for visitors
-if ($vavok->post_and_get('action') == "publish") {
+if ($vavok->post_and_get('action') == 'publish') {
     if (!empty($page_id)) {
-
         if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('users')->is_administrator()) {
             header("Location: index.php?isset=ap_noaccess");
             exit;

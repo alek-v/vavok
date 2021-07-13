@@ -2,16 +2,14 @@
 
 require_once '../include/startup.php';
 
-$token = isset($_GET['token']) ? $vavok->check($_GET['token']) : '';
-
 /**
  * Update profile if token exist
  */
-if ($vavok->go('db')->count_row(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$token}'") > 0) {
+if ($vavok->go('db')->count_row(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$vavok->post_and_get('token')}'") > 0) {
 	/**
 	 * Get token data
 	 */
-	$data = $vavok->go('db')->get_data(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$token}'");
+	$data = $vavok->go('db')->get_data(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$vavok->post_and_get('token')}'");
 
 	/**
 	 * Update email
@@ -21,7 +19,7 @@ if ($vavok->go('db')->count_row(DB_PREFIX . 'tokens', "type = 'email' AND token 
 	/**
 	 * Remove token
 	 */
-	$vavok->go('db')->delete(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$token}'");
+	$vavok->go('db')->delete(DB_PREFIX . 'tokens', "type = 'email' AND token = '{$vavok->post_and_get('token')}'");
 
 	$vavok->redirect_to(HOMEDIR . "pages/profile.php?isset=editprofile");
 } else {

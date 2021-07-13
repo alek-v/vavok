@@ -14,9 +14,7 @@ if (!defined('BASEDIR')) {
 
 require_once BASEDIR . 'include/startup.php';
 
-if (isset($_GET['error'])) { $error = $vavok->check($_GET['error']); } 
-
-if ($error == '404') { header("HTTP/1.0 404 Not Found"); }
+if ($vavok->post_and_get('error') == '404') { header("HTTP/1.0 404 Not Found"); }
 
 $vavok->go('current_page')->page_title = 'Error - Ooops';
 
@@ -37,32 +35,32 @@ $write_data = $phpself . $request_uri . ':|:' . time() . ':|:' . $vavok->go('use
 $error_number_info = '';
 $additional_error_info = '';
 
-if ($error == '401') {
+if ($vavok->post_and_get('error') == '401') {
     $error_number_info = $vavok->go('localization')->string('err401');
     $logdat = "datalog/error401.dat";
     $write = ':|:Error 401:|:' . $write_data;
-} elseif ($error == '402') {
+} elseif ($vavok->post_and_get('error') == '402') {
     $error_number_info =  $vavok->go('localization')->string('err402');
     $logdat = "datalog/error402.dat";
     $write = ':|:Error 402:|:' . $write_data;
-} elseif ($error == '403') {
+} elseif ($vavok->post_and_get('error') == '403') {
     $error_number_info = $vavok->go('localization')->string('err403');
     $write = ':|:Error 403:|:' . $write_data;
     $logdat = "datalog/error403.dat";
-} elseif ($error == '404') {
+} elseif ($vavok->post_and_get('error') == '404') {
     $error_number_info = $vavok->go('localization')->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri;
     $additional_error_info = $vavok->go('localization')->string('filenotfound');
     $write = ':|:Error 404:|:' . $write_data;
     $logdat = 'datalog/error404.dat';
-} elseif ($error == '406') {
+} elseif ($vavok->post_and_get('error') == '406') {
     $error_number_info = $vavok->go('localization')->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $phpself . $request_uri . ' ' . $vavok->go('localization')->string('notfonserver');
     $write = ':|:406 - Not acceptable:|:' . $write_data;
     $logdat = "datalog/error406.dat";
-} elseif ($error == '500') {
+} elseif ($vavok->post_and_get('error') == '500') {
     $error_number_info = $vavok->go('localization')->string('err500');
     $logdat = "datalog/error500.dat";
     $write = ':|:500 - Internal server error:|:' . $write_data;
-} elseif ($error == '502') {
+} elseif ($vavok->post_and_get('error') == '502') {
     $error_number_info = $vavok->go('localization')->string('err502');
     $logdat = "datalog/error502.dat";
     $write = ':|:Error 502:|:' . $write_data;

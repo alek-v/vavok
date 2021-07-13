@@ -8,7 +8,7 @@ require_once '../include/startup.php';
 if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../pages/login.php");
 
 // if there is last message id set
-if (isset($vavok->post_and_get('lastid')) && !empty($vavok->post_and_get('lastid'))) {
+if (!empty($vavok->post_and_get('lastid'))) {
 	$sql = "SELECT * FROM inbox WHERE id > {$vavok->post_and_get('lastid')} AND ((byuid = {$vavok->post_and_get('who')} OR touid = {$vavok->go('users')->user_id}) or (byuid = {$vavok->go('users')->user_id} OR touid = {$vavok->post_and_get('who')})) ORDER BY id DESC LIMIT 1";
 } else {
 	// no last id, load unread message
