@@ -104,6 +104,8 @@ class Mailer {
 			$mail->setFrom($mail_username, $name);
 		}
 
+		// Set charset
+		$mail->CharSet = 'utf-8';
 		//Set who the message is to be sent to
 		$mail->addAddress($usermail);
 		//Set the subject line
