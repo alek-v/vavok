@@ -20,7 +20,7 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('pro
 $vavok->require_header();
 
 $checkIfExist = $vavok->go('db')->count_row('vavok_users', "id='{$users_id}'");
-$about_user = $vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site');
+$about_user = $vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'sex, photo, city, about, birthday, site, rname, surname');
 $user_profil = $vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'regche, bantime, bandesc, perstat, forummes, chat, commadd, subscri, regdate, lastvst');
 $show_user = $vavok->go('db')->get_data('vavok_users', "id='{$users_id}'");
 
@@ -55,7 +55,7 @@ if ($user_profil['regche'] == 1) {
     $showPage->set('regCheck', '');
 }
 
-if ($show_user['banned'] == "1" && $user_profil['bantime'] > time()) {
+if ($show_user['banned'] == 1 && $user_profil['bantime'] > time()) {
     $profileBanned = new PageGen("pages/user-profile/banned.tpl");
     $profileBanned->set('banned', $vavok->go('localization')->string('userbanned') . '!');
     $time_ban = round($user_profil['bantime'] - time());
@@ -76,9 +76,12 @@ if (!empty($user_profil['perstat'])) {
     $showPage->set('personalStatus', '');
 }
 
-$showPage->set('sex', $vavok->go('localization')->string('sex') . '');
+$showPage->set('sex', $vavok->go('localization')->string('sex'));
 
-if ($about_user['sex'] == "N" or $about_user['sex'] == 'n' or $about_user['sex'] == '') {
+if (!empty($about_user['rname'])) $showPage->set('firstname', $about_user['rname']);
+if (!empty($about_user['surname'])) $showPage->set('lastname', $about_user['surname']);
+
+if ($about_user['sex'] == "N" or $about_user['sex'] == 'n' or empty($about_user['sex'])) {
     $showPage->set('usersSex', $vavok->go('localization')->string('notchosen'));
 } elseif ($about_user['sex'] == "M" or $about_user['sex'] == "m") {
     $showPage->set('usersSex', $vavok->go('localization')->string('male'));
@@ -114,8 +117,8 @@ if (!empty($show_user['browsers'])) {
 }
 
 $user_skin = $show_user['skin'];
-$user_skin = str_replace("web_", "", $user_skin);
-$user_skin = str_replace("wap_", "", $user_skin);
+$user_skin = str_replace("web_", '', $user_skin);
+$user_skin = str_replace("wap_", '', $user_skin);
 $user_skin = ucfirst($user_skin);
 $showPage->set('siteSkin', $vavok->go('localization')->string('skin') . ': ' . $vavok->check($user_skin) . '<br>');
 
@@ -184,7 +187,6 @@ if ($uz != $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) && $
 }
 
 if (!empty($about_user['photo'])) {
-
     $ext = strtolower(substr($about_user['photo'], strrpos($about_user['photo'], '.') + 1));
 
     if ($users_id != $vavok->go('users')->user_id) {
@@ -192,7 +194,6 @@ if (!empty($about_user['photo'])) {
     } else {
         $showPage->set('userPhoto', '<a href="../pages/photo.php"><img src="../' . $about_user['photo'] . '" alt="" /></a>');
     }
-
 }  else { // update
     $showPage->set('userPhoto', '');
 }

@@ -27,7 +27,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
 
     // user is logging in with email
     if ($vavok->go('users')->validate_email($vavok->post_and_get('log'))) {
-        $userx_about = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$vavok->post_and_get('log')}'", 'uid');
+        $userx_about = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='" . $vavok->post_and_get('log') . "'", 'uid');
         $userx_id = $userx_about['uid'];
     } else {
         // user is logging in with username
@@ -38,7 +38,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
     $user_profil = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$userx_id}'", 'regche');
 
     // compare sent data and data from database
-    if (isset($show_userx['name']) && $vavok->go('users')->password_check($vavok->post_and_get('pass'), $show_userx['pass']) && $vavok->post_and_get('log') == $show_userx['name']) {
+    if (isset($show_userx['pass']) && $vavok->go('users')->password_check($vavok->post_and_get('pass'), $show_userx['pass'])) {
         // user want to remember login
         if ($vavok->post_and_get('cookietrue') == 1) {
             // Encrypt data to save in cookie
@@ -77,13 +77,11 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
         // update data in profile
         $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
 
-        if ($user_profil['regche'] == 1) {
-            $vavok->redirect_to(HOMEDIR . "pages/key.php?log=$vavok->post_and_get('log')");
-        }
+        // Redirect user to confirm registration
+        if ($user_profil['regche'] == 1) $vavok->redirect_to(HOMEDIR . "pages/key.php?log=" . $vavok->post_and_get('log'));
 
-        if ($show_userx['banned'] == 1) {
-            $vavok->redirect_to(HOMEDIR . "pages/ban.php?log=$vavok->post_and_get('log')");
-        }
+        // Redirect user if he is banned
+        if ($show_userx['banned'] == 1) $vavok->redirect_to(HOMEDIR . "pages/ban.php?log=" . $vavok->post_and_get('log'));
 
         $vavok->redirect_to(HOMEDIR . $vavok->post_and_get('ptl'));
     }
@@ -98,5 +96,6 @@ if ($vavok->go('users')->is_reg() && $vavok->post_and_get('action') == 'exit') {
     $vavok->redirect_to('../?isset=exit');
 }
 
+// Wrong login data
 $vavok->redirect_to('../?isset=inputoff');
 ?>

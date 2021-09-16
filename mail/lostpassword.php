@@ -8,15 +8,13 @@ require_once '../include/startup.php';
 
 // Page settings
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('lostpass');
-
 $vavok->go('current_page')->append_head_tags('<link rel="stylesheet" href="../themes/templates/pages/registration/lost_password.css" />');
-
 // Add data to page <head> to show Google reCAPTCHA
 $vavok->go('current_page')->append_head_tags('<script src="https://www.google.com/recaptcha/api.js" async defer></script>');
 
 $vavok->require_header();
 
-if (empty($vavok->post_and_get('page')) || $vavok->post_and_get('page') == 'index') {
+if (empty($vavok->post_and_get('action'))) {
 	$this_page = new PageGen('pages/registration/lost_password.tpl');
 
     // Show reCAPTCHA
@@ -26,7 +24,7 @@ if (empty($vavok->post_and_get('page')) || $vavok->post_and_get('page') == 'inde
 }
 
 // Send mail
-if ($vavok->post_and_get('page') == 'send') {
+if ($vavok->post_and_get('action') == 'send') {
     if (!empty($vavok->post_and_get('logus')) && !empty($vavok->post_and_get('mailsus'))) {
         $userx_id = $vavok->go('users')->getidfromnick($vavok->post_and_get('logus'));
         $show_userx = $vavok->go('db')->get_data('vavok_about', "uid='" . $userx_id . "'", 'email');
