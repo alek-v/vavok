@@ -18,18 +18,18 @@ switch ($vavok->post_and_get('action')) {
 		// check birthday
 		// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
 
-		$my_name = $vavok->no_br($vavok->check($_POST['my_name']));
-		$surname = $vavok->no_br($vavok->check($_POST['surname']));
-		$city = $vavok->no_br($vavok->check($_POST['otkel']));
-		$street = $vavok->no_br($vavok->check($_POST['street']));
-		$zip = $vavok->no_br($vavok->check($_POST['zip']));
-		$infa = $vavok->no_br($vavok->check($_POST['infa']));
-		$email = htmlspecialchars(strtolower($_POST['email']));
-		$site = $vavok->no_br($vavok->check($_POST['site']));
+		$my_name = $vavok->no_br($vavok->check($vavok->post_and_get('my_name')));
+		$surname = $vavok->no_br($vavok->check($vavok->post_and_get('surname')));
+		$city = $vavok->no_br($vavok->check($vavok->post_and_get('otkel')));
+		$street = $vavok->no_br($vavok->check($vavok->post_and_get('street')));
+		$zip = $vavok->no_br($vavok->check($vavok->post_and_get('zip')));
+		$infa = $vavok->no_br($vavok->check($vavok->post_and_get('infa')));
+		$email = htmlspecialchars(strtolower($vavok->post_and_get('email')));
+		$site = $vavok->no_br($vavok->check($vavok->post_and_get('site')));
 		$browser = $vavok->no_br($vavok->check($vavok->go('users')->user_browser()));
 		$ip = $vavok->no_br($vavok->check($vavok->go('users')->find_ip()));
-		$sex = $vavok->no_br($vavok->check($_POST['pol']));
-		$happy = $vavok->no_br($vavok->check($_POST['happy']));
+		$sex = $vavok->no_br($vavok->check($vavok->post_and_get('pol')));
+		$happy = $vavok->no_br($vavok->check($vavok->post_and_get('happy')));
 
 		$fields = array();
 		$fields[] = 'city';
@@ -139,8 +139,6 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 		echo '<div class="row">';
 
 		$about_user = $vavok->go('db')->get_data('vavok_about', "uid='{$vavok->go('users')->user_id}'");
-		$user_profil = $vavok->go('db')->get_data('vavok_profil', "uid='{$vavok->go('users')->user_id}'", 'subscri');
-		$show_user = $vavok->go('db')->get_data('vavok_users', "id='{$vavok->go('users')->user_id}'", 'skin, banned, browsers');
 
 		echo '<div class="col-sm">';
 
@@ -160,7 +158,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $my_name->set('label_value', $vavok->go('localization')->string('name'));
 			    $my_name->set('input_id', 'my_name');
 			    $my_name->set('input_name', 'my_name');
-			    $my_name->set('input_value', $about_user['rname']);
+			    $my_name->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'firstname'));
 
 			    /**
 			     * Last name
@@ -170,7 +168,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $surname->set('label_value', $vavok->go('localization')->string('surname'));
 			    $surname->set('input_id', 'surname');
 			    $surname->set('input_name', 'surname');
-			    $surname->set('input_value', $about_user['surname']);
+			    $surname->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'lastname'));
 
 			    /**
 			     * City
@@ -180,7 +178,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $otkel->set('label_value', $vavok->go('localization')->string('city'));
 			    $otkel->set('input_id', 'otkel');
 			    $otkel->set('input_name', 'otkel');
-			    $otkel->set('input_value', $about_user['city']);
+			    $otkel->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'city'));
 
 			    /**
 			     * Street
@@ -190,7 +188,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $street->set('label_value', $vavok->go('localization')->string('street'));
 			    $street->set('input_id', 'street');
 			    $street->set('input_name', 'street');
-			    $street->set('input_value', $about_user['address']);
+			    $street->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'address'));
 
 			    /**
 			     * Postal code
@@ -200,7 +198,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $zip->set('label_value', $vavok->go('localization')->string('postal'));
 			    $zip->set('input_id', 'zip');
 			    $zip->set('input_name', 'zip');
-			    $zip->set('input_value', $about_user['zip']);
+			    $zip->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'zip'));
 
 			    /**
 			     * About user
@@ -210,7 +208,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $infa->set('label_value', $vavok->go('localization')->string('aboutyou'));
 			    $infa->set('input_id', 'infa');
 			    $infa->set('input_name', 'infa');
-			    $infa->set('input_value', $about_user['about']);
+			    $infa->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'about'));
 
 			    /**
 			     * Email
@@ -220,7 +218,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $email->set('label_value', $vavok->go('localization')->string('yemail'));
 			    $email->set('input_id', 'email');
 			    $email->set('input_name', 'email');
-			    $email->set('input_value', $about_user['email']);
+			    $email->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'email'));
 
 			    /**
 			     * Site
@@ -230,7 +228,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $site->set('label_value', $vavok->go('localization')->string('site'));
 			    $site->set('input_id', 'site');
 			    $site->set('input_name', 'site');
-			    $site->set('input_value', $about_user['site']);
+			    $site->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'site'));
 
 			    /**
 			     * Site
@@ -240,7 +238,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $birthday->set('label_value', $vavok->go('localization')->string('birthday') . ' (dd.mm.yyyy)');
 			    $birthday->set('input_id', 'happy');
 			    $birthday->set('input_name', 'happy');
-			    $birthday->set('input_value', $about_user['birthday']);
+			    $birthday->set('input_value', $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'birthday'));
 
 			    /**
 			     * Gender
@@ -251,7 +249,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $gender_m->set('input_id', 'pol');
 			    $gender_m->set('input_name', 'pol');
 			    $gender_m->set('input_value', 'm');
-			    if ($about_user['sex'] == 'm') {
+			    if ($vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'gender') == 'm') {
 			        $gender_m->set('input_status', 'checked');
 			    }
 
@@ -261,7 +259,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $gender_f->set('input_id', 'pol');
 			    $gender_f->set('input_name', 'pol');
 			    $gender_f->set('input_value', 'z');
-			    if ($about_user['sex'] == 'z') {
+			    if ($vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'gender') == 'z') {
 			        $gender_f->set('input_status', 'checked');
 			    }
 
@@ -320,8 +318,8 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 
 		echo '<div class="col-sm">';
 		    echo '<div class="photo">';
-		    if (!empty($about_user['photo'])) {
-		        echo '<img src="../' . $about_user['photo'] . '" alt=""><br /> ';
+		    if (!empty($vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'photo'))) {
+		        echo '<img src="../' . $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'photo') . '" alt="User\'s photo" /><br /> ';
 		        echo $vavok->sitelink('photo.php', 'Change photo') . '<br />';
 				echo $vavok->sitelink('photo.php?action=remove', 'Remove photo'); // update lang
 		    } else {
@@ -335,8 +333,6 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 		echo $vavok->homelink('<p>', '</p>');
 
 		$vavok->require_footer();
-
-		break;
 }
 
 ?>

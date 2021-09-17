@@ -521,20 +521,105 @@ class Users {
 	    return $rage;
 	}
 
-	// Get informations about user from database
+	/**
+	 * Get informations about user
+	 * 
+	 * @param $users_id ID of user
+	 * @param $info Data that method need to return
+	 * @return string|bool
+	 */
 	public function get_user_info($users_id, $info) {
+	    switch ($info) {
+	    	case 'email':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email')['email'];
+	    		break;
+	    	
+	    	case 'full_name':
+		    	$uinfo = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname, surname');
+		    	$full_name = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
+		    	return $full_name;
+	    		break;
 
-	    if ($info == 'email') {
-	        return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email')['email'];
-	    } elseif ($info == 'full_name') {
-	    	$uinfo = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname, surname');
+	    	case 'firstname':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname')['rname'];
+	    		break;
 
-	    	$full_name = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
+	    	case 'lastname':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'surname')['surname'];
+	    		break;
 
-	    	return $full_name;
-	    } elseif ('language') {
-	    	return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang')['lang'];
-	    } else { return false; }
+	    	case 'city':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'city')['city'];
+	    		break;
+
+	    	case 'address':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'address')['address'];
+	    		break;
+
+	    	case 'zip':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'zip')['zip'];
+	    		break;
+
+	    	case 'about':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'about')['about'];
+	    		break;
+
+	    	case 'site':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'site')['site'];
+	    		break;
+
+	    	case 'birthday':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'birthday')['birthday'];
+	    		break;
+
+	    	case 'gender':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'sex')['sex'];
+	    		break;
+
+	    	case 'photo':
+	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'photo')['photo'];
+	    		break;
+
+	    	case 'language':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang')['lang'];
+    			break;
+
+	    	case 'banned':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'banned')['banned'];
+    			break;
+
+	    	case 'password':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'pass')['pass'];
+    			break;
+
+	    	case 'perm':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'perm')['perm'];
+    			break;
+
+	    	case 'name':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name')['name'];
+    			break;
+
+	    	case 'bantime':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime')['bantime'];
+    			break;
+
+	    	case 'bandesc':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bandesc')['bandesc'];
+    			break;
+
+	    	case 'allban':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'allban')['allban'];
+    			break;
+
+	    	case 'regche':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regche')['regche'];
+    			break;
+
+	    	default:
+	    		return false;
+	    		break;
+	    }
 	}
 
 	// User's language

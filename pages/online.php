@@ -32,13 +32,9 @@ if ($list != 'full' && $list != 'reg') {
     $list = 'full';
 }
 
-if (isset($_GET['start'])) {
-    $start = $vavok->check($_GET['start']);
-} 
-
 echo $vavok->go('localization')->string('totonsite') . ': <b>' . (int)$total . '</b><br />' . $vavok->go('localization')->string('registered') . ':  <b>' . (int)$totalreg . '</b><br /><hr>';
 
-if ($list == "full") {
+if ($list == 'full') {
     $navigation = new Navigation($data_on_page, $total, $vavok->post_and_get('page'), 'online.php?list=full&'); // start navigation
 
     $start = $navigation->start()['start']; // starting point 

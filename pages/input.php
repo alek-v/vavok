@@ -34,11 +34,8 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
         $userx_id = $vavok->go('users')->getidfromnick($vavok->post_and_get('log'));
     }
 
-    $show_userx = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$userx_id}'", 'name, pass, banned, perm');
-    $user_profil = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$userx_id}'", 'regche');
-
     // compare sent data and data from database
-    if (isset($show_userx['pass']) && $vavok->go('users')->password_check($vavok->post_and_get('pass'), $show_userx['pass'])) {
+    if (!empty($vavok->go('users')->get_user_info($userx_id, 'password')) && $vavok->go('users')->password_check($vavok->post_and_get('pass'), $vavok->go('users')->get_user_info($userx_id, 'password'))) {
         // user want to remember login
         if ($vavok->post_and_get('cookietrue') == 1) {
             // Encrypt data to save in cookie
@@ -64,7 +61,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
         }
 
         $_SESSION['log'] = $vavok->go('users')->getnickfromid($userx_id);
-        $_SESSION['permissions'] = $show_userx['perm'];
+        $_SESSION['permissions'] = $vavok->go('users')->get_user_info($userx_id, 'perm');
         $_SESSION['uid'] = $userx_id;
 
         unset($_SESSION['lang']); // use language settings from profile
@@ -78,10 +75,10 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
         $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
 
         // Redirect user to confirm registration
-        if ($user_profil['regche'] == 1) $vavok->redirect_to(HOMEDIR . "pages/key.php?log=" . $vavok->post_and_get('log'));
+        if ($vavok->go('users')->get_user_info($userx_id, 'regche') == 1) $vavok->redirect_to(HOMEDIR . "pages/key.php?log=" . $vavok->post_and_get('log'));
 
         // Redirect user if he is banned
-        if ($show_userx['banned'] == 1) $vavok->redirect_to(HOMEDIR . "pages/ban.php?log=" . $vavok->post_and_get('log'));
+        if ($vavok->go('users')->get_user_info($userx_id, 'banned') == 1) $vavok->redirect_to(HOMEDIR . "pages/ban.php?log=" . $vavok->post_and_get('log'));
 
         $vavok->redirect_to(HOMEDIR . $vavok->post_and_get('ptl'));
     }
