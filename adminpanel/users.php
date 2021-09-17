@@ -272,7 +272,7 @@ if ($vavok->post_and_get('action') == "upgrade") {
                             'uid' => $users_id
                         );
                         // Insert data to database
-                        $vavok->go('db')->insert_data('specperm', $values);
+                        $vavok->go('db')->insert(DB_PREFIX . 'specperm', $values);
 
                     }
 

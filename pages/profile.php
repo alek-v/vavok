@@ -79,7 +79,7 @@ switch ($vavok->post_and_get('action')) {
 				'expiration_time' => $new_time
 			);
 
-			$vavok->go('db')->insert_data(DB_PREFIX . 'tokens', $data);
+			$vavok->go('db')->insert(DB_PREFIX . 'tokens', $data);
 
 			/**
 			 * Add email to the queue

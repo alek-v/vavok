@@ -152,7 +152,7 @@ class Mailer {
 			'priority' => $priority
 		);
 
-		$this->vavok->go('db')->insert_data(DB_PREFIX . 'email_queue', $data);
+		$this->vavok->go('db')->insert(DB_PREFIX . 'email_queue', $data);
 	}
 
 	// get subscription options

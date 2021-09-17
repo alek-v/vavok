@@ -241,7 +241,7 @@ class Users {
 	        'datetime' =>  date("Y-m-d H:i:s"),
 	        'username' => $username
 	        );
-	        $this->vavok->go('db')->insert_data(DB_PREFIX . 'login_attempts', $values);
+	        $this->vavok->go('db')->insert(DB_PREFIX . 'login_attempts', $values);
 	        
 	        // Finally we count the number of recent attempts from this ip address  
 	        $attempts = $this->vavok->go('db')->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
@@ -267,13 +267,13 @@ class Users {
 	        'newmsg' => 0,
 	        'lang' => $this->vavok->get_configuration('siteDefaultLang')
 	    );
-	    $this->vavok->go('db')->insert_data(DB_PREFIX . 'vavok_users', $values);
+	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_users', $values);
 
 	    $user_id = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "name='{$name}'", 'id')['id'];
 
-	    $this->vavok->go('db')->insert_data(DB_PREFIX . 'vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
-	    $this->vavok->go('db')->insert_data(DB_PREFIX . 'vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
-	    $this->vavok->go('db')->insert_data(DB_PREFIX . 'notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
+	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
+	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
+	    $this->vavok->go('db')->insert(DB_PREFIX . 'notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
 	    // send private message
 	    $msg = $this->vavok->go('localization')->string('autopmreg');
@@ -402,13 +402,13 @@ class Users {
 
 		$time = time();
 
-        $this->vavok->go('db')->insert_data(DB_PREFIX . 'inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
+        $this->vavok->go('db')->insert(DB_PREFIX . 'inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
         $user_profile = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$who}'", 'lastvst');
         $last_notif = $this->vavok->go('db')->get_data(DB_PREFIX . 'notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
-            $this->vavok->go('db')->insert_data(DB_PREFIX . 'notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
+            $this->vavok->go('db')->insert(DB_PREFIX . 'notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
         } 
         $notif_expired = $last_notif['lstinb'] + 864000;
 
@@ -442,7 +442,7 @@ class Users {
 	 	'timesent' => time()
 		);
 
-		$this->vavok->go('db')->insert_data(DB_PREFIX . 'inbox', $values);
+		$this->vavok->go('db')->insert(DB_PREFIX . 'inbox', $values);
 	}
 
 	/**

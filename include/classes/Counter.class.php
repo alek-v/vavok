@@ -74,7 +74,7 @@ class Counter {
                     'usr_chck' => $xmatch,
                     'bot' => $this->vavok->detect_bot()
                     );
-                    $this->vavok->go('db')->insert_data(DB_PREFIX . 'online', $values);
+                    $this->vavok->go('db')->insert(DB_PREFIX . 'online', $values);
                     unset($values);
                 } 
             } 
@@ -87,7 +87,7 @@ class Counter {
             'usr_chck' => $xmatch,
             'bot' => $this->vavok->detect_bot()
             );
-            $this->vavok->go('db')->insert_data(DB_PREFIX . 'online', $values);
+            $this->vavok->go('db')->insert(DB_PREFIX . 'online', $values);
             unset($values);
         } 
 

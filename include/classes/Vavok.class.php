@@ -13,7 +13,7 @@ class Vavok {
 		 * Error reporting
 		 */
 		error_reporting(E_ALL);
-		ini_set('display_errors', '1');
+		ini_set('display_errors', 0);
 
 		/**
 		 * Default time zone
@@ -38,18 +38,22 @@ class Vavok {
 		        $pathindex .= '../';
 		    }
 
-		    define("HOMEDIR", $pathindex);
+		    define('HOMEDIR', $pathindex);
 		}
 
 		// Define constants
-		$enviroment = file(BASEDIR . '.env');
+		if (file_exists(BASEDIR . '.env')) {
+			$enviroment = file(BASEDIR . '.env');
 
-		for ($i=0; $i < count($enviroment); $i++) {
-		    if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
+			for ($i=0; $i < count($enviroment); $i++) {
+			    if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
 
-		    if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
+			    // Get value
+			    if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
 
-		    if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
+			    // Get and define constant name
+			    if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
+			}
 		}
 	}
 

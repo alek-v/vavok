@@ -86,13 +86,13 @@ if ($act == "savenew") {
             'tname' => $msg,
             'file' => $tpage
         );
-        $vavok->go('db')->insert_data(DB_PREFIX . 'pages', $values);
+        $vavok->go('db')->insert(DB_PREFIX . 'pages', $values);
 
         $PBPage = false;
     } else {
         $fields = array('tname', 'headt');
         $values = array($msg, $headData);
-        $vavok->go('db')->insert_data(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
+        $vavok->go('db')->insert(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
 
         $PBPage = true;
     } 

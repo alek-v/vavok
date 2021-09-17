@@ -40,7 +40,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	    if (empty($result)) {
 	        $randkey = $vavok->generate_password();
 	        
-	        $vavok->go('db')->insert_data(DB_PREFIX . 'subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $email, 'user_pass' => $randkey));
+	        $vavok->go('db')->insert(DB_PREFIX . 'subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $email, 'user_pass' => $randkey));
 
 	        $result = 'ok'; // sucessfully subscribed to site news!
 	        $subnewss = 1;
@@ -101,7 +101,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	if ($check_inb > 0) {
 	    $vavok->go('db')->update(DB_PREFIX . 'notif', 'active', $inbox_notification, "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
 	} else {
-		$vavok->go('db')->insert_data(DB_PREFIX . 'notif', array('active' => $inbox_notification, 'uid' => $vavok->go('users')->user_id, 'type' => 'inbox'));
+		$vavok->go('db')->insert(DB_PREFIX . 'notif', array('active' => $inbox_notification, 'uid' => $vavok->go('users')->user_id, 'type' => 'inbox'));
 	}
 
 	// redirect

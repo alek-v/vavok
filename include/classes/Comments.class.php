@@ -22,7 +22,7 @@ class Comments {
 		$values = array('uid' => $this->user_id, 'comment' => $content, 'pid' => $pid, 'date' => date('Y-m-d H:i:s'));
 
 		// Insert data to database
-		$this->vavok->go('db')->insert_data(DB_PREFIX . 'comments', $values);
+		$this->vavok->go('db')->insert(DB_PREFIX . 'comments', $values);
 
 	}
 

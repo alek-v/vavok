@@ -77,7 +77,7 @@ class Page {
 
 	// insert new page
 	function insert($values) {
-		$this->vavok->go('db')->insert_data($this->table_prefix . 'pages', $values);
+		$this->vavok->go('db')->insert($this->table_prefix . 'pages', $values);
 	}
 
 	// delete page
@@ -110,7 +110,7 @@ class Page {
 				'page_id' => $id,
 				'tag_name' => $value
 			);
-			$this->vavok->go('db')->insert_data($this->table_prefix . 'tags', $values);
+			$this->vavok->go('db')->insert($this->table_prefix . 'tags', $values);
 		}
 	}
 
