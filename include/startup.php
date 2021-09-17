@@ -5,7 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '1.5.12.b');
+define('VERSION', '1.5.13');
 
 /**
  * Root dir for including system files
