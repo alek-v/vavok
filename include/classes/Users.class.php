@@ -652,7 +652,7 @@ class Users {
 	// User's language
 	public function get_user_language() {
 		if ($this->is_reg()) {
-			return $this->get_user_info($this->user_id, 'language');
+			return $this->user_info('language', $this->user_id);
 		} else {
 			// Use language from session if exists
 			if (!empty($_SESSION['lang'])) { return $_SESSION['lang']; }
