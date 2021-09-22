@@ -22,7 +22,7 @@ switch ($vavok->post_and_get('pg')) {
 
 		// Author
 		// Author link
-		$author_full_name = $vavok->go('users')->get_user_info($vavok->go('current_page')->page_author, 'full_name');
+		$author_full_name = $vavok->go('users')->user_info('full_name', $vavok->go('current_page')->page_author);
 		$author_name = !empty($author_full_name) ? $author_full_name : $vavok->go('users')->getnickfromid($vavok->go('current_page')->page_author);
 
 		$author_link = '<a href="' . HOMEDIR . 'pages/user.php?uz=' . $vavok->go('current_page')->page_author . '">' . $author_name . '</a>';

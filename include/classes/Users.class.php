@@ -528,7 +528,10 @@ class Users {
 	 * @param $info Data that method need to return
 	 * @return string|bool
 	 */
-	public function get_user_info($users_id, $info) {
+	public function user_info($info, $users_id = '') {
+		// If $users_id is not set use user if of logged in user
+		$users_id = empty($users_id) ? $this->user_id : $users_id;
+
 	    switch ($info) {
 	    	case 'email':
 	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email')['email'];
@@ -600,6 +603,14 @@ class Users {
     			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name')['name'];
     			break;
 
+	    	case 'browser':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'browsers')['browsers'];
+    			break;
+
+	    	case 'ipaddress':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'ipadd')['ipadd'];
+    			break;
+
 	    	case 'bantime':
     			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime')['bantime'];
     			break;
@@ -614,6 +625,22 @@ class Users {
 
 	    	case 'regche':
     			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regche')['regche'];
+    			break;
+
+	    	case 'status':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'perstat')['perstat'];
+    			break;
+
+	    	case 'regdate':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regdate')['regdate'];
+    			break;
+
+	    	case 'forummes':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'forummes')['forummes'];
+    			break;
+
+	    	case 'lastvisit':
+    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'lastvst')['lastvst'];
     			break;
 
 	    	default:

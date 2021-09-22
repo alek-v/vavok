@@ -22,7 +22,7 @@ if ($vavok->post_and_get('action') == 'resendkey') {
     if ($check > 0) {
     	// Get user's email if it is not submited
     	if (empty($recipient_mail)) {
-    		$recipient_mail = $vavok->go('users')->get_user_info($recipient_id, 'email');
+    		$recipient_mail = $vavok->go('users')->user_info('email', $recipient_id);
     	}
 
         $email = $vavok->go('db')->get_data('email_queue', "recipient='{$recipient_mail}'");

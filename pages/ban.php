@@ -9,10 +9,10 @@ require_once '../include/startup.php';
 if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../');
 
 // Ban description
-$bandesc = $vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'bandesc');
+$bandesc = $vavok->go('users')->user_info('bandesc');
 
 // Ban time
-$time_ban = round($vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'bantime') - time());
+$time_ban = round($vavok->go('users')->user_info('bantime') - time());
 
 // Page title
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banned');
@@ -30,7 +30,7 @@ if ($time_ban > 0) {
 
     echo '<br>' . $vavok->go('localization')->string('timetoend') . ' ' . $vavok->formattime($time_ban);
 
-    echo '<br><br>' . $vavok->go('localization')->string('banno') . ': <b>' . (int)$vavok->go('users')->get_user_info($vavok->go('users')->user_id, 'allban') . '</b><br>';
+    echo '<br><br>' . $vavok->go('localization')->string('banno') . ': <b>' . (int)$vavok->go('users')->user_info('allban') . '</b><br>';
     echo $vavok->go('localization')->string('becarefnr') . '<br /><br />';
 } else {
     $vavok->require_header();
