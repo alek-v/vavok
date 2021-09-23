@@ -534,7 +534,9 @@ class Users {
 
 	    switch ($info) {
 	    	case 'email':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email')['email'];
+	    		$email = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email');
+	    		$email = !empty($email) ? $email['email'] : '';
+	    		return $email;
 	    		break;
 	    	
 	    	case 'full_name':
@@ -544,103 +546,153 @@ class Users {
 	    		break;
 
 	    	case 'firstname':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname')['rname'];
+	    		$firstname = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname');
+	    		$firstname = !empty($firstname) ? $firstname['rname'] : '';
+	    		return $firstname;
 	    		break;
 
 	    	case 'lastname':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'surname')['surname'];
+	    		$lastname = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'surname');
+	    		$lastname = !empty($lastname) ? $lastname['surname'] : '';
+	    		return $lastname;
 	    		break;
 
 	    	case 'city':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'city')['city'];
+	    		$city = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'city');
+	    		$city = !empty($city) ? $city['city'] : '';
+	    		return $city;
 	    		break;
 
 	    	case 'address':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'address')['address'];
+	    		$address = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'address');
+	    		$address = !empty($address) ? $address['address'] : '';
+	    		return $address;
 	    		break;
 
 	    	case 'zip':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'zip')['zip'];
+	    		$zip = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'zip');
+	    		$zip = !empty($zip) ? $zip['zip'] : '';
+	    		return $zip;
 	    		break;
 
 	    	case 'about':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'about')['about'];
+	    		$about = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'about');
+	    		$about = !empty($about) ? $about['about'] : '';
+	    		return $about;
 	    		break;
 
 	    	case 'site':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'site')['site'];
+	    		$site = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'site');
+	    		$site = !empty($site) ? $site['site'] : '';
+	    		return $site;
 	    		break;
 
 	    	case 'birthday':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'birthday')['birthday'];
+	    		$birthday = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'birthday');
+	    		$birthday = !empty($birthday) ? $birthday['birthday'] : '';
+	    		return $birthday;
 	    		break;
 
 	    	case 'gender':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'sex')['sex'];
+	    		$gender = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'sex');
+	    		$gender = !empty($gender) ? $gender['sex'] : '';
+	    		return $gender;
 	    		break;
 
 	    	case 'photo':
-	    		return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'photo')['photo'];
+	    		$photo = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'photo');
+	    		$photo = !empty($photo) ? $photo['photo'] : '';
+	    		return $photo;
 	    		break;
 
 	    	case 'language':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang')['lang'];
+    			$language = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang');
+	    		$language = !empty($language) ? $language['lang'] : '';
+	    		return $language;
     			break;
 
 	    	case 'banned':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'banned')['banned'];
+    			$banned = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'banned');
+	    		$banned = !empty($banned) ? $banned['banned'] : '';
+	    		return $banned;
     			break;
 
 	    	case 'password':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'pass')['pass'];
+    			$password = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'pass');
+	    		$password = !empty($password) ? $password['pass'] : '';
+	    		return $password;
     			break;
 
 	    	case 'perm':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'perm')['perm'];
+    			$perm = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'perm');
+	    		$perm = !empty($perm) ? $perm['perm'] : '';
+	    		return $perm;
     			break;
 
 	    	case 'name':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name')['name'];
+    			$name = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name');
+	    		$name = !empty($name) ? $name['name'] : '';
+	    		return $name;
     			break;
 
 	    	case 'browser':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'browsers')['browsers'];
+    			$browser = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'browsers');
+	    		$browser = !empty($browser) ? $browser['browsers'] : '';
+	    		return $browser;
     			break;
 
 	    	case 'ipaddress':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'ipadd')['ipadd'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'ipadd');
+	    		$data = !empty($data) ? $data['ipadd'] : '';
+	    		return $data;
     			break;
 
 	    	case 'bantime':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime')['bantime'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime');
+	    		$data = !empty($data) ? $data['bantime'] : '';
+	    		return $data;
     			break;
 
 	    	case 'bandesc':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bandesc')['bandesc'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bandesc');
+	    		$data = !empty($data) ? $data['bandesc'] : '';
+	    		return $data;
     			break;
 
 	    	case 'allban':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'allban')['allban'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'allban');
+	    		$data = !empty($data) ? $data['allban'] : '';
+	    		return $data;
     			break;
 
 	    	case 'regche':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regche')['regche'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regche');
+	    		$data = !empty($data) ? $data['regche'] : '';
+	    		return $data;
     			break;
 
 	    	case 'status':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'perstat')['perstat'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'perstat');
+	    		$data = !empty($data) ? $data['perstat'] : '';
+	    		return $data;
     			break;
 
 	    	case 'regdate':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regdate')['regdate'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regdate');
+	    		$data = !empty($data) ? $data['regdate'] : '';
+	    		return $data;
     			break;
 
 	    	case 'forummes':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'forummes')['forummes'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'forummes');
+	    		$data = !empty($data) ? $data['forummes'] : '';
+	    		return $data;
     			break;
 
 	    	case 'lastvisit':
-    			return $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'lastvst')['lastvst'];
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'lastvst');
+	    		$data = !empty($data) ? $data['lastvst'] : '';
+	    		return $data;
     			break;
 
 	    	default:
