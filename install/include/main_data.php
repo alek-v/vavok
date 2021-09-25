@@ -93,5 +93,17 @@ $fp = fopen('../used/config.dat', 'a');
 fwrite($fp, $configData);
 fclose($fp);
 
+// Put main .htaccess file
+if (!file_exists('../.htaccess')) {
+	if (!copy('include/.htaccess.sample', '../.htaccess')) {
+	    echo 'failed to copy to ../.htaccess';
+	}
+}
 
+// Put main robots.txt file
+if (!file_exists('../robots.txt')) {
+	if (!copy('include/robots.txt.sample', '../robots.txt')) {
+	    echo 'failed to copy to ../robots.txt';
+	}
+}
 ?>
