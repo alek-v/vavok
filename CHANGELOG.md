@@ -10,6 +10,7 @@
 - Use user_info() method for retrieving users info
 
 
+
 # Vavok v1.5.10
 - Added support for blog categories
 - Added priority levels for email queue
