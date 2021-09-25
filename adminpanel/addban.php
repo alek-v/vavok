@@ -12,9 +12,7 @@ if (isset($_POST['users'])) {
     $user = $vavok->check($_GET['users']);
 } else { $user = ''; }
 
-$time = time();
-
-if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to("../?error"); } 
+if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to('../?error'); } 
 
 if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESSION['permissions'] == 103) {
     $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banning');
@@ -52,33 +50,32 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             } else {
                 $userx_id = $user;
                 $users_nick = $vavok->go('users')->getnickfromid($user);
-            } 
-
-            $show_user = $vavok->go('db')->get_data('vavok_users', "id='" . $userx_id . "'", 'banned, perm');
-            $show_prof = $vavok->go('db')->get_data('vavok_profil', "uid='" . $userx_id . "'", 'bantime, bandesc, allban, lastban');
+            }
 
             $user = $vavok->check($user);
             if ($userx_id != "" && $users_nick != "") {
                 echo '<img src="../images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
-                echo 'Bans: <b>' . (int)$show_prof['allban'] . '</b><br />'; // update lang
-                if (ctype_digit($show_prof['lastban'])) {
-                    echo '' . $vavok->go('localization')->string('lastban') . ': ' . $vavok->date_fixed($vavok->check($show_prof['lastban']), "j.m.y/H:i") . '<br />';
+                echo 'Bans: <b>' . (int)$vavok->go('users')->user_info('allban', $userx_id) . '</b><br />'; // update lang
+                if (ctype_digit($vavok->go('users')->user_info('lastban', $userx_id))) {
+                    echo '' . $vavok->go('localization')->string('lastban') . ': ' . $vavok->date_fixed($vavok->check($vavok->go('users')->user_info('lastban', $userx_id)), "j.m.y/H:i") . '<br />';
                 } 
 
                 echo '<br />';
 
-                if ($show_user['perm'] >= 101 && $show_user['perm'] <= 105 && $user != $vavok->go('users')->show_username()) {
+                if ($vavok->go('users')->user_info('perm', $userx_id) >= 101 && $vavok->go('users')->user_info('perm', $userx_id) <= 105 && $user != $vavok->go('users')->show_username()) {
                     echo $vavok->go('localization')->string('noauthtoban') . '<br /><br />';
                 } else {
                     if ($user == $vavok->go('users')->show_username()) {
                         echo '<b><font color="#FF0000">' . $vavok->go('localization')->string('myprofile') . '!</font></b><br /><br />';
                     } 
 
-                    if ($show_prof['bantime'] > 0) {
-                    $ost_time = round($show_prof['bantime'] - $time);
-                	} else { $ost_time = $time; }
+                    if ($vavok->go('users')->user_info('bantime', $userx_id) > 0) {
+                        $ost_time = round($vavok->go('users')->user_info('bantime', $userx_id) - time());
+                	} else {
+                        $ost_time = time();
+                    }
 
-                    if ($show_user['banned'] < 1 || $show_prof['bantime'] < $time) {
+                    if ($vavok->go('users')->user_info('banned', $userx_id) < 1 || $vavok->go('users')->user_info('bantime', $userx_id) < time()) {
                         $form = new PageGen('forms/form.tpl');
                         $form->set('form_method', 'post');
                         $form->set('form_action', 'addban.php?action=banuser&amp;users=' . $users_nick);
@@ -127,22 +124,21 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                         echo $vavok->go('localization')->string('bandesc1') . '<br />';
                     } else {
                         echo '<b><font color="#FF0000">' . $vavok->go('localization')->string('confban') . '</font></b><br />';
-                        if (ctype_digit($show_prof['lastban'])) {
-                            echo '' . $vavok->go('localization')->string('bandate') . ': ' . $vavok->date_fixed($show_prof['lastban']) . '<br />';
-                        } 
+                        if (ctype_digit($vavok->go('users')->user_info('lastban', $userx_id))) {
+                            echo '' . $vavok->go('localization')->string('bandate') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('lastban', $userx_id)) . '<br />';
+                        }
                         echo $vavok->go('localization')->string('banend') . ' ' . $vavok->formattime($ost_time) . '<br />';
-                        echo $vavok->go('localization')->string('bandesc') . ': ' . $vavok->check($show_prof['bandesc']) . '<br />'; 
+                        echo $vavok->go('localization')->string('bandesc') . ': ' . $vavok->check($vavok->go('users')->user_info('bandesc', $userx_id)) . '<br />'; 
                         echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delban') . '</a><hr>';
-                    } 
-                } 
+                    }
+                }
             } else {
                 echo '' . $vavok->go('localization')->string('usrnoexist') . '!<br />';
-            } 
+            }
         } else {
             echo '' . $vavok->go('localization')->string('nousername') . '!<br />';
-        } 
-
-    } 
+        }
+    }
 
     if ($vavok->post_and_get('action') == 'banuser') {
         $bform = $vavok->check($_POST['bform']);
@@ -164,55 +160,53 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             if ($ban_time != "") {
                 if ($ban_time <= $vavok->get_configuration('maxBanTime')) {
                     if ($udd39 != "") {
-                        $newbantime = round($time + ($ban_time * 60));
+                        $newbantime = round(time() + ($ban_time * 60));
                         $newbandesc = $vavok->no_br($vavok->check($udd39), ' ');
-                        $newlastban = $time;
+                        $newlastban = time();
 
-                        $vavok_profil = $vavok->go('db')->get_data('vavok_users', "uid='" . $users_id . "'", 'allban');
-                        $newallban = $vavok_profil['allban'];
-                        $newallban = $newallban + 1;
+                        $newallban = $vavok->go('users')->user_info('allban', $users_id) + 1;
 
                         $vavok->go('db')->update('vavok_users', 'banned', 1, "id='" . $users_id . "'");
 
                         $fields = array('bantime', 'bandesc', 'lastban', 'allban');
                         $values = array($newbantime, $newbandesc, $newlastban, $newallban);
-                        $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+                        $vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $fields, $values, "uid='" . $users_id . "'");
 
                         echo $vavok->go('localization')->string('usrdata') . ' ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
                         echo '<b><font color="FF0000">' . $vavok->go('localization')->string('confban') . '</font></b><br /><br />';
 
-                        echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+                        echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
                     } else {
-                        echo '' . $vavok->go('localization')->string('noreason') . '!<br />';
+                        echo $vavok->go('localization')->string('noreason') . '!<br />';
                     } 
                 } else {
-                    echo '' . $vavok->go('localization')->string('maxbantimeare') . ' ' . round($vavok->get_configuration('maxBanTime') / 1440) . ' ' . $vavok->go('localization')->string('days') . '!<br />';
+                    echo $vavok->go('localization')->string('maxbantimeare') . ' ' . round($vavok->get_configuration('maxBanTime') / 1440) . ' ' . $vavok->go('localization')->string('days') . '!<br />';
                 } 
             } else {
-                echo '' . $vavok->go('localization')->string('nobantime') . '!<br />';
+                echo $vavok->go('localization')->string('nobantime') . '!<br />';
             } 
         } else {
             echo $vavok->go('localization')->string('usrnoexist') . '!<br />';
         } 
-        echo'<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
-    } 
+        echo '<br /><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
+    }
 
     if ($vavok->post_and_get('action') == 'deleteban') {
         $users_id = $vavok->go('users')->getidfromnick($user);
 
         if ($users_id != "") {
             // update changes
-            $vavok_binfo = $vavok->go('db')->get_data('vavok_profil', "uid='" . $users_id . "'", 'allban');
-            $newallban = $vavok_binfo['allban'];
+            $newallban = $vavok->go('users')->user_info('allban', $users_id);
+
             if ($newallban > 0) {
                 $newallban = $newallban--;
-            } 
+            }
 
             $vavok->go('db')->update('vavok_users', 'banned', 0, "id='" . $users_id . "'");
 
             $fields = array('bantime', 'bandesc', 'allban');
             $values = array(0, '', $newallban);
-            $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+            $vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $fields, $values, "uid='" . $users_id . "'");
 
             echo $vavok->go('localization')->string('usrdata') . '  ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
             echo '<b><font color="00FF00">' . $vavok->go('localization')->string('confUnBan') . '</font></b><br /><br />';

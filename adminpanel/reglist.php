@@ -32,7 +32,7 @@ if (empty($vavok->post_and_get('action'))) {
     $num_items = $noi; //changable
     $items_per_page = 20;
     $num_pages = ceil($num_items / $items_per_page);
-    if (($vavok->post_and_get('page') > $num_pages) && $vavok->post_and_get('page') != 1)$vavok->post_and_get('page') = $num_pages;
+    if (($vavok->post_and_get('page') > $num_pages) && $vavok->post_and_get('page') != 1) $page = $num_pages;
     $limit_start = ($vavok->post_and_get('page')-1) * $items_per_page;
     if ($limit_start < 0) {
         $limit_start = 0;
@@ -42,16 +42,15 @@ if (empty($vavok->post_and_get('action'))) {
 
     if ($num_items > 0) {
         foreach ($vavok->go('db')->query($sql) as $item) {
-            $show_userx = $vavok->go('db')->get_data('vavok_users', "id='" . $item['uid'] . "'", 'browsers, ipadd');
-            $lnk = "<a href=\"../pages/user.php?uz=" . $item['uid'] . "\" class=\"sitelink\">" . $vavok->go('users')->getnickfromid($item['uid']) . "</a> (" . $vavok->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ")";
+            $lnk = '<a href="../pages/user.php?uz=' . $item['uid'] . '" class="sitelink">' . $vavok->go('users')->getnickfromid($item['uid']) . '</a> (' . $vavok->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ')';
             if ($item['regche'] == 1) {
-                $bt = "" . $vavok->go('localization')->string('notconfirmed') . "!";
-                $bym = '<a href="reglist.php?action=conf&amp;usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('confirms') . '</a>';
+                $bt = $vavok->go('localization')->string('notconfirmed') . '!';
+                $bym = '<a href="reglist.php?action=conf&usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('confirms') . '</a>';
             } else {
-                $bt = "Confirmed";
+                $bt = 'Confirmed';
             } 
 
-            echo '<p>' . $lnk . ' IP: ' . $show_userx["ipadd"] . ' ' . $vavok->go('localization')->string('browser') . ': ' . $show_userx["browsers"] . ' ' . $bym . '</p>';
+            echo '<p>' . $lnk . ' IP: ' . $vavok->go('users')->user_info('ipadd', $item['uid']) . ' ' . $vavok->go('localization')->string('browser') . ': ' . $vavok->go('users')->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
         } 
     } else {
         echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';

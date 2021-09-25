@@ -6,29 +6,28 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../index.php?isset=inputoff");
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../index.php?isset=inputoff');
 
 // Save settings
 if ($vavok->post_and_get('action') == 'save') {
-	$lang = isset($_POST['lang']) ? $vavok->check($_POST['lang']) : '';
-	$user_timezone = isset($_POST['timezone']) ? $vavok->check($_POST['timezone']) : 0;
-	$subnews = isset($_POST['subnews']) ? $vavok->check($_POST['subnews']) : '';
-	$inbox_notification = isset($_POST['inbnotif']) ? $vavok->check($_POST['inbnotif']) : '';
-		
-	$email = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$vavok->go('users')->user_id}'", 'email')['email'];
-	$notif = $vavok->go('db')->get_data(DB_PREFIX . 'notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'", 'email');
-
-	if (empty($lang)) $vavok->redirect_to('settings.php?isset=incorrect');
-
-	if (!isset($user_timezone)) $user_timezone = 0;
-
+	// Users timezone
+	$user_timezone = !empty($vavok->post_and_get('timezone')) ? $vavok->check($vavok->post_and_get('timezone')) : 0;
+	// Redirect if timezone is incorrect
 	if (preg_match("/[^0-9+-]/", $user_timezone)) $vavok->redirect_to('settings.php?isset=incorrect');
+
+	// Subscription to site news
+	$subnews = !empty($vavok->post_and_get('subnews')) ? $vavok->check($vavok->post_and_get('subnews')) : '';
+
+	// New message notifications
+	$inbox_notification = !empty($vavok->post_and_get('inbnotif')) ? $vavok->check($vavok->post_and_get('inbnotif')) : '';
+
+	if (empty($vavok->post_and_get('lang'))) $vavok->redirect_to('settings.php?isset=incorrect');
 
 	/**
 	 * Site newsletter
 	 */
-	if ($subnews == 1) {
-	    $email_check = $vavok->go('db')->get_data(DB_PREFIX . 'subs', "user_mail='{$email}'", 'user_mail');
+	if ($vavok->post_and_get('subnews') == 1) {
+	    $email_check = $vavok->go('db')->get_data(DB_PREFIX . 'subs', "user_mail='{$vavok->go('users')->user_info('email')}'", 'user_mail');
 
 	    if (!empty($email_check['user_mail'])) {
 	        $result = 'error2'; // Error! Email already exist in database!
@@ -40,7 +39,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	    if (empty($result)) {
 	        $randkey = $vavok->generate_password();
 	        
-	        $vavok->go('db')->insert(DB_PREFIX . 'subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $email, 'user_pass' => $randkey));
+	        $vavok->go('db')->insert(DB_PREFIX . 'subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $vavok->go('users')->user_info('email'), 'user_pass' => $randkey));
 
 	        $result = 'ok'; // sucessfully subscribed to site news!
 	        $subnewss = 1;
@@ -52,14 +51,14 @@ if ($vavok->post_and_get('action') == 'save') {
 	    if (empty($email_check['user_mail'])) {
 	        $result = 'error';
 	        $subnews = 0;
-	        $randkey = "";
+	        $randkey = '';
 	    } else {
 	    	// unsub
 	        $vavok->go('db')->delete(DB_PREFIX . 'subs', "user_id='{$vavok->go('users')->user_id}'");
 	    	
 	        $result = 'no';
 	        $subnews = 0;
-	        $randkey = "";
+	        $randkey = '';
 	    } 
 	}
 
@@ -76,7 +75,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	unset($fields, $values);
 
 	// Update language
-	$vavok->go('users')->change_language($lang);
+	$vavok->go('users')->change_language($vavok->post_and_get('lang'));
 
 	// update email notificatoins
 	$fields = array();
@@ -93,9 +92,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	unset($fields, $values);
 
 	// notification settings
-	if (!isset($inbox_notification)) {
-		$inbox_notification = 1;
-	}
+	if (!isset($inbox_notification)) $inbox_notification = 1;
 
 	$check_inb = $vavok->go('db')->count_row(DB_PREFIX . 'notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
 	if ($check_inb > 0) {
@@ -105,28 +102,23 @@ if ($vavok->post_and_get('action') == 'save') {
 	}
 
 	// redirect
-	$vavok->redirect_to("./settings.php?isset=editsetting");
-
+	$vavok->redirect_to('./settings.php?isset=editsetting');
 }
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('settings');
 $vavok->require_header();
 
 if ($vavok->go('users')->is_reg()) {
-
-	$show_user = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$vavok->go('users')->user_id}'", 'lang, mskin, skin');
-	$page_set = $vavok->go('db')->get_data(DB_PREFIX . 'page_setting', "uid='{$vavok->go('users')->user_id}'");
-	$user_profil = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$vavok->go('users')->user_id}'", 'subscri');
 	$inbox_notif = $vavok->go('db')->get_data(DB_PREFIX . 'notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'", 'active');
 
 	$form = new PageGen('forms/form.tpl');
 	$form->set('form_method', 'post');
 	$form->set('form_action', 'settings.php?action=save');
 
-	$options = '<option value="' . $show_user['lang'] . '">' . $show_user['lang'] . '</option>';
-    $dir = opendir(BASEDIR . "include/lang");
+	$options = '<option value="' . $vavok->go('users')->user_info('language') . '">' . $vavok->go('users')->user_info('language') . '</option>';
+    $dir = opendir(BASEDIR . 'include/lang');
     while ($file = readdir ($dir)) {
-        if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $show_user['lang']) && strlen($file) > 2) {
+        if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $vavok->go('users')->user_info('language')) && strlen($file) > 2) {
             $options .= '<option value="' . $file . '">' . $file . '</option>';
         } 
     }
@@ -146,9 +138,7 @@ if ($vavok->go('users')->is_reg()) {
     $subnews_yes->set('input_id', 'subnews');
     $subnews_yes->set('input_name', 'subnews');
     $subnews_yes->set('input_value', 1);
-    if ($user_profil['subscri'] == 1) {
-        $subnews_yes->set('input_status', 'checked');
-    }
+    if ($vavok->go('users')->user_info('subscribed') == 1) $subnews_yes->set('input_status', 'checked');
 
     $subnews_no = new PageGen('forms/radio_inline.tpl');
     $subnews_no->set('label_for', 'subnews');
@@ -156,9 +146,7 @@ if ($vavok->go('users')->is_reg()) {
     $subnews_no->set('input_id', 'subnews');
     $subnews_no->set('input_name', 'subnews');
     $subnews_no->set('input_value', 0);
-    if ($user_profil['subscri'] == 0 || empty($user_profil['subscri'])) {
-        $subnews_no->set('input_status', 'checked');
-    }
+    if ($vavok->go('users')->user_info('subscribed') == 0 || empty($vavok->go('users')->user_info('subscribed'))) $subnews_no->set('input_status', 'checked');
 
     $subnews = new PageGen('forms/radio_group.tpl');
     $subnews->set('description', $vavok->go('localization')->string('subscribetonews'));
@@ -173,9 +161,7 @@ if ($vavok->go('users')->is_reg()) {
     $msgnotif_yes->set('input_id', 'inbnotif');
     $msgnotif_yes->set('input_name', 'inbnotif');
     $msgnotif_yes->set('input_value', 1);
-    if ($inbox_notif['active'] == 1) {
-        $msgnotif_yes->set('input_status', 'checked');
-    }
+    if ($inbox_notif['active'] == 1) $msgnotif_yes->set('input_status', 'checked');
 
     $msgnotif_no = new PageGen('forms/radio_inline.tpl');
     $msgnotif_no->set('label_for', 'inbnotif');
@@ -183,9 +169,7 @@ if ($vavok->go('users')->is_reg()) {
     $msgnotif_no->set('input_id', 'inbnotif');
     $msgnotif_no->set('input_name', 'inbnotif');
     $msgnotif_no->set('input_value', 0);
-    if ($inbox_notif['active'] == 0 || empty($inbox_notif['active'])) {
-        $msgnotif_no->set('input_status', 'checked');
-    }
+    if ($inbox_notif['active'] == 0 || empty($inbox_notif['active'])) $msgnotif_no->set('input_status', 'checked');
 
     $msgnotif = new PageGen('forms/radio_group.tpl');
     $msgnotif->set('description', 'Receive new message notification');
@@ -195,7 +179,7 @@ if ($vavok->go('users')->is_reg()) {
     echo $form->output();
 } else {
     echo '<p>' . $vavok->go('localization')->string('notloged') . '</p>';
-} 
+}
 
 echo $vavok->homelink('<p>', '</p>');
 
