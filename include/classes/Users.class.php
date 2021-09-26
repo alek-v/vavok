@@ -334,6 +334,58 @@ class Users {
 	}
 
 	/**
+	 * Update users informations
+	 * 
+	 * @param string|array $fields
+	 * @param string|array $values
+	 * @param integer $user_id
+	 * @return void
+	 */
+	public function update_user($fields, $values, $user_id = '')
+	{
+		$user_id = empty($user_id) ? $this->user_id : false;
+
+		// vavok_users table fields
+		$vavok_users_valid_fields = array('name', 'pass', 'perm', 'skin', 'browsers', 'ipadd', 'timezone', 'banned', 'newmsg', 'lang');
+
+		// vavok_profil table fields
+		$vavok_profil_valid_fields = array('opentem', 'forummes', 'chat', 'commadd', 'subscri', 'newscod', 'perstat', 'regdate', 'regche', 'regkey', 'bantime', 'bandesc', 'lastban', 'allban', 'lastvst');
+
+		// First check if there are fields to update for selected table, then update data
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')))  $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values'), "id='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values'), "uid='{$user_id}'");
+	}
+
+	/**
+	 * Filter and remove fields that don't exist in table we are updating
+	 * 
+	 * @param array $fields
+	 * @param array $values
+	 * @param array $valid_fields
+	 * @param string $data here we choose if we want fields or values to be returned
+	 * @return array
+	 */
+	protected function filter_user_fields_values($fields, $values, $valid_fields, $data)
+	{
+		// Filter fields and values
+		foreach ($fields as $key => $value) {
+			// Remove field and value that don't belog to this table
+			if (!array_search($value, $valid_fields)) {
+				// Find key number of value and remove value
+				$value_number = array_search($key, array_keys($fields));
+
+				// Remove value
+				unset($values[$value_number]);
+
+				// Remove field
+				unset($fields[$key]);
+			}
+		}
+
+		if ($data == 'fields') { return $fields; } else { return $values; }
+	}
+
+	/**
 	 * Inbox
 	 */
 
@@ -458,12 +510,12 @@ class Users {
 	 * Get user nick from user id number
 	 *
 	 * @param bool $uid
-	 * @return str $unick
+	 * @return str|bool $unick
 	 */
 	public function getnickfromid($uid)
 	{
-	    $unick = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$uid}'", 'name');
-	    return $unick = !empty($unick['name']) ? $unick['name'] : '';
+	    $unick = $this->user_info('nickname', $uid);
+	    return $unick = !empty($unick) ? $unick : false;
 	}
 
 	/**
@@ -605,6 +657,12 @@ class Users {
 	    		return $data;
 	    		break;
 
+	    	case 'nickname':
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name');
+	    		$data = !empty($data) ? $data['name'] : '';
+	    		return $data;
+    			break;
+
 	    	case 'language':
     			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang');
 	    		$data = !empty($data) ? $data['lang'] : '';
@@ -626,12 +684,6 @@ class Users {
 	    	case 'perm':
     			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'perm');
 	    		$data = !empty($data) ? $data['perm'] : '';
-	    		return $data;
-    			break;
-
-	    	case 'name':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name');
-	    		$data = !empty($data) ? $data['name'] : '';
 	    		return $data;
     			break;
 
@@ -877,8 +929,8 @@ class Users {
 	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$id}'", 'perm');
-	    $perm = isset($chk_adm['perm']) ? intval($chk_adm['perm']) : 0;
+	    $permission = $this->user_info('perm', $id);
+	    $perm = !empty($permission) ? intval($permission) : 0;
 	    
 	    if ($perm === $num) {
 	        return true;
@@ -902,8 +954,8 @@ class Users {
 	        $id = $this->user_id;
 	    }
 
-	    $chk_adm = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$id}'", 'perm');
-	    $perm = isset($chk_adm['perm']) ? intval($chk_adm['perm']) : 0;
+	    $permission = $this->user_info('perm', $id);
+	    $perm = !empty($permission) ? intval($permission) : 0;
 
 	    if ($perm === $num) {
 	        return true;
