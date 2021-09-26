@@ -5,7 +5,7 @@
  */
 
 require_once '../include/startup.php';
-include_once BASEDIR . "include/lang/" . $vavok->go('users')->get_user_language() . "/pagescounter.php";
+include_once BASEDIR . 'include/lang/' . $vavok->go('users')->get_user_language() . '/pagescounter.php';
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('statistics');
 $vavok->require_header();
@@ -35,8 +35,8 @@ if ($vavok->get_configuration('forumAccess') == 1) {
     echo $vavok->go('localization')->string('topicinforum') . ': <b>' . $notc[0] . '</b><br />';
 }
 
-echo $vavok->go('localization')->string('bannedip') . ': <b>' . counter_string(BASEDIR . "used/ban.dat") . '</b><br />';
-echo $vavok->go('localization')->string('regusers') . ': <b>' . $vavok->go('db')->count_row('vavok_users') - 1 . '</b><br />';
+echo $vavok->go('localization')->string('bannedip') . ': <b>' . counter_string(BASEDIR . 'used/ban.dat') . '</b><br />';
+echo $vavok->go('localization')->string('regusers') . ': <b>' . $vavok->go('users')->regmemcount() . '</b><br />';
 
 echo $vavok->homelink('<p>', '</p>');
 

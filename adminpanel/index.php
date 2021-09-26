@@ -53,9 +53,7 @@ if (empty($vavok->post_and_get('action'))) {
 	echo '<a href="adminchat.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admchat') . '</a>';
 	echo '<a href="adminlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('modlist') . '</a>';
 	echo '<a href="reglist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('notconf') . '</a>';
-
-    $totalUsers = $vavok->go('db')->count_row('vavok_users');
-    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('userlist') . ' (' . $totalUsers . ')</a>';
+    echo '<a href="../pages/userlist.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('userlist') . ' (' . $vavok->go('users')->regmemcount() . ')</a>';
 
     /*
     Super moderator access level or bigger
