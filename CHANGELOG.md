@@ -1,4 +1,4 @@
-# Vavok v1.5.13.3
+# Vavok v1.5.13.4
 - Removed xoft_encode method from Vavok.class.php
 - Removed xoft_decode method from Vavok.class.php
 - Removed safe_encode method from Vavok.class.php
@@ -7,6 +7,7 @@
 - Remove saved token when user logout
 - Implemented handling of POST and GET data
 - Added method user_info() in Users.class.php
+- Added methods update_user() and filter_user_fields_values() in Users.class.php
 - Use user_info() method for retrieving users info
 
 
