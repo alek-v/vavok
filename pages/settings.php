@@ -70,8 +70,8 @@ if ($vavok->post_and_get('action') == 'save') {
 	$values = array();
 	$values[] = $vavok->go('users')->find_ip();
 	$values[] = $user_timezone;
-	 
-	$vavok->go('db')->update(DB_PREFIX . 'vavok_users', $fields, $values, "id='{$vavok->go('users')->user_id}'");
+
+	$vavok->go('users')->update_user($fields, $values);
 	unset($fields, $values);
 
 	// Update language
@@ -82,13 +82,13 @@ if ($vavok->post_and_get('action') == 'save') {
 	$fields[] = 'subscri';
 	$fields[] = 'newscod';
 	$fields[] = 'lastvst';
-	 
+
 	$values = array();
 	$values[] = $subnews;
 	$values[] = $randkey;
 	$values[] = time();
-	 
-	$vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $fields, $values, "uid='{$vavok->go('users')->user_id}'");
+
+	$vavok->go('users')->update_user($fields, $values);
 	unset($fields, $values);
 
 	// notification settings
