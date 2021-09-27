@@ -150,7 +150,7 @@ if ($vavok->post_and_get('action') == 'edit') {
                 $udd40->set('label_value', $vavok->go('localization')->string('perstatus'));
                 $udd40->set('input_id', 'udd40');
                 $udd40->set('input_name', 'udd40');
-                $udd40->set('input_value', $vavok->go('users')->user_info('perstat', $userx_id));
+                $udd40->set('input_value', $vavok->go('users')->user_info('status', $userx_id));
  
                 if ($vavok->go('users')->user_info('subscribed', $userx_id) == 1) {
                     $value = $vavok->go('localization')->string('subscribed');
@@ -259,7 +259,7 @@ if ($vavok->post_and_get('action') == 'upgrade') {
                 $values = array($vavok->no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
                 $vavok->go('db')->update(DB_PREFIX . 'vavok_about', $fields, $values, "uid='" . $users_id . "'");
                 
-                $vavok->go('db')->update(DB_PREFIX . 'vavok_profil', 'perstat', $vavok->no_br($vavok->check($udd40)), "uid='{$users_id}'");
+                $vavok->go('users')->update_user('perstat', $vavok->no_br($vavok->check($udd40)), $users_id);
 
                 echo $vavok->go('localization')->string('usrdataupd') . '!<br>';
 

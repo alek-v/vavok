@@ -50,12 +50,12 @@ if ($vavok->post_and_get('action') == "acdel") {
     }
 }
 
-if ($vavok->post_and_get('action') == "delmail" && $_SESSION['permissions'] == 101) {
+if ($vavok->post_and_get('action') == 'delmail' && $_SESSION['permissions'] == 101) {
     $users_id = $vavok->check($_GET['users']);
     if (!empty($users_id)) {
             $fields = array('subscri', 'newscod');
             $values = array('', '');
-            $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+            $vavok->go('users')->update_user($fields, $values, $users_id);
 
             $vavok->go('db')->delete('subs', "user_id='" . $users_id . "'");
 

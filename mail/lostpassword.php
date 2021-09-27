@@ -49,8 +49,8 @@ if ($vavok->post_and_get('action') == 'send') {
 				$send_mail = new Mailer();
 				$send_mail->queue_email($vavok->post_and_get('mailsus'), $subject, $mail);
 
-                // Update user's profile
-                $vavok->go('db')->update('vavok_users', 'pass', $new, "id='{$userx_id}'");
+                // Update users profile
+                $vavok->go('users')->update_user('pass', $new, $userx_id);
 
                 echo '<p><b>' . $vavok->go('localization')->string('passgen') . '</b></p>';
             } else {

@@ -343,7 +343,7 @@ class Users {
 	 */
 	public function update_user($fields, $values, $user_id = '')
 	{
-		$user_id = empty($user_id) ? $this->user_id : false;
+		$user_id = empty($user_id) ? $this->user_id : $user_id;
 
 		// vavok_users table fields
 		$vavok_users_valid_fields = array('name', 'pass', 'perm', 'skin', 'browsers', 'ipadd', 'timezone', 'banned', 'newmsg', 'lang');
@@ -351,9 +351,13 @@ class Users {
 		// vavok_profil table fields
 		$vavok_profil_valid_fields = array('opentem', 'forummes', 'chat', 'commadd', 'subscri', 'newscod', 'perstat', 'regdate', 'regche', 'regkey', 'bantime', 'bandesc', 'lastban', 'allban', 'lastvst');
 
+		// vavok_about table fields
+		$vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'rname', 'surname', 'photo', 'address', 'zip', 'country', 'phone');
+
 		// First check if there are fields to update for selected table, then update data
 		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')))  $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values'), "id='{$user_id}'");
 		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values'), "uid='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_about', $this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values'), "uid='{$user_id}'");
 	}
 
 	/**
@@ -363,16 +367,27 @@ class Users {
 	 * @param array $values
 	 * @param array $valid_fields
 	 * @param string $data here we choose if we want fields or values to be returned
-	 * @return array
+	 * @return array|bool
 	 */
 	protected function filter_user_fields_values($fields, $values, $valid_fields, $data)
 	{
-		// Filter fields and values
+		// Check $fields variable and return data if variable is string
+		if (!is_array($fields)) {
+			if (array_search($fields, $valid_fields)) {
+				// Return field or value
+				if ($data == 'fields') return $fields;
+				if ($data == 'values') return $values;
+			} else {
+				return false;
+			}
+		}
+
+		// Filter fields and values in array
 		foreach ($fields as $key => $value) {
 			// Remove field and value that don't belog to this table
 			if (!array_search($value, $valid_fields)) {
 				// Find key number of value and remove value
-				$value_number = array_search($key, array_keys($fields));
+				$value_number = array_search($value, $fields);
 
 				// Remove value
 				unset($values[$value_number]);
@@ -587,7 +602,7 @@ class Users {
 	    switch ($info) {
 	    	case 'email':
 	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email');
-	    		$data = !empty($email) ? $email['email'] : '';
+	    		$data = !empty($data['email']) ? $data['email'] : '';
 	    		return $data;
 	    		break;
 	    	
@@ -611,7 +626,7 @@ class Users {
 
 	    	case 'city':
 	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'city');
-	    		$data = !empty($city) ? $data['city'] : '';
+	    		$data = !empty($data) ? $data['city'] : '';
 	    		return $data;
 	    		break;
 
@@ -718,37 +733,37 @@ class Users {
     			break;
 
 	    	case 'regche':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regche');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'regche');
 	    		$data = !empty($data) ? $data['regche'] : '';
 	    		return $data;
     			break;
 
 	    	case 'status':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'perstat');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'perstat');
 	    		$data = !empty($data) ? $data['perstat'] : '';
 	    		return $data;
     			break;
 
 	    	case 'regdate':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'regdate');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'regdate');
 	    		$data = !empty($data) ? $data['regdate'] : '';
 	    		return $data;
     			break;
 
 	    	case 'forummes':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'forummes');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'forummes');
 	    		$data = !empty($data) ? $data['forummes'] : '';
 	    		return $data;
     			break;
 
 	    	case 'lastvisit':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'lastvst');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'lastvst');
 	    		$data = !empty($data) ? $data['lastvst'] : '';
 	    		return $data;
     			break;
 
 	    	case 'subscribed':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'subscri');
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'subscri');
 	    		$data = !empty($data) ? $data['subscri'] : '';
 	    		return $data;
     			break;

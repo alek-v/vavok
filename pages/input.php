@@ -72,7 +72,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
         session_regenerate_id();
 
         // update data in profile
-        $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $vavok->go('users')->find_ip(), "id='{$userx_id}'");
+        $vavok->go('users')->update_user('ipadd', $vavok->go('users')->find_ip(), $userx_id);
 
         // Redirect user to confirm registration
         if ($vavok->go('users')->user_info('regche', $userx_id) == 1) $vavok->redirect_to(HOMEDIR . "pages/key.php?log=" . $vavok->post_and_get('log'));

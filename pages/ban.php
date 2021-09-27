@@ -43,8 +43,8 @@ if ($time_ban > 0) {
 
     echo '<p>' . $vavok->go('localization')->string('endbanadvice') . ' <b><a href="siterules.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('siterules') . '</a></b></p>';
 
-    $vavok->go('db')->update('vavok_users', 'banned', 0, "id='{$vavok->go('users')->user_id}'");
-    $vavok->go('db')->update('vavok_profil', array('bantime', 'bandesc'), array('', ''), "uid='{$vavok->go('users')->user_id}'");
+    $vavok->go('users')->update_user('banned', 0);
+    $vavok->go('users')->update_user(array('bantime', 'bandesc'), array('', ''));
 }
 
 echo $vavok->homelink('<p>', '</p>');

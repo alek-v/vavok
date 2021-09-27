@@ -13,7 +13,7 @@ if (!empty($vavok->post_and_get('subdel'))) {
         if ($vavok->post_and_get('subdel') == $email_check['user_pass'] && (empty($email_check['subscripton_name']) || $email_check['subscripton_name'] == $vavok->post_and_get('sn'))) {
             if ($email_check['user_id'] > 0 && ($vavok->post_and_get('sn') == 'sitenews' || empty($vavok->post_and_get('sn')))) {
                 $uz_log = $vavok->go('users')->getnickfromid($email_check['user_id']);
-                $vavok->go('db')->update('vavok_profil', array('subscri', 'newscod'), array(0, ''), "uid='" . $email_check['user_id'] . "'");
+                $vavok->go('users')->update_user(array('subscri', 'newscod'), array(0, ''), $email_check['user_id']);
             } 
 
             $vavok->go('db')->delete('subs', "user_pass='{$vavok->post_and_get('subdel')}'");
@@ -22,13 +22,13 @@ if (!empty($vavok->post_and_get('subdel'))) {
             <p>' . $vavok->go('localization')->string('delsubok') . '!</p>';
         } else {
             echo '<p>' . $vavok->go('localization')->string('unsubcodefail') . '!</p>'; // code does not match
-        } 
+        }
     } else {
         echo '<p>' . $vavok->go('localization')->string('unsubcodefail') . '!</p>'; // bad code
-    } 
+    }
 } else {
     echo '<p>' . $vavok->go('localization')->string('unsubfail') . '!</p>'; // code 
-} 
+}
 
 echo $vavok->homelink('<p>', '</p>');
 

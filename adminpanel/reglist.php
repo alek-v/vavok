@@ -11,7 +11,7 @@ if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(ba
 if ($vavok->post_and_get('action') == 'conf' && !empty($vavok->post_and_get('usr'))) {
     $fields = array('regche', 'regkey');
     $values = array('', '');
-    $vavok->go('db')->update('vavok_profil', $fields, $values, "uid='" . $vavok->post_and_get('usr') . "'");
+    $vavok->go('users')->update_user($fields, $values, $vavok->post_and_get('usr'));
 
     $about_user = $vavok->go('db')->get_data('vavok_about', "uid='" . $vavok->post_and_get('usr') . "'", 'email');
     $vav_name = $vavok->go('users')->getnickfromid($vavok->post_and_get('usr'));

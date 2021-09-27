@@ -166,11 +166,12 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
                         $newallban = $vavok->go('users')->user_info('allban', $users_id) + 1;
 
-                        $vavok->go('db')->update('vavok_users', 'banned', 1, "id='" . $users_id . "'");
+                        // Update users data
+                        $vavok->go('users')->update_user('banned', 1, $users_id);
 
                         $fields = array('bantime', 'bandesc', 'lastban', 'allban');
                         $values = array($newbantime, $newbandesc, $newlastban, $newallban);
-                        $vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+                        $vavok->go('users')->update_user($fields, $values, $users_id);
 
                         echo $vavok->go('localization')->string('usrdata') . ' ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
                         echo '<b><font color="FF0000">' . $vavok->go('localization')->string('confban') . '</font></b><br /><br />';
@@ -194,7 +195,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     if ($vavok->post_and_get('action') == 'deleteban') {
         $users_id = $vavok->go('users')->getidfromnick($user);
 
-        if ($users_id != "") {
+        if (!empty($users_id)) {
             // update changes
             $newallban = $vavok->go('users')->user_info('allban', $users_id);
 
@@ -202,11 +203,11 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                 $newallban = $newallban--;
             }
 
-            $vavok->go('db')->update('vavok_users', 'banned', 0, "id='" . $users_id . "'");
+            $vavok->go('users')->update_user('banned', 0, $users_id);
 
             $fields = array('bantime', 'bandesc', 'allban');
             $values = array(0, '', $newallban);
-            $vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $fields, $values, "uid='" . $users_id . "'");
+            $vavok->go('users')->update_user($fields, $values, $users_id);
 
             echo $vavok->go('localization')->string('usrdata') . '  ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
             echo '<b><font color="00FF00">' . $vavok->go('localization')->string('confUnBan') . '</font></b><br /><br />';
