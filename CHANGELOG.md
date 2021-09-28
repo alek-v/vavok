@@ -1,4 +1,4 @@
-# Vavok v1.5.13.4
+# Vavok v1.5.13.5
 - Removed xoft_encode method from Vavok.class.php
 - Removed xoft_decode method from Vavok.class.php
 - Removed safe_encode method from Vavok.class.php
