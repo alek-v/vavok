@@ -232,13 +232,11 @@ if ($vavok->post_and_get('action') == 'upgrade') {
 
                 if (!empty($udd1)) $newpass = $vavok->go('users')->password_encrypt($udd1);
 
-                // update password
-                if (!empty($newpass)) $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'pass', $vavok->no_br($newpass), "id='{$users_id}'");
+                // Update password
+                if (!empty($newpass)) $vavok->go('users')->update_user('pass', $vavok->no_br($newpass), $users_id);
 
-                // access level
-                if (!empty($udd7)) {
-                    $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'perm', (int)$udd7, "id='{$users_id}'");
-                }
+                // Access level
+                if (!empty($udd7)) $vavok->go('users')->update_user('perm', (int)$udd7, $users_id);
 
                 if ($udd7 == 101 || $udd7 == 102 || $udd7 == 103 || $udd7 == 105 || $udd7 == 106) {
                     // Insert data to database if does not exsist
@@ -253,11 +251,11 @@ if ($vavok->post_and_get('action') == 'upgrade') {
                     }
                 }
 
-                $vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'browsers', $vavok->no_br($vavok->check($udd13)), "id='{$users_id}'");
+                $vavok->go('users')->update_user('browsers', $vavok->no_br($vavok->check($udd13)), $users_id);
 
                 $fields = array('city', 'about', 'email', 'site', 'rname');
                 $values = array($vavok->no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
-                $vavok->go('db')->update(DB_PREFIX . 'vavok_about', $fields, $values, "uid='" . $users_id . "'");
+                $vavok->go('users')->update_user($fields, $values, $users_id);
                 
                 $vavok->go('users')->update_user('perstat', $vavok->no_br($vavok->check($udd40)), $users_id);
 

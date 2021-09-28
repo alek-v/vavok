@@ -56,7 +56,7 @@ switch ($vavok->post_and_get('action')) {
 		/**
 		 * Update profile data
 		 */
-		$vavok->go('db')->update('vavok_about', $fields, $values, "uid='{$vavok->go('users')->user_id}'");
+		$vavok->go('users')->update_user($fields, $values);
 
 		/**
 		 * Send email confirmation link if it is changed and save data into database
@@ -137,13 +137,8 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 		$vavok->require_header();
 
 		echo '<div class="row">';
-
-		$about_user = $vavok->go('db')->get_data('vavok_about', "uid='{$vavok->go('users')->user_id}'");
-
 		echo '<div class="col-sm">';
-
 			echo '<div class="row">';
-
 			    echo '<h1>' . $vavok->go('localization')->string('profsettings') . '</h1>';
 
 			    $form = new PageGen('forms/form.tpl');
@@ -309,11 +304,9 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    echo $form->output();
 
 			echo '</div>';
-
 			echo '<div class="row">';
 				echo '<p><a href="profile.php?action=delete_profile" class="btn btn-danger">' . $vavok->go('localization')->string('deleteProfile') . '</a></p>';
 			echo '</div>';
-
 		echo '</div>';
 
 		echo '<div class="col-sm">';
