@@ -4,6 +4,9 @@
  * URI:       https://vavok.net
  */
 
+// Disable direct access to this file
+if (!defined('BASEDIR')) exit;
+
 /**
  * Custom page templates directory is named "templates" and it must be under template main folder
  * default page templates directory is /themes/templates/
