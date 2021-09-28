@@ -43,6 +43,9 @@ switch ($vavok->post_and_get('pg')) {
 			$post->set('published_date', $vavok->date_fixed(time(), 'd.m.Y.'));
 		}
 
+		// Date updated
+		$post->set('date_updated', $vavok->date_fixed($vavok->go('current_page')->page_updated_date, 'd.m.Y.'));
+
 		/**
 		 * Content
 		 */

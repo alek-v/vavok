@@ -12,7 +12,8 @@
 
 	<div class="col-sm blog-author"> <!-- Author and date -->
 		{@website_language[author]}}: {@author_link}}<br />
-		{@website_language[published]}}: {@published_date}}
+		{@website_language[published]}}: {@published_date}}<br />
+		{@website_language[updated]}}: {@date_updated}}
 	</div>
 
 	<div id="tags_area">

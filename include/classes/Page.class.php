@@ -305,35 +305,26 @@ class Page {
 			// Page content
 			$this->page_content = $page_data['content'];
 
-			/**
-			 * Published status
-			 */
+			// Published status
 			$this->published = $page_data['published'];
 
-			/**
-			 * Page id
-			 */
+			// Page id
 			$this->page_id = $page_data['id'];
 
-			/**
-			 * Author
-			 */
+			// Author
 			$this->page_author = $page_data['crtdby'];
 
-			/**
-			 * Date created
-			 */
+			// Date created
 			$this->page_created_date = $page_data['created'];
 
-			/**
-			 * Head tags
-			 */
+			// Head tags
 			$this->head_tags = $this->append_head_tags($page_data['headt']);
 
-			/**
-			 * Published date
-			 */
+			// Published date
 			$this->page_published_date = $page_data['pubdate'];
+
+			// Published date
+			$this->page_updated_date = $page_data['lastupd'];
 
 			return $page_data;
 		}
