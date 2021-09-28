@@ -43,11 +43,9 @@ if (empty($vavok->post_and_get('action'))) {
         $usernameAndMail = new PageGen('mail/usernameAndMail_guest.tpl');
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     } else {
-        $user_email = $vavok->go('db')->get_data('vavok_about', "uid='{$vavok->go('users')->user_id}'", 'email');
-
         $usernameAndMail = new PageGen("mail/usernameAndMail_registered.tpl");
         $usernameAndMail->set('log', $vavok->go('users')->show_username());
-        $usernameAndMail->set('user_email', $user_email['email']);
+        $usernameAndMail->set('user_email', $vavok->go('users')->user_info('email'));
 
         $showPage->set('usernameAndMail', $usernameAndMail->output());
     }

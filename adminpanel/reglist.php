@@ -13,12 +13,11 @@ if ($vavok->post_and_get('action') == 'conf' && !empty($vavok->post_and_get('usr
     $values = array('', '');
     $vavok->go('users')->update_user($fields, $values, $vavok->post_and_get('usr'));
 
-    $about_user = $vavok->go('db')->get_data('vavok_about', "uid='" . $vavok->post_and_get('usr') . "'", 'email');
     $vav_name = $vavok->go('users')->getnickfromid($vavok->post_and_get('usr'));
 
     $message = $vavok->go('localization')->string('hello') . " " . $vav_name . "!\r\n\r\n" . $vavok->go('localization')->string('sitemod') . " " . $vavok->get_configuration('homeBase') . " " . $vavok->go('localization')->string('confirmedreg') . ".\r\n" . $vavok->go('localization')->string('youcanlog') . ".\r\n\r\n" . $vavok->go('localization')->string('bye') . "!\r\n\r\n\r\n\r\n" . $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) . "\r\n" . ucfirst($vavok->get_configuration('homeBase'));
     $newMail = new Mailer;
-    $newMail->queue_email($about_user['email'], $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration('title'), $message, '', '', 'high');
+    $newMail->queue_email($vavok->go('users')->user_info('email', $vavok->post_and_get('usr')), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration('title'), $message, '', '', 'high');
 
     $vavok->redirect_to('reglist.php?isset=mp_ydelconf');
 }
@@ -48,10 +47,10 @@ if (empty($vavok->post_and_get('action'))) {
                 $bym = '<a href="reglist.php?action=conf&usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('confirms') . '</a>';
             } else {
                 $bt = 'Confirmed';
-            } 
+            }
 
             echo '<p>' . $lnk . ' IP: ' . $vavok->go('users')->user_info('ipadd', $item['uid']) . ' ' . $vavok->go('localization')->string('browser') . ': ' . $vavok->go('users')->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
-        } 
+        }
     } else {
         echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';
     }

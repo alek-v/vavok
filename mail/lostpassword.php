@@ -27,9 +27,8 @@ if (empty($vavok->post_and_get('action'))) {
 if ($vavok->post_and_get('action') == 'send') {
     if (!empty($vavok->post_and_get('logus')) && !empty($vavok->post_and_get('mailsus'))) {
         $userx_id = $vavok->go('users')->getidfromnick($vavok->post_and_get('logus'));
-        $show_userx = $vavok->go('db')->get_data('vavok_about', "uid='" . $userx_id . "'", 'email');
 
-        $checkmail = trim($show_userx['email']);
+        $checkmail = trim($vavok->go('users')->user_info('email', $userx_id));
 
         if ($vavok->post_and_get('mailsus') == $checkmail) {
 			if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == true) {

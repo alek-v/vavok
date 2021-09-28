@@ -19,11 +19,9 @@ $vavok->require_header();
 
 if ($vavok->go('users')->is_reg()) {
     if (empty($vavok->post_and_get('action'))) {
-        $chk_photo = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$vavok->go('users')->user_id}'", 'photo');
-
-        if (!empty($chk_photo['photo'])) {
+        if (!empty($vavok->go('users')->user_info('photo'))) {
             echo '<div class="photo">';
-            echo '<h1>Your photo</h1><br /><img src="../' . $chk_photo['photo'] . '" alt="" />';
+            echo '<h1>Your photo</h1><br /><img src="../' . $vavok->go('users')->user_info('photo') . '" alt="Users photo" />';
             echo '</div>';
         }
 
@@ -42,8 +40,9 @@ if ($vavok->go('users')->is_reg()) {
 
         echo $form->output();
     }
+
     // choose photo
-    if ($vavok->post_and_get('action') == "photo") {
+    if ($vavok->post_and_get('action') == 'photo') {
         $avat_size = $_FILES['file']['size'];
         $avat_name = $_FILES['file']['name'];
         $size = GetImageSize($_FILES['file']['tmp_name']);
@@ -93,6 +92,7 @@ if ($vavok->go('users')->is_reg()) {
 
         echo $vavok->sitelink('photo.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
     }
+
     if ($vavok->post_and_get('action') == 'remove') {
         if (file_exists("../used/dataphoto/" . $vavok->go('users')->user_id . ".jpg")) {
             unlink("../used/dataphoto/" . $vavok->go('users')->user_id . ".jpg");
