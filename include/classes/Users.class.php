@@ -385,7 +385,7 @@ class Users {
 		// Filter fields and values in array
 		foreach ($fields as $key => $value) {
 			// Remove field and value that don't belog to this table
-			if (!array_search($value, $valid_fields)) {
+			if (array_search($value, $valid_fields) === false) {
 				// Find key number of value and remove value
 				$value_number = array_search($value, $fields);
 
@@ -393,7 +393,7 @@ class Users {
 				unset($values[$value_number]);
 
 				// Remove field
-				unset($fields[$key]);
+				unset($fields[$value_number]);
 			}
 		}
 
