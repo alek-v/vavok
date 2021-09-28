@@ -8,7 +8,10 @@
 - Implemented handling of POST and GET data
 - Added method user_info() in Users.class.php
 - Added methods update_user() and filter_user_fields_values() in Users.class.php
+- Added updated date for blog pages
+- Use update_user() method for updatins users data
 - Use user_info() method for retrieving users info
+- Updated localization
 
 
 
