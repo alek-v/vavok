@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to("../pages/input.php?action=exit");
+if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to('../?auth_error');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('modlist');
 $vavok->require_header();
