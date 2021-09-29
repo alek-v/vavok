@@ -3,17 +3,14 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_moderator() && !$vavok->go('users')->is_administrator())) {
-    $vavok->redirect_to("../pages/input.php?action=exit");
-}
+if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_moderator() && !$vavok->go('users')->is_administrator())) $vavok->redirect_to("../pages/input.php?action=exit");
 
-$ip = $vavok->check($_GET['ip']);
+$ip = $vavok->check($vavok->post_and_get('ip'));
 
-if (empty($ip)) { exit('please set ip address'); }
+if (empty($ip)) exit('please set ip address');
 
 // Get an array with geoip-infodata
 function geo_check_ip($ip) {
-
     // check, if the provided ip is valid
     if (!filter_var($ip, FILTER_VALIDATE_IP)) {
         throw new InvalidArgumentException("IP is not valid");
@@ -24,12 +21,11 @@ function geo_check_ip($ip) {
 
     if (empty($response)) {
         throw new InvalidArgumentException("Error contacting Geo-IP-Server");
-    } 
+    }
 
     // Return result as array
     return json_decode($response, true);
-
-} 
+}
 
 $ipData = geo_check_ip($ip);
 

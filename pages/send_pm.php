@@ -6,13 +6,13 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to("../pages/login.php"); }
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../pages/login.php');
 
-$pmtext = isset($_POST['pmtext']) ? $pmtext = $vavok->check($_POST['pmtext']) : $pmtext = '';
-$who = isset($_POST['who']) ? $who = $vavok->check($_POST['who']) : $who = '';
+$pmtext = !empty($vavok->post_and_get('pmtext')) ? $vavok->post_and_get('pmtext') : '';
+$who = !empty($vavok->post_and_get('who')) ? $vavok->post_and_get('who') : '';
 
 // dont send message to system
-if ($who == 0) exit;
+if ($who == 0 || empty($who)) exit;
 
 $inbox_notif = $vavok->go('db')->get_data('notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'", 'active');
 

@@ -3,7 +3,7 @@
 
 require_once '../include/startup.php';
 
-$uz = $vavok->check($_GET['uz']);
+$uz = $vavok->check($vavok->post_and_get('uz'));
 
 if (file_exists(BASEDIR . "used/dataphoto/" . $uz . ".jpg")) {
     $filename = BASEDIR . "used/dataphoto/" . $uz . ".jpg";
@@ -13,7 +13,7 @@ if (file_exists(BASEDIR . "used/dataphoto/" . $uz . ".jpg")) {
     $filename = BASEDIR . "used/dataphoto/" . $uz . ".gif";
 } elseif (file_exists(BASEDIR . "used/dataphoto/" . $uz . ".jpeg")) {
     $filename = BASEDIR . "used/dataphoto/" . $uz . ".jpeg";
-} 
+}
 
 $ext = substr($filename, strrpos($filename, '.') + 1);
 $filename = file_get_contents($filename);

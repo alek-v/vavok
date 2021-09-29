@@ -12,7 +12,7 @@ if ($vavok->post_and_get('action') == 'acadd') {
     if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions('adminchat')) $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
 
     $brow = $vavok->check($vavok->go('users')->user_browser());
-    $msg = $vavok->check(wordwrap($_POST['msg'], 150, ' ', 1));
+    $msg = $vavok->check(wordwrap($vavok->post_and_get('msg'), 150, ' ', 1));
     $msg = substr($msg, 0, 1200);
     $msg = $vavok->check($msg);
 
@@ -51,7 +51,8 @@ if ($vavok->post_and_get('action') == "acdel") {
 }
 
 if ($vavok->post_and_get('action') == 'delmail' && $_SESSION['permissions'] == 101) {
-    $users_id = $vavok->check($_GET['users']);
+    $users_id = $vavok->check($vavok->post_and_get('users'));
+
     if (!empty($users_id)) {
             $fields = array('subscri', 'newscod');
             $values = array('', '');
@@ -75,7 +76,7 @@ if ($vavok->post_and_get('action') == 'delallsub' && $_SESSION['permissions'] ==
 }
 
 if ($vavok->post_and_get('action') == "zaban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-	$ips = $vavok->check($_POST['ips']);
+	$ips = $vavok->check($vavok->post_and_get('ips'));
 
     if (!empty($ips) && substr_count($ips, '.') == 3) {
         $vavok->write_data_file('ban.dat', "|$ips|" . PHP_EOL, 1);
@@ -85,13 +86,9 @@ if ($vavok->post_and_get('action') == "zaban" && ($_SESSION['permissions'] == 10
 }
 
 if ($vavok->post_and_get('action') == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-	if (isset($_POST['id'])) {
-        $id = $vavok->check($_POST['id']);
-    } else {
-        $id = $vavok->check($_GET['id']);
-    }
+	if (isset($vavok->post_and_get('id'))) $id = $vavok->check($vavok->post_and_get('id'));
 
-    if (isset($id)) {
+    if (!empty($id)) {
         $file = $vavok->get_data_file('ban.dat');
         $fp = fopen("../used/ban.dat", "w");
         flock ($fp, LOCK_EX);
@@ -105,7 +102,7 @@ if ($vavok->post_and_get('action') == "razban" && ($_SESSION['permissions'] == 1
         fclose($fp);
     }
 
-    $vavok->redirect_to("ban.php");
+    $vavok->redirect_to('ban.php');
 }
 
 if ($vavok->post_and_get('action') == "delallip" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
@@ -114,8 +111,8 @@ if ($vavok->post_and_get('action') == "delallip" && ($_SESSION['permissions'] ==
     $vavok->redirect_to("ban.php");
 }
 
-if ($vavok->post_and_get('action') == "delbw" && $_SESSION['permissions'] == 101) {
-	$stroka = $vavok->check($_GET['stroka']);
+if ($vavok->post_and_get('action') == 'delbw' && $_SESSION['permissions'] == 101) {
+	$stroka = $vavok->check($vavok->('stroka'));
     $file = $vavok->get_data_file('antiword.dat');
     $filestr = explode("|", $file[0]);
     unset($filestr[$stroka]);
@@ -127,14 +124,13 @@ if ($vavok->post_and_get('action') == "delbw" && $_SESSION['permissions'] == 101
     exit;
 }
 
-if ($vavok->post_and_get('action') == "addbw" && $_SESSION['permissions'] == 101 && $_POST['slovo'] != '') {
-	$slovo = $vavok->check($_POST['slovo']);
+if ($vavok->post_and_get('action') == 'addbw' && $_SESSION['permissions'] == 101 && !empty($vavok->post_and_get('slovo')) {
+	$slovo = $vavok->check($vavok->post_and_get('slovo'));
     $fp = fopen(BASEDIR . "used/antiword.dat", "a+");
     $text = preg_replace ("|[\r\n]+|si", "", $slovo);
     fputs($fp, $text . '|');
     fclose($fp);
-    header ("Location: antiword.php?isset=ok");
-    exit;
+    $vavok->redirect_to('antiword.php?isset=ok');
 }
 
 if ($vavok->post_and_get('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
@@ -152,8 +148,8 @@ if ($vavok->post_and_get('action') == "delerlog" && ($_SESSION['permissions'] ==
     $vavok->redirect_to("logfiles.php?isset=mp_dellogs");
 }
 
-if ($vavok->post_and_get('action') == "delerid" && !empty($_GET['err']) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-	$err = $vavok->check($_GET['err']);
+if ($vavok->post_and_get('action') == 'delerid' && !empty($vavok->('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+	$err = $vavok->check($vavok->post_and_get('err'));
     $vavok->clear_files("../used/datalog/" . $err . ".dat");
 
     header ("Location: logfiles.php?isset=mp_dellogs");

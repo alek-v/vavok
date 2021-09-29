@@ -25,7 +25,7 @@ if (empty($vavok->post_and_get('action'))) {
 
     echo $vavok->sitelink('files.php', $vavok->go('localization')->string('back'), '<p>', '<br />');
 } else if ($vavok->post_and_get('action') == 'stpc') {
-    $stext = $vavok->check($_POST['stext']);
+    $stext = $vavok->check($vavok->post_and_get('stext'));
 
     if (empty($stext)) {
         echo '<p>Please fill all fields</p>';

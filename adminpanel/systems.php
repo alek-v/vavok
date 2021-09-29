@@ -23,11 +23,7 @@ if ($vavok->go('users')->is_reg()) {
 
                 echo '<img src="../images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('checksys') . '<hr>';
 
-                if (isset($_GET['did'])) {
-                    $did = $vavok->check($_GET['did']);
-                } else {
-                    $did = '';
-                }
+                $did = $vavok->check($vavok->post_and_get('did'));
 
                 if (!is_dir("../used" . "$did") || !file_exists("../used" . "$did")) {
                     header("Location: systems.php");
@@ -114,41 +110,41 @@ if ($vavok->go('users')->is_reg()) {
             case ('pod_chmod'):
                 echo '<img src="../images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('chchmod') . '<hr>';
 
-                if ($_GET['file'] != "" && file_exists("../used/" . $_GET['file'] . "")) {
+                if ($vavok->post_and_get('file') && file_exists("../used/" . $vavok->post_and_get('file'))) {
                         echo '<form action="systems.php?action=chmod" method=post>';
-                        if (is_file("../used/" . $_GET['file'] . "")) {
-                            echo $vavok->go('localization')->string('file') . ': ../used' . $_GET['file'] . '<br>';
-                        } elseif (is_dir("../used/" . $_GET['file'] . "")) {
-                            echo $vavok->go('localization')->string('folder') . ': ../used' . $_GET['file'] . '<br>';
+                        if (is_file("../used/" . $vavok->post_and_get('file'))) {
+                            echo $vavok->go('localization')->string('file') . ': ../used' . $vavok->post_and_get('file') . '<br>';
+                        } elseif (is_dir("../used/" . $vavok->post_and_get('file'))) {
+                            echo $vavok->go('localization')->string('folder') . ': ../used' . $vavok->post_and_get('file') . '<br>';
                         } 
-                        echo 'CHMOD: <br><input type="text" name="mode" value="' . $vavok->permissions("../used/" . $_GET['file'] . "") . '" maxlength="3" /><br>
-<input name="file" type="hidden" value="' . $_GET['file'] . '" />
+                        echo 'CHMOD: <br><input type="text" name="mode" value="' . $vavok->permissions("../used/" . $vavok->post_and_get('file')) . '" maxlength="3" /><br>
+<input name="file" type="hidden" value="' . $vavok->post_and_get('file') . '" />
 <input type=submit value="' . $vavok->go('localization')->string('save') . '"></form><hr>';
 
                 } else {
                     echo 'No file name!<hr>';
                 }
 
-                if (prev_dir($_GET['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_GET['file']) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
+                if (!empty(prev_dir($vavok->post_and_get('file')))) {
+                    echo '<a href="systems.php?did=' . prev_dir($vavok->post_and_get('file')) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
                 }
                 echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
 
                 break;
 
-            case ("chmod"):
-                if ($_POST['file'] != "" && $_POST['mode'] != "") {
-                    if (chmod("../used/" . $_POST['file'] . "", octdec($_POST['mode'])) != false) {
-                        echo '' . $vavok->go('localization')->string('chmodok') . '!<hr>';
+            case ('chmod'):
+                if (!empty($vavok->post_and_get('file')) && !empty($vavok->post_and_get('mode'))) {
+                    if (chmod("../used/" . $vavok->post_and_get('file'), octdec($vavok->post_and_get('mode'))) != false) {
+                        echo $vavok->go('localization')->string('chmodok') . '!<hr>';
                     } else {
-                        echo '' . $vavok->go('localization')->string('chmodnotok') . '!<hr>';
+                        echo $vavok->go('localization')->string('chmodnotok') . '!<hr>';
                     } 
                 } else {
-                    echo '' . $vavok->go('localization')->string('noneededdata') . '!<hr>';
+                    echo $vavok->go('localization')->string('noneededdata') . '!<hr>';
                 } 
 
-                if (prev_dir($_POST['file']) != "") {
-                    echo '<a href="systems.php?did=' . prev_dir($_POST['file']) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
+                if (!empty(prev_dir($vavok->post_and_get('file')))) {
+                    echo '<a href="systems.php?did=' . prev_dir($vavok->post_and_get('file')) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
                 } 
                 echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
 

@@ -14,25 +14,19 @@ $site_configuration = new Config();
  * Мain settings update
  */
 if ($vavok->post_and_get('action') == 'editone') {
-
-	// Check fields
-    if (!isset($_POST['conf_set2']) || !isset($_POST['conf_set8']) || !isset($_POST['conf_set9']) || !isset($_POST['conf_set10']) || !isset($_POST['conf_set11']) || !isset($_POST['conf_set14']) || !isset($_POST['conf_set61']) || !isset($_POST['conf_set62']) || !isset($_POST['conf_set63'])) {
-        $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
-    }
-
     $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
 
     $values = array(
-        $vavok->check($_POST['conf_set2']),
-        $vavok->check($_POST['conf_set8']),
-        htmlspecialchars(stripslashes(trim($_POST['conf_set9']))),
-        $vavok->check($_POST['conf_set10']),
-        $vavok->check($_POST['conf_set11']),
-        $vavok->check($_POST['conf_set14']),
-        $vavok->check($_POST['conf_set47']),
-        (int)$_POST['conf_set61'],
-        (int)$_POST['conf_set62'],
-        (int)$_POST['conf_set63']
+        $vavok->post_and_get('conf_set2'),
+        $vavok->post_and_get('conf_set8'),
+        $vavok->post_and_get('conf_set9'),
+        $vavok->post_and_get('conf_set10'),
+        $vavok->post_and_get('conf_set11'),
+        $vavok->post_and_get('conf_set14'),
+        $vavok->post_and_get('conf_set47'),
+        (int)$vavok->post_and_get('conf_set61'),
+        (int)$vavok->post_and_get('conf_set62'),
+        (int)$vavok->post_and_get('conf_set63')
     );
 
     /**
@@ -40,16 +34,10 @@ if ($vavok->post_and_get('action') == 'editone') {
      */
     $site_configuration->update_config_data(array_combine($fields, $values));
 
-    $vavok->redirect_to("settings.php?isset=mp_yesset");
-
+    $vavok->redirect_to('settings.php?isset=mp_yesset');
 }
 
-if ($vavok->post_and_get('action') == "edittwo") {
-
-	if (!isset($_POST['conf_set4']) || !isset($_POST['conf_set5']) || !isset($_POST['conf_set7']) || !isset($_POST['conf_set32']) || !isset($_POST['conf_set74'])) {
-        $vavok->redirect_to("settings.php?action=settwo&isset=mp_nosset");
-    }
-
+if ($vavok->post_and_get('action') == 'edittwo') {
     $fields = array(
     	'showtime',
     	'pageGenTime',
@@ -59,11 +47,11 @@ if ($vavok->post_and_get('action') == "edittwo") {
     );
 
     $values = array(
-        (int)$_POST['conf_set4'],
-        (int)$_POST['conf_set5'],
-        (int)$_POST['conf_set7'],
-        (int)$_POST['conf_set32'], // cookie consent
-        (int)$_POST['conf_set74']
+        (int)$vavok->post_and_get('conf_set4'),
+        (int)$vavok->post_and_get('conf_set5'),
+        (int)$vavok->post_and_get('conf_set7'),
+        (int)$vavok->post_and_get('conf_set32'), // cookie consent
+        (int)$vavok->post_and_get('conf_set74')
     );
 
     /**
@@ -74,12 +62,7 @@ if ($vavok->post_and_get('action') == "edittwo") {
 	$vavok->redirect_to("settings.php?isset=mp_yesset");
 } 
 
-if ($vavok->post_and_get('action') == "editthree") {
-
-    if (!isset($_POST['conf_set20']) || !isset($_POST['conf_set22']) || !isset($_POST['conf_set24']) || !isset($_POST['conf_set56'])) {
-        $vavok->redirect_to("settings.php?action=setthree&isset=mp_nosset");
-    }
-
+if ($vavok->post_and_get('action') == 'editthree') {
     $fields = array(
         'bookGuestAdd',
         'maxPostChat',
@@ -88,10 +71,10 @@ if ($vavok->post_and_get('action') == "editthree") {
     );
 
     $values = array(
-        (int)$_POST['conf_set20'],
-        (int)$_POST['conf_set22'],
-        (int)$_POST['conf_set24'],
-        (int)$_POST['conf_set56']
+        (int)$vavok->post_and_get('conf_set20'),
+        (int)$vavok->post_and_get('conf_set22'),
+        (int)$vavok->post_and_get('conf_set24'),
+        (int)$vavok->post_and_get('conf_set56')
     );
 
     /**
@@ -102,12 +85,7 @@ if ($vavok->post_and_get('action') == "editthree") {
 
 }
 
-if ($vavok->post_and_get('action') == "editfour") {
-
-    if (!isset($_POST['conf_set38']) || !isset($_POST['conf_set39']) || !isset($_POST['conf_set49'])) {
-        $vavok->redirect_to("settings.php?action=setfour&isset=mp_nosset");
-    }
-
+if ($vavok->post_and_get('action') == 'editfour') {
     // Update main config
     $fields = array(
         'photoFileSize',
@@ -117,10 +95,10 @@ if ($vavok->post_and_get('action') == "editfour") {
     );
 
     $values = array(
-        (int)$_POST['conf_set38'] * 1024,
-        (int)$_POST['conf_set39'],
-        (int)$_POST['conf_set49'],
-        (int)$_POST['conf_set68']
+        (int)$vavok->post_and_get('conf_set38') * 1024,
+        (int)$vavok->post_and_get('conf_set39'),
+        (int)$vavok->post_and_get('conf_set49'),
+        (int)$vavok->post_and_get('conf_set68')
     );
 
     /**
@@ -133,11 +111,11 @@ if ($vavok->post_and_get('action') == "editfour") {
     if (empty($gallery_file)) $gallery_file = '||||||||||';
     $gallery_data = explode("|", $gallery_file[0]);
 
-    $gallery_data[0] = (int)$_POST['gallery_set0']; // users can upload
-    $gallery_data[8] = (int)$_POST['gallery_set8']; // photos per page
-    $gallery_data[5] = (int)$_POST['screen_width'];
-    $gallery_data[6] = (int)$_POST['screen_height'];
-    $gallery_data[7] = (int)$_POST['media_buttons'];
+    $gallery_data[0] = (int)$vavok->post_and_get('gallery_set0'); // users can upload
+    $gallery_data[8] = (int)$vavok->post_and_get('gallery_set8'); // photos per page
+    $gallery_data[5] = (int)$vavok->post_and_get('screen_width');
+    $gallery_data[6] = (int)$vavok->post_and_get('screen_height');
+    $gallery_data[7] = (int)$vavok->post_and_get('media_buttons');
 
     $gallery_text = '';
     for ($u = 0; $u < 10; $u++) {
@@ -153,24 +131,15 @@ if ($vavok->post_and_get('action') == "editfour") {
 }
 
 if ($vavok->post_and_get('action') == 'editfive') {
-	if (!isset($_POST['conf_set30'])) {
-        $vavok->redirect_to("settings.php?action=setfive&isset=mp_nosset");
-    }
-
     /**
      * Update settings
      */
-    $site_configuration->update_config_data(array_combine(array('pvtLimit'), array((int)$_POST['conf_set30'])));
+    $site_configuration->update_config_data(array_combine(array('pvtLimit'), array((int)$vavok->post_and_get('conf_set30'))));
 
-	$vavok->redirect_to("settings.php?isset=mp_yesset");
+	$vavok->redirect_to('settings.php?isset=mp_yesset');
 }
 
-if ($vavok->post_and_get('action') == "editseven") {
-
-    if (!isset($_POST['conf_set6']) || !isset($_POST['conf_set51']) || !isset($_POST['conf_set70'])) {
-        $vavok->redirect_to("settings.php?action=setseven&isset=mp_nosset");
-    }
-
+if ($vavok->post_and_get('action') == 'editseven') {
     // url of custom pages
     $htaccess = file_get_contents('../.htaccess'); // load .htaccess file
 
@@ -185,10 +154,8 @@ if ($vavok->post_and_get('action') == "editseven") {
     }
 
     // do replacement
-    if (!empty($_POST['conf_set28'])) {
-        $_POST['conf_set28'] = str_replace(' ', '', $_POST['conf_set28']);
-
-        $replacement = "\r\n" . 'RewriteRule ^' . $_POST['conf_set28'] . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
+    if (!empty($vavok->post_and_get('conf_set28'))) {
+        $replacement = "\r\n" . 'RewriteRule ^' . str_replace(' ', '', $vavok->post_and_get('conf_set28')) . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
     } else { $replacement = "\r\n# custom_link - don't remove\r\n"; }
 
     $new_htaccess = str_replace($replace, $replacement, $htaccess);
@@ -204,33 +171,28 @@ if ($vavok->post_and_get('action') == "editseven") {
     );
 
     $values = array(
-        $_POST['conf_set6'],
-        $_POST['conf_set28'],
-        (int)$_POST['conf_set51'],
-        $_POST['conf_set70']
+        $vavok->post_and_get('conf_set6'),
+        $vavok->post_and_get('conf_set28'),
+        (int)$vavok->post_and_get('conf_set51'),
+        $vavok->post_and_get('conf_set70')
     );
 
     /**
      * Update settings
      */
     $site_configuration->update_config_data(array_combine($fields, $values));
-    $vavok->redirect_to("settings.php?isset=mp_yesset");
-
+    $vavok->redirect_to('settings.php?isset=mp_yesset');
 }
 
-if ($vavok->post_and_get('action') == "editeight") {
-    if (!isset($_POST['conf_set58']) || !isset($_POST['conf_set76'])) {
-        $vavok->redirect_to("settings.php?action=seteight&isset=mp_nosset");
-    }
-
+if ($vavok->post_and_get('action') == 'editeight') {
     $fields = array(
         'maxLogData',
         'maxBanTime'
     );
 
     $values = array(
-        (int)$_POST['conf_set58'],
-        round($_POST['conf_set76'] * 1440)
+        (int)$vavok->post_and_get('conf_set58'),
+        round($vavok->post_and_get('conf_set76') * 1440)
     );
 
     /**
@@ -245,20 +207,15 @@ if ($vavok->post_and_get('action') == "editeight") {
  * Site security options
  */
 if ($vavok->post_and_get('action') == 'editsecurity') {
-	// Check fields
-    if (!isset($_POST['conf_set1']) || !isset($_POST['conf_set3']) || !isset($_POST['conf_set21']) || !isset($_POST['conf_set29'])) {
-        $vavok->redirect_to("settings.php?action=setone&isset=mp_nosset");
-    }
-
     $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
 
     $values = array(
-        $vavok->check($_POST['conf_set1']),
-        $vavok->check($_POST['conf_set3']),
-        $vavok->check($_POST['conf_set21']),
-        (int)$_POST['conf_set29'],
-        $vavok->check($_POST['recaptcha_sitekey']),
-        $vavok->check($_POST['recaptcha_secretkey'])
+        $vavok->post_and_get('conf_set1'),
+        $vavok->post_and_get('conf_set3'),
+        $vavok->post_and_get('conf_set21'),
+        (int)$vavok->post_and_get('conf_set29'),
+        $vavok->post_and_get('recaptcha_sitekey'),
+        $vavok->post_and_get('recaptcha_secretkey')
     );
 
     /**
@@ -277,7 +234,7 @@ $htaccess_tp_s = '# force https protocol
 RewriteCond %{HTTPS} !=on
 RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
 
-    if ($vavok->get_configuration('transferProtocol') == 'HTTPS' && ($_POST['conf_set21'] == 'auto' || $_POST['conf_set21'] == 'HTTP')) {
+    if ($vavok->get_configuration('transferProtocol') == 'HTTPS' && ($vavok->post_and_get('conf_set21') == 'auto' || $vavok->post_and_get('conf_set21') == 'HTTP')) {
         // Disable forcing HTTPS in .htaccess
 
         $file = file_get_contents('../.htaccess');
@@ -288,7 +245,7 @@ RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
         $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
 
         file_put_contents('../.htaccess', $file);
-    } elseif ($_POST['conf_set21'] == 'HTTPS' && ($vavok->get_configuration('transferProtocol') == 'HTTP' || $vavok->get_configuration('transferProtocol') == 'auto')) {
+    } elseif ($vavok->post_and_get('conf_set21') == 'HTTPS' && ($vavok->get_configuration('transferProtocol') == 'HTTP' || $vavok->get_configuration('transferProtocol') == 'auto')) {
         // Enable forcing HTTPS in .htaccess
         $file = file_get_contents('../.htaccess');
 
@@ -318,7 +275,7 @@ if (empty($vavok->post_and_get('action'))) {
 }
 
 // main settings
-if ($vavok->post_and_get('action') == "setone") {
+if ($vavok->post_and_get('action') == 'setone') {
     echo '<h1>' . $vavok->go('localization')->string('mainset') . '</h1>';
 
     $form = new PageGen('forms/form.tpl');

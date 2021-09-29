@@ -6,15 +6,13 @@
 
 require_once '../include/startup.php';
 
-$recipient_mail = isset($_POST['recipient']) ? $vavok->check($_POST['recipient']) : '';
-$recipient_id = isset($_GET['uid']) ? $vavok->check($_GET['uid']) : '';
+$recipient_mail = $vavok->post_and_get('recipient');
+$recipient_id = $vavok->post_and_get('uid');
 
 // resend registration email with key
 if ($vavok->post_and_get('action') == 'resendkey') {
 	// if user id is not in url, get it from submited email
-	if (empty($recipient_id)) {
-    	$recipient_id = $vavok->go('users')->get_id_from_mail($recipient_mail);
-	}
+	if (empty($recipient_id)) $recipient_id = $vavok->go('users')->get_id_from_mail($recipient_mail);
 
     // check if user really need to confirm registration
     $check = $vavok->go('db')->count_row('vavok_profil', "uid = '{$recipient_id}' AND regche = 1");
@@ -101,7 +99,7 @@ if (empty($vavok->post_and_get('action'))) {
 
 // check comfirmation code
 if ($vavok->post_and_get('action') == 'inkey') {
-    $key = isset($_GET['key']) ? $vavok->check(trim($_GET['key'])) : $vavok->check(trim($_POST['key']));
+    $key = $vavok->post_and_get('key']);
 
     if (!empty($key)) {
         if (!$vavok->go('db')->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) {

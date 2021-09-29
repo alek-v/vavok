@@ -19,8 +19,8 @@ echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $vavok->go('localiza
 $total = $vavok->go('db')->count_row(DB_PREFIX . 'online');
 $totalreg = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user > 0");
 
-if (!empty($_GET['list'])) {
-    $list = $vavok->check($_GET['list']);
+if (!empty($vavok->post_and_get('list'))) {
+    $list = $vavok->check($vavok->post_and_get('list'));
 } else {
     if ($totalreg > 0) {
         $list = 'reg';

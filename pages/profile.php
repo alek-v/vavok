@@ -10,10 +10,10 @@ if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../?isset=inputoff');
 
 switch ($vavok->post_and_get('action')) {
 	case 'save':
-		if (!empty($_POST['site']) && !$vavok->validateURL($_POST['site'])) $vavok->redirect_to('profile.php?isset=insite');
+		if (!empty($vavok->post_and_get('site')) && !$vavok->validateURL($vavok->post_and_get('site'))) $vavok->redirect_to('profile.php?isset=insite');
 
 		// check email
-		if (!empty($_POST['email']) && !$vavok->go('users')->validate_email($_POST['email'])) $vavok->redirect_to('profile.php?isset=noemail');
+		if (!empty($vavok->post_and_get('email')) && !$vavok->go('users')->validate_email($vavok->post_and_get('email'))) $vavok->redirect_to('profile.php?isset=noemail');
 
 		// check birthday
 		// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}

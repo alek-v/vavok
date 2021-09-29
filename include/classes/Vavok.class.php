@@ -1114,7 +1114,7 @@ class Vavok {
 	 * @param string $return_key
 	 * @return array|string
 	 */
-	public function post_and_get($return_key = '')
+	public function post_and_get($return_key = '', $unchainged = '')
 	{
 		$arrays = array_merge($_POST, $_GET);
 
@@ -1126,8 +1126,11 @@ class Vavok {
 		// Handle page number
 		if (!isset($return['page']) || empty($return['page']) || $return['page'] < 1) $return['page'] = 1;
 
+		// Return unchanged data
+		if (!empty($return_key) && $unchainged == true) $return = isset($arrays[$return_key]) ? $arrays[$return_key] : '';
+
 		// Return requested key
-		if (!empty($return_key)) $return = isset($return[$return_key]) ? $return[$return_key] : '';
+		if (!empty($return_key) && empty($unchainged)) $return = isset($return[$return_key]) ? $return[$return_key] : '';
 
 		return $return;
 	}

@@ -20,8 +20,7 @@ $vavok->go('current_page')->append_head_tags('<meta name="robots" content="noind
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('inbox');
 $vavok->require_header();
 
-$who = isset($_GET['who']) ? $vavok->check($_GET["who"]) : '';
-if (empty($who) && isset($_POST['who'])) $who = $vavok->go('users')->getidfromnick($vavok->check($_POST['who']));
+$who = !empty($vavok->post_and_get('who')) ? $vavok->go('users')->getidfromnick($vavok->post_and_get('who')) : 0;
 
 if (empty($vavok->post_and_get('action'))) {
     $num_items = $vavok->go('users')->getpmcount($vavok->go('users')->user_id);

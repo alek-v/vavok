@@ -6,11 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (isset($_POST['users'])) {
-    $user = $vavok->check($_POST['users']);
-} elseif (isset($_GET['users'])) {
-    $user = $vavok->check($_GET['users']);
-} else { $user = ''; }
+$user = $vavok->post_and_get('users');
 
 if (!$vavok->go('users')->is_reg()) { $vavok->redirect_to('../?error'); } 
 
@@ -53,7 +49,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
             }
 
             $user = $vavok->check($user);
-            if ($userx_id != "" && $users_nick != "") {
+            if (!empty($userx_id) && !empty($users_nick)) {
                 echo '<img src="../images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
                 echo 'Bans: <b>' . (int)$vavok->go('users')->user_info('allban', $userx_id) . '</b><br />'; // update lang
                 if (ctype_digit($vavok->go('users')->user_info('lastban', $userx_id))) {
@@ -133,18 +129,18 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
                     }
                 }
             } else {
-                echo '' . $vavok->go('localization')->string('usrnoexist') . '!<br />';
+                echo $vavok->go('localization')->string('usrnoexist') . '!<br />';
             }
         } else {
-            echo '' . $vavok->go('localization')->string('nousername') . '!<br />';
+            echo $vavok->go('localization')->string('nousername') . '!<br />';
         }
     }
 
     if ($vavok->post_and_get('action') == 'banuser') {
-        $bform = $vavok->check($_POST['bform']);
-        $udd38 = $vavok->check($_POST['duration']);
+        $bform = $vavok->check($vavok->post_and_get('bform'));
+        $udd38 = $vavok->check($vavok->post_and_get('duration'));
         $users_id = $vavok->go('users')->getidfromnick($user);
-        $udd39 = $vavok->check($_POST['udd39']);
+        $udd39 = $vavok->check($vavok->post_and_get('udd39'));
 
         if ($users_id != "") {
             if ($bform == "min") {

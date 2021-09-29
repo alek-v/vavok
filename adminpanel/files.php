@@ -12,38 +12,25 @@ require_once '../include/htmlbbparser.php';
  */
 if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
 
-$file = isset($_GET['file']) ? $vavok->check($_GET['file']) : '';
-$text_files = isset($_POST['text_files']) ? $_POST['text_files'] : ''; // keep data as received so html codes will be ok
-$id = isset($_POST['id']) ? $vavok->check($_POST['id']) : '';
-$id = isset($_GET['id']) ? $vavok->check($_GET['id']) : '';
+$file = $vavok->check($vavok->post_and_get('file'));
+$text_files = $vavok->post_and_get('text_files', true); // keep data as received so html codes will be ok
+$id = $vavok->check($vavok->post_and_get('id'));
 
-// init class
 $page_editor = new Page();
 
-// get page id we work with
-$page_id = $page_editor->get_page_id("file='{$file}'");
-
-if (isset($_GET['file'])) {
-    // get page id we work with
-    $page_id = $page_editor->get_page_id("file='{$file}'");
-} elseif (isset($_POST['file'])) {
-    $file = $vavok->check($_POST['file']);
-    // get page id we work with
-    $page_id = $page_editor->get_page_id("file='{$file}'");
-} else {
-    $file = '';
-}
+// Get page id we work with
+if (!empty($vavok->post_and_get('file'))) $page_id = $page_editor->get_page_id("file='{$file}'");
 
 $config_editfiles = 20;
 
-if ($vavok->post_and_get('action') == "editfile") {
+if ($vavok->post_and_get('action') == 'editfile') {
     // get edit mode
     if (!empty($_SESSION['edmode'])) {
         $edmode = $vavok->check($_SESSION['edmode']);
     } else {
         $edmode = 'columnist';
         $_SESSION['edmode'] = $edmode;
-    } 
+    }
 
     if (!empty($file) && !empty($text_files)) {
         $page_info = $page_editor->select_page($page_id, 'crtdby, published');
@@ -67,13 +54,12 @@ if ($vavok->post_and_get('action') == "editfile") {
     } 
 
     $vavok->redirect_to("files.php?action=edit&file=$file&isset=mp_editfiles");
-
 }
 
 if ($vavok->post_and_get('action') == 'savetags') {
     if (!$vavok->go('users')->check_permissions('pageedit', 'insert') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
 
-    $tags = isset($_POST['tags']) ? $vavok->check($_POST['tags']) : '';
+    $tags = !empty($vavok->post_and_get('tags')) ? $vavok->post_and_get('tags') : '';
 
     if (isset($tags)) { $page_editor->update_tags($id, $tags); }
 
@@ -93,7 +79,7 @@ if ($vavok->post_and_get('action') == 'editmainhead') {
 // update head tags on specific page
 if ($vavok->post_and_get('action') == "editheadtag") {
     // get default image link
-    $image = !empty($_POST['image']) ? $vavok->check($_POST['image']) : '';
+    $image = !empty($vavok->post_and_get('image')) ? $vavok->post_and_get('image') : '';
 
     // update header tags
     if (!empty($file)) {
@@ -126,7 +112,7 @@ if ($vavok->post_and_get('action') == "editheadtag") {
  * Rename page
  */
 if ($vavok->post_and_get('action') == 'save_renamed') {
-    $pg = $vavok->check($_POST['pg']); // new file name
+    $pg = $vavok->post_and_get('pg'); // new file name
 
     if (!empty($pg) && !empty($file)) {
         $page_info = $page_editor->select_page($page_id, 'crtdby');
@@ -150,13 +136,13 @@ if ($vavok->post_and_get('action') == 'save_renamed') {
     exit;
 }
 
-if ($vavok->post_and_get('action') == "addnew") {
+if ($vavok->post_and_get('action') == 'addnew') {
     if (!$vavok->go('users')->check_permissions('pageedit', 'insert') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); }
 
-    $newfile = isset($_POST['newfile']) ? $vavok->check($_POST['newfile']) : '';
-    $type = isset($_POST['type']) ? $vavok->check($_POST['type']) : '';
-    $page_structure = isset($_POST['page_structure']) ? $vavok->check($_POST['page_structure']) : '';
-    $allow_unicode = isset($_POST['allow_unicode']) ? true : false;
+    $newfile = !empty($vavok->post_and_get('newfile')) ? $vavok->post_and_get('newfile') : '';
+    $type = !empty($vavok->post_and_get('type')) ? $vavok->post_and_get('type') : '';
+    $page_structure = !empty($vavok->post_and_get('page_structure')) ? $vavok->post_and_get('page_structure') : '';
+    $allow_unicode = $vavok->post_and_get('allow_unicode') == 'on' ? true : false;
 
     // page title
     $page_title = $newfile;
@@ -175,8 +161,8 @@ if ($vavok->post_and_get('action') == "addnew") {
     }
 
     // page language
-    if (isset($_POST['lang']) && !empty($_POST['lang'])) {
-        $pagelang = $vavok->check($_POST['lang']);
+    if (!empty($vavok->post_and_get('lang'))) {
+        $pagelang = $vavok->post_and_get('lang');
 
         $pagelang_file = '!.' . $pagelang . '!';
     } else {
@@ -278,8 +264,8 @@ if ($vavok->post_and_get('action') == "unpublish") {
 if ($vavok->post_and_get('action') == 'pagelang') {
     if (!$vavok->go('users')->is_administrator()) { $vavok->redirect_to("../?isset=ap_noaccess"); }
 
-    $pageId = $vavok->check($_GET['id']);
-    $lang = $vavok->check($_POST['lang']);
+    $pageId = $vavok->check($vavok->post_and_get('id'));
+    $lang = $vavok->post_and_get('lang');
 
     // update database data
     $page_editor->language($pageId, $lang);
@@ -297,8 +283,8 @@ if (!empty($_SESSION['edmode'])) {
     $edmode = 'visual';
     $_SESSION['edmode'] = $edmode;
 } 
-if (!empty($_POST['edmode'])) {
-    $edmode = $vavok->check($_POST['edmode']);
+if (!empty($vavok->post_and_get('edmode'))) {
+    $edmode = $vavok->post_and_get('edmode');
     $_SESSION['edmode'] = $edmode;
 }
 
@@ -764,7 +750,7 @@ if ($vavok->post_and_get('action') == 'renamepg') {
         exit;
     }
 
-    $pg = $vavok->check($_GET['pg']);
+    $pg = $vavok->check($vavok->post_and_get('pg'));
 
     $vavok->require_header();
 
@@ -956,12 +942,10 @@ if ($vavok->post_and_get('action') == "poddel") {
     echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
 } 
 
-if ($vavok->post_and_get('action') == "updpagelang") {
-    if (!$vavok->go('users')->is_administrator()) {
-        $vavok->redirect_to("index.php?isset=ap_noaccess");
-    } 
+if ($vavok->post_and_get('action') == 'updpagelang') {
+    if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('index.php?isset=ap_noaccess');
 
-    $id = $vavok->check($_GET['id']);
+    $id = $vavok->check($vavok->post_and_get('id'));
 
     // get page data
     $pageData = $page_editor->select_page($id);
