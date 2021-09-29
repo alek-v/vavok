@@ -86,7 +86,7 @@ if ($vavok->post_and_get('action') == "zaban" && ($_SESSION['permissions'] == 10
 }
 
 if ($vavok->post_and_get('action') == "razban" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-	if (isset($vavok->post_and_get('id'))) $id = $vavok->check($vavok->post_and_get('id'));
+	if (!empty($vavok->post_and_get('id'))) $id = $vavok->post_and_get('id');
 
     if (!empty($id)) {
         $file = $vavok->get_data_file('ban.dat');
@@ -112,7 +112,7 @@ if ($vavok->post_and_get('action') == "delallip" && ($_SESSION['permissions'] ==
 }
 
 if ($vavok->post_and_get('action') == 'delbw' && $_SESSION['permissions'] == 101) {
-	$stroka = $vavok->check($vavok->('stroka'));
+	$stroka = $vavok->post_and_get('stroka');
     $file = $vavok->get_data_file('antiword.dat');
     $filestr = explode("|", $file[0]);
     unset($filestr[$stroka]);
@@ -124,7 +124,7 @@ if ($vavok->post_and_get('action') == 'delbw' && $_SESSION['permissions'] == 101
     exit;
 }
 
-if ($vavok->post_and_get('action') == 'addbw' && $_SESSION['permissions'] == 101 && !empty($vavok->post_and_get('slovo')) {
+if ($vavok->post_and_get('action') == 'addbw' && $_SESSION['permissions'] == 101 && !empty($vavok->post_and_get('slovo'))) {
 	$slovo = $vavok->check($vavok->post_and_get('slovo'));
     $fp = fopen(BASEDIR . "used/antiword.dat", "a+");
     $text = preg_replace ("|[\r\n]+|si", "", $slovo);
@@ -148,7 +148,7 @@ if ($vavok->post_and_get('action') == "delerlog" && ($_SESSION['permissions'] ==
     $vavok->redirect_to("logfiles.php?isset=mp_dellogs");
 }
 
-if ($vavok->post_and_get('action') == 'delerid' && !empty($vavok->('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+if ($vavok->post_and_get('action') == 'delerid' && !empty($vavok->post_and_get('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
 	$err = $vavok->check($vavok->post_and_get('err'));
     $vavok->clear_files("../used/datalog/" . $err . ".dat");
 

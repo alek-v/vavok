@@ -199,22 +199,22 @@ if ($vavok->post_and_get('action') == 'edit') {
 
 // update changes
 if ($vavok->post_and_get('action') == 'upgrade') {
-    $udd1 = !empty($vavok->post_and_get('udd1')) ? $vavok->post_and_get('udd1')) : '';
-    $udd2 = !empty($vavok->post_and_get('udd2')) ? $vavok->post_and_get('udd2')) : '';
-    $udd3 = !empty($vavok->post_and_get('udd3')) ? $vavok->post_and_get('udd3')) : '';
-    $udd4 = !empty($vavok->post_and_get('udd4')) ? $vavok->post_and_get('udd4')) : '';
-    $udd5 = !empty($vavok->post_and_get('udd5')) ? $vavok->post_and_get('udd5')) : '';
-    $udd6 = !empty($vavok->post_and_get('udd6')) ? $vavok->post_and_get('udd6')) : '';
-    $udd7 = !empty($vavok->post_and_get('udd7')) ? $vavok->post_and_get('udd7')) : ''; // access level
-    $udd8 = !empty($vavok->post_and_get('udd8')) ? $vavok->post_and_get('udd8')) : '';
-    $udd9 = !empty($vavok->post_and_get('udd9')) ? $vavok->post_and_get('udd9')) : '';
-    $udd10 = !empty($vavok->post_and_get('udd10')) ? $vavok->post_and_get('udd10')) : '';
-    $udd11 = !empty($vavok->post_and_get('udd11')) ? $vavok->post_and_get('udd11')) : '';
-    $udd12 = !empty($vavok->post_and_get('udd12')) ? $vavok->post_and_get('udd12')) : '';
-    $udd13 = !empty($vavok->post_and_get('udd13')) ? $vavok->post_and_get('udd13')) : '';
-    $udd29 = !empty($vavok->post_and_get('udd29')) ? $vavok->post_and_get('udd29')) : '';
-    $udd40 = !empty($vavok->post_and_get('udd40')) ? $vavok->post_and_get('udd40')) : '';
-    $udd43 = !empty($vavok->post_and_get('udd43')) ? $vavok->post_and_get('udd43')) : '';
+    $udd1 = !empty($vavok->post_and_get('udd1')) ? $vavok->post_and_get('udd1') : '';
+    $udd2 = !empty($vavok->post_and_get('udd2')) ? $vavok->post_and_get('udd2') : '';
+    $udd3 = !empty($vavok->post_and_get('udd3')) ? $vavok->post_and_get('udd3') : '';
+    $udd4 = !empty($vavok->post_and_get('udd4')) ? $vavok->post_and_get('udd4') : '';
+    $udd5 = !empty($vavok->post_and_get('udd5')) ? $vavok->post_and_get('udd5') : '';
+    $udd6 = !empty($vavok->post_and_get('udd6')) ? $vavok->post_and_get('udd6') : '';
+    $udd7 = !empty($vavok->post_and_get('udd7')) ? $vavok->post_and_get('udd7') : ''; // access level
+    $udd8 = !empty($vavok->post_and_get('udd8')) ? $vavok->post_and_get('udd8') : '';
+    $udd9 = !empty($vavok->post_and_get('udd9')) ? $vavok->post_and_get('udd9') : '';
+    $udd10 = !empty($vavok->post_and_get('udd10')) ? $vavok->post_and_get('udd10') : '';
+    $udd11 = !empty($vavok->post_and_get('udd11')) ? $vavok->post_and_get('udd11') : '';
+    $udd12 = !empty($vavok->post_and_get('udd12')) ? $vavok->post_and_get('udd12') : '';
+    $udd13 = !empty($vavok->post_and_get('udd13')) ? $vavok->post_and_get('udd13') : '';
+    $udd29 = !empty($vavok->post_and_get('udd29')) ? $vavok->post_and_get('udd29') : '';
+    $udd40 = !empty($vavok->post_and_get('udd40')) ? $vavok->post_and_get('udd40') : '';
+    $udd43 = !empty($vavok->post_and_get('udd43')) ? $vavok->post_and_get('udd43') : '';
 
     if ($vavok->go('users')->validate_email($udd4)) {
         if (empty($udd5) || $vavok->validateURL($udd5) === true) {
