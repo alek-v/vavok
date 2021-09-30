@@ -1,3 +1,12 @@
+# Vavok v1.5.14
+- Added support for cookie-free domains
+- Added current_connection() method to Vavok.class.php
+- Updated localization
+- Updated default theme
+- Moved folder images to themes/images
+
+
+
 # Vavok v1.5.13.5
 - Removed xoft_encode method from Vavok.class.php
 - Removed xoft_decode method from Vavok.class.php
