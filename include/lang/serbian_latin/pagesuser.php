@@ -1,5 +1,4 @@
 <?php
-// modified: 05.06.2020. 20:17:17
 
 $lang_user['profile'] = "Profil";
 $lang_user['online'] = "Online";
@@ -27,7 +26,7 @@ $lang_user['notsubscribed'] = "Nije prijavljen";
 $lang_user['skin'] = "Izabrana tema";
 $lang_user['regdate'] = "Datum registracije";
 $lang_user['addto'] = "Dodaj u";
-$lang_user['contact'] = "kontakt";
+$lang_user['addtocontacts'] = "kontakt";
 $lang_user['ignore'] = "ignor";
 $lang_user['bandelban'] = "Kazni / Skini kaznu";
 $lang_user['update'] = "Izmeni";

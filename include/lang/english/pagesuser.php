@@ -1,5 +1,4 @@
 <?php
-// modified: 05.06.2020. 20:04:33
 
 $lang_user['profile'] = "Profile";
 $lang_user['online'] = "Online";
@@ -27,7 +26,7 @@ $lang_user['notsubscribed'] = "Not subscribed";
 $lang_user['skin'] = "Selected skin";
 $lang_user['regdate'] = "Registration date";
 $lang_user['addto'] = "Add to";
-$lang_user['contact'] = "contact";
+$lang_user['addtocontacts'] = "contact";
 $lang_user['ignore'] = "ignore";
 $lang_user['bandelban'] = "Ban / Delete ban";
 $lang_user['update'] = "Update";
