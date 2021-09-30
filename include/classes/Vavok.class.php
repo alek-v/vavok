@@ -24,6 +24,21 @@ class Vavok {
 		 * Configuration
 		 */
 
+		// Define constants
+		if (file_exists(BASEDIR . '.env')) {
+			$enviroment = file(BASEDIR . '.env');
+
+			for ($i=0; $i < count($enviroment); $i++) {
+			    if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
+
+			    // Get value
+			    if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
+
+			    // Get and define constant name
+			    if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
+			}
+		}
+
 		define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
 		define('CLEAN_REQUEST_URI', $this->clean_request_uri(REQUEST_URI)); // Clean URL (REQUEST_URI)
 		define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
@@ -41,19 +56,14 @@ class Vavok {
 		    define('HOMEDIR', $pathindex);
 		}
 
-		// Define constants
-		if (file_exists(BASEDIR . '.env')) {
-			$enviroment = file(BASEDIR . '.env');
+		// Cookie-free domain for uploaded files
+		if (!defined('STATIC_UPLOAD_URL')) {
+			define('STATIC_UPLOAD_URL', $this->current_connection() . $_SERVER['HTTP_HOST'] . '/fls');
+		}
 
-			for ($i=0; $i < count($enviroment); $i++) {
-			    if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
-
-			    // Get value
-			    if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
-
-			    // Get and define constant name
-			    if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
-			}
+		// Cookie-free domain for themes
+		if (!defined('STATIC_THEMES_URL')) {
+			define('STATIC_THEMES_URL', $this->current_connection() . $_SERVER['HTTP_HOST'] . '/themes');
 		}
 	}
 
@@ -430,15 +440,15 @@ class Vavok {
 
 	// delete image links
 	function erase_img($image) {
-	    $image = preg_replace('#<img src="\.\./images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
-	    $image = preg_replace('#<img src="\.\./images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
+	    $image = preg_replace('#<img src="\.\./themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
+	    $image = preg_replace('#<img src="\.\./themes/images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
 	    $image = preg_replace('#<img src="(.*?)" alt="(.*?)>#', '', $image);
 
 	    return $image;
 	}
 
 	function no_smiles($string) {
-	    $string = preg_replace('#<img src="' . HOMEDIR . '/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
+	    $string = preg_replace('#<img src="' . HOMEDIR . '/themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
 	    return $string;
 	}
 
@@ -554,21 +564,6 @@ class Vavok {
 	    $r = trim($r);
 
 	    return $r;
-	}
-
-	/**
-	 * Clean request URI from unwanted data in url
-	 *
-	 * @param string $uri
-	 * @return strig $clean_requri
-	 */
-	public function clean_request_uri($uri)
-	{
-		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
-		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
-		$clean_requri = explode('?isset', $clean_requri)[0];
-
-		return $clean_requri;
 	}
 
 	/**
@@ -741,7 +736,7 @@ class Vavok {
 
 	// add smiles
 	function smiles($string) {
-	    $dir = opendir (BASEDIR . "images/smiles");
+	    $dir = opendir (BASEDIR . "themes/images/smiles");
 	    while ($file = readdir ($dir)) {
 	        if (preg_match ("/.gif/", $file)) {
 	            $smfile[] = str_replace(".gif", "", $file);
@@ -751,15 +746,15 @@ class Vavok {
 	    rsort($smfile);
 
 	    foreach($smfile as $smval) {
-	        $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
+	        $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'themes/images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
 	    } 
 
-	    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=";)" />', $string);
-	    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'images/smiles/).gif" alt=":)" />', $string);
-	    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'images/smiles/(.gif" alt=":(" />', $string);
-	    $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'images/smiles/D.gif" alt=":D" />', $string);
-	    $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'images/smiles/E.gif" alt=":E" />', $string);
-	    $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'images/smiles/P.gif" alt=":P" />', $string);
+	    $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=";)" />', $string);
+	    $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=":)" />', $string);
+	    $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'themes/images/smiles/(.gif" alt=":(" />', $string);
+	    $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'themes/images/smiles/D.gif" alt=":D" />', $string);
+	    $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'themes/images/smiles/E.gif" alt=":E" />', $string);
+	    $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'themes/images/smiles/P.gif" alt=":P" />', $string);
 
 	   return $string;
 	}
@@ -912,12 +907,12 @@ class Vavok {
 	//--> 
 	</script>
 
-	<a href=# onClick="javascript:tag('[url=', ']url name here[/url]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/a.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[img]', '[/img]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/img.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[b]', '[/b]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/b.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[i]', '[/i]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/i.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[u]', '[/u]'); return false;"><img src="<?php echo HOMEDIR; ?>images/editor/u.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[youtube]', '[/youtube]'); return false;"><img src="<?php echo HOMEDIR; ?>images/socialmedia/youtube.png" width="16" height="16" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[url=', ']url name here[/url]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/a.gif" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[img]', '[/img]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/img.gif" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[b]', '[/b]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/b.gif" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[i]', '[/i]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/i.gif" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[u]', '[/u]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/u.gif" alt="" /></a> 
+	<a href=# onClick="javascript:tag('[youtube]', '[/youtube]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/socialmedia/youtube.png" width="16" height="16" alt="" /></a> 
 	<?php
 	}
 
@@ -957,6 +952,30 @@ class Vavok {
 	public function website_home_address()
 	{
 	    return $this->transfer_protocol() . $_SERVER['HTTP_HOST'];
+	}
+
+	/**
+	 * Clean request URI from unwanted data in url
+	 *
+	 * @param string $uri
+	 * @return strig $clean_requri
+	 */
+	public function clean_request_uri($uri)
+	{
+		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
+		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
+		$clean_requri = explode('?isset', $clean_requri)[0];
+
+		return $clean_requri;
+	}
+
+	/**
+	 * Current connection that we use to open site
+	 * 
+	 * @return string
+	 */
+	public function current_connection() {
+  		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
 	}
 
 	function compress_output_gzip($output)
