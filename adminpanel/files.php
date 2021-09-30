@@ -721,7 +721,7 @@ if ($vavok->post_and_get('action') == 'mainmeta') {
 
     $vavok->require_header();
 
-    echo '<img src="/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
+    echo '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
     $headtags = trim(file_get_contents(BASEDIR . 'used/headmeta.dat'));
 

@@ -11,7 +11,7 @@ if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator() 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banlist');
 $vavok->require_header();
 
-echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banlist') . '</b></p>'; 
+echo '<p><img src="../themes/images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banlist') . '</b></p>'; 
 
 // Number of banned users
 $noi = $vavok->go('db')->count_row('vavok_users', "banned='1' OR banned='2'");
@@ -30,7 +30,7 @@ if ($noi > 0) {
         }
     }
 } else {
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('noentry') . '!</p>';
+    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('noentry') . '!</p>';
 }
 
 echo $navigation->get_navigation();

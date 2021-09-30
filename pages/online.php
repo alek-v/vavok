@@ -14,7 +14,7 @@ $data_on_page = 10; // online users per page
 $vavok->go('current_page')->page_title = 'Online';
 $vavok->require_header();
 
-echo '<p><img src="../images/img/online.gif" alt=""> <b>' . $vavok->go('localization')->string('whoisonline') . '</b></p>';
+echo '<p><img src="../themes/images/img/online.gif" alt=""> <b>' . $vavok->go('localization')->string('whoisonline') . '</b></p>';
 
 $total = $vavok->go('db')->count_row(DB_PREFIX . 'online');
 $totalreg = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user > 0");
@@ -68,7 +68,7 @@ if ($list == 'full') {
     $total = $totalreg;
 
     if ($total < 1) {
-        echo '<p><img src="../images/img/reload.gif" alt=""> <b>' . $vavok->go('localization')->string('noregd') . '!</b></p>';
+        echo '<p><img src="../themes/images/img/reload.gif" alt=""> <b>' . $vavok->go('localization')->string('noregd') . '!</b></p>';
     }
 
     $navigation = new Navigation($data_on_page, $total, $vavok->post_and_get('page'), 'online.php?'); // start navigation

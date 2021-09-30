@@ -9,7 +9,7 @@ $substr_count = $pcounter_guest;
 $counter_online = $pcounter_online;
 $counter_reg = $counter_online - $substr_count;
 
-$img = @imageCreateFromGIF(BASEDIR . 'images/img/counter.gif');
+$img = @imageCreateFromGIF(BASEDIR . 'themes/images/img/counter.gif');
 $color = imagecolorallocate($img, 169, 169, 169);
 $color2 = imagecolorallocate($img, 102, 102, 102);
 

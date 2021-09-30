@@ -18,13 +18,12 @@ if (!empty($vavok->post_and_get('uz'))) {
     }
 }
 
-$vavok->go('current_page')->page_title = $vavok->go('localization')->string('profile') . " " . $uz;
-$vavok->require_header();
-
 // if user doesn't exist show error page
 if ($vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") < 1) {
+    $vavok->require_header();
+
 	echo '<div class="user_profile">';
-    echo '<p><img src="../images/img/error.gif" alt="error.gif"> ' . $vavok->go('localization')->string('usrnoexist');
+    echo '<p><img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $vavok->go('localization')->string('usrnoexist');
     echo '</p></div>';
 
     echo $vavok->homelink('<p>', '</p>');
@@ -33,16 +32,19 @@ if ($vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") < 1) {
     exit;
 }
 
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('profile') . " " . $uz;
+$vavok->require_header();
+
 // Load page from template
 $showPage = new PageGen('pages/user-profile/user-profile.tpl');
 
 // Show gender image
 if ($vavok->go('users')->user_info('gender', $users_id) == 'N' || $vavok->go('users')->user_info('gender', $users_id) == 'n' || empty($vavok->go('users')->user_info('gender', $users_id))) {
-    $showPage->set('sex-img', '<img src="../images/img/anonim.gif" alt="" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/anonim.gif" alt="" />');
 } elseif ($vavok->go('users')->user_info('gender', $users_id) == 'M' or $vavok->go('users')->user_info('gender', $users_id) == 'm') {
-    $showPage->set('sex-img', '<img src="../images/img/man.png" alt="" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/man.png" alt="Male" />');
 } else {
-    $showPage->set('sex-img', '<img src="../images/img/women.gif" alt="" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/women.gif" alt="Female" />');
 }
 
 // Show nickname
@@ -121,7 +123,7 @@ if ($vavok->go('users')->is_reg() && ($vavok->go('users')->is_moderator() || $va
 if ($uz != $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) && $vavok->go('users')->is_reg()) {
     $userMenu = new PageGen("pages/user-profile/user-menu.tpl");
     $userMenu->set('add-to', $vavok->go('localization')->string('addto'));
-    $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $vavok->go('localization')->string('contact') . '</a>');
+    $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $vavok->go('localization')->string('addtocontacts') . '</a>');
 
     if (!$vavok->go('users')->isignored($users_id, $vavok->go('users')->user_id)) {
     //$userMenu->set('add-to', $vavok->go('localization')->string('addto']);
@@ -129,7 +131,7 @@ if ($uz != $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) && $
     $userMenu->set('sendMessage', '<br /><a href="inbox.php?action=dialog&amp;who=' . $users_id . '">' . $vavok->go('localization')->string('sendmsg') . '</a><br>');
     } else {
         $userMenu->set('ignore', $vavok->go('localization')->string('ignore') . '<br />');
-    } 
+    }
 
     if ($vavok->go('users')->is_reg() && ($vavok->go('users')->is_moderator() || $vavok->go('users')->is_administrator())) $userMenu->set('banUser', '<a href="../' . $vavok->get_configuration('mPanel') . '/addban.php?action=edit&amp;users=' . $uz . '">' . $vavok->go('localization')->string('bandelban') . '</a><br>');
 

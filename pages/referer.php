@@ -32,7 +32,7 @@ if ($vavok->get_configuration('showRefPage') == 1 || $vavok->go('users')->is_adm
     echo $navigation->get_navigation();
 
 } else {
-    echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('pgviewoff') . '</p>';
+    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('pgviewoff') . '</p>';
 }
 
 echo '<p>' . $vavok->homelink() . '<p>';

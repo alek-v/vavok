@@ -21,7 +21,7 @@ if ($vavok->go('users')->is_reg()) {
         switch ($vavok->post_and_get('action')) {
             default:
 
-                echo '<img src="../images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('checksys') . '<hr>';
+                echo '<img src="../themes/images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('checksys') . '<hr>';
 
                 $did = $vavok->check($vavok->post_and_get('did'));
 
@@ -100,7 +100,7 @@ if ($vavok->go('users')->is_reg()) {
 
                 if ($did != '') {
                     if (prev_dir($did) != '') {
-                        echo '<img src="../images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
+                        echo '<img src="../themes/images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
                     }
                     echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
                 }
@@ -108,7 +108,7 @@ if ($vavok->go('users')->is_reg()) {
                 break; 
             // CHMOD
             case ('pod_chmod'):
-                echo '<img src="../images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('chchmod') . '<hr>';
+                echo '<img src="../themes/images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('chchmod') . '<hr>';
 
                 if ($vavok->post_and_get('file') && file_exists("../used/" . $vavok->post_and_get('file'))) {
                         echo '<form action="systems.php?action=chmod" method=post>';

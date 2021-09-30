@@ -12,10 +12,10 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('adm
 
 $vavok->require_header();
 
-echo '<img src="../images/img/menu.gif" alt=""> <b>' . $vavok->go('localization')->string('adminchat') . '</b><br><br>';
+echo '<img src="../themes/images/img/menu.gif" alt=""> <b>' . $vavok->go('localization')->string('adminchat') . '</b><br><br>';
 
 if (empty($vavok->post_and_get('action'))) {
-    echo '<a href="#down"><img src="../images/img/downs.gif" alt=""></a> ';
+    echo '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';
     echo '<a href="adminchat.php?r=' . rand(100, 999) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('refresh') . '</a><br>';
 
     echo'<hr><form action="process.php?action=acadd" method="post"><b>' . $vavok->go('localization')->string('message') . '</b><br>';
@@ -28,7 +28,7 @@ if (empty($vavok->post_and_get('action'))) {
     $total = count($file);
 
     if ($total < 1) {
-        echo'<br><img src="../images/img/reload.gif" alt=""> <b>' . $vavok->go('localization')->string('nomsgs') . '</b><br>';
+        echo'<br><img src="../themes/images/img/reload.gif" alt=""> <b>' . $vavok->go('localization')->string('nomsgs') . '</b><br>';
     }
 
     $navigation = new Navigation(10, $total, $vavok->post_and_get('page'), 'adminchat.php?'); // start navigation

@@ -50,7 +50,7 @@ if (empty($vavok->post_and_get('action'))) {
             array_push($senders, $item['name']);
 
             if ($item['unread'] == 1) {
-                $iml = '<img src="../images/img/new.gif" alt="New message" />';
+                $iml = '<img src="../themes/images/img/new.gif" alt="New message" />';
             } else { $iml = ''; }
 
             $lnk = '<a href="inbox.php?action=dialog&amp;who=' . $item['byuid'] . '" class="btn btn-outline-primary sitelink">' . $iml . ' ' . $item['name'] . '</a>';
@@ -62,7 +62,7 @@ if (empty($vavok->post_and_get('action'))) {
     echo $navigation->get_navigation();
 
     } else {
-        echo '<img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('nopmsgs') . '<br /><br />';
+        echo '<img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('nopmsgs') . '<br /><br />';
     }
 
     echo $vavok->sitelink('inbox.php?action=sendto', $vavok->go('localization')->string('sendmsg')) . '<br />';

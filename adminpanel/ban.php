@@ -11,7 +11,7 @@ if (!$vavok->go('users')->is_reg() || ($_SESSION['permissions'] != 101 && $_SESS
 $vavok->go('current_page')->page_title = 'IP ban';
 $vavok->require_header();
 
-echo '<p><img src="../images/img/menu.gif" alt="" /> <b>IP ban panel</b></p>';
+echo '<p><img src="../themes/images/img/menu.gif" alt="" /> <b>IP ban panel</b></p>';
 
 if (empty($vavok->post_and_get('action'))) {
     $file = $vavok->get_data_file('ban.dat');
@@ -39,7 +39,7 @@ if (empty($vavok->post_and_get('action'))) {
     } 
 
     if ($total < 1) {
-        echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptylist') . '</p>';
+        echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptylist') . '</p>';
     } 
 
     echo $navigation->get_navigation();

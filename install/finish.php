@@ -61,9 +61,9 @@ if ($step == 'second') {
         }
     }
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> Second step - Creating database<br></p>';
+    echo '<p><img src="../themes/images/img/partners.gif" alt="" /> Second step - Creating database<br></p>';
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
+    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
     echo '<p><a href="finish.php?step=third" class="btn btn-outline-primary sitelink">Third step</a></p>';
 } 
 
@@ -71,7 +71,7 @@ if ($step == 'third') {
     require_once '../include/startup.php';
     require_once "include/header.php";
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> This will make you register as an administrator of this website.<br>After successful registration, delete folder "install"<br></p>';
+    echo '<p><img src="../themes/images/img/partners.gif" alt="" /> This will make you register as an administrator of this website.<br>After successful registration, delete folder "install"<br></p>';
         // check if website and admin already exists (crossdomain website)
     if ($vavok->go('users')->regmemcount() > 1) {
 		echo '<p>It seems that you are configuring crossdomain website.<br />
@@ -108,7 +108,7 @@ if ($step == "regadmin") {
     require_once '../include/startup.php';
     require_once "include/header.php";
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> Installation results</p>';
+    echo '<p><img src="../themes/images/img/partners.gif" alt="" /> Installation results</p>';
 
     // check if website and admin already exists (crossdomain website)
     $crossDomainInstall = 0;
@@ -194,7 +194,7 @@ if ($step == "regadmin") {
 
                         echo '<p>Installation competed successfully<br></p>';
 
-                        echo '<p><img src="../images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">Login</a></b></p>';
+                        echo '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../pages/input.php?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">Login</a></b></p>';
                     } else {
                         echo '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
                         echo '<p><a href="finish.php?step=third">Back</a></p>';

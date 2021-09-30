@@ -26,10 +26,10 @@ if ($vavok->go('users')->is_reg()) {
 
                 $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '" class="btn btn-outline-primary sitelink">' . $tnick . '</a>';
                 echo "$lnk: ";
-                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $vavok->go('localization')->string('delete') . "</a><br>";
+                echo "<img src=\"../themes/images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $vavok->go('localization')->string('delete') . "</a><br>";
             }
         } else {
-            echo '<img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('ignorempty') . '<br><br>';
+            echo '<img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('ignorempty') . '<br><br>';
         }
 
         echo $navigation->get_navigation();
@@ -41,17 +41,17 @@ if ($vavok->go('users')->is_reg()) {
             if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $who) == 1) {
                 $vavok->go('db')->insert(DB_PREFIX . '`ignore`', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
 
-                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> " . $vavok->go('localization')->string('user') . " $tnick " . $vavok->go('localization')->string('sucadded') . "<br>";
+                echo "<img src=\"../themes/images/img/open.gif\" alt=\"o\"/> " . $vavok->go('localization')->string('user') . " $tnick " . $vavok->go('localization')->string('sucadded') . "<br>";
             } else {
-                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> " . $vavok->go('localization')->string('cantadd') . " " . $tnick . " " . $vavok->go('localization')->string('inignor') . "<br>";
+                echo "<img src=\"../themes/images/img/close.gif\" alt=\"x\"/> " . $vavok->go('localization')->string('cantadd') . " " . $tnick . " " . $vavok->go('localization')->string('inignor') . "<br>";
             }
         } elseif ($vavok->post_and_get('todo') = 'del') {
             if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $vavok->post_and_get('who')) == 2) {
                 $vavok->go('db')->delete('`ignore`', "name='{$vavok->go('users')->user_id}' AND target='" . $vavok->post_and_get('who') . "'");
 
-                echo "<img src=\"../images/img/open.gif\" alt=\"o\"/> $tnick " . $vavok->go('localization')->string('deltdfrmignor') . "<br>";
+                echo "<img src=\"../themes/images/img/open.gif\" alt=\"o\"/> $tnick " . $vavok->go('localization')->string('deltdfrmignor') . "<br>";
             } else {
-                echo "<img src=\"../images/img/close.gif\" alt=\"x\"/> $tnick " . $vavok->go('localization')->string('notinignor') . "<br>";
+                echo "<img src=\"../themes/images/img/close.gif\" alt=\"x\"/> $tnick " . $vavok->go('localization')->string('notinignor') . "<br>";
             }
         }
 

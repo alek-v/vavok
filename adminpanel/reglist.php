@@ -52,7 +52,7 @@ if (empty($vavok->post_and_get('action'))) {
             echo '<p>' . $lnk . ' IP: ' . $vavok->go('users')->user_info('ipadd', $item['uid']) . ' ' . $vavok->go('localization')->string('browser') . ': ' . $vavok->go('users')->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
         }
     } else {
-        echo '<p><img src="../images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';
+        echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('emptyunconf') . '!</p>';
     }
 
     $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'reglist.php?');

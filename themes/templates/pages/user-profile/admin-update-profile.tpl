@@ -1,3 +1,3 @@
 <div class="b">
-<img src="../images/img/edit.gif" alt="" /> {@profileLink}}<br/>
+	<img src="../themes/images/img/edit.gif" alt="Edit" /> {@profileLink}}<br/>
 </div>

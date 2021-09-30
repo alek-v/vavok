@@ -116,9 +116,9 @@ EOT;
     // database name
     $mysql_database = $_POST['database'];
 
-    echo '<p><img src="../images/img/partners.gif" alt="" /> Second step<br></p>';
+    echo '<p><img src="../themes/images/img/partners.gif" alt="" /> Second step<br></p>';
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> Data successfully saved!</p>';
+    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> Data successfully saved!</p>';
     echo '<p><a href="finish.php?step=second&host=' . $mysql_host . '&user=' . $mysql_username . '&pass=' . $mysql_password . '&db=' . $mysql_database . '">Second step</a> - Creating database</p>';
 
 }

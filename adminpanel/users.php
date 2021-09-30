@@ -40,7 +40,7 @@ if ($vavok->post_and_get('action') == 'edit') {
             $userx_id = $vavok->go('users')->getidfromnick($user);
             
             if (!empty($userx_id)) {
-                echo '<img src="../images/img/profiles.gif" alt=""> ' . $vavok->go('localization')->string('usrprofile') . ' ' . $user . '<br>';
+                echo '<img src="../themes/images/img/profiles.gif" alt="Profile" /> ' . $vavok->go('localization')->string('usrprofile') . ' ' . $user . '<br>';
 
                 if ($vavok->go('users')->show_username() != $vavok->get_configuration('adminNick') && $user == $vavok->get_configuration('adminNick')) {
                     echo '<br>' . $vavok->go('localization')->string('noauthtoedit') . '!<br>';

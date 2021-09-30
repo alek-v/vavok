@@ -24,7 +24,7 @@ if ($time_ban > 0) {
     // headers could not be send before cookies, so we load it here
     $vavok->require_header();
 
-    echo '<img src="../images/img/error.gif" alt=""> <b>' . $vavok->go('localization')->string('banned1') . '</b><br /><br />';
+    echo '<img src="../themes/images/img/error.gif" alt=""> <b>' . $vavok->go('localization')->string('banned1') . '</b><br /><br />';
     echo '<b><font color="#FF0000">' . $vavok->go('localization')->string('bandesc') . ': ' . $bandesc . '</font></b>';
     //echo '<strong>You are logged out</strong>'; TODO - update lang and show message
 
@@ -35,7 +35,7 @@ if ($time_ban > 0) {
 } else {
     $vavok->require_header();
 
-    echo '<p><img src="../images/img/open.gif" alt=""> ' . $vavok->go('localization')->string('wasbanned') . '</p>';
+    echo '<p><img src="../themes/images/img/open.gif" alt=""> ' . $vavok->go('localization')->string('wasbanned') . '</p>';
 
     if (!empty($bandesc)) {
         echo '<p><b><font color="#FF0000">' . $vavok->go('localization')->string('bandesc') . ': ' . $bandesc . '</font></b></p>';

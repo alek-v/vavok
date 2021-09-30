@@ -106,7 +106,7 @@ if (!isset($act) || empty($act)) {
     $total = $nitems;
 
     if ($total < 1) {
-        echo '<br /><img src="../images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
+        echo '<br /><img src="../themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
     }
 
     $nitems = $vavok->go('db')->count_row(DB_PREFIX . 'pages', 'tname is not null');
@@ -122,7 +122,7 @@ if (!isset($act) || empty($act)) {
 
     if ($num_items > 0) {
         foreach ($vavok->go('db')->query($sql) as $item) {
-            $lnk = $item['pname'] . " <img src=\"../images/img/edit.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=edit&amp;pgfile=" . $item['file'] . "\">" . $item['tname'] . "</a> | <img src=\"../images/img/edit.gif\" alt=\"\" /> <a href=\"files.php?action=headtag&amp;file=" . $item['file'] . "\">[Edit Meta]</a> | <img src=\"../images/img/close.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=del&amp;tid=" . $item['pname'] . "\">[DEL]</a>"; 
+            $lnk = $item['pname'] . " <img src=\"../themes/images/img/edit.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=edit&amp;pgfile=" . $item['file'] . "\">" . $item['tname'] . "</a> | <img src=\"../themes/images/img/edit.gif\" alt=\"\" /> <a href=\"files.php?action=headtag&amp;file=" . $item['file'] . "\">[Edit Meta]</a> | <img src=\"../themes/images/img/close.gif\" alt=\"\" /> <a href=\"pgtitle.php?act=del&amp;tid=" . $item['pname'] . "\">[DEL]</a>"; 
             // echo " <small>joined: $jdt</small>";
             echo "$lnk<br />";
         }

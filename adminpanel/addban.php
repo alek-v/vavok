@@ -14,7 +14,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
     $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banning');
     $vavok->require_header();
 
-    echo '<p><img src="../images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banunban') . '</b></p>';
+    echo '<p><img src="../themes/images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banunban') . '</b></p>';
 
     if (empty($vavok->post_and_get('action'))) {
         $form = new PageGen('forms/form.tpl');
@@ -50,7 +50,7 @@ if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102 || $_SESS
 
             $user = $vavok->check($user);
             if (!empty($userx_id) && !empty($users_nick)) {
-                echo '<img src="../images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
+                echo '<img src="../themes/images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
                 echo 'Bans: <b>' . (int)$vavok->go('users')->user_info('allban', $userx_id) . '</b><br />'; // update lang
                 if (ctype_digit($vavok->go('users')->user_info('lastban', $userx_id))) {
                     echo '' . $vavok->go('localization')->string('lastban') . ': ' . $vavok->date_fixed($vavok->check($vavok->go('users')->user_info('lastban', $userx_id)), "j.m.y/H:i") . '<br />';

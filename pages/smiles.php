@@ -9,7 +9,7 @@ require_once '../include/startup.php';
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('smile');
 $vavok->require_header();
 
-$dir = opendir (BASEDIR . "images/smiles");
+$dir = opendir (BASEDIR . "themes/images/smiles");
 while ($file = readdir ($dir)) {
     if (preg_match("/.gif/", $file)) {
         $a[] = $file;
@@ -31,7 +31,7 @@ echo '<p>';
 for ($i = $limit_start; $i < $end; $i++) {
     $smkod = str_replace(".gif", "", $a[$i]);
 
-    echo '<img src="' . HOMEDIR . 'images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" /> ';
+    echo '<img src="' . STATIC_THEMES_URL . '/images/smiles/' . $a[$i] . '" alt="' . $a[$i] . '" /> ';
 
     if ($smkod == ')' || $smkod == '(' || $smkod == 'D' || $smkod == 'E' || $smkod == 'P') {
       echo '- :' . $smkod . '<br>';

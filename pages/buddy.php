@@ -44,14 +44,12 @@ if ($vavok->go('users')->is_reg()) {
         if ($num_items > 0) {
             foreach ($vavok->go('db')->query($sql) as $item) {
                 $tnick = $vavok->go('users')->getnickfromid($item['target']);
-
-                $lnk = "<a href=\"../pages/user.php?uz=" . $item['target'] . "\"  class=\"sitelink\">" . $tnick . "</a>";
+                $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '"  class="sitelink">' . $tnick . '</a>';
                 echo $vavok->go('users')->user_online($tnick) . " " . $lnk . ": ";
-                echo "<img src=\"../images/img/close.gif\" alt=\"\"> <a href=\"buddy.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $vavok->go('localization')->string('delete') . "</a><br>";
+                echo '<img src="../themes/images/img/close.gif" alt=""> <a href="buddy.php?action=ign&amp;who=' . $item['target'] . '&amp;todo=del" class="sitelink">' . $vavok->go('localization')->string('delete') . '</a><br>';
             }
-
         } else {
-            echo '<p><img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('nobuddy') . '</p>';
+            echo '<p><img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('nobuddy') . '</p>';
         }
 
         echo $navigation->get_navigation();

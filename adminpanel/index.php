@@ -157,7 +157,7 @@ if ($vavok->post_and_get('action') == 'clear' && $vavok->go('users')->is_adminis
 if ($vavok->post_and_get('action') == 'clrmlog' && $vavok->go('users')->is_administrator(101)) {
     $vavok->go('db')->query("DELETE FROM mlog");
 
-    echo '<p><img src="../images/img/open.gif" alt="" /> ' . $vavok->go('localization')->string('mlogcleaned') . '</p>';
+    echo '<p><img src="../themes/images/img/open.gif" alt="" /> ' . $vavok->go('localization')->string('mlogcleaned') . '</p>';
 } 
 
 if ($vavok->post_and_get('action') == "sysmng" && $vavok->go('users')->is_administrator(101)) {
@@ -184,7 +184,7 @@ if ($vavok->post_and_get('action') == "opttbl" && $vavok->go('users')->is_admini
         } 
     } 
 
-    echo '<p><img src="../images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
+    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
 }
 
 // check vavok cms version
@@ -196,11 +196,11 @@ $key = 'checkver'; // key to save cache with
     echo '<div class="b">Vavok CMS ' . $vavok->go('localization')->string('version') . ': <b>' . $vavok_version . '</b>';
 
     if ($version != $last_ver && !empty($last_ver)) {
-        echo '<p><img src="../images/img/close.gif" alt="" /> ' . $vavok->go('localization')->string('newver') . '!</p>';
-        echo '<p><img src="../images/img/reload.gif" alt="" /> Latest version: ' . $last_ver . '</p>';
+        echo '<p><img src="../themes/images/img/close.gif" alt="" /> ' . $vavok->go('localization')->string('newver') . '!</p>';
+        echo '<p><img src="../themes/images/img/reload.gif" alt="" /> Latest version: ' . $last_ver . '</p>';
         echo '<a href="index.php?action=refver" class="btn btn-outline-primary sitelink">Refresh</a>';
     } else {
-        echo '<p><img src="../images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('hnewver') . '!</p>';
+        echo '<p><img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('hnewver') . '!</p>';
     } 
 
     echo '</div>';

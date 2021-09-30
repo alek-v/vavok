@@ -316,7 +316,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 		        echo $vavok->sitelink('photo.php', 'Change photo') . '<br />';
 				echo $vavok->sitelink('photo.php?action=remove', 'Remove photo'); // update lang
 		    } else {
-		        echo '<img src="../images/img/no_picture.jpg" alt="" /><br /> ';
+		        echo '<img src="../themes/images/img/no_picture.jpg" alt="" /><br /> ';
 		        echo $vavok->sitelink('photo.php', 'Change photo');
 		    }
 		    echo '</div>';

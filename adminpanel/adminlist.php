@@ -12,7 +12,7 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('mod
 $vavok->require_header();
 
 if (empty($vavok->post_and_get('action'))) {
-    echo '<p><img src="../images/img/user.gif" alt=""> <b>' . $vavok->go('localization')->string('adminlistl') . '</b></p>'; 
+    echo '<p><img src="../themes/images/img/user.gif" alt=""> <b>' . $vavok->go('localization')->string('adminlistl') . '</b></p>'; 
 
     $num_items = $vavok->go('db')->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
     $items_per_page = 10;
