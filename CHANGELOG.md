@@ -8,6 +8,7 @@
 - Updated default theme
 - Moved folder images to themes/images
 - Refresh users browser name after login
+- Show time zone in profile
 
 
 
