@@ -7,6 +7,7 @@
 - Updated handling GET and POST data
 - Updated default theme
 - Moved folder images to themes/images
+- Refresh users browser name after login
 
 
 

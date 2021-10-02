@@ -47,7 +47,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
 
             // Set token expire time
             $now = new DateTime();
-            $now->add(new DateInterval("P1Y"));
+            $now->add(new DateInterval('P1Y'));
             $new_time = $now->format('Y-m-d H:i:s');
 
             // Insert token
@@ -71,14 +71,17 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
          */
         session_regenerate_id();
 
-        // update data in profile
-        $vavok->go('users')->update_user('ipadd', $vavok->go('users')->find_ip(), $userx_id);
+        // Update data in profile
+        $vavok->go('users')->update_user(
+            array('ipadd', 'browsers'),
+            array($vavok->go('users')->find_ip(), $vavok->go('users')->user_browser()),
+            $userx_id);
 
         // Redirect user to confirm registration
-        if ($vavok->go('users')->user_info('regche', $userx_id) == 1) $vavok->redirect_to(HOMEDIR . "pages/key.php?log=" . $vavok->post_and_get('log'));
+        if ($vavok->go('users')->user_info('regche', $userx_id) == 1) $vavok->redirect_to(HOMEDIR . 'pages/key.php?log=' . $vavok->post_and_get('log'));
 
         // Redirect user if he is banned
-        if ($vavok->go('users')->user_info('banned', $userx_id) == 1) $vavok->redirect_to(HOMEDIR . "pages/ban.php?log=" . $vavok->post_and_get('log'));
+        if ($vavok->go('users')->user_info('banned', $userx_id) == 1) $vavok->redirect_to(HOMEDIR . 'pages/ban.php?log=' . $vavok->post_and_get('log'));
 
         $vavok->redirect_to(HOMEDIR . $vavok->post_and_get('ptl'));
     }
