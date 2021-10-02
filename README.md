@@ -3,6 +3,7 @@
 
 # Vavok CMS
 > Made to be fast, safe and easy to customize
+
 > Documentation: https://docs.vavok.net/
 
 > Feel free to contribute
