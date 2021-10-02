@@ -2,6 +2,7 @@
 - Added support for cookie-free domains
 - Added current_connection() method to Vavok.class.php
 - Added method update_default_permissions() to Users.class.php
+- Added option to add and edit access to administration panel options
 - Updated localization
 - Updated handling GET and POST data
 - Updated default theme
