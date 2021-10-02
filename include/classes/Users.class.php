@@ -751,6 +751,12 @@ class Users {
 	    		return $data;
     			break;
 
+	    	case 'timezone':
+    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'timezone');
+	    		$data = !empty($data) ? $data['timezone'] : '';
+	    		return $data;
+    			break;
+
 	    	case 'bantime':
     			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime');
 	    		$data = !empty($data) ? $data['bantime'] : '';
