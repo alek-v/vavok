@@ -9,6 +9,7 @@
 - Moved folder images to themes/images
 - Refresh users browser name after login
 - Show time zone in profile
+- Removed file include/functions_extra.php
 
 
 
