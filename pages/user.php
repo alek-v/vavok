@@ -112,7 +112,8 @@ if (!empty($vavok->go('users')->user_info('site', $users_id)) && $vavok->go('use
 if (!empty($vavok->go('users')->user_info('regdate', $users_id))) $showPage->set('regDate', $vavok->go('localization')->string('regdate') . ': ' . $vavok->date_fixed($vavok->check($vavok->go('users')->user_info('regdate', $users_id)), 'd.m.Y.') . '<br>');
 
 // Last visit
-$showPage->set('lastVisit', $vavok->go('localization')->string('lastvisit') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('lastvisit', $users_id), 'd.m.Y. / H:i'));
+$timezone = $vavok->go('users')->is_reg() ? $vavok->go('users')->user_info('timezone') : $vavok->get_configuration('timezone');
+$showPage->set('lastVisit', $vavok->go('localization')->string('lastvisit') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('lastvisit', $users_id), 'd.m.Y. / H:i', $timezone, true));
 
 if ($vavok->go('users')->is_reg() && ($vavok->go('users')->is_moderator() || $vavok->go('users')->is_administrator())) {
     $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
@@ -148,9 +149,9 @@ if (!empty($vavok->go('users')->user_info('photo', $users_id))) {
     $ext = strtolower(substr($vavok->go('users')->user_info('photo', $users_id), strrpos($vavok->go('users')->user_info('photo', $users_id), '.') + 1));
 
     if ($users_id != $vavok->go('users')->user_id) {
-        $showPage->set('userPhoto', '<img src="../' . $vavok->go('users')->user_info('photo', $users_id) . '" alt="" /><br>');
+        $showPage->set('userPhoto', '<img src="../' . $vavok->go('users')->user_info('photo', $users_id) . '" alt="Profile picture" /><br>');
     } else {
-        $showPage->set('userPhoto', '<a href="../pages/photo.php"><img src="../' . $vavok->go('users')->user_info('photo', $users_id) . '" alt="" /></a>');
+        $showPage->set('userPhoto', '<a href="../pages/photo.php"><img src="../' . $vavok->go('users')->user_info('photo', $users_id) . '" alt="Profile picture" /></a>');
     }
 }
 

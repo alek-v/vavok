@@ -113,19 +113,15 @@ class Vavok {
 	 * @param string $myzone
 	 * @return string
 	 */
-	public function date_fixed($timestamp = '', $format = 'd.m.Y.', $myzone = '')
+	public function date_fixed($timestamp = '', $format = 'd.m.Y.', $myzone = '', $show_zone_info = '')
 	{
 	    $timezone = $this->get_configuration('timeZone');
 
-	    if (empty($timestamp)) {
-	        $timestamp = time();
-	    } 
-	    if (empty($format)) {
-	        $format = "d.m.y. / H:i";
-	    } 
-	    if (!empty($myzone)) {
-	        $timezone = $myzone;
-	    } 
+	    if (empty($timestamp)) $timestamp = time();
+
+	    if (empty($format)) $format = "d.m.y. / H:i";
+
+	    if (!empty($myzone)) $timezone = $myzone;
 
 	    if (stristr($timezone, '-')) {
 	        $clock = str_replace('-', '', $timezone);
@@ -139,7 +135,9 @@ class Vavok {
 	        $rdate = date($format, $timestamp + ($seconds)); // return date
 	    }
 
-	    return $rdate;
+	    $zone_info = $show_zone_info == true ? ' UTC ' . $timezone : '';
+
+	    return $rdate . $zone_info;
 	}
 
 	// Make time
