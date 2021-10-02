@@ -1137,19 +1137,23 @@ class Vavok {
 	{
 		$arrays = array_merge($_POST, $_GET);
 
+		// Handle page number
+		if (!isset($arrays['page']) || empty($arrays['page']) || $arrays['page'] < 1) $arrays['page'] = 1;
+
+		// Return unfiltered data when requested
+		if (!empty($return_key) && $unchainged == true && isset($arrays[$return_key])) return $arrays[$return_key];
+
+		// Return filtered (checked) requested key
+		if (!empty($return_key) && isset($arrays[$return_key])) return $this->check($arrays[$return_key]);
+
+		// Check all fields with Vavok:check()
 		$return = array();
 		foreach ($arrays as $key => $value) {
 			$return[$key] = $this->check($value);
 		}
 
-		// Handle page number
-		if (!isset($return['page']) || empty($return['page']) || $return['page'] < 1) $return['page'] = 1;
-
-		// Return unchanged data
-		if (!empty($return_key) && $unchainged == true) $return = isset($arrays[$return_key]) ? $arrays[$return_key] : '';
-
-		// Return requested key
-		if (!empty($return_key) && empty($unchainged)) $return = isset($return[$return_key]) ? $return[$return_key] : '';
+		// Handle case when return key is not set
+		if (!empty($return_key) && !isset($arrays[$return_key])) return '';
 
 		return $return;
 	}
