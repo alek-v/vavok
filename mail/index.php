@@ -8,20 +8,20 @@ require_once '../include/startup.php';
 
 if ($vavok->post_and_get('action') == 'go') {
     // Check name
-    if (empty($vavok->post_and_get('name'))) { $vavok->redirect_to('./?isset=noname'); }
+    if (empty($vavok->post_and_get('name'))) $vavok->redirect_to('./?isset=noname');
 
     // Check email body
-    if (empty($vavok->post_and_get('body'))) { $vavok->redirect_to('./?isset=nobody'); }
+    if (empty($vavok->post_and_get('body'))) $vavok->redirect_to('./?isset=nobody');
 
     // Validate email address
-    if (!$vavok->go('users')->validate_email($vavok->post_and_get('umail'))) { $vavok->redirect_to('./?isset=noemail'); }
+    if (!$vavok->go('users')->validate_email($vavok->post_and_get('umail'))) $vavok->redirect_to('./?isset=noemail');
 
     // Redirect if response is false
-    if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == false) { $vavok->redirect_to('./?isset=vrcode'); }
+    if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == false) $vavok->redirect_to('./?isset=vrcode');
 
     // Send email
     $mail = new Mailer();
-    $mail->queue_email($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . " " . $vavok->get_configuration("title"), $vavok->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$vavok->post_and_get('name')}\r\nSender's email: {$vavok->post_and_get('umail')}\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+    $mail->queue_email($vavok->get_configuration('adminEmail'), $vavok->go('localization')->string('msgfrmst') . ' ' . $vavok->get_configuration('title'), $vavok->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$vavok->post_and_get('name')}\r\nSender's email: {$vavok->post_and_get('umail')}\r\nBrowser: " . $vavok->go('users')->user_browser() . "\r\nIP: " . $vavok->go('users')->find_ip() . "\r\n" . $vavok->go('localization')->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
     // Email sent
     $vavok->redirect_to('./?isset=mail');
@@ -37,7 +37,7 @@ if (empty($vavok->post_and_get('action'))) {
     $vavok->require_header();
 
     // generate page
-    $showPage = new PageGen("mail/mail_index.tpl");
+    $showPage = new PageGen('mail/mail_index.tpl');
 
     if (!$vavok->go('users')->is_reg()) {
         $usernameAndMail = new PageGen('mail/usernameAndMail_guest.tpl');
@@ -52,7 +52,7 @@ if (empty($vavok->post_and_get('action'))) {
 
     // Show reCAPTCHA
     $showPage->set('security_code', '<div class="g-recaptcha" data-sitekey="' . $vavok->get_configuration('recaptcha_sitekey') . '"></div>');
-} 
+}
 
 // show page
 echo $showPage->output();
