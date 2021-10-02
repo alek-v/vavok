@@ -22,21 +22,21 @@
     ),
     'phpmailer/phpmailer' => 
     array (
-      'pretty_version' => 'v6.5.0',
-      'version' => '6.5.0.0',
+      'pretty_version' => 'v6.5.1',
+      'version' => '6.5.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'a5b5c43e50b7fba655f793ad27303cd74c57363c',
+      'reference' => 'dd803df5ad7492e1b40637f7ebd258fee5ca7355',
     ),
     'tinymce/tinymce' => 
     array (
-      'pretty_version' => '5.8.2',
-      'version' => '5.8.2.0',
+      'pretty_version' => '5.9.2',
+      'version' => '5.9.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dbf8c9ab481e11b660a957257c73f55e2af83b20',
+      'reference' => '48c665ad12ba0e4d8068ba0784026c7488aa4746',
     ),
   ),
 );
