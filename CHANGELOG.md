@@ -1,7 +1,9 @@
 # Vavok v1.5.14
 - Added support for cookie-free domains
 - Added current_connection() method to Vavok.class.php
+- Added method update_default_permissions() to Users.class.php
 - Updated localization
+- Updated handling GET and POST data
 - Updated default theme
 - Moved folder images to themes/images
 
