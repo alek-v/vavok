@@ -88,11 +88,6 @@ if ($vavok->post_and_get('action') == 'edit') {
                 $udd7->set('select_name', 'udd7');
                 $udd7->set('options', $options);
 
-                // website permitions for various sections
-                if (file_exists('specperm.php')) {
-                    echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Special permitions</a><br />';
-                }
-
                 $udd1 = new PageGen('forms/input.tpl');
                 $udd1->set('label_for', 'udd1');
                 $udd1->set('label_value', $vavok->go('localization')->string('newpassinfo'));
@@ -181,9 +176,15 @@ if ($vavok->post_and_get('action') == 'edit') {
                 $form->set('fields', $form->merge(array($udd7, $udd1, $udd2, $udd3, $udd4, $udd5, $udd13, $udd29, $udd40, $subscribed, $allban, $lastvst, $ip)));
                 echo $form->output();
 
-                if ($userx_access < 101 || $userx_access > 105) {
-                    echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b>';
-                } 
+                echo '<p>';
+                if ($userx_access > 106) {
+                    echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b><br />';
+                }
+                // Website permissions for various sections
+                if (file_exists('specperm.php')) {
+                    echo '<a href="specperm.php?users=' . $userx_id . '" class="btn btn-outline-primary sitelink">Change access permissions</a><br />';
+                }
+                echo '</p>';
             } else {
                 echo $vavok->go('localization')->string('usrnoexist') . '!';
             } 
@@ -231,35 +232,21 @@ if ($vavok->post_and_get('action') == 'upgrade') {
                 // Update password
                 if (!empty($newpass)) $vavok->go('users')->update_user('pass', $vavok->no_br($newpass), $users_id);
 
-                // Access level
-                if (!empty($udd7)) $vavok->go('users')->update_user('perm', (int)$udd7, $users_id);
+                // Update default access permissions
+                if ($udd7 != $vavok->go('users')->user_info('perm', $users_id)) $vavok->go('users')->update_default_permissions($users_id, $udd7);
 
-                if ($udd7 == 101 || $udd7 == 102 || $udd7 == 103 || $udd7 == 105 || $udd7 == 106) {
-                    // Insert data to database if does not exsist
-                    if ($vavok->go('db')->count_row('specperm', "permname='adminpanel' AND uid='{$users_id}'") < 1) {
-                        $values = array(
-                            'permname' => 'adminpanel',
-                            'permacc' => 'show',
-                            'uid' => $users_id
-                        );
-                        // Insert data to database
-                        $vavok->go('db')->insert(DB_PREFIX . 'specperm', $values);
-                    }
-                }
-
-                $vavok->go('users')->update_user('browsers', $vavok->no_br($vavok->check($udd13)), $users_id);
-
-                $fields = array('city', 'about', 'email', 'site', 'rname');
-                $values = array($vavok->no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)));
-                $vavok->go('users')->update_user($fields, $values, $users_id);
-                
-                $vavok->go('users')->update_user('perstat', $vavok->no_br($vavok->check($udd40)), $users_id);
+                // Update data
+                $vavok->go('users')->update_user(
+                    array('city', 'about', 'email', 'site', 'rname', 'perstat', 'browsers'),
+                    array($vavok->no_br($vavok->check($udd2)), $vavok->check($udd3), $vavok->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $vavok->no_br($vavok->check($udd5)), $vavok->no_br($vavok->check($udd29)), $vavok->no_br($vavok->check($udd40)), $vavok->no_br($vavok->check($udd13))), $users_id
+                );
 
                 echo $vavok->go('localization')->string('usrdataupd') . '!<br>';
 
                 if (!empty($udd1)) {
                     echo '<font color=red>' . $vavok->go('localization')->string('passchanged') . ': ' . $udd1 . '</font> <br>';
-                } 
+                }
+
                 echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('changeotheruser') . '</a><br>';
             } else {
                 echo $vavok->go('localization')->string('usrnoexist') . '!<br>';
@@ -271,10 +258,10 @@ if ($vavok->post_and_get('action') == 'upgrade') {
         echo $vavok->go('localization')->string('emailnotok') . '<br>';
     } 
     echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
-} 
+}
 
 // confirm delete
-if ($vavok->post_and_get('action') == "poddel") {
+if ($vavok->post_and_get('action') == 'poddel') {
     echo $vavok->go('localization')->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
     echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b>';
 
@@ -282,7 +269,7 @@ if ($vavok->post_and_get('action') == "poddel") {
 } 
 
 // delete user
-if ($vavok->post_and_get('action') == "deluser") {
+if ($vavok->post_and_get('action') == 'deluser') {
     if ($user != $vavok->get_configuration('adminNick')) {
         $userx_id = $vavok->go('users')->getidfromnick($user);
 
