@@ -1,4 +1,9 @@
-<?php 
+<?php
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ */
+
 require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?auth_error');
@@ -6,55 +11,16 @@ if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?auth_erro
 $edit_user = $vavok->post_and_get('users');
 $permission_name = $vavok->post_and_get('permission_name');
 
+// Update data
 if ($vavok->post_and_get('action') == 'update') {
     $acc_data = '';
 
     if (!empty($vavok->post_and_get('pageedit', true))) {
-        $optionArray = $vavok->post_and_get('pageedit', true);
-        for ($i = 0; $i < count($optionArray); $i++) {
-            if ($optionArray[$i] == 'show') {
-                $show = 'show,';
-                break;
-            } else {
-                $show = '';
-            } 
-        }
-
-        for ($i = 0; $i < count($optionArray); $i++) {
-            if ($optionArray[$i] == 'edit') {
-                $edit = 'edit,';
-                break;
-            } else {
-                $edit = '';
-            } 
-        }
-
-        for ($i = 0; $i < count($optionArray); $i++) {
-            if ($optionArray[$i] == 'del') {
-                $del = 'del,';
-                break;
-            } else {
-                $del = '';
-            } 
-        }
-
-        for ($i = 0; $i < count($optionArray); $i++) {
-            if ($optionArray[$i] == 'insert') {
-                $insert = 'insert,';
-                break;
-            } else {
-                $insert = '';
-            } 
-        }
-
-        for ($i = 0; $i < count($optionArray); $i++) {
-            if ($optionArray[$i] == 'editunpub') {
-                $editunpub = 'editunpub,';
-                break;
-            } else {
-                $editunpub = '';
-            } 
-        }
+        $show = in_array('show', $vavok->post_and_get('pageedit', true)) ? 'show,' : '';
+        $edit = in_array('edit', $vavok->post_and_get('pageedit', true)) ? 'edit,' : '';
+        $del = in_array('delete', $vavok->post_and_get('pageedit', true)) ? 'delete,' : '';
+        $insert = in_array('insert', $vavok->post_and_get('pageedit', true)) ? 'insert,' : '';
+        $editunpub = in_array('editunpub', $vavok->post_and_get('pageedit', true)) ? 'editunpub,' : '';
 
         $acc_data = $show . $edit . $del . $insert . $editunpub;
         $acc_data = rtrim($acc_data, ',');
@@ -66,8 +32,8 @@ if ($vavok->post_and_get('action') == 'update') {
 		// Edit Unpublished - Ability do edit all unpublished data
     }
 
-    $check_data = $vavok->go('db')->count_row('specperm', "uid='{$edit_user}' AND permname='{$permission_name}'");
-    if ($check_data < 1) {
+    // Update data if exist or insert new data if data previosly doesnt existed
+    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") < 1) {
         $values = array(
             'uid' => $edit_user,
             'permname' => $permname,
@@ -82,28 +48,27 @@ if ($vavok->post_and_get('action') == 'update') {
 }
 
 if ($vavok->post_and_get('action') == 'delete_permission') {
-    $vavok->go('db')->delete('specperm', "permname='{$permission_name}' AND uid='{$edit_user}'");
-    $vavok->redirect_to('specperm.php?users=' . $edit_user);
+    $vavok->go('db')->delete(DB_PREFIX . 'specperm', "permname='{$permission_name}' AND uid='{$edit_user}'");
+    $vavok->redirect_to(DB_PREFIX . 'specperm.php?users=' . $edit_user);
 }
 
 if ($vavok->post_and_get('action') == 'forum') $vavok->redirect_to('forum-moders.php?users=' . $edit_user);
 
-$vavok->go('current_page')->page_title = 'Special Permissions'; // update lang
+$vavok->go('current_page')->page_title = 'User Permissions'; // update lang
 $vavok->require_header();
 
 echo '<p>Updating permissions for user <strong>' . $vavok->go('users')->getnickfromid($edit_user) . '</strong></p>';
 
 if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
-    $permissionData = $vavok->go('db')->count_row('specperm', "uid='{$edit_user}'");
-
-    if ($permissionData > 0) {
-        foreach($vavok->go('db')->query("SELECT * FROM specperm WHERE uid='{$edit_user}'") as $permission) {
+    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}'") > 0) {
+        foreach($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "specperm WHERE uid='{$edit_user}'") as $permission) {
             echo '<p><span class="btn btn-outline-primary"><strong>' . $permission['permname'] . '</strong></span> - 
             <a href="specperm.php?action=changepermissions&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'] . '" class="btn btn-primary sitelink">[EDIT]</a>
             <a href="specperm.php?action=delete_permission&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'] . '" class="btn btn-primary sitelink">[DEL]</a></p>';
         }
     }
     ?>
+
     <form method="post" action="specperm.php?action=changepermissions&users=<?php echo $edit_user; ?>">
         <div class="form-group">
             <label for="permission_list">Add or edit users permissions</label>
@@ -118,7 +83,6 @@ if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
         </div>
         <button type="submit" class="btn btn-primary">Confirm</button>
     </form>
-
     <form method="post" action="specperm.php?action=changepermissions&users=<?php echo $edit_user; ?>">
         <div class="form-group">
             <label for="change_permissions_input">Add or edit permissions that are not listed above</label>
@@ -126,42 +90,22 @@ if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
         </div>
         <button type="submit" class="btn btn-primary">Confirm</button>
     </form>
+
     <?php
 }
 
 if ($vavok->post_and_get('action') == 'changepermissions' && !empty($edit_user) && !empty($permission_name)) {
-    if ($vavok->go('db')->count_row("specperm", "uid='{$edit_user}' AND permname='{$permission_name}'") > 0) {
-        $check_data = $vavok->go('db')->get_data('specperm', "uid='{$edit_user}' AND permname='{$permission_name}'");
-        $acc_data = explode(',', $check_data['permacc']);
+    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") > 0) {
+        $acc_data = explode(',', $vavok->go('db')->get_data(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'")['permacc']);
     } else {
         $acc_data = array();
     }
 
-    if (in_array('show', $acc_data) || in_array(1, $acc_data)) {
-        $show_checked = 'checked';
-    } else {
-        $show_checked = '';
-    } 
-    if (in_array('edit', $acc_data) || in_array(2, $acc_data)) {
-        $edit_checked = 'checked';
-    } else {
-        $edit_checked = '';
-    } 
-    if (in_array('del', $acc_data) || in_array(3, $acc_data)) {
-        $del_checked = 'checked';
-    } else {
-        $del_checked = '';
-    } 
-    if (in_array('insert', $acc_data) || in_array(4, $acc_data)) {
-        $insert_checked = 'checked';
-    } else {
-        $insert_checked = '';
-    } 
-    if (in_array('editunpub', $acc_data) || in_array(5, $acc_data)) {
-        $editunpub_checked = 'checked';
-    } else {
-        $editunpub_checked = '';
-    }
+    $show_checked = in_array('show', $acc_data) ? 'checked' : '';
+    $edit_checked = in_array('edit', $acc_data) ? 'checked' : '';
+    $del_checked = in_array('delete', $acc_data) ? 'checked' : '';
+    $insert_checked = in_array('insert', $acc_data) ? 'checked' : '';
+    $editunpub_checked = in_array('editunpub', $acc_data) ? 'checked' : '';
     ?>
 
     <p>Updating permission <strong><?php echo $permission_name; ?></strong></p>
@@ -186,7 +130,7 @@ if ($vavok->post_and_get('action') == 'changepermissions' && !empty($edit_user) 
             </label>
         </div>
         <div class="form-check form-check">
-            <input type="checkbox" name="pageedit[]" value="del" <?php echo $del_checked; ?> class="form-check-input" id="delete" />
+            <input type="checkbox" name="pageedit[]" value="delete" <?php echo $del_checked; ?> class="form-check-input" id="delete" />
             <label class="form-check-label" for="delete">
                 Delete
             </label>
@@ -209,6 +153,7 @@ if ($vavok->post_and_get('action') == 'changepermissions' && !empty($edit_user) 
         Delete - Delete data<br />
         Edit Unpublished - Ability do edit all unpublished content
     </p>
+
     <?php
 }
 
