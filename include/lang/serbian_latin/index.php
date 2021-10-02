@@ -94,6 +94,7 @@ $lang_home['security'] = 'Bezbednost';
 $lang_home['backtoblog'] = 'Nazad na blog';
 $lang_home['category'] = 'Kategorija';
 $lang_home['updated'] = 'Ažurirano';
+$lang_home['timezone'] = 'Vremenska zona';
 
 // cookie consent
 $lang_home['cookies'] = 'Kolačići.'; // Title
