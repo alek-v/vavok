@@ -355,9 +355,9 @@ class Users {
 		$vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'rname', 'surname', 'photo', 'address', 'zip', 'country', 'phone');
 
 		// First check if there are fields to update for selected table, then update data
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')))  $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values'), "id='{$user_id}'");
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values'), "uid='{$user_id}'");
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_about', $this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'), $this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values'), "uid='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values')), "uid='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
 	}
 
 	/**
@@ -398,6 +398,43 @@ class Users {
 		}
 
 		if ($data == 'fields') { return $fields; } else { return $values; }
+	}
+
+	/**
+	 * Update default users permissions
+	 * 
+	 * @param int $user_id
+	 * @param int $permission_id
+	 * @return void
+	 */
+	public function update_default_permissions($user_id, $permission_id)
+	{
+        // Access level
+        $this->vavok->go('users')->update_user('perm', $permission_id, $user_id);
+
+		$default_permissions = array(
+			101 => array(),
+			102 => array(),
+			103 => array(),
+			104 => array(),
+			105 => array(),
+			106 => array('adminpanel' => 'show', 'adminchat' => 'show,insert', 'adminlist' => 'show', 'reglist' => 'show'),
+			107 => array()
+		);
+
+		foreach ($default_permissions[$permission_id] as $key => $value) {
+            // Insert data to database if data does not exsist
+            if ($this->vavok->go('db')->count_row(DB_PREFIX . 'specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
+                $values = array(
+                    'permname' => $key,
+                    'permacc' => $value,
+                    'uid' => $user_id
+                );
+
+                // Insert data to database
+                $this->vavok->go('db')->insert(DB_PREFIX . 'specperm', $values);
+            }
+		}
 	}
 
 	/**
