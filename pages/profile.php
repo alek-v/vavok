@@ -18,18 +18,19 @@ switch ($vavok->post_and_get('action')) {
 		// check birthday
 		// if (!empty($happy) && !preg_match("/^[0-9]{2}+\.[0-9]{2}+\.([0-9]{2}|[0-9]{4})$/",$happy)){header ("Location: profile.php?isset=inhappy"); exit;}
 
-		$my_name = $vavok->no_br($vavok->check($vavok->post_and_get('my_name')));
-		$surname = $vavok->no_br($vavok->check($vavok->post_and_get('surname')));
-		$city = $vavok->no_br($vavok->check($vavok->post_and_get('otkel')));
-		$street = $vavok->no_br($vavok->check($vavok->post_and_get('street')));
-		$zip = $vavok->no_br($vavok->check($vavok->post_and_get('zip')));
-		$infa = $vavok->no_br($vavok->check($vavok->post_and_get('infa')));
+		$my_name = $vavok->no_br($vavok->post_and_get('my_name'));
+		$surname = $vavok->no_br($vavok->post_and_get('surname'));
+		$city = $vavok->no_br($vavok->post_and_get('otkel'));
+		$street = $vavok->no_br($vavok->post_and_get('street'));
+		$zip = $vavok->no_br($vavok->post_and_get('zip'));
+		$infa = $vavok->no_br($vavok->post_and_get('infa'));
 		$email = htmlspecialchars(strtolower($vavok->post_and_get('email')));
-		$site = $vavok->no_br($vavok->check($vavok->post_and_get('site')));
-		$browser = $vavok->no_br($vavok->check($vavok->go('users')->user_browser()));
-		$ip = $vavok->no_br($vavok->check($vavok->go('users')->find_ip()));
-		$sex = $vavok->no_br($vavok->check($vavok->post_and_get('pol')));
-		$happy = $vavok->no_br($vavok->check($vavok->post_and_get('happy')));
+		$site = $vavok->no_br($vavok->post_and_get('site'));
+		$browser = $vavok->no_br($vavok->go('users')->user_browser());
+		$ip = $vavok->no_br($vavok->go('users')->find_ip());
+		$sex = $vavok->no_br($vavok->post_and_get('pol'));
+		$happy = $vavok->no_br($vavok->post_and_get('happy'));
+		$timezone = $vavok->no_br($vavok->post_and_get('timezone'));
 
 		$fields = array();
 		$fields[] = 'city';
@@ -41,6 +42,7 @@ switch ($vavok->post_and_get('action')) {
 		$fields[] = 'surname';
 		$fields[] = 'address';
 		$fields[] = 'zip';
+		$fields[] = 'timezone';
 
 		$values = array();
 		$values[] = $city;
@@ -52,6 +54,7 @@ switch ($vavok->post_and_get('action')) {
 		$values[] = $surname;
 		$values[] = $street;
 		$values[] = $zip;
+		$values[] = $timezone;
 
 		/**
 		 * Update profile data
@@ -196,6 +199,16 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $zip->set('input_value', $vavok->go('users')->user_info('zip'));
 
 			    /**
+			     * Timezone
+			     */
+			    $timezone = new PageGen('forms/input.tpl');
+			    $timezone->set('label_for', 'timezone');
+			    $timezone->set('label_value', $vavok->go('localization')->string('timezone'));
+			    $timezone->set('input_id', 'timezone');
+			    $timezone->set('input_name', 'timezone');
+			    $timezone->set('input_value', $vavok->go('users')->user_info('timezone'));
+
+			    /**
 			     * About user
 			     */
 			    $infa = new PageGen('forms/input.tpl');
@@ -244,9 +257,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $gender_m->set('input_id', 'pol');
 			    $gender_m->set('input_name', 'pol');
 			    $gender_m->set('input_value', 'm');
-			    if ($vavok->go('users')->user_info('gender') == 'm') {
-			        $gender_m->set('input_status', 'checked');
-			    }
+			    if ($vavok->go('users')->user_info('gender') == 'm') $gender_m->set('input_status', 'checked');
 
 			    $gender_f = new PageGen('forms/radio_inline.tpl');
 			    $gender_f->set('label_for', 'pol');
@@ -254,14 +265,12 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 			    $gender_f->set('input_id', 'pol');
 			    $gender_f->set('input_name', 'pol');
 			    $gender_f->set('input_value', 'z');
-			    if ($vavok->go('users')->user_info('gender') == 'z') {
-			        $gender_f->set('input_status', 'checked');
-			    }
+			    if ($vavok->go('users')->user_info('gender') == 'z') $gender_f->set('input_status', 'checked');
 
 			    $gender = new PageGen('forms/radio_group.tpl');
 			    $gender->set('radio_group', $gender->merge(array($gender_m, $gender_f)));
 
-			    $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $infa, $email, $site, $birthday, $gender)));
+			    $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $timezone, $infa, $email, $site, $birthday, $gender)));
 			    echo $form->output();
 
 			    /**
@@ -316,7 +325,7 @@ please confirm this address here visiting confirmation link " . $vavok->website_
 		        echo $vavok->sitelink('photo.php', 'Change photo') . '<br />';
 				echo $vavok->sitelink('photo.php?action=remove', 'Remove photo'); // update lang
 		    } else {
-		        echo '<img src="../themes/images/img/no_picture.jpg" alt="" /><br /> ';
+		        echo '<img src="../themes/images/img/no_picture.jpg" alt="No profile picture" /><br /> ';
 		        echo $vavok->sitelink('photo.php', 'Change photo');
 		    }
 		    echo '</div>';
