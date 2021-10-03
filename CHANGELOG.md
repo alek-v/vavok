@@ -10,6 +10,7 @@
 - Refresh users browser name after login
 - Show time zone in profile
 - Removed file include/functions_extra.php
+- Don't count as new users click in statistics if request is ajax/dynamic
 
 
 
