@@ -151,26 +151,25 @@ class Users {
 	}
 
 	/**
-	 * Check if user is registered
+	 * Check if user is logged in
 	 *
 	 * @return bool
 	 */
 	public function is_reg()
 	{
-	    if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
-	        if (!empty($this->user_id)) {
-	            $show_user = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$this->user_id}'", 'name, perm');
-	            // Check if permissions are changed
-	            if ($this->vavok->check($_SESSION['log']) == $show_user['name'] && $_SESSION['permissions'] == $show_user['perm']) {
-	                return true; // everything is ok
-	            } else {
-	            	$this->logout($this->user_id);
+	    if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions']) && !empty($this->user_id)) {
+	    	// Regular authenticated user
+    		if ($_SESSION['permissions'] == 107) return true;
 
-	                return false;
-	            }
-	        } else {
-	            return false;
-	        }
+            // Administrator, check if access permissions are changed
+            if ($this->vavok->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
+                return true; // everything is ok
+            } else {
+            	// Permissions are changed, logout user
+            	// When user login again new permissions will be set in session
+            	$this->logout($this->user_id);
+                return false;
+            }
 	    } else {
 	    	return false;
 	    }
@@ -344,6 +343,10 @@ class Users {
 	public function update_user($fields, $values, $user_id = '')
 	{
 		$user_id = empty($user_id) ? $this->user_id : $user_id;
+
+		// Fields and values must be array, we are using array_values to sort keys when any is removed while filtering
+		if (!is_array($fields)) $fields = array($fields);
+		if (!is_array($values)) $values = array($values);
 
 		// vavok_users table fields
 		$vavok_users_valid_fields = array('name', 'pass', 'perm', 'skin', 'browsers', 'ipadd', 'timezone', 'banned', 'newmsg', 'lang');
