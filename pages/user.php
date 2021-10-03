@@ -18,8 +18,9 @@ if (!empty($vavok->post_and_get('uz'))) {
     }
 }
 
-// if user doesn't exist show error page
-if ($vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") < 1) {
+// Show error page if user doesn't exist
+if (!isset($users_id) || $vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") == 0) {
+    $vavok->go('current_page')->page_title = 'User doesn\'t exist';
     $vavok->require_header();
 
 	echo '<div class="user_profile">';
@@ -32,7 +33,7 @@ if ($vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") < 1) {
     exit;
 }
 
-$vavok->go('current_page')->page_title = $vavok->go('localization')->string('profile') . " " . $uz;
+$vavok->go('current_page')->page_title = $vavok->go('localization')->string('profile') . ' ' . $uz;
 $vavok->require_header();
 
 // Load page from template
@@ -67,7 +68,7 @@ if ($vavok->go('users')->user_info('banned', $users_id) == 1 && $vavok->go('user
 
 // Personal status
 if (!empty($vavok->go('users')->user_info('status', $users_id))) {
-    $personalStatus = new PageGen("pages/user-profile/status.tpl");
+    $personalStatus = new PageGen('pages/user-profile/status.tpl');
     $personalStatus->set('status', $vavok->go('localization')->string('status') . ':');
     $personalStatus->set('personalStatus', $vavok->check($vavok->go('users')->user_info('status', $users_id)));
     $showPage->set('personalStatus', $personalStatus->output());
@@ -116,13 +117,13 @@ $timezone = $vavok->go('users')->is_reg() ? $vavok->go('users')->user_info('time
 $showPage->set('lastVisit', $vavok->go('localization')->string('lastvisit') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('lastvisit', $users_id), 'd.m.Y. / H:i', $timezone, true));
 
 if ($vavok->go('users')->is_reg() && ($vavok->go('users')->is_moderator() || $vavok->go('users')->is_administrator())) {
-    $ipAddress = new PageGen("pages/user-profile/ip-address.tpl");
+    $ipAddress = new PageGen('pages/user-profile/ip-address.tpl');
     $ipAddress->set('ip-address', 'IP address: <a href="../' . $vavok->get_configuration('mPanel') . '/ip-informations.php?ip=' . $vavok->check($vavok->go('users')->user_info('ipaddress', $users_id)) . '" target="_blank">'  . $vavok->check($vavok->go('users')->user_info('ipaddress', $users_id)) . '</a>');
     $showPage->set('ip-address', $ipAddress->output());
 }
 
 if ($uz != $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) && $vavok->go('users')->is_reg()) {
-    $userMenu = new PageGen("pages/user-profile/user-menu.tpl");
+    $userMenu = new PageGen('pages/user-profile/user-menu.tpl');
     $userMenu->set('add-to', $vavok->go('localization')->string('addto'));
     $userMenu->set('contacts', '<a href="buddy.php?action=ign&amp;todo=add&amp;who=' . $users_id . '">' . $vavok->go('localization')->string('addtocontacts') . '</a>');
 
@@ -140,7 +141,7 @@ if ($uz != $vavok->go('users')->getnickfromid($vavok->go('users')->user_id) && $
 
     $showPage->set('userMenu', $userMenu->output());
 } elseif ($vavok->go('users')->getnickfromid($vavok->go('users')->user_id) == $uz && $vavok->go('users')->is_reg()) {
-    $adminMenu = new PageGen("pages/user-profile/admin-update-profile.tpl");
+    $adminMenu = new PageGen('pages/user-profile/admin-update-profile.tpl');
     $adminMenu->set('profileLink', '<a href="../pages/profile.php">' . $vavok->go('localization')->string('updateprofile') . '</a>');
     $showPage->set('userMenu', $adminMenu->output());
 }
