@@ -14,12 +14,12 @@ $max_time_in_seconds = 600;
 $max_attempts = 10;
 
 // login
-if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log')) && $vavok->post_and_get('log') != 'System') {
+if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log')) && !empty($vavok->post_and_get('pass')) && $vavok->post_and_get('log') != 'System') {
 	if ($vavok->go('users')->login_attempt_count($max_time_in_seconds, $vavok->post_and_get('log'), $vavok->go('users')->find_ip()) > $max_attempts) {
 	    $vavok->require_header();
 
 	    echo "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
-	    Try again in " . explode(':', $vavok->maketime($max_time_in_seconds))[0] . " minutes.</p>"; // update lang
+	    Try again in " . explode(':', $vavok->maketime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
 
 	    $vavok->require_footer();
 	    exit;
@@ -27,8 +27,8 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
 
     // user is logging in with email
     if ($vavok->go('users')->validate_email($vavok->post_and_get('log'))) {
-        $userx_about = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='" . $vavok->post_and_get('log') . "'", 'uid');
-        $userx_id = $userx_about['uid'];
+        $userx_about = $vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$vavok->post_and_get('log')}'", 'uid');
+        $userx_id = !empty($userx_about['uid']) ? $userx_about['uid'] : '';
     } else {
         // user is logging in with username
         $userx_id = $vavok->go('users')->getidfromnick($vavok->post_and_get('log'));
