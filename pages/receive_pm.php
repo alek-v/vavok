@@ -3,9 +3,14 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  */
+
+// This is ajax request
+// Counter will not threat this as new click/visit
+define('DYNAMIC_REQUEST', true);
+
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg()) $vavok->redirect_to("../pages/login.php");
+if (!$vavok->go('users')->is_reg()) $vavok->redirect_to('../pages/login.php');
 
 // if there is last message id set
 if (!empty($vavok->post_and_get('lastid'))) {

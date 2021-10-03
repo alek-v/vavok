@@ -3,7 +3,6 @@
  * Author:    Aleksandar Vranešević
  * URI:       https://vavok.net
  * Online, hit & click counter
- * Updated:   02.09.2020. 22:18:47
  */
 
 class Counter {
@@ -104,6 +103,7 @@ class Counter {
         if (empty($current_day) || !isset($current_day)) {
         	$current_day = $day;
     	}
+
     	if ($current_day != $day) {
     		$current_day = $day;
     		$clicks_today = 0;
@@ -131,14 +131,14 @@ class Counter {
 
         $values = array();
         $values[] = $day;
-        $values[] = date("m");
+        $values[] = date('m');
         $values[] = $new_clicks_today;
         $values[] = $new_total_clicks;
         $values[] = $new_visits_today;
         $values[] = $new_total_visits;
 
-        $this->vavok->go('db')->update(DB_PREFIX . 'counter', $fields, $values);
-        unset($fields, $values);
+        // Don't update if request is ajax
+        if (!defined('DYNAMIC_REQUEST')) $this->vavok->go('db')->update(DB_PREFIX . 'counter', $fields, $values);
 
         // show stats
         $this->counter_online = $this->vavok->go('db')->count_row(DB_PREFIX . 'online');
@@ -152,7 +152,6 @@ class Counter {
 
         $this->vavok->add_global(array('counter' => $this));
     }
-
 }
 
 ?>
