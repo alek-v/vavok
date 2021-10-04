@@ -6,6 +6,7 @@
 - Updated localization
 - Updated handling GET and POST data
 - Updated default theme
+- Updated is_moderator() and is_administrator() methods
 - Moved folder images to themes/images
 - Refresh users browser name after login
 - Show time zone in profile
