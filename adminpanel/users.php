@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) $vavok->redirect_to('./?error=noauth');
+if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('./?error=noauth');
 
 $user = $vavok->check($vavok->post_and_get('users'));
 

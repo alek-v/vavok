@@ -8,7 +8,7 @@ require_once '../include/startup.php';
 
 $user = $vavok->post_and_get('users');
 
-if ($_SESSION['permissions'] != 101 && $_SESSION['permissions'] != 102 && $_SESSION['permissions'] != 103) $vavok->redirect_to('../?auth_error');
+if (!$vavok->go('users')->is_administrator(101) && !$vavok->go('users')->is_administrator(102) && !$vavok->go('users')->is_moderator(103)) $vavok->redirect_to('../?auth_error');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banning');
 $vavok->require_header();

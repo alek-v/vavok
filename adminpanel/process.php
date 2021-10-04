@@ -3,13 +3,9 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg()) {
-    $vavok->redirect_to(BASEDIR . "pages/error.php?isset=nologin");
-}
-
 // add to admin chat
 if ($vavok->post_and_get('action') == 'acadd') {
-    if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions('adminchat')) $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
+    if (!$vavok->go('users')->check_permissions('adminchat')) $vavok->redirect_to(BASEDIR . "pages/input.php?action=exit");
 
     $brow = $vavok->check($vavok->go('users')->user_browser());
     $msg = $vavok->check(wordwrap($vavok->post_and_get('msg'), 150, ' ', 1));

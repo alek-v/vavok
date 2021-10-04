@@ -1,8 +1,12 @@
 <?php 
-// (c) vavok.net
+/**
+ * Author:    Aleksandar Vranešević
+ * URI:       https://vavok.net
+ */
+
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator()) $vavok->redirect_to('./');
+if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('./');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('search');
 $vavok->require_header();

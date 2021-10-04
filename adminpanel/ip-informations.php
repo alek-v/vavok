@@ -3,7 +3,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_moderator() && !$vavok->go('users')->is_administrator())) $vavok->redirect_to("../pages/input.php?action=exit");
+if (!$vavok->go('users')->is_moderator() && !$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?auth_error');
 
 $ip = $vavok->check($vavok->post_and_get('ip'));
 

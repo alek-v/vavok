@@ -7,10 +7,8 @@
 require_once '../include/startup.php';
 require_once '../include/htmlbbparser.php';
 
-/**
- * Checking access permitions
- */
-if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->check_permissions('pageedit', 'show'))) { $vavok->redirect_to("../"); }
+// Checking access permitions
+if (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->check_permissions('pageedit', 'show')) $vavok->redirect_to('../?auth_error');
 
 $file = $vavok->check($vavok->post_and_get('file'));
 $text_files = $vavok->post_and_get('text_files', true); // keep data as received so html codes will be ok
@@ -51,7 +49,7 @@ if ($vavok->post_and_get('action') == 'editfile') {
 
         // update db data
         $page_editor->update($page_id, $text_files);
-    } 
+    }
 
     $vavok->redirect_to("files.php?action=edit&file=$file&isset=mp_editfiles");
 }
@@ -73,11 +71,11 @@ if ($vavok->post_and_get('action') == 'editmainhead') {
     // update header data
     $vavok->write_data_file('headmeta.dat', $text_files);
 
-    $vavok->redirect_to("files.php?action=mainmeta&isset=mp_editfiles");
+    $vavok->redirect_to('files.php?action=mainmeta&isset=mp_editfiles');
 }
 
 // update head tags on specific page
-if ($vavok->post_and_get('action') == "editheadtag") {
+if ($vavok->post_and_get('action') == 'editheadtag') {
     // get default image link
     $image = !empty($vavok->post_and_get('image')) ? $vavok->post_and_get('image') : '';
 

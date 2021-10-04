@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to('../?auth_error');
+if (!$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to('../?auth_error');
 
 if ($vavok->post_and_get('action') == 'conf' && !empty($vavok->post_and_get('usr'))) {
     $fields = array('regche', 'regkey');

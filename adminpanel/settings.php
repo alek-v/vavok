@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->is_administrator(101)) $vavok->redirect_to("../pages/error.php?error=auth");
+if (!$vavok->go('users')->is_administrator(101)) $vavok->redirect_to('../pages/error.php?error=auth');
 
 $site_configuration = new Config();
 

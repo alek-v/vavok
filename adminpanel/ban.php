@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if ($_SESSION['permissions'] != 101 && $_SESSION['permissions'] != 102) $vavok->redirect_to('../?auth_error');
+if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?auth_error');
 
 $vavok->go('current_page')->page_title = 'IP ban';
 $vavok->require_header();

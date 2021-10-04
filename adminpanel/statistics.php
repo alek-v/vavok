@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator(101) && !$vavok->go('users')->is_administrator(102))) $vavok->redirect_to("../?errorAuth");
+if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?errorAuth');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('sitestats');
 $vavok->require_header();

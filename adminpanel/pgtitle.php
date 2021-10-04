@@ -8,7 +8,7 @@ require_once '../include/startup.php';
 
 $act = $vavok->post_and_get('act');
 
-if (!$vavok->go('users')->is_administrator() || !$vavok->go('users')->is_reg()) $vavok->redirect_to('../?error');
+if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?error');
 
 if ($act == 'addedit') {
     $tfile = $vavok->check($vavok->post_and_get('tfile'));

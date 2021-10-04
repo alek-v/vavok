@@ -6,10 +6,9 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || !$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to('../?auth_error');
+if (!$vavok->go('users')->check_permissions(basename(__FILE__))) $vavok->redirect_to('../?auth_error');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('adminchat');
-
 $vavok->require_header();
 
 echo '<img src="../themes/images/img/menu.gif" alt=""> <b>' . $vavok->go('localization')->string('adminchat') . '</b><br><br>';

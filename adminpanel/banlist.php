@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->is_reg() || (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->is_moderator(103))) $vavok->redirect_to('../index.php?error');
+if (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->is_moderator(103)) $vavok->redirect_to('../index.php?error');
 
 $vavok->go('current_page')->page_title = $vavok->go('localization')->string('banlist');
 $vavok->require_header();

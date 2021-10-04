@@ -879,16 +879,15 @@ class Users {
 	// check permissions for admin panel
 	// check if user have permitions to see, edit, delete, etc selected part of the website
 	function check_permissions($permname, $needed = 'show') {
+		// Check if user is logged in
+		if (!$this->is_reg()) return false;
+
 	    $permname = str_replace('.php', '', $permname);
 
-	    if ($this->is_administrator()) {
-	        return true;
-	    }
+	    // Administrator have access to all site functions
+	    if ($this->is_administrator(101)) return true;
 
-	    $check = $this->vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'");
-
-	    if ($check > 0) {
-	    	
+	    if ($this->vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'") > 0) {
 	        $check_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
@@ -986,14 +985,15 @@ class Users {
 	 */
 	function is_moderator($num = '', $id = '')
 	{
-	    if (empty($id) && !empty($this->user_id)) {
-	        $id = $this->user_id;
-	    }
+		// Return false if user is not logged in
+		if (!$this->is_reg()) return false;
+
+	    if (empty($id) && !empty($this->user_id)) $id = $this->user_id;
 
 	    $permission = $this->user_info('perm', $id);
 	    $perm = !empty($permission) ? intval($permission) : 0;
 	    
-	    if ($perm === $num) {
+	    if (!empty($num) && $perm === $num && ($perm === 103 || $perm === 105 || $perm === 106)) {
 	        return true;
 	    } elseif (empty($num) && ($perm === 103 || $perm === 105 || $perm === 106)) {
 	        return true;
@@ -1011,14 +1011,15 @@ class Users {
 	 */
 	function is_administrator($num = '', $id = '')
 	{
-	    if (empty($id) && !empty($this->user_id)) {
-	        $id = $this->user_id;
-	    }
+		// Return false if user is not logged in
+		if (!$this->is_reg()) return false;
+
+	    if (empty($id) && !empty($this->user_id)) $id = $this->user_id;
 
 	    $permission = $this->user_info('perm', $id);
 	    $perm = !empty($permission) ? intval($permission) : 0;
 
-	    if ($perm === $num) {
+	    if (!empty($num) && $perm === $num && ($perm === 101 || $perm === 102)) {
 	        return true;
 	    } if (empty($num) && ($perm === 101 || $perm === 102)) {
 	        return true;

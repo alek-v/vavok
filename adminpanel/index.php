@@ -6,7 +6,7 @@
 
 require_once '../include/startup.php';
 
-if (!$vavok->go('users')->check_permissions('adminpanel', 'show')) { $vavok->redirect_to("../"); }
+if (!$vavok->go('users')->check_permissions('adminpanel', 'show')) $vavok->redirect_to('../?auth_error');
 
 if ($vavok->post_and_get('action') == 'refver') {
     $vavokStableVersionURL = "http://www.vavok.net/cms/version.txt";
