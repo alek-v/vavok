@@ -45,7 +45,7 @@ if ($vavok->go('users')->is_reg()) {
             } else {
                 echo "<img src=\"../themes/images/img/close.gif\" alt=\"x\"/> " . $vavok->go('localization')->string('cantadd') . " " . $tnick . " " . $vavok->go('localization')->string('inignor') . "<br>";
             }
-        } elseif ($vavok->post_and_get('todo') = 'del') {
+        } elseif ($vavok->post_and_get('todo') == 'del') {
             if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $vavok->post_and_get('who')) == 2) {
                 $vavok->go('db')->delete('`ignore`', "name='{$vavok->go('users')->user_id}' AND target='" . $vavok->post_and_get('who') . "'");
 

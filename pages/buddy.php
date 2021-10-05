@@ -20,11 +20,10 @@ if ($vavok->go('users')->is_reg()) {
                 header ("Location: buddy.php?isset=kontakt_noadd");
                 exit;
             }
-        } elseif ($vavok->post_and_get('todo') = "del") {
+        } elseif ($vavok->post_and_get('todo') == 'del') {
             $vavok->go('db')->delete('buddy', "name='{$vavok->go('users')->user_id}' AND target='" . $vavok->post_and_get('who') . "'");
 
-            header ("Location: buddy.php?isset=kontakt_del");
-            exit;
+            $vavok->redirect_to('buddy.php?isset=kontakt_del');
         }
     }
 
