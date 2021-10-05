@@ -126,11 +126,9 @@ class Db extends PDO {
                 $sth->bindValue(':' . $f, $v);
             }
             $sth->execute();
-    }
 
-    // Deprecated 29.09.2020. 15:40:17
-    public function insert_data($table, $values = array()) {
-        $this->insert($table, $values);
+        // Count number of db queries while debugging
+        $this->db_queries();
     }
 
     public function run($sql, $bind = "") {
@@ -155,25 +153,40 @@ class Db extends PDO {
         }
     }
 
-    // get data
-    public function get_data($table, $where = "", $fields = "*", $bind = "") {
-        $sql = "SELECT " . $fields . " FROM " . $table;
+    /**
+     * Get data from database
+     * 
+     * @param str $table
+     * @param str $where
+     * @param str $fields
+     * @param str $bind
+     * @return array
+     */
+    public function get_data($table, $where = '', $fields = '*', $bind = '') {
+        $sql = 'SELECT ' . $fields . ' FROM ' . $table;
         if (!empty($where))
-            $sql .= " WHERE " . $where;
-        $sql .= ";";
+            $sql .= ' WHERE ' . $where;
+        $sql .= ';';
+
+        // Count number of db queries while debugging
+        $this->db_queries();
+
         return $this->run($sql, $bind);
     }
 
     // count number of rows
-    public function count_row($table, $where = "") {
+    public function count_row($table, $where = '') {
         $sql = "SELECT count(*) FROM " . $table;
         if (!empty($where))
-            $sql .= " WHERE " . $where;
-        $sql .= ";";
+            $sql .= ' WHERE ' . $where;
+        $sql .= ';';
 
         $result = $this->query($sql);
-        $row = $result->fetch(PDO::FETCH_NUM);
-        return $row[0];
+
+        // Count number of db queries while debugging
+        $this->db_queries();
+    
+        return $result->fetch(PDO::FETCH_NUM)[0];
     }
 
     public function setErrorCallbackFunction($errorCallbackFunction, $errorMsgFormat = "html") { 
@@ -203,9 +216,8 @@ class Db extends PDO {
     $vavok->go('db')->update('table', $fields, $values, 'something = "value"');
     */
     public function update($table, $fields, $values, $where = '') {
-        if (!empty($where)) {
-            $where = ' WHERE ' . $where;
-        }
+        if (!empty($where)) $where = ' WHERE ' . $where;
+
         //build the field to value correlation
         $buildSQL = '';
         if (is_array($fields)) {
@@ -222,7 +234,6 @@ class Db extends PDO {
             endforeach;
 
         } else {
-
             //we are only updating one field
             $buildSQL .= $fields.' = :value';
         }
@@ -235,6 +246,9 @@ class Db extends PDO {
         } else {
             $prepareUpdate->execute(array(':value' => $values));
         }
+
+        // Count number of db queries while debugging
+        $this->db_queries();
 
         //record and print any DB error that may be given
         $error = $prepareUpdate->errorInfo();
@@ -262,6 +276,19 @@ class Db extends PDO {
     public function copy_table($table, $prefix)
     {
         $this->query("CREATE TABLE " . $prefix . $table . " LIKE " . $table);
+    }
+
+    /**
+     * Count number of db queries while debugging
+     *
+     * @return void
+     */
+    public function db_queries()
+    {
+        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') {
+            if (!isset($_SESSION['db_queries'])) $_SESSION['db_queries'] = 0;
+            $_SESSION['db_queries'] = $_SESSION['db_queries'] + 1;
+        }
     }
 }
 
