@@ -69,8 +69,8 @@ class Users {
 		    }
 		}
 
-		$this->user_id = isset($_SESSION['log']) ? $this->getidfromnick($_SESSION['log']) : ''; // User's id
-		$this->username = isset($_SESSION['log']) ? $_SESSION['log'] : '';
+		$this->user_id = isset($_SESSION['uid']) && !empty($_SESSION['uid']) ? $_SESSION['uid'] : ''; // Users id
+		$this->username = isset($_SESSION['log']) && !empty($_SESSION['log']) ? $_SESSION['log'] : ''; // Username
 
 		// Get user data
 		if (!empty($this->user_id)) {
@@ -822,14 +822,13 @@ class Users {
 
 	// User's language
 	public function get_user_language() {
+		// Use language from session if exists
+		if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
+
 		if ($this->is_reg()) {
 			return $this->user_info('language', $this->user_id);
 		} else {
-			// Use language from session if exists
-			if (!empty($_SESSION['lang'])) { return $_SESSION['lang']; }
-			else {
-				return $this->vavok->get_configuration('siteDefaultLang');
-			}
+			return $this->vavok->get_configuration('siteDefaultLang');
 		}
 	}
 
@@ -913,17 +912,14 @@ class Users {
 	function current_user_id($user_id = '') {
 	    $user_id = $this->user_id;
 
-	    if (empty($user_id)) {
-	        $user_id = 0;
-	    }
+	    if (empty($user_id)) $user_id = 0;
 
 	    return $user_id;
 	}
 
 	// number of registered members
 	function regmemcount() {
-	    $rmc = $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users');
-	    return $rmc;
+	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users');
 	}
 
 	function user_device() {
