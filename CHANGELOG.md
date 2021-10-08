@@ -9,12 +9,14 @@
 - Updated default theme
 - Updated is_moderator() and is_administrator() methods
 - Updated default theme to show number of database queries in debug mode
+- Updated node modules
 - Moved folder images to themes/images
 - Refresh users browser name after login
 - Show time zone in profile
 - Removed file include/functions_extra.php
 - Removed deprecated method insert_data() from Db.class.php
 - Don't count as new users click in statistics if request is ajax/dynamic
+- Reduced number of DB queries
 
 
 
