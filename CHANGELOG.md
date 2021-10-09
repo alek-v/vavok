@@ -10,6 +10,8 @@
 - Updated is_moderator() and is_administrator() methods
 - Updated default theme to show number of database queries in debug mode
 - Updated node modules
+- Updated method erase_img() in Vavok.class.php
+- Updated blog and template files
 - Moved folder images to themes/images
 - Refresh users browser name after login
 - Show time zone in profile
