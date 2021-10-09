@@ -208,6 +208,7 @@ switch ($vavok->post_and_get('pg')) {
 			// load template
 			$page_posts = new PageGen('pages/blog/blog_post.tpl');
 
+			// Linked title
 			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
 
 			// Replace html headings and images from content
@@ -239,6 +240,8 @@ switch ($vavok->post_and_get('pg')) {
 
 			// Read more link
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
+
+			// Read more title
 			$page_posts->set('read_more_title', $vavok->go('localization')->string('readmore'));
 
 			// Cover image
