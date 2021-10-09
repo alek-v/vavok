@@ -164,15 +164,13 @@ textarea {
 }
 
 .blog-index {
+  padding: 25px;
   box-shadow: 0px 0px 6px #ccc;
-  margin-bottom: 80px;
+  margin-bottom: 55px;
 }
 .blog-index p {
   max-width: 850px;
   text-align: justify;
-}
-.blog-index img {
-  display: none;
 }
 
 .blog-page {

@@ -8,7 +8,7 @@ require_once '../include/startup.php';
 
 $pg = $vavok->post_and_get('pg'); // blog page
 
-$items_per_page = 5; // How many blog posts to show per page
+$items_per_page = 9; // How many blog posts to show per page
 $comments_per_page = 0; // How many comments to show per page
 
 switch ($vavok->post_and_get('pg')) {
@@ -199,10 +199,10 @@ switch ($vavok->post_and_get('pg')) {
 		 */
 
 		/**
-		 * Query when category is not set and when it is set
+		 * Query when category is not set and case when it is set
 		 */		
 		$page_sql_query = empty($vavok->post_and_get('category')) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
-		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content FROM pages INNER JOIN tags ON tags.tag_name='{$vavok->post_and_get('category')}' AND tags.page_id = pages.id  ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$vavok->post_and_get('category')}' AND tags.page_id = pages.id AND pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
 
 		foreach ($vavok->go('db')->query($page_sql_query) as $key) {
 			// load template
@@ -210,40 +210,39 @@ switch ($vavok->post_and_get('pg')) {
 
 			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
 
-			$content = $key['content'];
+			// Replace html headings and images from content
+			$content = $vavok->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']));
 
-			// length of blog text
-			$content_length = mb_strlen($key['content']);
+			// When there is more then 45 words show only first 45 words
+			if (count(explode(' ', $content)) > 45) $content = implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $content)), 0, 45)) . '...';
 
-			// if there is more then 45 words
-			if (count(explode(' ', $key['content'])) > 45) {
-				// show first 45 words
-				$content = $vavok->getbbcode(implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $key['content'])), 0, 45))) . '...';
-			}
-
-			// replace html headings
-			$content = preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $content);
-
-			/**
-			 * Day and month created
-			 */
+			// Day when article is created
 			$page_posts->set('date-created-day', date('d', $key['created']));
-			$page_posts->set('date-created-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['created']) - 1], 0, 3));
 
-			/**
-			 * Day and month when article is published
-			 */
+			// Month when article is created
+			$page_posts->set('date-created-month', $vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['created']) - 1]);
+
+			// Day when article is published
 			$page_posts->set('date-published-day', date('d', $key['pubdate']));
-			$page_posts->set('date-published-month', mb_substr($vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['pubdate']) - 1], 0, 3));
 
-			/**
-			 * Page URL
-			 */
+			// Month when article is published
+			$page_posts->set('date-published-month', $vavok->go('localization')->show_all()['ln_all_month'][date('n', $key['pubdate']) - 1]);
+
+			// Year when article is published
+			$page_posts->set('date-published-year', date('Y', $key['pubdate']));
+
+			// Page URL
 			$page_posts->set('page-link', $vavok->go('current_page')->media_page_url());
 
+			// Page text
 			$page_posts->set('post_text', $content);
+
+			// Read more link
 			$page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname'] . '/');
 			$page_posts->set('read_more_title', $vavok->go('localization')->string('readmore'));
+
+			// Cover image
+			$page_posts->set('page_image', $key['default_img']);
 
 			// blog post objects
 			$all_posts[] = $page_posts;

@@ -1,22 +1,12 @@
-<div class="index-blog-post">
-	<div class="row blog-title">
-		<div class="col-10">
-			<h2>{@post_name}}</h2>
-			<!-- category: one, two -->
+<div class="col">
+	<div class="card h-100">
+		<img src="{@page_image}}" class="card-img-top" alt="">
+		<div class="card-body">
+			<h5 class="card-title">{@post_name}}</h5>
+			<p class="card-text">{@post_text}}</p>
 		</div>
-		<div class="col-2">
-			<div class="rounded-circle blog-date">
-				{@date-published-day}}<br />{@date-published-month}}
-			</div>
+		<div class="card-footer">
+			<small class="text-muted">{@date-published-day}}. {@date-published-month}} {@date-published-year}}.</small>
 		</div>
-	</div>
-
-	<div class="row">
-		{@post_text}}
-	</div>
-	<div class="row readmore">
-		<p>
-			<a href="{@read_more_link}}" class="btn btn-primary">{@read_more_title}}</a>
-		</p>
 	</div>
 </div>
