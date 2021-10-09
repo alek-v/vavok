@@ -441,6 +441,9 @@ class Vavok {
 	    $image = preg_replace('#<img src="\.\./themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
 	    $image = preg_replace('#<img src="\.\./themes/images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
 	    $image = preg_replace('#<img src="(.*?)" alt="(.*?)>#', '', $image);
+	    $image = preg_replace('/<img src="(.*?)" width="(.*?)" height="(.*?)>/', '', $image);
+	    $image = preg_replace('/<img class="(.*?)" src="(.*?)" \/>/', '', $image);
+	    $image = preg_replace('/<img class="(.*?)" src="(.*?)" alt="(.*?)>/', '', $image);
 
 	    return $image;
 	}
