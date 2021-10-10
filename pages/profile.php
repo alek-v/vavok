@@ -89,15 +89,15 @@ switch ($vavok->post_and_get('action')) {
 			 */
 			$mailQueue = new Mailer;
 
-			$msg = "Hello {$vavok->go('users')->username}\r\n
+			$msg = "Hello {$vavok->go('users')->username}<br /><br />
 In order to add this email to your profile at site {$vavok->website_home_address()}
-please confirm this address here visiting confirmation link " . $vavok->website_home_address() . "/pages/confirm_email.php?token=" . $token;
-			$msg .= "\r\n\r\n\r\nIf you received this email by mistake please ignore it.";
+please follow link to confirm email address " . '<a href="' . $vavok->website_home_address() . '/pages/confirm_email.php?token=' . $token . '">' . $vavok->website_home_address() . '/pages/confirm_email.php?token=' . $token . '</a>';
+			$msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
 			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
 		}
 
-		$vavok->redirect_to("./profile.php?isset=editprofile");
+		$vavok->redirect_to('./profile.php?isset=editprofile');
 		break;
 
 	case 'delete_profile':
