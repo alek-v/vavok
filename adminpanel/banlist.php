@@ -14,14 +14,13 @@ $vavok->require_header();
 echo '<p><img src="../themes/images/img/partners.gif" alt=""> <b>' . $vavok->go('localization')->string('banlist') . '</b></p>'; 
 
 // Number of banned users
-$noi = $vavok->go('db')->count_row('vavok_users', "banned='1' OR banned='2'");
-
+$noi = $vavok->go('users')->total_banned();
 $items_per_page = 10;
 
 $navigation = new Navigation($items_per_page, $noi, $vavok->post_and_get('page'), 'banlist.php?'); // start navigation
 $limit_start = $navigation->start()['start']; // starting point
 
-$sql = "SELECT id, name, banned FROM vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";
+$sql = "SELECT id, name, banned FROM " . DB_PREFIX . "vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";
 
 if ($noi > 0) {
     foreach ($vavok->go('db')->query($sql) as $item) {
@@ -33,7 +32,9 @@ if ($noi > 0) {
     echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('noentry') . '!</p>';
 }
 
+echo '<div class="mt-5">';
 echo $navigation->get_navigation();
+echo '</div>';
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
 echo $vavok->homelink() . '</p>';

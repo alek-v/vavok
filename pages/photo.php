@@ -72,7 +72,8 @@ if ($vavok->go('users')->is_reg()) {
                         chmod($ch, 0777);
                         chmod("../used/dataphoto/" . $vavok->go('users')->user_id . "." . $av_string . "", 0777);
 
-                        $vavok->go('db')->update('vavok_about', 'photo', "gallery/photo.php?uz=" . $vavok->go('users')->user_id, "uid='{$vavok->go('users')->user_id}'");
+                        $vavok->go('users')->update_user('photo', 'gallery/photo.php?uz=' . $vavok->go('users')->user_id);
+
                         echo '<div class="photo">';
                         echo '<br>Photo saved!<br>';
                         echo 'Current photo: <img src="../gallery/photo.php?uz=' . $vavok->go('users')->user_id . '" alt="" /><br>';
@@ -104,7 +105,7 @@ if ($vavok->go('users')->is_reg()) {
             unlink("../used/dataphoto/" . $vavok->go('users')->user_id . ".jpeg");
         }
 
-        $vavok->go('db')->update(DB_PREFIX . 'vavok_about', 'photo', '', "uid='{$vavok->go('users')->user_id}'");
+        $vavok->go('users')->update_user('photo', '');
 
         echo '<p>Your photography successfully deleted!</p>'; // update lang
 

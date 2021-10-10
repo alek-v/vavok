@@ -13,7 +13,7 @@ $vavok->require_header();
 
 echo '<p><img src="../themes/images/img/user.gif" alt=""> <b>' . $vavok->go('localization')->string('adminlistl') . '</b></p>'; 
 
-$num_items = $vavok->go('db')->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
+$num_items = $vavok->go('users')->total_admins();
 $items_per_page = 10;
 
 $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'adminlist.php?'); // start navigation

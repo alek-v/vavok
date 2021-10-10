@@ -19,7 +19,7 @@ if (!empty($vavok->post_and_get('uz'))) {
 }
 
 // Show error page if user doesn't exist
-if (!isset($users_id) || $vavok->go('db')->count_row('vavok_users', "id='{$users_id}'") == 0) {
+if (!isset($users_id) || !$vavok->go('users')->id_exists($users_id)) {
     $vavok->go('current_page')->page_title = 'User doesn\'t exist';
     $vavok->require_header();
 

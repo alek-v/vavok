@@ -29,120 +29,109 @@ if ($vavok->post_and_get('action') == 'reguser') {
     // load theme header
     $vavok->require_header();
 
-    // check email
-    $check_mail = $vavok->go('db')->count_row('vavok_about', "email='{$vavok->post_and_get('meil')}'");
-    if ($check_mail > 0) $check_mail = 'no';
+    // Continue if email does not exist in database
+    if (!$vavok->go('users')->email_exists($vavok->post_and_get('meil'))) {
+        // Continue if username does not exists in database
+        if (!$vavok->go('users')->username_exists($vavok->post_and_get('log'))) {
+            // Continue if email is valid
+            if ($vavok->go('users')->validate_email($vavok->post_and_get('meil'))) {
+                // Check reCAPTCHA
+                if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == true) {
+                    $password = $vavok->check($vavok->post_and_get('par'));
+                    $mail = htmlspecialchars(stripslashes(strtolower($vavok->post_and_get('meil'))));
 
-    // check nick
-    $check_users = $vavok->go('db')->count_row('vavok_users', "name='{$vavok->post_and_get('log')}'");
-    if ($check_users > 0) $check_users = 'no';
-
-    // check for '-'
-    $substr_log = substr_count($vavok->post_and_get('log'), '-');
-
-    if ($substr_log < 3) {
-        if ($check_mail != 'no') {
-            if ($check_users != 'no') {
-                    if ($vavok->go('users')->validate_email($vavok->post_and_get('meil'))) {
-                        if ($vavok->recaptcha_response($vavok->post_and_get('g-recaptcha-response'))['success'] == true) {
-                            $password = $vavok->check($vavok->post_and_get('par'));
-                            $mail = htmlspecialchars(stripslashes(strtolower($vavok->post_and_get('meil'))));
-
-                            if ($vavok->get_configuration('regConfirm') == 1) {
-                                $registration_key = time() + 24 * 60 * 60;
-                            } else {
-                                $registration_key = '';
-                            }
-
-                            // register user
-                            $vavok->go('users')->register($vavok->post_and_get('log'), $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
-                             
-                            // Send email with registration data
-                            if ($vavok->get_configuration('regConfirm') == 1) {
-                                $needkey = "<p>" . $vavok->go('localization')->string('emailpart5') . "</p>
-                                <p>" . $vavok->go('localization')->string('yourkey') . ": " . $registration_key . "</p>
-                                <p>" . $vavok->go('localization')->string('emailpart6') . ":</p>
-                                <p>" . $vavok->website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "</p>
-                                <p>" . $vavok->go('localization')->string('emailpart7') . "</p>";
-                            } else {
-                                $needkey = '<br />';
-                            }
-
-                            $subject = $vavok->go('localization')->string('regonsite') . ' ' . $vavok->get_configuration('title');
-                            $regmail = "<p>" . $vavok->go('localization')->string('hello') . " " . $vavok->post_and_get('log') . "!</p>
-                            <p>" . $vavok->go('localization')->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . "</p>
-                            <p>" . $vavok->go('localization')->string('emailpart2') . ":</p>
-                            <p>" . $vavok->go('localization')->string('username') . ": " . $vavok->post_and_get('log') . "</p>
-                            <p>" . $needkey . "" . $vavok->go('localization')->string('emailpart3') . "</p>
-                            <p>" . $vavok->go('localization')->string('emailpart4') . "</p>";
-
-                            // Send confirmation email
-                            $newMail = new Mailer;
-
-                            // Add to the email queue
-                            $newMail->queue_email($mail, $subject, $regmail, '', '', $priority = 'high');
-
-                            // Registration completed successfully
-                            $completed = 'successfully';
-
-                            // registration successfully, show info
-                            echo '<p>' . $vavok->go('localization')->string('regoknick') . ': <b>' . $vavok->post_and_get('log') . '</b> <br /><br /></p>';
-
-                            if ($vavok->get_configuration('regConfirm') == 1) {
-                                /**
-                                 * Confirm registration
-                                 */
-                                $form = new PageGen('forms/form.tpl');
-                                $form->set('form_method', 'post');
-                                $form->set('form_action', 'key.php?action=inkey');
-
-                                $input = new PageGen('forms/input.tpl');
-                                $input->set('label_for', 'key');
-                                $input->set('label_value', $vavok->go('localization')->string('yourkey'));
-                                $input->set('input_type', 'text');
-                                $input->set('input_id', 'key');
-                                $input->set('input_name', 'key');
-                                $input->set('input_placeholder', '');
-
-                                $form->set('website_language[save]', $vavok->go('localization')->string('confirm'));
-                                $form->set('fields', $input->output());
-                                echo $form->output();
-
-                                /**
-                                 * Resend email
-                                 */
-                                $form = new PageGen('forms/form.tpl');
-                                $form->set('form_method', 'post');
-                                $form->set('form_action', 'key.php?action=resendkey');
-
-                                $input = new PageGen('forms/input.tpl');
-                                $input->set('input_type', 'hidden');
-                                $input->set('input_id', 'recipient');
-                                $input->set('input_name', 'recipient');
-                                $input->set('input_value', $mail);
-
-                                $form->set('website_language[save]', $vavok->go('localization')->string('resend'));
-                                $form->set('fields', $input->output());
-                                echo $form->output();
-
-                                echo '<p><b>' . $vavok->go('localization')->string('enterkeymessage') . '</b></p>';
-                            } else {
-                            	echo '<p>' . $vavok->go('localization')->string('loginnow') . '</p>';
-                            }
-                        } else {
-                            echo '<p>' . $vavok->go('localization')->string('badcaptcha') . '</p>';
-                        }
+                    if ($vavok->get_configuration('regConfirm') == 1) {
+                        $registration_key = time() + 24 * 60 * 60;
                     } else {
-                        echo '<p>' . $vavok->go('localization')->string('badmail') . "</p>";
+                        $registration_key = '';
                     }
+
+                    // register user
+                    $vavok->go('users')->register($vavok->post_and_get('log'), $password, $vavok->get_configuration('regConfirm'), $registration_key, MY_THEME, $mail); // register user
+                     
+                    // Send email with registration data
+                    if ($vavok->get_configuration('regConfirm') == 1) {
+                        $needkey = "<p>" . $vavok->go('localization')->string('emailpart5') . "</p>
+                        <p>" . $vavok->go('localization')->string('yourkey') . ": " . $registration_key . "</p>
+                        <p>" . $vavok->go('localization')->string('emailpart6') . ":</p>
+                        <p>" . $vavok->website_home_address() . "/pages/key.php?action=inkey&key=" . $registration_key . "</p>
+                        <p>" . $vavok->go('localization')->string('emailpart7') . "</p>";
+                    } else {
+                        $needkey = '<br />';
+                    }
+
+                    $subject = $vavok->go('localization')->string('regonsite') . ' ' . $vavok->get_configuration('title');
+                    $regmail = "<p>" . $vavok->go('localization')->string('hello') . " " . $vavok->post_and_get('log') . "!</p>
+                    <p>" . $vavok->go('localization')->string('emailpart1') . " " . $vavok->get_configuration('homeUrl') . "</p>
+                    <p>" . $vavok->go('localization')->string('emailpart2') . ":</p>
+                    <p>" . $vavok->go('localization')->string('username') . ": " . $vavok->post_and_get('log') . "</p>
+                    <p>" . $needkey . "" . $vavok->go('localization')->string('emailpart3') . "</p>
+                    <p>" . $vavok->go('localization')->string('emailpart4') . "</p>";
+
+                    // Send confirmation email
+                    $newMail = new Mailer;
+
+                    // Add to the email queue
+                    $newMail->queue_email($mail, $subject, $regmail, '', '', $priority = 'high');
+
+                    // Registration completed successfully
+                    $completed = 'successfully';
+
+                    // registration successfully, show info
+                    echo '<p>' . $vavok->go('localization')->string('regoknick') . ': <b>' . $vavok->post_and_get('log') . '</b> <br /><br /></p>';
+
+                    if ($vavok->get_configuration('regConfirm') == 1) {
+                        /**
+                         * Confirm registration
+                         */
+                        $form = new PageGen('forms/form.tpl');
+                        $form->set('form_method', 'post');
+                        $form->set('form_action', 'key.php?action=inkey');
+
+                        $input = new PageGen('forms/input.tpl');
+                        $input->set('label_for', 'key');
+                        $input->set('label_value', $vavok->go('localization')->string('yourkey'));
+                        $input->set('input_type', 'text');
+                        $input->set('input_id', 'key');
+                        $input->set('input_name', 'key');
+                        $input->set('input_placeholder', '');
+
+                        $form->set('website_language[save]', $vavok->go('localization')->string('confirm'));
+                        $form->set('fields', $input->output());
+                        echo $form->output();
+
+                        /**
+                         * Resend email
+                         */
+                        $form = new PageGen('forms/form.tpl');
+                        $form->set('form_method', 'post');
+                        $form->set('form_action', 'key.php?action=resendkey');
+
+                        $input = new PageGen('forms/input.tpl');
+                        $input->set('input_type', 'hidden');
+                        $input->set('input_id', 'recipient');
+                        $input->set('input_name', 'recipient');
+                        $input->set('input_value', $mail);
+
+                        $form->set('website_language[save]', $vavok->go('localization')->string('resend'));
+                        $form->set('fields', $input->output());
+                        echo $form->output();
+
+                        echo '<p><b>' . $vavok->go('localization')->string('enterkeymessage') . '</b></p>';
+                    } else {
+                    	echo '<p>' . $vavok->go('localization')->string('loginnow') . '</p>';
+                    }
+                } else {
+                    echo '<p>' . $vavok->go('localization')->string('badcaptcha') . '</p>';
+                }
             } else {
-                echo '<p>' . $vavok->go('localization')->string('userexists') . "</p>";
+                echo '<p>' . $vavok->go('localization')->string('badmail') . "</p>";
             }
         } else {
-            echo '<p>' . $vavok->go('localization')->string('emailexists') . '</p>';
+            echo '<p>' . $vavok->go('localization')->string('userexists') . "</p>";
         }
     } else {
-        echo '<p>' . $vavok->go('localization')->string('toomuchslashes') . '</p>';
+        echo '<p>' . $vavok->go('localization')->string('emailexists') . '</p>';
     }
 
     // Show back link if registration is not completed

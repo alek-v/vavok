@@ -441,6 +441,18 @@ class Users {
 	}
 
 	/**
+	 * Confirm registration with registration key
+	 * 
+	 * @param string $key
+	 * @return bool
+	 */
+	public function confirm_registration($key)
+	{
+		if (!$this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) return false;
+		return true;
+	}
+
+	/**
 	 * Inbox
 	 */
 
@@ -587,10 +599,18 @@ class Users {
 	    return $id;
 	}
 
-	// get vavok_users user id from email
-	public function get_id_from_mail($mail) {
-	    $uid = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$mail}'", 'uid');
-	    return $uid['uid'];
+	/**
+	 * Get users id by email address
+	 * 
+	 * @param string $email
+	 * @return int|bool
+	 */
+	public function id_from_email($email)
+	{
+        $id = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$email}'", 'uid');
+        $id = !empty($id['uid']) ? $id['uid'] : false;
+
+        return $id;
 	}
 
 	// Calculate age
@@ -942,6 +962,69 @@ class Users {
 	}
 
 	/**
+	 * Check if username exist in database
+	 * 
+	 * @param string $username
+	 * @return bool
+	 */
+	public function username_exists($username)
+	{
+	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "name='{$username}'") > 0 ? true : false;
+	}
+
+	/**
+	 * Check if email exist in database
+	 * 
+	 * @param string $email
+	 * @return bool
+	 */
+	public function email_exists($email)
+	{
+	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_about', "email='{$email}'") > 0 ? true : false;
+	}
+
+	/**
+	 * Check if users ID exist in database
+	 * 
+	 * @param string $id
+	 * @return bool
+	 */
+	public function id_exists($id)
+	{
+	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "id='{$id}'") > 0 ? true : false;
+	}
+
+	/**
+	 * Number of administrators
+	 * 
+	 * @return int
+	 */
+	public function total_admins()
+	{
+		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
+	}
+
+	/**
+	 * Number of banned users
+	 * 
+	 * @return int
+	 */
+	public function total_banned()
+	{
+		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "banned='1' OR banned='2'");
+	}
+
+	/**
+	 * Number of unconfirmed registrations
+	 * 
+	 * @return int
+	 */
+	public function total_unconfirmed()
+	{
+		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_profil', "regche='1' OR regche='2'");
+	}
+
+	/**
 	 * Validations
 	 */
 
@@ -1067,6 +1150,22 @@ class Users {
 	}
 
 	/**
+	 * Clean unconfirmed registrations
+	 * 
+	 * @return void
+	 */
+	public function clean_unconfirmed()
+	{
+		// Hours user have to confirm registration
+		$confirmationHours = 24;
+
+		foreach ($vavok->go('db')->query("SELECT regdate, uid FROM " . DB_PREFIX . "vavok_profil WHERE regche = '1'") as $user) {
+			// Delete user if he didn't confirmed registration within $confirmationHours
+			if ($user['regdate'] + ($confirmationTime * 3600) < time()) $vavok->go('users')->delete_user($user['uid']);
+		}
+	}
+
+	/**
 	 * Other
 	 */
 
@@ -1081,13 +1180,13 @@ class Users {
 		return password_verify($password, $hash);
 	}
 
-	public function get_prefered_language($language = '', $format = '') {
+	public function get_prefered_language($language = '', $format = '')
+	{
 		// Get browser preferred language
 		$locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
 		// Use default language
-		if (empty($language)) { $language = $this->vavok->get_configuration('siteDefaultLang'); }
-
+		if (empty($language)) $language = $this->vavok->get_configuration('siteDefaultLang');
 
 		if ($language == 'en') {
 			$language = 'english';
@@ -1095,9 +1194,7 @@ class Users {
 			$language = 'serbian_latin';
 
 			// If browser user serbian it is cyrillic
-			if ($locale == 'sr') {
-				$language = 'serbian_cyrillic';
-			}
+			if ($locale == 'sr') $language = 'serbian_cyrillic';
 
 			// check if language is available
 			if ($language == 'serbian_latin' && file_exists(BASEDIR . "include/lang/serbian_latin/index.php")) {
