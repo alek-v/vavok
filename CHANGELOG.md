@@ -1,3 +1,8 @@
+# Vavok v1.5.15.a1
+- Removed process.php from adminpanel
+
+
+
 # Vavok v1.5.14
 - Added support for cookie-free domains
 - Added current_connection() method to Vavok.class.php
