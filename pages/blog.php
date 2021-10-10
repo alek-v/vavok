@@ -211,8 +211,8 @@ switch ($vavok->post_and_get('pg')) {
 			// Linked title
 			$page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '/">' . $key['tname'] . '</a>');
 
-			// Replace html headings and images from content
-			$content = $vavok->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']));
+			// Replace html headings, images and other tags from content
+			$content = strip_tags($vavok->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content'])));
 
 			// When there is more then 45 words show only first 45 words
 			if (count(explode(' ', $content)) > 45) $content = implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $content)), 0, 45)) . '...';
