@@ -8,6 +8,40 @@ require_once '../include/startup.php';
 
 if (!$vavok->go('users')->is_administrator()) $vavok->redirect_to('../?auth_error');
 
+if ($vavok->post_and_get('action') == 'zaban' && $vavok->go('users')->is_administrator()) {
+    $ips = $vavok->check($vavok->post_and_get('ips'));
+
+    if (!empty($ips) && substr_count($ips, '.') == 3) {
+        $vavok->write_data_file('ban.dat', "|$ips|" . PHP_EOL, 1);
+    }
+
+    $vavok->redirect_to('ban.php');
+}
+
+if ($vavok->post_and_get('action') == 'razban' && $vavok->go('users')->is_administrator()) {
+    if (!empty($vavok->post_and_get('id')) || $vavok->post_and_get('id') == 0) $id = $vavok->post_and_get('id');
+
+    if (isset($id)) {
+        $file = $vavok->get_data_file('ban.dat');
+        unset($file[$id]);
+
+        $data = '';
+        foreach ($file as $key => $value) {
+            $data .= $value;
+        }
+
+        $vavok->write_data_file('ban.dat', $data);
+    }
+
+    $vavok->redirect_to('ban.php');
+}
+
+if ($vavok->post_and_get('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+    $vavok->clear_files('../used/ban.dat');
+
+    $vavok->redirect_to('ban.php');
+}
+
 $vavok->go('current_page')->page_title = 'IP ban';
 $vavok->require_header();
 
@@ -34,7 +68,7 @@ for ($i = $limit_start; $i < $end; $i++) {
 
     $num = $total - $i-1;
 
-    echo $i2 . '. ' . $data[1] . ' <br><a href="process.php?action=razban&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delban') . '</a><hr>';
+    echo $i2 . '. ' . $data[1] . ' <br><a href="ban.php?action=razban&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delban') . '</a><hr>';
 } 
 
 if ($total < 1) {
@@ -47,7 +81,7 @@ echo '<hr>';
 
 $form = new PageGen('forms/form.tpl');
 $form->set('form_method', 'post');
-$form->set('form_action', 'process.php?action=zaban');
+$form->set('form_action', 'ban.php?action=zaban');
 
 $input = new PageGen('forms/input.tpl');
 $input->set('label_for', 'ips');
@@ -65,7 +99,7 @@ echo '<p>' . $vavok->go('localization')->string('ipbanexam') . '</p>';
 echo '<p>' . $vavok->go('localization')->string('allbanips') . ': ' . $total . '</p>';
 
 if ($total > 1) {
-    echo '<p><a href="process.php?action=delallip" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('dellist') . '</a></p>';
+    echo '<p><a href="ban.php?action=delallip" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('dellist') . '</a></p>';
 }
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
