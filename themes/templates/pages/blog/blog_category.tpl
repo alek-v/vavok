@@ -1,1 +1,1 @@
-<a class="btn btn-outline-primary mt-1" href="{@category_link}}" rel="nofollow">{@category_name}}</a>
+<li><a class="dropdown-item" href="{@category_link}}">{@category_name}}</a></li>

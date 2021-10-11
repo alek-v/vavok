@@ -265,7 +265,7 @@ textarea {
 
 .blog-category {
   display: block;
-  padding: 40px 20px 20px 40px;
+  padding: 20px;
 }
 .blog-category .category_text {
   font-size: 1.4em;

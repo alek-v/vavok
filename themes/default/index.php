@@ -25,14 +25,10 @@ header("Content-type:text/html; charset=utf-8");
 		<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/framework.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/framework.min.css'); ?>" />
 		<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/style.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/style.min.css'); ?>" />
 		<?php
-		/**
-		 * Load data for header
-		 */
+		// Load data for header
 		$vavok->go('current_page')->load_head_tags();
 
-		/**
-		 * Cookie consent
-		 */
+		// Cookie consent
 		if ($vavok->get_configuration('cookieConsent') == 1) include_once BASEDIR . 'include/plugins/cookie-consent/cookie-consent.php';
 		?>
 	</head>

@@ -1,7 +1,11 @@
 <div class="blog-index">
-	<div class="blog-category mb-4{@bc_style_options}}">
-		<span class="category_text mt-1">{@website_language[category]}}:</span>
-		<span>{@category-list}}</span>
+	<div class="blog-category dropdown{@bc_style_options}}">
+	  <button class="btn btn-primary dropdown-toggle" type="button" id="blog_category" data-bs-toggle="dropdown" aria-expanded="false">
+	    {@website_language[category]}}
+	  </button>
+	  <ul class="dropdown-menu" aria-labelledby="blog_category">
+	    {@category-list}}
+	  </ul>
 	</div>
 	<div class="row row-cols-1 row-cols-md-3 g-4">
 		{@posts}}
@@ -13,7 +17,5 @@
 		<div class="col-4 text-right">
 			<!--<p>Page 1 of 1</p>-->
 		</div>
-
 	</div>
-
 </div>
