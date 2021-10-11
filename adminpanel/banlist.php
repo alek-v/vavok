@@ -25,7 +25,7 @@ $sql = "SELECT id, name, banned FROM " . DB_PREFIX . "vavok_users WHERE banned='
 if ($noi > 0) {
     foreach ($vavok->go('db')->query($sql) as $item) {
         if ($item['banned'] == 1) {
-            echo '<div class="a"><p><a href="../pages/user.php?uz=' . $item['name'] . ' " class="sitelink">' . $item['name'] . '</a> <small>' . $vavok->go('localization')->string('banduration') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('bantime', $item['id']), 'd.m.y.') . ' | ' . $vavok->go('localization')->string('bandesc') . ': ' . $vavok->go('users')->user_info('bandesc', $item['id']) . '</small></p></div>';
+            echo '<div class="a"><p>' . $vavok->sitelink('../pages/user.php?uz=' . $item['name'], $item['name']) . ' <small>' . $vavok->go('localization')->string('banduration') . ': ' . $vavok->date_fixed($vavok->go('users')->user_info('bantime', $item['id']), 'd.m.y.') . ' | ' . $vavok->go('localization')->string('bandesc') . ': ' . $vavok->go('users')->user_info('bandesc', $item['id']) . '</small></p></div>';
         }
     }
 } else {
@@ -36,7 +36,7 @@ echo '<div class="mt-5">';
 echo $navigation->get_navigation();
 echo '</div>';
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

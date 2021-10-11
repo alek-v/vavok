@@ -135,7 +135,7 @@ if ($vavok->post_and_get('action') == 'reguser') {
     }
 
     // Show back link if registration is not completed
-    if (!isset($completed)) { echo '<p><a href="' . HOMEDIR . 'pages/registration.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>'; }
+    if (!isset($completed)) echo $vavok->sitelink(HOMEDIR . 'pages/registration.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 
     echo $vavok->homelink('<p>', '</p>');
 

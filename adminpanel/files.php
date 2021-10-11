@@ -390,14 +390,14 @@ if (empty($vavok->post_and_get('action'))) {
     $navigation = new Navigation($config_editfiles, $total_pages, $vavok->post_and_get('page'), 'files.php?');
     echo $navigation->get_navigation();
 
-    echo '<br />' . $vavok->go('localization')->string('totpages') . ': <b>' . (int)$total_pages . '</b><br />';
-    echo '<div>&nbsp;</div>';
-    if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a><br />';
-    } 
-} 
+    echo '<p>' . $vavok->go('localization')->string('totpages') . ': <b>' . (int)$total_pages . '</b></p>';
 
-if ($vavok->post_and_get('action') == "show") {
+    if (empty($edit_only_own_pages)) {
+        echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('pagetitle')) . '<br />';
+    }
+}
+
+if ($vavok->post_and_get('action') == 'show') {
     if (!empty($page_id)) {
         $base_file = $file;
 
@@ -456,18 +456,16 @@ if ($vavok->post_and_get('action') == "show") {
 
         echo '</p>';
 
-
-        echo '<br /><a href="files.php?action=edit&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('edit') . '</a><br />';
+        echo '<br />' . $vavok->sitelink('files.php?action=edit&file=' . $base_file, $vavok->go('localization')->string('edit')) . '<br />';
         if ($vavok->go('users')->check_permissions('pageedit', 'del') || $vavok->go('users')->is_administrator()) {
-        echo '<a href="files.php?action=poddel&amp;file=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delete') . '</a><br />';
+            echo $vavok->sitelink('files.php?action=poddel&amp;file=' . $base_file, $vavok->go('localization')->string('delete')) . '<br />';
         }
-    } 
-
-    if (empty($edit_only_own_pages)) {
-        echo '<a href="pgtitle.php?act=edit&amp;pgfile=' . $base_file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a><br />';
     }
 
-} 
+    if (empty($edit_only_own_pages)) {
+        echo $vavok->sitelink('pgtitle.php?act=edit&amp;pgfile=' . $base_file, $vavok->go('localization')->string('pagetitle')) . '<br />';
+    }
+}
 
 if ($vavok->post_and_get('action') == "edit") {
     // check if page exists
@@ -527,7 +525,7 @@ if ($vavok->post_and_get('action') == "edit") {
 
         echo '<hr />';
 
-        echo '<p>Updating page ' . $show_up_file . ' | <a href="files.php?action=renamepg&amp;pg=' . $file . '" class="btn btn-outline-primary sitelink">rename</a></p>'; // update lang
+        echo '<p>Updating page ' . $show_up_file . ' | ' . $vavok->sitelink('files.php?action=renamepg&amp;pg=' . $file, 'rename') . '</p>'; // update lang
 
         $form = new PageGen('forms/form.tpl');
         $form->set('form_method', 'post');
@@ -546,18 +544,16 @@ if ($vavok->post_and_get('action') == "edit") {
         echo $form->output();
 
         echo '<hr>';
-        echo '<p><a href="files.php?action=show&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $show_up_file . '</a></p>';
+        echo $vavok->sitelink('files.php?action=show&amp;file=' . $file, $show_up_file, '<p>', '</p>');
 
-        echo '<p><a href="pgtitle.php?act=edit&amp;pgfile=' . $file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagetitle') . '</a>';
-        echo '<a href="files.php?action=updpagelang&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Update page language</a>';
-        echo '<a href="files.php?action=headtag&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">Head (meta) tags on this page</a>'; // update lang
-        echo '<a href="files.php?action=tags&amp;id=' . $page_id . '" class="btn btn-outline-primary sitelink">Tags</a></p>'; // update lang
-
+        echo '<p>' . $vavok->sitelink('pgtitle.php?act=edit&amp;pgfile=' . $file, $vavok->go('localization')->string('pagetitle'));
+        echo $vavok->sitelink('files.php?action=updpagelang&amp;id=' . $page_id, 'Update page language');
+        echo $vavok->sitelink('files.php?action=headtag&amp;file=' . $file, 'Head (meta) tags on this page'); // update lang
+        echo $vavok->sitelink('files.php?action=tags&amp;id=' . $page_id, 'Tags') . '</p>'; // update lang
     } else {
         $vavok->require_header();
         echo '<p>' . $vavok->go('localization')->string('file') . ' ' . $file . ' ' . $vavok->go('localization')->string('noexist') . '</p>';
-    } 
-
+    }
 } 
 // edit meta tags
 if ($vavok->post_and_get('action') == "headtag") {
@@ -739,7 +735,7 @@ if ($vavok->post_and_get('action') == 'mainmeta') {
 
     echo '<hr>';
 
-    echo '<br /><a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 } 
 
 if ($vavok->post_and_get('action') == 'renamepg') {
@@ -778,7 +774,7 @@ if ($vavok->post_and_get('action') == 'renamepg') {
 
     echo '<hr />';
 
-    echo '<p><a href="files.php?action=edit&amp;file=' . $pg . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('files.php?action=edit&amp;file=' . $pg, $vavok->go('localization')->string('back'), '<p>', '</p>');
 } 
 
 if ($vavok->post_and_get('action') == "new") {
@@ -930,14 +926,14 @@ if ($vavok->post_and_get('action') == "poddel") {
     if (!empty($file)) {
         if ($file != "index.php") {
             echo $vavok->go('localization')->string('confdelfile') . ' <b>' . $file . '</b><br />';
-            echo '<b><a href="files.php?action=del&amp;file=' . $file . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delete') . '</a></b><br />';
+            echo '<b>' . $vavok->sitelink('files.php?action=del&amp;file=' . $file, $vavok->go('localization')->string('delete')) . '</b><br />';
         } else {
             echo $vavok->go('localization')->string('indexnodel') . '!<br />';
         } 
     } else {
         echo $vavok->go('localization')->string('nofiletodel') . '<br />';
     } 
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('back')) . '<br />';
 } 
 
 if ($vavok->post_and_get('action') == 'updpagelang') {
@@ -980,7 +976,7 @@ if ($vavok->post_and_get('action') == 'updpagelang') {
 
 	echo $form->output();
 
-    echo '<p><a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == 'tags') {
@@ -1012,21 +1008,20 @@ if ($vavok->post_and_get('action') == 'tags') {
 
 echo '<p>';
 if ($vavok->post_and_get('action') != "new" && ($vavok->go('users')->check_permissions('pageedit', 'insert') || $vavok->go('users')->is_administrator())) {
-    echo '<a href="files.php?action=new" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('newpage') . '</a>';
+    echo $vavok->sitelink('files.php?action=new', $vavok->go('localization')->string('newpage'));
 }
 if ($vavok->go('users')->is_administrator(101)) {
-    echo '<a href="files.php?action=mainmeta" class="btn btn-outline-primary sitelink">Head (meta) tags on all pages</a>';
+    echo $vavok->sitelink('files.php?action=mainmeta', 'Head (meta) tags on all pages');
 } // update lang
 if ($vavok->go('users')->is_administrator()) {
-    echo '<a href="filesearch.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('search') . '</a>';
+    echo $vavok->sitelink('filesearch.php', $vavok->go('localization')->string('search'));
 } 
 if (!empty($vavok->post_and_get('action'))) {
-    echo '<a href="files.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mngpage') . '</a>';
+    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('mngpage'));
 }
-
 echo '</p>';
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

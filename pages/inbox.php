@@ -53,7 +53,7 @@ if (empty($vavok->post_and_get('action'))) {
                 $iml = '<img src="../themes/images/img/new.gif" alt="New message" />';
             } else { $iml = ''; }
 
-            $lnk = '<a href="inbox.php?action=dialog&amp;who=' . $item['byuid'] . '" class="btn btn-outline-primary sitelink">' . $iml . ' ' . $item['name'] . '</a>';
+            $lnk = $vavok->sitelink('inbox.php?action=dialog&amp;who=' . $item['byuid'], $iml . ' ' . $item['name']);
             echo '<p>' . $lnk . '</p>';
         }
     }
@@ -99,7 +99,7 @@ if (empty($vavok->post_and_get('action'))) {
     $pms = "SELECT * FROM inbox WHERE (byuid = '" . $vavok->go('users')->user_id . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
     foreach ($vavok->go('db')->query($pms) as $pm) {
         $sender_nick = $pm['byuid'] == 0 ? 'System' : $vavok->go('users')->getnickfromid($pm['byuid']);
-        $bylnk = $pm['byuid'] == 0 ? 'System ' : "<a href=\"../pages/user.php?uz=" . $pm['byuid'] . "\" class=\"sitelink\">" . $sender_nick . "</a> ";
+        $bylnk = $pm['byuid'] == 0 ? 'System ' : $vavok->sitelink('../pages/user.php?uz=' . $pm['byuid'], $sender_nick) . ' ';
         echo $bylnk;
         $tmopm = date("d m y - h:i:s", $pm['timesent']);
         echo "$tmopm<br />";

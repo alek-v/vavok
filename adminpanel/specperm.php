@@ -63,8 +63,8 @@ if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
     if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}'") > 0) {
         foreach($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "specperm WHERE uid='{$edit_user}'") as $permission) {
             echo '<p><span class="btn btn-outline-primary"><strong>' . $permission['permname'] . '</strong></span> - 
-            <a href="specperm.php?action=changepermissions&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'] . '" class="btn btn-primary sitelink">[EDIT]</a>
-            <a href="specperm.php?action=delete_permission&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'] . '" class="btn btn-primary sitelink">[DEL]</a></p>';
+            ' . $vavok->sitelink('specperm.php?action=changepermissions&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'], '[EDIT]') . '
+            ' . $vavok->sitelink('specperm.php?action=delete_permission&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'], '[DEL]') . '</p>';
         }
     }
     ?>
@@ -157,7 +157,7 @@ if ($vavok->post_and_get('action') == 'changepermissions' && !empty($edit_user) 
     <?php
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

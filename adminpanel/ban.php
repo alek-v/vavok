@@ -68,7 +68,7 @@ for ($i = $limit_start; $i < $end; $i++) {
 
     $num = $total - $i-1;
 
-    echo $i2 . '. ' . $data[1] . ' <br><a href="ban.php?action=razban&amp;id=' . $num . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delban') . '</a><hr>';
+    echo $i2 . '. ' . $data[1] . ' <br>' . $vavok->sitelink('ban.php?action=razban&amp;id=' . $num, $vavok->go('localization')->string('delban')) . '<hr>';
 } 
 
 if ($total < 1) {
@@ -99,10 +99,10 @@ echo '<p>' . $vavok->go('localization')->string('ipbanexam') . '</p>';
 echo '<p>' . $vavok->go('localization')->string('allbanips') . ': ' . $total . '</p>';
 
 if ($total > 1) {
-    echo '<p><a href="ban.php?action=delallip" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('dellist') . '</a></p>';
+    echo $vavok->sitelink('ban.php?action=delallip', $vavok->go('localization')->string('dellist'), '<p>', '</p>');
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

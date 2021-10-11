@@ -13,11 +13,10 @@ $vavok->require_header();
 
 echo '<p><img src="../themes/images/img/webstats.png" alt="">  ' . $vavok->go('localization')->string('sitestats') . '<br /><br /></p>';
 
-echo '<p><a href="../pages/counter.php" class="btn btn-outline-primary sitelink"> ' . $vavok->go('localization')->string('visitstats') . '</a><br />';
-echo '<a href="../pages/online.php" class="btn btn-outline-primary sitelink"> ' . $vavok->go('localization')->string('usronline') . '</a></p>';
+echo '<p>' . $vavok->sitelink('../pages/counter.php', $vavok->go('localization')->string('visitstats')) . '<br />';
+echo $vavok->sitelink('../pages/online.php', $vavok->go('localization')->string('usronline')) . '</p>';
 
-echo '<p><br /><br />
-<a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

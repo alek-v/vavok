@@ -124,7 +124,7 @@ if ($vavok->post_and_get('action') == 'edit') {
                     }
                     echo $vavok->go('localization')->string('banend') . ' ' . $vavok->formattime($ost_time) . '<br />';
                     echo $vavok->go('localization')->string('bandesc') . ': ' . $vavok->check($vavok->go('users')->user_info('bandesc', $userx_id)) . '<br />'; 
-                    echo '<a href="addban.php?action=deleteban&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('delban') . '</a><hr>';
+                    echo $vavok->sitelink('addban.php?action=deleteban&amp;users=' . $user, $vavok->go('localization')->string('delban')) . '<hr>';
                 }
             }
         } else {
@@ -171,7 +171,7 @@ if ($vavok->post_and_get('action') == 'banuser') {
                     echo $vavok->go('localization')->string('usrdata') . ' ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
                     echo '<b><font color="FF0000">' . $vavok->go('localization')->string('confban') . '</font></b><br /><br />';
 
-                    echo '<a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+                    echo $vavok->sitelink('addban.php', $vavok->go('localization')->string('back')) . '<br />';
                 } else {
                     echo $vavok->go('localization')->string('noreason') . '!<br />';
                 } 
@@ -184,7 +184,7 @@ if ($vavok->post_and_get('action') == 'banuser') {
     } else {
         echo $vavok->go('localization')->string('usrnoexist') . '!<br />';
     } 
-    echo '<p><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('addban.php?action=edit&amp;users=' . $user, $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == 'deleteban') {
@@ -207,11 +207,11 @@ if ($vavok->post_and_get('action') == 'deleteban') {
         echo $vavok->go('localization')->string('usrdata') . '  ' . $user . ' ' . $vavok->go('localization')->string('edited') . '!<br />';
         echo '<b><font color="00FF00">' . $vavok->go('localization')->string('confUnBan') . '</font></b><br /><br />';
 
-        echo'<a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('changeotheruser') . '</a><br />';
+        echo $vavok->sitelink('addban.php', $vavok->go('localization')->string('changeotheruser')) . '<br />';
     } else {
         echo '<p>' . $vavok->go('localization')->string('usrnoexist') . '!</p>';
     } 
-    echo'<p><a href="addban.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></a>';
+    echo $vavok->sitelink('addban.php?action=edit&amp;users=' . $user, $vavok->go('localization')->string('back'), '<p>', '</p>');
 } 
 // delete user
 if ($vavok->post_and_get('action') == 'deluser') {
@@ -220,12 +220,11 @@ if ($vavok->post_and_get('action') == 'deluser') {
 
     echo '<p>' . $vavok->go('localization')->string('usrdeleted') . '!</p>';
 
-    echo '<p><a href="addban.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('addban.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 } 
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
-
 
 $vavok->require_footer();
 

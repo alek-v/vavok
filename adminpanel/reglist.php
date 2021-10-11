@@ -42,10 +42,10 @@ if (empty($vavok->post_and_get('action'))) {
 
     if ($num_items > 0) {
         foreach ($vavok->go('db')->query($sql) as $item) {
-            $lnk = '<a href="../pages/user.php?uz=' . $item['uid'] . '" class="sitelink">' . $vavok->go('users')->getnickfromid($item['uid']) . '</a> (' . $vavok->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ')';
+            $lnk = $vavok->sitelink('../pages/user.php?uz=' . $item['uid'], $vavok->go('users')->getnickfromid($item['uid'])) . ' (' . $vavok->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ')';
             if ($item['regche'] == 1) {
                 $bt = $vavok->go('localization')->string('notconfirmed') . '!';
-                $bym = '<a href="reglist.php?action=conf&usr=' . $item['uid'] . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('confirms') . '</a>';
+                $bym = $vavok->sitelink('reglist.php?action=conf&usr=' . $item['uid'], $vavok->go('localization')->string('confirms'));
             } else {
                 $bt = 'Confirmed';
             }
@@ -63,7 +63,7 @@ if (empty($vavok->post_and_get('action'))) {
     echo '</div>';
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

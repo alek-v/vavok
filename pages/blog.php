@@ -154,7 +154,7 @@ switch ($vavok->post_and_get('pg')) {
 		// if there is no posts
 		if ($total_posts < 1) {
 			echo '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is nothing here</p>';
-			echo '<p><a href="' . HOMEDIR . 'blog/" class="btn btn-primary sitelink">' . $vavok->go('localization')->string('backtoblog') . '</a></p>';
+			echo $vavok->sitelink( HOMEDIR . 'blog/', $vavok->go('localization')->string('backtoblog'), '<p>', '</p>');
 
 			// page footer
 			$vavok->require_footer();

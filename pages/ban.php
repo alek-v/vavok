@@ -41,7 +41,7 @@ if ($time_ban > 0) {
         echo '<p><b><font color="#FF0000">' . $vavok->go('localization')->string('bandesc') . ': ' . $bandesc . '</font></b></p>';
     }
 
-    echo '<p>' . $vavok->go('localization')->string('endbanadvice') . ' <b><a href="siterules.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('siterules') . '</a></b></p>';
+    echo '<p>' . $vavok->go('localization')->string('endbanadvice') . ' ' . $vavok->sitelink('siterules.php', $vavok->go('localization')->string('siterules'), '<strong>', '</strong>') . '</p>';
 
     $vavok->go('users')->update_user('banned', 0);
     $vavok->go('users')->update_user(array('bantime', 'bandesc'), array('', ''));

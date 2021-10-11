@@ -64,7 +64,7 @@ if (empty($vavok->post_and_get('action'))) {
             	if (!empty($item['lang'])) {
             		$itemLang = ' (' . mb_strtolower($item['lang']) . ')'; } else {
             			$itemLang = ''; }
-                $tlink = '<a href="files.php?action=show&amp;file=' . $item['file'] . '" class="btn btn-outline-primary sitelink">' . $tname . $itemLang . '</a><br />';
+                $tlink = $vavok->sitelink('files.php?action=show&amp;file=' . $item['file'], $tname . $itemLang) . '<br />';
             }
             echo $tlink;
         }

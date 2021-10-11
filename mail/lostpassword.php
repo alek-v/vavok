@@ -55,17 +55,17 @@ if ($vavok->post_and_get('action') == 'send') {
             } else {
                 echo '<p>' . $vavok->go('localization')->string('wrongcaptcha') . '!</p>';
 
-                echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+                echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
             } 
         } else {
             echo '<p>' . $vavok->go('localization')->string('wrongmail') . '!</p>';
 
-            echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+            echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
         } 
     } else {
         echo '<p>' . $vavok->go('localization')->string('noneededdata') . '!</p>';
 
-        echo '<p><a href="lostpassword.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+        echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
     } 
 } 
 

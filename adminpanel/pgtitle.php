@@ -130,7 +130,7 @@ if (!isset($act) || empty($act)) {
 
     echo $navigation->get_navigation();
 
-    echo '<br /><br /><a href="pgtitle.php?act=addnew" class="btn btn-outline-primary sitelink">Add new title</a><br /><br />'; // update lang
+    echo $vavok->sitelink('pgtitle.php?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
 }
 
 if ($act == 'edit') {
@@ -159,7 +159,7 @@ if ($act == 'edit') {
 
     echo '<hr>';
 
-    echo '<br /><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br />';
+    echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 } 
 
 if ($act == "addnew") {
@@ -186,7 +186,7 @@ if ($act == "addnew") {
 
     echo '<hr />';
 
-    echo '<p><a href="pgtitle.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';

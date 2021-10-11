@@ -24,9 +24,9 @@ if ($vavok->go('users')->is_reg()) {
             foreach ($vavok->go('db')->query($sql) as $item) {
                 $tnick = $vavok->go('users')->getnickfromid($item['target']);
 
-                $lnk = '<a href="../pages/user.php?uz=' . $item['target'] . '" class="btn btn-outline-primary sitelink">' . $tnick . '</a>';
+                $lnk = $vavok->sitelink('../pages/user.php?uz=' . $item['target'], $tnick);
                 echo "$lnk: ";
-                echo "<img src=\"../themes/images/img/close.gif\" alt=\"\"> <a href=\"ignor.php?action=ign&amp;who=" . $item['target'] . "&amp;todo=del\" class=\"sitelink\">" . $vavok->go('localization')->string('delete') . "</a><br>";
+                echo $vavok->sitelink('ignor.php?action=ign&who=' . $item['target'] . '&todo=del', '<img src="../themes/images/img/close.gif" alt=""> ' . $vavok->go('localization')->string('delete')) . '<br>';
             }
         } else {
             echo '<img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('ignorempty') . '<br><br>';

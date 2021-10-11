@@ -49,7 +49,7 @@ if (!empty($ipData) && isset($ipData['country'])) {
 }
 echo '</div>';
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();
