@@ -1159,7 +1159,7 @@ class Users {
 		// Hours user have to confirm registration
 		$confirmationHours = 24;
 
-		foreach ($vavok->go('db')->query("SELECT regdate, uid FROM " . DB_PREFIX . "vavok_profil WHERE regche = '1'") as $user) {
+		foreach ($this->vavok->go('db')->query("SELECT regdate, uid FROM " . DB_PREFIX . "vavok_profil WHERE regche = '1'") as $user) {
 			// Delete user if he didn't confirmed registration within $confirmationHours
 			if ($user['regdate'] + ($confirmationTime * 3600) < time()) $vavok->go('users')->delete_user($user['uid']);
 		}
