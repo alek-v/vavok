@@ -171,18 +171,19 @@ if ($vavok->post_and_get('action') == 'edit') {
 
         echo '<p>';
         if ($userx_access > 106) {
-            echo '<b><a href="users.php?action=poddel&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b><br />';
+            echo $vavok->sitelink('users.php?action=poddel&amp;users=' . $user, $vavok->go('localization')->string('deluser'), '<b>', '</b>') . '<br />';
         }
         // Website permissions for various sections
         if (file_exists('specperm.php')) {
-            echo '<a href="specperm.php?users=' . $users_id . '" class="btn btn-outline-primary sitelink">Change access permissions</a><br />';
+            echo $vavok->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
         }
+
         echo '</p>';
     } else {
         echo $vavok->go('localization')->string('usrnoexist') . '!';
-    } 
+    }
 
-    echo '<p><a href="users.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('users.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 // update changes
@@ -232,7 +233,7 @@ if ($vavok->post_and_get('action') == 'upgrade') {
                     echo '<font color=red>' . $vavok->go('localization')->string('passchanged') . ': ' . $udd1 . '</font> <br>';
                 }
 
-                echo '<a href="users.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('changeotheruser') . '</a><br>';
+                echo $vavok->sitelink('users.php', $vavok->go('localization')->string('changeotheruser')) . '<br>';
             } else {
                 echo $vavok->go('localization')->string('usrnoexist') . '!<br>';
             }
@@ -242,15 +243,15 @@ if ($vavok->post_and_get('action') == 'upgrade') {
     } else {
         echo $vavok->go('localization')->string('emailnotok') . '<br>';
     } 
-    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
+    echo '<br>' . $vavok->sitelink('users.php?action=edit&amp;users=' . $user, $vavok->go('localization')->string('back'));
 }
 
 // confirm delete
 if ($vavok->post_and_get('action') == 'poddel') {
     echo $vavok->go('localization')->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
-    echo '<b><a href="users.php?action=deluser&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('deluser') . '</a></b>';
+    echo $vavok->sitelink('users.php?action=deluser&amp;users=' . $user, $vavok->go('localization')->string('deluser'), '<b>', '</b>');
 
-    echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
+    echo '<br>' . $vavok->sitelink('users.php?action=edit&amp;users=' . $user, $vavok->go('localization')->string('back'));
 } 
 
 // delete user
@@ -260,15 +261,15 @@ if ($vavok->post_and_get('action') == 'deluser') {
             $vavok->go('users')->delete_user($user);
             echo $vavok->go('localization')->string('usrdeleted') . '!<br>';
 
-            echo '<br><a href="users.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('changeotheruser') . '</a><br>';
+            echo $vavok->sitelink('users.php', $vavok->go('localization')->string('changeotheruser'), '<p>', '</p>');
         } else {
             echo $vavok->go('localization')->string('noaccessdel') . '<br>';
-            echo '<br><a href="users.php?action=edit&amp;users=' . $user . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a>';
+            echo '<br>' . $vavok->sitelink('users.php?action=edit&amp;users=' . $user, $vavok->go('localization')->string('back'));
         }
     }
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br>';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

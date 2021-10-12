@@ -41,7 +41,7 @@ switch ($vavok->post_and_get('action')) {
 
         if ($did == '') {
             if (file_exists("../used/.htaccess")) {
-                echo '<a href="systems.php?action=pod_chmod&amp;file=/.htaccess" class="btn btn-outline-primary sitelink">[Chmod - ' . $vavok->permissions("../used/.htaccess") . ']</a> - <font color="#00FF00">' . $vavok->go('localization')->string('file') . ' .htaccess ' . $vavok->go('localization')->string('exist') . '</font><br>';
+                echo $vavok->sitelink('systems.php?action=pod_chmod&amp;file=/.htaccess', '[Chmod - ' . $vavok->permissions("../used/.htaccess") . ']') . ' - <font color="#00FF00">' . $vavok->go('localization')->string('file') . ' .htaccess ' . $vavok->go('localization')->string('exist') . '</font><br>';
 
                 if (is_writeable("../used/.htaccess")) {
                     echo'<font color="#FF0000">' . $vavok->go('localization')->string('wrhtacc') . '</font><br>';
@@ -55,7 +55,7 @@ switch ($vavok->post_and_get('action')) {
             if (count($files) > 0) {
                 if ($did != "") {
                     if (file_exists("../used" . "$did/.htaccess")) {
-                        echo '<a href="systems.php?action=pod_chmod&amp;file=' . $did . '/.htaccess" class="btn btn-outline-primary sitelink">[CHMOD - ' . $vavok->permissions("../used" . "$did/.htaccess") . ']</a> - <font color="#00FF00">' . $vavok->go('localization')->string('file') . ' .htaccess ' . $vavok->go('localization')->string('exist') . '</font><br>';
+                        echo $vavok->sitelink('systems.php?action=pod_chmod&amp;file=' . $did . '/.htaccess', '[CHMOD - ' . $vavok->permissions("../used" . "$did/.htaccess") . ']') . ' - <font color="#00FF00">' . $vavok->go('localization')->string('file') . ' .htaccess ' . $vavok->go('localization')->string('exist') . '</font><br>';
 
                         if (is_writeable("../used" . "$did/.htaccess")) {
                             echo '<font color="#FF0000">' . $vavok->go('localization')->string('wrhtacc') . '</font><br>';
@@ -67,7 +67,8 @@ switch ($vavok->post_and_get('action')) {
 
                 $usedfiles = 0;
                 foreach ($files as $value) {
-                    echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="btn btn-outline-primary sitelink">[CHMOD - ' . $vavok->permissions("../used" . "$value") . ']</a> - used' . $value . ' (' . $vavok->formatsize(filesize("../used" . "$value")) . ') - ';
+                    echo $vavok->sitelink('systems.php?action=pod_chmod&amp;file=' . $value, '[CHMOD - ' . $vavok->permissions("../used" . "$value") . ']') . ' - used' . $value . ' (' . $vavok->formatsize(filesize("../used" . "$value")) . ') - ';
+
                     if (is_writeable("../used" . "$value")) {
                         echo '<font color="#00FF00">' . $vavok->go('localization')->string('filewrit') . '</font><br>';
                     } else {
@@ -82,7 +83,8 @@ switch ($vavok->post_and_get('action')) {
                 echo $vavok->go('localization')->string('checkdirs') . ': <br>';
 
                 foreach ($dires as $value) {
-                    echo '<a href="systems.php?action=pod_chmod&amp;file=' . $value . '" class="btn btn-outline-primary sitelink">[CHMOD - ' . $vavok->permissions("../used" . "$value") . ']</a> - <a href="systems.php?did=' . $value . '" class="btn btn-outline-primary sitelink">used' . $value . '</a> (' . $vavok->formatsize($vavok->read_dir("../used" . "$value")) . ') - ';
+                    echo $vavok->sitelink('systems.php?action=pod_chmod&amp;file=' . $value, '[CHMOD - ' . $vavok->permissions("../used" . "$value") . ']') . ' - ' . $vavok->sitelink('systems.php?did=' . $value, 'used' . $value) . ' (' . $vavok->formatsize($vavok->read_dir("../used" . "$value")) . ') - ';
+
                     if (is_writeable("../used" . "$value")) {
                         echo '<font color="#00FF00">' . $vavok->go('localization')->string('filewrit') . '</font><br>';
                     } else {
@@ -99,14 +101,14 @@ switch ($vavok->post_and_get('action')) {
 
         if ($did != '') {
             if (prev_dir($did) != '') {
-                echo '<img src="../themes/images/img/reload.gif" alt=""> <a href="systems.php?did=' . prev_dir($did) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
+                echo $vavok->sitelink('systems.php?did=' . prev_dir($did), '<img src="../themes/images/img/reload.gif" alt=""> ' . $vavok->go('localization')->string('back')) . '<br>';
             }
-            echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
+            echo $vavok->sitelink('systems.php', $vavok->go('localization')->string('checksys')) . '<br>';
         }
 
         break; 
         // CHMOD
-        case ('pod_chmod'):
+    case ('pod_chmod'):
         echo '<img src="../themes/images/img/menu.gif" alt=""> ' . $vavok->go('localization')->string('chchmod') . '<hr>';
 
         if ($vavok->post_and_get('file') && file_exists("../used/" . $vavok->post_and_get('file'))) {
@@ -124,34 +126,35 @@ switch ($vavok->post_and_get('action')) {
         }
 
         if (!empty(prev_dir($vavok->post_and_get('file')))) {
-            echo '<a href="systems.php?did=' . prev_dir($vavok->post_and_get('file')) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
+            echo $vavok->sitelink('systems.php?did=' . prev_dir($vavok->post_and_get('file')), $vavok->go('localization')->string('back')) . '<br>';
         }
-        echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
 
-        break;
+        echo $vavok->sitelink('systems.php', $vavok->go('localization')->string('checksys')) . '<br>';
+    break;
 
-        case ('chmod'):
-            if (!empty($vavok->post_and_get('file')) && !empty($vavok->post_and_get('mode'))) {
-                if (chmod("../used/" . $vavok->post_and_get('file'), octdec($vavok->post_and_get('mode'))) != false) {
-                    echo $vavok->go('localization')->string('chmodok') . '!<hr>';
-                } else {
-                    echo $vavok->go('localization')->string('chmodnotok') . '!<hr>';
-                } 
+    case ('chmod'):
+        if (!empty($vavok->post_and_get('file')) && !empty($vavok->post_and_get('mode'))) {
+            if (chmod("../used/" . $vavok->post_and_get('file'), octdec($vavok->post_and_get('mode'))) != false) {
+                echo $vavok->go('localization')->string('chmodok') . '!<hr>';
             } else {
-                echo $vavok->go('localization')->string('noneededdata') . '!<hr>';
-            } 
+                echo $vavok->go('localization')->string('chmodnotok') . '!<hr>';
+            }
+        } else {
+            echo $vavok->go('localization')->string('noneededdata') . '!<hr>';
+        } 
 
-            if (!empty(prev_dir($vavok->post_and_get('file')))) {
-                echo '<a href="systems.php?did=' . prev_dir($vavok->post_and_get('file')) . '" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a><br>';
-            } 
-            echo '<a href="systems.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('checksys') . '</a><br>';
+        if (!empty(prev_dir($vavok->post_and_get('file')))) {
+            echo $vavok->sitelink('systems.php?did=' . prev_dir($vavok->post_and_get('file')), $vavok->go('localization')->string('back')) . '<br>';
+        }
 
-        break;
+        echo $vavok->sitelink('systems.php', $vavok->go('localization')->string('checksys')) . '<br>';
+    break;
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br>
-' . $vavok->homelink() . '</p>';
-
+echo '<p>'
+echo $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
+echo $vavok->homelink();
+echo '</p>';
 
 $vavok->require_footer();
 

@@ -265,13 +265,13 @@ $vavok->go('current_page')->page_title = "Settings";
 $vavok->require_header();
 
 if (empty($vavok->post_and_get('action'))) {
-    echo '<a href="settings.php?action=setone" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('mainset') . '</a>';
-    echo '<a href="settings.php?action=settwo" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('shwinfo') . '</a>';
-    echo '<a href="settings.php?action=setthree" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('bookchatnews') . '</a>';
-    echo '<a href="settings.php?action=setfour" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('forumgallery') . '</a>';
-    echo '<a href="settings.php?action=setseven" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('pagemanage') . '</a>';
-    echo '<a href="settings.php?action=security" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('security') . '</a>';
-    echo '<a href="settings.php?action=seteight" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('other') . '</a>';
+    echo $vavok->sitelink('settings.php?action=setone', $vavok->go('localization')->string('mainset'));
+    echo $vavok->sitelink('settings.php?action=settwo', $vavok->go('localization')->string('shwinfo'));
+    echo $vavok->sitelink('settings.php?action=setthree', $vavok->go('localization')->string('bookchatnews'));
+    echo $vavok->sitelink('settings.php?action=setfour', $vavok->go('localization')->string('forumgallery'));
+    echo $vavok->sitelink('settings.php?action=setseven', $vavok->go('localization')->string('pagemanage'));
+    echo $vavok->sitelink('settings.php?action=security', $vavok->go('localization')->string('security'));
+    echo $vavok->sitelink('settings.php?action=seteight', $vavok->go('localization')->string('other'));
 }
 
 // main settings
@@ -436,7 +436,7 @@ if ($vavok->post_and_get('action') == 'setone') {
     $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $radio_group_one, $radio_group_two, $radio_group_three)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == "settwo") {
@@ -576,7 +576,7 @@ if ($vavok->post_and_get('action') == "settwo") {
     $form->set('fields', $form->merge(array($show_clock, $page_gen, $show_online, $cookie_consent, $show_counter)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == "setthree") {
@@ -649,7 +649,7 @@ if ($vavok->post_and_get('action') == "setthree") {
     $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == "setfour") {
@@ -839,7 +839,7 @@ if ($vavok->post_and_get('action') == "setfour") {
     $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == "setseven") {
@@ -927,7 +927,7 @@ if ($vavok->post_and_get('action') == "setseven") {
     $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == "seteight") {
@@ -962,7 +962,7 @@ if ($vavok->post_and_get('action') == "seteight") {
     $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
 if ($vavok->post_and_get('action') == 'security') {
@@ -1047,10 +1047,10 @@ if ($vavok->post_and_get('action') == 'security') {
     $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
     echo $form->output();
 
-    echo '<p><a href="settings.php" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('back') . '</a></p>';
+    echo $vavok->sitelink('settings.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
+echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
 echo $vavok->homelink() . '</p>';
 
 $vavok->require_footer();

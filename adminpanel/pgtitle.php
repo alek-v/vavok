@@ -189,8 +189,10 @@ if ($act == "addnew") {
     echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
 }
 
-echo '<p><a href="./" class="btn btn-outline-primary sitelink">' . $vavok->go('localization')->string('admpanel') . '</a><br />';
-echo $vavok->homelink() . '</p>';
+echo '<p>';
+echo $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
+echo $vavok->homelink();
+echo '</p>';
 
 $vavok->require_footer();
 
