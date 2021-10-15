@@ -311,7 +311,6 @@ if (!$vavok->go('users')->check_permissions('pageedit', 'edit') && !$vavok->go('
 $vavok->go('current_page')->page_title = 'Files'; // current page title
 
 if (empty($vavok->post_and_get('action'))) {
-
     $vavok->require_header();
 
     echo '<h1>' . $vavok->go('localization')->string('filelist') . '</h1>';
@@ -350,7 +349,6 @@ if (empty($vavok->post_and_get('action'))) {
         $filename = $filename . ' ' . strtoupper($file_lang) . '';
 
         if (empty($edit_only_own_pages)) {
-
             echo $vavok->sitelink('files.php?action=show&amp;file=' . $page_info['file'], $filename, '<b>', '</b>');
             // Check for permissions to edit pages
             if ($vavok->go('users')->check_permissions('pageedit', 'edit') || $vavok->go('users')->is_administrator() || $page_info['crtdby'] == $vavok->go('users')->user_id || ($vavok->go('users')->check_permissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
@@ -391,10 +389,6 @@ if (empty($vavok->post_and_get('action'))) {
     echo $navigation->get_navigation();
 
     echo '<p>' . $vavok->go('localization')->string('totpages') . ': <b>' . (int)$total_pages . '</b></p>';
-
-    if (empty($edit_only_own_pages)) {
-        echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('pagetitle')) . '<br />';
-    }
 }
 
 if ($vavok->post_and_get('action') == 'show') {
@@ -1007,22 +1001,28 @@ if ($vavok->post_and_get('action') == 'tags') {
 }
 
 echo '<p>';
-if ($vavok->post_and_get('action') != "new" && ($vavok->go('users')->check_permissions('pageedit', 'insert') || $vavok->go('users')->is_administrator())) {
-    echo $vavok->sitelink('files.php?action=new', $vavok->go('localization')->string('newpage'));
+if ($vavok->post_and_get('action') != 'new' && ($vavok->go('users')->check_permissions('pageedit', 'insert') || $vavok->go('users')->is_administrator())) {
+    echo $vavok->sitelink('files.php?action=new', $vavok->go('localization')->string('newpage')) . '<br />';
 }
+echo $vavok->sitelink('blog.php', 'Blog management') . '<br />';
 if ($vavok->go('users')->is_administrator(101)) {
-    echo $vavok->sitelink('files.php?action=mainmeta', 'Head (meta) tags on all pages');
+    echo $vavok->sitelink('files.php?action=mainmeta', 'Head tags (meta tags) on all pages') . '<br />';
 } // update lang
 if ($vavok->go('users')->is_administrator()) {
-    echo $vavok->sitelink('filesearch.php', $vavok->go('localization')->string('search'));
-} 
+    echo $vavok->sitelink('filesearch.php', $vavok->go('localization')->string('search')) . '<br />';
+}
+if (empty($edit_only_own_pages)) {
+    echo $vavok->sitelink('pgtitle.php', $vavok->go('localization')->string('pagetitle')) . '<br />';
+}
 if (!empty($vavok->post_and_get('action'))) {
-    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('mngpage'));
+    echo $vavok->sitelink('files.php', $vavok->go('localization')->string('mngpage')) . '<br />';
 }
 echo '</p>';
 
-echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
-echo $vavok->homelink() . '</p>';
+echo '<p>';
+echo $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
+echo $vavok->homelink();
+echo '</p>';
 
 $vavok->require_footer();
 
