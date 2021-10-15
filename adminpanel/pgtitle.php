@@ -114,7 +114,7 @@ if (!isset($act) || empty($act)) {
 
     $items_per_page = 30;
 
-    $navigation = new Navigation($items_per_page, $num_items, $page, 'pgtitle.php?'); // start navigation
+    $navigation = new Navigation($items_per_page, $num_items, $vavok->post_and_get('page'), 'pgtitle.php?'); // start navigation
 
     $limit_start = $navigation->start()['start']; // starting point
 
