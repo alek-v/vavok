@@ -735,6 +735,17 @@ class Vavok {
 	    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
 	}
 
+	/**
+	 * Show notification to user
+	 * 
+	 * @param string $notification
+	 * @return str
+	 */
+	public function show_notification($notification)
+	{
+	    return '<p><span style="text-align: center;margin-top: 40px;">' . $notification . '</span></p>';
+	}
+
 	// add smiles
 	function smiles($string) {
 	    $dir = opendir (BASEDIR . "themes/images/smiles");
