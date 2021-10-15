@@ -1004,7 +1004,7 @@ echo '<p>';
 if ($vavok->post_and_get('action') != 'new' && ($vavok->go('users')->check_permissions('pageedit', 'insert') || $vavok->go('users')->is_administrator())) {
     echo $vavok->sitelink('files.php?action=new', $vavok->go('localization')->string('newpage')) . '<br />';
 }
-echo $vavok->sitelink('blog.php', 'Blog management') . '<br />';
+echo $vavok->sitelink('blog.php', 'Blog category management') . '<br />';
 if ($vavok->go('users')->is_administrator(101)) {
     echo $vavok->sitelink('files.php?action=mainmeta', 'Head tags (meta tags) on all pages') . '<br />';
 } // update lang
