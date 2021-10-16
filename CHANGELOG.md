@@ -1,6 +1,7 @@
 # Vavok v1.5.15.a1
 - Added method show_notification() in Vavok.class.php
 - Added page for blog category management, possiblility add category, delete, edit, move up and down
+- Updated Navigation.class.php, use Bootstrap for pagination
 - Removed process.php from adminpanel
 
 
