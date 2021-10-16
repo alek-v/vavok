@@ -71,6 +71,8 @@ class Navigation {
 		$page = $this->current_page;
 		$total = $this->total_items;
 		$link = $this->link;
+		// Reduce number of links in pagination for smaller screens
+		if ($this->vavok->go('users')->user_device() == 'phone') $lnks = 1;
 
 		// Variable for navigation links
 		$navigation = '';
