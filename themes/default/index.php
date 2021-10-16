@@ -33,7 +33,7 @@ header("Content-type:text/html; charset=utf-8");
 		?>
 	</head>
 	<body class="d-flex flex-column">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light top-navigation">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="<?php echo HOMEDIR; ?>"><img src="<?php echo HOMEDIR; ?>themes/default/images/logo.png" width="30" height="30" alt="Logo"></a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
