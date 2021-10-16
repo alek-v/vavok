@@ -730,9 +730,15 @@ class Vavok {
 	    exit;
 	}
 
-	// Show error
-	public function show_error($error) {
-	    echo '<span style="text-align: center;margin-top: 40px;">Error: ' . $error . '</span>';
+	/**
+	 * Show error notification to user
+	 * 
+	 * @param string $error
+	 * @return str
+	 */
+	public function show_danger($error)
+	{
+	    return '<div class="alert alert-danger" role="alert">' . $error . '</div>';
 	}
 
 	/**
@@ -743,7 +749,7 @@ class Vavok {
 	 */
 	public function show_notification($notification)
 	{
-	    return '<p><span style="text-align: center;margin-top: 40px;">' . $notification . '</span></p>';
+	    return '<div class="alert alert-info" role="alert">' . $notification . '</div>';
 	}
 
 	// add smiles
