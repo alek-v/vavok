@@ -106,7 +106,7 @@ switch ($action) {
 
 			echo $vavok->show_notification('<img src="../themes/images/img/error.gif" alt="Deleted" /> Category deleted');
 		} else {
-			echo $vavok->show_notification('<img src="../themes/images/img/error.gif" alt="Error" /> This category does not exist');
+			echo $vavok->show_danger('<img src="../themes/images/img/error.gif" alt="Error" /> This category does not exist');
 		}
 	break;
 
@@ -128,7 +128,7 @@ switch ($action) {
 
 			echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="Updated" /> Category position updated');
 		} else {
-			echo $vavok->show_notification('<img src="../themes/images/img/error.gif" alt="Error" /> Category position not updated');
+			echo $vavok->show_danger('<img src="../themes/images/img/error.gif" alt="Error" /> Category position not updated');
 		}
 	break;
 
@@ -152,7 +152,7 @@ switch ($action) {
 
 			echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="Updated" /> Category position updated');
 		} else {
-			echo $vavok->show_notification('<img src="../themes/images/img/error.gif" alt="Error" /> Category position not updated');
+			echo $vavok->show_danger('<img src="../themes/images/img/error.gif" alt="Error" /> Category position not updated');
 		}
 	break;
 

@@ -17,7 +17,7 @@ if ($vavok->post_and_get('action') == 'reguser') {
     } elseif (!$vavok->go('users')->validate_username($vavok->post_and_get('log'))) {
         $vavok->redirect_to('registration.php?isset=useletter');
     } elseif ($vavok->post_and_get('par') !== $vavok->post_and_get('pars')) {
-        $vavok->redirect_to('registration.php?isset=nopassword');
+        $vavok->redirect_to('registration.php?isset=nonewpass');
     }
 
     // Meta tag for this page
@@ -117,21 +117,21 @@ if ($vavok->post_and_get('action') == 'reguser') {
                         $form->set('fields', $input->output());
                         echo $form->output();
 
-                        echo '<p><b>' . $vavok->go('localization')->string('enterkeymessage') . '</b></p>';
+                        echo $vavok->show_notification($vavok->go('localization')->string('enterkeymessage'));
                     } else {
-                    	echo '<p>' . $vavok->go('localization')->string('loginnow') . '</p>';
+                    	echo $vavok->show_success($vavok->go('localization')->string('loginnow'));
                     }
                 } else {
-                    echo '<p>' . $vavok->go('localization')->string('badcaptcha') . '</p>';
+                    echo $vavok->show_danger($vavok->go('localization')->string('badcaptcha'));
                 }
             } else {
-                echo '<p>' . $vavok->go('localization')->string('badmail') . "</p>";
+                echo $vavok->show_danger($vavok->go('localization')->string('badmail'));
             }
         } else {
-            echo '<p>' . $vavok->go('localization')->string('userexists') . "</p>";
+            echo $vavok->show_danger($vavok->go('localization')->string('userexists'));
         }
     } else {
-        echo '<p>' . $vavok->go('localization')->string('emailexists') . '</p>';
+        echo $vavok->show_danger($vavok->go('localization')->string('emailexists'));
     }
 
     // Show back link if registration is not completed

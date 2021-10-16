@@ -68,7 +68,12 @@ if (empty($vavok->post_and_get('action'))) {
     echo $vavok->sitelink('inbox.php?action=sendto', $vavok->go('localization')->string('sendmsg')) . '<br />';
 
 } else if ($vavok->post_and_get('action') == 'dialog') {
-    if (!isset($who) || ($who > 0 && empty($vavok->go('users')->getnickfromid($who)))) { $vavok->show_error('User does not exist'); $vavok->require_footer(); exit; }
+    if (!isset($who) || ($who > 0 && empty($vavok->go('users')->getnickfromid($who)))) {
+        echo $vavok->show_danger('User does not exist');
+
+        $vavok->require_footer();
+        exit;
+    }
 
     $pms = $vavok->go('db')->count_row('inbox', "(byuid='" . $vavok->go('users')->user_id . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $vavok->go('users')->user_id . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
 

@@ -97,16 +97,16 @@ if (empty($vavok->post_and_get('action'))) {
 if ($vavok->post_and_get('action') == 'inkey') {
     if (!empty($vavok->post_and_get('key'))) {
         if (!$vavok->go('users')->confirm_registration($vavok->post_and_get('key'))) {
-            echo '<p>' . $vavok->go('localization')->string('keynotok') . '!</p>';
+            echo $vavok->show_danger($vavok->go('localization')->string('keynotok'));
 
             echo $vavok->sitelink(HOMEDIR . 'pages/key.php?uid=' . $recipient_id, $vavok->go('localization')->string('back')) . '</p>';
         } else {
-            echo '<p>' . $vavok->go('localization')->string('keyok') . '!</p>';
+            echo $vavok->show_success($vavok->go('localization')->string('keyok'));
 
             echo $vavok->sitelink(HOMEDIR . 'pages/login.php', $vavok->go('localization')->string('login'), '<p>', '</p>');
         }
     } else {
-        echo '<p>' . $vavok->go('localization')->string('nokey') . '!</p>';
+        echo $vavok->show_danger($vavok->go('localization')->string('nokey'));
 
         echo $vavok->sitelink(HOMEDIR . 'pages/key.php?uid=' . $recipient_id, $vavok->go('localization')->string('back'), '<p>', '</p>');
     }
