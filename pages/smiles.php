@@ -21,7 +21,7 @@ sort($a);
 $smilesPerPage = 15;
 $total = count($a);
 
-$navigation = new Navigation($smilesPerPage, $total, $vavok->post_and_get('page'), 'smiles.php?'); // start navigation
+$navigation = new Navigation($smilesPerPage, $total, 'smiles.php?'); // start navigation
 
 $limit_start = $navigation->start()['start']; // starting point
 $end = $navigation->start()['end']; // ending point
