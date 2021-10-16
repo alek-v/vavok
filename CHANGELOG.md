@@ -1,8 +1,11 @@
 # Vavok v1.5.15.a1
 - Added method show_notification() in Vavok.class.php
 - Added page for blog category management, possiblility add category, delete, edit, move up and down
+- Added method show_danger() in Vavok.class.php
 - Updated Navigation.class.php, use Bootstrap for pagination
+- Updated localization
 - Removed process.php from adminpanel
+- Removed method show_error() in Vavok.class.php
 
 
 
