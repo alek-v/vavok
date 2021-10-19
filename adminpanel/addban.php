@@ -141,7 +141,7 @@ if ($vavok->post_and_get('action') == 'banuser') {
     $users_id = $vavok->go('users')->getidfromnick($user);
     $udd39 = $vavok->check($vavok->post_and_get('udd39'));
 
-    if ($users_id != "") {
+    if (!empty($users_id)) {
         if ($bform == "min") {
             $ban_time = $udd38;
         } 

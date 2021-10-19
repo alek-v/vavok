@@ -53,7 +53,7 @@ switch ($vavok->post_and_get('action')) {
 
         if ((count($files) + count($dires)) > 0) {
             if (count($files) > 0) {
-                if ($did != "") {
+                if (!empty($did)) {
                     if (file_exists("../used" . "$did/.htaccess")) {
                         echo $vavok->sitelink('systems.php?action=pod_chmod&amp;file=' . $did . '/.htaccess', '[CHMOD - ' . $vavok->permissions("../used" . "$did/.htaccess") . ']') . ' - <font color="#00FF00">' . $vavok->go('localization')->string('file') . ' .htaccess ' . $vavok->go('localization')->string('exist') . '</font><br>';
 
