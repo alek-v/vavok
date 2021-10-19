@@ -26,9 +26,7 @@ if ($num_items > 0) {
     }
 }
 
-echo '<p>';
 echo $navigation->get_navigation();
-echo '</p>';
 
 // echo '<br>Total users: <b>' . (int)$num_items . '</b><br>';
 echo $vavok->homelink();

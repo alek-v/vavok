@@ -69,7 +69,8 @@ if ($vavok->post_and_get('error') == '401') {
     $write = ':|:Unknown error:|:' . $write_data;
 }
 
-echo $error_number_info . '<br />' . $additional_error_info;
+echo '<p>' . $error_number_info . '</p>';
+echo '<p>' . $additional_error_info . '</p>';
 
 if (isset($write) && !empty($logdat)) {
     // Write new data to log file
