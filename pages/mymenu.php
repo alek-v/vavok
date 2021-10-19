@@ -16,7 +16,7 @@ if ($vavok->go('users')->is_reg()) {
 	$vavok->sitelink(HOMEDIR . 'pages/settings.php', $vavok->go('localization')->string('settings'), '', '<br />') .
 	$vavok->sitelink(HOMEDIR . 'pages/input.php?action=exit', $vavok->go('localization')->string('logout'));
 } else {
-    echo '<p>' . $vavok->go('localization')->string('notloged') . '</p>';
+    echo $vavok->show_danger($vavok->go('localization')->string('notloged'));
 }
 
 echo $vavok->homelink('<p>', '</p>');

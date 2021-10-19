@@ -157,7 +157,7 @@ switch ($action) {
 	break;
 
 	default:
-		if ($vavok->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'blog_category'") == 0) echo '<p><img src="../themes/images/img/reload.gif" alt=""/> There is no any category</p>';
+		if ($vavok->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'blog_category'") == 0) $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt=""/> There is no any category');
 
 		// Blog categories
 		foreach ($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {

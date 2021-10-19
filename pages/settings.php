@@ -178,7 +178,7 @@ if ($vavok->go('users')->is_reg()) {
     $form->set('fields', $form->merge(array($choose_lang, $subnews, $msgnotif)));
     echo $form->output();
 } else {
-    echo '<p>' . $vavok->go('localization')->string('notloged') . '</p>';
+    echo $vavok->show_danger($vavok->go('localization')->string('notloged'));
 }
 
 echo $vavok->homelink('<p>', '</p>');

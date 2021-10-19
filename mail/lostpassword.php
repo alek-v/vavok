@@ -51,19 +51,19 @@ if ($vavok->post_and_get('action') == 'send') {
                 // Update users profile
                 $vavok->go('users')->update_user('pass', $new, $userx_id);
 
-                echo '<p><b>' . $vavok->go('localization')->string('passgen') . '</b></p>';
+                echo $vavok->show_notification($vavok->go('localization')->string('passgen'));
             } else {
-                echo '<p>' . $vavok->go('localization')->string('wrongcaptcha') . '!</p>';
+                echo $vavok->show_danger($vavok->go('localization')->string('wrongcaptcha'));
 
                 echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
             } 
         } else {
-            echo '<p>' . $vavok->go('localization')->string('wrongmail') . '!</p>';
+            echo $vavok->show_danger($vavok->go('localization')->string('wrongmail'));
 
             echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
         } 
     } else {
-        echo '<p>' . $vavok->go('localization')->string('noneededdata') . '!</p>';
+        echo $vavok->show_danger($vavok->go('localization')->string('noneededdata'));
 
         echo $vavok->sitelink('lostpassword.php', $vavok->go('localization')->string('back'), '<p>', '</p>');
     } 

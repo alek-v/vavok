@@ -45,7 +45,7 @@ if (!empty($ipData) && isset($ipData['country'])) {
 	echo 'State/Region: ' . $ipData['regionName'] . '<br />';
 	echo 'City/Town: ' . $ipData['city'] . '<br />';
 } else {
-    echo '<p>No data available</p>';
+    $vavok->show_danger('No data available');
 }
 echo '</div>';
 

@@ -29,15 +29,15 @@ if ($noi > 0) {
         }
     }
 } else {
-    echo '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('noentry') . '!</p>';
+    echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="" /> ' . $vavok->go('localization')->string('noentry'));
 }
 
-echo '<div class="mt-5">';
 echo $navigation->get_navigation();
-echo '</div>';
 
-echo '<p>' . $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br>';
-echo $vavok->homelink() . '</p>';
+echo '<p>';
+echo $vavok->sitelink('./', $vavok->go('localization')->string('admpanel')) . '<br />';
+echo $vavok->homelink();
+echo '</p>';
 
 $vavok->require_footer();
 

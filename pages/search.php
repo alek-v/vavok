@@ -180,7 +180,7 @@ if (empty($vavok->post_and_get('item'))) {
 	if ($items < 1) {
 		echo $resultsPage->output();
 
-		echo '<p>No search results, try another phrase</p>';
+		echo $vavok->show_notification('No search results, try another phrase');
 
 		$vavok->require_footer();
 		exit;

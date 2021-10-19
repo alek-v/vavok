@@ -23,9 +23,7 @@ if (!isset($users_id) || !$vavok->go('users')->id_exists($users_id)) {
     $vavok->go('current_page')->page_title = 'User doesn\'t exist';
     $vavok->require_header();
 
-	echo '<div class="user_profile">';
-    echo '<p><img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $vavok->go('localization')->string('usrnoexist');
-    echo '</p></div>';
+    echo $vavok->show_danger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $vavok->go('localization')->string('usrnoexist'));
 
     echo $vavok->homelink('<p>', '</p>');
 

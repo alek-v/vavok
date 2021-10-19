@@ -22,16 +22,10 @@ spl_autoload_register(function($class) {
 $vavok = new Vavok();
 new Db();
 new Users();
-
-/**
- * Stop application here for system requests
- */
-if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) {
-    new Page();
-    new Localization();
-    new Counter();
-    new Manageip();
-    new Referer();
-}
+new Page();
+new Localization();
+new Manageip();
+new Referer();
+if (!strstr($_SERVER['PHP_SELF'], '/cronjob/')) new Counter(); // We don't need visitor counter for cron job
 
 ?>

@@ -16,17 +16,14 @@ if (stristr($_SERVER['REQUEST_URI'], 'pages.php?pg=')) $vavok->redirect_to(BASED
 /* Page not found */
 if (empty($vavok->go('current_page')->page_content)) {
 // error 404
-// todo: fix error reporting
 // header("Status: 404 Not Found");
 header($_SERVER["SERVER_PROTOCOL"] . " 404 Not Found");
 
 $vavok->require_header();
 ?>
 
-<p>Error 404 - Page not found<br /></p>
-<div class="break"></div>
+<p class="mb-5">Error 404 - Page not found</p>
 <?php echo $vavok->homelink('<p>', '</p>'); ?>
-<div class="break"></div>
 
 <?php
 
@@ -44,9 +41,8 @@ $vavok->require_header();
 
 // Check if page is published
 if ($vavok->go('current_page')->published == 1 && !$vavok->go('users')->is_administrator()) {
-	echo '<p>Requested page is not published.</p>'; // update lang
-	echo '<p><br /><br />';
-	echo $vavok->homelink() . '</p>';
+	$vavok->show_notification('Requested page is not published.'); // update lang
+	echo $vavok->homelink();
 
 	$vavok->require_footer();
 	exit;
