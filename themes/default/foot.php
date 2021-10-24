@@ -16,8 +16,7 @@ if ($vavok->get_configuration('pageGenTime') == 1) {
 
 // Show database queries while debugging
 if (defined('SITE_STAGE') && SITE_STAGE == 'debug') {
-    echo '<span>DB queries: ' . $_SESSION['db_queries'] . '<br /></span>';
-    unset($_SESSION['db_queries']);
+    echo '<span>DB queries: ' . $vavok->go('db')->show_db_queries() . '<br /></span>';
 }
 
 echo '<span>powered by <a href="https://www.vavok.net/" class="sitelink">Vavok.net</a></span>';
