@@ -20,7 +20,7 @@ $items_per_page = 10;
 $navigation = new Navigation($items_per_page, $noi, $vavok->post_and_get('page'), 'banlist.php?'); // start navigation
 $limit_start = $navigation->start()['start']; // starting point
 
-$sql = "SELECT id, name, banned FROM " . DB_PREFIX . "vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";
+$sql = "SELECT id, name, banned FROM vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";
 
 if ($noi > 0) {
     foreach ($vavok->go('db')->query($sql) as $item) {

@@ -1,9 +1,9 @@
 <?php
 require_once '../include/startup.php';
 
-$pcounter_guest = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user = 0");
+$pcounter_guest = $vavok->go('db')->count_row('online', 'user = 0');
 
-$pcounter_online = $vavok->go('db')->count_row(DB_PREFIX . 'online');
+$pcounter_online = $vavok->go('db')->count_row('online');
 
 $substr_count = $pcounter_guest;
 $counter_online = $pcounter_online;

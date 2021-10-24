@@ -16,8 +16,8 @@ $vavok->require_header();
 
 echo '<p><img src="../themes/images/img/online.gif" alt=""> <b>' . $vavok->go('localization')->string('whoisonline') . '</b></p>';
 
-$total = $vavok->go('db')->count_row(DB_PREFIX . 'online');
-$totalreg = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user > 0");
+$total = $vavok->go('db')->count_row('online');
+$totalreg = $vavok->go('db')->count_row('online', "user > 0");
 
 if (!empty($vavok->post_and_get('list'))) {
     $list = $vavok->check($vavok->post_and_get('list'));
@@ -39,7 +39,7 @@ if ($list == 'full') {
 
     $start = $navigation->start()['start']; // starting point 
 
-    $full_query = "SELECT * FROM " . DB_PREFIX . "online ORDER BY date DESC LIMIT $start, " . $data_on_page;
+    $full_query = "SELECT * FROM online ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($vavok->go('db')->query($full_query) as $item) {
         $time = $vavok->date_fixed($item['date'], 'H:i');
@@ -75,7 +75,7 @@ if ($list == 'full') {
 
     $start = $navigation->start()['start']; // starting point
 
-    $full_query = "SELECT * FROM " . DB_PREFIX . "online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
+    $full_query = "SELECT * FROM online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
 
     foreach ($vavok->go('db')->query($full_query) as $item) {
         $time = $vavok->date_fixed($item['date'], 'H:i');

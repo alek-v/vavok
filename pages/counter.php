@@ -15,13 +15,13 @@ $hour = (int)date("H", time());
 $hday = date("j", time())-1;
 
 if (empty($vavok->post_and_get('action'))) {
-    $pcounter_guest = $vavok->go('db')->count_row(DB_PREFIX . 'online', "user='0'");
+    $pcounter_guest = $vavok->go('db')->count_row('online', "user='0'");
 
-    $pcounter_online = $vavok->go('db')->count_row(DB_PREFIX . 'online');
+    $pcounter_online = $vavok->go('db')->count_row('online');
 
     $pcounter_reg = $pcounter_online - $pcounter_guest;
 
-    $counts = $vavok->go('db')->get_data(DB_PREFIX . 'counter');
+    $counts = $vavok->go('db')->get_data('counter');
 
     $clicks_today = $counts['clicks_today'];
     $total_clicks = $counts['clicks_total'];

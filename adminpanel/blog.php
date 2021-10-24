@@ -13,11 +13,11 @@ switch ($action) {
 		// Save category if name is sent
 		if (!empty($vavok->post_and_get('category')) && !empty($vavok->post_and_get('value'))) {
 			// Calculate category position
-			$position = $vavok->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'blog_category'");
+			$position = $vavok->go('db')->count_row('settings', "setting_group = 'blog_category'");
 
 			// Add category
 			$data = array('setting_group' => 'blog_category', 'setting_name' => $vavok->post_and_get('category'), 'value' => $vavok->post_and_get('value'), 'options' => $position);
-			$vavok->go('db')->insert(DB_PREFIX . 'settings', $data);
+			$vavok->go('db')->insert('settings', $data);
 
 			// Show message if category is saved
 			echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="Saved" /> Category saved</p>');
@@ -56,14 +56,14 @@ switch ($action) {
 		// Update category if data are sent
 		if (!empty($vavok->post_and_get('id')) && !empty($vavok->post_and_get('category')) && !empty($vavok->post_and_get('value'))) {
 			// Update category
-			$vavok->go('db')->update(DB_PREFIX . 'settings', array('setting_name', 'value'), array($vavok->post_and_get('category'), $vavok->post_and_get('value')), "id = '{$vavok->post_and_get('id')}'");
+			$vavok->go('db')->update('settings', array('setting_name', 'value'), array($vavok->post_and_get('category'), $vavok->post_and_get('value')), "id = '{$vavok->post_and_get('id')}'");
 
 			// Show message if category is updated
 			echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="Saved" /> Category updated</p>');
 		}
 
 		// Category data
-		$cat_info = $vavok->go('db')->get_data(DB_PREFIX . 'settings', "id='{$vavok->post_and_get('id')}'");
+		$cat_info = $vavok->go('db')->get_data('settings', "id='{$vavok->post_and_get('id')}'");
 
 	    // Category input
 	    $category = new PageGen('forms/input.tpl');
@@ -101,8 +101,8 @@ switch ($action) {
 	break;
 	
 	case 'delete':
-		if ($vavok->go('db')->count_row(DB_PREFIX . 'settings', "id = {$vavok->post_and_get('id')}") > 0) {
-			$vavok->go('db')->delete(DB_PREFIX . 'settings', "id = {$vavok->post_and_get('id')}");
+		if ($vavok->go('db')->count_row('settings', "id = {$vavok->post_and_get('id')}") > 0) {
+			$vavok->go('db')->delete('settings', "id = {$vavok->post_and_get('id')}");
 
 			echo $vavok->show_notification('<img src="../themes/images/img/error.gif" alt="Deleted" /> Category deleted');
 		} else {
@@ -112,7 +112,7 @@ switch ($action) {
 
 	case 'move-up':
 		// cat we want to update
-		$cat_info = $vavok->go('db')->get_data(DB_PREFIX . 'settings', "id='{$vavok->post_and_get('id')}'");
+		$cat_info = $vavok->go('db')->get_data('settings', "id='{$vavok->post_and_get('id')}'");
 
 		$cat_position = $cat_info['options'];
 		$new_position = $cat_position - 1;
@@ -133,22 +133,22 @@ switch ($action) {
 	break;
 
 	case 'move-down':
-		$total = $vavok->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'blog_category'");
+		$total = $vavok->go('db')->count_row('settings', "setting_group = 'blog_category'");
 		
 		// cat we want to update
-		$cat_info = $vavok->go('db')->get_data(DB_PREFIX . 'settings', "id='{$vavok->post_and_get('id')}'");
+		$cat_info = $vavok->go('db')->get_data('settings', "id='{$vavok->post_and_get('id')}'");
 
 		$cat_position = $cat_info['options'];
 		$new_position = $cat_position + 1;
 			
 		if ($new_position < $total && (!empty($cat_position) || $cat_position == '0')) {
 			// Update cat with position we want to take
-			$cat_to_down = $vavok->go('db')->get_data(DB_PREFIX . 'settings', "setting_group = 'blog_category' AND options='{$new_position}'");
+			$cat_to_down = $vavok->go('db')->get_data('settings', "setting_group = 'blog_category' AND options='{$new_position}'");
 			$cat_to_down_position = $cat_to_down['options'] - 1;
-			$vavok->go('db')->exec("UPDATE " . DB_PREFIX . "settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
+			$vavok->go('db')->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
 			
 			// Now, update our cat
-			$vavok->go('db')->exec("UPDATE " . DB_PREFIX . "settings SET options='{$new_position}' WHERE id='{$vavok->post_and_get('id')}'");
+			$vavok->go('db')->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$vavok->post_and_get('id')}'");
 
 			echo $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt="Updated" /> Category position updated');
 		} else {
@@ -157,10 +157,10 @@ switch ($action) {
 	break;
 
 	default:
-		if ($vavok->go('db')->count_row(DB_PREFIX . 'settings', "setting_group = 'blog_category'") == 0) $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt=""/> There is no any category');
+		if ($vavok->go('db')->count_row('settings', "setting_group = 'blog_category'") == 0) $vavok->show_notification('<img src="../themes/images/img/reload.gif" alt=""/> There is no any category');
 
 		// Blog categories
-		foreach ($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
+		foreach ($vavok->go('db')->query("SELECT * FROM settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
 			echo '<div class="a">';
 			echo $vavok->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
 			echo $vavok->sitelink('blog.php?action=edit-category&id=' . $category['id'], '<img src="../themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';

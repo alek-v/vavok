@@ -64,7 +64,7 @@ switch ($vavok->post_and_get('action')) {
 		/**
 		 * Send email confirmation link if it is changed and save data into database
 		 */
-		if ($vavok->go('users')->user_info('email') != $email && $vavok->go('db')->count_row(DB_PREFIX . 'tokens', "uid = '{$vavok->go('users')->user_id}' AND content = '{$email}'") < 1) {
+		if ($vavok->go('users')->user_info('email') != $email && $vavok->go('db')->count_row('tokens', "uid = '{$vavok->go('users')->user_id}' AND content = '{$email}'") < 1) {
 			/**
 			 * Insert data to database
 			 */
@@ -82,7 +82,7 @@ switch ($vavok->post_and_get('action')) {
 				'expiration_time' => $new_time
 			);
 
-			$vavok->go('db')->insert(DB_PREFIX . 'tokens', $data);
+			$vavok->go('db')->insert('tokens', $data);
 
 			/**
 			 * Add email to the queue

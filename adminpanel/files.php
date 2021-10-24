@@ -326,9 +326,9 @@ if (empty($vavok->post_and_get('action'))) {
 
 
     if ($edit_only_own_pages == 'yes') {
-        $sql = "SELECT * FROM " . DB_PREFIX . "pages WHERE crtdby='{$vavok->go('users')->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM pages WHERE crtdby='{$vavok->go('users')->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     } else {
-        $sql = "SELECT * FROM " . DB_PREFIX . "pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
+        $sql = "SELECT * FROM pages ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
     }
 
     foreach ($vavok->go('db')->query($sql) as $page_info) {

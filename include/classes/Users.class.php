@@ -45,12 +45,12 @@ class Users {
 		 */
 		if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
 		    // Search for token in database and get tokend data if exists
-			$cookie_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'tokens', "token = '{$vavok->check($_COOKIE['cookie_login'])}'", 'uid, token');
+			$cookie_data = $this->vavok->go('db')->get_data('tokens', "token = '{$vavok->check($_COOKIE['cookie_login'])}'", 'uid, token');
 			$cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
 			$token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
 
 		    // Get user's data
-			$cookie_check = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
+			$cookie_check = $this->vavok->go('db')->get_data('vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
 
 		    // If user exists write session data
 		    if (isset($cookie_check['name']) && !empty($cookie_check['name']) && ($_COOKIE['cookie_login'] === $token_value)) {
@@ -61,7 +61,7 @@ class Users {
 		            $_SESSION['lang'] = $cookie_check['lang'];
 
 		            // Update ip address
-		            $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
+		            $this->vavok->go('db')->update('vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
 		    } else {
 		    	// Token from cookie is not valid or it is expired, delete cookie
 		    	setcookie('cookie_login', '', time() - 3600);
@@ -75,13 +75,13 @@ class Users {
 		// Get user data
 		if (!empty($this->user_id)) {
 			// Get data
-		    $vavok_users = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$this->user_id}'");
-		    $user_profil = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$this->user_id}'", 'regche');
+		    $vavok_users = $this->vavok->go('db')->get_data('vavok_users', "id='{$this->user_id}'");
+		    $user_profil = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$this->user_id}'", 'regche');
 
 		    /**
 		     * Update last visit
 		     */
-		    $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
+		    $this->vavok->go('db')->update('vavok_profil', 'lastvst', time(), "uid='{$this->user_id}'");
 
 		 	// Time zone
 		    if (!empty($vavok_users['timezone'])) define('MY_TIMEZONE', $vavok_users['timezone']);
@@ -186,10 +186,10 @@ class Users {
 		if (empty($user_id)) $user_id = $this->user_id;
 
 		// Remove user from online list
-	    $this->vavok->go('db')->delete(DB_PREFIX . 'online', "user = '{$user_id}'");
+	    $this->vavok->go('db')->delete('online', "user = '{$user_id}'");
 
 	    // Remove login token from database if token exists
-	    if (isset($_COOKIE['cookie_login']) && $this->vavok->go('db')->count_row(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->vavok->go('db')->delete(DB_PREFIX . 'tokens', "token = '{$_COOKIE['cookie_login']}'");
+	    if (isset($_COOKIE['cookie_login']) && $this->vavok->go('db')->count_row('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->vavok->go('db')->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
 
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
@@ -232,7 +232,7 @@ class Users {
 	        // First we delete old attempts from the table
 	        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
 	        $oldest = date("Y-m-d H:i:s", $oldest);
-	        $this->vavok->go('db')->delete(DB_PREFIX . 'login_attempts', "`datetime` < '{$oldest}'");
+	        $this->vavok->go('db')->delete('login_attempts', "`datetime` < '{$oldest}'");
 	        
 	        // Next we insert this attempt into the table
 	        $values = array(
@@ -240,7 +240,7 @@ class Users {
 	        'datetime' =>  date("Y-m-d H:i:s"),
 	        'username' => $username
 	        );
-	        $this->vavok->go('db')->insert(DB_PREFIX . 'login_attempts', $values);
+	        $this->vavok->go('db')->insert('login_attempts', $values);
 	        
 	        // Finally we count the number of recent attempts from this ip address  
 	        $attempts = $this->vavok->go('db')->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
@@ -266,13 +266,13 @@ class Users {
 	        'newmsg' => 0,
 	        'lang' => $this->vavok->get_configuration('siteDefaultLang')
 	    );
-	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_users', $values);
+	    $this->vavok->go('db')->insert('vavok_users', $values);
 
-	    $user_id = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "name='{$name}'", 'id')['id'];
+	    $user_id = $this->vavok->go('db')->get_data('vavok_users', "name='{$name}'", 'id')['id'];
 
-	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
-	    $this->vavok->go('db')->insert(DB_PREFIX . 'vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
-	    $this->vavok->go('db')->insert(DB_PREFIX . 'notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
+	    $this->vavok->go('db')->insert('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
+	    $this->vavok->go('db')->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
+	    $this->vavok->go('db')->insert('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
 	    // send private message
 	    $msg = $this->vavok->go('localization')->string('autopmreg');
@@ -304,7 +304,7 @@ class Users {
 			$_SESSION['lang'] = $language;
 
 			// Update language if user is registered
-			if ($this->is_reg()) { $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
+			if ($this->is_reg()) { $this->vavok->go('db')->update('vavok_users', 'lang', $language, "id='{$this->user_id}'"); }
 		}
 	}
 
@@ -318,16 +318,16 @@ class Users {
 	        $users_id = $this->getidfromnick($users);
 	    }
 
-	    $this->vavok->go('db')->delete(DB_PREFIX . "vavok_users", "id = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "vavok_profil", "uid = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "vavok_about", "uid = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "ignore", "target = '{$users_id}' OR name = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "buddy", "target = '{$users_id}' OR name = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "subs", "user_id = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "notif", "uid = '{$users_id}'");
-	    $this->vavok->go('db')->delete(DB_PREFIX . "specperm", "uid = '{$users_id}'");
-	    if ($this->vavok->go('db')->table_exists(DB_PREFIX . 'group_members')) $this->vavok->go('db')->delete(DB_PREFIX . 'group_members', "uid = '{$users_id}'");
+	    $this->vavok->go('db')->delete("vavok_users", "id = '{$users_id}'");
+	    $this->vavok->go('db')->delete("vavok_profil", "uid = '{$users_id}'");
+	    $this->vavok->go('db')->delete("vavok_about", "uid = '{$users_id}'");
+	    $this->vavok->go('db')->delete("inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
+	    $this->vavok->go('db')->delete("ignore", "target = '{$users_id}' OR name = '{$users_id}'");
+	    $this->vavok->go('db')->delete("buddy", "target = '{$users_id}' OR name = '{$users_id}'");
+	    $this->vavok->go('db')->delete("subs", "user_id = '{$users_id}'");
+	    $this->vavok->go('db')->delete("notif", "uid = '{$users_id}'");
+	    $this->vavok->go('db')->delete("specperm", "uid = '{$users_id}'");
+	    if ($this->vavok->go('db')->table_exists('group_members')) $this->vavok->go('db')->delete('group_members', "uid = '{$users_id}'");
 
 	    return $users;
 	}
@@ -358,9 +358,9 @@ class Users {
 		$vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'rname', 'surname', 'photo', 'address', 'zip', 'country', 'phone');
 
 		// First check if there are fields to update for selected table, then update data
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values')), "uid='{$user_id}'");
-		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->vavok->go('db')->update(DB_PREFIX . 'vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) $this->vavok->go('db')->update('vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->vavok->go('db')->update('vavok_profil', array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values')), "uid='{$user_id}'");
+		if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->vavok->go('db')->update('vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
 	}
 
 	/**
@@ -427,7 +427,7 @@ class Users {
 
 		foreach ($default_permissions[$permission_id] as $key => $value) {
             // Insert data to database if data does not exsist
-            if ($this->vavok->go('db')->count_row(DB_PREFIX . 'specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
+            if ($this->vavok->go('db')->count_row('specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
                 $values = array(
                     'permname' => $key,
                     'permacc' => $value,
@@ -435,7 +435,7 @@ class Users {
                 );
 
                 // Insert data to database
-                $this->vavok->go('db')->insert(DB_PREFIX . 'specperm', $values);
+                $this->vavok->go('db')->insert('specperm', $values);
             }
 		}
 	}
@@ -448,7 +448,7 @@ class Users {
 	 */
 	public function confirm_registration($key)
 	{
-		if (!$this->vavok->go('db')->update(DB_PREFIX . 'vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) return false;
+		if (!$this->vavok->go('db')->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) return false;
 		return true;
 	}
 
@@ -459,13 +459,13 @@ class Users {
 	// private messages
 	public function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
-	        $nopm = $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->vavok->go('db')->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
-	        $nopm = $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
+	        $nopm = $this->vavok->go('db')->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $this->user_id . "' OR deleted IS NULL)");
 	    } elseif ($view == "str") {
-	        $nopm = $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='" . $uid . "' AND starred='1'");
+	        $nopm = $this->vavok->go('db')->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
 	    } elseif ($view == "urd") {
-	        $nopm = $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='" . $uid . "' AND unread='1'");
+	        $nopm = $this->vavok->go('db')->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
 	    } 
 	    return $nopm;
 	}
@@ -478,7 +478,7 @@ class Users {
 	 */
 	function getunreadpm($uid)
 	{
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'inbox', "touid='{$uid}' AND unread='1'");
+	    return $this->vavok->go('db')->count_row('inbox', "touid='{$uid}' AND unread='1'");
 	}
 
 	// number of private msg's
@@ -492,7 +492,7 @@ class Users {
 	}
 
 	public function isstarred($pmid) {
-	    $strd = $this->vavok->go('db')->get_data(DB_PREFIX . 'inbox', "id='{$pmid}'", 'starred');
+	    $strd = $this->vavok->go('db')->get_data('inbox', "id='{$pmid}'", 'starred');
 	    if ($strd['starred'] == 1) {
 	        return true;
 	    } else {
@@ -521,23 +521,23 @@ class Users {
 
 		$time = time();
 
-        $this->vavok->go('db')->insert(DB_PREFIX . 'inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
+        $this->vavok->go('db')->insert('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
-        $user_profile = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$who}'", 'lastvst');
-        $last_notif = $this->vavok->go('db')->get_data(DB_PREFIX . 'notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
+        $user_profile = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$who}'", 'lastvst');
+        $last_notif = $this->vavok->go('db')->get_data('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
-            $this->vavok->go('db')->insert(DB_PREFIX . 'notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
+            $this->vavok->go('db')->insert('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
         } 
         $notif_expired = $last_notif['lstinb'] + 864000;
 
         if (($user_profile['lastvst'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
-            $user_mail = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$who}'", 'email');
+            $user_mail = $this->vavok->go('db')->get_data('vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
             $send_mail->queue_email($user_mail['email'], "Message on " . $this->vavok->get_configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->vavok->get_configuration('homeUrl'), '', '', 'normal'); // update lang
 
-            $this->vavok->go('db')->update(DB_PREFIX . 'notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
+            $this->vavok->go('db')->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
 	}
 
@@ -561,7 +561,7 @@ class Users {
 	 	'timesent' => time()
 		);
 
-		$this->vavok->go('db')->insert(DB_PREFIX . 'inbox', $values);
+		$this->vavok->go('db')->insert('inbox', $values);
 	}
 
 	/**
@@ -593,7 +593,7 @@ class Users {
 	 */
 	public function getidfromnick($nick)
 	{
-	    $uid = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "name='{$nick}'", 'id');
+	    $uid = $this->vavok->go('db')->get_data('vavok_users', "name='{$nick}'", 'id');
 	    $id = !empty($uid['id']) ? $uid['id'] : 0;
 
 	    return $id;
@@ -607,7 +607,7 @@ class Users {
 	 */
 	public function id_from_email($email)
 	{
-        $id = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "email='{$email}'", 'uid');
+        $id = $this->vavok->go('db')->get_data('vavok_about', "email='{$email}'", 'uid');
         $id = !empty($id['uid']) ? $id['uid'] : false;
 
         return $id;
@@ -661,175 +661,175 @@ class Users {
 
 	    switch ($info) {
 	    	case 'email':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'email');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'email');
 	    		$data = !empty($data['email']) ? $data['email'] : '';
 	    		return $data;
 	    		break;
 	    	
 	    	case 'full_name':
-		    	$uinfo = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname, surname');
+		    	$uinfo = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'rname, surname');
 		    	$data = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
 		    	return $data;
 	    		break;
 
 	    	case 'firstname':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'rname');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'rname');
 	    		$data = !empty($data) ? $data['rname'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'lastname':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'surname');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'surname');
 	    		$data = !empty($data) ? $data['surname'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'city':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'city');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'city');
 	    		$data = !empty($data) ? $data['city'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'address':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'address');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'address');
 	    		$data = !empty($data) ? $data['address'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'zip':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'zip');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'zip');
 	    		$data = !empty($data) ? $data['zip'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'about':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'about');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'about');
 	    		$data = !empty($data) ? $data['about'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'site':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'site');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'site');
 	    		$data = !empty($data) ? $data['site'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'birthday':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'birthday');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'birthday');
 	    		$data = !empty($data) ? $data['birthday'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'gender':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'sex');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'sex');
 	    		$data = !empty($data) ? $data['sex'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'photo':
-	    		$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_about', "uid='{$users_id}'", 'photo');
+	    		$data = $this->vavok->go('db')->get_data('vavok_about', "uid='{$users_id}'", 'photo');
 	    		$data = !empty($data) ? $data['photo'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'nickname':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'name');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'name');
 	    		$data = !empty($data) ? $data['name'] : '';
 	    		return $data;
     			break;
 
 	    	case 'language':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'lang');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'lang');
 	    		$data = !empty($data) ? $data['lang'] : '';
 	    		return $data;
     			break;
 
 	    	case 'banned':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'banned');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'banned');
 	    		$data = !empty($data) ? $data['banned'] : '';
 	    		return $data;
     			break;
 
 	    	case 'password':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'pass');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'pass');
 	    		$data = !empty($data) ? $data['pass'] : '';
 	    		return $data;
     			break;
 
 	    	case 'perm':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'perm');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'perm');
 	    		$data = !empty($data) ? $data['perm'] : '';
 	    		return $data;
     			break;
 
 	    	case 'browser':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'browsers');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'browsers');
 	    		$data = !empty($data) ? $data['browsers'] : '';
 	    		return $data;
     			break;
 
 	    	case 'ipaddress':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'ipadd');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'ipadd');
 	    		$data = !empty($data) ? $data['ipadd'] : '';
 	    		return $data;
     			break;
 
 	    	case 'timezone':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_users', "id='{$users_id}'", 'timezone');
+    			$data = $this->vavok->go('db')->get_data('vavok_users', "id='{$users_id}'", 'timezone');
 	    		$data = !empty($data) ? $data['timezone'] : '';
 	    		return $data;
     			break;
 
 	    	case 'bantime':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bantime');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "id='{$users_id}'", 'bantime');
 	    		$data = !empty($data) ? $data['bantime'] : '';
 	    		return $data;
     			break;
 
 	    	case 'bandesc':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'bandesc');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "id='{$users_id}'", 'bandesc');
 	    		$data = !empty($data) ? $data['bandesc'] : '';
 	    		return $data;
     			break;
 
 	    	case 'allban':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "id='{$users_id}'", 'allban');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "id='{$users_id}'", 'allban');
 	    		$data = !empty($data) ? $data['allban'] : '';
 	    		return $data;
     			break;
 
 	    	case 'regche':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'regche');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'regche');
 	    		$data = !empty($data) ? $data['regche'] : '';
 	    		return $data;
     			break;
 
 	    	case 'status':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'perstat');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'perstat');
 	    		$data = !empty($data) ? $data['perstat'] : '';
 	    		return $data;
     			break;
 
 	    	case 'regdate':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'regdate');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'regdate');
 	    		$data = !empty($data) ? $data['regdate'] : '';
 	    		return $data;
     			break;
 
 	    	case 'forummes':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'forummes');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'forummes');
 	    		$data = !empty($data) ? $data['forummes'] : '';
 	    		return $data;
     			break;
 
 	    	case 'lastvisit':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'lastvst');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'lastvst');
 	    		$data = !empty($data) ? $data['lastvst'] : '';
 	    		return $data;
     			break;
 
 	    	case 'subscribed':
-    			$data = $this->vavok->go('db')->get_data(DB_PREFIX . 'vavok_profil', "uid='{$users_id}'", 'subscri');
+    			$data = $this->vavok->go('db')->get_data('vavok_profil', "uid='{$users_id}'", 'subscri');
 	    		$data = !empty($data) ? $data['subscri'] : '';
 	    		return $data;
     			break;
@@ -877,7 +877,7 @@ class Users {
 	    $xuser = $this->getidfromnick($login);
 	    $statwho = '<font color="#CCCCCC">[Off]</font>';
 
-	    $result = $this->vavok->go('db')->count_row(DB_PREFIX . 'online', "user='{$xuser}'");
+	    $result = $this->vavok->go('db')->count_row('online', "user='{$xuser}'");
 
 	    if ($result > 0 && $xuser > 0) $statwho = '<font color="#00FF00">[On]</font>';
 
@@ -906,8 +906,8 @@ class Users {
 	    // Administrator have access to all site functions
 	    if ($this->is_administrator(101)) return true;
 
-	    if ($this->vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'") > 0) {
-	        $check_data = $this->vavok->go('db')->get_data(DB_PREFIX . 'specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
+	    if ($this->vavok->go('db')->count_row('specperm', "uid='{$this->user_id}' AND permname='{$permname}'") > 0) {
+	        $check_data = $this->vavok->go('db')->get_data('specperm', "uid='{$this->user_id}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
 	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
@@ -939,7 +939,7 @@ class Users {
 
 	// number of registered members
 	function regmemcount() {
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users');
+	    return $this->vavok->go('db')->count_row('vavok_users');
 	}
 
 	function user_device() {
@@ -969,7 +969,7 @@ class Users {
 	 */
 	public function username_exists($username)
 	{
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "name='{$username}'") > 0 ? true : false;
+	    return $this->vavok->go('db')->count_row('vavok_users', "name='{$username}'") > 0 ? true : false;
 	}
 
 	/**
@@ -980,7 +980,7 @@ class Users {
 	 */
 	public function email_exists($email)
 	{
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_about', "email='{$email}'") > 0 ? true : false;
+	    return $this->vavok->go('db')->count_row('vavok_about', "email='{$email}'") > 0 ? true : false;
 	}
 
 	/**
@@ -991,7 +991,7 @@ class Users {
 	 */
 	public function id_exists($id)
 	{
-	    return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "id='{$id}'") > 0 ? true : false;
+	    return $this->vavok->go('db')->count_row('vavok_users', "id='{$id}'") > 0 ? true : false;
 	}
 
 	/**
@@ -1001,7 +1001,7 @@ class Users {
 	 */
 	public function total_admins()
 	{
-		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
+		return $this->vavok->go('db')->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
 	}
 
 	/**
@@ -1011,7 +1011,7 @@ class Users {
 	 */
 	public function total_banned()
 	{
-		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_users', "banned='1' OR banned='2'");
+		return $this->vavok->go('db')->count_row('vavok_users', "banned='1' OR banned='2'");
 	}
 
 	/**
@@ -1021,7 +1021,7 @@ class Users {
 	 */
 	public function total_unconfirmed()
 	{
-		return $this->vavok->go('db')->count_row(DB_PREFIX . 'vavok_profil', "regche='1' OR regche='2'");
+		return $this->vavok->go('db')->count_row('vavok_profil', "regche='1' OR regche='2'");
 	}
 
 	/**
@@ -1109,7 +1109,7 @@ class Users {
 
 	// is ignored
 	function isignored($tid, $uid) {
-	    $ign = $this->vavok->go('db')->count_row(DB_PREFIX . '`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
+	    $ign = $this->vavok->go('db')->count_row('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    }
@@ -1142,7 +1142,7 @@ class Users {
 
 	// is buddy
 	function isbuddy($tid, $uid) {
-	    $ign = $this->vavok->go('db')->count_row(DB_PREFIX . 'buddy', "target='" . $tid . "' AND name='" . $uid . "'");
+	    $ign = $this->vavok->go('db')->count_row('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    }
@@ -1160,7 +1160,7 @@ class Users {
 		$confirmationHours = 24;
 		$confirmationTime = $confirmationHours * 3600;
 
-		foreach ($this->vavok->go('db')->query("SELECT regdate, uid FROM " . DB_PREFIX . "vavok_profil WHERE regche = '1'") as $userCheck) {
+		foreach ($this->vavok->go('db')->query("SELECT regdate, uid FROM vavok_profil WHERE regche = '1'") as $userCheck) {
 			// Delete user if he didn't confirmed registration within $confirmationHours
 			if (($userCheck['regdate'] + $confirmationTime) < time()) {
 				$this->vavok->go('users')->delete_user($userCheck['uid']);

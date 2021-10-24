@@ -51,7 +51,7 @@ if (empty($vavok->post_and_get('action')) && !empty($vavok->post_and_get('log'))
             $new_time = $now->format('Y-m-d H:i:s');
 
             // Insert token
-            $vavok->go('db')->insert(DB_PREFIX . 'tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
+            $vavok->go('db')->insert('tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
 
             // With '.' session is accessible from all subdomains
             $rootDomain = '.' . $vavok->clean_domain();

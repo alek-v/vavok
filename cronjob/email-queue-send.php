@@ -22,7 +22,7 @@ $new_time = time(); // time new package is sent, every second is important :-)
 
 $sendMail = new Mailer();
 
-$sql = "SELECT * FROM " . DB_PREFIX . "email_queue WHERE sent = 0 ORDER BY FIELD(priority,
+$sql = "SELECT * FROM email_queue WHERE sent = 0 ORDER BY FIELD(priority,
         'high',
         'normal',
         'low') LIMIT 0, " . $vavok->get_configuration('subMailPacket');
@@ -38,7 +38,7 @@ foreach ($vavok->go('db')->query($sql) as $email) {
 
         // update data if email is sent
         if ($result == true) {
-            	$vavok->go('db')->update(DB_PREFIX . 'email_queue', $fields, $values, 'id = ' . $email['id']);
+            	$vavok->go('db')->update('email_queue', $fields, $values, 'id = ' . $email['id']);
 
             	$i++; // number of successfully sent emails
 	}

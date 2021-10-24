@@ -281,7 +281,7 @@ HEAD;
 				'fulldir' => $upload_URL
 			);
 
-			$this->vavok->go('db')->insert(DB_PREFIX . 'uplfiles', $values);
+			$this->vavok->go('db')->insert('uplfiles', $values);
 
 	    } else {
 	    	$upload_URL = $directory . $upload_Name;

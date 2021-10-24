@@ -69,7 +69,7 @@ class Config {
 	public function update_config_data($data)
 	{
 		foreach ($data as $key => $value) {
-			$this->vavok->go('db')->update(DB_PREFIX . 'settings', array('value'), array($value), "setting_name = '{$key}'");
+			$this->vavok->go('db')->update('settings', array('value'), array($value), "setting_name = '{$key}'");
 		}
 	}
 }

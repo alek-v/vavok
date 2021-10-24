@@ -12,7 +12,7 @@ if ($vavok->go('users')->is_reg()) {
 
         if ($vavok->post_and_get('todo') == 'add') {
             if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $vavok->post_and_get('who')) == 1 && !$vavok->go('users')->isbuddy($vavok->post_and_get('who'), $vavok->go('users')->user_id)) {
-                $vavok->go('db')->insert(DB_PREFIX . 'buddy', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
+                $vavok->go('db')->insert('buddy', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
 
                 header ("Location: buddy.php?isset=kontakt_add");
                 exit;

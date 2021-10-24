@@ -19,7 +19,7 @@ if ($vavok->post_and_get('action') == 'resendkey') {
     	// Get users email if it is not submited
     	if (empty($recipient_mail)) $recipient_mail = $vavok->go('users')->user_info('email', $recipient_id);
 
-        $email = $vavok->go('db')->get_data(DB_PREFIX . 'email_queue', "recipient='{$recipient_mail}'");
+        $email = $vavok->go('db')->get_data('email_queue', "recipient='{$recipient_mail}'");
 
         /**
          * Check if it is too early to resend email

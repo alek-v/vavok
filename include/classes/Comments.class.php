@@ -22,21 +22,21 @@ class Comments {
 		$values = array('uid' => $this->user_id, 'comment' => $content, 'pid' => $pid, 'date' => date('Y-m-d H:i:s'));
 
 		// Insert data to database
-		$this->vavok->go('db')->insert(DB_PREFIX . 'comments', $values);
+		$this->vavok->go('db')->insert('comments', $values);
 
 	}
 
 	// count number of comments
 	public function count_comments($pid)
 	{
-		return $this->vavok->go('db')->count_row(DB_PREFIX . 'comments', 'pid=' . $pid);
+		return $this->vavok->go('db')->count_row('comments', 'pid=' . $pid);
 	}
 
 	// load comments
 	public function load_comments($pid, $start, $items_per_page) {
 		$all_posts = array();
 
-		foreach ($this->vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}") as $key) {
+		foreach ($this->vavok->go('db')->query("SELECT * FROM comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}") as $key) {
 			// load template
 			$page_posts = new PageGen('pages/blog/comment.tpl');
 

@@ -18,11 +18,11 @@ class Db extends PDO {
         $options = array(
             PDO::ATTR_PERSISTENT => false,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4'
             );
 
         try {
-            parent::__construct("mysql:host=" . DB_HOST . ";dbname=" . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
+            parent::__construct('mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
         } 
         catch (PDOException $e) {
             echo 'Database error: ' . $this->error = $e->getMessage();
@@ -49,7 +49,7 @@ class Db extends PDO {
             }
 
             $msg = "";
-            if ($this->errorMsgFormat == "html") {
+            if ($this->errorMsgFormat == 'html') {
                 if (!empty($error["Bind Parameters"]))
                     $error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
                 $css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
@@ -69,8 +69,8 @@ class Db extends PDO {
         } 
     }
 
-    public function delete($table, $where, $bind = "") {
-        $sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
+    public function delete($table, $where, $bind = '') {
+        $sql = "DELETE FROM " . DB_PREFIX . "{$table} WHERE {$where};";
         $this->run($sql, $bind);
     }
 
@@ -119,7 +119,7 @@ class Db extends PDO {
 
             $ins = implode(',', $ins);
             $fields = implode(',', array_keys($values));
-            $sql = "INSERT INTO {$table} ($fields) VALUES ($ins)";
+            $sql = "INSERT INTO " . DB_PREFIX . "{$table} ($fields) VALUES ($ins)";
 
             $sth = $this->prepare($sql);
             foreach ($values as $f => $v) {
@@ -131,7 +131,7 @@ class Db extends PDO {
         $this->db_queries();
     }
 
-    public function run($sql, $bind = "") {
+    public function run($sql, $bind = '') {
         $this->sql = trim($sql);
         $this->bind = $this->cleanup($bind);
         $this->error = "";
@@ -163,7 +163,7 @@ class Db extends PDO {
      * @return array
      */
     public function get_data($table, $where = '', $fields = '*', $bind = '') {
-        $sql = 'SELECT ' . $fields . ' FROM ' . $table;
+        $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
         if (!empty($where))
             $sql .= ' WHERE ' . $where;
         $sql .= ';';
@@ -176,7 +176,7 @@ class Db extends PDO {
 
     // count number of rows
     public function count_row($table, $where = '') {
-        $sql = "SELECT count(*) FROM " . $table;
+        $sql = 'SELECT count(*) FROM ' . DB_PREFIX . $table;
         if (!empty($where))
             $sql .= ' WHERE ' . $where;
         $sql .= ';';
@@ -238,7 +238,7 @@ class Db extends PDO {
             $buildSQL .= $fields.' = :value';
         }
 
-        $prepareUpdate = $this->prepare('UPDATE ' . $table . ' SET ' . $buildSQL . $where);
+        $prepareUpdate = $this->prepare('UPDATE ' . DB_PREFIX . $table . ' SET ' . $buildSQL . $where);
 
         //execute the update for one or many values
         if (is_array($values)) {
@@ -289,6 +289,21 @@ class Db extends PDO {
             if (!isset($_SESSION['db_queries'])) $_SESSION['db_queries'] = 0;
             $_SESSION['db_queries'] = $_SESSION['db_queries'] + 1;
         }
+    }
+
+    /**
+     * Show number of db queries while debugging
+     *
+     * @return int
+     */
+    public function show_db_queries()
+    {
+        $queries = $_SESSION['db_queries'];
+
+        // Reset number of queries in session
+        unset($_SESSION['db_queries']);
+
+        return $queries;
     }
 }
 

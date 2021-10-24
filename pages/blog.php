@@ -107,7 +107,7 @@ switch ($vavok->post_and_get('pg')) {
 		/**
 		 * Page tags
 		 */
-		$sql = $vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "tags WHERE page_id='{$vavok->go('current_page')->page_id}' ORDER BY id ASC");
+		$sql = $vavok->go('db')->query("SELECT * FROM tags WHERE page_id='{$vavok->go('current_page')->page_id}' ORDER BY id ASC");
 
 		$tags = '';
 
@@ -149,7 +149,7 @@ switch ($vavok->post_and_get('pg')) {
 		/**
 		 * Count total posts
 		 */
-		$total_posts = empty($vavok->post_and_get('category')) ? $vavok->go('db')->count_row(DB_PREFIX . 'pages', "type='post' AND published = '2'") : $vavok->go('db')->count_row('tags', "tag_name='{$vavok->post_and_get('category')}'");
+		$total_posts = empty($vavok->post_and_get('category')) ? $vavok->go('db')->count_row('pages', "type='post' AND published = '2'") : $vavok->go('db')->count_row('tags', "tag_name='{$vavok->post_and_get('category')}'");
 
 		// if there is no posts
 		if ($total_posts < 1) {
@@ -168,7 +168,7 @@ switch ($vavok->post_and_get('pg')) {
 		/**
 		 * Get blog category names
 		 */
-		foreach ($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
+		foreach ($vavok->go('db')->query("SELECT * FROM settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
 			$page_category = new PageGen('pages/blog/blog_category.tpl');
 
 			/**
@@ -201,8 +201,8 @@ switch ($vavok->post_and_get('pg')) {
 		/**
 		 * Query when category is not set and case when it is set
 		 */		
-		$page_sql_query = empty($vavok->post_and_get('category')) ? "SELECT * FROM " . DB_PREFIX . "pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
-		"SELECT " . DB_PREFIX . "pages.pubdate, " . DB_PREFIX . "pages.created, " . DB_PREFIX . "pages.tname, " . DB_PREFIX . "pages.pname, " . DB_PREFIX . "pages.content, " . DB_PREFIX . "pages.default_img FROM " . DB_PREFIX . "pages INNER JOIN " . DB_PREFIX . "tags ON " . DB_PREFIX . "tags.tag_name='{$vavok->post_and_get('category')}' AND " . DB_PREFIX . "tags.page_id = " . DB_PREFIX . "pages.id AND " . DB_PREFIX . "pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+		$page_sql_query = empty($vavok->post_and_get('category')) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+		"SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$vavok->post_and_get('category')}' AND tags.page_id = pages.id AND pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
 
 		foreach ($vavok->go('db')->query($page_sql_query) as $key) {
 			// load template

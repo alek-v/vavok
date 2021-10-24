@@ -39,7 +39,7 @@ if ($vavok->go('users')->is_reg()) {
 
         if ($vavok->post_and_get('todo') == 'add') {
             if ($vavok->go('users')->ignoreres($vavok->go('users')->user_id, $who) == 1) {
-                $vavok->go('db')->insert(DB_PREFIX . '`ignore`', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
+                $vavok->go('db')->insert('`ignore`', array('name' => $vavok->go('users')->user_id, 'target' => $vavok->post_and_get('who')));
 
                 echo "<img src=\"../themes/images/img/open.gif\" alt=\"o\"/> " . $vavok->go('localization')->string('user') . " $tnick " . $vavok->go('localization')->string('sucadded') . "<br>";
             } else {

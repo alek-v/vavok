@@ -864,7 +864,7 @@ class Vavok {
 	 */
 	public function count_group_members($group_name)
 	{
-		return $this->go('db')->count_row(DB_PREFIX . 'group_members', "group_name = '{$group_name}'");
+		return $this->go('db')->count_row('group_members', "group_name = '{$group_name}'");
 	}
 
 	/**********

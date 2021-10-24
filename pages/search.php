@@ -69,7 +69,7 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Count pages by tags
 	 */
-	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$vavok->post_and_get('item')}'";
+	$prep = "SELECT id, page_id FROM tags WHERE tag_name = '{$vavok->post_and_get('item')}'";
 	foreach ($vavok->go('db')->query($prep) as $resultItem) {
 		if (!in_array($resultItem['page_id'], $page_ids)) array_push($page_ids, $resultItem['page_id']);
 	}
@@ -77,7 +77,7 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Count pages by content
 	 */
-	$prep = "SELECT id, pname, tname, content, type FROM " . DB_PREFIX . "pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'";
+	$prep = "SELECT id, pname, tname, content, type FROM pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'";
 	foreach($vavok->go('db')->query($prep) as $resultItem) {
 		/**
 		 * Add item if it is not added
@@ -92,8 +92,8 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Count forum posts
 	 */
-	if ($vavok->go('db')->table_exists(DB_PREFIX . 'ftopics')) {
-		$items += $vavok->go('db')->count_row(DB_PREFIX . "ftopics", "name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0)");
+	if ($vavok->go('db')->table_exists('ftopics')) {
+		$items += $vavok->go('db')->count_row("ftopics", "name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0)");
 	}
 
 	$thisPageNav = new Navigation(20, $items, $vavok->post_and_get('page'));
@@ -104,12 +104,12 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Search tags
 	 */
-	$prep = "SELECT id, page_id FROM " . DB_PREFIX . "tags WHERE tag_name = '{$vavok->post_and_get('item')}' LIMIT {$thisPageNav->start()['start']}, 20";
+	$prep = "SELECT id, page_id FROM tags WHERE tag_name = '{$vavok->post_and_get('item')}' LIMIT {$thisPageNav->start()['start']}, 20";
 	foreach ($vavok->go('db')->query($prep) as $resultItem) {
 		/**
 		 * Page data
 		 */
-		$resultItem = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "id = '" . $resultItem['page_id'] . "'");
+		$resultItem = $vavok->go('db')->get_data('pages', "id = '" . $resultItem['page_id'] . "'");
 		$dots = strlen($resultItem['content']) > 50 ? '...' : '';
 
 		$itemText = mb_substr(strip_tags($resultItem['content']), 0, 50, 'UTF-8') . $dots;
@@ -135,7 +135,7 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Search pages
 	 */
-	$prep = "SELECT id, pname, tname, content, type FROM " . DB_PREFIX . "pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'" . $orderBy . "LIMIT {$thisPageNav->start()['start']}, 20";
+	$prep = "SELECT id, pname, tname, content, type FROM pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'" . $orderBy . "LIMIT {$thisPageNav->start()['start']}, 20";
 	foreach ($vavok->go('db')->query($prep) as $resultItem) {
 		$dots = strlen($resultItem['content']) > 50 ? '...' : '';
 
@@ -160,8 +160,8 @@ if (empty($vavok->post_and_get('item'))) {
 	/**
 	 * Search forum posts
 	 */
-	if ($vavok->go('db')->table_exists(DB_PREFIX . 'ftopics')) {
-		$preps = "SELECT `name`, `text`, `id` FROM " . DB_PREFIX . "ftopics WHERE name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0) LIMIT {$thisPageNav->start()['start']}, 20";
+	if ($vavok->go('db')->table_exists('ftopics')) {
+		$preps = "SELECT `name`, `text`, `id` FROM ftopics WHERE name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0) LIMIT {$thisPageNav->start()['start']}, 20";
 
 		foreach($vavok->go('db')->query($preps) as $resultItems) {
 			$dots = strlen($resultItems['text']) > 50 ? '...' : '';

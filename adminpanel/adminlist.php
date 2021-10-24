@@ -22,7 +22,7 @@ $limit_start = $navigation->start()['start']; // starting point
 $end = $navigation->start()['end']; // ending point
 
 if ($num_items > 0) {
-    foreach ($vavok->go('db')->query("SELECT id, name, perm FROM " . DB_PREFIX . "vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
+    foreach ($vavok->go('db')->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
         if ($item['perm'] == 101 or $item['perm'] == 102 or $item['perm'] == 103 or $item['perm'] == 105 or $item['perm'] == 106) {
             $lnk = '<div class="a">' . $vavok->sitelink('../pages/user.php?uz=' . $item['id'], $item['name']) . ' - ' . $vavok->go('users')->user_status($item['perm']) . '</div>';
             echo $lnk . '<br>';

@@ -19,7 +19,7 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('use
 $vavok->require_header();
 
 if ($num_items > 0) {
-    foreach ($vavok->go('db')->query("SELECT id, name FROM " . DB_PREFIX . "vavok_users ORDER BY name LIMIT $limit_start, $items_per_page") as $item) {
+    foreach ($vavok->go('db')->query("SELECT id, name FROM vavok_users ORDER BY name LIMIT $limit_start, $items_per_page") as $item) {
         echo '<div class="a">';
         echo '<a href="../pages/user.php?uz=' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $vavok->date_fixed($vavok->go('users')->user_info('regdate', $item['id']), 'd.m.Y.'); // update lang
         echo '</div>';

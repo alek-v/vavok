@@ -47,14 +47,14 @@ class Manageip {
 
             $logfiles = BASEDIR . "used/datados/" . $ip . ".dat";
 
-            if (file_exists($logfiles)) {
+            if (file_exists($logfiles) && !empty($logfiles)) {
                 $file_dos_time = file($logfiles);
                 $file_dos_str = explode("|", $file_dos_time[0]);
 
                 if ($file_dos_str[1] < ($this->vavok->get_configuration('siteTime')-60)) {
-                    unlink($logfiles);
+                    @unlink($logfiles);
                 }
-            } 
+            }
 
             $write = '|' . $this->vavok->get_configuration('siteTime') . '|Time: ' . date("Y-m-d / H:i:s", $this->vavok->get_configuration('siteTime')) . '|Browser: ' . $this->vavok->go('users')->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
             $fp = fopen($logfiles, "a+");
@@ -64,7 +64,6 @@ class Manageip {
             fclose($fp);
 
             if (count(file($logfiles)) > $this->vavok->get_configuration('dosLimit') && $this->vavok->get_configuration('dosLimit') > 0) {
-                
                 unlink($logfiles);
 
                 $banlines = $this->vavok->get_data_file('ban.dat');
@@ -95,9 +94,7 @@ class Manageip {
                         flock ($fp, LOCK_UN);
                         fclose($fp);
                     }
-
                 }
-
         	}
 
         	// ban
@@ -119,10 +116,9 @@ class Manageip {
         	        if ($this->vavok->go('users')->is_administrator() == false) {
         	            header ("Location: " . BASEDIR . "pages/banip.php");
         	            exit;
-        	        } 
-        	    } 
+        	        }
+        	    }
         	}
-
         }
     }
 }

@@ -33,23 +33,23 @@ if ($vavok->post_and_get('action') == 'update') {
     }
 
     // Update data if exist or insert new data if data previosly doesnt existed
-    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") < 1) {
+    if ($vavok->go('db')->count_row('specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") < 1) {
         $values = array(
             'uid' => $edit_user,
             'permname' => $permname,
             'permacc' => $acc_data
         );
-        $vavok->go('db')->insert(DB_PREFIX . 'specperm', $values);
+        $vavok->go('db')->insert('specperm', $values);
     } else {
-        $vavok->go('db')->update(DB_PREFIX . 'specperm', 'permacc', $acc_data, "uid='{$edit_user}' AND permname='{$permission_name}'");
+        $vavok->go('db')->update('specperm', 'permacc', $acc_data, "uid='{$edit_user}' AND permname='{$permission_name}'");
     }
 
     $vavok->redirect_to('users.php?action=edit&users=' . $vavok->go('users')->getnickfromid($edit_user) . '&isset=savedok');
 }
 
 if ($vavok->post_and_get('action') == 'delete_permission') {
-    $vavok->go('db')->delete(DB_PREFIX . 'specperm', "permname='{$permission_name}' AND uid='{$edit_user}'");
-    $vavok->redirect_to(DB_PREFIX . 'specperm.php?users=' . $edit_user);
+    $vavok->go('db')->delete('specperm', "permname='{$permission_name}' AND uid='{$edit_user}'");
+    $vavok->redirect_to('specperm.php?users=' . $edit_user);
 }
 
 if ($vavok->post_and_get('action') == 'forum') $vavok->redirect_to('forum-moders.php?users=' . $edit_user);
@@ -60,8 +60,8 @@ $vavok->require_header();
 echo '<p>Updating permissions for user <strong>' . $vavok->go('users')->getnickfromid($edit_user) . '</strong></p>';
 
 if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
-    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}'") > 0) {
-        foreach($vavok->go('db')->query("SELECT * FROM " . DB_PREFIX . "specperm WHERE uid='{$edit_user}'") as $permission) {
+    if ($vavok->go('db')->count_row('specperm', "uid='{$edit_user}'") > 0) {
+        foreach($vavok->go('db')->query("SELECT * FROM specperm WHERE uid='{$edit_user}'") as $permission) {
             echo '<p><span class="btn btn-outline-primary"><strong>' . $permission['permname'] . '</strong></span> - 
             ' . $vavok->sitelink('specperm.php?action=changepermissions&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'], '[EDIT]') . '
             ' . $vavok->sitelink('specperm.php?action=delete_permission&permission_name=' . $permission['permname'] . '&users=' . $permission['uid'], '[DEL]') . '</p>';
@@ -95,8 +95,8 @@ if (empty($vavok->post_and_get('action')) && !empty($edit_user)) {
 }
 
 if ($vavok->post_and_get('action') == 'changepermissions' && !empty($edit_user) && !empty($permission_name)) {
-    if ($vavok->go('db')->count_row(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") > 0) {
-        $acc_data = explode(',', $vavok->go('db')->get_data(DB_PREFIX . 'specperm', "uid='{$edit_user}' AND permname='{$permission_name}'")['permacc']);
+    if ($vavok->go('db')->count_row('specperm', "uid='{$edit_user}' AND permname='{$permission_name}'") > 0) {
+        $acc_data = explode(',', $vavok->go('db')->get_data('specperm', "uid='{$edit_user}' AND permname='{$permission_name}'")['permacc']);
     } else {
         $acc_data = array();
     }

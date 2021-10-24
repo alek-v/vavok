@@ -15,7 +15,7 @@ if ($act == 'addedit') {
     $msg = $vavok->no_br($vavok->post_and_get('msg'));
 
     // get page data
-    $pageData = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "file='{$tfile}'", 'file, headt');
+    $pageData = $vavok->go('db')->get_data('pages', "file='{$tfile}'", 'file, headt');
 
     $headData = $pageData['headt'];
 
@@ -37,7 +37,7 @@ if ($act == 'addedit') {
 
     $fields = array('tname', 'headt');
     $values = array($msg, $headData);
-    $vavok->go('db')->update(DB_PREFIX . 'pages', $fields, $values, "file='{$tfile}'");
+    $vavok->go('db')->update('pages', $fields, $values, "file='{$tfile}'");
 
 
     $vavok->redirect_to("files.php?action=edit&file=" . $pageData['file'] . "&isset=savedok");
@@ -50,7 +50,7 @@ if ($act == "savenew") {
 
     $msg = $vavok->no_br($vavok->post_and_get('msg'));
 
-    $last_notif = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
+    $last_notif = $vavok->go('db')->get_data('pages', "pname='" . $tpage . "'", '`tname`, `pname`, `file`, `headt`');
 
     $headData = $last_notif['headt'];
 
@@ -77,13 +77,13 @@ if ($act == "savenew") {
             'tname' => $msg,
             'file' => $tpage
         );
-        $vavok->go('db')->insert(DB_PREFIX . 'pages', $values);
+        $vavok->go('db')->insert('pages', $values);
 
         $PBPage = false;
     } else {
         $fields = array('tname', 'headt');
         $values = array($msg, $headData);
-        $vavok->go('db')->insert(DB_PREFIX . 'pages', $fields, $values, "pname='" . $tpage . "'");
+        $vavok->go('db')->insert('pages', $fields, $values, "pname='" . $tpage . "'");
 
         $PBPage = true;
     } 
@@ -94,7 +94,7 @@ if ($act == "savenew") {
 if ($act == 'del') {
     $tid = $vavok->check($vavok->post_and_get('tid'));
 
-    $vavok->go('db')->delete(DB_PREFIX . 'pages', "pname = '{$tid}'");
+    $vavok->go('db')->delete('pages', "pname = '{$tid}'");
 
     $vavok->redirect_to('pgtitle.php');
 }
@@ -102,14 +102,14 @@ if ($act == 'del') {
 $vavok->require_header();
 
 if (!isset($act) || empty($act)) {
-    $nitems = $vavok->go('db')->count_row(DB_PREFIX . 'pages');
+    $nitems = $vavok->go('db')->count_row('pages');
     $total = $nitems;
 
     if ($total < 1) {
         echo '<br /><img src="../themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
     }
 
-    $nitems = $vavok->go('db')->count_row(DB_PREFIX . 'pages', 'tname is not null');
+    $nitems = $vavok->go('db')->count_row('pages', 'tname is not null');
     $num_items = $nitems;
 
     $items_per_page = 30;
@@ -118,7 +118,7 @@ if (!isset($act) || empty($act)) {
 
     $limit_start = $navigation->start()['start']; // starting point
 
-    $sql = "SELECT id, pname, tname, file FROM " . DB_PREFIX . "pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+    $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
         foreach ($vavok->go('db')->query($sql) as $item) {
@@ -136,7 +136,7 @@ if (!isset($act) || empty($act)) {
 if ($act == 'edit') {
     $pgfile = $vavok->check($vavok->post_and_get('pgfile'));
 
-    $page_title = $vavok->go('db')->get_data(DB_PREFIX . 'pages', "file='{$pgfile}'", 'tname, pname');
+    $page_title = $vavok->go('db')->get_data('pages', "file='{$pgfile}'", 'tname, pname');
 
     $form = new PageGen('forms/form.tpl');
     $form->set('form_action', 'pgtitle.php?act=addedit');

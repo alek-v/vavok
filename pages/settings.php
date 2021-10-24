@@ -27,7 +27,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	 * Site newsletter
 	 */
 	if ($vavok->post_and_get('subnews') == 1) {
-	    $email_check = $vavok->go('db')->get_data(DB_PREFIX . 'subs', "user_mail='{$vavok->go('users')->user_info('email')}'", 'user_mail');
+	    $email_check = $vavok->go('db')->get_data('subs', "user_mail='{$vavok->go('users')->user_info('email')}'", 'user_mail');
 
 	    if (!empty($email_check['user_mail'])) {
 	        $result = 'error2'; // Error! Email already exist in database!
@@ -39,14 +39,14 @@ if ($vavok->post_and_get('action') == 'save') {
 	    if (empty($result)) {
 	        $randkey = $vavok->generate_password();
 	        
-	        $vavok->go('db')->insert(DB_PREFIX . 'subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $vavok->go('users')->user_info('email'), 'user_pass' => $randkey));
+	        $vavok->go('db')->insert('subs', array('user_id' => $vavok->go('users')->user_id, 'user_mail' => $vavok->go('users')->user_info('email'), 'user_pass' => $randkey));
 
 	        $result = 'ok'; // sucessfully subscribed to site news!
 	        $subnewss = 1;
 	    } 
 	}
 	else {
-	    $email_check = $vavok->go('db')->get_data(DB_PREFIX . 'subs', "user_id='{$vavok->go('users')->user_id}'", 'user_mail');
+	    $email_check = $vavok->go('db')->get_data('subs', "user_id='{$vavok->go('users')->user_id}'", 'user_mail');
 
 	    if (empty($email_check['user_mail'])) {
 	        $result = 'error';
@@ -54,7 +54,7 @@ if ($vavok->post_and_get('action') == 'save') {
 	        $randkey = '';
 	    } else {
 	    	// unsub
-	        $vavok->go('db')->delete(DB_PREFIX . 'subs', "user_id='{$vavok->go('users')->user_id}'");
+	        $vavok->go('db')->delete('subs', "user_id='{$vavok->go('users')->user_id}'");
 	    	
 	        $result = 'no';
 	        $subnews = 0;
@@ -94,11 +94,11 @@ if ($vavok->post_and_get('action') == 'save') {
 	// notification settings
 	if (!isset($inbox_notification)) $inbox_notification = 1;
 
-	$check_inb = $vavok->go('db')->count_row(DB_PREFIX . 'notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
+	$check_inb = $vavok->go('db')->count_row('notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
 	if ($check_inb > 0) {
-	    $vavok->go('db')->update(DB_PREFIX . 'notif', 'active', $inbox_notification, "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
+	    $vavok->go('db')->update('notif', 'active', $inbox_notification, "uid='{$vavok->go('users')->user_id}' AND type='inbox'");
 	} else {
-		$vavok->go('db')->insert(DB_PREFIX . 'notif', array('active' => $inbox_notification, 'uid' => $vavok->go('users')->user_id, 'type' => 'inbox'));
+		$vavok->go('db')->insert('notif', array('active' => $inbox_notification, 'uid' => $vavok->go('users')->user_id, 'type' => 'inbox'));
 	}
 
 	// redirect
@@ -109,7 +109,7 @@ $vavok->go('current_page')->page_title = $vavok->go('localization')->string('set
 $vavok->require_header();
 
 if ($vavok->go('users')->is_reg()) {
-	$inbox_notif = $vavok->go('db')->get_data(DB_PREFIX . 'notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'", 'active');
+	$inbox_notif = $vavok->go('db')->get_data('notif', "uid='{$vavok->go('users')->user_id}' AND type='inbox'", 'active');
 
 	$form = new PageGen('forms/form.tpl');
 	$form->set('form_method', 'post');

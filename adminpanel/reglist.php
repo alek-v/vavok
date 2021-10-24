@@ -38,7 +38,7 @@ if (empty($vavok->post_and_get('action'))) {
         $limit_start = 0;
     } 
 
-    $sql = "SELECT uid, regche, regdate, lastvst FROM " . DB_PREFIX . "vavok_profil WHERE regche='1' OR regche='2' ORDER BY regdate LIMIT $limit_start, $items_per_page";
+    $sql = "SELECT uid, regche, regdate, lastvst FROM vavok_profil WHERE regche='1' OR regche='2' ORDER BY regdate LIMIT $limit_start, $items_per_page";
 
     if ($num_items > 0) {
         foreach ($vavok->go('db')->query($sql) as $item) {
