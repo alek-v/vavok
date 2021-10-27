@@ -10,7 +10,7 @@ define('VERSION', '1.6.0.b1');
 /**
  * Root dir for including system files
  */
-if (!defined('BASEDIR')) define('BASEDIR', __DIR__ . '/../');
+if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'include'));
 
 /**
  * Autoload classes
