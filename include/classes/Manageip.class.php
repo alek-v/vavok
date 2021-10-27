@@ -14,13 +14,13 @@ class Manageip {
         $this->vavok = $vavok;
 
         if (empty(REQUEST_URI)) {
-            $config_requri = "index.php";
+            $config_requri = 'index.php';
         } else { $config_requri = REQUEST_URI; }
 
         if (isset($_SERVER['HTTP_REFERER'])) {
             $http_referer = urldecode($_SERVER['HTTP_REFERER']);
         } else {
-            $http_referer = "No referer";
+            $http_referer = 'No referer';
         }
 
         if (isset($this->vavok->go('users')->user_id)) {
@@ -32,7 +32,7 @@ class Manageip {
         $ip = $this->vavok->go('users')->find_ip();
         $hostname = gethostbyaddr($ip);
 
-        if ($opendir = opendir(BASEDIR . "used/datados")) {
+        if ($opendir = opendir(BASEDIR . 'used/datados')) {
             while (false !== ($doslog = readdir($opendir))) {
                 if ($doslog != "." and $doslog != "..") {
                     $file_array_filemtime = @filemtime(BASEDIR . "used/datados/$doslog");
@@ -45,18 +45,22 @@ class Manageip {
                 }
             }
 
-            $logfiles = BASEDIR . "used/datados/" . $ip . ".dat";
+            $logfiles = BASEDIR . 'used/datados/' . $ip . '.dat';
 
-            if (file_exists($logfiles) && !empty($logfiles)) {
-                $file_dos_time = file($logfiles);
-                $file_dos_str = explode("|", $file_dos_time[0]);
+            if (file_exists($logfiles)) {
+                $file_dos_time = @file($logfiles);
 
-                if ($file_dos_str[1] < ($this->vavok->get_configuration('siteTime')-60)) {
-                    @unlink($logfiles);
+                // Check for case wneh file exist but it is empty
+                if (!empty($file_dos_time)) {
+                    $file_dos_str = explode('|', $file_dos_time[0]);
+
+                    if ($file_dos_str[1] < ($this->vavok->get_configuration('siteTime') - 60)) {
+                        @unlink($logfiles);
+                    }
                 }
             }
 
-            $write = '|' . $this->vavok->get_configuration('siteTime') . '|Time: ' . date("Y-m-d / H:i:s", $this->vavok->get_configuration('siteTime')) . '|Browser: ' . $this->vavok->go('users')->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
+            $write = '|' . $this->vavok->get_configuration('siteTime') . '|Time: ' . date('Y-m-d / H:i:s', $this->vavok->get_configuration('siteTime')) . '|Browser: ' . $this->vavok->go('users')->user_browser() . '|Referer: ' . $http_referer . '|URL: ' . $config_requri . '|User: ' . $username . '|';
             $fp = fopen($logfiles, "a+");
             flock ($fp, LOCK_EX);
             fputs($fp, "$write\r\n");
@@ -72,7 +76,7 @@ class Manageip {
                 foreach($banlines as $banvalue) {
                     $bancell = explode("|", $banvalue);
                     $banarray[] = $bancell[1];
-                } 
+                }
 
                 if (!in_array($ip, $banarray)) {
                     $this->vavok->write_data_file('ban.dat', "|$ip|" . PHP_EOL, 1);
@@ -109,8 +113,8 @@ class Manageip {
         	    for($i_i = 0;$i_i < 4;$i_i++) {
         	        if ($this_ip_split[$i_i] == $db_ip_split[$i_i] or $db_ip_split[$i_i] == '*') {
         	            $ip_check_matches += 1;
-        	        } 
-        	    } 
+        	        }
+        	    }
 
         	    if ($ip_check_matches == 4) {
         	        if ($this->vavok->go('users')->is_administrator() == false) {
