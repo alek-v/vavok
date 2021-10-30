@@ -21,28 +21,26 @@
 </style>
 <div class="user_profile">
 	<div class="b">
-		{@sex-img}} <b>{@profile-nick}}</b> {@user-online}}
-		<div class="break"></div>
+		{@sex-img}} {@firstname}} {@lastname}} <i>{@nickname}}</i> {@user-online}}
 	</div>
 	<div>
 		<div class="prof_left">
-			<p>{@firstname}} {@lastname}}</p>
 			<p>
-			{@regCheck}}
-			{@banned}}
-			{@personalStatus}}
-			{@sex}}: {@usersSex}}<br />
-			{@city}}
-			{@about}}
-			{@birthday}}
-			{@forumPosts}}
-			{@browser}}
-			{@siteSkin}}
-			{@site}}
-			{@regDate}}
-			{@lastVisit}}
-			{@ip-address}}
-			{@userMenu}}
+				{@regCheck}}
+				{@banned}}
+				{@personalStatus}}
+				{@sex}}: {@usersSex}}<br />
+				{@city}}
+				{@about}}
+				{@birthday}}
+				{@forumPosts}}
+				{@browser}}
+				{@siteSkin}}
+				{@site}}
+				{@regDate}}
+				{@lastVisit}}
+				{@ip-address}}
+				{@userMenu}}
 			</p>
 		</div>
 		<div class="prof_right">
@@ -52,6 +50,4 @@
 		</div> <!-- prof_right -->
 	</div>
 </div> <!-- user profile -->
-<div class="break"></div>
-<div class="clear"></div>
 {@homepage}}

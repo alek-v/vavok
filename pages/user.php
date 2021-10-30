@@ -39,15 +39,15 @@ $showPage = new PageGen('pages/user-profile/user-profile.tpl');
 
 // Show gender image
 if ($vavok->go('users')->user_info('gender', $users_id) == 'N' || $vavok->go('users')->user_info('gender', $users_id) == 'n' || empty($vavok->go('users')->user_info('gender', $users_id))) {
-    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/anonim.gif" alt="" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/anonim.gif" width="32" height="32" alt="" />');
 } elseif ($vavok->go('users')->user_info('gender', $users_id) == 'M' or $vavok->go('users')->user_info('gender', $users_id) == 'm') {
-    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/man.png" alt="Male" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/man.png" width="32" height="32" alt="Male" />');
 } else {
-    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/women.gif" alt="Female" />');
+    $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/women.gif" width="32" height="32" alt="Female" />');
 }
 
 // Show nickname
-$showPage->set('profile-nick', $vavok->go('localization')->string('profile') . ' ' . $uz);
+$showPage->set('nickname', $uz);
 
 // Show online status
 $showPage->set('user-online', $vavok->go('users')->user_online($uz));
