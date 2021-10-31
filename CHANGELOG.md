@@ -1,3 +1,8 @@
+# Vavok v1.6.1.b1
+- More textarea rows and code improvements in adminpanel/files.php
+
+
+
 # Vavok v1.6.0
 - Added method show_notification() in Vavok.class.php
 - Added page for blog category management, possiblility add category, delete, edit, move up and down
@@ -5,7 +10,7 @@
 - Updated Navigation.class.php, use Bootstrap for pagination
 - Updated localization
 - Updted users profile
-- Moved database prefix settings in DB class
+- Moved database prefix settings to DB class
 - Created method to show number of db queries
 - Removed process.php from adminpanel
 - Removed method show_error() in Vavok.class.php
