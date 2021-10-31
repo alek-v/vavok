@@ -1,5 +1,7 @@
 # Vavok v1.6.1.b1
+- Added edit_mode() method in Page.class.php
 - More textarea rows and code improvements in adminpanel/files.php
+- Use edit_mode() method in adminpanel/files.php
 
 
 
