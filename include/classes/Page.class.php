@@ -21,7 +21,8 @@ class Page {
 	 * @param string $page_name
 	 * @param string $page_language
 	 */
-	function __construct($page_name = '', $page_language = '') {
+	function __construct($page_name = '', $page_language = '')
+	{
 		global $vavok;
 
 		$this->vavok = $vavok;
@@ -501,6 +502,27 @@ class Page {
 		return $this->head_tags .= $tags;
 	}
 
+	/**
+	 * Editing mode we are currently using
+	 * 
+	 * @return str $edmode
+	 */
+	public function edit_mode()
+	{
+		if (!empty($this->vavok->post_and_get('edmode'))) {
+		    $edmode = $this->vavok->post_and_get('edmode');
+		    $_SESSION['edmode'] = $edmode;
+		} elseif (!empty($_SESSION['edmode'])) {
+			// Use edit mode from session
+		    $edmode = $_SESSION['edmode'];
+		} else {
+			// Use visual mode as default
+		    $edmode = 'visual';
+		    $_SESSION['edmode'] = $edmode;
+		}
+
+	    return $edmode;
+	}
 }
 
 ?>
