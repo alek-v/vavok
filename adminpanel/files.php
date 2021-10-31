@@ -5,40 +5,25 @@
  */
 
 require_once '../include/startup.php';
-require_once '../include/htmlbbparser.php';
 
 // Checking access permitions
 if (!$vavok->go('users')->is_administrator() && !$vavok->go('users')->check_permissions('pageedit', 'show')) $vavok->redirect_to('../?auth_error');
 
-$file = $vavok->check($vavok->post_and_get('file'));
-$text_files = $vavok->post_and_get('text_files', true); // keep data as received so html codes will be ok
-$id = $vavok->check($vavok->post_and_get('id'));
-
 $page_editor = new Page();
 
-// Get page id we work with
-if (!empty($vavok->post_and_get('file'))) $page_id = $page_editor->get_page_id("file='{$file}'");
-
-$config_editfiles = 20;
+$file = $vavok->check($vavok->post_and_get('file'));
+$text_files = $vavok->post_and_get('text_files', true); // Keep data as received so html codes will be not filtered
+$id = $vavok->check($vavok->post_and_get('id'));
+if (!empty($vavok->post_and_get('file'))) $page_id = $page_editor->get_page_id("file='{$file}'"); // Get page id we work with
+$config_editfiles = 20; // Files per page
 
 if ($vavok->post_and_get('action') == 'editfile') {
-    // get edit mode
-    if (!empty($_SESSION['edmode'])) {
-        $edmode = $vavok->check($_SESSION['edmode']);
-    } else {
-        $edmode = 'columnist';
-        $_SESSION['edmode'] = $edmode;
-    }
-
     if (!empty($file) && !empty($text_files)) {
         $page_info = $page_editor->select_page($page_id, 'crtdby, published');
 
         if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
-        }
+        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) $vavok->redirect_to('index.php?isset=ap_noaccess');
 
         // bug when magic quotes are on and '\' sign
         // if magic quotes are on we don't want ' to become \'
@@ -274,21 +259,7 @@ if ($vavok->post_and_get('action') == 'pagelang') {
 
 }
 
-// editing mode
-// use visual mode as default
-if (!empty($_SESSION['edmode'])) {
-    $edmode = $vavok->check($_SESSION['edmode']);
-} else {
-    $edmode = 'visual';
-    $_SESSION['edmode'] = $edmode;
-} 
-if (!empty($vavok->post_and_get('edmode'))) {
-    $edmode = $vavok->post_and_get('edmode');
-    $_SESSION['edmode'] = $edmode;
-}
-
-
-if ($edmode == 'visual') {
+if ($page_editor->edit_mode() == 'visual') {
     // text editor
     $loadTextEditor = $page_editor->loadPageEditor();
 
@@ -464,7 +435,7 @@ if ($vavok->post_and_get('action') == 'show') {
 
 if ($vavok->post_and_get('action') == 'edit') {
     // Coder mode for advanced users / coders
-    $edmode_name = $edmode == 'visual' ? 'Visual' : 'Coder';
+    $edmode_name = $page_editor->edit_mode() == 'visual' ? 'Visual' : 'Coder';
 
     // Check if page exists
     if ($page_editor->page_exists($file)) {
@@ -493,9 +464,9 @@ if ($vavok->post_and_get('action') == 'edit') {
 		$select->set('select_id', 'edmode');
 		$select->set('select_name', 'edmode');
 
-		$options = '<option value="' . $edmode . '">' . $edmode_name . '</option>';
+		$options = '<option value="' . $page_editor->edit_mode() . '">' . $edmode_name . '</option>';
 
-		if ($edmode == 'coder') {
+		if ($page_editor->edit_mode() == 'coder') {
 			$options .= '<option value="visual">Visual</option>';
 		} else {
 			$options .= '<option value="coder">Coder</option>';
