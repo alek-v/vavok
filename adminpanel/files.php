@@ -204,7 +204,8 @@ if ($vavok->post_and_get('action') == 'addnew') {
         'pubdate' => '0',
         'tname' => $page_title,
         'headt' => '<meta property="og:title" content="' . $page_title . '" />'. "\r\n" . '<meta property="og:url" content="' . $page_url . '" />' . "\r\n" . '<link rel="canonical" href="' . $page_url . '" />',
-        'type' => $type
+        'type' => $type,
+        'default_img' => ''
         );
 
         // insert data
@@ -461,37 +462,25 @@ if ($vavok->post_and_get('action') == 'show') {
     }
 }
 
-if ($vavok->post_and_get('action') == "edit") {
-    // check if page exists
-    $checkPage = $page_editor->page_exists($file);
+if ($vavok->post_and_get('action') == 'edit') {
+    // Coder mode for advanced users / coders
+    $edmode_name = $edmode == 'visual' ? 'Visual' : 'Coder';
 
-    // coder mode for advanced users / coders
-    if ($edmode == 'coder') {
-        $edmode_name = 'Coder';
-    } 
-    if ($edmode == 'visual') {
-        $edmode_name = 'Visual';
-    } 
-
-    if ($checkPage == true) {
+    // Check if page exists
+    if ($page_editor->page_exists($file)) {
         $page_info = $page_editor->select_page($page_id);
 
         if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) { $vavok->redirect_to("index.php?isset=ap_noaccess"); } 
 
-        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) {
-            header("Location: index.php?isset=ap_noaccess");
-            exit;
-        } 
+        if ($page_info['crtdby'] != $vavok->go('users')->user_id && !$vavok->go('users')->check_permissions('pageedit', 'edit') && (!$vavok->go('users')->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$vavok->go('users')->is_administrator()) $vavok->redirect_to('index.php?isset=ap_noaccess');
 
         $vavok->require_header();
 
         $datamainfile = htmlspecialchars($page_info['content']);
 
-        // show page name
+        // Page name
         $show_up_file = str_replace('.php', '', $file);
-        if (stristr($show_up_file, '!.')) {
-            $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
-        } 
+        if (stristr($show_up_file, '!.')) $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
 
         echo '<p>Edit mode: ' . $edmode_name . '</p>';
 
@@ -519,7 +508,7 @@ if ($vavok->post_and_get('action') == "edit") {
 
         echo '<hr />';
 
-        echo '<p>Updating page ' . $show_up_file . ' | ' . $vavok->sitelink('files.php?action=renamepg&amp;pg=' . $file, 'rename') . '</p>'; // update lang
+        echo '<p>Updating page ' . $show_up_file . ' ' . $vavok->sitelink('files.php?action=renamepg&amp;pg=' . $file, 'rename') . '</p>'; // update lang
 
         $form = new PageGen('forms/form.tpl');
         $form->set('form_method', 'post');
@@ -530,7 +519,7 @@ if ($vavok->post_and_get('action') == "edit") {
         $textarea->set('label_for', 'text_files');
         $textarea->set('textarea_id', 'text_files');
         $textarea->set('textarea_name', 'text_files');
-        $textarea->set('textarea_rows', '3');
+        $textarea->set('textarea_rows', 25);
         $textarea->set('textarea_value', $datamainfile);
 
         $form->set('fields', $textarea->output());
@@ -540,20 +529,22 @@ if ($vavok->post_and_get('action') == "edit") {
         echo '<hr>';
         echo $vavok->sitelink('files.php?action=show&amp;file=' . $file, $show_up_file, '<p>', '</p>');
 
-        echo '<p>' . $vavok->sitelink('pgtitle.php?act=edit&amp;pgfile=' . $file, $vavok->go('localization')->string('pagetitle'));
+        echo '<p>';
+        echo $vavok->sitelink('pgtitle.php?act=edit&amp;pgfile=' . $file, $vavok->go('localization')->string('pagetitle'));
         echo $vavok->sitelink('files.php?action=updpagelang&amp;id=' . $page_id, 'Update page language');
         echo $vavok->sitelink('files.php?action=headtag&amp;file=' . $file, 'Head (meta) tags on this page'); // update lang
-        echo $vavok->sitelink('files.php?action=tags&amp;id=' . $page_id, 'Tags') . '</p>'; // update lang
+        echo $vavok->sitelink('files.php?action=tags&amp;id=' . $page_id, 'Tags'); // update lang
+        echo '</p>';
     } else {
         $vavok->require_header();
-        echo '<p>' . $vavok->go('localization')->string('file') . ' ' . $file . ' ' . $vavok->go('localization')->string('noexist') . '</p>';
+
+        echo $vavok->show_danger($vavok->go('localization')->string('file') . ' ' . $file . ' ' . $vavok->go('localization')->string('noexist'));
     }
-} 
-// edit meta tags
-if ($vavok->post_and_get('action') == "headtag") {
-    if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) {
-        $vavok->redirect_to("index.php?isset=ap_noaccess");
-    }
+}
+
+// Edit meta tags
+if ($vavok->post_and_get('action') == 'headtag') {
+    if (!$vavok->go('users')->check_permissions('pageedit', 'show') && !$vavok->go('users')->is_administrator()) $vavok->redirect_to('index.php?isset=ap_noaccess');
 
     $page_info = $page_editor->select_page($page_id);
 
