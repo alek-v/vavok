@@ -479,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL COMMENT 'user id',
   `type` varchar(255) NOT NULL COMMENT 'token type',
-  `content` text NOT NULL,
+  `content` text DEFAULT NULL,
   `token` varchar(255) NOT NULL,
   `expiration_time` datetime NOT NULL COMMENT 'time until token is valid',
   PRIMARY KEY (`id`)
