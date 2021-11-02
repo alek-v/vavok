@@ -20,8 +20,6 @@ header("Content-type:text/html; charset=utf-8");
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/node_modules/bootstrap/dist/css/bootstrap.min.css" />
-		<script src="<?php echo HOMEDIR; ?>themes/default/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-		<script src="<?php echo HOMEDIR; ?>themes/default/node_modules/jquery/dist/jquery.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/framework.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/framework.min.css'); ?>" />
 		<link rel="stylesheet" type="text/css" href="<?php echo HOMEDIR; ?>themes/default/css/style.min.css?v=<?php echo filemtime(BASEDIR . 'themes/default/css/style.min.css'); ?>" />
 		<?php
