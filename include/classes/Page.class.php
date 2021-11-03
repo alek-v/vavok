@@ -398,7 +398,7 @@ class Page {
 	function loadPageEditor()
 	{
 		// load page editor
-		$pageEditor = file_get_contents(HOMEDIR . 'vendor/tinymce.vavok.php');
+		$pageEditor = file_get_contents(HOMEDIR . 'include/plugins/tinymce.vavok.php');
 
 		// set base dir
 		$pageEditor = str_replace('{@BASEDIR}', BASEDIR, $pageEditor);
