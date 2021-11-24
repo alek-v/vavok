@@ -1,0 +1,2527 @@
+<?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
+
+class AdminpanelModel extends Controller {
+    protected object $db;
+    protected object $user;
+    protected object $localization;
+	protected array  $user_data = [
+		'authenticated' => false,
+		'admin_status' => 'user',
+		'language' => 'english'
+	];
+
+    public function __construct()
+    {
+        $this->db = new Database;
+
+        $this->user = $this->model('User');
+
+        // Check if user is authenticated
+        if ($this->user->is_reg()) $this->user_data['authenticated'] = true;
+        // Admin status
+        if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
+        if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';
+        // Users laguage
+        $this->user_data['language'] = $this->user->get_user_language();
+
+        // Localization
+        $this->localization = $this->model('Localization');
+        $this->localization->load();
+    }
+
+    /**
+     * Index page
+     */
+    public function index()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = '{@website_language[admpanel]}}';
+        $data['content'] = '';
+
+        if (!$this->user->check_permissions('adminpanel', 'show')) $this->redirect_to('../?auth_error');
+
+        if (empty($this->post_and_get('action'))) {
+            /*
+            Moderator access level or bigger
+            */
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat', $this->localization->string('admchat'));
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminlist', $this->localization->string('modlist'));
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', $this->localization->string('notconf'));
+            $data['content'] .= $this->sitelink('pages/userlist', $this->localization->string('userlist') . ' (' . $this->user->regmemcount() . ')');
+        
+            /*
+            Super moderator access level or bigger
+            */
+            if ($this->user->is_moderator(103) || $this->user->is_moderator(105) || $this->user->is_administrator()) {
+                if (file_exists('reports.php')) $data['content'] .= $this->sitelink('reports.php', $this->localization->string('usrcomp'));
+
+                if (file_exists('upload.php')) {
+                    $data['content'] .= $this->sitelink('upload.php', $this->localization->string('upload'));
+                    $data['content'] .= $this->sitelink('uploaded_files.php', $this->localization->string('uplFiles'));
+                    $data['content'] .= $this->sitelink('search_uploads.php', 'Search uploaded files');
+                }
+            }
+
+            /*
+            Head moderator access level or bigger
+            */
+            if ($this->user->is_administrator() || $this->user->is_moderator(103)) {
+                $data['content'] .= '<hr>';
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', '{@website_language[banunban]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/banlist', '{@website_language[banlist]}}');
+            }
+
+            /*
+            Administrator access level or bigger
+            */
+            if ($this->user->is_administrator()) {
+                $data['content'] .= '<hr>';
+
+                if (file_exists('forumadmin.php')) {
+                    $data['content'] .= $this->sitelink('forumadmin.php?action=fcats', $this->localization->string('forumcat'));
+                    $data['content'] .= $this->sitelink('forumadmin.php?action=forums', $this->localization->string('forums'));
+                }
+
+                if (file_exists('gallery/manage_gallery.php')) $data['content'] .= $this->sitelink('gallery/manage_gallery.php', $this->localization->string('gallery'));
+
+                if (file_exists('votes.php')) $data['content'] .= $this->sitelink('votes.php', $this->localization->string('pools'));
+
+                if (file_exists('antiword.php')) $data['content'] .= $this->sitelink('antiword.php', $this->localization->string('badword'));
+
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/statistics', $this->localization->string('statistics'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', $this->localization->string('mngprof'));
+            }
+
+            if (file_exists('news.php') && ($this->user->is_administrator() || $this->user->check_permissions('news', 'show'))) {
+                $data['content'] .= $this->sitelink('news.php', $this->localization->string('sitenews'));
+            }
+
+            if ($this->user->is_administrator() || $this->user->check_permissions('pageedit')) {
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('mngpage'));
+            }
+
+            /*
+            Head administrator access level
+            */
+            if ($this->user->is_administrator(101)) {
+                $data['content'] .= '<hr>';
+
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings', $this->localization->string('syssets'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban', $this->localization->string('ipbanp') . ' (' . $this->counter_string(APPDIR . 'used/ban.dat') . ')');
+
+                if (file_exists('subscribe.php')) $data['content'] .= $this->sitelink('subscribe.php', $this->localization->string('subscriptions'));
+
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/?action=sysmng', $this->localization->string('sysmng'));
+
+                if (file_exists('logfiles.php')) $data['content'] .= $this->sitelink('logfiles.php?action=sysmng', $this->localization->string('logcheck'));
+
+                if (file_exists('email-queue.php')) $data['content'] .= $this->sitelink('email-queue.php', 'Add to email queue');
+            }
+        }
+
+        if ($this->post_and_get('action') == 'clear' && $this->user->is_administrator(101)) {
+            $data['content'] .= '<p>';
+            if (file_exists('delusers.php')) $data['content'] .= $this->sitelink('delusers.php', $this->localization->string('cleanusers'));
+            $data['content'] .= $this->sitelink('./?action=clrmlog', $this->localization->string('cleanmodlog'));
+            $data['content'] .= '</p>';
+        }
+
+        if ($this->post_and_get('action') == 'clrmlog' && $this->user->is_administrator(101)) {
+            $this->db->query("DELETE FROM mlog");
+        
+            $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt="" /> ' . $this->localization->string('mlogcleaned') . '</p>';
+        } 
+ 
+        if ($this->post_and_get('action') == "sysmng" && $this->user->is_administrator(101)) {
+            $data['content'] .= '<p>';
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck', $this->localization->string('chksystem'));
+            $data['content'] .= $this->sitelink('./?action=clear', $this->localization->string('cleansys'));
+        
+            if (file_exists('backup.php')) $data['content'] .= $this->sitelink('backup.php', $this->localization->string('backup'));
+        
+            $data['content'] .= $this->sitelink('serverbenchmark.php', 'Server benchmark'); // update lang
+            $data['content'] .= '</p>';
+        }
+
+        if ($this->post_and_get('action') == "opttbl" && $this->user->is_administrator(101)) {
+            $alltables = mysqli_query("SHOW TABLES");
+
+            while ($table = mysqli_fetch_assoc($alltables)) {
+                foreach ($table as $db => $tablename) {
+                    $sql = "OPTIMIZE TABLE `" . $tablename . "`";
+                    $this->db->query($sql);
+                }
+            }
+
+            $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
+        }
+
+        if (!empty($this->post_and_get('action'))) $data['content'] .= $this->sitelink('./', $this->localization->string('admpanel'), '<p>', '</p>');
+
+        $data['content'] .= $this->homelink('<p>', '</p>');
+
+        // Pass data to the view
+        return $data;
+    }
+
+    /**
+     * Settings
+     */
+    public function settings()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+
+        $data['tname'] = '{@website_language[settings]}}';
+        $data['content'] = '';
+
+        if (!$this->user->is_administrator(101)) $this->redirect_to('../pages/error.php?error=auth');
+
+        $site_configuration = new Config();
+        
+        /**
+         * Мain settings update
+         */
+        if ($this->post_and_get('action') == 'editone') {
+            $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
+        
+            $values = array(
+                $this->post_and_get('conf_set2'),
+                $this->post_and_get('conf_set8'),
+                $this->post_and_get('conf_set9'),
+                $this->post_and_get('conf_set10'),
+                $this->post_and_get('conf_set11'),
+                $this->post_and_get('conf_set14'),
+                $this->post_and_get('conf_set47'),
+                (int)$this->post_and_get('conf_set61'),
+                (int)$this->post_and_get('conf_set62'),
+                (int)$this->post_and_get('conf_set63')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+        
+            $this->redirect_to(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+        }
+        
+        if ($this->post_and_get('action') == 'edittwo') {
+            $fields = array(
+                'showtime',
+                'pageGenTime',
+                'showOnline',
+                'cookieConsent',
+                'showCounter'
+            );
+        
+            $values = array(
+                (int)$this->post_and_get('conf_set4'),
+                (int)$this->post_and_get('conf_set5'),
+                (int)$this->post_and_get('conf_set7'),
+                (int)$this->post_and_get('conf_set32'), // cookie consent
+                (int)$this->post_and_get('conf_set74')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+        
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+        } 
+        
+        if ($this->post_and_get('action') == 'editthree') {
+            $fields = array(
+                'bookGuestAdd',
+                'maxPostChat',
+                'maxPostNews',
+                'subMailPacket'
+            );
+        
+            $values = array(
+                (int)$this->post_and_get('conf_set20'),
+                (int)$this->post_and_get('conf_set22'),
+                (int)$this->post_and_get('conf_set24'),
+                (int)$this->post_and_get('conf_set56')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+        
+        }
+        
+        if ($this->post_and_get('action') == 'editfour') {
+            // Update main config
+            $fields = array(
+                'photoFileSize',
+                'maxPhotoPixels',
+                'forumAccess',
+                'forumChLang'
+            );
+        
+            $values = array(
+                (int)$this->post_and_get('conf_set38') * 1024,
+                (int)$this->post_and_get('conf_set39'),
+                (int)$this->post_and_get('conf_set49'),
+                (int)$this->post_and_get('conf_set68')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+        
+            // update gallery settings
+            $gallery_file = $this->get_data_file('dataconfig/gallery.dat');
+            if (empty($gallery_file)) $gallery_file = '||||||||||';
+            $gallery_data = explode("|", $gallery_file[0]);
+        
+            $gallery_data[0] = (int)$this->post_and_get('gallery_set0'); // users can upload
+            $gallery_data[8] = (int)$this->post_and_get('gallery_set8'); // photos per page
+            $gallery_data[5] = (int)$this->post_and_get('screen_width');
+            $gallery_data[6] = (int)$this->post_and_get('screen_height');
+            $gallery_data[7] = (int)$this->post_and_get('media_buttons');
+        
+            $gallery_text = '';
+            for ($u = 0; $u < 10; $u++) {
+                $gallery_text .= $gallery_data[$u] . '|';
+            }
+        
+            if (isset($gallery_text)) {
+                $this->write_data_file('dataconfig/gallery.dat', $gallery_text);
+            }
+        
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+        }
+        
+        if ($this->post_and_get('action') == 'editfive') {
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine(array('pvtLimit'), array((int)$this->post_and_get('conf_set30'))));
+        
+            $this->redirect_to(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+        }
+        
+        if ($this->post_and_get('action') == 'editseven') {
+            // url of custom pages
+            $htaccess = file_get_contents('../.htaccess'); // load .htaccess file
+        
+            // replace custom link
+            $chars = strlen('# website custom pages');
+            $start = strpos($htaccess, '# website custom pages') + $chars;
+            $end = strpos($htaccess, '# end of website custom pages');
+        
+            $replace = '';
+            for ($i=$start; $i < $end; $i++) {
+                $replace .= $htaccess[$i];
+            }
+        
+            // do replacement
+            if (!empty($this->post_and_get('conf_set28'))) {
+                $replacement = "\r\n" . 'RewriteRule ^' . str_replace(' ', '', $this->post_and_get('conf_set28')) . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
+            } else { $replacement = "\r\n# custom_link - don't remove\r\n"; }
+        
+            $new_htaccess = str_replace($replace, $replacement, $htaccess);
+        
+            // save changes
+            file_put_contents('../.htaccess', $new_htaccess);
+        
+            $fields = array(
+                'pgFbComm',
+                'customPages',
+                'refererLog',
+                'showRefPage'
+            );
+        
+            $values = array(
+                $this->post_and_get('conf_set6'),
+                $this->post_and_get('conf_set28'),
+                (int)$this->post_and_get('conf_set51'),
+                $this->post_and_get('conf_set70')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+            $this->redirect_to(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+        }
+
+        if ($this->post_and_get('action') == 'editeight') {
+            $fields = array(
+                'maxLogData',
+                'maxBanTime'
+            );
+
+            $values = array(
+                (int)$this->post_and_get('conf_set58'),
+                round($this->post_and_get('conf_set76') * 1440)
+            );
+
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+        
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+        }
+
+        /**
+         * Site security options
+         */
+        if ($this->post_and_get('action') == 'editsecurity') {
+            $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
+        
+            $values = array(
+                $this->post_and_get('conf_set1'),
+                $this->post_and_get('conf_set3'),
+                $this->post_and_get('conf_set21'),
+                (int)$this->post_and_get('conf_set29'),
+                $this->post_and_get('recaptcha_sitekey'),
+                $this->post_and_get('recaptcha_secretkey')
+            );
+        
+            /**
+             * Update settings
+             */
+            $site_configuration->update_config_data(array_combine($fields, $values));
+        
+            // update .htaccess file
+            // dont force https
+        $htaccess_tp_nos = '# force https protocol
+        #RewriteCond %{HTTPS} !=on
+        #RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+        
+                // force https
+        $htaccess_tp_s = '# force https protocol
+        RewriteCond %{HTTPS} !=on
+        RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
+        
+            if ($this->get_configuration('transferProtocol') == 'HTTPS' && ($this->post_and_get('conf_set21') == 'auto' || $this->post_and_get('conf_set21') == 'HTTP')) {
+                // Disable forcing HTTPS in .htaccess
+        
+                $file = file_get_contents('../.htaccess');
+        
+                $start = strpos($file, '# force https protocol');
+                $strlen = mb_strlen($htaccess_tp_s); // find string length
+        
+                $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
+        
+                file_put_contents('../.htaccess', $file);
+            } elseif ($this->post_and_get('conf_set21') == 'HTTPS' && ($this->get_configuration('transferProtocol') == 'HTTP' || $this->get_configuration('transferProtocol') == 'auto')) {
+                // Enable forcing HTTPS in .htaccess
+                $file = file_get_contents('../.htaccess');
+        
+                $start = strpos($file, '# force https protocol');
+                $strlen = mb_strlen($htaccess_tp_nos); // find string length
+        
+                $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
+        
+                file_put_contents('../.htaccess', $file);
+            }
+        
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?action=security&isset=mp_yesset");
+        }
+
+        if (empty($this->post_and_get('action'))) {
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setone', $this->localization->string('mainset'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=settwo', $this->localization->string('shwinfo'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', $this->localization->string('bookchatnews'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setfour', $this->localization->string('forumgallery'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setseven', $this->localization->string('pagemanage'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=security', $this->localization->string('security'));
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=seteight', $this->localization->string('other'));
+        }
+
+        // main settings
+        if ($this->post_and_get('action') == 'setone') {
+            $data['content'] .=  '<h1>' . $this->localization->string('mainset') . '</h1>';
+
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editone');
+        
+            $options = '<option value="' . $this->get_configuration('siteDefaultLang') . '">' . $this->get_configuration('siteDefaultLang') . '</option>';
+            $dir = opendir(APPDIR . 'include/lang');
+            while ($file = readdir($dir)) {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->get_configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+                    $options .= '<option value="' . $file . '">' . $file . '</option>';
+                }
+            }
+        
+            $select_lang = $this->model('ParsePage');
+            $select_lang->load('forms/select');
+            $select_lang->set('label_for', 'conf_set47');
+            $select_lang->set('label_value', $this->localization->string('language'));
+            $select_lang->set('select_id', 'conf_set47');
+            $select_lang->set('select_name', 'conf_set47');
+            $select_lang->set('options', $options);
+
+            $config_themes_show = str_replace('web_', '', $this->get_configuration('webtheme'));
+            $config_themes_show = ucfirst($config_themes_show);
+
+            $options = '<option value="' . $this->get_configuration('webtheme') . '">' . $config_themes_show . '</option>';
+            $dir = opendir (PUBLICDIR . 'themes');
+            while ($file = readdir ($dir)) {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->get_configuration('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
+                    $nfile = str_replace("web_", "", $file);
+                    $nfile = ucfirst($nfile);
+                    $options .= '<option value="' . $file . '">' . $nfile . '</option>';
+                }
+            }
+
+            $select_theme = $this->model('ParsePage');
+            $select_theme->load('forms/select');
+            $select_theme->set('label_for', 'conf_set2');
+            $select_theme->set('label_value', $this->localization->string('webskin'));
+            $select_theme->set('select_id', 'conf_set2');
+            $select_theme->set('select_name', 'conf_set2');
+            $select_theme->set('options', $options);
+        
+            // this will be admin username or system username
+            $input8 = $this->model('ParsePage');
+            $input8->load('forms/input');
+            $input8->set('label_for', 'conf_set8');
+            $input8->set('label_value', $this->localization->string('adminusername'));
+            $input8->set('input_id', 'conf_set8');
+            $input8->set('input_name', 'conf_set8');
+            $input8->set('input_value', $this->get_configuration('adminNick'));
+            $input8->set('input_maxlength', 20);
+        
+            $input9 = $this->model('ParsePage');
+            $input9->load('forms/input');
+            $input9->set('label_for', 'conf_set9');
+            $input9->set('label_value', $this->localization->string('adminemail'));
+            $input9->set('input_id', 'conf_set9');
+            $input9->set('input_name', 'conf_set9');
+            $input9->set('input_value', $this->get_configuration('adminEmail'));
+            $input9->set('input_maxlength', 50);
+        
+            $input10 = $this->model('ParsePage');
+            $input10->load('forms/input');
+            $input10->set('label_for', 'conf_set10');
+            $input10->set('label_value', $this->localization->string('timezone'));
+            $input10->set('input_id', 'conf_set10');
+            $input10->set('input_name', 'conf_set10');
+            $input10->set('input_value', $this->get_configuration('timeZone'));
+            $input10->set('input_maxlength', 3);
+        
+            $input11 = $this->model('ParsePage');
+            $input11->load('forms/input');
+            $input11->set('label_for', 'conf_set11');
+            $input11->set('label_value', $this->localization->string('pagetitle'));
+            $input11->set('input_id', 'conf_set11');
+            $input11->set('input_name', 'conf_set11');
+            $input11->set('input_value', $this->get_configuration('title'));
+            $input11->set('input_maxlength', 100);
+        
+            $input14 = $this->model('ParsePage');
+            $input14->load('forms/input');
+            $input14->set('label_for', 'conf_set14');
+            $input14->set('label_value', $this->localization->string('siteurl'));
+            $input14->set('input_id', 'conf_set14');
+            $input14->set('input_name', 'conf_set14');
+            $input14->set('input_value', $this->get_configuration('homeUrl'));
+            $input14->set('input_maxlength', 50);
+        
+            // Registration opened or closed
+            $input_radio61_yes = $this->model('ParsePage');
+            $input_radio61_yes->load('forms/radio_inline');
+            $input_radio61_yes->set('label_for', 'conf_set61');
+            $input_radio61_yes->set('label_value', $this->localization->string('yes'));
+            $input_radio61_yes->set('input_id', 'conf_set61');
+            $input_radio61_yes->set('input_name', 'conf_set61');
+            $input_radio61_yes->set('input_value', 1);
+            if ($this->get_configuration('openReg') == 1) {
+                $input_radio61_yes->set('input_status', 'checked');
+            }
+        
+            $input_radio61_no = $this->model('ParsePage');
+            $input_radio61_no->load('forms/radio_inline');
+            $input_radio61_no->set('label_for', 'conf_set61');
+            $input_radio61_no->set('label_value', $this->localization->string('no'));
+            $input_radio61_no->set('input_id', 'conf_set61');
+            $input_radio61_no->set('input_name', 'conf_set61');
+            $input_radio61_no->set('input_value', 0);
+            if ($this->get_configuration('openReg') == 0) {
+                $input_radio61_no->set('input_status', 'checked');
+            }
+        
+            $radio_group_one = $this->model('ParsePage');
+            $radio_group_one->load('forms/radio_group');
+            $radio_group_one->set('description', $this->localization->string('openreg'));
+            $radio_group_one->set('radio_group', $radio_group_one->merge(array($input_radio61_yes, $input_radio61_no)));
+        
+            // Does user need to confirm registration
+            $input_radio62_yes = $this->model('ParsePage');
+            $input_radio62_yes->load('forms/radio_inline');
+            $input_radio62_yes->set('label_for', 'conf_set62');
+            $input_radio62_yes->set('label_value', $this->localization->string('yes'));
+            $input_radio62_yes->set('input_id', 'conf_set62');
+            $input_radio62_yes->set('input_name', 'conf_set62');
+            $input_radio62_yes->set('input_value', 1);
+            if ($this->get_configuration('regConfirm') == 1) {
+                $input_radio62_yes->set('input_status', 'checked');
+            }
+        
+            $input_radio62_no = $this->model('ParsePage');
+            $input_radio62_no->load('forms/radio_inline');
+            $input_radio62_no->set('label_for', 'conf_set62');
+            $input_radio62_no->set('label_value', $this->localization->string('no'));
+            $input_radio62_no->set('input_id', 'conf_set62');
+            $input_radio62_no->set('input_name', 'conf_set62');
+            $input_radio62_no->set('input_value', 0);
+            if ($this->get_configuration('regConfirm') == 0) {
+                $input_radio62_no->set('input_status', 'checked');
+            }
+        
+            $radio_group_two = $this->model('ParsePage');
+            $radio_group_two->load('forms/radio_group');
+            $radio_group_two->set('description', $this->localization->string('confregs'));
+            $radio_group_two->set('radio_group', $radio_group_two->merge(array($input_radio62_yes, $input_radio62_no)));
+        
+            // Maintenance mode
+            $input_radio63_yes = $this->model('ParsePage');
+            $input_radio63_yes->load('forms/radio_inline');
+            $input_radio63_yes->set('label_for', 'conf_set63');
+            $input_radio63_yes->set('label_value', $this->localization->string('yes'));
+            $input_radio63_yes->set('input_id', 'conf_set63');
+            $input_radio63_yes->set('input_name', 'conf_set63');
+            $input_radio63_yes->set('input_value', 1);
+            if ($this->get_configuration('siteOff') == 1) {
+                $input_radio63_yes->set('input_status', 'checked');
+            }
+        
+            $input_radio63_no = $this->model('ParsePage');
+            $input_radio63_no->load('forms/radio_inline');
+            $input_radio63_no->set('label_for', 'conf_set63');
+            $input_radio63_no->set('label_value', $this->localization->string('no'));
+            $input_radio63_no->set('input_id', 'conf_set63');
+            $input_radio63_no->set('input_name', 'conf_set63');
+            $input_radio63_no->set('input_value', 0);
+            if ($this->get_configuration('siteOff') == 0) {
+                $input_radio63_no->set('input_status', 'checked');
+            }
+        
+            $radio_group_three = $this->model('ParsePage');
+            $radio_group_three->load('forms/radio_group');
+            $radio_group_three->set('description', 'Maintenance');
+            $radio_group_three->set('radio_group', $radio_group_three->merge(array($input_radio63_yes, $input_radio63_no)));
+        
+            $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $radio_group_one, $radio_group_two, $radio_group_three)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        if ($this->post_and_get('action') == "settwo") {
+            $data['content'] .= '<h1>' . $this->localization->string('shwinfo') . '</h1>';
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=edittwo');
+        
+            /**
+             * Show clock
+             */
+            $_4_yes = $this->model('ParsePage');
+            $_4_yes->load('forms/radio_inline');
+            $_4_yes->set('label_for', 'conf_set4');
+            $_4_yes->set('label_value', $this->localization->string('yes'));
+            $_4_yes->set('input_id', 'conf_set4');
+            $_4_yes->set('input_name', 'conf_set4');
+            $_4_yes->set('input_value', 1);
+            if ($this->get_configuration('showtime') == 1) {
+                $_4_yes->set('input_status', 'checked');
+            }
+        
+            $_4_no = $this->model('ParsePage');
+            $_4_no->load('forms/radio_inline');
+            $_4_no->set('label_for', 'conf_set4');
+            $_4_no->set('label_value',  $this->localization->string('no'));
+            $_4_no->set('input_id', 'conf_set4');
+            $_4_no->set('input_name', 'conf_set4');
+            $_4_no->set('input_value', 0);
+            if ($this->get_configuration('showtime') == 0) {
+                $_4_no->set('input_status', 'checked');
+            }
+        
+            $show_clock = $this->model('ParsePage');
+            $show_clock->load('forms/radio_group');
+            $show_clock->set('description', $this->localization->string('showclock'));
+            $show_clock->set('radio_group', $show_clock->merge(array($_4_yes, $_4_no)));
+        
+            /**
+             * Show page generatioin time
+             */
+            $_5_yes = $this->model('ParsePage');
+            $_5_yes->load('forms/radio_inline');
+            $_5_yes->set('label_for', 'conf_set5');
+            $_5_yes->set('label_value', $this->localization->string('yes'));
+            $_5_yes->set('input_id', 'conf_set5');
+            $_5_yes->set('input_name', 'conf_set5');
+            $_5_yes->set('input_value', 1);
+            if ($this->get_configuration('pageGenTime') == 1) {
+                $_5_yes->set('input_status', 'checked');
+            }
+        
+            $_5_no = $this->model('ParsePage');
+            $_5_no->load('forms/radio_inline');
+            $_5_no->set('label_for', 'conf_set5');
+            $_5_no->set('label_value', $this->localization->string('no'));
+            $_5_no->set('input_id', 'conf_set5');
+            $_5_no->set('input_name', 'conf_set5');
+            $_5_no->set('input_value', 0);
+            if ($this->get_configuration('pageGenTime') == 0) {
+                $_5_no->set('input_status', 'checked');
+            }
+        
+            $page_gen = $this->model('ParsePage');
+            $page_gen->load('forms/radio_group');
+            $page_gen->set('description', $this->localization->string('pagegen'));
+            $page_gen->set('radio_group', $page_gen->merge(array($_5_yes, $_5_no)));
+        
+            /**
+             * Show online
+             */
+            $_7_yes = $this->model('ParsePage');
+            $_7_yes->load('forms/radio_inline');
+            $_7_yes->set('label_for', 'conf_set7');
+            $_7_yes->set('label_value', $this->localization->string('yes'));
+            $_7_yes->set('input_id', 'conf_set7');
+            $_7_yes->set('input_name', 'conf_set7');
+            $_7_yes->set('input_value', 1);
+            if ($this->get_configuration('showOnline') == 1) {
+                $_7_yes->set('input_status', 'checked');
+            }
+        
+            $_7_no = $this->model('ParsePage');
+            $_7_no->load('forms/radio_inline');
+            $_7_no->set('label_for', 'conf_set7');
+            $_7_no->set('label_value',  $this->localization->string('no'));
+            $_7_no->set('input_id', 'conf_set7');
+            $_7_no->set('input_name', 'conf_set7');
+            $_7_no->set('input_value', 0);
+            if ($this->get_configuration('showOnline') == 0) {
+                $_7_no->set('input_status', 'checked');
+            }
+        
+            $show_online = $this->model('ParsePage');
+            $show_online->load('forms/radio_group');
+            $show_online->set('description', $this->localization->string('showonline'));
+            $show_online->set('radio_group', $show_online->merge(array($_7_yes, $_7_no)));
+        
+            /**
+             * Show cookie consent
+             */
+            $_32_yes = $this->model('ParsePage');
+            $_32_yes->load('forms/radio_inline');
+            $_32_yes->set('label_for', 'conf_set32');
+            $_32_yes->set('label_value', $this->localization->string('yes'));
+            $_32_yes->set('input_id', 'conf_set32');
+            $_32_yes->set('input_name', 'conf_set32');
+            $_32_yes->set('input_value', 1);
+            if ($this->get_configuration('cookieConsent') == 1) {
+                $_32_yes->set('input_status', 'checked');
+            }
+        
+            $_32_no = $this->model('ParsePage');
+            $_32_no->load('forms/radio_inline');
+            $_32_no->set('label_for', 'conf_set32');
+            $_32_no->set('label_value', $this->localization->string('no'));
+            $_32_no->set('input_id', 'conf_set32');
+            $_32_no->set('input_name', 'conf_set32');
+            $_32_no->set('input_value', 0);
+            if ($this->get_configuration('cookieConsent') == 0) {
+                $_32_no->set('input_status', 'checked');
+            }
+        
+            $cookie_consent = $this->model('ParsePage');
+            $cookie_consent->load('forms/radio_group');
+            $cookie_consent->set('description', 'Cookie consent');
+            $cookie_consent->set('radio_group', $cookie_consent->merge(array($_32_yes, $_32_no)));
+        
+            /**
+             * Show counter
+             */
+            $incounters = array(6 => "" . $this->localization->string('dontshow') . "", 1 => "" . $this->localization->string('vsttotalvst') . "", 2 => "" . $this->localization->string('clicktotalclick') . "", 3 => "" . $this->localization->string('clickvisits') . "", 4 => "" . $this->localization->string('totclicktotvst'));
+        
+            $options = '<option value="' . $this->get_configuration('showCounter') . '">' . $incounters[$this->get_configuration('showCounter')] . '</option>';
+            foreach($incounters as $k => $v) {
+                if ($k != $this->get_configuration('showCounter')) {
+                    $options .= '<option value="' . $k . '">' . $v . '</option>';
+                }
+            }
+        
+            $show_counter = $this->model('ParsePage');
+            $show_counter->load('forms/select');
+            $show_counter->set('label_for', 'conf_set74');
+            $show_counter->set('label_value', $this->localization->string('countlook'));
+            $show_counter->set('select_id', 'conf_set74');
+            $show_counter->set('select_name', 'conf_set74');
+            $show_counter->set('options', $options);
+        
+            $form->set('fields', $form->merge(array($show_clock, $page_gen, $show_online, $cookie_consent, $show_counter)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        if ($this->post_and_get('action') == "setthree") {
+            $data['content'] .= '<h1>' . $this->localization->string('gbnewschatset') . '</h1>';
+
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editthree');
+
+            /**
+             * Allow guests to write in guestbook
+             */
+            $_20_yes = $this->model('ParsePage');
+            $_20_yes->load('forms/radio_inline');
+            $_20_yes->set('label_for', 'conf_set20');
+            $_20_yes->set('label_value', $this->localization->string('yes'));
+            $_20_yes->set('input_id', 'conf_set20');
+            $_20_yes->set('input_name', 'conf_set20');
+            $_20_yes->set('input_value', 1);
+            if ($this->get_configuration('bookGuestAdd') == 1) {
+                $_20_yes->set('input_status', 'checked');
+            }
+
+            $_20_no = $this->model('ParsePage');
+            $_20_no->load('forms/radio_inline');
+            $_20_no->set('label_for', 'conf_set20');
+            $_20_no->set('label_value', $this->localization->string('no'));
+            $_20_no->set('input_id', 'conf_set20');
+            $_20_no->set('input_name', 'conf_set20');
+            $_20_no->set('input_value', 0);
+            if ($this->get_configuration('bookGuestAdd') == 0) {
+                $_20_no->set('input_status', 'checked');
+            }
+
+            $gb_write = $this->model('ParsePage');
+            $gb_write->load('forms/radio_group');
+            $gb_write->set('description', $this->localization->string('allowguestingb'));
+            $gb_write->set('radio_group', $gb_write->merge(array($_20_yes, $_20_no)));
+        
+            /**
+             * Max chat posts
+             */
+            $input22 = $this->model('ParsePage');
+            $input22->load('forms/input');
+            $input22->set('label_for', 'conf_set22');
+            $input22->set('label_value', $this->localization->string('maxinchat'));
+            $input22->set('input_id', 'conf_set22');
+            $input22->set('input_name', 'conf_set22');
+            $input22->set('input_value', $this->get_configuration('maxPostChat'));
+            $input22->set('input_maxlength', 4);
+        
+            /**
+             * Max news posts
+             */
+            $input24 = $this->model('ParsePage');
+            $input24->load('forms/input');
+            $input24->set('label_for', 'conf_set24');
+            $input24->set('label_value', $this->localization->string('maxnews'));
+            $input24->set('input_id', 'conf_set24');
+            $input24->set('input_name', 'conf_set24');
+            $input24->set('input_value', $this->get_configuration('maxPostNews'));
+            $input24->set('input_maxlength', 5);
+        
+            /**
+             * Mails in one package
+             */
+            $input56 = $this->model('ParsePage');
+            $input56->load('forms/input');
+            $input56->set('label_for', 'conf_set56');
+            $input56->set('label_value', $this->localization->string('onepassmail'));
+            $input56->set('input_id', 'conf_set56');
+            $input56->set('input_name', 'conf_set56');
+            $input56->set('input_value', $this->get_configuration('subMailPacket'));
+            $input56->set('input_maxlength', 3);
+        
+            $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        if ($this->post_and_get('action') == "setfour") {
+        
+            $kbs = $this->get_configuration('photoFileSize') / 1024;
+        
+            // forum settings
+            $data['content'] .= '<h1>' . $this->localization->string('forumandgalset') . '</h1>';
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editfour');
+        
+            /**
+             * Allow access to forum
+             */
+            $_49_yes = $this->model('ParsePage');
+            $_49_yes->load('forms/radio_inline');
+            $_49_yes->set('label_for', 'conf_set49');
+            $_49_yes->set('label_value', $this->localization->string('yes'));
+            $_49_yes->set('input_id', 'conf_set49');
+            $_49_yes->set('input_name', 'conf_set49');
+            $_49_yes->set('input_value', 1);
+            if ($this->get_configuration('forumAccess') == 1) {
+                $_49_yes->set('input_status', 'checked');
+            }
+        
+            $_49_no = $this->model('ParsePage');
+            $_49_no->load('forms/radio_inline');
+            $_49_no->set('label_for', 'conf_set49');
+            $_49_no->set('label_value', $this->localization->string('no'));
+            $_49_no->set('input_id', 'conf_set49');
+            $_49_no->set('input_name', 'conf_set49');
+            $_49_no->set('input_value', 0);
+            if ($this->get_configuration('forumAccess') == 0) {
+                $_49_no->set('input_status', 'checked');
+            }
+        
+            $forum_access = $this->model('ParsePage');
+            $forum_access->load('forms/radio_group');
+            $forum_access->set('description', $this->localization->string('forumon'));
+            $forum_access->set('radio_group', $forum_access->merge(array($_49_yes, $_49_no)));
+        
+            /**
+             * Forum language dropdown
+             */
+            $_68_yes = $this->model('ParsePage');
+            $_68_yes->load('forms/radio_inline');
+            $_68_yes->set('label_for', 'conf_set68');
+            $_68_yes->set('label_value', $this->localization->string('yes'));
+            $_68_yes->set('input_id', 'conf_set68');
+            $_68_yes->set('input_name', 'conf_set68');
+            $_68_yes->set('input_value', 1);
+            if ($this->get_configuration('forumChLang') == 1) {
+                $_68_yes->set('input_status', 'checked');
+            }
+        
+            $_68_no = $this->model('ParsePage');
+            $_68_no->load('forms/radio_inline');
+            $_68_no->set('label_for', 'conf_set68');
+            $_68_no->set('label_value', $this->localization->string('no'));
+            $_68_no->set('input_id', 'conf_set68');
+            $_68_no->set('input_name', 'conf_set68');
+            $_68_no->set('input_value', 0);
+            if ($this->get_configuration('forumChLang') == 0) {
+                $_68_no->set('input_status', 'checked');
+            }
+        
+            $forum_dropdown = $this->model('ParsePage');
+            $forum_dropdown->load('forms/radio_group');
+            $forum_dropdown->set('description', 'Show language dropdown');
+            $forum_dropdown->set('radio_group', $forum_dropdown->merge(array($_68_yes, $_68_no)));
+        
+            /**
+             * Gallery settings
+             */
+            $gallery_config = $this->get_data_file('dataconfig/gallery.dat');
+            if (!empty($gallery_config)) {
+                $gallery_data = explode("|", $gallery_config[0]);
+            } else {
+                $gallery_data = explode("|", '|||||||||||||');
+            }
+        
+            /**
+             * Gallery photos per page
+             */
+            $gallery_set8 = $this->model('ParsePage');
+            $gallery_set8->load('forms/input');
+            $gallery_set8->set('label_for', 'gallery_set8');
+            $gallery_set8->set('label_value', $this->localization->string('photosperpg'));
+            $gallery_set8->set('input_id', 'gallery_set8');
+            $gallery_set8->set('input_name', 'gallery_set8');
+            $gallery_set8->set('input_value', $gallery_data[8]);
+            $gallery_set8->set('input_maxlength', 2);
+        
+            /**
+             * Gallery max screen width
+             */
+            $screen_width = $this->model('ParsePage');
+            $screen_width->load('forms/input');
+            $screen_width->set('label_for', 'screen_width');
+            $screen_width->set('label_value', 'Maximum width in gallery');
+            $screen_width->set('input_id', 'screen_width');
+            $screen_width->set('input_name', 'screen_width');
+            $screen_width->set('input_value', $gallery_data[5]);
+            $screen_width->set('input_maxlength', 5);
+        
+            /**
+             * Gallery max screen height
+             */
+            $screen_height = $this->model('ParsePage');
+            $screen_height->load('forms/input');
+            $screen_height->set('label_for', 'screen_height');
+            $screen_height->set('label_value', 'Maximum height in gallery');
+            $screen_height->set('input_id', 'screen_height');
+            $screen_height->set('input_name', 'screen_height');
+            $screen_height->set('input_value', $gallery_data[6]);
+            $screen_height->set('input_maxlength', 5);
+        
+            /**
+             * Gallery social network buttons
+             */
+            $media_buttons_yes = $this->model('ParsePage');
+            $media_buttons_yes->load('forms/radio_inline');
+            $media_buttons_yes->set('label_for', 'media_buttons');
+            $media_buttons_yes->set('label_value', $this->localization->string('yes'));
+            $media_buttons_yes->set('input_id', 'media_buttons');
+            $media_buttons_yes->set('input_name', 'media_buttons');
+            $media_buttons_yes->set('input_value', 1);
+            if ($gallery_data[7] == 1) {
+                $media_buttons_yes->set('input_status', 'checked');
+            }
+        
+            $media_buttons_no = $this->model('ParsePage');
+            $media_buttons_no->load('forms/radio_inline');
+            $media_buttons_no->set('label_for', 'media_buttons');
+            $media_buttons_no->set('label_value', $this->localization->string('no'));
+            $media_buttons_no->set('input_id', 'media_buttons');
+            $media_buttons_no->set('input_name', 'media_buttons');
+            $media_buttons_no->set('input_value', 0);
+            if ($gallery_data[7] == 0) {
+                $media_buttons_no->set('input_status', 'checked');
+            }
+        
+            $sn_buttons = $this->model('ParsePage');
+            $sn_buttons->load('forms/radio_group');
+            $sn_buttons->set('description', 'Social media like buttons in gallery');
+            $sn_buttons->set('radio_group', $sn_buttons->merge(array($media_buttons_yes, $media_buttons_no)));
+        
+            /**
+             * Gallery max upload size
+             */
+            $conf_set38 = $this->model('ParsePage');
+            $conf_set38->load('forms/input');
+            $conf_set38->set('label_for', 'conf_set38');
+            $conf_set38->set('label_value', $this->localization->string('photomaxkb'));
+            $conf_set38->set('input_id', 'conf_set38');
+            $conf_set38->set('input_name', 'conf_set38');
+            $conf_set38->set('input_value', (int)$kbs);
+            $conf_set38->set('input_maxlength', 8);
+        
+            /**
+             * Gallery max upload pixel size
+             */
+            $conf_set39 = $this->model('ParsePage');
+            $conf_set39->load('forms/input');
+            $conf_set39->set('label_for', 'conf_set39');
+            $conf_set39->set('label_value', $this->localization->string('photopx'));
+            $conf_set39->set('input_id', 'conf_set39');
+            $conf_set39->set('input_name', 'conf_set39');
+            $conf_set39->set('input_value', (int)$this->get_configuration('maxPhotoPixels'));
+            $conf_set39->set('input_maxlength', 4);
+        
+            /**
+             * Gallery uploads
+             */
+            $gallery_set0_yes = $this->model('ParsePage');
+            $gallery_set0_yes->load('forms/radio_inline');
+            $gallery_set0_yes->set('label_for', 'gallery_set0');
+            $gallery_set0_yes->set('label_value', $this->localization->string('yes'));
+            $gallery_set0_yes->set('input_id', 'gallery_set0');
+            $gallery_set0_yes->set('input_name', 'gallery_set0');
+            $gallery_set0_yes->set('input_value', 1);
+            if ($gallery_data[0] == 1) {
+                $gallery_set0_yes->set('input_status', 'checked');
+            }
+        
+            $gallery_set0_no = $this->model('ParsePage');
+            $gallery_set0_no->load('forms/radio_inline');
+            $gallery_set0_no->set('label_for', 'gallery_set0');
+            $gallery_set0_no->set('label_value', $this->localization->string('no'));
+            $gallery_set0_no->set('input_id', 'gallery_set0');
+            $gallery_set0_no->set('input_name', 'gallery_set0');
+            $gallery_set0_no->set('input_value', 0);
+            if ($gallery_data[0] == 0) {
+                $gallery_set0_no->set('input_status', 'checked');
+            }
+        
+            $gallery_uploads = $this->model('ParsePage');
+            $gallery_uploads->load('forms/radio_group');
+            $gallery_uploads->set('description', 'Users can upload');
+            $gallery_uploads->set('radio_group', $gallery_uploads->merge(array($gallery_set0_yes, $gallery_set0_no)));
+        
+            $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        if ($this->post_and_get('action') == "setseven") {
+            $data['content'] .= '<h1>' . $this->localization->string('pagessets') . '</h1>';
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editseven');
+        
+            /**
+             * Custom pages
+             */
+            $conf_set28 = $this->model('ParsePage');
+            $conf_set28->load('forms/input');
+            $conf_set28->set('label_for', 'custom-pages');
+            $conf_set28->set('label_value', $this->localization->string('customPageUrl'));
+            $conf_set28->set('input_id', 'custom-pages');
+            $conf_set28->set('input_name', 'conf_set28');
+            $conf_set28->set('input_value', $this->get_configuration('customPages'));
+        
+            /**
+             * Max referer data
+             */
+            $conf_set51 = $this->model('ParsePage');
+            $conf_set51->load('forms/input');
+            $conf_set51->set('label_for', 'referals');
+            $conf_set51->set('label_value', $this->localization->string('maxrefererdata'));
+            $conf_set51->set('input_id', 'referals');
+            $conf_set51->set('input_name', 'conf_set51');
+            $conf_set51->set('input_value', $this->get_configuration('refererLog'));
+            $conf_set51->set('input_maxlength', 3);
+        
+            /**
+             * Show referal page
+             */
+            $conf_set70yes = $this->model('ParsePage');
+            $conf_set70yes->load('forms/radio_inline');
+            $conf_set70yes->set('label_for', 'referal-yes');
+            $conf_set70yes->set('label_value', $this->localization->string('yes'));
+            $conf_set70yes->set('input_id', 'referal-yes');
+            $conf_set70yes->set('input_name', 'conf_set70');
+            $conf_set70yes->set('input_value', 1);
+            if ($this->get_configuration('showRefPage') == 1) {
+                $conf_set70yes->set('input_status', 'checked');
+            }
+        
+            $conf_set70no = $this->model('ParsePage');
+            $conf_set70no->load('forms/radio_inline');
+            $conf_set70no->set('label_for', 'referal-no');
+            $conf_set70no->set('label_value', $this->localization->string('no'));
+            $conf_set70no->set('input_id', 'referal-no');
+            $conf_set70no->set('input_name', 'conf_set70');
+            $conf_set70no->set('input_value', 0);
+            if ($this->get_configuration('showRefPage') == 0) {
+                $conf_set70no->set('input_status', 'checked');
+            }
+        
+            $show_refpage = $this->model('ParsePage');
+            $show_refpage->load('forms/radio_group');
+            $show_refpage->set('description', $this->localization->string('showrefpage'));
+            $show_refpage->set('radio_group', $show_refpage->merge(array($conf_set70yes, $conf_set70no)));
+        
+            /**
+             * Allow Facebook comments on pages
+             */
+            $conf_set6yes = $this->model('ParsePage');
+            $conf_set6yes->load('forms/radio_inline');
+            $conf_set6yes->set('label_for', 'fb_comm_yes');
+            $conf_set6yes->set('label_value', $this->localization->string('yes'));
+            $conf_set6yes->set('input_id', 'fb_comm_yes');
+            $conf_set6yes->set('input_name', 'conf_set6');
+            $conf_set6yes->set('input_value', 1);
+            if ($this->get_configuration('pgFbComm') == 1) {
+                $conf_set6yes->set('input_status', 'checked');
+            }
+        
+            $conf_set6no = $this->model('ParsePage');
+            $conf_set6no->load('forms/radio_inline');
+            $conf_set6no->set('label_for', 'fb_comm_no');
+            $conf_set6no->set('label_value', $this->localization->string('no'));
+            $conf_set6no->set('input_id', 'fb_comm_no');
+            $conf_set6no->set('input_name', 'conf_set6');
+            $conf_set6no->set('input_value', 0);
+            if ($this->get_configuration('pgFbComm') == 0) {
+                $conf_set6no->set('input_status', 'checked');
+            }
+        
+            $fb_comm = $this->model('ParsePage');
+            $fb_comm->load('forms/radio_group');
+            $fb_comm->set('description', 'Facebook comments on pages');
+            $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
+        
+            $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+
+        if ($this->post_and_get('action') == "seteight") {
+            $data['content'] .= '<h1>' . $this->localization->string('other') . '</h1>';
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editeight');
+
+            /**
+             * Max error logs in file
+             */
+            $conf_set58 = $this->model('ParsePage');
+            $conf_set58->load('forms/input');
+            $conf_set58->set('label_for', 'conf_set58');
+            $conf_set58->set('label_value', $this->localization->string('maxlogfile'));
+            $conf_set58->set('input_id', 'conf_set58');
+            $conf_set58->set('input_name', 'conf_set58');
+            $conf_set58->set('input_value', $this->get_configuration('maxLogData'));
+            $conf_set58->set('input_maxlength', 3);
+
+            /**
+             * Max ban time
+             */
+            $conf_set76 = $this->model('ParsePage');
+            $conf_set76->load('forms/input');
+            $conf_set76->set('label_for', 'conf_set76');
+            $conf_set76->set('label_value', $this->localization->string('maxbantime'));
+            $conf_set76->set('input_id', 'conf_set76');
+            $conf_set76->set('input_name', 'conf_set76');
+            $conf_set76->set('input_value', round($this->get_configuration('maxBanTime') / 1440));
+            $conf_set76->set('input_maxlength', 3);
+        
+            $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        if ($this->post_and_get('action') == 'security') {
+            $data['content'] .= '<h1>' . $this->localization->string('security') . '</h1>';
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editsecurity');
+        
+            $input29 = $this->model('ParsePage');
+            $input29->load('forms/input');
+            $input29->set('label_for', 'conf_set29');
+            $input29->set('label_value', $this->localization->string('floodtime'));
+            $input29->set('input_id', 'conf_set29');
+            $input29->set('input_name', 'conf_set29');
+            $input29->set('input_value', $this->get_configuration('floodTime'));
+            $input29->set('input_maxlength', 3);
+        
+            $input1 = $this->model('ParsePage');
+            $input1->load('forms/input');
+            $input1->set('label_for', 'conf_set1');
+            $input1->set('label_value', $this->localization->string('passkey'));
+            $input1->set('input_id', 'conf_set1');
+            $input1->set('input_name', 'conf_set1');
+            $input1->set('input_value', $this->get_configuration('keypass'));
+            $input1->set('input_maxlength', 25);
+        
+            // quarantine time
+            $quarantine = array(0 => "" . $this->localization->string('disabled') . "", 21600 => "6 " . $this->localization->string('hours') . "", 43200 => "12 " . $this->localization->string('hours') . "", 86400 => "24 " . $this->localization->string('hours') . "", 129600 => "36 " . $this->localization->string('hours') . "", 172800 => "48 " . $this->localization->string('hours') . "");
+        
+            $options = '<option value="' . $this->get_configuration('quarantine') . '">' . $quarantine[$this->get_configuration('quarantine')] . '</option>';
+            foreach($quarantine as $k => $v) {
+                if ($k != $this->get_configuration('quarantine')) {
+                    $options .= '<option value="' . $k . '">' . $v . '</option>';
+                }
+            }
+        
+            $select_set3 = $this->model('ParsePage');
+            $select_set3->load('forms/select');
+            $select_set3->set('label_for', 'conf_set3');
+            $select_set3->set('label_value', $this->localization->string('quarantinetime'));
+            $select_set3->set('select_id', 'conf_set3');
+            $select_set3->set('select_name', 'conf_set3');
+            $select_set3->set('options', $options);
+        
+            // transfer protocol
+            $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
+        
+            $transfer_protocol = $this->get_configuration('transferProtocol');
+            if (empty($this->get_configuration('transferProtocol'))) $transfer_protocol = 'auto';
+            
+            $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
+        
+            foreach($tProtocol as $k => $v) {
+                if ($k != $transfer_protocol) {
+                    $options .= '<option value="' . $k . '">' . $v . '</option>';
+                }
+            }
+        
+            $select_set21 = $this->model('ParsePage');
+            $select_set21->load('forms/select');
+            $select_set21->set('label_for', 'conf_set21');
+            $select_set21->set('label_value', 'Transfer protocol');
+            $select_set21->set('select_id', 'conf_set21');
+            $select_set21->set('select_name', 'conf_set21');
+            $select_set21->set('options', $options);
+        
+            // reCAPTCHA site key
+            $captcha_sitekey = $this->model('ParsePage');
+            $captcha_sitekey->load('forms/input');
+            $captcha_sitekey->set('label_for', 'recaptcha_sitekey');
+            $captcha_sitekey->set('label_value', 'reCAPTCHA site key');
+            $captcha_sitekey->set('input_id', 'recaptcha_sitekey');
+            $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
+            $captcha_sitekey->set('input_value', $this->get_configuration('recaptcha_sitekey'));
+            $captcha_sitekey->set('input_maxlength', 50);
+        
+            // reCAPTCHA secret key
+            $captcha_secret = $this->model('ParsePage');
+            $captcha_secret->load('forms/input');
+            $captcha_secret->set('label_for', 'recaptcha_secretkey');
+            $captcha_secret->set('label_value', 'reCAPTCHA secret key');
+            $captcha_secret->set('input_id', 'recaptcha_secretkey');
+            $captcha_secret->set('input_name', 'recaptcha_secretkey');
+            $captcha_secret->set('input_value', $this->get_configuration('recaptcha_secretkey'));
+            $captcha_secret->set('input_maxlength', 50);
+        
+            $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
+            $data['content'] .= $form->output();
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        // Pass data to the view
+        return $data;
+    }
+
+    /**
+     * Admin list
+     */
+    public function adminlist()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = '{@website_language[modlist]}}';
+        $data['content'] = '';
+
+        if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');
+
+        $data['content'] .= '<p><img src="../themes/images/img/user.gif" alt=""> <b>' . $this->localization->string('adminlistl') . '</b></p>'; 
+
+        $num_items = $this->user->total_admins();
+        $items_per_page = 10;
+
+        $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
+
+        $limit_start = $navigation->start()['start']; // starting point
+        $end = $navigation->start()['end']; // ending point
+
+        if ($num_items > 0) {
+            foreach ($this->db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
+                if ($item['perm'] == 101 or $item['perm'] == 102 or $item['perm'] == 103 or $item['perm'] == 105 or $item['perm'] == 106) {
+                    $lnk = '<div class="a">' . $this->sitelink(HOMEDIR . 'users/u/' . $item['id'], $item['name']) . ' - ' . $this->user->user_status($item['perm']) . '</div>';
+                    $data['content'] .= $lnk . '<br>';
+                }
+            }
+        }
+
+        $data['content'] .= $navigation->get_navigation();
+
+        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        return $data;
+    }
+
+    public function unconfirmed_reg()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = '{@website_language[uncomfreg]}}';
+        $data['content'] = '';
+
+        if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');
+
+        if ($this->post_and_get('action') == 'conf' && !empty($this->post_and_get('usr'))) {
+            $fields = array('regche', 'regkey');
+            $values = array('', '');
+            $this->user->update_user($fields, $values, $this->post_and_get('usr'));
+        
+            $vav_name = $this->user->getnickfromid($this->post_and_get('usr'));
+        
+            $message = $this->localization->string('hello') . " " . $vav_name . "!\r\n\r\n" . $this->localization->string('sitemod') . " " . $this->get_configuration('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n" . $this->localization->string('youcanlog') . ".\r\n\r\n" . $this->localization->string('bye') . "!\r\n\r\n\r\n\r\n" . $this->user->getnickfromid($this->user->user_id()) . "\r\n" . ucfirst($this->get_configuration('homeBase'));
+            $newMail = new Mailer;
+            $newMail->queue_email($this->user->user_info('email', $this->post_and_get('usr')), $this->localization->string('msgfrmst') . " " . $this->get_configuration('title'), $message, '', '', 'high');
+        
+            $this->redirect_to(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
+        }
+
+        if (empty($this->post_and_get('action'))) {
+            $noi = $this->user->total_unconfirmed();
+            $num_items = $noi;
+            $items_per_page = 20;
+            $num_pages = ceil($num_items / $items_per_page);
+        
+            if (($this->post_and_get('page') > $num_pages) && $this->post_and_get('page') != 1) $page = $num_pages;
+            $limit_start = ($this->post_and_get('page')-1) * $items_per_page;
+            if ($limit_start < 0) {
+                $limit_start = 0;
+            } 
+
+            $sql = "SELECT uid, regche, regdate, lastvst FROM vavok_profil WHERE regche='1' OR regche='2' ORDER BY regdate LIMIT $limit_start, $items_per_page";
+
+            if ($num_items > 0) {
+                foreach ($this->db->query($sql) as $item) {
+                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getnickfromid($item['uid'])) . ' (' . $this->date_fixed($item['regdate'], 'd.m.Y. / H:i') . ')';
+                    if ($item['regche'] == 1) {
+                        $bt = $this->localization->string('notconfirmed') . '!';
+                        $bym = $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg/?action=conf&usr=' . $item['uid'], $this->localization->string('confirms'));
+                    } else {
+                        $bt = 'Confirmed';
+                    }
+
+                    $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->user_info('ipadd', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
+                }
+            } else {
+                $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptyunconf') . '!</p>';
+            }
+        
+            $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), HOMEDIR . 'adminpanel/unconfirmed_reg/');
+        
+            $data['content'] .= '<div class="mt-5">';
+                $data['content'] .= $navigation->get_navigation();
+            $data['content'] .= '</div>';
+        }
+
+        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        return $data;
+    }
+
+    /**
+     * Statistics
+     */
+    public function statistics()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = '{@website_language[sitestats]}}';
+        $data['content'] = '';
+
+        if (!$this->user->is_administrator()) $this->redirect_to('../?errorAuth');
+  
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@website_language[visitstats]}}') . '<br />';
+        $data['content'] .= $this->sitelink('../pages/online', '{@website_language[usronline]}}') . '</p>';
+        
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@website_language[admpanel]}}') . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        return $data;
+    }
+
+    /**
+     * Users
+     */
+    public function users()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = '{@website_language[usrprofile]}}';
+        $data['content'] = '';
+
+        if (!$this->user->is_administrator()) $this->redirect_to('./?error=noauth');
+
+        $user = $this->check($this->post_and_get('users'));
+        $users_id = $this->user->getidfromnick($user);
+
+        if (empty($this->post_and_get('action'))) {
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/users/?action=edit');
+
+            $input_users = $this->model('ParsePage');
+            $input_users->load('forms/input');
+            $input_users->set('label_for', 'users');
+            $input_users->set('label_value', $this->localization->string('chooseuser') . ':');
+            $input_users->set('input_name', 'users');
+            $input_users->set('input_id', 'users');
+            $input_users->set('input_maxlength', 20);
+
+            $form->set('website_language[save]', $this->localization->string('showdata'));
+            $form->set('fields', $input_users->output());
+            $data['content'] .= $form->output();
+        }
+
+        // change profile
+        if ($this->post_and_get('action') == 'edit') {
+            if (!empty($user) && $this->user->username_exists($user) && $this->user->id_exists($users_id)) {
+                $data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/profiles.gif" alt="Profile" /> ' . $this->localization->string('usrprofile') . ' ' . $user . '<br>';
+
+                if ($this->user->show_username() != $this->get_configuration('adminNick') && $user == $this->get_configuration('adminNick')) {
+                    $data['content'] .= '<br>' . $this->localization->string('noauthtoedit') . '!<br>';
+                    return $data;
+                    exit;
+                }
+
+                if (($this->user->show_username() != $this->get_configuration('adminNick')) && ($this->user->user_info('perm', $users_id) == 101 || $this->user->user_info('perm', $users_id) == 102 || $this->user->user_info('perm', $users_id) == 103 || $this->user->user_info('perm', $users_id) == 105) && $this->user->show_username() != $user) {
+                    $data['content'] .= '<br>' . $this->localization->string('noauthtoban') . '!<br>';
+                    return $data;
+                    exit;
+                }
+
+                $casenick = strcasecmp($user, $this->user->show_username());
+
+                if ($casenick == 0) $data['content'] .= '<p><b><font color="red">' . $this->localization->string('myprofile') . '!</font></b></p>';
+
+                if ($this->user->user_info('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>' . $this->localization->string('confban') . '</b></font></p>';
+        
+                if ($this->user->user_info('regche', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>' . $this->localization->string('notactivated') . '</b></font></p>';
+        
+                $form = $this->model('ParsePage');
+                $form->load('forms/form');
+                $form->set('form_method', 'post');
+                $form->set('form_action', HOMEDIR . 'adminpanel/users/?action=upgrade&amp;users=' . $user);
+        
+                $userx_access = (int)$this->user->user_info('perm', $users_id);
+        
+                if ($_SESSION['permissions'] == 101 && $this->user->show_username() == $this->get_configuration('adminNick')) {
+                    $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
+        
+                    if ($userx_access == 0 || empty($userx_access)) $userx_access = 107;
+        
+                    $options = '<option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
+                    foreach($array_dostup as $k => $v) {
+                        if ($k != $userx_access) {
+                            $options .= '<option value="' . $k . '">' . $v . '</option>';
+                        }
+                    }
+                }
+        
+                $udd7 = $this->model('ParsePage');
+                $udd7->load('forms/select');
+                $udd7->set('label_for', 'udd7');
+                $udd7->set('label_value', $this->localization->string('accesslevel'));
+                $udd7->set('select_id', 'udd7');
+                $udd7->set('select_name', 'udd7');
+                $udd7->set('options', $options);
+        
+                $udd1 = $this->model('ParsePage');
+                $udd1->load('forms/input');
+                $udd1->set('label_for', 'udd1');
+                $udd1->set('label_value', $this->localization->string('newpassinfo'));
+                $udd1->set('input_id', 'udd1');
+                $udd1->set('input_name', 'udd1');
+        
+                $udd2 = $this->model('ParsePage');
+                $udd2->load('forms/input');
+                $udd2->set('label_for', 'udd2');
+                $udd2->set('label_value', $this->localization->string('city'));
+                $udd2->set('input_id', 'udd2');
+                $udd2->set('input_name', 'udd2');
+                $udd2->set('input_value', $this->user->user_info('city', $users_id));
+        
+                $udd3 = $this->model('ParsePage');
+                $udd3->load('forms/input');
+                $udd3->set('label_for', 'udd3');
+                $udd3->set('label_value', $this->localization->string('aboutyou'));
+                $udd3->set('input_id', 'udd3');
+                $udd3->set('input_name', 'udd3');
+                $udd3->set('input_value', $this->user->user_info('about', $users_id));
+        
+                $udd4 = $this->model('ParsePage');
+                $udd4->load('forms/input');
+                $udd4->set('label_for', 'udd4');
+                $udd4->set('label_value', $this->localization->string('yemail'));
+                $udd4->set('input_id', 'udd4');
+                $udd4->set('input_name', 'udd4');
+                $udd4->set('input_value', $this->user->user_info('email', $users_id));
+        
+                $udd5 = $this->model('ParsePage');
+                $udd5->load('forms/input');
+                $udd5->set('label_for', 'udd5');
+                $udd5->set('label_value', $this->localization->string('site'));
+                $udd5->set('input_id', 'udd5');
+                $udd5->set('input_name', 'udd5');
+                $udd5->set('input_value', $this->user->user_info('site', $users_id));
+        
+                $udd13 = $this->model('ParsePage');
+                $udd13->load('forms/input');
+                $udd13->set('label_for', 'udd13');
+                $udd13->set('label_value', $this->localization->string('browser'));
+                $udd13->set('input_id', 'udd13');
+                $udd13->set('input_name', 'udd13');
+                $udd13->set('input_value', $this->user->user_info('browser', $users_id));
+        
+                $udd29 = $this->model('ParsePage');
+                $udd29->load('forms/input');
+                $udd29->set('label_for', 'udd29');
+                $udd29->set('label_value', $this->localization->string('name'));
+                $udd29->set('input_id', 'udd29');
+                $udd29->set('input_name', 'udd29');
+                $udd29->set('input_value', $this->user->user_info('firstname', $users_id));
+        
+                $udd40 = $this->model('ParsePage');
+                $udd40->load('forms/input');
+                $udd40->set('label_for', 'udd40');
+                $udd40->set('label_value', $this->localization->string('perstatus'));
+                $udd40->set('input_id', 'udd40');
+                $udd40->set('input_name', 'udd40');
+                $udd40->set('input_value', $this->user->user_info('status', $users_id));
+        
+                if ($this->user->user_info('subscribed', $users_id) == 1) {
+                    $value = $this->localization->string('subscribed');
+                } else {
+                    $value = $this->localization->string('notsubed');
+                }
+                $subscribed = $this->model('ParsePage');
+                $subscribed->load('forms/input_readonly');
+                $subscribed->set('label_for', 'subscribed');
+                $subscribed->set('label_value', $this->localization->string('sitenews'));
+                $subscribed->set('input_id', 'subscribed');
+                $subscribed->set('input_name', 'subscribed');
+                $subscribed->set('input_placeholder', $value);
+        
+                $allban = $this->model('ParsePage');
+                $allban->load('forms/input_readonly');
+                $allban->set('label_for', 'allban');
+                $allban->set('label_value', $this->localization->string('numbbans'));
+                $allban->set('input_id', 'allban');
+                $allban->set('input_placeholder', (int)$this->user->user_info('allban', $users_id));
+        
+                $lastvst = $this->model('ParsePage');
+                $lastvst->load('forms/input_readonly');
+                $lastvst->set('label_for', 'lastvst');
+                $lastvst->set('label_value', $this->localization->string('lastvst'));
+                $lastvst->set('input_id', 'lastvst');
+                $lastvst->set('input_placeholder', $this->date_fixed($this->user->user_info('lastvisit', $users_id), 'j.m.Y. / H:i'));
+        
+                $ip = $this->model('ParsePage');
+                $ip->load('forms/input_readonly');
+                $ip->set('label_for', 'ip');
+                $ip->set('label_value', 'IP');
+                $ip->set('input_id', 'ip');
+                $ip->set('input_placeholder', $this->user->user_info('ipaddress', $users_id));
+        
+                $form->set('fields', $form->merge(array($udd7, $udd1, $udd2, $udd3, $udd4, $udd5, $udd13, $udd29, $udd40, $subscribed, $allban, $lastvst, $ip)));
+                $data['content'] .= $form->output();
+        
+                $data['content'] .= '<p>';
+                if ($userx_access > 106) {
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/?action=poddel&amp;users=' . $user, $this->localization->string('deluser'), '<b>', '</b>') . '<br />';
+                }
+                // Website permissions for various sections
+                if (file_exists('specperm.php')) {
+                    $data['content'] .= $this->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
+                }
+        
+                $data['content'] .= '</p>';
+            } else {
+                $data['content'] .= $this->localization->string('usrnoexist') . '!';
+            }
+        
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        // update changes
+        if ($this->post_and_get('action') == 'upgrade') {
+            $udd1 = !empty($this->post_and_get('udd1')) ? $this->post_and_get('udd1') : '';
+            $udd2 = !empty($this->post_and_get('udd2')) ? $this->post_and_get('udd2') : '';
+            $udd3 = !empty($this->post_and_get('udd3')) ? $this->post_and_get('udd3') : '';
+            $udd4 = !empty($this->post_and_get('udd4')) ? $this->post_and_get('udd4') : '';
+            $udd5 = !empty($this->post_and_get('udd5')) ? $this->post_and_get('udd5') : '';
+            $udd6 = !empty($this->post_and_get('udd6')) ? $this->post_and_get('udd6') : '';
+            $udd7 = !empty($this->post_and_get('udd7')) ? $this->post_and_get('udd7') : ''; // access level
+            $udd8 = !empty($this->post_and_get('udd8')) ? $this->post_and_get('udd8') : '';
+            $udd9 = !empty($this->post_and_get('udd9')) ? $this->post_and_get('udd9') : '';
+            $udd10 = !empty($this->post_and_get('udd10')) ? $this->post_and_get('udd10') : '';
+            $udd11 = !empty($this->post_and_get('udd11')) ? $this->post_and_get('udd11') : '';
+            $udd12 = !empty($this->post_and_get('udd12')) ? $this->post_and_get('udd12') : '';
+            $udd13 = !empty($this->post_and_get('udd13')) ? $this->post_and_get('udd13') : '';
+            $udd29 = !empty($this->post_and_get('udd29')) ? $this->post_and_get('udd29') : '';
+            $udd40 = !empty($this->post_and_get('udd40')) ? $this->post_and_get('udd40') : '';
+            $udd43 = !empty($this->post_and_get('udd43')) ? $this->post_and_get('udd43') : '';
+        
+            if ($this->user->validate_email($udd4)) {
+                if (empty($udd5) || $this->validateURL($udd5) === true) {
+                    if (!empty($users_id)) {
+                        if (!empty($udd6)) {
+                            list($uday, $umonth, $uyear) = explode(".", $udd6);
+                            $udd6 = mktime('0', '0', '0', $umonth, $uday, $uyear);
+                        }
+
+                        if (!empty($udd1)) $newpass = $this->user->password_encrypt($udd1);
+        
+                        // Update password
+                        if (!empty($newpass)) $this->user->update_user('pass', $this->no_br($newpass), $users_id);
+        
+                        // Update default access permissions
+                        if ($udd7 != $this->user->user_info('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
+        
+                        // Update data
+                        $this->user->update_user(
+                            array('city', 'about', 'email', 'site', 'rname', 'perstat', 'browsers'),
+                            array($this->no_br($this->check($udd2)), $this->check($udd3), $this->no_br(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->no_br($this->check($udd5)), $this->no_br($this->check($udd29)), $this->no_br($this->check($udd40)), $this->no_br($this->check($udd13))), $users_id
+                        );
+        
+                        $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
+        
+                        if (!empty($udd1)) {
+                            $data['content'] .= '<font color=red>' . $this->localization->string('passchanged') . ': ' . $udd1 . '</font> <br>';
+                        }
+        
+                        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', $this->localization->string('changeotheruser')) . '<br>';
+                    } else {
+                        $data['content'] .= $this->localization->string('usrnoexist') . '!<br>';
+                    }
+                } else {
+                    $data['content'] .= $this->localization->string('urlnotok') . '!<br>';
+                } 
+            } else {
+                $data['content'] .= $this->localization->string('emailnotok') . '<br>';
+            }
+
+            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&amp;users=' . $user, $this->localization->string('back'));
+        }
+        
+        // confirm delete
+        if ($this->post_and_get('action') == 'poddel') {
+            $data['content'] .= $this->localization->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/?action=deluser&amp;users=' . $user, $this->localization->string('deluser'), '<b>', '</b>');
+        
+            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&amp;users=' . $user, $this->localization->string('back'));
+        } 
+        
+        // delete user
+        if ($this->post_and_get('action') == 'deluser') {
+            if ($user != $this->get_configuration('adminNick')) {
+                if ($this->user->user_info('perm', $users_id) < 101 || $this->user->user_info('perm', $users_id) > 105) {
+                    $this->user->delete_user($user);
+                    $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';
+        
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', $this->localization->string('changeotheruser'), '<p>', '</p>');
+                } else {
+                    $data['content'] .= $this->localization->string('noaccessdel') . '<br>';
+                    $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&amp;users=' . $user, $this->localization->string('back'));
+                }
+            }
+        }
+        
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        return $data;
+    }
+
+    /**
+     * IP ban
+     */
+    public function ipban()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = 'IP Ban';
+        $data['content'] = '';
+
+        if (!$this->user->is_administrator()) $this->redirect_to('../?auth_error');
+
+        if ($this->post_and_get('action') == 'zaban' && $this->user->is_administrator()) {
+            $ips = $this->check($this->post_and_get('ips'));
+        
+            if (!empty($ips) && substr_count($ips, '.') == 3) $this->write_data_file('ban.dat', "|$ips|" . PHP_EOL, 1);
+        
+            $data['notification'] = $this->show_success('IP has been banned');
+        }
+
+        if ($this->post_and_get('action') == 'razban' && $this->user->is_administrator()) {
+            if (!empty($this->post_and_get('id')) || $this->post_and_get('id') == 0) $id = $this->post_and_get('id');
+        
+            if (isset($id)) {
+                $file = $this->get_data_file('ban.dat');
+                unset($file[$id]);
+        
+                $file_data = '';
+                foreach ($file as $key => $value) {
+                    $file_data .= $value;
+                }
+        
+                $this->write_data_file('ban.dat', $file_data);
+            }
+
+            // Notification
+            // Update localization
+            $data['notification'] = $this->show_success('IP ban has been removed');
+        }
+
+        if ($this->post_and_get('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+            $this->clear_files('../used/ban.dat');
+
+            $this->redirect_to(HOMEDIR . 'adminpanel/ipban');
+        }
+
+        $file = $this->get_data_file('ban.dat');
+        $total = count($file);
+
+        $navigation = new Navigation(10, $total, HOMEDIR . 'adminpanel/ipban/?'); // start navigation
+
+        $limit_start = $navigation->start()['start']; // starting point
+        
+        if ($total < $limit_start + 10) {
+            $end = $total;
+        } else {
+            $end = $limit_start + 10;
+        }
+        
+        for ($i = $limit_start; $i < $end; $i++) {
+            $file = $this->get_data_file('ban.dat');
+            $file = array_reverse($file);
+            $file_data = explode("|", $file[$i]);
+            $i2 = round($i + 1);
+        
+            $num = $total - $i-1;
+        
+            $data['content'] .= $i2 . '. ' . $file_data[1] . ' <br>' . $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=razban&amp;id=' . $num, $this->localization->string('delban')) . '<hr>';
+        } 
+
+        if ($total < 1) {
+            $data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptylist') . '</p>';
+        }
+
+        $data['content'] .= $navigation->get_navigation();
+
+        $data['content'] .= '<hr>';
+
+        $form = $this->model('ParsePage');
+        $form->load('forms/form');
+        $form->set('form_method', 'post');
+        $form->set('form_action', HOMEDIR . 'adminpanel/ipban/?action=zaban');
+
+        $input = $this->model('ParsePage');
+        $input->load('forms/input');
+        $input->set('label_for', 'ips');
+        $input->set('label_value', $this->localization->string('iptoblock'));
+        $input->set('input_name', 'ips');
+        $input->set('input_id', 'ips');
+
+        $form->set('website_language[save]', $this->localization->string('confirm'));
+        $form->set('fields', $input->output());
+        $data['content'] .= $form->output();
+
+        $data['content'] .= '<hr>';
+
+        $data['content'] .= '<p>' . $this->localization->string('ipbanexam') . '</p>';
+        $data['content'] .= '<p>' . $this->localization->string('allbanips') . ': ' . $total . '</p>';
+
+        if ($total > 1) {
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=delallip', $this->localization->string('dellist'), '<p>', '</p>');
+        }
+
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
+
+        return $data;
+    }
+
+    /**
+     * System check
+     */
+    public function systemcheck()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+        $data['tname'] = 'System Check';
+        $data['content'] = '';
+
+        if (!$this->user->is_administrator(101)) $this->redirect_to(HOMEDIR);
+
+        function prev_dir($string) {
+            $d1 = strrpos($string, "/");
+            $d2 = substr($string, $d1, 999);
+            $string = str_replace($d2, "", $string);
+        
+            return $string;
+        }
+
+        switch ($this->post_and_get('action')) {
+            default:
+                $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/menu.gif" alt=""> ' . $this->localization->string('checksys') . '<hr>';
+
+                $did = $this->check($this->post_and_get('did'));
+
+                if (!empty($did) && (!is_dir(APPDIR . "used" . "$did") || !file_exists(APPDIR . "used" . "$did"))) {
+                    header('Location: ' . HOMEDIR . 'adminpanel/systemcheck');
+                    exit;
+                }
+
+                foreach (scandir(APPDIR . "used" . "$did") as $value) {
+                    if ($value != "." && $value != ".." && $value != ".htaccess") {
+                        if (is_file(APPDIR . "used" . "$did/$value")) {
+                            $files[] = "$did/$value";
+                        } elseif (is_dir(APPDIR . "used" . "$did/$value")) {
+                            $dires[] = "$did/$value";
+                        }
+                    }
+                }
+        
+                if ($did == '') {
+                    if (file_exists(APPDIR . "used/.htaccess")) {
+                        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&amp;file=/.htaccess', '[Chmod - ' . $this->permissions(APPDIR . "used/.htaccess") . ']') . ' - <font color="#00FF00">' . $this->localization->string('file') . ' .htaccess ' . $this->localization->string('exist') . '</font><br>';
+        
+                        if (is_writeable(APPDIR . "used/.htaccess")) {
+                            $data['content'] .= '<font color="#FF0000">' . $this->localization->string('wrhtacc') . '</font><br>';
+                        }
+                    } else {
+                        $data['content'] .= '<font color="#FF0000">' . $this->localization->string('warning') . '!!! ' . $this->localization->string('file') . ' .htaccess ' . $this->localization->string('noexist') . '!<br></font>';
+                    }
+                }
+        
+                if ((count($files) + count($dires)) > 0) {
+                    if (count($files) > 0) {
+                        if (!empty($did)) {
+                            if (file_exists(APPDIR . "used" . "$did/.htaccess")) {
+                                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&amp;file=' . $did . '/.htaccess', '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$did/.htaccess") . ']') . ' - <font color="#00FF00">' . $this->localization->string('file') . ' .htaccess ' . $this->localization->string('exist') . '</font><br>';
+        
+                                if (is_writeable(APPDIR . "used" . "$did/.htaccess")) {
+                                    $data['content'] .= '<font color="#FF0000">' . $this->localization->string('wrhtacc') . '</font><br>';
+                                }
+                            }
+                        }
+
+                        $data['content'] .= $this->localization->string('filecheck') . ': <br />';
+
+                        $usedfiles = 0;
+                        foreach ($files as $value) {
+                            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&amp;file=' . $value, '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$value") . ']') . ' - used' . $value . ' (' . $this->formatsize(filesize(APPDIR . "used" . "$value")) . ') - ';
+        
+                            if (is_writeable(APPDIR . "used" . "$value")) {
+                                $data['content'] .= '<font color="#00FF00">' . $this->localization->string('filewrit') . '</font><br>';
+                            } else {
+                                $data['content'] .= '<font color="#FF0000">' . $this->localization->string('filenowrit') . '</font><br>';
+                            }
+                            $usedfiles += filesize(APPDIR . "used" . "$value");
+                        }
+                        $data['content'] .= '<hr>' . $this->localization->string('filessize') . ': ' . $this->formatsize($usedfiles) . '<hr>';
+                    }
+
+                    if (count($dires) > 0) {
+                        $data['content'] .= $this->localization->string('checkdirs') . ': <br>';
+
+                        foreach ($dires as $value) {
+                            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&amp;file=' . $value, '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$value") . ']') . ' - ' . $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . $value, 'used' . $value) . ' (' . $this->formatsize($this->read_dir(APPDIR . "used" . "$value")) . ') - ';
+        
+                            if (is_writeable(APPDIR . "used" . "$value")) {
+                                $data['content'] .= '<font color="#00FF00">' . $this->localization->string('filewrit') . '</font><br>';
+                            } else {
+                                $data['content'] .= '<font color="#FF0000">' . $this->localization->string('filenowrit') . '</font><br>';
+                            }
+        
+                            $useddires = $this->read_dir(APPDIR . "used" . "$value");
+                        }
+                        $data['content'] .= '<hr>' . $this->localization->string('dirsize') . ': ' . $this->formatsize($useddires) . '<hr>';
+                    }
+                } else {
+                    $data['content'] .= $this->localization->string('dirempty') . '!<hr>';
+                }
+
+                if ($did != '') {
+                    if (prev_dir($did) != '') {
+                        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($did), '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> ' . $this->localization->string('back')) . '<br>';
+                    }
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/', $this->localization->string('checksys')) . '<br>';
+                }
+
+                break; 
+                // CHMOD
+            case ('pod_chmod'):
+                $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/menu.gif" alt=""> ' . $this->localization->string('chchmod') . '<hr>';
+        
+                if ($this->post_and_get('file') && file_exists(APPDIR . "used/" . $this->post_and_get('file'))) {
+                    $data['content'] .= '<form action="' . HOMEDIR . 'adminpanel/systemcheck/?action=chmod" method=post>';
+                    if (is_file(APPDIR . "used/" . $this->post_and_get('file'))) {
+                        $data['content'] .= $this->localization->string('file') . ': ../used' . $this->post_and_get('file') . '<br>';
+                    } elseif (is_dir(APPDIR . "used/" . $this->post_and_get('file'))) {
+                        $data['content'] .= $this->localization->string('folder') . ': ../used' . $this->post_and_get('file') . '<br>';
+                    } 
+                    $data['content'] .= 'CHMOD: <br><input type="text" name="mode" value="' . $this->permissions(APPDIR . "used/" . $this->post_and_get('file')) . '" maxlength="3" /><br>
+                    <input name="file" type="hidden" value="' . $this->post_and_get('file') . '" />
+                    <input type=submit value="' . $this->localization->string('save') . '"></form><hr>';
+                } else {
+                    $data['content'] .= 'No file name!<hr>';
+                }
+        
+                if (!empty(prev_dir($this->post_and_get('file')))) {
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($this->post_and_get('file')), $this->localization->string('back')) . '<br>';
+                }
+        
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/', $this->localization->string('checksys')) . '<br>';
+            break;
+        
+            case ('chmod'):
+                if (!empty($this->post_and_get('file')) && !empty($this->post_and_get('mode'))) {
+                    if (chmod(APPDIR . "used/" . $this->post_and_get('file'), octdec($this->post_and_get('mode'))) != false) {
+                        $data['content'] .= $this->localization->string('chmodok') . '!<hr>';
+                    } else {
+                        $data['content'] .= $this->localization->string('chmodnotok') . '!<hr>';
+                    }
+                } else {
+                    $data['content'] .= $this->localization->string('noneededdata') . '!<hr>';
+                } 
+        
+                if (!empty(prev_dir($this->post_and_get('file')))) {
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($this->post_and_get('file')), $this->localization->string('back')) . '<br>';
+                }
+        
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/systemcheck/', $this->localization->string('checksys')) . '<br>';
+            break;
+        }
+        
+        $data['content'] .= '<p>';
+        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= $this->homelink();
+        $data['content'] .= '</p>';
+
+        return $data;
+    }
+
+    /**
+     * Page search
+     */
+    public function pagesearch()
+    {
+        // Users data
+        $page_data['user'] = $this->user_data;
+        $page_data['tname'] = '{@website_language[search]}}';
+        $page_data['content'] = '';
+
+        if (!$this->user->is_administrator()) $this->redirect_to(HOMEDIR);
+
+        if (empty($this->post_and_get('action'))) {
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_method', 'post');
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagesearch/?action=stpc');
+            $form->set('website_language[save]', $this->localization->string('search'));
+
+            $input = $this->model('ParsePage');
+            $input->load('forms/input');
+            $input->set('label_for', 'stext');
+            $input->set('label_value', 'Page name:');
+            $input->set('input_name', 'stext');
+            $input->set('input_id', 'stext');
+            $input->set('input_maxlength', 30);
+
+            $form->set('fields', $input->output());
+            $page_data['content'] .= $form->output();
+
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('back'), '<p>', '<br />');
+        } elseif ($this->post_and_get('action') == 'stpc') {
+            if (empty($this->post_and_get('stext'))) {
+                $page_data['content'] .= '<p>Please fill all fields</p>';
+            } else {
+                // begin search
+                $where_table = "pages";
+                $cond = "pname";
+                $select_fields = "*";
+                $ord_fields = "pubdate DESC";
+        
+                $noi = $this->db->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
+                $items_per_page = 10;
+        
+                $navigation = new Navigation($items_per_page, $noi, $this->post_and_get('page'), HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
+        
+                $limit_start = $navigation->start()['start']; // starting point
+        
+                $sql = "SELECT {$select_fields} FROM {$where_table} WHERE pname LIKE '%{$stext}%' OR tname LIKE '%{$stext}%' ORDER BY {$ord_fields} LIMIT $limit_start, $items_per_page";
+        
+                foreach ($this->db->query($sql) as $item) {
+                    $tname = $item['tname'];
+                    if (empty($tname)) {
+                        $tname = $item['pname'];
+                    } 
+                    if (empty($item['file'])) {
+                        $item['file'] = $item['pname'] . '.php';
+                    }
+                    if (empty($tname)) {
+                        $tlink = 'Unreachable<br>';
+                    } else {
+                        if (!empty($item['lang'])) {
+                            $itemLang = ' (' . mb_strtolower($item['lang']) . ')';
+                        } else {
+                                $itemLang = '';
+                            }
+
+                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&amp;file=' . $item['file'], $tname . $itemLang) . '<br />';
+                    }
+
+                    $page_data['content'] .= $tlink;
+                }
+
+                $page_data['content'] .= $navigation->get_navigation();
+            }
+
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', $this->localization->string('back'), '<p>', '<br />');
+        }
+
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel'), '', '<br />');
+        $page_data['content'] .= $this->homelink('', '</p>');
+
+        return $page_data;
+    }
+
+    /**
+     * Blog category
+     */
+    public function blogcategory()
+    {
+        // Users data
+        $page_data['user'] = $this->user_data;
+        $page_data['tname'] = 'Blog';
+        $page_data['content'] = '';
+
+        if (!$this->user->is_administrator()) $this->redirect_to('../?auth_error');
+
+        $action = $this->post_and_get('action');
+        switch ($action) {
+            case 'add-category':
+                // Save category if name is sent
+                if (!empty($this->post_and_get('category')) && !empty($this->post_and_get('value'))) {
+                    // Calculate category position
+                    $position = $this->db->count_row('settings', "setting_group = 'blog_category'");
+
+                    // Add category
+                    $data = array('setting_group' => 'blog_category', 'setting_name' => $this->post_and_get('category'), 'value' => $this->post_and_get('value'), 'options' => $position);
+                    $this->db->insert('settings', $data);
+        
+                    // Show message if category is saved
+                    $page_data['content'] .= $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category saved</p>');
+                }
+        
+                // Category input
+                $category = $this->model('ParsePage');
+                $category->load('forms/input');
+                $category->set('label_value', 'Category name');
+                $category->set('label_for', 'category');
+                $category->set('input_name', 'category');
+                $category->set('input_id', 'category');
+                $category->set('input_type', 'text');
+                $category->set('input_value', '');
+        
+                // Value input
+                $value = $this->model('ParsePage');
+                $value->load('forms/input');
+                $value->set('label_value', 'Category value (page tag)');
+                $value->set('label_for', 'value');
+                $value->set('input_name', 'value');
+                $value->set('input_id', 'value');
+                $value->set('input_type', 'text');
+                $value->set('input_value', '');
+        
+                $fields = array($category, $value);
+        
+                // Create form
+                $form = $this->model('ParsePage');
+                $form->load('forms/form');
+                $form->set('form_action', HOMEDIR . 'adminpanel/blogcategory/?action=add-category');
+                $form->set('form_method', 'post');
+                $form->set('fields', $form->merge($fields));
+        
+                $page_data['content'] .= $form->output();
+                break;
+        
+            case 'edit-category':
+                // Update category if data are sent
+                if (!empty($this->post_and_get('id')) && !empty($this->post_and_get('category')) && !empty($this->post_and_get('value'))) {
+                    // Update category
+                    $this->db->update('settings', array('setting_name', 'value'), array($this->post_and_get('category'), $this->post_and_get('value')), "id = '{$this->post_and_get('id')}'");
+        
+                    // Show message if category is updated
+                    $page_data['content'] .= $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category updated</p>');
+                }
+        
+                // Category data
+                $cat_info = $this->db->get_data('settings', "id='{$this->post_and_get('id')}'");
+        
+                // Category input
+                $category = $this->model('ParsePage');
+                $category->load('forms/input');
+                $category->set('label_value', 'Category name');
+                $category->set('label_for', 'category');
+                $category->set('input_name', 'category');
+                $category->set('input_id', 'category');
+                $category->set('input_type', 'text');
+                $category->set('input_value', $cat_info['setting_name']);
+        
+                // Value input
+                $value = $this->model('ParsePage');
+                $value->load('forms/input');
+                $value->set('label_value', 'Category value (page tag)');
+                $value->set('label_for', 'value');
+                $value->set('input_name', 'value');
+                $value->set('input_id', 'value');
+                $value->set('input_type', 'text');
+                $value->set('input_value', $cat_info['value']);
+        
+                // Category id
+                $category_id = $this->model('ParsePage');
+                $category_id->load('forms/input');
+                $category_id->set('input_name', 'id');
+                $category_id->set('input_type', 'hidden');
+                $category_id->set('input_value', $this->post_and_get('id'));
+        
+                $fields = array($category, $value, $category_id);
+        
+                // Create form
+                $form = $this->model('ParsePage');
+                $form->load('forms/form');
+                $form->set('form_action', HOMEDIR . 'adminpanel/blogcategory/?action=edit-category');
+                $form->set('form_method', 'post');
+                $form->set('fields', $form->merge($fields));
+        
+                $page_data['content'] .= $form->output();
+            break;
+            
+            case 'delete':
+                if ($this->db->count_row('settings', "id = {$this->post_and_get('id')}") > 0) {
+                    $this->db->delete('settings', "id = {$this->post_and_get('id')}");
+        
+                    $page_data['content'] .= $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Deleted" /> Category deleted');
+                } else {
+                    $page_data['content'] .= $this->show_danger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> This category does not exist');
+                }
+            break;
+
+            case 'move-up':
+                // cat we want to update
+                $cat_info = $this->db->get_data('settings', "id='{$this->post_and_get('id')}'");
+
+                $cat_position = $cat_info['options'];
+                $new_position = $cat_position - 1;
+
+                if ($cat_position != 0 && !empty($cat_position)) {
+                    // Update cat with position we want to take
+                    $cat_to_down = $this->db->get_data('settings', "setting_group = 'blog_category' AND options='{$new_position}'");
+                    $cat_to_down_position = $cat_to_down['options'] + 1;
+                    $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
+
+                    // Now, update our cat
+                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->post_and_get('id')}'");
+
+                    $page_data['content'] .= $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
+                } else {
+                    $page_data['content'] .= $this->show_danger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
+                }
+            break;
+
+            case 'move-down':
+                $total = $this->db->count_row('settings', "setting_group = 'blog_category'");
+                
+                // cat we want to update
+                $cat_info = $this->db->get_data('settings', "id='{$this->post_and_get('id')}'");
+        
+                $cat_position = $cat_info['options'];
+                $new_position = $cat_position + 1;
+                    
+                if ($new_position < $total && (!empty($cat_position) || $cat_position == '0')) {
+                    // Update cat with position we want to take
+                    $cat_to_down = $this->db->get_data('settings', "setting_group = 'blog_category' AND options='{$new_position}'");
+                    $cat_to_down_position = $cat_to_down['options'] - 1;
+                    $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
+                    
+                    // Now, update our cat
+                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->post_and_get('id')}'");
+        
+                    $page_data['content'] .= $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
+                } else {
+                    $page_data['content'] .= $this->show_danger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
+                }
+            break;
+        
+            default:
+                if ($this->db->count_row('settings', "setting_group = 'blog_category'") == 0) $this->show_notification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
+        
+                // Blog categories
+                foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
+                    $page_data['content'] .= '<div class="a">';
+                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
+                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
+                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=delete&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Delete" /> Delete') . ' ';
+                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-up&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/ups.gif" alt="Up" /> Move up') . ' ';
+                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
+                    $page_data['content'] .= '</div>';
+                }
+                break;
+        }
+        
+        $page_data['content'] .= '<p class="mt-5">';
+        if ($this->post_and_get('action') !== 'add-category') $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
+        if (!empty($this->post_and_get('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog') . '<br />';
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->homelink();
+        $page_data['content'] .= '</p>';
+
+        return $page_data;
+    }
+
+    /**
+     * Page title
+     */
+    public function pagetitle()
+    {
+        // Users data
+        $page_data['user'] = $this->user_data;
+        $page_data['tname'] = 'Page Title';
+        $page_data['content'] = '';
+
+        $act = $this->post_and_get('act');
+
+        if (!$this->user->is_administrator()) $this->redirect_to('../?error');
+        
+        if ($act == 'addedit') {
+            $tfile = $this->check($this->post_and_get('tfile'));
+            $msg = $this->no_br($this->post_and_get('msg'));
+        
+            // get page data
+            $pageData = $this->db->get_data('pages', "file='{$tfile}'", 'file, headt');
+        
+            $headData = $pageData['headt'];
+        
+            // remove old open graph title title and set new
+            if (stripos($headData, 'property="og:title" content="')) {
+            $start = stripos($headData, '<meta property="og:title"');
+            for ($i = $start;$i < strlen($headData);$i++) {
+                $currentChar = $headData[$i];
+                $headData[$i] = '~';
+        
+                if ($currentChar == '>')
+                break;
+                }
+            }
+
+            $inputPosition = $start;
+            $headData = str_replace('~', '', $headData);
+            $headData = substr_replace($headData, '<meta property="og:title" content="' . $msg . '" />', $inputPosition, 0);
+
+            $fields = array('tname', 'headt');
+            $values = array($msg, $headData);
+            $this->db->update('pages', $fields, $values, "file='{$tfile}'");
+
+            $this->redirect_to(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=" . $pageData['file'] . "&isset=savedok");
+        } 
+        
+        if ($act == 'savenew') {
+            $tpage = $this->check($this->post_and_get('tpage'));
+            $tpage = strtolower($tpage);
+            $tpage = str_replace(' ', '-', $tpage);
+
+            $msg = $this->no_br($this->post_and_get('msg'));
+
+            $last_notif = $this->db->get_data('pages', "pname='{$tpage}'", '`tname`, `pname`, `file`, `headt`');
+
+            $headData = $last_notif['headt'];
+
+            // remove old open graph title title and set new
+            if (stripos($headData, 'property="og:title" content="')) {
+            $start = stripos($headData, '<meta property="og:title"');
+            for ($i = $start;$i < strlen($headData);$i++) {
+                $currentChar = $headData[$i];
+                $headData[$i] = '~';
+        
+                if ($currentChar == '>')
+                break;
+                }
+            }
+
+            $inputPosition = $start;
+            $headData = str_replace('~', '', $headData);
+            $headData = trim(substr_replace($headData, '<meta property="og:title" content="' . $msg . '" />', $inputPosition, 0));
+        
+            // no data in database, insert data
+            if (empty($last_notif['tname'] && $last_notif['pname'] && $last_notif['file'])) {
+                $values = array(
+                    'pname' => $tpage,
+                    'tname' => $msg,
+                    'file' => $tpage
+                );
+                $this->db->insert('pages', $values);
+
+                $PBPage = false;
+            } else {
+                $fields = array('tname', 'headt');
+                $values = array($msg, $headData);
+                $this->db->insert('pages', $fields, $values, "pname='" . $tpage . "'");
+        
+                $PBPage = true;
+            } 
+
+            $this->redirect_to(HOMEDIR . "adminpanel/pagetitle/?isset=savedok");
+        }
+
+        if ($act == 'del') {
+            $tid = $this->check($this->post_and_get('tid'));
+        
+            $this->db->delete('pages', "pname = '{$tid}'");
+        
+            $this->redirect_to(HOMEDIR . 'adminpanel/pagetitle');
+        }
+        
+        if (!isset($act) || empty($act)) {
+            $nitems = $this->db->count_row('pages');
+            $total = $nitems;
+        
+            if ($total < 1) {
+                $page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
+            }
+        
+            $nitems = $this->db->count_row('pages', 'tname is not null');
+            $num_items = $nitems;
+        
+            $items_per_page = 30;
+        
+            $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), HOMEDIR . 'adminpanel/pagetitle/?'); // start navigation
+
+            $limit_start = $navigation->start()['start']; // starting point
+
+            $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+        
+            if ($num_items > 0) {
+                foreach ($this->db->query($sql) as $item) {
+                    $lnk = $item['pname'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&amp;pgfile=' . $item['file'] . '">' . $item['tname'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=headtag&amp;file=' . $item['file'] . '">[Edit Meta]</a> | <img src="' . HOMEDIR . 'themes/images/img/close.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=del&amp;tid=' . $item['pname'] . '">[DEL]</a>'; 
+                    // $page_data['content'] .= " <small>joined: $jdt</small>";
+                    $page_data['content'] .= "$lnk<br />";
+                }
+            }
+
+            $page_data['content'] .= $navigation->get_navigation();
+
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
+        }
+        
+        if ($act == 'edit') {
+            $pgfile = $this->check($this->post_and_get('pgfile'));
+        
+            $page_title = $this->db->get_data('pages', "file='{$pgfile}'", 'tname, pname');
+        
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagetitle/?act=addedit');
+            $form->set('form_method', 'POST');
+        
+            $input = $this->model('ParsePage');
+            $input->load('forms/input');
+            $input->set('input_type', 'hidden');
+            $input->set('input_name', 'tfile');
+            $input->set('input_value', $pgfile);
+        
+            $input_2 = $this->model('ParsePage');
+            $input_2->load('forms/input');
+            $input_2->set('label_for', 'msg');
+            $input_2->set('label_value', 'Page title:');
+            $input_2->set('input_name', 'msg');
+            $input_2->set('input_id', 'msg');
+            $input_2->set('input_value', $page_title['tname']);
+        
+            $form->set('fields', $form->merge(array($input, $input_2)));
+            $page_data['content'] .= $form->output();
+        
+            $page_data['content'] .= '<hr>';
+        
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', $this->localization->string('back'), '<p>', '</p>');
+        } 
+
+        if ($act == "addnew") {
+            $form = $this->model('ParsePage');
+            $form->load('forms/form');
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagetitle/?act=savenew');
+            $form->set('form_method', 'POST');
+        
+            $input = $this->model('ParsePage');
+            $input->load('forms/input');
+            $input->set('label_for', 'tpage');
+            $input->set('label_value', 'Page:');
+            $input->set('input_type', 'text');
+            $input->set('input_name', 'tpage');
+            $input->set('input_id', 'tpage');
+        
+            $input_2 = $this->model('ParsePage');
+            $input_2->load('forms/input');
+            $input_2->set('label_for', 'msg');
+            $input_2->set('label_value', 'Page title:');
+            $input_2->set('input_type', 'text');
+            $input_2->set('input_name', 'msg');
+            $input_2->set('input_id', 'msg');
+        
+            $form->set('fields', $form->merge(array($input, $input_2)));
+            $page_data['content'] .= $form->output();
+        
+            $page_data['content'] .= '<hr />';
+        
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', $this->localization->string('back'), '<p>', '</p>');
+        }
+        
+        $page_data['content'] .= '<p>';
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->homelink();
+        $page_data['content'] .= '</p>';
+
+        return $page_data;
+    }
+
+    /**
+     * IP informations
+     */
+    public function ip_informations()
+    {
+        // Users data
+        $page_data['user'] = $this->user_data;
+        $page_data['tname'] = 'IP Informations';
+        $page_data['content'] = '';
+
+        if (!$this->user->is_moderator() && !$this->user->is_administrator()) $this->redirect_to('../?auth_error');
+
+        $ip = $this->post_and_get('ip');
+
+        if (empty($ip)) exit('please set ip address');
+
+        // Get an array with geoip-infodata
+        function geo_check_ip($ip) {
+            // check, if the provided ip is valid
+            if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+                throw new InvalidArgumentException("IP is not valid");
+            } 
+
+            // contact ip-server
+            $response = @file_get_contents('http://ip-api.com/json/' . $ip);
+
+            if (empty($response)) {
+                throw new InvalidArgumentException("Error contacting Geo-IP-Server");
+            }
+
+            // Return result as array
+            return json_decode($response, true);
+        }
+
+        $ipData = geo_check_ip($ip);
+
+        $page_data['ip_informations'] = 'IP Address: ' . $ip . '<br />';
+        if (!empty($ipData) && isset($ipData['country'])) {
+            $page_data['ip_informations'] .= 'Country: ' . $ipData['country'] . '<br />';
+            $page_data['ip_informations'] .= 'State/Region: ' . $ipData['regionName'] . '<br />';
+            $page_data['ip_informations'] .= 'City/Town: ' . $ipData['city'] . '<br />';
+        } else {
+            $page_data['ip_informations'] .= $this->show_danger('No data available');
+        }
+
+        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->homelink() . '</p>';
+
+        return $page_data;
+    }    
+}

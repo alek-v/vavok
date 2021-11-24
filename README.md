@@ -9,7 +9,9 @@
 > Feel free to contribute
 
 # Install
-> Go to your_site.com/install/ and follow instructions.
+> 1. Install composer dependencies in app directory
+> 2. Enter database data in app/.env file 
+> 3. Go to your_site.com/install/ to complete installation
 
 >
 
