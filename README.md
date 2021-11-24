@@ -6,8 +6,6 @@
 
 > Documentation: https://docs.vavok.net/
 
-> Feel free to contribute
-
 # Install
 > 1. Install composer dependencies in app directory
 > 2. Enter database data in app/.env file 
@@ -20,5 +18,4 @@
 > <strong>Required extensions:</strong>
 
 > PHP: pdo, pdo_mysql, mbstring
-
 > Apache: mod_rewrite
