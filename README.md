@@ -17,5 +17,5 @@
 
 > <strong>Required extensions:</strong>
 
-PHP: pdo, pdo_mysql, mbstring
+PHP: pdo, pdo_mysql, mbstring<br />
 Apache: mod_rewrite
