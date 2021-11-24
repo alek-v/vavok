@@ -2,7 +2,7 @@
 <a href="https://vavok.net"><img src="https://www.vavok.net/themes/vavok3/images/logo.png" height="40" alt="Vavok logo" /></a>
 
 # Vavok CMS
-Made to be fast, safe and easy to customize
+Upgrading from v1, more updates are required to use in production
 
 Documentation: https://docs.vavok.net/
 
