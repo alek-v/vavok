@@ -110,7 +110,7 @@ class UsersModel extends Controller {
                 exit;
             }
 
-            $password = $this->check($this->post_and_get('par'));
+            $password = $this->post_and_get('par', true);
             $mail = htmlspecialchars(stripslashes(strtolower($this->post_and_get('meil'))));
 
             if ($this->get_configuration('regConfirm') == 1) {

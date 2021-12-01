@@ -32,6 +32,7 @@ $lang_profil['badfileext'] = "This file format is unallowed";
 $lang_profil['badsize'] = "This file size is not allowed. It must bee";
 $lang_profil['filemustb'] = "File size must be";
 $lang_profil['badextlrg'] = "File format unallowed. It must be";
+$lang_profil['notoken'] = 'Token does not exist';
 
 $lang_home = array_merge($lang_home, $lang_profil);
 

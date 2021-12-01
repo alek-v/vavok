@@ -426,23 +426,18 @@ class PagemanagerModel extends Controller {
                 $index_data['content'] .= '<p>';
                 $index_data['content'] .= $this->localization->string('pgaddress') . ': ';
 
-                // if it is index doesnt show this page like other pages
+                // Homepage (index page)
                 if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
-                    // this is index page
                     if (!empty($page_info['lang'])) { $url_lang = strtolower($page_info['lang']) . '/'; } else { $url_lang = ''; }
-
                     $index_data['content'] .= '<a href="' . $this->website_home_address() . '/' . $url_lang . '" target="_blank">' . $this->website_home_address() . '/' . $url_lang . '</a>';
-
-                } elseif ($post_type == 'post') {
-                    // this is blog post
-                    $index_data['content'] .= '<br /><a href="' . $this->website_home_address() . '/blog/' . $showname . '/" target="_blank">' . $this->website_home_address() . '/blog/' . $showname . '/</a><br />';
-
-                } elseif ($post_type == 'page' || empty($post_type)) {
-                    // this is page
-                    $index_data['content'] .= '<br /><a href="' . $this->website_home_address() . '/page/' . $showname . '/" target="_blank">' . $this->website_home_address() . '/page/' . $showname . '/</a><br />';
-                } else {
-                    // this is custom page structure
-                    $index_data['content'] .= '<br /><a href="' . $this->website_home_address() . '/' . $post_type . '/' . $showname . '/" target="_blank">' . $this->website_home_address() . '/' . $post_type . '/' . $showname . '/</a><br />';
+                }
+                // Blog post
+                elseif ($post_type == 'post') {
+                    $index_data['content'] .= '<br /><a href="' . $this->website_home_address() . '/blog/' . $showname . '" target="_blank">' . $this->website_home_address() . '/blog/' . $showname . '</a><br />';
+                }
+                // Page
+                elseif ($post_type == 'page' || empty($post_type)) {
+                    $index_data['content'] .= '<br /><a href="' . $this->website_home_address() . '/page/' . $showname . '" target="_blank">' . $this->website_home_address() . '/page/' . $showname . '</a><br />';
                 }
 
                 $index_data['content'] .= '</p>';
@@ -923,7 +918,7 @@ class PagemanagerModel extends Controller {
         $index_data['content'] .= '</p>';
 
         $index_data['content'] .= '<p>';
-        $index_data['content'] .= $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
         $index_data['content'] .= $this->homelink();
         $index_data['content'] .= '</p>';
 

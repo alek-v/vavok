@@ -1034,6 +1034,7 @@ class Core {
 	 * Return POST and GET variables or single variable
 	 *
 	 * @param string $return_key
+	 * @param bool $unchainged
 	 * @return array|string
 	 */
 	public function post_and_get($return_key = '', $unchainged = '')
@@ -1074,8 +1075,27 @@ class Core {
 	/**
 	 * Users device, computer or phone
 	 */
-	function user_device() {
+	public function user_device() {
     	return BrowserDetection::userDevice();
+	}
+
+	/**
+	 * Clean unconfirmed registrations
+	 * 
+	 * @return void
+	 */
+	public function clean_registrations()
+	{
+		// Hours user have to confirm registration
+		$confirmationHours = 24;
+		$confirmationTime = $confirmationHours * 3600;
+
+		foreach ($this->db->query("SELECT regdate, uid FROM vavok_profil WHERE regche = '1'") as $userCheck) {
+			// Delete user if he didn't confirmed registration within $confirmationHours
+			if (($userCheck['regdate'] + $confirmationTime) < time()) {
+				$this->db->delete_user($userCheck['uid']);
+			}
+		}
 	}
 
 	/**
@@ -1091,6 +1111,9 @@ class Core {
 
 		// Tags for all pages at the website
 		$tags = file_get_contents(APPDIR . 'used/headmeta.dat');
+
+		// Tags for this page only
+		if (isset($page_data['headt'])) $tags .= $page_data['headt'];
 
 		// Add missing open graph tags
 		if (!strstr($tags, 'og:type')) $tags .= "\n" . '<meta property="og:type" content="website" />';

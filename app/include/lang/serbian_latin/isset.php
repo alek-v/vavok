@@ -38,7 +38,6 @@ $issetLang = array(
 "noreg" => 'Nedozvoljeni znakovi u korisničkom imenu ili šifri<br />Koristite samo latinicu i brojeve',
 "antirega" => 'Već ste registrovani',
 "nopassword" => 'Niste upisali šifru ili je nepravilna',
-"notoken" => 'Token ne postoji',
 
 // admin panel isset
 "mp_yesset" => 'Podešavanja sistema uspešno sačuvana',

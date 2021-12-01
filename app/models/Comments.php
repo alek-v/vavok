@@ -6,8 +6,8 @@
 
 class Comments extends Controller {
 	protected object $db;
+	protected object $user;
 
-	// class constructor
 	function __construct() {
 		$this->db = new Database;
 	}
@@ -15,27 +15,27 @@ class Comments extends Controller {
 	// Insert new comment
 	public function insert($content, $pid) {
 		// Values to insert
-		$values = array('uid' => $this->user_id, 'comment' => $content, 'pid' => $pid, 'date' => date('Y-m-d H:i:s'));
+		$values = array('uid' => $_SESSION['uid'], 'comment' => $content, 'pid' => $pid, 'date' => date('Y-m-d H:i:s'));
 
 		// Insert data to database
 		$this->db->insert('comments', $values);
-
 	}
 
-	// count number of comments
+	// Count number of comments
 	public function count_comments($pid)
 	{
 		return $this->db->count_row('comments', 'pid=' . $pid);
 	}
 
-	// load comments
-	public function load_comments($pid, $start, $items_per_page) {
+	// Load comments
+	public function load_comments($pid, $start, $items_per_page, $user) {
+		$this->user = $user;
 		$all_posts = array();
 
 		foreach ($this->db->query("SELECT * FROM comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}") as $key) {
 			// load template
 			$page_posts = $this->model('ParsePage');
-			$page_posts->load('pages/blog/comment');
+			$page_posts->load('blog/comment');
 
 			$page_posts->set('user', '<a href="' . HOMEDIR . 'users/u/' . $key['uid'] . '">' . $this->user->getnickfromid($key['uid']) . '</a>');
 
@@ -50,7 +50,7 @@ class Comments extends Controller {
 
 			$page_posts->set('time_added', $day . '.' . $month . '.' . $year . '.' . ' ' . $full_date[1]);
 
-			// blog post objects
+			// Blog posts
 			$all_posts[] = $page_posts;
 		}
 

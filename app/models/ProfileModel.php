@@ -331,7 +331,7 @@ class ProfileModel extends Controller {
 
 			$msg = "Hello {$this->user->show_username()}<br /><br />
             In order to add this email to your profile at site {$this->website_home_address()}
-            please follow link to confirm email address " . '<a href="' . $this->website_home_address() . '/pages/confirm_email.php?token=' . $token . '">' . $this->website_home_address() . '/pages/confirm_email.php?token=' . $token . '</a>';
+            please follow link to confirm email address " . '<a href="' . $this->website_home_address() . '/profile/confirm_email/?token=' . $token . '">' . $this->website_home_address() . '/profile/confirm_email/?token=' . $token . '</a>';
 			$msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
 			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
@@ -385,11 +385,11 @@ class ProfileModel extends Controller {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->password_check($this->post_and_get('oldpar'), $this->user->user_info('password'))) {
+        if ($this->user->password_check($this->post_and_get('oldpar', true), $this->user->user_info('password'))) {
             // Update password
-            $this->user->update_user('pass', $this->user->password_encrypt($this->post_and_get('newpar')));
+            $this->user->update_user('pass', $this->user->password_encrypt($this->post_and_get('newpar', true)));
 
-            $this->redirect_to($this->website_home_address() . "/users/login/?log=" . $this->user->getnickfromid($this->user->user_id()) . "&pass=" . $this->post_and_get('newpar') . "&isset=editpass");
+            $this->redirect_to($this->website_home_address() . "/users/login");
         } else {
             $data['content'] = $this->show_danger('{@website_language[nopass]}}');
         }
@@ -554,5 +554,36 @@ class ProfileModel extends Controller {
 
         // Pass page to the view
         return $data;
+    }
+
+    /**
+     * Confirm email
+     */
+    public function confirm_email()
+    {
+        // Users data
+        $this_page['user'] = $this->user_data;
+
+        // Page data
+        $this_page['tname'] = 'Confirm email address';
+        $this_page['content'] = '';
+
+        // Token does not exist
+        if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'") < 1) {
+            $this_page['content'] .= $this->show_danger('{@website_language[notoken]}}');
+
+            return $this_page;
+        }
+
+        // Get token data
+        $data = $this->db->get_data('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'");
+
+        // Update email
+        $this->user->update_user('email', $data['content'], $data['uid']);
+
+        // Remove token
+        $this->db->delete('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'");
+
+        $this->redirect_to(HOMEDIR . 'profile');
     }
 }

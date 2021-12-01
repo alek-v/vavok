@@ -28,11 +28,9 @@ class ParsePage extends Core {
         // Metadata for all pages
         // Set missing OG tags when possible too
         $this->head_data = $this->page_head_metatags($data);
-
         $this->title = isset($data['tname']) ? $data['tname'] : '';
         $this->content = isset($data['content']) ? $data['content'] : '';
         $this->lang = isset($data['lang']) ? $data['lang'] : '';
-        $this->head_data .= isset($data['headt']) ? $data['headt'] : '';
         $this->notification = isset($data['show_notification']) ? $data['show_notification'] : '';
         $this->values = array_merge($this->values, $data);
     }

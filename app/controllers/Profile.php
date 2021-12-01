@@ -77,4 +77,15 @@ class Profile extends Controller {
         // Pass page to the view
         $this->view('notifications', $model->removephoto());
     }
+
+    /**
+     * Confirm email address
+     */
+    public function confirm_email()
+    {
+        $model = $this->model('ProfileModel');
+
+        // Pass page to the view
+        $this->view('notifications', $model->confirm_email());
+    }
 }

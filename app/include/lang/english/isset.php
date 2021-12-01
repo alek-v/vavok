@@ -38,7 +38,6 @@ $issetLang = array(
 "noreg" => 'Please use only letters and numbers',
 "antirega" => 'You are already registered',
 "nopassword" => 'Please enter your password',
-"notoken" => 'Token does not exist',
 
 // admin panel isset
 "mp_yesset" => 'Settings successfully saved',

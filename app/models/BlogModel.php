@@ -144,7 +144,7 @@ class BlogModel extends Controller {
                 // Start navigation
                 $navi = new Navigation($items_per_page, $total_comments, $this->post_and_get('page'));
         
-                $all_comments = $comments->load_comments($this->page_id, $navi->start()['start'], $comments_per_page);
+                $all_comments = $comments->load_comments($this->page_id, $navi->start()['start'], $comments_per_page, $this->user);
         
                 // merge blog comments and output from object
                 $merge_all = $post->merge($all_comments);
@@ -155,7 +155,7 @@ class BlogModel extends Controller {
                 if ($this->user->is_reg()) {
                     $add_comment = $this->model('ParsePage');
                     $add_comment->load('blog/add_comment');
-                    $add_comment->set('add_comment_page', HOMEDIR . 'pages/comments.php?action=save&amp;pid=' . $this->page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
+                    $add_comment->set('add_comment_page', HOMEDIR . 'blog/save_comment/?pid=' . $this->page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
         
                     $post->set('add_comment', $add_comment->output());
                 }
@@ -164,9 +164,7 @@ class BlogModel extends Controller {
         
                 $post->set('comments', $show_comments->output());
         
-                /**
-                 * Page tags
-                 */
+                // Page tags
                 $sql = $this->db->query("SELECT * FROM tags WHERE page_id='{$this->page_id}' ORDER BY id ASC");
         
                 $tags = '';
@@ -191,33 +189,28 @@ class BlogModel extends Controller {
             default:
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
 
-                /**
-                 * Add meta tags
-                 */
+                // Add meta tags
                 $this_page['headt'] = '<meta name="robots" content="noindex, follow" />' . "\r\n";
         
-                // page title
+                // Page title
                 $this_page['tname'] = 'Blog';
         
-                // load index template
+                // Load index template
                 $show_page = $this->model('ParsePage');
                 $show_page->load("blog/index");
         
-                /**
-                 * Count total posts
-                 */
+                // Count total posts
                 $total_posts = empty($this_category) ? $this->db->count_row('pages', "type='post' AND published = '2'") : $this->db->count_row('tags', "tag_name='{$this_category}'");
-        
-                // if there is no posts
+
+                // When there is no posts
                 if ($total_posts < 1) {
                     $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is nothing here</p>';
                     $this_page['content'] .= $this->sitelink( HOMEDIR . 'blog/', $this->localization->string('backtoblog'), '<p>', '</p>');
-        
+
                     return $this_page;
-        
                     break;
                 }
-        
+
                 // start navigation
                 $navi = new Navigation($items_per_page, $total_posts, $this->post_and_get('page'));
         
@@ -255,9 +248,7 @@ class BlogModel extends Controller {
                  * Get blog posts
                  */
         
-                /**
-                 * Query when category is not set and case when it is set
-                 */		
+                // Query when category is not set and case when it is set
                 $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
                 "SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$this_category}' AND tags.page_id = pages.id AND pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
         
@@ -309,9 +300,7 @@ class BlogModel extends Controller {
                     $all_posts[] = $page_posts;
                 }
         
-                /**
-                 * Merge blog posts and output from object
-                 */
+                // Merge blog posts and output from object
                 $show_page->set('posts', $page_posts->merge($all_posts));
         
                 // page navigation
@@ -325,6 +314,34 @@ class BlogModel extends Controller {
 
                 break;
         }
+    }
+
+	/**
+	 * Blog
+	 * 
+	 * @param array $params
+	 * @return array
+	 */
+	public function save_comment()
+	{
+        // Users data
+		$this_page['user'] = $this->user_data;
+
+        // Content of the page
+        $this_page['content'] = '';
+
+        $ptl = ltrim($this->check($this->post_and_get('ptl')), '/'); // Return page
+
+        // In case data is missing
+        if ($this->user->is_reg() && (empty($this->post_and_get('comment')) || empty($this->post_and_get('pid')))) { $this->redirect_to(HOMEDIR . $ptl . '?isset=msgshort'); }
+
+        $comments = $this->model('Comments');
+
+        // Insert data to database
+        $comments->insert($this->post_and_get('comment'), $this->post_and_get('pid'));
+
+        // Saved, return to page
+        $this->redirect_to(HOMEDIR . $ptl . '?isset=savedok');
     }
 
 	/**

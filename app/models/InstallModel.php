@@ -150,7 +150,7 @@ class InstallModel extends Controller {
 
                             $this_page['content'] .= '<p>Installation competed successfully<br></p>';
 
-                            $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login/?log=' . $name . '&amp;pass=' . $password . '&amp;cookietrue=1">Login</a></b></p>';
+                            $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login">Login</a></b></p>';
                         } else {
                             $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
                             $this_page['content'] .= '<p><a href="register">Back</a></p>';

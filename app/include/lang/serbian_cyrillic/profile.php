@@ -32,6 +32,7 @@ $lang_profil['badfileext'] = "Недозвољен формат фајла";
 $lang_profil['badsize'] = "Недозвољена величина фајла. Мора бити";
 $lang_profil['filemustb'] = "Фајл мора бити величине";
 $lang_profil['badextlrg'] = "Недозвољен формат фајла. Мора бити";
+$lang_profil['notoken'] = 'Токен не постоји';
 
 $lang_home = array_merge($lang_home, $lang_profil);
 

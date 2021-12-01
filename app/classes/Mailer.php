@@ -10,7 +10,7 @@ use PHPMailer\PHPMailer\SMTP;
 
 require APPDIR . 'vendor/autoload.php';
 
-class Mailer {
+class Mailer extends Core {
     protected object $db;
 
 	function __construct()
@@ -45,10 +45,10 @@ class Mailer {
 	    /**
 	     * Default name
 	     */
-	    if (empty($name)) $name = $this->vavok->get_configuration('title');
+	    if (empty($name)) $name = $this->get_configuration('title');
 
 	    // support for unicode emails
-	    if ($this->vavok->is_unicode($usermail) && function_exists('idn_to_ascii')) {
+	    if ($this->is_unicode($usermail) && function_exists('idn_to_ascii')) {
 	    	// convert to ascii
 	    	$usermail = idn_to_ascii($usermail);
 	    }
@@ -109,10 +109,10 @@ class Mailer {
 		//Set the subject line
 		$mail->Subject = $subject;
 		// Convert to HTML if message is plain text
-		if ($this->vavok->is_html($msg)) {
+		if ($this->is_html($msg)) {
 			$mail->msgHTML($msg);
 		} else {
-			$mail->msgHTML($this->vavok->getbbcode($msg));
+			$mail->msgHTML($this->getbbcode($msg));
 		}
 		//Replace the plain text body with one created manually
 		$mail->AltBody = $msg;

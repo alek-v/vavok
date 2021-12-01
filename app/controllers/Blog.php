@@ -15,4 +15,14 @@ class Blog extends Controller {
         // Pass page to the view
         $this->view('blog/main', $model->index($params));
     }
+
+    /**
+     * Save comment
+     */
+    public function save_comment()
+    {
+        // Load page model
+        $model = $this->model('BlogModel');
+        $model->save_comment(); 
+    }
 }

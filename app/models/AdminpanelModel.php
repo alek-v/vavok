@@ -313,46 +313,19 @@ class AdminpanelModel extends Controller {
         }
         
         if ($this->post_and_get('action') == 'editseven') {
-            // url of custom pages
-            $htaccess = file_get_contents('../.htaccess'); // load .htaccess file
-        
-            // replace custom link
-            $chars = strlen('# website custom pages');
-            $start = strpos($htaccess, '# website custom pages') + $chars;
-            $end = strpos($htaccess, '# end of website custom pages');
-        
-            $replace = '';
-            for ($i=$start; $i < $end; $i++) {
-                $replace .= $htaccess[$i];
-            }
-        
-            // do replacement
-            if (!empty($this->post_and_get('conf_set28'))) {
-                $replacement = "\r\n" . 'RewriteRule ^' . str_replace(' ', '', $this->post_and_get('conf_set28')) . '\/([^\/]+)\/?$ pages/pages.php?pg=$1 [NC,L]' . "\r\n";
-            } else { $replacement = "\r\n# custom_link - don't remove\r\n"; }
-        
-            $new_htaccess = str_replace($replace, $replacement, $htaccess);
-        
-            // save changes
-            file_put_contents('../.htaccess', $new_htaccess);
-        
             $fields = array(
                 'pgFbComm',
-                'customPages',
                 'refererLog',
                 'showRefPage'
             );
-        
+
             $values = array(
                 $this->post_and_get('conf_set6'),
-                $this->post_and_get('conf_set28'),
                 (int)$this->post_and_get('conf_set51'),
                 $this->post_and_get('conf_set70')
             );
-        
-            /**
-             * Update settings
-             */
+
+            // Update settings
             $site_configuration->update_config_data(array_combine($fields, $values));
             $this->redirect_to(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
@@ -368,17 +341,13 @@ class AdminpanelModel extends Controller {
                 round($this->post_and_get('conf_set76') * 1440)
             );
 
-            /**
-             * Update settings
-             */
+            // Update settings
             $site_configuration->update_config_data(array_combine($fields, $values));
-        
+
             $this->redirect_to(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         }
 
-        /**
-         * Site security options
-         */
+        // Site security options
         if ($this->post_and_get('action') == 'editsecurity') {
             $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
         
@@ -459,7 +428,7 @@ class AdminpanelModel extends Controller {
                     $options .= '<option value="' . $file . '">' . $file . '</option>';
                 }
             }
-        
+
             $select_lang = $this->model('ParsePage');
             $select_lang->load('forms/select');
             $select_lang->set('label_for', 'conf_set47');
@@ -860,7 +829,6 @@ class AdminpanelModel extends Controller {
         }
         
         if ($this->post_and_get('action') == "setfour") {
-        
             $kbs = $this->get_configuration('photoFileSize') / 1024;
         
             // forum settings
@@ -1067,24 +1035,13 @@ class AdminpanelModel extends Controller {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
         }
         
-        if ($this->post_and_get('action') == "setseven") {
+        if ($this->post_and_get('action') == 'setseven') {
             $data['content'] .= '<h1>' . $this->localization->string('pagessets') . '</h1>';
         
             $form = $this->model('ParsePage');
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editseven');
-        
-            /**
-             * Custom pages
-             */
-            $conf_set28 = $this->model('ParsePage');
-            $conf_set28->load('forms/input');
-            $conf_set28->set('label_for', 'custom-pages');
-            $conf_set28->set('label_value', $this->localization->string('customPageUrl'));
-            $conf_set28->set('input_id', 'custom-pages');
-            $conf_set28->set('input_name', 'conf_set28');
-            $conf_set28->set('input_value', $this->get_configuration('customPages'));
         
             /**
              * Max referer data
@@ -1141,7 +1098,7 @@ class AdminpanelModel extends Controller {
             if ($this->get_configuration('pgFbComm') == 1) {
                 $conf_set6yes->set('input_status', 'checked');
             }
-        
+
             $conf_set6no = $this->model('ParsePage');
             $conf_set6no->load('forms/radio_inline');
             $conf_set6no->set('label_for', 'fb_comm_no');
@@ -1152,13 +1109,13 @@ class AdminpanelModel extends Controller {
             if ($this->get_configuration('pgFbComm') == 0) {
                 $conf_set6no->set('input_status', 'checked');
             }
-        
+
             $fb_comm = $this->model('ParsePage');
             $fb_comm->load('forms/radio_group');
             $fb_comm->set('description', 'Facebook comments on pages');
             $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
         
-            $form->set('fields', $form->merge(array($conf_set28, $conf_set51, $show_refpage, $fb_comm)));
+            $form->set('fields', $form->merge(array($conf_set51, $show_refpage, $fb_comm)));
             $data['content'] .= $form->output();
         
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');

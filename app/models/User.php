@@ -53,17 +53,14 @@ class User extends Core {
 		 	// Time zone
 		    if (!empty($vavok_users['timezone'])) define('MY_TIMEZONE', $vavok_users['timezone']);
 
-		 	// Language
-		    if (!empty($vavok_users['lang'])) {
-		        // Update language in session if it is not language from prifile
-		        if (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang']) $_SESSION['lang'] = $vavok_users['lang'];
-		    }
+			// Update language in session if it is not language from profile
+		    if (!empty($vavok_users['lang']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang'])) $_SESSION['lang'] = $vavok_users['lang'];
 
 			// Check if user is banned
-		    if ($vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirect_to(HOMEDIR . 'users/ban');
+		    if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirect_to(HOMEDIR . 'users/ban');
 
 		 	// activate account
-		    if ($user_profil['regche'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
+		    if (isset($user_profil['regche']) && $user_profil['regche'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
 		        setcookie('cookpass', '');
 		        setcookie('cooklog', '');
 		        setcookie(session_name(), '');
@@ -101,15 +98,11 @@ class User extends Core {
 		// If timezone is not defined use default
 		if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->get_configuration('timeZone'));
 
-		/**
-		 * Site theme
-		 */
+		// Site theme
 	    $config_themes = $this->get_configuration('webtheme');
 
-		/**
-		 * If theme does not exist use default theme
-		 * For admin panel use default theme
-		 */
+		// If theme does not exist use default theme
+		// For admin panel use default theme
 		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php") || strpos($this->vavok->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
 		define('MY_THEME', $config_themes);
@@ -210,12 +203,12 @@ class User extends Core {
 			}
 
 			// compare sent data and data from database
-			if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->post_and_get('pass'), $this->user_info('password', $userx_id))) {
+			if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->post_and_get('pass', true), $this->user_info('password', $userx_id))) {
 				// user want to remember login
 				if ($this->post_and_get('cookietrue') == 1) {
 					// Encrypt data to save in cookie
-					$token = $this->latin_letters_numbers($this->password_encrypt($this->post_and_get('pass') . $this->generate_password()));
-		
+					$token = $this->latin_letters_numbers($this->password_encrypt($this->post_and_get('pass', true) . $this->generate_password()));
+
 					// Set token expire time
 					$now = new DateTime();
 					$now->add(new DateInterval('P1Y'));
@@ -1205,25 +1198,6 @@ class User extends Core {
 	        return true;
 	    }
 	    return false;
-	}
-
-	/**
-	 * Clean unconfirmed registrations
-	 * 
-	 * @return void
-	 */
-	public function clean_unconfirmed()
-	{
-		// Hours user have to confirm registration
-		$confirmationHours = 24;
-		$confirmationTime = $confirmationHours * 3600;
-
-		foreach ($this->query("SELECT regdate, uid FROM vavok_profil WHERE regche = '1'") as $userCheck) {
-			// Delete user if he didn't confirmed registration within $confirmationHours
-			if (($userCheck['regdate'] + $confirmationTime) < time()) {
-				$this->delete_user($userCheck['uid']);
-			}
-		}
 	}
 
 	/**

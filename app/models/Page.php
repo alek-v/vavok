@@ -8,6 +8,7 @@ class Page extends Controller {
     protected object $db;
     protected object $user;
     protected object $localization;
+	protected string $page_localization;
 	protected array  $user_data = [
 		'authenticated' => false,
 		'admin_status' => 'user',
@@ -41,14 +42,59 @@ class Page extends Controller {
 	 */
 	public function homepage($params = [])
 	{
+		// Localization from URL
+		$this->page_localization = !empty($params[0]) ? $this->user->get_prefered_language($params[0], 'short') : '';
+		// Query to select page with localization
 		$localization = !empty($params[0]) ? " AND lang = '{$params[0]}'" : '';
 
+		// Get page
 		$data = $this->db->get_data('pages', "pname='index'{$localization}", '*');
+
+		// Update user's language when language is set in URL and it is different then current localization
+		if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
+			$this->user->change_language(strtolower($this->page_localization));
+			// Update user's localization for page that we are now loading
+			$this->user_data['language'] = $this->user->get_prefered_language($this->page_localization);
+		}
+
+		// Redirect if user's language is not website default language,
+		// language is not in URL, example: www.example.com
+		// and page with users's language exists, example: www.example.com/de
+		if ($this->get_configuration('siteDefaultLang') != $this->user->get_user_language() && empty($params[0])) $this->redirect_to(HOMEDIR . $this->user->get_prefered_language($this->user->get_user_language(), 'short') . '/');
 
 		// Users data
 		$data['user'] = $this->user_data;
 
 		return $data = isset($data['tname']) ? $data : die('error404');
+	}
+
+	/**
+	 * Dynamic loading pages from database
+	 * 
+	 * @param array $params
+	 */
+	public function dynamic($params = [])
+	{
+		// Page data
+		$this_page = $this->db->get_data('pages', "pname='{$params[0]}'", '*');
+
+		// Localization from page's data
+		$this->page_localization = !empty($this_page['lang']) ? $this->user->get_prefered_language($this_page['lang'], 'short') : '';
+
+		// Update user's language when language is set in URL and it is different then current localization
+		if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
+			$this->user->change_language(strtolower($this->page_localization));
+			// Update user's localization for page that we are now loading
+			$this->user_data['language'] = $this->user->get_prefered_language($this->page_localization);
+		}
+
+		// Users data
+		$this_page['user'] = $this->user_data;
+
+		// Error 404
+		if (!isset($this_page['content'])) $this_page['content'] = 'Error 404';
+
+		return $this_page;
 	}
 
 	/**
@@ -269,24 +315,5 @@ class Page extends Controller {
 		$data['content'] .= $this->homelink('<p>', '</p>');
 
 		return $data;
-	}
-
-	/**
-	 * Dynamic loading pages from database
-	 * 
-	 * @param array $params
-	 */
-	public function dynamic($params = [])
-	{
-		// Page data
-		$this_page = $this->db->get_data('pages', "pname='{$params[0]}'", '*');
-
-		// Users data
-		$this_page['user'] = $this->user_data;
-
-		// Error 404
-		if (!isset($this_page['content'])) $this_page['content'] = 'Error 404';
-
-		return $this_page;
 	}
 }
