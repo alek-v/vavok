@@ -2,7 +2,7 @@
 <a href="https://vavok.net"><img src="https://www.vavok.net/themes/vavok3/images/logo.png" height="40" alt="Vavok logo" /></a>
 
 # Vavok CMS
-Upgrading from v1, more updates are required to use in production
+Upgrading from v1, still in beta
 
 Documentation: https://docs.vavok.net/
 
