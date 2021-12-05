@@ -1,4 +1,8 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
 class Core {
 	protected object $db;

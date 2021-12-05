@@ -41,13 +41,10 @@ class User extends Core {
 
 		// Get user data
 		if (!empty($_SESSION['uid'])) {
-			// Get data
 		    $vavok_users = $this->db->get_data('vavok_users', "id='{$_SESSION['uid']}'");
 		    $user_profil = $this->db->get_data('vavok_profil', "uid='{$_SESSION['uid']}'", 'regche');
 
-		    /**
-		     * Update last visit
-		     */
+		    // Update last visit
 		    $this->db->update('vavok_profil', 'lastvst', time(), "uid='{$_SESSION['uid']}'");
 
 		 	// Time zone
@@ -71,18 +68,9 @@ class User extends Core {
 		    if (empty($_SESSION['lang'])) $this->change_language();
 		}
 
-		/**
-		 * Count visited pages and time on site
-		 */
-
-		if (empty($_SESSION['currs'])) {
-		    $_SESSION['currs'] = time();
-		}
-
-		if (empty($_SESSION['counton'])) {
-		    $_SESSION['counton'] = 0;
-		}
-
+		// Count visited pages and time on site
+		if (empty($_SESSION['currs'])) $_SESSION['currs'] = time();
+		if (empty($_SESSION['counton'])) $_SESSION['counton'] = 0;
 		$_SESSION['counton']++;
 
 		// pages visited at this session
@@ -103,7 +91,7 @@ class User extends Core {
 
 		// If theme does not exist use default theme
 		// For admin panel use default theme
-		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php") || strpos($this->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+		if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
 		define('MY_THEME', $config_themes);
 

@@ -43,5 +43,6 @@ require_once 'classes/Navigation.php';
 require_once 'classes/Mailer.php';
 require_once 'classes/Config.php';
 require_once 'classes/Counter.php';
+require_once 'classes/BaseModel.php';
 
 $vavok = new Vavok();

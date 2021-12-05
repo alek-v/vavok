@@ -4,35 +4,7 @@
  * Site:   https://vavok.net
  */
 
-class ErrorModel extends Controller {
-    protected object $db;
-    protected object $user;
-    protected object $localization;
-	protected array  $user_data = [
-		'authenticated' => false,
-		'admin_status' => 'user',
-		'language' => 'english'
-	];
-
-    public function __construct()
-    {
-        $this->db = new Database;
-
-        $this->user = $this->model('User');
-
-        // Check if user is authenticated
-        if ($this->user->is_reg()) $this->user_data['authenticated'] = true;
-        // Admin status
-        if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
-        if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';
-        // Users laguage
-        $this->user_data['language'] = $this->user->get_user_language();
-
-        // Localization
-        $this->localization = $this->model('Localization');
-        $this->localization->load('', 'error');
-    }
-
+class ErrorModel extends BaseModel {
     /**
      * Log error
      * 
@@ -40,6 +12,10 @@ class ErrorModel extends Controller {
      */
     protected function log_error($params = [])
     {
+        // Localization
+        $this->localization = $this->model('Localization');
+        $this->localization->load('', 'error');
+
         $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';
         $http_referer = str_replace(':|:', '|', $http_referer);
         $request_uri = str_replace(':|:', '|', REQUEST_URI);

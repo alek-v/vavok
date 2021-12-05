@@ -4,48 +4,19 @@
  * Site:   https://vavok.net
  */
 
-class InboxModel extends Controller {
-    protected object $db;
-    protected object $user;
-    protected object $localization;
-	protected array  $user_data = [
-		'authenticated' => false,
-		'admin_status' => 'user',
-		'language' => 'english'
-	];
-
-    public function __construct()
-    {
-        $this->db = new Database;
-
-        $this->user = $this->model('User');
-
-        // Check if user is authenticated
-        if ($this->user->is_reg()) $this->user_data['authenticated'] = true;
-        // Admin status
-        if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
-        if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';
-        // Users laguage
-        $this->user_data['language'] = $this->user->get_user_language();
-
-        // Localization
-        $this->localization = $this->model('Localization');
-        $this->localization->load();
-    }
-
+class InboxModel extends BaseModel {
     public function index()
     {
         // Users data
         $data['user'] = $this->user_data;
+
         // Disable access for unregistered users
         if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR);
 
         // Update notification data
         if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
 
-        $data['headt'] = '<meta name="robots" content="noindex">
-        <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
-        <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
+        $data['headt'] = '<meta name="robots" content="noindex">';
         $data['tname'] = '{@localization[inbox]}}';
         $data['content'] = '';
 
@@ -102,6 +73,7 @@ class InboxModel extends Controller {
         // Users data
         $data['user'] = $this->user_data;
         $data['content'] = '';
+
         // Update notification data
         if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
 

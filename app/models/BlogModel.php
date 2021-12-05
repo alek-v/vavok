@@ -4,15 +4,7 @@
  * Site:   https://vavok.net
  */
 
-class BlogModel extends Controller {
-    protected object $db;
-    protected object $user;
-    protected object $localization;
-	protected array  $user_data = [
-		'authenticated' => false,
-		'admin_status' => 'user',
-		'language' => 'english'
-	];
+class BlogModel extends BaseModel {
     protected object $current_page;
 	protected $page_name;             // Page name
 	protected $page_language;         // Page language
@@ -24,28 +16,6 @@ class BlogModel extends Controller {
 	protected $head_tags;             // Head tags
 	protected $page_published_date;   // Date when post is published
 
-    public function __construct()
-    {
-        $this->db = new Database;
-
-        $this->user = $this->model('User');
-
-        // Check if user is authenticated
-        if ($this->user->is_reg()) $this->user_data['authenticated'] = true;
-        // Admin status
-        if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
-        if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';
-        // Users laguage
-        $this->user_data['language'] = $this->user->get_user_language();
-
-        // Localization
-        $this->localization = $this->model('Localization');
-        $this->localization->load();
-
-        // Instantiate model
-        $this->current_page = $this->model('Pagemanager');
-    }
-
 	/**
 	 * Blog
 	 * 
@@ -54,6 +24,9 @@ class BlogModel extends Controller {
 	 */
 	public function index($params = [])
 	{
+        // Instantiate model
+        $this->current_page = $this->model('Pagemanager');
+
         // Users data
 		$this_page['user'] = $this->user_data;
 
@@ -114,7 +87,7 @@ class BlogModel extends Controller {
                  */
                 $post->set('date-created-day', date('d', $this->page_created_date));
                 $post->set('date-created-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
-        
+
                 /**
                  * Day and month when post is published
                  * If article is not published and page is viewed by administrator use current time
@@ -131,21 +104,21 @@ class BlogModel extends Controller {
                  * Page URL
                  */
                 $post->set('page-link', $this->current_page->media_page_url());
-        
+
                 // comments
                 $comments = $this->model('Comments');
-        
+
                 // Number of comments
                 $total_comments = $comments->count_comments($this->page_id);
-        
+
                 // Show all comments
-                if ($comments_per_page == 0) { $comments_per_page = $total_comments; }
-        
+                if ($comments_per_page == 0) $comments_per_page = $total_comments;
+
                 // Start navigation
                 $navi = new Navigation($items_per_page, $total_comments, $this->post_and_get('page'));
         
                 $all_comments = $comments->load_comments($this->page_id, $navi->start()['start'], $comments_per_page, $this->user);
-        
+
                 // merge blog comments and output from object
                 $merge_all = $post->merge($all_comments);
         

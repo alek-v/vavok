@@ -4,13 +4,12 @@
  * Site:   https://vavok.net
  */
 
-class EmailQueue extends Controller {
-    protected object $db;
-    protected object $mailer;
+class EmailQueue extends BaseModel {
+    private object $mailer;
 
     public function __construct()
     {
-        $this->db = new Database;
+        parent::__construct();
 
         // Instantiate mailer
         $this->mailer = new Mailer;
