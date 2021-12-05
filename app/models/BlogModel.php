@@ -68,8 +68,8 @@ class BlogModel extends Controller {
         
         switch ($pg) {
             case isset($pg):
-                // Load page data
-                $this->blog_page_data($params);
+                // Load page data and merge with existing data
+                $this_page = array_merge($this->blog_page_data($params), $this_page);
 
                 // Redirect to blog main page if page does not exist
                 $page_id = !empty($this->page_id) or $this->redirect_to(HOMEDIR . 'blog/');
@@ -178,8 +178,8 @@ class BlogModel extends Controller {
                 }
         
                 $post->set('tags', $tags);
-        
-                // show page content
+
+                // Page content
                 $this_page['content'] .= $post->output();
 
                 return $this_page;

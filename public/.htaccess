@@ -23,14 +23,14 @@ AddDefaultCharset UTF-8
    Deny from all
 </Files>
 
-ErrorDocument 400 /pages/error.php?error=400
-ErrorDocument 401 /pages/error.php?error=401
-ErrorDocument 402 /pages/error.php?error=402
-ErrorDocument 403 /pages/error.php?error=403
-ErrorDocument 404 /pages/error.php?error=404
-ErrorDocument 406 /pages/error.php?error=406
-ErrorDocument 500 /pages/error.php?error=500
-ErrorDocument 502 /pages/error.php?error=502
+ErrorDocument 400 /errors/error_400
+ErrorDocument 401 /errors/error_401
+ErrorDocument 402 /errors/error_402
+ErrorDocument 403 /errors/error_403
+ErrorDocument 404 /errors/error_404
+ErrorDocument 406 /errors/error_406
+ErrorDocument 500 /errors/error_500
+ErrorDocument 502 /errors/error_502
 
 # ----------------------------------------------------------------------
 # Expires headers (for better cache control) (SEO and site performance improvements)
@@ -97,12 +97,12 @@ ErrorDocument 502 /pages/error.php?error=502
    
 </IfModule>
 
-# pagespeed module
+# Pagespeed module
 <IfModule pagespeed_module>
 	ModPagespeed off
 </IfModule>
 
-# commpression mod_deflate
+# Commpression mod_deflate
 <IfModule mod_deflate.c>
   # Compress HTML, CSS, JavaScript, Text, XML and fonts
   AddOutputFilterByType DEFLATE application/javascript
@@ -127,15 +127,6 @@ ErrorDocument 502 /pages/error.php?error=502
   AddOutputFilterByType DEFLATE text/plain
   AddOutputFilterByType DEFLATE text/xml
 </IfModule>
-
-RewriteEngine on
-# Include in the next line all folders to exclude
-# The [NC] flag here stands for No Case, so you don't have to worry about case sensitivity.
-RewriteCond %{REQUEST_URI} !(js|img|fls) [NC]
-
-# force https protocol
-#RewriteCond %{HTTPS} !=on
-#RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
 
 # deny adding www. or other subdomain to site address
 # The [L] flag stands for "Last", meaning that if this condition is true, execute the RewriteRule and do not attempt to match other RewriteConds or perform other operations on the request.

@@ -81,7 +81,7 @@ $lang_home['days'] = 'dana';
 $lang_home['secs'] = 'sekundi';
 $lang_home['guest'] = 'Gost';
 $lang_home['search'] = 'Pretraga';
-$lang_home['notloged'] = "Niste prijavljeni, da bi videli stranicu morate se <a href=\"" . BASEDIR. "pages/login.php\">prijaviti</a><br>ili najpre <a href=\"" . BASEDIR. "pages/registration.php\">registrovati</a>";
+$lang_home['notloged'] = "Niste prijavljeni, da bi videli stranicu morate se <a href=\"" . HOMEDIR. "users/login\">prijaviti</a><br>ili najpre <a href=\"" . HOMEDIR. "users/register\">registrovati</a>";
 $lang_home['next'] = 'Napred';
 $lang_home['prev'] = 'Nazad';
 $lang_home['contact'] = 'Kontakt';
@@ -100,7 +100,7 @@ $lang_home['settings'] = 'Podešavanja';
 // cookie consent
 $lang_home['cookies'] = 'Kolačići.'; // Title
 $lang_home['purecookieDesc'] = 'Korišćenjem ovog sajta prihvatate da koristite kolačiće.'; // Description
-$lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_blank">Zbog čega?</a>'; // Cookiepolicy link
+$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">Zbog čega?</a>'; // Cookiepolicy link
 $lang_home['purecookieButton'] = 'Prihvatam'; // Button text
 
 // ob_start("cyr_to_lat_skiptags");

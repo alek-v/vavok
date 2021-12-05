@@ -40,7 +40,7 @@ class ContactModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[contact]}}';
+        $data['tname'] = '{@localization[contact]}}';
         // Add data to page <head> to show Google reCAPTCHA
         $data['headt'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         $data['content'] = '';
@@ -71,7 +71,7 @@ class ContactModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[contact]}}';
+        $data['tname'] = '{@localization[contact]}}';
         $data['content'] = '';
 
         // Localization
@@ -79,16 +79,16 @@ class ContactModel extends Controller {
         $localization->load();
 
         // Check name
-        if (empty($this->post_and_get('name'))) $data['content'] .= $this->show_danger('{@website_language[noname]}}');
+        if (empty($this->post_and_get('name'))) $data['content'] .= $this->show_danger('{@localization[noname]}}');
 
         // Check email body
-        if (empty($this->post_and_get('body'))) $data['content'] .= $this->show_danger('{@website_language[nobody]}}');
+        if (empty($this->post_and_get('body'))) $data['content'] .= $this->show_danger('{@localization[nobody]}}');
 
         // Validate email address
-        if (!$this->user->validate_email($this->post_and_get('umail'))) $data['content'] .= $this->show_danger('{@website_language[noemail]}}');
+        if (!$this->user->validate_email($this->post_and_get('umail'))) $data['content'] .= $this->show_danger('{@localization[noemail]}}');
 
         // Redirect if response is false
-        if ($this->recaptcha_response($this->post_and_get('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->show_danger('{@website_language[wrongcode]}}');
+        if ($this->recaptcha_response($this->post_and_get('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->show_danger('{@localization[wrongcode]}}');
 
         // Send email if there is no error
         if (empty($data['content'])) {
@@ -96,11 +96,11 @@ class ContactModel extends Controller {
             $mail->queue_email($this->get_configuration('adminEmail'), $localization->string('msgfrmst') . ' ' . $this->get_configuration('title'), $this->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->post_and_get('name')}\r\nSender's email: {$this->post_and_get('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
             // Email sent
-            $data['content'] .= $this->show_success('{@website_language[emailsent]}}');
+            $data['content'] .= $this->show_success('{@localization[emailsent]}}');
         }
 
         // Back link
-        $data['content'] .= $this->sitelink(HOMEDIR . 'contact', '{@website_language[back]}}', '<p>', '</p>');
+        $data['content'] .= $this->sitelink(HOMEDIR . 'contact', '{@localization[back]}}', '<p>', '</p>');
 
         return $data;
     }

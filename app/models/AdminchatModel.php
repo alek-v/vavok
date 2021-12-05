@@ -37,7 +37,7 @@ class AdminchatModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[adminchat]}}';
+        $data['tname'] = '{@localization[adminchat]}}';
         $data['content'] = '';
 
         if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');

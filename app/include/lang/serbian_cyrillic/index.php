@@ -81,7 +81,7 @@ $lang_home['days'] = 'дана';
 $lang_home['secs'] = 'секунди';
 $lang_home['guest'] = 'Гост';
 $lang_home['search'] = 'Претрага';
-$lang_home['notloged'] = "Нисте пријављени, да би приступили страници морате се <a href=\"" . BASEDIR. "pages/login.php\">пријавити</a><br>или најпре <a href=\"" . BASEDIR. "pages/registration.php\">регистровати</a>";
+$lang_home['notloged'] = "Нисте пријављени, да би приступили страници морате се <a href=\"" . HOMEDIR . "users/login\">пријавити</a><br>или најпре <a href=\"" . HOMEDIR. "users/register\">регистровати</a>";
 $lang_home['next'] = 'Напред';
 $lang_home['prev'] = 'Назад';
 $lang_home['contact'] = 'Контакт';
@@ -100,7 +100,7 @@ $lang_home['settings'] = 'Подешавања';
 // cookie consent
 $lang_home['cookies'] = 'Колачићи.'; // Title
 $lang_home['purecookieDesc'] = 'Коришћењем овог сајта прихватате да користите колачиће.'; // Description
-$lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_blank">Због чега?</a>'; // Cookiepolicy link
+$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">Због чега?</a>'; // Cookiepolicy link
 $lang_home['purecookieButton'] = 'Прихватам'; // Button text
 
 // ob_start("lat_to_cyr_skiptags");

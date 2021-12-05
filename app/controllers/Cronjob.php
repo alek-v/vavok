@@ -6,6 +6,14 @@
 
 class Cronjob extends Controller {
     /**
+     * Index
+     */
+    public function index()
+    {
+        die('Cronjob does not exist.');
+    }
+
+    /**
      * Send email from the queue
      */
     public function email_queue_send()

@@ -40,7 +40,7 @@ class UsersModel extends Controller {
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@website_language[registration]}}';
+        $data['tname'] = '{@localization[registration]}}';
         $data['content'] = '';
 
         // Localization
@@ -211,11 +211,11 @@ class UsersModel extends Controller {
         // Add data to page <head> to show Google reCAPTCHA
         $data['headt'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         // Page title
-        $data['tname'] = '{@website_language[registration]}}';
+        $data['tname'] = '{@localization[registration]}}';
 
         if ($this->get_configuration('openReg') == 1) {
             if ($this->user->is_reg()) {
-                $data['content'] = $this->show_danger($this->user->show_username() . ', {@website_language[againreg]}}');
+                $data['content'] = $this->show_danger($this->user->show_username() . ', {@localization[againreg]}}');
 
                 // Load the view
                 $this->view('users/register/already_registered', $data);
@@ -223,10 +223,10 @@ class UsersModel extends Controller {
                 if (!empty($this->post_and_get('ptl'))) $data['page_to_load'] = $this->check($this->post_and_get('ptl'));
 
                 // Informations about registration confirmation
-                if ($this->get_configuration('regConfirm') == 1) $data['registration_key_info'] = '{@website_language[keyinfo]}}';
+                if ($this->get_configuration('regConfirm') == 1) $data['registration_key_info'] = '{@localization[keyinfo]}}';
 
                 // Informations about quarantine
-                if ($this->get_configuration('quarantine') > 0) $data['quarantine_info'] = '{@website_language[quarantine1]}} ' . round($this->get_configuration('quarantine') / 3600) . ' {@website_language[quarantine2]}}';
+                if ($this->get_configuration('quarantine') > 0) $data['quarantine_info'] = '{@localization[quarantine1]}} ' . round($this->get_configuration('quarantine') / 3600) . ' {@localization[quarantine2]}}';
 
                 // Show reCAPTCHA
                 if (!empty($this->get_configuration('recaptcha_sitekey'))) $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->get_configuration('recaptcha_sitekey') . '"></div>';
@@ -235,7 +235,7 @@ class UsersModel extends Controller {
                 $this->view('users/register/register', $data);
             }
         } else {
-            $data['content'] = $this->show_notification('{@website_language[regstoped]}}');
+            $data['content'] = $this->show_notification('{@localization[regstoped]}}');
 
             // Pass page to the view
             $this->view('users/register/registration_stopped', $data);
@@ -252,7 +252,7 @@ class UsersModel extends Controller {
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@website_language[confreg]}}';
+        $data['tname'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         // Localization
@@ -288,7 +288,7 @@ class UsersModel extends Controller {
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@website_language[confreg]}}';
+        $data['tname'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         // Localization
@@ -339,7 +339,7 @@ class UsersModel extends Controller {
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@website_language[confreg]}}';
+        $data['tname'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         // Localization
@@ -354,7 +354,7 @@ class UsersModel extends Controller {
 
         // Check if user really need to confirm registration
         if ($this->user->user_info('regche', $recipient_id) != 1) {
-            $data['content'] .= $this->show_notification('{@website_language[regalreadyconfirmed]}}');
+            $data['content'] .= $this->show_notification('{@localization[regalreadyconfirmed]}}');
             // Pass page data to the view
             $this->view('users/register/resendkey', $data);
             exit;
@@ -376,7 +376,7 @@ class UsersModel extends Controller {
         // Redirect if it is too early to send new message
         // User can resend message every 10 minutes
         if ((int)$interval->format('%i') < 10) {
-            $data['content'] .= $this->show_notification('{@website_language[tooearlytoresend]}}');
+            $data['content'] .= $this->show_notification('{@localization[tooearlytoresend]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $localization->string('back'), '<p>', '</p>');
             // Pass page data to the view
             $this->view('users/register/resendkey', $data);
@@ -395,9 +395,9 @@ class UsersModel extends Controller {
         if ($result == true) $this->db->update('email_queue', $fields, $values, 'id = ' . $email['id']);
 
         if ($result == true) {
-            $data['content'] .= $this->show_success('{@website_language[confmailsent]}}');
+            $data['content'] .= $this->show_success('{@localization[confmailsent]}}');
         } else {
-            $data['content'] .= $this->show_notification('{@website_language[confmailwillbesent]}}');
+            $data['content'] .= $this->show_notification('{@localization[confmailwillbesent]}}');
         }
 
         // Pass data to the controller
@@ -412,7 +412,7 @@ class UsersModel extends Controller {
         // Users data
         $data['user'] = $this->user_data;
         // Page title
-        $data['tname'] = '{@website_language[lostpass]}}';
+        $data['tname'] = '{@localization[lostpass]}}';
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         $data['headt'] .= '<link rel="stylesheet" href="../themes/templates/users/lost_password.css" />';
@@ -525,7 +525,7 @@ class UsersModel extends Controller {
         $localization = $this->model('Localization');
         $localization->load();
 
-        $data['tname'] = '{@website_language[ignorlist]}}';
+        $data['tname'] = '{@localization[ignorlist]}}';
         $data['content'] = '';
 
         // Add or remove user from ignore list
@@ -598,7 +598,7 @@ class UsersModel extends Controller {
         $localization = $this->model('Localization');
         $localization->load();
 
-        $data['tname'] = '{@website_language[contacts]}}';
+        $data['tname'] = '{@localization[contacts]}}';
         $data['content'] = '';
 
         // Add or remove from contacts
@@ -657,7 +657,7 @@ class UsersModel extends Controller {
         if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR);
 
         // Page data
-		$data['tname'] = '{@website_language[mymenu]}}';
+		$data['tname'] = '{@localization[mymenu]}}';
 
         // Pass data
         return $data;
@@ -670,7 +670,7 @@ class UsersModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[settings]}}';
+        $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
         // Disable access for unregistered users
@@ -866,7 +866,7 @@ class UsersModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[banned]}}';
+        $data['tname'] = '{@localization[banned]}}';
         $data['content'] = '';
 
         if (!$this->user->is_reg()) $this->redirect_to('../');
@@ -942,7 +942,7 @@ class UsersModel extends Controller {
             exit;
         }
 
-        $this_page['tname'] = '{@website_language[profile]}} ' . $uz;
+        $this_page['tname'] = '{@localization[profile]}} ' . $uz;
 
         // Load page from template
         $showPage = $this->model('ParsePage');

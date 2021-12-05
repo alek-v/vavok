@@ -79,9 +79,9 @@ class Navigation extends Core {
 	    if ($page > 1 && $this->total_pages > 1) {
 	    	// Dont show file.php?page=1, only file.php if this is first page
 	    	// We dont want to create duplicated pages with the same content file.php and file.php?page=1
-	    	$navigation .= $page == 2 ? $this->show_link($link, '{@website_language[prev]}}') : $this->show_link($link . 'page=' . ($page - 1), '{@website_language[prev]}}');
+	    	$navigation .= $page == 2 ? $this->show_link($link, '{@localization[prev]}}') : $this->show_link($link . 'page=' . ($page - 1), '{@localization[prev]}}');
 	    } else {
-		    $navigation .= $this->disabled_link('{@website_language[prev]}}');
+		    $navigation .= $this->disabled_link('{@localization[prev]}}');
 	    }
 
 	    if ($total > 0) {
@@ -134,11 +134,11 @@ class Navigation extends Core {
 
 	    // Next page link
 	    if ($total > ($this->items_per_page * $page)) {
-	        $navigation .= $this->show_link($link . 'page=' . ($page + 1), '{@website_language[next]}}');
+	        $navigation .= $this->show_link($link . 'page=' . ($page + 1), '{@localization[next]}}');
 	    }
 	    // Disabled link when current page is last page
 	    else {
-		    $navigation .= $this->disabled_link('{@website_language[next]}}');
+		    $navigation .= $this->disabled_link('{@localization[next]}}');
 	    }
 
 	    // HTML before links, using Bootstrap

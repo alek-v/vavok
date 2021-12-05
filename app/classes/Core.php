@@ -94,13 +94,13 @@ class Core {
 	// Format time into days and minutes
 	function formattime($file_time) {
 	    if ($file_time >= 86400) {
-	        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' {@website_language[days]}}';
+	        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' {@localization[days]}}';
 	    } elseif ($file_time >= 3600) {
-	        $file_time = round(($file_time / 60) / 60, 1) . ' {@website_language[hours]}}';
+	        $file_time = round(($file_time / 60) / 60, 1) . ' {@localization[hours]}}';
 	    } elseif ($file_time >= 60) {
-	        $file_time = round($file_time / 60) . ' {@website_language[minutes]}}';
+	        $file_time = round($file_time / 60) . ' {@localization[minutes]}}';
 	    } else {
-	        $file_time = round($file_time) . ' {@website_language[secs]}}';
+	        $file_time = round($file_time) . ' {@localization[secs]}}';
 	    }
 
 	    return $file_time;
@@ -744,10 +744,12 @@ class Core {
 	 */
 	public function show_online()
 	{
-	    if ($this->get_configuration('showOnline') == 1) {
-	        $online = '<a href="/pages/online.php">[ Online: ' . $this->go('counter')->counter_reg . ' / ' . $this->go('counter')->counter_online . ' ]</a>';
-	        return $online;
-	    } 
+        $online = $this->db->count_row('online');
+        $registered = $this->db->count_row('online', "user > 0");
+
+		$online = '<p class="site_online_users"><a href="/pages/online">[ Online: ' . $registered . ' / ' . $online . ' ]</a></p>';
+
+		return $online;
 	}
 
 	/**
@@ -757,32 +759,38 @@ class Core {
 	 */
 	public function show_counter()
 	{
-	    if (!empty($this->get_configuration('showCounter')) && $this->get_configuration('showCounter') != "6") {
-	        if ($this->get_configuration('showCounter') == 1) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_host . ' | ' . $this->go('counter')->counter_all . '</a>';
-	        } 
-	        if ($this->get_configuration('showCounter') == 2) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_hits . ' | ' . $this->go('counter')->counter_allhits . '</a>';
-	        } 
-	        if ($this->get_configuration('showCounter') == 3) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_host . ' | ' . $this->go('counter')->counter_hits . '</a>';
-	        } 
-	        if ($this->get_configuration('showCounter') == 4) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php">' . $this->go('counter')->counter_all . ' | ' . $this->go('counter')->counter_allhits . '</a>';
-	        } 
-	        if ($this->get_configuration('showCounter') == 5) {
-	            $info = '<a href="' . HOMEDIR . 'pages/counter.php"><img src="' . HOMEDIR . 'gallery/count.php" alt=""></a>';
-	        }
-	        return $info;
+        $counts = $this->db->get_data('counter');
+
+        $current_day = $counts['day'];
+        $clicks_today = $counts['clicks_today'];
+        $total_clicks = $counts['clicks_total'];
+        $visits_today = $counts['visits_today']; // visits today
+    	$total_visits = $counts['visits_total']; // total visits
+
+		$counter_configuration = $this->get_configuration('showCounter');
+
+	    if (!empty($counter_configuration) && $counter_configuration != 6) {
+	        if ($counter_configuration == 1) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $visits_today . ' | ' . $total_visits . '</a>';
+
+	        if ($counter_configuration == 2) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $clicks_today . ' | ' . $total_clicks . '</a>';
+
+	        if ($counter_configuration == 3) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $visits_today . ' | ' . $clicks_today . '</a>';
+
+	        if ($counter_configuration == 4) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $total_visits . ' | ' . $total_clicks . '</a>';
+
+	        if ($counter_configuration == 5) $info = '<a href="' . HOMEDIR . 'pages/statistics"><img src="' . HOMEDIR . 'gallery/count.php" alt=""></a>';
+
+	        return '<p class="site_counter">' . $info . '</p>';
 	    }
 	}
 
 	// show page generation time
-	public function show_gentime() {
+	public function show_gentime()
+	{
 	    if ($this->get_configuration('pageGenTime') == 1) {
 	        $end_time = microtime(true);
 	        $gen_time = $end_time - START_TIME;
-	        $pagegen = '{@website_language[pggen]}}' . ' ' . round($gen_time, 4) . ' s.<br />';
+	        $pagegen = '<p class="site_pagegen_time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
 
 	        return $pagegen;
 	    }
@@ -877,9 +885,12 @@ class Core {
 	 * @return mixed
 	 */
 	public function redirect_to($url) {
-	    if (!headers_sent()) { // Can not redirect if headers are already sent
+		// Cannot redirect if headers are already sent
+	    if (!headers_sent()) {
+			header('HTTP/1.1 301 Moved Permanently');
 	        header('Location: ' . $url);
-	        exit; // protects from code being executed after redirect request
+			// Protects from code being executed after redirect request
+	        exit;
 	    } else {
 	        throw new Exception('Cannot redirect, headers already sent');
 	    }
@@ -900,6 +911,18 @@ class Core {
 	    }
 
 	    return $connectionProtocol;
+	}
+
+	/**
+	 * Check if we use SSL
+	 * 
+	 * @return bool
+	 */
+	public function is_secure_connection()
+	{
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') return true;
+
+		return false;
 	}
 
 	// complete dynamic website address
@@ -1013,7 +1036,7 @@ class Core {
 	 */
 	public function homelink($before = '', $after = '')
 	{
-		return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">{@website_language[home]}}</a>' . $after;
+		return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">{@localization[home]}}</a>' . $after;
 	}
 
 	/**

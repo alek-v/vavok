@@ -81,7 +81,7 @@ $lang_home['days'] = 'days';
 $lang_home['secs'] = 'seconds';
 $lang_home['guest'] = 'Guest';
 $lang_home['search'] = 'Search';
-$lang_home['notloged'] = "You are not logged in, in order to see this page you must <a href=\"" . BASEDIR. "pages/login.php\">log in</a><br>or <a href=\"" . BASEDIR. "pages/registration.php\">register</a>";
+$lang_home['notloged'] = "You are not logged in, in order to see this page you must <a href=\"" . HOMEDIR. "users/login\">log in</a><br>or <a href=\"" . HOMEDIR. "users/register\">register</a>";
 $lang_home['next'] = 'Next';
 $lang_home['prev'] = 'Prev';
 $lang_home['contact'] = 'Contact';
@@ -100,7 +100,7 @@ $lang_home['settings'] = 'Settings';
 // cookie consent
 $lang_home['cookies'] = 'Cookies.'; // Title
 $lang_home['purecookieDesc'] = 'By using this website, you automatically accept that we use cookies.'; // Description
-$lang_home['purecookieLink'] = '<a href="/pages/cookies-policy.php" target="_blank">What for?</a>'; // Cookiepolicy link
+$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">What for?</a>'; // Cookiepolicy link
 $lang_home['purecookieButton'] = 'Understood'; // Button text
 
 $language_data = array(

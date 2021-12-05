@@ -1,4 +1,8 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
 class InboxModel extends Controller {
     protected object $db;
@@ -42,7 +46,7 @@ class InboxModel extends Controller {
         $data['headt'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
         <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
-        $data['tname'] = '{@website_language[inbox]}}';
+        $data['tname'] = '{@localization[inbox]}}';
         $data['content'] = '';
 
         $num_items = $this->user->getpmcount($this->user->user_id());
@@ -72,10 +76,10 @@ class InboxModel extends Controller {
                 array_push($senders, $item['name']);
     
                 if ($item['unread'] == 1) {
-                    $iml = '<img src="../themes/images/img/new.gif" alt="New message" />';
+                    $iml = '<img src="{@HOMEDIR}}themes/images/img/new.gif" alt="New message" />';
                 } else { $iml = ''; }
     
-                $lnk = $this->sitelink('inbox/dialog?who=' . $item['byuid'], $iml . ' ' . $item['name']);
+                $lnk = $this->sitelink(HOMEDIR . 'inbox/dialog?who=' . $item['byuid'], $iml . ' ' . $item['name']);
                 $data['content'] .= '<p>' . $lnk . '</p>';
             }
         }
@@ -87,7 +91,7 @@ class InboxModel extends Controller {
             $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt=""> No messages</p>';
         }
 
-        $data['content'] .= $this->sitelink('inbox/sendto', 'Send message') . '<br />';
+        $data['content'] .= $this->sitelink(HOMEDIR. 'inbox/sendto', 'Send message') . '<br />';
 
         // Pass page to the controller
         return $data;
@@ -97,13 +101,20 @@ class InboxModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-
-        $who = !empty($this->post_and_get('who')) ? $this->user->getidfromnick($this->post_and_get('who')) : 0;
-
         $data['content'] = '';
+        // Update notification data
+        if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
+
+        $data['headt'] = '<meta name="robots" content="noindex">
+        <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
+        <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
+
+        $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : 0;
 
         if (!isset($who) || ($who > 0 && empty($this->user->getnickfromid($who)))) {
             $data['content'] = $this->show_danger('User does not exist');
+
+            return $data;
         } else {
             $data['who'] = $who;
 
@@ -121,7 +132,7 @@ class InboxModel extends Controller {
             $pms = "SELECT * FROM inbox WHERE (byuid = '" . $this->user->user_id() . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $this->user->user_id() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
             foreach ($this->db->query($pms) as $pm) {
                 $sender_nick = $pm['byuid'] == 0 ? 'System' : $this->user->getnickfromid($pm['byuid']);
-                $bylnk = $pm['byuid'] == 0 ? 'System ' : $vavok->sitelink(HOMEDIR . 'users/u/' . $pm['byuid'], $sender_nick) . ' ';
+                $bylnk = $pm['byuid'] == 0 ? 'System ' : $this->sitelink(HOMEDIR . 'users/u/' . $pm['byuid'], $sender_nick) . ' ';
                 $data['content'] .= $bylnk;
                 $tmopm = date("d m y - h:i:s", $pm['timesent']);
                 $data['content'] .= "$tmopm<br />";
@@ -132,9 +143,9 @@ class InboxModel extends Controller {
             }
         }
 
-        $data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@website_language[inbox]}}', '<p>', '</p>');
+        $data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
         $data['content'] .= $this->homelink('<p>', '</p>');
-        $data['tname'] = '{@website_language[inbox]}}';
+        $data['tname'] = '{@localization[inbox]}}';
 
         // Pass page to the controller
         return $data;
@@ -142,13 +153,92 @@ class InboxModel extends Controller {
 
     public function sendto()
     {
+        // Data sent, redirect to dialog
+        if (!empty($this->post_and_get('who')) && $this->user->getidfromnick($this->post_and_get('who')) > 0) {
+            $this->redirect_to(HOMEDIR . 'inbox/dialog?who=' . $this->user->getidfromnick($this->post_and_get('who')));
+        }
+
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[inbox]}}';
-        $data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@website_language[inbox]}}', '<p>', '</p>');
+        $data['tname'] = '{@localization[inbox]}}';
+        $data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
         $data['links'] .= $this->homelink('<p>', '</p>');
 
         // Pass page to the controller
         return $data;
+    }
+
+    /**
+     * Send private message
+     */
+    public function send_message()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+
+        if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR . 'pages/login');
+
+        // This is ajax request
+        // Counter will not threat this as new click/visit
+        define('DYNAMIC_REQUEST', true);
+
+        $pmtext = !empty($this->post_and_get('pmtext')) ? $this->post_and_get('pmtext') : '';
+        $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : '';
+
+        // dont send message to system
+        if ($who == 0 || empty($who)) exit;
+
+        $inbox_notif = $this->db->get_data('notif', "uid='{$this->user->user_id()}' AND type='inbox'", 'active');
+
+        $whonick = $this->user->getnickfromid($who);
+        $byuid = $this->user->user_id();
+
+        $stmt = $this->db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");
+        $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
+        $stmt->closeCursor();
+
+        $pmfl = $lastpm + 0; // 0 is $this->get_configuration("floodTime")
+
+        if ($pmfl < time()) {
+            if (!$this->user->isignored($byuid, $who)) {
+                $this->user->send_pm($pmtext, $this->user->user_id(), $who);
+
+                echo 'sent';
+            } else {
+                echo 'not_sent';
+            } 
+        }
+    }
+
+    /**
+     * Receive private message
+     */
+    public function receive_message()
+    {
+        // Users data
+        $data['user'] = $this->user_data;
+
+        // This is ajax request
+        // Counter will not threat this as new click/visit
+        define('DYNAMIC_REQUEST', true);
+
+        if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR . 'users/login');
+
+        // if there is last message id set
+        if (!empty($this->post_and_get('lastid'))) {
+            $sql = "SELECT * FROM inbox WHERE id > {$this->post_and_get('lastid')} AND ((byuid = {$this->post_and_get('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->post_and_get('who')})) ORDER BY id DESC LIMIT 1";
+        } else {
+            // no last id, load unread message
+            $sql = "SELECT * FROM inbox WHERE ((byuid = {$this->post_and_get('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->post_and_get('who')})) ORDER BY id DESC LIMIT 1";
+        }
+
+        foreach($this->db->query($sql) as $item) {
+            echo $this->user->getnickfromid($item['byuid']) . ':|:' . $this->user->parsepm($item['text']) . ':|:' . $item['id'] . ':|:' . $item['byuid'] . ':|:' . date("d.m.y. - H:i:s", $item['timesent']);
+
+            // update read status
+            if ($this->user->user_id() == $item['touid']) {
+                $this->db->update('inbox', 'unread', 0, "id = {$item['id']} LIMIT 1");
+            }
+        }
     }
 }

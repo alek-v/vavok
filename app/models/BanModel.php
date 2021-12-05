@@ -40,7 +40,7 @@ class BanModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[banning]}}';
+        $data['tname'] = '{@localization[banning]}}';
         $data['content'] = '';
 
         $user = $this->post_and_get('users');
@@ -270,7 +270,7 @@ class BanModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[banlist]}}';
+        $data['tname'] = '{@localization[banlist]}}';
         $data['content'] = '';
 
         if (!$this->user->is_administrator() && !$this->user->is_moderator(103)) $this->redirect_to('../index.php?error');

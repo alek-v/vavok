@@ -7,12 +7,6 @@
 
 class Counter {
     private object $db;
-    public $counter_online;
-    public $counter_reg;
-    public $counter_host;
-    public $counter_all;
-    public $counter_hits;
-    public $counter_allhits;
 
     function __construct($is_reg, $users_ip, $users_browser, $bot)
     {
@@ -140,16 +134,6 @@ class Counter {
 
         // Don't update if request is ajax
         if (!defined('DYNAMIC_REQUEST')) $this->db->update('counter', $fields, $values);
-
-        // show stats
-        $this->counter_online = $this->db->count_row('online');
-        $this->counter_reg = $this->db->count_row('online', "user > 0");
-
-        $this->counter_host = $new_visits_today;
-        $this->counter_all = $new_total_visits;
-
-        $this->counter_hits = $new_clicks_today;
-        $this->counter_allhits = $new_total_clicks;
     }
 }
 

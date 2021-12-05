@@ -22,8 +22,15 @@ class ParsePage extends Core {
      */
     public function load_page($file, $data)
     {
-        // Template location
-        $this->file = APPDIR . 'views/' . $file . '.php';
+        // Load template
+        $this->load($file);
+
+        // Check if we use SSL
+        if ($this->get_configuration('transferProtocol') == 'HTTPS' && !$this->is_secure_connection()) {
+            // Redirect to secure connection (HTTPS)
+            $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $this->redirect_to($redirect);
+        }
 
         // Metadata for all pages
         // Set missing OG tags when possible too
@@ -41,7 +48,7 @@ class ParsePage extends Core {
     public function load($file)
     {
         // Template location
-        $this->file = APPDIR . 'views/' . $file . '.php';
+        $this->file = file_exists(APPDIR . 'views/' . MY_THEME . '/' . $file . '.php') ? APPDIR . 'views/' . MY_THEME . '/' . $file . '.php' : APPDIR . 'views/default/' . $file . '.php';
     }
  
     /**
@@ -64,7 +71,7 @@ class ParsePage extends Core {
 
         $search = array();
         foreach($all as $key => $val) {
-            array_push($search, '{@website_language[' . $key . ']}}');
+            array_push($search, '{@localization[' . $key . ']}}');
         }
 
         return str_replace($search, $all, $content);
@@ -128,24 +135,31 @@ class ParsePage extends Core {
     {
         // Homedir
         $this->set('HOMEDIR', HOMEDIR);
+
         // Page content
         $this->set('content', $this->content);
+
         // HTML Language
         if (!empty($this->lang)) $this->set('page_language', ' lang="' . $this->lang . '"');
+
+        // Cookie consent
+        if ($this->get_configuration('cookieConsent') == 1) include APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);
+
         // Title
         $this->set('title', $this->title);
+
         // Notification
         if (!empty($this->notification)) $this->set('show_notification', $this->show_danger($this->notification));
-        // Cookie consent
-        if ($this->get_configuration('cookieConsent') == 1) $this->set('title', file_get_contents('include/plugins/cookie-consent/cookie-consent.php'));
-        if ($this->get_configuration('showOnline') == 1) $this->set('show_online', '<span>' . $this->show_online() . '<br /></span>');
-        if ($this->get_configuration('showCounter') != 6) $this->set('show_counter', '<span>' . $this->show_counter() . '<br /></span>');
-        if ($this->get_configuration('pageGenTime') == 1) $this->set('show_generation_time', '<span>' . $this->show_gentime() . '<br /></span>');
+
+        if ($this->get_configuration('showOnline') == 1) $this->set('show_online', $this->show_online());
+        if ($this->get_configuration('showCounter') != 6) $this->set('show_counter', $this->show_counter());
+        if ($this->get_configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->show_gentime());
 
         // Show database queries while debugging
-        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', '<span>DB queries: ' . $this->db->show_db_queries() . '<br /></span>');
+        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->show_db_queries());
 
         return preg_replace('/{@(.*?)}}/' , '', $this->parse_language($this->output(), $localization));
     }

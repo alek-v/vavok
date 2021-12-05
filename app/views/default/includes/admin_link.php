@@ -1,0 +1,1 @@
+<li class="nav-item"><a href="{@HOMEDIR}}adminpanel" class="btn btn-primary sitelink">{@localization[admpanel]}}</a></li>

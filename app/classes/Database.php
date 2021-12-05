@@ -297,7 +297,7 @@ class Database extends PDO {
         // Reset number of queries in session
         unset($_SESSION['db_queries']);
 
-        return $queries;
+        return '<p class="site_db_queries">DB queries: ' . $queries . '</p>';
     }
 }
 

@@ -103,7 +103,7 @@ class User extends Core {
 
 		// If theme does not exist use default theme
 		// For admin panel use default theme
-		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php") || strpos($this->vavok->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+		if (!file_exists(BASEDIR . "themes/" . $config_themes . "/index.php") || strpos($this->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
 		define('MY_THEME', $config_themes);
 
@@ -247,7 +247,7 @@ class User extends Core {
 				$this->redirect_to(HOMEDIR . $this->post_and_get('ptl'));
 			}
 
-            $data['show_notification'] = '{@website_language[wronguserorpass]}}';
+            $data['show_notification'] = '{@localization[wronguserorpass]}}';
 		}
 
 		return $data;
@@ -941,12 +941,12 @@ class User extends Core {
 	 * Administrator status name
 	 */
 	function user_status($message) {
-	    $message = str_replace('101', '{@website_language[access101]}}', $message);
-	    $message = str_replace('102', '{@website_language[access102]}}', $message);
-	    $message = str_replace('103', '{@website_language[access103]}}', $message);
-	    $message = str_replace('105', '{@website_language[access105]}}', $message);
-	    $message = str_replace('106', '{@website_language[access106]}}', $message);
-	    $message = str_replace('107', '{@website_language[access107]}}', $message);
+	    $message = str_replace('101', '{@localization[access101]}}', $message);
+	    $message = str_replace('102', '{@localization[access102]}}', $message);
+	    $message = str_replace('103', '{@localization[access103]}}', $message);
+	    $message = str_replace('105', '{@localization[access105]}}', $message);
+	    $message = str_replace('106', '{@localization[access106]}}', $message);
+	    $message = str_replace('107', '{@localization[access107]}}', $message);
 	    return $message;
 	}
 

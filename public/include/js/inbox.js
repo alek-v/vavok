@@ -6,7 +6,7 @@ window.onload=function() {
 	objDiv.scrollTop = objDiv.scrollHeight;
 }
 
-var GetMsgUrl = "receive_pm.php";
+var GetMsgUrl = "/inbox/receive_message";
 
 var lastID = 0; // initial value will be replaced by the latest message id
 
@@ -37,24 +37,19 @@ function handlehhttpReceiveMsg() {
 
     if (results.length > 2) {
 	    for(i=0;i < (results.length);i=i+5) { //goes through the result one message at a time
-
 	    	if (lastID !== 0) {
 	    		insertNewMessage(results[i],results[i+1], results[i+3], results[i+4]); //inserts the new content into the page
 	    	}
 
 	    	lastID = results[i+2];
-
 	    }
-
     }
 
     setTimeout('receiveChatText();', 2000); //executes the next data query in 4 seconds
   }
 }
 
-
-//inserts the new content into the page
-//inserts the new content into the page
+// Inserts the new content into the page
 function insertNewMessage(liName, liText, id, time_sent) {
 	insertO = document.getElementById("outputList");
 	oSpan = document.createElement('span');
@@ -62,7 +57,7 @@ function insertNewMessage(liName, liText, id, time_sent) {
 	oName = document.createTextNode(liName);
 	oText = document.createTextNode(liText);
 	oSpan.appendChild(oName);
-	oSpan.innerHTML = ('<a href="/users/u/' + id + '">' + liName + '</a> ' + time_sent + '<br />' + liText + '<hr />');
+	oSpan.innerHTML = ('<a href="/users/u/' + id + '" class="btn btn-primary">' + liName + '</a> ' + time_sent + '<br />' + liText + '<hr />');
 	insertO.insertBefore(oSpan, insertO.firstChild);
 }
 
@@ -102,12 +97,11 @@ function send_message() {
                 //alert(xmlHttp.responseText);
             }
         }
-        xmlHttp.open("post", "send_pm.php"); 
+        xmlHttp.open("post", "send_message"); 
         xmlHttp.send(formData); 
 
         document.forms['message-form'].elements['pmtext'].value = '';
 }
-
 
 // initiates the two objects for sending and receiving data
 var httpReceiveMsg = getHTTPObject();

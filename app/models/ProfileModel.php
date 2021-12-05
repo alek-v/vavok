@@ -358,7 +358,7 @@ class ProfileModel extends Controller {
 		}
 
         // Page title
-        $data['tname'] = '{@website_language[deleteProfile]}}';
+        $data['tname'] = '{@localization[deleteProfile]}}';
 
         // Pass page to the view
         return $data;
@@ -372,12 +372,12 @@ class ProfileModel extends Controller {
         // Users data
         $data['user'] = $this->user_data;
 
-        $data['tname'] = '{@website_language[profile]}}';
+        $data['tname'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
         if ($this->post_and_get('newpar') !== $this->post_and_get('newpar2'))
         {
-            $data['content'] = $this->show_danger('{@website_language[nonewpass]}}');
+            $data['content'] = $this->show_danger('{@localization[nonewpass]}}');
 
             // Pass page to the view
             $this->view('profile/newpassword', $data);
@@ -391,7 +391,7 @@ class ProfileModel extends Controller {
 
             $this->redirect_to($this->website_home_address() . "/users/login");
         } else {
-            $data['content'] = $this->show_danger('{@website_language[nopass]}}');
+            $data['content'] = $this->show_danger('{@localization[nopass]}}');
         }
 
         // Pass page to the view
@@ -570,7 +570,7 @@ class ProfileModel extends Controller {
 
         // Token does not exist
         if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'") < 1) {
-            $this_page['content'] .= $this->show_danger('{@website_language[notoken]}}');
+            $this_page['content'] .= $this->show_danger('{@localization[notoken]}}');
 
             return $this_page;
         }

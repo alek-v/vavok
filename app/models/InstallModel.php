@@ -62,7 +62,7 @@ class InstallModel extends Controller {
 
         // Users data
         $this_page['user'] = $this->user_data;
-        $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
+        $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
         $this_page['content'] .= '<p><a href="{@HOMEDIR}}install/register" class="btn btn-outline-primary sitelink">Next step</a></p>';
 
         return $this_page;
@@ -75,7 +75,7 @@ class InstallModel extends Controller {
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
-        $this_page['content'] = '';
+        $this_page['site_address'] = $this->website_home_address();
 
         return $this_page;
     }

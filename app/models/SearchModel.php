@@ -39,7 +39,7 @@ class SearchModel extends Controller {
     {
         // Users data
         $this_page['user'] = $this->user_data;
-        $this_page['tname'] = '{@website_language[search]}}';
+        $this_page['tname'] = '{@localization[search]}}';
         $this_page['headt'] = '';
         $this_page['content'] = '';
 

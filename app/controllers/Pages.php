@@ -65,4 +65,16 @@ class Pages extends Controller {
         // Pass page to the view
         $this->view('page', $model->dynamic($params));
     }
+
+    /**
+     * Cookies policy
+     */
+    public function cookies_policy($params = [])
+    {
+        // Load page model
+        $model = $this->model('Page');
+
+        // Pass page to the view
+        $this->view('pages/cookies_policy', $model->cookies_policy($params));
+    }
 }

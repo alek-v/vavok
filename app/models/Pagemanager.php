@@ -435,14 +435,7 @@ class Pagemanager extends Controller {
         $vk_page = $this->db->get_data('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
         if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
 
-		/**
-		 * Tell bots what is our preferred page
-		 */
-		if (!stristr($tags, 'rel="canonical"') && isset($_GET['pg'])) { $tags .= "\n" . '<link rel="canonical" href="' . $this->transfer_protocol() . $_SERVER['HTTP_HOST'] . '/page/' . $_GET['pg'] . '/" />'; }
-
-		/**
-		 * Add missing open graph tags
-		 */
+		// Add missing open graph tags
 		if (!strstr($tags, 'og:type')) { $tags .= "\n" . '<meta property="og:type" content="website" />'; }
 
 		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->get_configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }

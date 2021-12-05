@@ -31,4 +31,22 @@ class Inbox extends Controller {
         // Pass page to the view
         $this->view('inbox/sendto', $model->sendto());
     }
+
+    public function send_message()
+    {
+        // Load page model
+        $model = $this->model('InboxModel');
+
+        // Send message
+        $model->send_message();
+    }
+
+    public function receive_message()
+    {
+        // Load page model
+        $model = $this->model('InboxModel');
+
+        // Receive message
+        $model->receive_message();
+    }
 }

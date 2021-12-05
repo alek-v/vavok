@@ -47,8 +47,11 @@ class Page extends Controller {
 		// Query to select page with localization
 		$localization = !empty($params[0]) ? " AND lang = '{$params[0]}'" : '';
 
-		// Get page
+		// Get localized page
 		$data = $this->db->get_data('pages', "pname='index'{$localization}", '*');
+
+		// Page without localization
+		if (empty($data)) $data = $this->db->get_data('pages', "pname='index'", '*');
 
 		// Update user's language when language is set in URL and it is different then current localization
 		if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
@@ -111,7 +114,7 @@ class Page extends Controller {
         // Users data
         $data['user'] = $this->user_data;
 
-		$data['tname'] = '{@website_language[login]}}';
+		$data['tname'] = '{@localization[login]}}';
 		$data['headt'] = '<meta name="robots" content="noindex">';
 		$data['headt'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/login/login.css">';
 
@@ -136,7 +139,7 @@ class Page extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[userlist]}}';
+        $data['tname'] = '{@localization[userlist]}}';
         $data['content'] = '';
 
         $num_items = $this->user->regmemcount(); // no. reg. members
@@ -169,7 +172,7 @@ class Page extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[statistics]}}';
+        $data['tname'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
 		if ($this->get_configuration('showCounter') == 6 && !$this->user->is_administrator()) $this->redirect_to("../");
@@ -190,20 +193,20 @@ class Page extends Controller {
 		$visits_today = $counts['visits_today']; // visits today
 		$total_visits = $counts['visits_total']; // total visits
 	
-		$data['content'] .= '{@website_language[temponline]}}: ';
+		$data['content'] .= '{@localization[temponline]}}: ';
 		if ($this->get_configuration('showOnline') == 1 || $this->user->is_administrator()) {
 			$data['content'] .= '<a href="{@HOMEDIR}}pages/online">' . (int)$pcounter_online . '</a><br />';
 		} else {
 			$data['content'] .= '<b>' . (int)$pcounter_online . '</b><br />';
 		}
 
-		$data['content'] .= '{@website_language[registered]}}: <b>' . (int)$pcounter_reg . '</b><br />';
-		$data['content'] .= '{@website_language[guests]}}: <b>' . (int)$pcounter_guest . '</b><br /><br />';
+		$data['content'] .= '{@localization[registered]}}: <b>' . (int)$pcounter_reg . '</b><br />';
+		$data['content'] .= '{@localization[guests]}}: <b>' . (int)$pcounter_guest . '</b><br /><br />';
 	
-		$data['content'] .= '{@website_language[vststoday]}}: <b>' . (int)$visits_today . '</b><br />';
-		$data['content'] .= '{@website_language[vstpagestoday]}}: <b>' . (int)$clicks_today . '</b><br />';
-		$data['content'] .= '{@website_language[totvisits]}}: <b>' . (int)$total_visits . '</b><br />';
-		$data['content'] .= '{@website_language[totopenpages]}}: <b>' . (int)$total_clicks . '</b><br /><br />';
+		$data['content'] .= '{@localization[vststoday]}}: <b>' . (int)$visits_today . '</b><br />';
+		$data['content'] .= '{@localization[vstpagestoday]}}: <b>' . (int)$clicks_today . '</b><br />';
+		$data['content'] .= '{@localization[totvisits]}}: <b>' . (int)$total_visits . '</b><br />';
+		$data['content'] .= '{@localization[totopenpages]}}: <b>' . (int)$total_clicks . '</b><br /><br />';
 
 		//echo $this->go('localization')->string('vstinhour') . ': <b>' . (int)$pcounter_hourhost . '</b><br />';
 		//echo $this->go('localization')->string('vstpagesinhour') . ': <b>' . (int)$pcounter_hourhits . '</b><br /><br />';
@@ -315,5 +318,18 @@ class Page extends Controller {
 		$data['content'] .= $this->homelink('<p>', '</p>');
 
 		return $data;
+	}
+
+    /**
+     * Cookies policy
+     */
+    public function cookies_policy()
+    {
+        // Users data
+        $this_page['user'] = $this->user_data;
+        $this_page['tname'] = 'Cookies Policy';
+		$this_page['homeurl'] = $this->get_configuration('homeUrl');
+
+		return $this_page;
 	}
 }

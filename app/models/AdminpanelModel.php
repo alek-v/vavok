@@ -40,7 +40,7 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[admpanel]}}';
+        $data['tname'] = '{@localization[admpanel]}}';
         $data['content'] = '';
 
         if (!$this->user->check_permissions('adminpanel', 'show')) $this->redirect_to('../?auth_error');
@@ -72,8 +72,8 @@ class AdminpanelModel extends Controller {
             */
             if ($this->user->is_administrator() || $this->user->is_moderator(103)) {
                 $data['content'] .= '<hr>';
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', '{@website_language[banunban]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/banlist', '{@website_language[banlist]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', '{@localization[banunban]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/banlist', '{@localization[banlist]}}');
             }
 
             /*
@@ -177,7 +177,7 @@ class AdminpanelModel extends Controller {
         // Users data
         $data['user'] = $this->user_data;
 
-        $data['tname'] = '{@website_language[settings]}}';
+        $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
         if (!$this->user->is_administrator(101)) $this->redirect_to('../pages/error.php?error=auth');
@@ -350,7 +350,7 @@ class AdminpanelModel extends Controller {
         // Site security options
         if ($this->post_and_get('action') == 'editsecurity') {
             $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
-        
+
             $values = array(
                 $this->post_and_get('conf_set1'),
                 $this->post_and_get('conf_set3'),
@@ -359,47 +359,11 @@ class AdminpanelModel extends Controller {
                 $this->post_and_get('recaptcha_sitekey'),
                 $this->post_and_get('recaptcha_secretkey')
             );
-        
-            /**
-             * Update settings
-             */
+
+            // Update settings
             $site_configuration->update_config_data(array_combine($fields, $values));
-        
-            // update .htaccess file
-            // dont force https
-        $htaccess_tp_nos = '# force https protocol
-        #RewriteCond %{HTTPS} !=on
-        #RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
-        
-                // force https
-        $htaccess_tp_s = '# force https protocol
-        RewriteCond %{HTTPS} !=on
-        RewriteRule ^.*$ https://%{SERVER_NAME}%{REQUEST_URI} [R,L]';
-        
-            if ($this->get_configuration('transferProtocol') == 'HTTPS' && ($this->post_and_get('conf_set21') == 'auto' || $this->post_and_get('conf_set21') == 'HTTP')) {
-                // Disable forcing HTTPS in .htaccess
-        
-                $file = file_get_contents('../.htaccess');
-        
-                $start = strpos($file, '# force https protocol');
-                $strlen = mb_strlen($htaccess_tp_s); // find string length
-        
-                $file = substr_replace($file, $htaccess_tp_nos, $start, $strlen);
-        
-                file_put_contents('../.htaccess', $file);
-            } elseif ($this->post_and_get('conf_set21') == 'HTTPS' && ($this->get_configuration('transferProtocol') == 'HTTP' || $this->get_configuration('transferProtocol') == 'auto')) {
-                // Enable forcing HTTPS in .htaccess
-                $file = file_get_contents('../.htaccess');
-        
-                $start = strpos($file, '# force https protocol');
-                $strlen = mb_strlen($htaccess_tp_nos); // find string length
-        
-                $file = substr_replace($file, $htaccess_tp_s, $start, $strlen);
-        
-                file_put_contents('../.htaccess', $file);
-            }
-        
-            $this->redirect_to(HOMEDIR . "adminpanel/settings/?action=security&isset=mp_yesset");
+
+            $this->redirect_to(HOMEDIR . "adminpanel/settings/?action=security&isset=success");
         }
 
         if (empty($this->post_and_get('action'))) {
@@ -1265,7 +1229,7 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[modlist]}}';
+        $data['tname'] = '{@localization[modlist]}}';
         $data['content'] = '';
 
         if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');
@@ -1301,7 +1265,7 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[uncomfreg]}}';
+        $data['tname'] = '{@localization[uncomfreg]}}';
         $data['content'] = '';
 
         if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');
@@ -1370,15 +1334,15 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[sitestats]}}';
+        $data['tname'] = '{@localization[sitestats]}}';
         $data['content'] = '';
 
         if (!$this->user->is_administrator()) $this->redirect_to('../?errorAuth');
   
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@website_language[visitstats]}}') . '<br />';
-        $data['content'] .= $this->sitelink('../pages/online', '{@website_language[usronline]}}') . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitstats]}}') . '<br />';
+        $data['content'] .= $this->sitelink('../pages/online', '{@localization[usronline]}}') . '</p>';
         
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@website_language[admpanel]}}') . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[admpanel]}}') . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1391,7 +1355,7 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@website_language[usrprofile]}}';
+        $data['tname'] = '{@localization[usrprofile]}}';
         $data['content'] = '';
 
         if (!$this->user->is_administrator()) $this->redirect_to('./?error=noauth');
@@ -1955,7 +1919,7 @@ class AdminpanelModel extends Controller {
     {
         // Users data
         $page_data['user'] = $this->user_data;
-        $page_data['tname'] = '{@website_language[search]}}';
+        $page_data['tname'] = '{@localization[search]}}';
         $page_data['content'] = '';
 
         if (!$this->user->is_administrator()) $this->redirect_to(HOMEDIR);
