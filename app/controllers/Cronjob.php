@@ -5,6 +5,12 @@
  */
 
 class Cronjob extends Controller {
+    public function __construct()
+    {
+        // Don't update visitors counter if current request is a cronjob
+        if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
+    }
+
     /**
      * Index
      */

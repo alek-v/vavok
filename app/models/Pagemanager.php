@@ -25,7 +25,8 @@ class Pagemanager extends Controller {
 	{
 		$this->db = new Database;
 
-		$this->user_id = $_SESSION['uid']; // User id with active login
+ 		// User id with active login
+		$this->user_id = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;
 	}
 
 	/**
@@ -51,14 +52,10 @@ class Pagemanager extends Controller {
 	 */
 	public function update_tags($id, $tags)
 	{
-		/**
-		 * Delete current tags
-		 */
+		// Delete current tags
 		$this->db->delete('tags', "page_id = '{$id}'");
 
-		/**
-		 * Insert new tags
-		 */
+		// Insert new tags
 		if (substr_count($tags, ' ') == 0) $tags = array($tags); 
 		else { $tags = explode(' ', $tags); }
 
@@ -115,21 +112,15 @@ class Pagemanager extends Controller {
  	 */
 	function rename($newName, $id)
 	{
-		/**
-		 * Set page name
-		 */
+		// Set page name
 		$pageName = str_replace('.php', '', $newName); // page name (without extension (.php))
 
-	    /**
-	     * Remove language data from page name
-	     */
+	    // Remove language data from page name
 	    if (stristr($pageName, '!.')) {
 	        $pageName = preg_replace("/(.*)!.(.*)!/", "$1", $pageName);
 	    }
 
-	    /**
-	     * Update URL tags in header data
-	     */
+	    // Update URL tags in header data
 	    $header_data = $this->select_page($id, 'headt, pname');
 
 	    $updated_links = str_replace($header_data['pname'], $pageName, $header_data['headt']);
@@ -139,9 +130,7 @@ class Pagemanager extends Controller {
         );
         $this->head_data($id, $new_data);
 
-	    /**
-	     * Update other data in database
-	     */
+	    // Update other data in database
 	    $fields[] = 'pname';
 	    $fields[] = 'file';
 

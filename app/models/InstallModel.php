@@ -22,9 +22,8 @@ class InstallModel extends Controller {
         // Check if install is already completed
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
-        if ($this->table_exists == true) {
-            if ($this->db->count_row('vavok_users') > 0) die('Installation already completed');
-        }
+
+        if ($this->table_exists == true && $this->db->count_row('vavok_users') > 0) $this->redirect_to(HOMEDIR);
     }
 
     public function index()

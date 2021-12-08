@@ -132,8 +132,8 @@ class Counter {
         $values[] = $new_visits_today;
         $values[] = $new_total_visits;
 
-        // Don't update if request is ajax
-        if (!defined('DYNAMIC_REQUEST')) $this->db->update('counter', $fields, $values);
+        // Update data in database
+        $this->db->update('counter', $fields, $values);
     }
 }
 

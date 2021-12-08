@@ -36,6 +36,5 @@
 	</div>
 	<p>{@localization[reginfo]}}{@registration_key_info}}.</p>
 	<p>{@quarantine_info}}</p>
-	<p><a href="siterules.php" class="btn btn-outline-primary sitelink">{@localization[siterules]}}</a></p>
 	<p><a href="../" class="btn btn-primary homepage">{@localization[home]}}</a></p>
 {@footer}}

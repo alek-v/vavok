@@ -4,13 +4,12 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
   `pass` varchar(120) NOT NULL,                      -- pass
   `perm` int(4) NOT NULL default '0',                -- permissions (accessr)
   `skin` varchar(30) NOT NULL default 'default',     -- skin
-  `browsers` varchar(50) NOT NULL default '',        -- browser
-  `ipadd` varchar(30) NOT NULL default '',           -- ip address
+  `browsers` varchar(50) NULL,                       -- browser
+  `ipadd` varchar(30) NULL,                          -- ip address
   `timezone` varchar(10) NOT NULL default '0',       -- time zone
   `banned` char(1) NOT NULL default '0',             -- is banned?
   `newmsg` int(30) NOT NULL default '0',             -- new messages in inbox
-  `lang` varchar(30) NOT NULL default '',            -- language
-  `mskin` varchar(30) NOT NULL default '',           -- mobile skin
+  `lang` varchar(30) NULL,                           -- language
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `id` (`id`)
@@ -26,16 +25,16 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `chat` int(100) NOT NULL default '0',              -- chat posts
   `commadd` int(100) NOT NULL default '0',           -- comments
   `subscri` char(1) NOT NULL default '0',            -- subscribed to site news status
-  `newscod` varchar(100) NOT NULL default '',        -- unsubscription code
-  `perstat` varchar(50) NOT NULL default '',         -- personal status
-  `regdate` varchar(30) NOT NULL default '',         -- reg. date
+  `newscod` varchar(100) NULL,                       -- unsubscription code
+  `perstat` varchar(50) NULL,                        -- personal status
+  `regdate` varchar(30) NULL,                        -- reg. date
   `regche` varchar(2) NOT NULL default '0',          -- reg. activated?
-  `regkey` varchar(100) NOT NULL default '',         -- reg. key
-  `bantime` varchar(20) NOT NULL default '',         -- ban time
-  `bandesc` varchar(120) NOT NULL default '',        -- ban reason
-  `lastban` varchar(20) NOT NULL default '',         -- last ban time
+  `regkey` varchar(100) NULL,                        -- reg. key
+  `bantime` varchar(20) NULL,                        -- ban time
+  `bandesc` varchar(120) NULL,                       -- ban reason
+  `lastban` varchar(20) NULL,                        -- last ban time
   `allban` varchar(20) DEFAULT NULL,                 -- no. of bans
-  `lastvst` varchar(30) NOT NULL default '',         -- last visit
+  `lastvst` varchar(30) NULL,                        -- last visit
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
@@ -45,19 +44,19 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
 CREATE TABLE IF NOT EXISTS `vavok_about` (
   `id` int(100) NOT NULL auto_increment,
   `uid` int(100) NOT NULL default '0',
-  `birthday` varchar(40) NOT NULL default '',       -- birthday
-  `sex` char(1) NOT NULL default 'n',               -- sex
-  `email` varchar(80) NOT NULL default '',          -- email
-  `site` varchar(50) NOT NULL default '',           -- site
-  `city` varchar(100) NOT NULL default '',          -- location
-  `about` tinytext,                                 -- about yourself
-  `rname` varchar(150) NOT NULL default '',         -- real name
-  `surname` varchar(150) NOT NULL default '',       -- surname
-  `photo` varchar(30) NOT NULL default '',          -- photo
-  `address` varchar(100) NOT NULL default '',       -- street address
-  `zip` varchar(20) NOT NULL default '',            -- postal address
-  `country` varchar(75) NOT NULL default '',
-  `phone` varchar(30) NOT NULL default '',
+  `birthday` varchar(40) NULL,                       -- birthday
+  `sex` char(1) NOT NULL default 'n',                -- sex
+  `email` varchar(80) NULL,                          -- email
+  `site` varchar(50) NULL,                           -- site
+  `city` varchar(100) NULL,                          -- location
+  `about` tinytext NULL,                             -- about yourself
+  `rname` varchar(150) NULL,                         -- real name
+  `surname` varchar(150) NULL,                       -- surname
+  `photo` varchar(30) NULL,                          -- photo
+  `address` varchar(100) NULL,                       -- street address
+  `zip` varchar(20) NULL,                            -- postal address
+  `country` varchar(75) NULL,
+  `phone` varchar(30) NULL,
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
@@ -101,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `buddy` (
 -- Moder log
 CREATE TABLE IF NOT EXISTS `mlog` (
   `id` int(100) NOT NULL auto_increment,
-  `action` varchar(10) NOT NULL default '',
+  `action` varchar(10) NULL,
   `details` TEXT NOT NULL,
   `actdt` int(100) NOT NULL default '0',
   PRIMARY KEY  (`id`)

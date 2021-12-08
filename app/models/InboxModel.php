@@ -152,7 +152,7 @@ class InboxModel extends BaseModel {
 
         // This is ajax request
         // Counter will not threat this as new click/visit
-        define('DYNAMIC_REQUEST', true);
+        if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
 
         $pmtext = !empty($this->post_and_get('pmtext')) ? $this->post_and_get('pmtext') : '';
         $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : '';
@@ -192,7 +192,7 @@ class InboxModel extends BaseModel {
 
         // This is ajax request
         // Counter will not threat this as new click/visit
-        define('DYNAMIC_REQUEST', true);
+        if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
 
         if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR . 'users/login');
 
