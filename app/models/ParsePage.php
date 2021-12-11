@@ -133,8 +133,10 @@ class ParsePage extends Core {
      */
     public function show($localization)
     {
-        // Homedir
-        $this->set('HOMEDIR', HOMEDIR);
+        // Values from constants
+        $this->values['HOMEDIR'] = HOMEDIR;
+        $this->values['STATIC_THEMES_URL'] = STATIC_THEMES_URL;
+        $this->values['STATIC_UPLOAD_URL'] = STATIC_UPLOAD_URL;
 
         // Page content
         $this->set('content', $this->content);

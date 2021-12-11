@@ -180,4 +180,15 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('adminpanel/ip_informations', $model->ip_informations());
     }
+
+    /**
+    * Data from log files
+    */
+    public function logfiles()
+    {
+        $model = $this->model('Logfiles');
+ 
+        // Pass page to the view
+        $this->view('adminpanel/logfiles', $model->index());
+    }
 }

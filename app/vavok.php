@@ -34,9 +34,9 @@ if (file_exists(APPDIR . '.env')) {
     }
 }
 
+require_once 'classes/Core.php';
 require_once 'classes/Vavok.php';
 require_once 'classes/Database.php';
-require_once 'classes/Core.php';
 require_once 'classes/Controller.php';
 require_once 'classes/BrowserDetection.php';
 require_once 'classes/Navigation.php';

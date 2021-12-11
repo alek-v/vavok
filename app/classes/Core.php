@@ -751,7 +751,7 @@ class Core {
         $online = $this->db->count_row('online');
         $registered = $this->db->count_row('online', "user > 0");
 
-		$online = '<p class="site_online_users"><a href="/pages/online">[ Online: ' . $registered . ' / ' . $online . ' ]</a></p>';
+		$online = '<p class="site_online_users"><a href="/pages/online">Online: ' . $registered . ' / ' . $online . '</a></p>';
 
 		return $online;
 	}
@@ -927,6 +927,45 @@ class Core {
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') return true;
 
 		return false;
+	}
+
+	/**
+	 * Explode url into array
+	 * 
+	 * @return array $url
+	 */
+    public function get_url()
+    {
+        if (isset($_GET['url'])) {
+            $url = $this->check(rtrim($_GET['url'], '/'));
+            $url = explode('/', $url);
+            return $url;
+        }
+    }
+
+	/**
+	 * Clean request URI from unwanted data in url
+	 *
+	 * @param string $uri
+	 * @return string $clean_requri
+	 */
+	public function clean_request_uri($uri)
+	{
+		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
+		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
+		$clean_requri = explode('?isset', $clean_requri)[0];
+
+		return $clean_requri;
+	}
+
+	/**
+	 * Current connection that we use to open site
+	 * 
+	 * @return string
+	 */
+	public function current_connection()
+	{
+		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
 	}
 
 	// complete dynamic website address
@@ -1109,19 +1148,18 @@ class Core {
 	/**
 	 * Clean unconfirmed registrations
 	 * 
+	 * @param object $user_model
 	 * @return void
 	 */
-	public function clean_registrations()
+	public function clean_registrations($user_model)
 	{
 		// Hours user have to confirm registration
 		$confirmationHours = 24;
 		$confirmationTime = $confirmationHours * 3600;
 
 		foreach ($this->db->query("SELECT regdate, uid FROM vavok_profil WHERE regche = '1'") as $userCheck) {
-			// Delete user if he didn't confirmed registration within $confirmationHours
-			if (($userCheck['regdate'] + $confirmationTime) < time()) {
-				$this->db->delete_user($userCheck['uid']);
-			}
+			// Delete user if registration is not confirmed within $confirmationHours
+			if (($userCheck['regdate'] + $confirmationTime) < time()) $user_model->delete_user($userCheck['uid']);
 		}
 	}
 

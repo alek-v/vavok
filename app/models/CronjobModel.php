@@ -6,6 +6,7 @@
 
 class CronjobModel extends Controller {
     protected object $db;
+    private object $user;
 
     public function __construct()
     {
@@ -28,6 +29,6 @@ class CronjobModel extends Controller {
      */
     public function clean_unconfirmed_reg()
     {
-        $this->clean_registrations();
+        $this->clean_registrations($this->model('User'));
     }
 }

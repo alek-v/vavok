@@ -25,7 +25,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminlist', $this->localization->string('modlist'));
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', $this->localization->string('notconf'));
             $data['content'] .= $this->sitelink('pages/userlist', $this->localization->string('userlist') . ' (' . $this->user->regmemcount() . ')');
-        
+
             /*
             Super moderator access level or bigger
             */
@@ -54,23 +54,10 @@ class AdminpanelModel extends BaseModel {
             if ($this->user->is_administrator()) {
                 $data['content'] .= '<hr>';
 
-                if (file_exists('forumadmin.php')) {
-                    $data['content'] .= $this->sitelink('forumadmin.php?action=fcats', $this->localization->string('forumcat'));
-                    $data['content'] .= $this->sitelink('forumadmin.php?action=forums', $this->localization->string('forums'));
-                }
-
-                if (file_exists('gallery/manage_gallery.php')) $data['content'] .= $this->sitelink('gallery/manage_gallery.php', $this->localization->string('gallery'));
-
-                if (file_exists('votes.php')) $data['content'] .= $this->sitelink('votes.php', $this->localization->string('pools'));
-
                 if (file_exists('antiword.php')) $data['content'] .= $this->sitelink('antiword.php', $this->localization->string('badword'));
 
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/statistics', $this->localization->string('statistics'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', $this->localization->string('mngprof'));
-            }
-
-            if (file_exists('news.php') && ($this->user->is_administrator() || $this->user->check_permissions('news', 'show'))) {
-                $data['content'] .= $this->sitelink('news.php', $this->localization->string('sitenews'));
             }
 
             if ($this->user->is_administrator() || $this->user->check_permissions('pageedit')) {
@@ -90,7 +77,7 @@ class AdminpanelModel extends BaseModel {
 
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/?action=sysmng', $this->localization->string('sysmng'));
 
-                if (file_exists('logfiles.php')) $data['content'] .= $this->sitelink('logfiles.php?action=sysmng', $this->localization->string('logcheck'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles', $this->localization->string('logcheck'));
 
                 if (file_exists('email-queue.php')) $data['content'] .= $this->sitelink('email-queue.php', 'Add to email queue');
             }

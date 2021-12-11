@@ -38,7 +38,7 @@ class BlogModel extends BaseModel {
 
         $items_per_page = 9; // How many blog posts to show per page
         $comments_per_page = 0; // How many comments to show per page
-        
+
         switch ($pg) {
             case isset($pg):
                 // Load page data and merge with existing data

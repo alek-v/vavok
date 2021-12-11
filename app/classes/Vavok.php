@@ -1,6 +1,10 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
-class Vavok {
+class Vavok extends Core {
     protected $currentController = 'Pages';
     protected $currentMethod = 'index';
     protected $params = [];
@@ -95,47 +99,8 @@ class Vavok {
 
         // Get params
         $this->params = $url ? array_values($url) : [];
+
         // Call a callback with array of params
         call_user_func_array([$this->currentController, $this->currentMethod], [$this->params]);
     }
-
-	/**
-	 * Explode url into array
-	 * 
-	 * @return array $url
-	 */
-    public function get_url()
-    {
-        if (isset($_GET['url'])) {
-            $url = rtrim($_GET['url'], '/');
-            $url = filter_var($url, FILTER_SANITIZE_URL);
-            $url = explode('/', $url);
-            return $url;
-        }
-    }
-
-	/**
-	 * Clean request URI from unwanted data in url
-	 *
-	 * @param string $uri
-	 * @return string $clean_requri
-	 */
-	public function clean_request_uri($uri)
-	{
-		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
-		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
-		$clean_requri = explode('?isset', $clean_requri)[0];
-
-		return $clean_requri;
-	}
-
-	/**
-	 * Current connection that we use to open site
-	 * 
-	 * @return string
-	 */
-	public function current_connection()
-	{
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
-	}
 }
