@@ -1,6 +1,6 @@
 <?php
 $this->head_data .= str_replace('  ', '', $this->no_br('
-<style type="text/css">
+<style>
     .cookieConsentContainer {
         z-index: 999;
         width: 350px;

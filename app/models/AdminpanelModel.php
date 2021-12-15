@@ -31,10 +31,10 @@ class AdminpanelModel extends BaseModel {
             */
             if ($this->user->is_moderator(103) || $this->user->is_moderator(105) || $this->user->is_administrator()) {
                 if (file_exists('reports.php')) $data['content'] .= $this->sitelink('reports.php', $this->localization->string('usrcomp'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/file_upload', $this->localization->string('upload'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/uploaded_files', $this->localization->string('uplFiles'));
 
-                if (file_exists('upload.php')) {
-                    $data['content'] .= $this->sitelink('upload.php', $this->localization->string('upload'));
-                    $data['content'] .= $this->sitelink('uploaded_files.php', $this->localization->string('uplFiles'));
+                if (file_exists('uploaded_files.php')) {
                     $data['content'] .= $this->sitelink('search_uploads.php', 'Search uploaded files');
                 }
             }

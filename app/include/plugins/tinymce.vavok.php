@@ -14,7 +14,7 @@
 		remove_script_host:false
 	});
 </script>
-<style type="text/css">
+<style>
 	textarea {
 		width: 100%;
 		min-height: 400px;

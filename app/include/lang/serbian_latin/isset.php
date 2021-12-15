@@ -5,13 +5,13 @@ $issetLang = array(
 "delfrombase" => 'Uspešno obrisano iz baze',
 
 // inbox
-"mail" => 'Vaše pismo uspešno poslato',
-"nouz" => 'Niste upisali za koga je pismo',
+"mail" => 'Vaše poruka uspešno poslata',
+"nouz" => 'Niste upisali za koga je poruka',
 "alldelpriv" => 'Sanduče očišćeno',
 "delpriv" => 'Poruka uspešno obrisana',
 "selectpriv" => 'Izabrane poruke obrisane',
-"nomess" => 'Pismo je kratko, nije poslato',
-"noprivlog" => 'Ne možete poslati pismo samom sebi',
+"nomess" => 'Poruka je kratka, nije poslato',
+"noprivlog" => 'Ne možete poslati poruku samom sebi',
 "fullmail" => 'Sanduče korisnika prepunjeno, ne možete mu pisati dok ne oslobodi mesta u sandučetu',
 
 // settings
@@ -84,7 +84,7 @@ $issetLang = array(
 "ignor_noadd" => 'Greška pri dodavanju u ignor listu',
 "ignor_del" => 'Član uspešno obrisan iz ignor liste',
 "ignor_nodel" => 'Greška pri brisanju iz ignor liste',
-"ignoring" => 'Član kome šaljete pismo vas je stavio u ignor listu! Pismo nije poslato.',
+"ignoring" => 'Član kome šaljete poruku vas je stavio u ignor listu! Poruka nije poslata.',
 "kontakt_add" => 'Član je uspesno dodat u kontakt listu',
 "kontakt_noadd" => 'Greška pri dodavanju u kontakt listu',
 "kontakt_del" => 'Član uspesno obrisan iz kontakt liste',

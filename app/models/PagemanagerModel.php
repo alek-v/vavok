@@ -646,7 +646,7 @@ class PagemanagerModel extends BaseModel {
             }
 
             $index_data['headt'] = '
-            <style type="text/css">
+            <style>
                 .tooltip {
                     border-bottom: 1px dotted #000000; color: #000000; outline: none;
                     cursor: help; text-decoration: none;

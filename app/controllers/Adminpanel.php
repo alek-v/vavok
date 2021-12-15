@@ -191,4 +191,37 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('adminpanel/logfiles', $model->index());
     }
+
+    /**
+    * Upload file
+    */
+    public function file_upload()
+    {
+        $model = $this->model('FileUpload');
+ 
+        // Pass page to the view
+        $this->view('adminpanel/file_upload', $model->index());
+    }
+
+    /**
+    * Finish upload
+    */
+    public function finish_upload()
+    {
+        $model = $this->model('FileUpload');
+ 
+        // Save file
+        $model->finish_upload();
+    }
+
+    /**
+    * Finish upload
+    */
+    public function uploaded_files()
+    {
+        $model = $this->model('FileUpload');
+ 
+        // Pass page to the view
+        $this->view('adminpanel/uploaded_files', $model->uploaded_files());
+    }
 }

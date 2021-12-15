@@ -47,7 +47,7 @@ class Database extends PDO {
                 if (!empty($error["Bind Parameters"]))
                     $error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
                 $css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
-                $msg .= '<style type="text/css">' . "\n" . $css . "\n</style>";
+                $msg .= '<style>' . "\n" . $css . "\n</style>";
                 $msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
                 foreach($error as $key => $val)
                 $msg .= "\n\t<label>" . $key . ":</label>" . $val;

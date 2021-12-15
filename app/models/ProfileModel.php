@@ -10,7 +10,7 @@ class ProfileModel extends BaseModel {
         $data['user'] = $this->user_data;
 
 		$data['headt'] = '
-		<style type="text/css">
+		<style>
 		    .photo img {
 		        max-width: 100px;
 		        max-height: 100px;
@@ -379,7 +379,7 @@ class ProfileModel extends BaseModel {
         $data['user'] = $this->user_data;
 
         $data['tname'] = 'Change Photo';
-        $data['headt'] = '<style type="text/css">
+        $data['headt'] = '<style>
         .photo img {
             max-width: 320px;
             max-height: 320px;
@@ -426,7 +426,7 @@ class ProfileModel extends BaseModel {
         // Page data
         $data['tname'] = 'Change Photography';
 		$data['headt'] = '
-		<style type="text/css">
+		<style>
 		    .photo img {
 		        max-width: 100px;
 		        max-height: 100px;

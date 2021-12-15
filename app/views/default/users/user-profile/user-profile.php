@@ -1,4 +1,4 @@
-<style type="text/css">
+<style>
 	.user_profile {
 	overflow: hidden;
 	margin-bottom: 15px;
