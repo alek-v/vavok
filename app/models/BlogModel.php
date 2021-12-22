@@ -42,10 +42,10 @@ class BlogModel extends BaseModel {
         switch ($pg) {
             case isset($pg):
                 // Load page data and merge with existing data
-                $this_page = array_merge($this->blog_page_data($params), $this_page);
+                if (isset($params) && is_array($params)) $this_page = array_merge($this->blog_page_data($params), $this_page);
 
                 // Redirect to blog main page if page does not exist
-                $page_id = !empty($this->page_id) or $this->redirect_to(HOMEDIR . 'blog/');
+                $page_id = !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
         
                 // generate page
                 $post = $this->model('ParsePage');
@@ -62,20 +62,20 @@ class BlogModel extends BaseModel {
                 /**
                  * Time created
                  */
-                $post->set('created_date', $this->date_fixed($this->page_created_date, 'd.m.Y.'));
+                $post->set('created_date', $this->correctDate($this->page_created_date, 'd.m.Y.'));
         
                 /**
                  * Time published
                  * If article is not published and page is viewed by administrator use current time
                  */
                 if (!empty($this->page_published_date)) {
-                    $post->set('published_date', $this->date_fixed($this->page_published_date, 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate($this->page_published_date, 'd.m.Y.'));
                 } else {
-                    $post->set('published_date', $this->date_fixed(time(), 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate(time(), 'd.m.Y.'));
                 }
         
                 // Date updated
-                $post->set('date_updated', $this->date_fixed($this->page_updated_date, 'd.m.Y.'));
+                $post->set('date_updated', $this->correctDate($this->page_updated_date, 'd.m.Y.'));
         
                 /**
                  * Content
@@ -125,7 +125,7 @@ class BlogModel extends BaseModel {
                 $show_comments = $this->model('ParsePage');
                 $show_comments->load('blog/all_comments');
         
-                if ($this->user->is_reg()) {
+                if ($this->user->userAuthenticated()) {
                     $add_comment = $this->model('ParsePage');
                     $add_comment->load('blog/add_comment');
                     $add_comment->set('add_comment_page', HOMEDIR . 'blog/save_comment/?pid=' . $this->page_id . '&amp;ptl=' . CLEAN_REQUEST_URI);
@@ -306,7 +306,7 @@ class BlogModel extends BaseModel {
         $ptl = ltrim($this->check($this->post_and_get('ptl')), '/'); // Return page
 
         // In case data is missing
-        if ($this->user->is_reg() && (empty($this->post_and_get('comment')) || empty($this->post_and_get('pid')))) { $this->redirect_to(HOMEDIR . $ptl . '?isset=msgshort'); }
+        if ($this->user->userAuthenticated() && (empty($this->post_and_get('comment')) || empty($this->post_and_get('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
 
         $comments = $this->model('Comments');
 
@@ -314,7 +314,7 @@ class BlogModel extends BaseModel {
         $comments->insert($this->post_and_get('comment'), $this->post_and_get('pid'));
 
         // Saved, return to page
-        $this->redirect_to(HOMEDIR . $ptl . '?isset=savedok');
+        $this->redirection(HOMEDIR . $ptl . '?isset=savedok');
     }
 
 	/**

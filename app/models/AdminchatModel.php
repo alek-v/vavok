@@ -12,7 +12,7 @@ class AdminchatModel extends BaseModel {
         $data['tname'] = '{@localization[adminchat]}}';
         $data['content'] = '';
 
-        if (!$this->user->check_permissions(basename(__FILE__))) $this->redirect_to('../?auth_error');
+        if (!$this->user->check_permissions(basename(__FILE__))) $this->redirection('../?auth_error');
 
         // add to admin chat
         if ($this->post_and_get('action') == 'acadd') {
@@ -25,12 +25,12 @@ class AdminchatModel extends BaseModel {
             $msg = $this->smiles($msg);
             $msg = $this->no_br($msg, '<br />');
         
-            $text = $msg . '|' . $this->user->show_username() . '|' . $this->date_fixed(time(), "d.m.y") . '|' . $this->date_fixed(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
+            $text = $msg . '|' . $this->user->show_username() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
             $text = $this->no_br($text);
         
-            $this->write_data_file('adminchat.dat', $text . PHP_EOL, 1);
+            $this->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
         
-            $file = $this->get_data_file('adminchat.dat');
+            $file = $this->getDataFile('adminchat.dat');
             $i = count($file);
             if ($i >= 300) {
                 $fp = fopen(APPDIR . "used/adminchat.dat", "w");
@@ -49,7 +49,7 @@ class AdminchatModel extends BaseModel {
         // empty admin chat
         if ($this->post_and_get('action') == "acdel") {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-                $this->clear_files(APPDIR . "used/adminchat.dat");
+                $this->clearFile(APPDIR . "used/adminchat.dat");
 
                 header ('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=mp_admindelchat');
                 exit;
@@ -67,7 +67,7 @@ class AdminchatModel extends BaseModel {
         
             $data['content'] .='<input type="submit" value="' . $this->localization->string('save') . '" /></form><hr>';
         
-            $file = $this->get_data_file('adminchat.dat');
+            $file = $this->getDataFile('adminchat.dat');
             $file = array_reverse($file);
             $total = count($file);
         

@@ -17,7 +17,7 @@ class BanModel extends BaseModel {
 
         $user = $this->post_and_get('users');
 
-        if (!$this->user->is_administrator(101) && !$this->user->is_administrator(102) && !$this->user->is_moderator(103)) $this->redirect_to('../?auth_error');
+        if (!$this->user->is_administrator(101) && !$this->user->is_administrator(102) && !$this->user->is_moderator(103)) $this->redirection('../?auth_error');
         
         $data['content'] .= '<p><img src="../themes/images/img/partners.gif" alt=""> <b>' . $this->localization->string('banunban') . '</b></p>';
         
@@ -60,7 +60,7 @@ class BanModel extends BaseModel {
                     $data['content'] .= '<img src="../themes/images/img/profiles.gif" alt=""> <b>Profile of member ' . $users_nick . '</b><br /><br />'; // update lang
                     $data['content'] .= 'Bans: <b>' . (int)$this->user->user_info('allban', $userx_id) . '</b><br />'; // update lang
                     if (ctype_digit($this->user->user_info('lastban', $userx_id))) {
-                        $data['content'] .= $this->localization->string('lastban') . ': ' . $this->date_fixed($this->check($this->user->user_info('lastban', $userx_id)), "j.m.y/H:i") . '<br />';
+                        $data['content'] .= $this->localization->string('lastban') . ': ' . $this->correctDate($this->check($this->user->user_info('lastban', $userx_id)), "j.m.y/H:i") . '<br />';
                     }
 
                     $data['content'] .= '<br />';
@@ -129,14 +129,14 @@ class BanModel extends BaseModel {
         
                             $data['content'] .= '<hr>';
         
-                            $data['content'] .= $this->localization->string('maxbantime') . ' ' . $this->formattime(round($this->get_configuration('maxBanTime') * 60)) . '<br />';
+                            $data['content'] .= $this->localization->string('maxbantime') . ' ' . $this->formatTime(round($this->configuration('maxBanTime') * 60)) . '<br />';
                             $data['content'] .= $this->localization->string('bandesc1') . '<br />';
                         } else {
                             $data['content'] .= '<b><font color="#FF0000">' . $this->localization->string('confban') . '</font></b><br />';
                             if (ctype_digit($this->user->user_info('lastban', $userx_id))) {
-                                $data['content'] .= $this->localization->string('bandate') . ': ' . $this->date_fixed($this->user->user_info('lastban', $userx_id)) . '<br />';
+                                $data['content'] .= $this->localization->string('bandate') . ': ' . $this->correctDate($this->user->user_info('lastban', $userx_id)) . '<br />';
                             }
-                            $data['content'] .= $this->localization->string('banend') . ' ' . $this->formattime($ost_time) . '<br />';
+                            $data['content'] .= $this->localization->string('banend') . ' ' . $this->formatTime($ost_time) . '<br />';
                             $data['content'] .= $this->localization->string('bandesc') . ': ' . $this->check($this->user->user_info('bandesc', $userx_id)) . '<br />'; 
                             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban/?action=deleteban&amp;users=' . $user, $this->localization->string('delban')) . '<hr>';
                         }
@@ -161,7 +161,7 @@ class BanModel extends BaseModel {
                 if ($bform == "sut") $ban_time = round($udd38 * 60 * 24);
 
                 if (!empty($ban_time)) {
-                    if ($ban_time <= $this->get_configuration('maxBanTime')) {
+                    if ($ban_time <= $this->configuration('maxBanTime')) {
                         if (!empty($udd39)) {
                             $newbantime = round(time() + ($ban_time * 60));
                             $newbandesc = $this->no_br($this->check($udd39), ' ');
@@ -182,7 +182,7 @@ class BanModel extends BaseModel {
                             $data['content'] .= $this->localization->string('noreason') . '!<br />';
                         } 
                     } else {
-                        $data['content'] .= $this->localization->string('maxbantimeare') . ' ' . round($this->get_configuration('maxBanTime') / 1440) . ' ' . $this->localization->string('days') . '!<br />';
+                        $data['content'] .= $this->localization->string('maxbantimeare') . ' ' . round($this->configuration('maxBanTime') / 1440) . ' ' . $this->localization->string('days') . '!<br />';
                     } 
                 } else {
                     $data['content'] .= $this->localization->string('nobantime') . '!<br />';
@@ -245,7 +245,7 @@ class BanModel extends BaseModel {
         $data['tname'] = '{@localization[banlist]}}';
         $data['content'] = '';
 
-        if (!$this->user->is_administrator() && !$this->user->is_moderator(103)) $this->redirect_to('../index.php?error');
+        if (!$this->user->is_administrator() && !$this->user->is_moderator(103)) $this->redirection('../index.php?error');
 
         // Number of banned users
         $noi = $this->user->total_banned();
@@ -258,10 +258,10 @@ class BanModel extends BaseModel {
         
         if ($noi > 0) {
             foreach ($this->db->query($sql) as $item) {
-                if ($item['banned'] == 1) $data['content'] .= '<div class="a"><p>' . $this->sitelink(HOMEDIR . 'users/u/' . $item['name'], $item['name']) . ' <small>' . $this->localization->string('banduration') . ': ' . $this->date_fixed($this->user->user_info('bantime', $item['id']), 'd.m.y.') . ' | ' . $this->localization->string('bandesc') . ': ' . $this->user->user_info('bandesc', $item['id']) . '</small></p></div>';
+                if ($item['banned'] == 1) $data['content'] .= '<div class="a"><p>' . $this->sitelink(HOMEDIR . 'users/u/' . $item['name'], $item['name']) . ' <small>' . $this->localization->string('banduration') . ': ' . $this->correctDate($this->user->user_info('bantime', $item['id']), 'd.m.y.') . ' | ' . $this->localization->string('bandesc') . ': ' . $this->user->user_info('bandesc', $item['id']) . '</small></p></div>';
             }
         } else {
-            $data['content'] .= $this->show_notification('<img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('noentry'));
+            $data['content'] .= $this->showNotification('<img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('noentry'));
         }
 
         $data['navigation'] = $navigation->get_navigation();

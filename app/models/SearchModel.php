@@ -187,7 +187,7 @@ class SearchModel extends BaseModel {
             if ($items < 1) {
                 $this_page['content'] .= $resultsPage->output();
         
-                $this_page['content'] .= $this->show_notification('No search results, try another phrase');
+                $this_page['content'] .= $this->showNotification('No search results, try another phrase');
         
                 return $this_page;
             }

@@ -27,7 +27,6 @@ form {
   margin: 5px;
 }
 
-/* site navigation link */
 .page_navigation {
   margin: 50px 0px 50px 0px;
 }
@@ -98,6 +97,18 @@ form {
 /* BLOG */
 .blog-page p {
   font-size: 16px;
+}
+
+.site_online_users {
+  margin: auto;
+}
+
+.site_counter {
+  margin: auto;
+}
+
+.site_pagegen_time {
+  margin: auto;
 }
 
 .footer {

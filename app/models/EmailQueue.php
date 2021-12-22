@@ -32,7 +32,7 @@ class EmailQueue extends BaseModel {
         $sql = "SELECT * FROM email_queue WHERE sent = 0 ORDER BY FIELD(priority,
                 'high',
                 'normal',
-                'low') LIMIT 0, " . $this->get_configuration('subMailPacket');
+                'low') LIMIT 0, " . $this->configuration('subMailPacket');
 
         $i = 0;
         foreach ($this->db->query($sql) as $email) {
@@ -52,7 +52,7 @@ class EmailQueue extends BaseModel {
         }
 
         // Update time of last sent mail
-        if ($i > 0) $this->write_data_file('email_queue_sent.dat', $new_time);
+        if ($i > 0) $this->writeDataFile('email_queue_sent.dat', $new_time);
     }
 
     /**

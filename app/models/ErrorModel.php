@@ -18,16 +18,19 @@ class ErrorModel extends BaseModel {
 
         $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';
         $http_referer = str_replace(':|:', '|', $http_referer);
-        $request_uri = str_replace(':|:', '|', REQUEST_URI);
+        $request_uri = $this->check(str_replace(':|:', '|', REQUEST_URI));
         $hostname = gethostbyaddr($this->user->find_ip());
         $hostname = str_replace(':|:', '|', $hostname);
-        
+
         $log = !empty($this->user->show_username()) ? $this->user->show_username() : 'Guest';
-        
+
         $write_data = $request_uri . ':|:' . time() . ':|:' . $this->user->find_ip() . ':|:' . $hostname . ':|:' . $this->user->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
         
         $error_number_info = '';
         $additional_error_info = '';
+
+        // No params from url
+        if (!isset($params[0])) $params[0] = '';
 
         if ($params[0] == 'error_401') {
             $error_number_info = $this->localization->string('err401');
@@ -65,10 +68,10 @@ class ErrorModel extends BaseModel {
 
         if (isset($write) && !empty($logdat)) {
             // Write new data to log file
-            $this->write_data_file($logdat, $write . PHP_EOL, 1);
+            $this->writeDataFile($logdat, $write . PHP_EOL, 1);
         
             // Remove lines from file
-            $this->limit_file_lines(APPDIR . 'used/' . $logdat, $this->get_configuration('maxLogData'));
+            $this->limitFileLines(APPDIR . 'used/' . $logdat, $this->configuration('maxLogData'));
         }
 
         $this_page['error_number_info'] = $error_number_info;

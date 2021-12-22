@@ -45,7 +45,7 @@ class Mailer extends Core {
 	    /**
 	     * Default name
 	     */
-	    if (empty($name)) $name = $this->get_configuration('title');
+	    if (empty($name)) $name = $this->configuration('title');
 
 	    // support for unicode emails
 	    if ($this->is_unicode($usermail) && function_exists('idn_to_ascii')) {

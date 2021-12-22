@@ -11,7 +11,7 @@ class InboxModel extends BaseModel {
         $data['user'] = $this->user_data;
 
         // Disable access for unregistered users
-        if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR);
+        if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Update notification data
         if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
@@ -84,7 +84,7 @@ class InboxModel extends BaseModel {
         $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : 0;
 
         if (!isset($who) || ($who > 0 && empty($this->user->getnickfromid($who)))) {
-            $data['content'] = $this->show_danger('User does not exist');
+            $data['content'] = $this->showDanger('User does not exist');
 
             return $data;
         } else {
@@ -127,7 +127,7 @@ class InboxModel extends BaseModel {
     {
         // Data sent, redirect to dialog
         if (!empty($this->post_and_get('who')) && $this->user->getidfromnick($this->post_and_get('who')) > 0) {
-            $this->redirect_to(HOMEDIR . 'inbox/dialog?who=' . $this->user->getidfromnick($this->post_and_get('who')));
+            $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getidfromnick($this->post_and_get('who')));
         }
 
         // Users data
@@ -148,7 +148,7 @@ class InboxModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-        if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR . 'pages/login');
+        if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR . 'pages/login');
 
         // This is ajax request
         // Counter will not threat this as new click/visit
@@ -169,7 +169,7 @@ class InboxModel extends BaseModel {
         $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
         $stmt->closeCursor();
 
-        $pmfl = $lastpm + 0; // 0 is $this->get_configuration("floodTime")
+        $pmfl = $lastpm + 0; // 0 is $this->configuration("floodTime")
 
         if ($pmfl < time()) {
             if (!$this->user->isignored($byuid, $who)) {
@@ -194,7 +194,7 @@ class InboxModel extends BaseModel {
         // Counter will not threat this as new click/visit
         if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
 
-        if (!$this->user->is_reg()) $this->redirect_to(HOMEDIR . 'users/login');
+        if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR . 'users/login');
 
         // if there is last message id set
         if (!empty($this->post_and_get('lastid'))) {

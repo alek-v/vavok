@@ -19,7 +19,7 @@ class Core {
 	 * @param bool $full_configuration
 	 * @return mixed
 	 */
-	public function get_configuration($data = '', $full_configuration = false)
+	public function configuration($data = '', $full_configuration = false)
 	{
 		$config = array();
 
@@ -46,10 +46,6 @@ class Core {
 	    }
 	}
 
-	/**********
-	 * Date and time
-	 */
-
 	/**
 	 * Return correct date
 	 *
@@ -58,9 +54,9 @@ class Core {
 	 * @param string $myzone
 	 * @return string
 	 */
-	public function date_fixed($timestamp = '', $format = 'd.m.Y.', $myzone = '', $show_zone_info = '')
+	public function correctDate($timestamp = '', $format = 'd.m.Y.', $myzone = '', $show_zone_info = '')
 	{
-	    $timezone = $this->get_configuration('timeZone');
+	    $timezone = $this->configuration('timeZone');
 
 	    if (empty($timestamp)) $timestamp = time();
 
@@ -86,7 +82,7 @@ class Core {
 	}
 
 	// Make time
-	function maketime($string) {
+	function makeTime($string) {
 	    if ($string < 3600) {
 	        $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
 	    } else {
@@ -96,7 +92,7 @@ class Core {
 	}
 
 	// Format time into days and minutes
-	function formattime($file_time) {
+	function formatTime($file_time) {
 	    if ($file_time >= 86400) {
 	        $file_time = round((($file_time / 60) / 60) / 24, 1) . ' {@localization[days]}}';
 	    } elseif ($file_time >= 3600) {
@@ -110,12 +106,8 @@ class Core {
 	    return $file_time;
 	}
 
-	/**********
-	 * File manipulation
-	 */
-
 	// clear file
-	function clear_files($files) {
+	function clearFile($files) {
 	    $file = file($files);
 	    $fp = fopen($files, "a+");
 	    flock ($fp, LOCK_EX);
@@ -128,7 +120,7 @@ class Core {
 	}
 
 	// Clear directory
-	function clear_directory($directory) {
+	function clearDirectory($directory) {
 	    $di = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
 	    $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
 
@@ -138,19 +130,20 @@ class Core {
 	}
 
 	// Read directory size
-	function read_dir($dir) {
+	function readDirectory($dir) {
 	    if ($path = opendir($dir)) while ($file_name = readdir($path)) {
 	        $size = 0;
 	        if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
-	            if (is_dir($dir . "/" . $file_name)) $size = $this->read_dir($dir . "/" . $file_name);
+	            if (is_dir($dir . "/" . $file_name)) $size = $this->readDirectory($dir . "/" . $file_name);
 	            else $size += filesize($dir . "/" . $file_name);
 	        }
 	    }
+
 	    return $size;
 	}
 
 	// count number of lines in file
-	function counter_string($files) {
+	function linesInFile($files) {
 	    $count_lines = 0;
 	    if (file_exists($files)) {
 	        $lines = file($files);
@@ -167,7 +160,7 @@ class Core {
 	 * @param integer $max
 	 * @return void
 	 */
-	function limit_file_lines($file_name, $max = 100)
+	function limitFileLines($file_name, $max = 100)
 	{
 	    $file = file($file_name);
 	    $i = count($file);
@@ -188,7 +181,7 @@ class Core {
 	 * @param string $filename
 	 * @return array
 	 */
-	public function get_data_file($filename)
+	public function getDataFile($filename)
 	{
 		return file(APPDIR . 'used/' . $filename);
 	}
@@ -201,7 +194,7 @@ class Core {
 	 * @param integer $append_data, 1 is to append new data
 	 * @return void
 	 */
-	public function write_data_file($filename, $data, $append_data = '')
+	public function writeDataFile($filename, $data, $append_data = '')
 	{
 		if ($append_data == 1) {
 			file_put_contents(APPDIR . 'used/' . $filename, $data, FILE_APPEND);
@@ -210,10 +203,6 @@ class Core {
 
 		file_put_contents(APPDIR . 'used/' . $filename, $data, LOCK_EX);
 	}
-
-	/**********
-	 * String and text manipulation
-	 */
 
 	// Multibyte ucfirst by plemieux
 	function my_mb_ucfirst($str) {
@@ -520,10 +509,6 @@ class Core {
 		return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
 	}
 
-	/**********
-	 * Security
-	 */
-
 	/**
 	 * Check input fields
 	 *
@@ -565,7 +550,7 @@ class Core {
 	}
 
 	// generate password
-	public function generate_password() {
+	public function generatePassword() {
 	    $length = rand(10, 12);
 	    $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
 	    $len = strlen($salt);
@@ -578,7 +563,7 @@ class Core {
 
 	// antiflood
 	function flooder($ip, $phpself = '') {
-	    $old_db = $this->get_data_file('flood.dat');
+	    $old_db = $this->getDataFile('flood.dat');
 	    $new_db = fopen(APPDIR . "used/flood.dat", "w");
 	    flock ($new_db, LOCK_EX);
 	    $result = false;
@@ -586,7 +571,7 @@ class Core {
 	    foreach($old_db as $old_db_line) {
 	        $old_db_arr = explode("|", $old_db_line);
 
-	        if (($old_db_arr[0] + $this->get_configuration('floodTime')) > time()) {
+	        if (($old_db_arr[0] + $this->configuration('floodTime')) > time()) {
 	            fputs ($new_db, $old_db_line);
 
 	            if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
@@ -608,20 +593,16 @@ class Core {
 	 * @param string $captcha
 	 * @return bool
 	 */
-	public function recaptcha_response($captcha)
+	public function recaptchaResponse($captcha)
 	{
 		// Return success if there is no secret key or disabled reCAPTCHA
-		if (empty($this->get_configuration('recaptcha_secretkey'))) return array('success' => true);
+		if (empty($this->configuration('recaptcha_secretkey'))) return array('success' => true);
 
 	    // Post request to Google, check captcha code
-	    $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->get_configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
+	    $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
 	    $response = file_get_contents($url);
 	    return $responseKeys = json_decode($response, true);
 	}
-
-	/**********
-	 * Validations
-	 */
 
 	// check URL
 	public function validateURL($URL) {
@@ -649,12 +630,8 @@ class Core {
 	    }
 	}
 
-	/**********
-	 * Show informations
-	 */
-
 	// Show fatal error and stop script execution
-	public function fatal_error($error) {
+	public function fatalError($error) {
 	    echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
 	    exit;
 	}
@@ -665,7 +642,7 @@ class Core {
 	 * @param string $error
 	 * @return str
 	 */
-	public function show_success($success)
+	public function showSuccess($success)
 	{
 	    return '<div class="alert alert-success" role="alert">' . $success . '</div>';
 	}
@@ -676,7 +653,7 @@ class Core {
 	 * @param string $error
 	 * @return str
 	 */
-	public function show_danger($error)
+	public function showDanger($error)
 	{
 	    return '<div class="alert alert-danger" role="alert">' . $error . '</div>';
 	}
@@ -687,7 +664,7 @@ class Core {
 	 * @param string $notification
 	 * @return str
 	 */
-	public function show_notification($notification)
+	public function showNotification($notification)
 	{
 	    return '<div class="alert alert-info" role="alert">' . $notification . '</div>';
 	}
@@ -746,7 +723,7 @@ class Core {
 	 *
 	 * @return string
 	 */
-	public function show_online()
+	public function showOnline()
 	{
         $online = $this->db->count_row('online');
         $registered = $this->db->count_row('online', "user > 0");
@@ -761,7 +738,7 @@ class Core {
 	 *
 	 * @return string
 	 */
-	public function show_counter()
+	public function showCounter()
 	{
         $counts = $this->db->get_data('counter');
 
@@ -771,7 +748,7 @@ class Core {
         $visits_today = $counts['visits_today']; // visits today
     	$total_visits = $counts['visits_total']; // total visits
 
-		$counter_configuration = $this->get_configuration('showCounter');
+		$counter_configuration = $this->configuration('showCounter');
 
 	    if (!empty($counter_configuration) && $counter_configuration != 6) {
 	        if ($counter_configuration == 1) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $visits_today . ' | ' . $total_visits . '</a>';
@@ -789,9 +766,9 @@ class Core {
 	}
 
 	// show page generation time
-	public function show_gentime()
+	public function showPageGenTime()
 	{
-	    if ($this->get_configuration('pageGenTime') == 1) {
+	    if ($this->configuration('pageGenTime') == 1) {
 	        $end_time = microtime(true);
 	        $gen_time = $end_time - START_TIME;
 	        $pagegen = '<p class="site_pagegen_time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
@@ -799,10 +776,6 @@ class Core {
 	        return $pagegen;
 	    }
 	}
-
-	/**********
-	 * Groups
-	 */
 
 	/**
 	 * Get group members number
@@ -814,10 +787,6 @@ class Core {
 	{
 		return $this->go('db')->count_row('group_members', "group_name = '{$group_name}'");
 	}
-
-	/**********
-	 * Other
-	 */
 
 	// get prefered language
 	function getDefaultLanguage() {
@@ -888,7 +857,7 @@ class Core {
 	 * @param string $url
 	 * @return mixed
 	 */
-	public function redirect_to($url) {
+	public function redirection($url) {
 		// Cannot redirect if headers are already sent
 	    if (!headers_sent()) {
 			header('HTTP/1.1 301 Moved Permanently');
@@ -902,13 +871,13 @@ class Core {
 
 	// get transfer protocol https or http
 	public function transfer_protocol() {
-	    if (empty($this->get_configuration('transferProtocol')) || $this->get_configuration('transferProtocol') == 'auto') {
+	    if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
 	        if (!empty($_SERVER['HTTPS'])) {
 	            $connectionProtocol = 'https://';
 	        } else {
 	            $connectionProtocol = 'http://';
 	        }
-	    } elseif ($this->get_configuration('transferProtocol') == 'HTTPS') {
+	    } elseif ($this->configuration('transferProtocol') == 'HTTPS') {
 	        $connectionProtocol = 'https://';
 	    } else {
 	        $connectionProtocol = 'http://';
@@ -934,7 +903,7 @@ class Core {
 	 * 
 	 * @return array $url
 	 */
-    public function get_url()
+    public function paramsFromUrl()
     {
         if (isset($_GET['url'])) {
             $url = $this->check(rtrim($_GET['url'], '/'));
@@ -1182,7 +1151,7 @@ class Core {
 
 		// Add missing open graph tags
 		if (!strstr($tags, 'og:type')) $tags .= "\n" . '<meta property="og:type" content="website" />';
-		if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->get_configuration('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
+		if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
 
 		return $tags;
 	}

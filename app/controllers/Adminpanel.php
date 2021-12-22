@@ -224,4 +224,15 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('adminpanel/uploaded_files', $model->uploaded_files());
     }
+
+    /**
+    * Search thrue uploaded files
+    */
+    public function search_uploads()
+    {
+        $model = $this->model('FileUpload');
+ 
+        // Pass page to the view
+        $this->view('adminpanel/search_uploads', $model->search_uploads());
+    }
 }

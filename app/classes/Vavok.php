@@ -50,7 +50,8 @@ class Vavok extends Core {
 		// Cookie-free domain for themes
 		if (!defined('STATIC_THEMES_URL')) define('STATIC_THEMES_URL', $this->current_connection() . $_SERVER['HTTP_HOST'] . '/themes');
 
-        $url = $this->get_url();
+		// Parameters from URL
+        $url = $this->paramsFromUrl();
 
 		// Look in URL for the first value
 		if (isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {

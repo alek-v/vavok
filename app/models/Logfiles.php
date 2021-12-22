@@ -15,28 +15,28 @@ class Logfiles extends BaseModel {
         $this_page['tname'] = 'Log data';
         $this_page['content'] = '';
 
-        if (!$this->user->is_reg() || !$this->user->is_administrator(101)) $this->redirect_to("./?isset=ap_noaccess");
+        if (!$this->user->userAuthenticated() || !$this->user->is_administrator(101)) $this->redirection("./?isset=ap_noaccess");
 
         if ($this->post_and_get('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->clear_files(APPDIR . "used/datalog/error401.dat");
-            $this->clear_files(APPDIR . "used/datalog/error402.dat");
-            $this->clear_files(APPDIR . "used/datalog/error403.dat");
-            $this->clear_files(APPDIR . "used/datalog/error404.dat");
-            $this->clear_files(APPDIR . "used/datalog/error406.dat");
-            $this->clear_files(APPDIR . "used/datalog/error500.dat");
-            $this->clear_files(APPDIR . "used/datalog/error502.dat");
-            $this->clear_files(APPDIR . "used/datalog/dberror.dat");
-            $this->clear_files(APPDIR . "used/datalog/error.dat");
-            $this->clear_files(APPDIR . "used/datalog/ban.dat");
+            $this->clearFile(APPDIR . "used/datalog/error401.dat");
+            $this->clearFile(APPDIR . "used/datalog/error402.dat");
+            $this->clearFile(APPDIR . "used/datalog/error403.dat");
+            $this->clearFile(APPDIR . "used/datalog/error404.dat");
+            $this->clearFile(APPDIR . "used/datalog/error406.dat");
+            $this->clearFile(APPDIR . "used/datalog/error500.dat");
+            $this->clearFile(APPDIR . "used/datalog/error502.dat");
+            $this->clearFile(APPDIR . "used/datalog/dberror.dat");
+            $this->clearFile(APPDIR . "used/datalog/error.dat");
+            $this->clearFile(APPDIR . "used/datalog/ban.dat");
         
-            $this->redirect_to(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
+            $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
         if ($this->post_and_get('action') == 'delerid' && !empty($this->post_and_get('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
             $err = $this->post_and_get('err');
-            $this->clear_files(APPDIR . 'used/datalog/' . $err . '.dat');
+            $this->clearFile(APPDIR . 'used/datalog/' . $err . '.dat');
 
-            $this->redirect_to(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
+            $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
         $list = isset($_GET['list']) ? $list = $this->check($_GET['list']) : $list = '404';
@@ -139,7 +139,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error401.dat');
+            $opis = $this->getDataFile('datalog/error401.dat');
             $err = 'error401';
         }
         if ($list == 402) {
@@ -147,7 +147,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error402.dat');
+            $opis = $this->getDataFile('datalog/error402.dat');
             $err = 'error402';
         }
         if ($list == 403) {
@@ -155,7 +155,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error403.dat');
+            $opis = $this->getDataFile('datalog/error403.dat');
             $err = 'error403';
         }
         if ($list == 404) {
@@ -163,7 +163,7 @@ class Logfiles extends BaseModel {
 
             $this_page['content'] .= getLogNavigation($listNames);
 
-            $opis = $this->get_data_file('datalog/error404.dat');
+            $opis = $this->getDataFile('datalog/error404.dat');
             $err = 'error404';
         }
         if ($list == 406) {
@@ -171,7 +171,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error406.dat');
+            $opis = $this->getDataFile('datalog/error406.dat');
             $err = 'error406';
         }
         if ($list == 500) {
@@ -179,7 +179,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error500.dat');
+            $opis = $this->getDataFile('datalog/error500.dat');
             $err = 'error500';
         }
         if ($list == 502) {
@@ -187,7 +187,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error502.dat');
+            $opis = $this->getDataFile('datalog/error502.dat');
             $err = 'error502';
         }
         if ($list == 'other') {
@@ -195,7 +195,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->get_data_file('datalog/error.dat');
+            $opis = $this->getDataFile('datalog/error.dat');
             $err = 'error';
         }
 
@@ -206,7 +206,7 @@ class Logfiles extends BaseModel {
             $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt=""> <b>' . $this->localization->string('noentry') . '</b></p>';
         }
 
-        $navigation = new Navigation($config_loglist, $total, HOMEDIR . 'adminpanel/logfiles?list=' . $list. '&amp;'); // start navigation
+        $navigation = new Navigation($config_loglist, $total, HOMEDIR . 'adminpanel/logfiles?list=' . $list. '&'); // start navigation
 
         $start = $navigation->start()['start']; // starting point
         $end = $navigation->start()['end']; // ending point
@@ -215,7 +215,7 @@ class Logfiles extends BaseModel {
             $dtlog = explode(":|:", $opis[$i]);
         
             $this_page['content'] .= '<img src="{@HOMEDIR}}themes/images/img/files.gif" alt=""> <b><font color="#FF0000">Fajl: ' . $dtlog[2] . '</font></b><br>';
-            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->date_fixed($dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
+            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->correctDate($dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
             $this_page['content'] .= 'Referer: ' . $dtlog[7] . '<br>';
             $this_page['content'] .= 'Host: ' . $dtlog[5] . '<br>';
             $this_page['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_informations?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';

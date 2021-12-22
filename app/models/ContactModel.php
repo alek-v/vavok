@@ -17,7 +17,7 @@ class ContactModel extends BaseModel {
         $data['headt'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         $data['content'] = '';
 
-        if (!$this->user->is_reg()) {
+        if (!$this->user->userAuthenticated()) {
             $usernameAndMail = $this->model('ParsePage');
             $usernameAndMail->load('contact/usernameAndMail_guest');
         } else {
@@ -28,7 +28,7 @@ class ContactModel extends BaseModel {
         }
 
         // Show reCAPTCHA
-        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->get_configuration('recaptcha_sitekey') . '"></div>';
+        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration('recaptcha_sitekey') . '"></div>';
 
         // Page data
         $data['usernameAndMail'] = $usernameAndMail->output();
@@ -51,24 +51,24 @@ class ContactModel extends BaseModel {
         $localization->load();
 
         // Check name
-        if (empty($this->post_and_get('name'))) $data['content'] .= $this->show_danger('{@localization[noname]}}');
+        if (empty($this->post_and_get('name'))) $data['content'] .= $this->showDanger('{@localization[noname]}}');
 
         // Check email body
-        if (empty($this->post_and_get('body'))) $data['content'] .= $this->show_danger('{@localization[nobody]}}');
+        if (empty($this->post_and_get('body'))) $data['content'] .= $this->showDanger('{@localization[nobody]}}');
 
         // Validate email address
-        if (!$this->user->validate_email($this->post_and_get('umail'))) $data['content'] .= $this->show_danger('{@localization[noemail]}}');
+        if (!$this->user->validate_email($this->post_and_get('umail'))) $data['content'] .= $this->showDanger('{@localization[noemail]}}');
 
         // Redirect if response is false
-        if ($this->recaptcha_response($this->post_and_get('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->show_danger('{@localization[wrongcode]}}');
+        if ($this->recaptchaResponse($this->post_and_get('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->showDanger('{@localization[wrongcode]}}');
 
         // Send email if there is no error
         if (empty($data['content'])) {
             $mail = new Mailer();
-            $mail->queue_email($this->get_configuration('adminEmail'), $localization->string('msgfrmst') . ' ' . $this->get_configuration('title'), $this->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->post_and_get('name')}\r\nSender's email: {$this->post_and_get('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+            $mail->queue_email($this->configuration('adminEmail'), $localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->post_and_get('name')}\r\nSender's email: {$this->post_and_get('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
             // Email sent
-            $data['content'] .= $this->show_success('{@localization[emailsent]}}');
+            $data['content'] .= $this->showSuccess('{@localization[emailsent]}}');
         }
 
         // Back link

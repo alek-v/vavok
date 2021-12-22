@@ -22,7 +22,7 @@ class BaseModel extends Controller {
         $this->user = $this->model('User');
 
         // Check if user is authenticated
-        if ($this->user->is_reg()) $this->user_data['authenticated'] = true;
+        if ($this->user->userAuthenticated()) $this->user_data['authenticated'] = true;
         // Admin status
         if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
         if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';

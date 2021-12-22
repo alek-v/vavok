@@ -54,7 +54,7 @@ class User extends Core {
 		    if (!empty($vavok_users['lang']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang'])) $_SESSION['lang'] = $vavok_users['lang'];
 
 			// Check if user is banned
-		    if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirect_to(HOMEDIR . 'users/ban');
+		    if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirection(HOMEDIR . 'users/ban');
 
 		 	// activate account
 		    if (isset($user_profil['regche']) && $user_profil['regche'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
@@ -77,17 +77,17 @@ class User extends Core {
 		$this->visited_pages = $_SESSION['counton'];
 
 		// visitor's time on the site
-		$this->time_on_site = $this->maketime(round(time() - $_SESSION['currs']));
+		$this->time_on_site = $this->makeTime(round(time() - $_SESSION['currs']));
 
 		/**
 		 * User settings
 		 */
 
 		// If timezone is not defined use default
-		if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->get_configuration('timeZone'));
+		if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration('timeZone'));
 
 		// Site theme
-	    $config_themes = $this->get_configuration('webtheme');
+	    $config_themes = $this->configuration('webtheme');
 
 		// If theme does not exist use default theme
 		// For admin panel use default theme
@@ -96,7 +96,7 @@ class User extends Core {
 		define('MY_THEME', $config_themes);
 
 		// Instantiate visit counter and online status if current request is not cronjob or ajax request
-		if (!defined('DYNAMIC_REQUEST')) new Counter($this->is_reg(), $this->find_ip(), $this->user_browser(), $this->detect_bot());
+		if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detect_bot());
 	}
 
 	/**
@@ -104,7 +104,7 @@ class User extends Core {
 	 *
 	 * @return bool
 	 */
-	public function is_reg()
+	public function userAuthenticated()
 	{
 		if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
 	    	// Regular authenticated user
@@ -177,7 +177,7 @@ class User extends Core {
         if (!empty($this->post_and_get('log')) && !empty($this->post_and_get('pass')) && $this->post_and_get('log') != 'System') {
 			if ($this->login_attempt_count($max_time_in_seconds, $this->post_and_get('log'), $this->find_ip()) > $max_attempts) {
 				$data['show_notification'] = "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
-				Try again in " . explode(':', $this->maketime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
+				Try again in " . explode(':', $this->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
 			}
 
 			// User is logging in with email
@@ -195,7 +195,7 @@ class User extends Core {
 				// user want to remember login
 				if ($this->post_and_get('cookietrue') == 1) {
 					// Encrypt data to save in cookie
-					$token = $this->latin_letters_numbers($this->password_encrypt($this->post_and_get('pass', true) . $this->generate_password()));
+					$token = $this->latin_letters_numbers($this->password_encrypt($this->post_and_get('pass', true) . $this->generatePassword()));
 
 					// Set token expire time
 					$now = new DateTime();
@@ -227,12 +227,12 @@ class User extends Core {
 					$userx_id);
 		
 				// Redirect user to confirm registration
-				if ($this->user_info('regche', $userx_id) == 1) $this->redirect_to(HOMEDIR . 'users/key/?log=' . $this->post_and_get('log'));
+				if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->post_and_get('log'));
 		
 				// Redirect user if he is banned
-				if ($this->user_info('banned', $userx_id) == 1) $this->redirect_to(HOMEDIR . 'users/ban/?log=' . $this->post_and_get('log'));
+				if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->post_and_get('log'));
 
-				$this->redirect_to(HOMEDIR . $this->post_and_get('ptl'));
+				$this->redirection(HOMEDIR . $this->post_and_get('ptl'));
 			}
 
             $data['show_notification'] = '{@localization[wronguserorpass]}}';
@@ -291,7 +291,7 @@ class User extends Core {
 	        'timezone' => 0,
 	        'banned' => 0,
 	        'newmsg' => 0,
-	        'lang' => $this->get_configuration('siteDefaultLang')
+	        'lang' => $this->configuration('siteDefaultLang')
 	    );
 	    $this->db->insert('vavok_users', $values);
 
@@ -330,7 +330,7 @@ class User extends Core {
 			$_SESSION['lang'] = $language;
 
 			// Update language if user is registered
-			if ($this->is_reg()) $this->db->update('vavok_users', 'lang', $language, "id='{$_SESSION['uid']}'");
+			if ($this->userAuthenticated()) $this->db->update('vavok_users', 'lang', $language, "id='{$_SESSION['uid']}'");
 		}
 	}
 
@@ -561,7 +561,7 @@ class User extends Core {
             $user_mail = $this->db->get_data('vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
-            $send_mail->queue_email($user_mail['email'], "Message on " . $this->get_configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->get_configuration('homeUrl'), '', '', 'normal'); // update lang
+            $send_mail->queue_email($user_mail['email'], "Message on " . $this->configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->configuration('homeUrl'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -886,10 +886,10 @@ class User extends Core {
 		// Use language from session if exists
 		if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
 
-		if ($this->is_reg()) {
+		if ($this->userAuthenticated()) {
 			return $this->user_info('language', $_SESSION['uid']);
 		} else {
-			return $this->get_configuration('siteDefaultLang');
+			return $this->configuration('siteDefaultLang');
 		}
 	}
 
@@ -942,7 +942,7 @@ class User extends Core {
 	// check if user have permitions to see, edit, delete, etc selected part of the website
 	function check_permissions($permname, $needed = 'show') {
 		// Check if user is logged in
-		if (!$this->is_reg()) return false;
+		if (!$this->userAuthenticated()) return false;
 
 	    $permname = str_replace('.php', '', $permname);
 
@@ -1104,7 +1104,7 @@ class User extends Core {
 	function is_moderator($num = '', $id = '')
 	{
 		// Return false if user is not logged in
-		if (!$this->is_reg()) return false;
+		if (!$this->userAuthenticated()) return false;
 
 	    if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
 
@@ -1130,7 +1130,7 @@ class User extends Core {
 	function is_administrator($num = '', $id = '')
 	{
 		// Return false if user is not logged in
-		if (!$this->is_reg()) return false;
+		if (!$this->userAuthenticated()) return false;
 
 	    if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
 
@@ -1209,7 +1209,7 @@ class User extends Core {
 		$locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
 		// Use default language
-		if (empty($language)) $language = $this->get_configuration('siteDefaultLang');
+		if (empty($language)) $language = $this->configuration('siteDefaultLang');
 
 		if ($language == 'en') {
 			$language = 'english';

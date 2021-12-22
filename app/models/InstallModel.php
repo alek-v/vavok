@@ -23,7 +23,7 @@ class InstallModel extends Controller {
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
 
-        if ($this->table_exists == true && $this->db->count_row('vavok_users') > 0) $this->redirect_to(HOMEDIR);
+        if ($this->table_exists == true && $this->db->count_row('vavok_users') > 0) $this->redirection(HOMEDIR);
     }
 
     public function index()
@@ -112,7 +112,7 @@ class InstallModel extends Controller {
                             $myconfig = new Config;
     
                             $values = array(
-                            'keypass' => $this->generate_password(),
+                            'keypass' => $this->generatePassword(),
                             'webtheme' => 'default',
                             'quarantine' => 0,
                             'showtime' => 0,

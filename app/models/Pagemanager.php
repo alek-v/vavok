@@ -99,7 +99,7 @@ class Pagemanager extends Controller {
 	 */
 	function updateCached($file, $content)
 	{
-		$this->write_data_file('datamain/' . $file, $content);
+		$this->writeDataFile('datamain/' . $file, $content);
 		return true;
 	}
 
@@ -198,9 +198,7 @@ class Pagemanager extends Controller {
 	public function total_pages($creator = '') {
 		$where = '';
 
-		if (!empty($creator)) {
-			$where = " WHERE crtdby = '{$creator}'";
-		}
+		if (!empty($creator)) $where = " WHERE crtdby = '{$creator}'";
 
 		return $this->db->count_row('pages' . $where);
 	}
@@ -390,7 +388,7 @@ class Pagemanager extends Controller {
 	    if (!empty($page_title)) {
 	        return $page_title;
 	    } else {
-	        return $this->get_configuration('title');
+	        return $this->configuration('title');
 	    }
 	}
 
@@ -427,7 +425,7 @@ class Pagemanager extends Controller {
 		// Add missing open graph tags
 		if (!strstr($tags, 'og:type')) { $tags .= "\n" . '<meta property="og:type" content="website" />'; }
 
-		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->get_configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }
+		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }
 
 		return $tags;
 	}

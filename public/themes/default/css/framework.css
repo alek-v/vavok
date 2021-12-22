@@ -2,7 +2,7 @@ html {
   font-family: arial, helvetica, sans-serif;
   font-display: swap;
   background: #ffffff;
-  color: #666666;
+  color: #646464;
   width: 100%;
   height: 100%;
 }
@@ -11,17 +11,13 @@ body {
   font-family: arial, helvetica, sans-serif;
   font-display: swap;
   background: #ffffff;
-  color: #666666;
+  color: #646464;
   width: 100%;
   height: 100%;
 }
 
 img {
   max-width: 100%;
-}
-
-p {
-  max-width: 650px;
 }
 
 iframe {
@@ -66,7 +62,11 @@ textarea {
 
 /* LINKS */
 /* homepage link */
-/* site navigation link */
+.homepage {
+  margin: 5px;
+}
+
+/* site link */
 .sitelink {
   margin: 5px;
 }
@@ -93,6 +93,9 @@ textarea {
 .blog-content {
   text-align: justify;
 }
+.blog-content p {
+  max-width: 650px;
+}
 
 .blog-index {
   padding: 25px;
@@ -105,8 +108,11 @@ textarea {
 }
 
 .blog-page {
-  box-shadow: 0px 0px 6px #ccc;
+  background-color: rgba(241, 241, 243, 0.3);
+  padding: 20px 20px 20px 20px;
+  margin-top: 40px;
   margin-bottom: 80px;
+  box-shadow: 0px 0px 6px #ccc;
 }
 .blog-page p {
   text-align: justify;
@@ -138,12 +144,6 @@ textarea {
 .index-blog-post .readmore {
   padding-bottom: 5px;
   margin-bottom: 5px;
-}
-
-.blog-page {
-  background-color: rgba(241, 241, 243, 0.3);
-  margin-top: 40px;
-  padding: 20px 40px 20px 40px;
 }
 
 .index-blog-topic {
@@ -212,6 +212,10 @@ textarea {
   margin: 60px 0px;
 }
 
+.page-content p {
+  max-width: 650px;
+}
+
 /* OTHER ELEMENTS AND OPTIONS */
 .clear {
   clear: both;
@@ -271,10 +275,6 @@ textarea {
   }
 
   .index-blog-post {
-    padding: 20px 20px 20px 20px;
-  }
-
-  .blog-page {
     padding: 20px 20px 20px 20px;
   }
 

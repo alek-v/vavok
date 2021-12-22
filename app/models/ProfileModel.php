@@ -225,10 +225,10 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		if (!empty($this->post_and_get('site')) && !$this->validateURL($this->post_and_get('site'))) $this->redirect_to('profile.php?isset=insite');
+		if (!empty($this->post_and_get('site')) && !$this->validateURL($this->post_and_get('site'))) $this->redirection('profile.php?isset=insite');
 
 		// check email
-		if (!empty($this->post_and_get('email')) && !$this->user->validate_email($this->post_and_get('email'))) $this->redirect_to('profile.php?isset=noemail');
+		if (!empty($this->post_and_get('email')) && !$this->user->validate_email($this->post_and_get('email'))) $this->redirection('profile.php?isset=noemail');
 
 		$my_name = $this->no_br($this->post_and_get('my_name'));
 		$surname = $this->no_br($this->post_and_get('surname'));
@@ -280,7 +280,7 @@ class ProfileModel extends BaseModel {
 			/**
 			 * Insert data to database
 			 */
-			$token = $this->generate_password();
+			$token = $this->generatePassword();
 
 			$now = new DateTime();
 			$now->add(new DateInterval("P1D"));
@@ -309,7 +309,7 @@ class ProfileModel extends BaseModel {
 			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
 		}
 
-		$this->redirect_to('./profile');
+		$this->redirection('./profile');
     }
 
     /**
@@ -326,7 +326,7 @@ class ProfileModel extends BaseModel {
 			$this->user->delete_user($delete_id);
 			$this->user->logout($delete_id);
 
-			$this->redirect_to(HOMEDIR);
+			$this->redirection(HOMEDIR);
 		}
 
         // Page title
@@ -349,7 +349,7 @@ class ProfileModel extends BaseModel {
         // Passwords from both password fields should match
         if ($this->post_and_get('newpar') !== $this->post_and_get('newpar2'))
         {
-            $data['content'] = $this->show_danger('{@localization[nonewpass]}}');
+            $data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
             // Pass page to the view
             $this->view('profile/newpassword', $data);
@@ -361,9 +361,9 @@ class ProfileModel extends BaseModel {
             // Update password
             $this->user->update_user('pass', $this->user->password_encrypt($this->post_and_get('newpar', true)));
 
-            $this->redirect_to($this->website_home_address() . "/users/login");
+            $this->redirection($this->website_home_address() . "/users/login");
         } else {
-            $data['content'] = $this->show_danger('{@localization[nopass]}}');
+            $data['content'] = $this->showDanger('{@localization[nopass]}}');
         }
 
         // Pass page to the view
@@ -437,7 +437,7 @@ class ProfileModel extends BaseModel {
         $data['content'] = '';
 
         // File path cannot be empty
-        if (empty($_FILES['file']['tmp_name'])) $this->redirect_to(HOMEDIR . 'profile/photo');
+        if (empty($_FILES['file']['tmp_name'])) $this->redirection(HOMEDIR . 'profile/photo');
 
         // Uploading
         $avat_size = $_FILES['file']['size'];
@@ -478,16 +478,16 @@ class ProfileModel extends BaseModel {
                         $this->view('profile/savephoto', $data);
                         exit;
                     } else {
-                        $data['content'] .= $this->show_danger('Error uploading photography');
+                        $data['content'] .= $this->showDanger('Error uploading photography');
                     }
                 } else {
-                    $data['content'] .= $this->show_danger($this->localization->string('badfileext'));
+                    $data['content'] .= $this->showDanger($this->localization->string('badfileext'));
                 }
             } else {
-                $data['content'] .= $this->show_danger('Photography must be under 1024px');
+                $data['content'] .= $this->showDanger('Photography must be under 1024px');
             }
         } else {
-            $data['content'] .= $this->show_danger($this->localization->string('filemustb') . ' under 5 MB');
+            $data['content'] .= $this->showDanger($this->localization->string('filemustb') . ' under 5 MB');
         }
 
         $data['content'] .= $this->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
@@ -521,7 +521,7 @@ class ProfileModel extends BaseModel {
         // Update database
         $this->user->update_user('photo', '');
 
-        $data['content'] .= $this->show_success('Your photography has been successfully deleted!'); // update lang
+        $data['content'] .= $this->showSuccess('Your photography has been successfully deleted!'); // update lang
         $data['content'] .= $this->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
 
         // Pass page to the view
@@ -542,7 +542,7 @@ class ProfileModel extends BaseModel {
 
         // Token does not exist
         if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'") < 1) {
-            $this_page['content'] .= $this->show_danger('{@localization[notoken]}}');
+            $this_page['content'] .= $this->showDanger('{@localization[notoken]}}');
 
             return $this_page;
         }
@@ -556,6 +556,6 @@ class ProfileModel extends BaseModel {
         // Remove token
         $this->db->delete('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'");
 
-        $this->redirect_to(HOMEDIR . 'profile');
+        $this->redirection(HOMEDIR . 'profile');
     }
 }
