@@ -437,7 +437,7 @@ class PagemanagerModel extends BaseModel {
 
                 if ($page_info['crtdby'] != $this->user->user_id() && !$this->user->check_permissions('pageedit', 'edit') && (!$this->user->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
-                $datamainfile = htmlspecialchars($page_info['content']);
+                $datamainfile = isset($page_info['content']) ? htmlspecialchars($page_info['content']) : '';
 
                 // Page name
                 $show_up_file = str_replace('.php', '', $file);
