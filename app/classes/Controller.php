@@ -10,6 +10,7 @@ class Controller extends Core {
     {
         // Require model file
         require_once '../app/models/' . $model . '.php';
+
         // Instantiate model
         return new $model();
     }
@@ -24,6 +25,7 @@ class Controller extends Core {
 
         // Localization
         $localization = $this->model('Localization');
+        // Load localization data depending of current $view (page)
         $localization->load($user['language'], $view);
 
         // Instantiate page parsing class
@@ -34,31 +36,37 @@ class Controller extends Core {
         // Header
         $header = $this->model('ParsePage');
         $header->load('includes/header');
+        // Set header for current page
         $page->set('header', $page->merge(array($header)));
 
         // Footer
         $footer = $this->model('ParsePage');
         $footer->load('includes/footer');
+        // Set footer for current page
         $page->set('footer', $page->merge(array($footer)));
 
         // Authentications
         $auth = $this->model('ParsePage');
-        // Authenticated user
+
+        // Load file for authenticated user
         if ($user['authenticated']) $auth->load('includes/authenticated');
-        // Not authenticated user
+        // Load file for user that is not authenticated
         if (!$user['authenticated']) $auth->load('includes/not_authenticated');
 
         // Administrators
         if ($user['admin_status'] == 'administrator' || $user['admin_status'] == 'moderator') {
+            // Add link to admin panel
             $admins = $this->model('ParsePage');
             $admins->load('includes/admin_link');
 
+            // Set authentication data for current page
             $page->set('authentication', $page->merge(array($auth, $admins)));
         } else {
+            // Set authentication data for current page
             $page->set('authentication', $page->merge(array($auth)));
         }
 
-        // Show page
+        // Pass localization data to method and show the page
         echo $page->show($localization->getStrings());
     }
 }
