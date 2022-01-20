@@ -18,7 +18,7 @@ class Navigation extends Core {
 		$this->total_pages = $this->total_pages($this->total_items, $this->items_per_page); // total pages
 
 		// Get page number
-		$page = $this->post_and_get('page');
+		$page = $this->postAndGet('page');
 		if ($page == 'end') $page = intval($this->total_pages);
 		else if (is_numeric($page)) $page = intval($page);
 		if ($page < 2) $page = 1;
@@ -69,7 +69,7 @@ class Navigation extends Core {
 		$total = $this->total_items;
 		$link = $this->link;
 		// Reduce number of links in pagination for smaller screens
-		if ($this->user_device() == 'phone') $lnks = 1;
+		if ($this->userDevice() == 'phone') $lnks = 1;
 		//$lnks = 1;
 
 		// Variable for navigation links

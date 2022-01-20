@@ -74,7 +74,7 @@ class InstallModel extends Controller {
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
-        $this_page['site_address'] = $this->website_home_address();
+        $this_page['site_address'] = $this->websiteHomeAddress();
 
         return $this_page;
     }
@@ -103,7 +103,7 @@ class InstallModel extends Controller {
             if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
                 if ($password == $password2) {
                     if ($this->user->validate_email($email)) {
-                        if ($this->validateURL($osite)) {
+                        if ($this->validateUrl($osite)) {
                             $osite_name = ucfirst(str_replace("http://", "", $osite));
                             $osite_name = str_replace("https://", "", $osite_name);
     
@@ -140,7 +140,7 @@ class InstallModel extends Controller {
                             'maxBanTime' => 43200
                             );
     
-                            $myconfig->update_config_data($values);
+                            $myconfig->updateConfigData($values);
     
                             // write to database
                             $this->user->register($name, $password, 0, '', 'default', $email); // register user

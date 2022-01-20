@@ -15,12 +15,12 @@ class User extends Core {
 		// Session from cookie
 		if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
 		    // Search for token in database and get tokend data if exists
-			$cookie_data = $this->db->get_data('tokens', "token = '{$this->check($_COOKIE['cookie_login'])}'", 'uid, token');
+			$cookie_data = $this->db->getData('tokens', "token = '{$this->check($_COOKIE['cookie_login'])}'", 'uid, token');
 			$cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
 			$token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
 
 		    // Get user's data
-			$cookie_check = $this->db->get_data('vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
+			$cookie_check = $this->db->getData('vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
 
 		    // If user exists write session data
 		    if (isset($cookie_check['name']) && !empty($cookie_check['name']) && ($_COOKIE['cookie_login'] === $token_value)) {
@@ -35,14 +35,14 @@ class User extends Core {
 		    } else {
 		    	// Token from cookie is not valid or it is expired, delete cookie
 		    	setcookie('cookie_login', '', time() - 3600);
-		    	setcookie('cookie_login', '', 1, '/', $this->clean_domain());
+		    	setcookie('cookie_login', '', 1, '/', $this->cleanDomain());
 		    }
 		}
 
 		// Get user data
 		if (!empty($_SESSION['uid'])) {
-		    $vavok_users = $this->db->get_data('vavok_users', "id='{$_SESSION['uid']}'");
-		    $user_profil = $this->db->get_data('vavok_profil', "uid='{$_SESSION['uid']}'", 'regche');
+		    $vavok_users = $this->db->getData('vavok_users', "id='{$_SESSION['uid']}'");
+		    $user_profil = $this->db->getData('vavok_profil', "uid='{$_SESSION['uid']}'", 'regche');
 
 		    // Update last visit
 		    $this->db->update('vavok_profil', 'lastvst', time(), "uid='{$_SESSION['uid']}'");
@@ -91,7 +91,7 @@ class User extends Core {
 
 		// If theme does not exist use default theme
 		// For admin panel use default theme
-		if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->website_home_address() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+		if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
 		define('MY_THEME', $config_themes);
 
@@ -145,7 +145,7 @@ class User extends Core {
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
          */
-        $rootDomain = '.' . $this->clean_domain();
+        $rootDomain = '.' . $this->cleanDomain();
 
 	    // destroy cookies
 	    setcookie('cookie_login', '', time() - 3600);
@@ -174,28 +174,28 @@ class User extends Core {
         $max_time_in_seconds = 600;
         $max_attempts = 10;
 
-        if (!empty($this->post_and_get('log')) && !empty($this->post_and_get('pass')) && $this->post_and_get('log') != 'System') {
-			if ($this->login_attempt_count($max_time_in_seconds, $this->post_and_get('log'), $this->find_ip()) > $max_attempts) {
+        if (!empty($this->postAndGet('log')) && !empty($this->postAndGet('pass')) && $this->postAndGet('log') != 'System') {
+			if ($this->login_attempt_count($max_time_in_seconds, $this->postAndGet('log'), $this->find_ip()) > $max_attempts) {
 				$data['show_notification'] = "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
 				Try again in " . explode(':', $this->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
 			}
 
 			// User is logging in with email
-			if ($this->validate_email($this->post_and_get('log'))) {
-				$userx_id = $this->id_from_email($this->post_and_get('log'));
+			if ($this->validate_email($this->postAndGet('log'))) {
+				$userx_id = $this->id_from_email($this->postAndGet('log'));
 			}
 
 			// User is logging in with username
 			else {
-				$userx_id = $this->getidfromnick($this->post_and_get('log'));
+				$userx_id = $this->getidfromnick($this->postAndGet('log'));
 			}
 
 			// compare sent data and data from database
-			if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->post_and_get('pass', true), $this->user_info('password', $userx_id))) {
+			if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
 				// user want to remember login
-				if ($this->post_and_get('cookietrue') == 1) {
+				if ($this->postAndGet('cookietrue') == 1) {
 					// Encrypt data to save in cookie
-					$token = $this->latin_letters_numbers($this->password_encrypt($this->post_and_get('pass', true) . $this->generatePassword()));
+					$token = $this->leaveLatinLettersNumbers($this->password_encrypt($this->postAndGet('pass', true) . $this->generatePassword()));
 
 					// Set token expire time
 					$now = new DateTime();
@@ -206,7 +206,7 @@ class User extends Core {
 					$this->db->insert('tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
 
 					// Save cookie with token in users's device
-					SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->clean_domain()); // one year
+					SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->cleanDomain()); // one year
 				}
 
 				$_SESSION['log'] = $this->getnickfromid($userx_id);
@@ -227,12 +227,12 @@ class User extends Core {
 					$userx_id);
 		
 				// Redirect user to confirm registration
-				if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->post_and_get('log'));
+				if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
 		
 				// Redirect user if he is banned
-				if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->post_and_get('log'));
+				if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->postAndGet('log'));
 
-				$this->redirection(HOMEDIR . $this->post_and_get('ptl'));
+				$this->redirection(HOMEDIR . $this->postAndGet('ptl'));
 			}
 
             $data['show_notification'] = '{@localization[wronguserorpass]}}';
@@ -295,7 +295,7 @@ class User extends Core {
 	    );
 	    $this->db->insert('vavok_users', $values);
 
-	    $user_id = $this->db->get_data('vavok_users', "name='{$name}'", 'id')['id'];
+	    $user_id = $this->db->getData('vavok_users', "name='{$name}'", 'id')['id'];
 
 	    $this->db->insert('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
 	    $this->db->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
@@ -518,7 +518,7 @@ class User extends Core {
 	}
 
 	public function isstarred($pmid) {
-	    $strd = $this->db->get_data('inbox', "id='{$pmid}'", 'starred');
+	    $strd = $this->db->getData('inbox', "id='{$pmid}'", 'starred');
 	    if ($strd['starred'] == 1) {
 	        return true;
 	    } else {
@@ -549,8 +549,8 @@ class User extends Core {
 
         $this->db->insert('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
-        $user_profile = $this->db->get_data('vavok_profil', "uid='{$who}'", 'lastvst');
-        $last_notif = $this->db->get_data('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
+        $user_profile = $this->db->getData('vavok_profil', "uid='{$who}'", 'lastvst');
+        $last_notif = $this->db->getData('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
             $this->db->insert('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
@@ -558,7 +558,7 @@ class User extends Core {
         $notif_expired = $last_notif['lstinb'] + 864000;
 
         if (($user_profile['lastvst'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
-            $user_mail = $this->db->get_data('vavok_about', "uid='{$who}'", 'email');
+            $user_mail = $this->db->getData('vavok_about', "uid='{$who}'", 'email');
 
             $send_mail = new Mailer();
             $send_mail->queue_email($user_mail['email'], "Message on " . $this->configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->configuration('homeUrl'), '', '', 'normal'); // update lang
@@ -634,7 +634,7 @@ class User extends Core {
 	 */
 	public function getidfromnick($nick)
 	{
-	    $uid = $this->db->get_data('vavok_users', "name='{$nick}'", 'id');
+	    $uid = $this->db->getData('vavok_users', "name='{$nick}'", 'id');
 	    $id = !empty($uid['id']) ? $uid['id'] : 0;
 
 	    return $id;
@@ -648,7 +648,7 @@ class User extends Core {
 	 */
 	public function id_from_email($email)
 	{
-        $id = $this->db->get_data('vavok_about', "email='{$email}'", 'uid');
+        $id = $this->db->getData('vavok_about', "email='{$email}'", 'uid');
         $id = !empty($id['uid']) ? $id['uid'] : false;
 
         return $id;
@@ -702,175 +702,175 @@ class User extends Core {
 
 	    switch ($info) {
 	    	case 'email':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'email');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'email');
 	    		$data = !empty($data['email']) ? $data['email'] : '';
 	    		return $data;
 	    		break;
 	    	
 	    	case 'full_name':
-		    	$uinfo = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'rname, surname');
+		    	$uinfo = $this->db->getData('vavok_about', "uid='{$users_id}'", 'rname, surname');
 		    	$data = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
 		    	return $data;
 	    		break;
 
 	    	case 'firstname':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'rname');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'rname');
 	    		$data = !empty($data) ? $data['rname'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'lastname':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'surname');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'surname');
 	    		$data = !empty($data) ? $data['surname'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'city':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'city');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'city');
 	    		$data = !empty($data) ? $data['city'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'address':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'address');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'address');
 	    		$data = !empty($data) ? $data['address'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'zip':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'zip');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'zip');
 	    		$data = !empty($data) ? $data['zip'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'about':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'about');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'about');
 	    		$data = !empty($data) ? $data['about'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'site':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'site');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'site');
 	    		$data = !empty($data) ? $data['site'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'birthday':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'birthday');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'birthday');
 	    		$data = !empty($data) ? $data['birthday'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'gender':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'sex');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'sex');
 	    		$data = !empty($data) ? $data['sex'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'photo':
-	    		$data = $this->db->get_data('vavok_about', "uid='{$users_id}'", 'photo');
+	    		$data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'photo');
 	    		$data = !empty($data) ? $data['photo'] : '';
 	    		return $data;
 	    		break;
 
 	    	case 'nickname':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'name');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'name');
 	    		$data = !empty($data) ? $data['name'] : '';
 	    		return $data;
     			break;
 
 	    	case 'language':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'lang');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'lang');
 	    		$data = !empty($data) ? $data['lang'] : '';
 	    		return $data;
     			break;
 
 	    	case 'banned':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'banned');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'banned');
 	    		$data = !empty($data) ? $data['banned'] : '';
 	    		return $data;
     			break;
 
 	    	case 'password':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'pass');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'pass');
 	    		$data = !empty($data) ? $data['pass'] : '';
 	    		return $data;
     			break;
 
 	    	case 'perm':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'perm');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'perm');
 	    		$data = !empty($data) ? $data['perm'] : '';
 	    		return $data;
     			break;
 
 	    	case 'browser':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'browsers');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'browsers');
 	    		$data = !empty($data) ? $data['browsers'] : '';
 	    		return $data;
     			break;
 
 	    	case 'ipaddress':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'ipadd');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'ipadd');
 	    		$data = !empty($data) ? $data['ipadd'] : '';
 	    		return $data;
     			break;
 
 	    	case 'timezone':
-    			$data = $this->db->get_data('vavok_users', "id='{$users_id}'", 'timezone');
+    			$data = $this->db->getData('vavok_users', "id='{$users_id}'", 'timezone');
 	    		$data = !empty($data) ? $data['timezone'] : '';
 	    		return $data;
     			break;
 
 	    	case 'bantime':
-    			$data = $this->db->get_data('vavok_profil', "id='{$users_id}'", 'bantime');
+    			$data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'bantime');
 	    		$data = !empty($data['bantime']) ? $data['bantime'] : 0;
 	    		return $data;
     			break;
 
 	    	case 'bandesc':
-    			$data = $this->db->get_data('vavok_profil', "id='{$users_id}'", 'bandesc');
+    			$data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'bandesc');
 	    		$data = !empty($data) ? $data['bandesc'] : '';
 	    		return $data;
     			break;
 
 	    	case 'allban':
-    			$data = $this->db->get_data('vavok_profil', "id='{$users_id}'", 'allban');
+    			$data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'allban');
 	    		$data = !empty($data) ? $data['allban'] : '';
 	    		return $data;
     			break;
 
 	    	case 'regche':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'regche');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'regche');
 	    		$data = !empty($data) ? $data['regche'] : '';
 	    		return $data;
     			break;
 
 	    	case 'status':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'perstat');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'perstat');
 	    		$data = !empty($data) ? $data['perstat'] : '';
 	    		return $data;
     			break;
 
 	    	case 'regdate':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'regdate');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'regdate');
 	    		$data = !empty($data) ? $data['regdate'] : '';
 	    		return $data;
     			break;
 
 	    	case 'forummes':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'forummes');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'forummes');
 	    		$data = !empty($data) ? $data['forummes'] : '';
 	    		return $data;
     			break;
 
 	    	case 'lastvisit':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'lastvst');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'lastvst');
 	    		$data = !empty($data) ? $data['lastvst'] : '';
 	    		return $data;
     			break;
 
 	    	case 'subscribed':
-    			$data = $this->db->get_data('vavok_profil', "uid='{$users_id}'", 'subscri');
+    			$data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'subscri');
 	    		$data = !empty($data) ? $data['subscri'] : '';
 	    		return $data;
     			break;
@@ -882,7 +882,7 @@ class User extends Core {
 	}
 
 	// User's language
-	public function get_user_language() {
+	public function getUserLanguage() {
 		// Use language from session if exists
 		if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
 
@@ -947,10 +947,10 @@ class User extends Core {
 	    $permname = str_replace('.php', '', $permname);
 
 	    // Administrator have access to all site functions
-	    if ($this->is_administrator(101)) return true;
+	    if ($this->administrator(101)) return true;
 
 	    if ($this->db->count_row('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") > 0) {
-	        $check_data = $this->db->get_data('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'", 'permacc');
+	        $check_data = $this->db->getData('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
 	        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
@@ -1101,7 +1101,7 @@ class User extends Core {
 	 * @param int $id
 	 * @return bool
 	 */
-	function is_moderator($num = '', $id = '')
+	function moderator($num = '', $id = '')
 	{
 		// Return false if user is not logged in
 		if (!$this->userAuthenticated()) return false;
@@ -1127,7 +1127,7 @@ class User extends Core {
 	 * @param int $id
 	 * @return bool
 	 */
-	function is_administrator($num = '', $id = '')
+	function administrator($num = '', $id = '')
 	{
 		// Return false if user is not logged in
 		if (!$this->userAuthenticated()) return false;
@@ -1164,7 +1164,7 @@ class User extends Core {
 	        return 0;
 	    }
 		/*
-		if ($vavok->go('users')->is_moderator($tid)) {
+		if ($vavok->go('users')->moderator($tid)) {
 		//you cant ignore staff members
 		return 0;
 		}

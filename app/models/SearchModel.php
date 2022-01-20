@@ -40,7 +40,7 @@ class SearchModel extends BaseModel {
         }
 
         // String for search
-        $search_item = isset($params[0]) ? $params[0] : $this->post_and_get('item');
+        $search_item = isset($params[0]) ? $params[0] : $this->postAndGet('item');
 
         $itemCyr = lat_to_cyr(htmlspecialchars_decode($search_item)); // translate to cyrillic to search for cyrillic post
         $itemLat = cyr_to_lat(htmlspecialchars_decode($search_item)); // translate to latin to search for latin post
@@ -100,7 +100,7 @@ class SearchModel extends BaseModel {
                 $items += $this->db->count_row("ftopics", "name LIKE '%" . $itemLat . "%' OR name LIKE '%" . $itemCyr . "%' AND (closed = '' OR closed = 0)");
             }
 
-            $thisPageNav = new Navigation(20, $items, $this->post_and_get('page'));
+            $thisPageNav = new Navigation(20, $items, $this->postAndGet('page'));
 
             $searchItems = array();
             $page_ids = array();
@@ -113,7 +113,7 @@ class SearchModel extends BaseModel {
                 /**
                  * Page data
                  */
-                $resultItem = $this->db->get_data('pages', "id = '" . $resultItem['page_id'] . "'");
+                $resultItem = $this->db->getData('pages', "id = '" . $resultItem['page_id'] . "'");
                 $dots = strlen($resultItem['content']) > 50 ? '...' : '';
         
                 $itemText = mb_substr(strip_tags($resultItem['content']), 0, 50, 'UTF-8') . $dots;

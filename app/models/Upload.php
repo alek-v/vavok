@@ -277,6 +277,6 @@ HEAD;
 			}
 		}
 
-		return array('file_address' => $this->website_home_address() . $upload_URL);
+		return array('file_address' => $this->websiteHomeAddress() . $upload_URL);
 	}
 }

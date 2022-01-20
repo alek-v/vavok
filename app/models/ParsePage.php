@@ -26,7 +26,7 @@ class ParsePage extends Core {
         $this->load($file);
 
         // Check if we use SSL
-        if ($this->configuration('transferProtocol') == 'HTTPS' && !$this->is_secure_connection()) {
+        if ($this->configuration('transferProtocol') == 'HTTPS' && !$this->secureConection()) {
             // Redirect to secure connection (HTTPS)
             $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $this->redirection($redirect);
@@ -34,7 +34,7 @@ class ParsePage extends Core {
 
         // Metadata for all pages
         // Set missing OG tags when possible too
-        $this->head_data = $this->page_head_metatags($data);
+        $this->head_data = $this->pageHeadMetatags($data);
         $this->title = isset($data['tname']) ? $data['tname'] : '';
         $this->content = isset($data['content']) ? $data['content'] : '';
         $this->lang = isset($data['lang']) ? $data['lang'] : '';

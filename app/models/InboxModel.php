@@ -24,7 +24,7 @@ class InboxModel extends BaseModel {
         $items_per_page = 10;
     
         // navigation
-        $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), 'inbox.php?');
+        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), 'inbox.php?');
         $limit_start = $navigation->start()['start']; // starting point
     
         if ($num_items > 0) {
@@ -81,7 +81,7 @@ class InboxModel extends BaseModel {
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
         <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
 
-        $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : 0;
+        $who = !empty($this->postAndGet('who')) ? $this->postAndGet('who') : 0;
 
         if (!isset($who) || ($who > 0 && empty($this->user->getnickfromid($who)))) {
             $data['content'] = $this->showDanger('User does not exist');
@@ -126,8 +126,8 @@ class InboxModel extends BaseModel {
     public function sendto()
     {
         // Data sent, redirect to dialog
-        if (!empty($this->post_and_get('who')) && $this->user->getidfromnick($this->post_and_get('who')) > 0) {
-            $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getidfromnick($this->post_and_get('who')));
+        if (!empty($this->postAndGet('who')) && $this->user->getidfromnick($this->postAndGet('who')) > 0) {
+            $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getidfromnick($this->postAndGet('who')));
         }
 
         // Users data
@@ -154,13 +154,13 @@ class InboxModel extends BaseModel {
         // Counter will not threat this as new click/visit
         if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
 
-        $pmtext = !empty($this->post_and_get('pmtext')) ? $this->post_and_get('pmtext') : '';
-        $who = !empty($this->post_and_get('who')) ? $this->post_and_get('who') : '';
+        $pmtext = !empty($this->postAndGet('pmtext')) ? $this->postAndGet('pmtext') : '';
+        $who = !empty($this->postAndGet('who')) ? $this->postAndGet('who') : '';
 
         // dont send message to system
         if ($who == 0 || empty($who)) exit;
 
-        $inbox_notif = $this->db->get_data('notif', "uid='{$this->user->user_id()}' AND type='inbox'", 'active');
+        $inbox_notif = $this->db->getData('notif', "uid='{$this->user->user_id()}' AND type='inbox'", 'active');
 
         $whonick = $this->user->getnickfromid($who);
         $byuid = $this->user->user_id();
@@ -197,11 +197,11 @@ class InboxModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR . 'users/login');
 
         // if there is last message id set
-        if (!empty($this->post_and_get('lastid'))) {
-            $sql = "SELECT * FROM inbox WHERE id > {$this->post_and_get('lastid')} AND ((byuid = {$this->post_and_get('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->post_and_get('who')})) ORDER BY id DESC LIMIT 1";
+        if (!empty($this->postAndGet('lastid'))) {
+            $sql = "SELECT * FROM inbox WHERE id > {$this->postAndGet('lastid')} AND ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
         } else {
             // no last id, load unread message
-            $sql = "SELECT * FROM inbox WHERE ((byuid = {$this->post_and_get('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->post_and_get('who')})) ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT * FROM inbox WHERE ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
         }
 
         foreach($this->db->query($sql) as $item) {

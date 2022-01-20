@@ -56,7 +56,7 @@ class Localization {
      * 
      * @return array
      */
-	public function show_strings() {
+	public function getStrings() {
 		return $this->strings;
 	}
 

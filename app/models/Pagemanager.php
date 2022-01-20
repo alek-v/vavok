@@ -82,7 +82,7 @@ class Pagemanager extends Controller {
 
 		// update cached index and menu pages
 		// this pages must be cached other pages are not cached
-		$file = $this->db->get_data('pages', "id = '{$id}'", 'file')['file'];
+		$file = $this->db->getData('pages', "id = '{$id}'", 'file')['file'];
 		if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
 			$this->updateCached($file, $content);
 		}
@@ -212,7 +212,7 @@ class Pagemanager extends Controller {
 	 */
 	public function select_page($id , $fields = '*')
 	{
-		return $this->db->get_data('pages', "id='{$id}'", $fields);
+		return $this->db->getData('pages', "id='{$id}'", $fields);
 	}
 
 	/**
@@ -229,11 +229,11 @@ class Pagemanager extends Controller {
 		if (isset($_GET['pg']) && $_GET['pg'] == 'index') return false;
 
 		// Get data
-		$page_data = $this->db->get_data('pages', "pname='" . $this->page_name . "'{$language}");
+		$page_data = $this->db->getData('pages', "pname='" . $this->page_name . "'{$language}");
 
 		// When language is set and page does not exsist try to find page without language
 		if (empty($page_data) && !empty($this->page_language)) {
-			$page_data = $this->db->get_data('pages', "pname='" . $this->page_name . "'");
+			$page_data = $this->db->getData('pages', "pname='" . $this->page_name . "'");
 		}
 
 		// return false if there is no data
@@ -301,7 +301,7 @@ class Pagemanager extends Controller {
 	 */
 	private function get_page_language($page)
 	{
-		$lang = $this->db->get_data('pages', "pname = '{$page}'", 'lang');
+		$lang = $this->db->getData('pages', "pname = '{$page}'", 'lang');
 
 		if (!isset($lang['lang']) || empty($lang['lang'])) return false;
 
@@ -333,7 +333,7 @@ class Pagemanager extends Controller {
 	 */
 	function get_page_id($where)
 	{
-		$page_id = $this->db->get_data('pages', $where, 'id');
+		$page_id = $this->db->getData('pages', $where, 'id');
 		return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
 	}
 
@@ -368,7 +368,7 @@ class Pagemanager extends Controller {
 		// remove index.php from urls to remove double content
 		$r = str_replace('/index.php', '/', $r);
 
-		if (empty($website)) { $website = $this->website_home_address(); }
+		if (empty($website)) { $website = $this->websiteHomeAddress(); }
 
 		// return url
 		return $website . $r;
@@ -382,7 +382,7 @@ class Pagemanager extends Controller {
 	public function page_title() {
 		if (!empty($this->page_title)) { return $this->page_title; }
 
-	    $page_title = $this->db->get_data('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname');
+	    $page_title = $this->db->getData('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname');
 	    $page_title = !empty($page_title) ? $page_title['tname'] : '';
 
 	    if (!empty($page_title)) {
@@ -419,7 +419,7 @@ class Pagemanager extends Controller {
 	{
 		$tags = file_get_contents(APPDIR . 'used/headmeta.dat');
 
-        $vk_page = $this->db->get_data('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
+        $vk_page = $this->db->getData('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
         if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
 
 		// Add missing open graph tags
@@ -447,8 +447,8 @@ class Pagemanager extends Controller {
 	 */
 	public function edit_mode()
 	{
-		if (!empty($this->post_and_get('edmode'))) {
-		    $edmode = $this->post_and_get('edmode');
+		if (!empty($this->postAndGet('edmode'))) {
+		    $edmode = $this->postAndGet('edmode');
 		    $_SESSION['edmode'] = $edmode;
 		} elseif (!empty($_SESSION['edmode'])) {
 			// Use edit mode from session

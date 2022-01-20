@@ -1,7 +1,6 @@
 <?php
 
 class BrowserDetection {
-
   private $_user_agent;
   private $_name;
   private $_version;

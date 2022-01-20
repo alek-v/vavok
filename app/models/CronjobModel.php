@@ -29,6 +29,6 @@ class CronjobModel extends Controller {
      */
     public function clean_unconfirmed_reg()
     {
-        $this->clean_registrations($this->model('User'));
+        $this->cleanRegistrations($this->model('User'));
     }
 }

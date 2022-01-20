@@ -22,10 +22,10 @@ class Page extends BaseModel {
         $localization = !empty($params[0]) ? " AND lang = '{$params[0]}'" : '';
 
         // Get localized page
-        $data = $this->db->get_data('pages', "pname='index'{$localization}", '*');
+        $data = $this->db->getData('pages', "pname='index'{$localization}", '*');
 
         // Page without localization
-        if (empty($data)) $data = $this->db->get_data('pages', "pname='index'", '*');
+        if (empty($data)) $data = $this->db->getData('pages', "pname='index'", '*');
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
@@ -37,7 +37,7 @@ class Page extends BaseModel {
         // Redirect if user's language is not website default language,
         // language is not in URL, example: www.example.com
         // and page with users's language exists, example: www.example.com/de
-        if ($this->configuration('siteDefaultLang') != $this->user->get_user_language() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->get_prefered_language($this->user->get_user_language(), 'short') . '/');
+        if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->get_prefered_language($this->user->getUserLanguage(), 'short') . '/');
 
         // Users data
         $data['user'] = $this->user_data;
@@ -53,7 +53,7 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this_page = $this->db->get_data('pages', "pname='{$params[0]}'", '*');
+        $this_page = $this->db->getData('pages', "pname='{$params[0]}'", '*');
 
         // Localization from page's data
         $this->page_localization = !empty($this_page['lang']) ? $this->user->get_prefered_language($this_page['lang'], 'short') : '';
@@ -120,7 +120,7 @@ class Page extends BaseModel {
         $items_per_page = 10;
  
         // Start navigation
-        $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), HOMEDIR . 'pages/userlist/?');
+        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'pages/userlist/?');
 
         // Starting point
         $limit_start = $navigation->start()['start'];
@@ -149,7 +149,7 @@ class Page extends BaseModel {
         $data['tname'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
-        if ($this->configuration('showCounter') == 6 && !$this->user->is_administrator()) $this->redirection(HOMEDIR);
+        if ($this->configuration('showCounter') == 6 && !$this->user->administrator()) $this->redirection(HOMEDIR);
 
         $hour = (int)date("H", time());
         $hday = date("j", time())-1;
@@ -160,7 +160,7 @@ class Page extends BaseModel {
 
         $pcounter_reg = $pcounter_online - $pcounter_guest;
 
-        $counts = $this->db->get_data('counter');
+        $counts = $this->db->getData('counter');
 
         $clicks_today = $counts['clicks_today'];
         $total_clicks = $counts['clicks_total'];
@@ -168,7 +168,7 @@ class Page extends BaseModel {
         $total_visits = $counts['visits_total']; // total visits
     
         $data['content'] .= '{@localization[temponline]}}: ';
-        if ($this->configuration('showOnline') == 1 || $this->user->is_administrator()) {
+        if ($this->configuration('showOnline') == 1 || $this->user->administrator()) {
             $data['content'] .= '<a href="{@HOMEDIR}}pages/online">' . (int)$pcounter_online . '</a><br />';
         } else {
             $data['content'] .= '<b>' . (int)$pcounter_online . '</b><br />';
@@ -197,7 +197,7 @@ class Page extends BaseModel {
         $data['tname'] = 'Online';
         $data['content'] = '';
 
-        if ($this->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->is_administrator())) $this->redirection("../");
+        if ($this->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->redirection("../");
 
         // page settings
         $data_on_page = 10; // online users per page
@@ -207,8 +207,8 @@ class Page extends BaseModel {
         $total = $this->db->count_row('online');
         $totalreg = $this->db->count_row('online', "user > 0");
         
-        if (!empty($this->post_and_get('list'))) {
-            $list = $this->check($this->post_and_get('list'));
+        if (!empty($this->postAndGet('list'))) {
+            $list = $this->check($this->postAndGet('list'));
         } else {
             if ($totalreg > 0) {
                 $list = 'reg';
@@ -234,19 +234,19 @@ class Page extends BaseModel {
         
                 if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
                     $data['content'] .= '<b>' . $this->localization->string('guest') . '</b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
-                    if ($this->user->is_moderator() || $this->user->is_administrator()) {
+                    if ($this->user->moderator() || $this->user->administrator()) {
                         $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
                     $data['content'] .= '<b>' . $item['bot'] . '</b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
-                    if ($this->user->is_moderator() || $this->user->is_administrator()) {
+                    if ($this->user->moderator() || $this->user->administrator()) {
                         $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } else {
                     $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getnickfromid($item['user']) . '</a></b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
-                    if ($this->user->is_moderator() || $this->user->is_administrator()) {
+                    if ($this->user->moderator() || $this->user->administrator()) {
                         $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     }
                     $data['content'] .= '<hr />';
@@ -270,7 +270,7 @@ class Page extends BaseModel {
         
                 $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getnickfromid($item['user']) . '</a></b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
 
-                if ($this->user->is_moderator() || $this->user->is_administrator()) {
+                if ($this->user->moderator() || $this->user->administrator()) {
                     $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                 }
 

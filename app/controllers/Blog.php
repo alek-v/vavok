@@ -1,4 +1,8 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
 class Blog extends Controller {
     /**

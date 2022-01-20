@@ -109,7 +109,7 @@ class Mailer extends Core {
 		//Set the subject line
 		$mail->Subject = $subject;
 		// Convert to HTML if message is plain text
-		if ($this->is_html($msg)) {
+		if ($this->isTextHtml($msg)) {
 			$mail->msgHTML($msg);
 		} else {
 			$mail->msgHTML($this->getbbcode($msg));

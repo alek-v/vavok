@@ -43,7 +43,7 @@ class Counter {
         $this->db->delete('online',  "date + " . $bz_seconds . " < " . $bz_date);
 
         if ($this->db->count_row('online', "usr_chck = '{$xmatch}'") > 0) {
-            while ($bz_row = $this->db->get_data('online', "usr_chck = '{$xmatch}'")) {
+            while ($bz_row = $this->db->getData('online', "usr_chck = '{$xmatch}'")) {
                 if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
                     $fields = array();
                     $fields[] = 'date';
@@ -86,7 +86,7 @@ class Counter {
         } 
 
         // counter
-        $counts = $this->db->get_data('counter');
+        $counts = $this->db->getData('counter');
 
         $current_day = $counts['day'];
         $clicks_today = $counts['clicks_today'];

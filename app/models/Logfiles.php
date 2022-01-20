@@ -15,9 +15,9 @@ class Logfiles extends BaseModel {
         $this_page['tname'] = 'Log data';
         $this_page['content'] = '';
 
-        if (!$this->user->userAuthenticated() || !$this->user->is_administrator(101)) $this->redirection("./?isset=ap_noaccess");
+        if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->redirection("./?isset=ap_noaccess");
 
-        if ($this->post_and_get('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+        if ($this->postAndGet('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
             $this->clearFile(APPDIR . "used/datalog/error401.dat");
             $this->clearFile(APPDIR . "used/datalog/error402.dat");
             $this->clearFile(APPDIR . "used/datalog/error403.dat");
@@ -32,8 +32,8 @@ class Logfiles extends BaseModel {
             $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
-        if ($this->post_and_get('action') == 'delerid' && !empty($this->post_and_get('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $err = $this->post_and_get('err');
+        if ($this->postAndGet('action') == 'delerid' && !empty($this->postAndGet('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+            $err = $this->postAndGet('err');
             $this->clearFile(APPDIR . 'used/datalog/' . $err . '.dat');
 
             $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
@@ -223,7 +223,7 @@ class Logfiles extends BaseModel {
 
         $this_page['content'] .= $navigation->get_navigation();
 
-        if ($this->user->is_administrator()) {
+        if ($this->user->administrator()) {
             if (isset($err)) {
                 $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerid&amp;err=' . $err, $this->localization->string('delaboerr') . ' ' . $err) . '<br>';
             }

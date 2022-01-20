@@ -225,24 +225,24 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		if (!empty($this->post_and_get('site')) && !$this->validateURL($this->post_and_get('site'))) $this->redirection('profile.php?isset=insite');
+		if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
 
 		// check email
-		if (!empty($this->post_and_get('email')) && !$this->user->validate_email($this->post_and_get('email'))) $this->redirection('profile.php?isset=noemail');
+		if (!empty($this->postAndGet('email')) && !$this->user->validate_email($this->postAndGet('email'))) $this->redirection('profile.php?isset=noemail');
 
-		$my_name = $this->no_br($this->post_and_get('my_name'));
-		$surname = $this->no_br($this->post_and_get('surname'));
-		$city = $this->no_br($this->post_and_get('otkel'));
-		$street = $this->no_br($this->post_and_get('street'));
-		$zip = $this->no_br($this->post_and_get('zip'));
-		$infa = $this->no_br($this->post_and_get('infa'));
-		$email = htmlspecialchars(strtolower($this->post_and_get('email')));
-		$site = $this->no_br($this->post_and_get('site'));
-		$browser = $this->no_br($this->user->user_browser());
-		$ip = $this->no_br($this->user->find_ip());
-		$sex = $this->no_br($this->post_and_get('pol'));
-		$happy = $this->no_br($this->post_and_get('happy'));
-		$timezone = $this->no_br($this->post_and_get('timezone'));
+		$my_name = $this->replaceNewLines($this->postAndGet('my_name'));
+		$surname = $this->replaceNewLines($this->postAndGet('surname'));
+		$city = $this->replaceNewLines($this->postAndGet('otkel'));
+		$street = $this->replaceNewLines($this->postAndGet('street'));
+		$zip = $this->replaceNewLines($this->postAndGet('zip'));
+		$infa = $this->replaceNewLines($this->postAndGet('infa'));
+		$email = htmlspecialchars(strtolower($this->postAndGet('email')));
+		$site = $this->replaceNewLines($this->postAndGet('site'));
+		$browser = $this->replaceNewLines($this->user->user_browser());
+		$ip = $this->replaceNewLines($this->user->find_ip());
+		$sex = $this->replaceNewLines($this->postAndGet('pol'));
+		$happy = $this->replaceNewLines($this->postAndGet('happy'));
+		$timezone = $this->replaceNewLines($this->postAndGet('timezone'));
 
 		$fields = array();
 		$fields[] = 'city';
@@ -302,8 +302,8 @@ class ProfileModel extends BaseModel {
 			$mailQueue = new Mailer;
 
 			$msg = "Hello {$this->user->show_username()}<br /><br />
-            In order to add this email to your profile at site {$this->website_home_address()}
-            please follow link to confirm email address " . '<a href="' . $this->website_home_address() . '/profile/confirm_email/?token=' . $token . '">' . $this->website_home_address() . '/profile/confirm_email/?token=' . $token . '</a>';
+            In order to add this email to your profile at site {$this->websiteHomeAddress()}
+            please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
 			$msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
 			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
@@ -320,7 +320,7 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		if ($this->post_and_get('confirmed') == 'yes') {
+		if ($this->postAndGet('confirmed') == 'yes') {
 			$delete_id = $this->user->user_id();
 
 			$this->user->delete_user($delete_id);
@@ -347,7 +347,7 @@ class ProfileModel extends BaseModel {
         $data['tname'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
-        if ($this->post_and_get('newpar') !== $this->post_and_get('newpar2'))
+        if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2'))
         {
             $data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
@@ -357,11 +357,11 @@ class ProfileModel extends BaseModel {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->password_check($this->post_and_get('oldpar', true), $this->user->user_info('password'))) {
+        if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->user_info('password'))) {
             // Update password
-            $this->user->update_user('pass', $this->user->password_encrypt($this->post_and_get('newpar', true)));
+            $this->user->update_user('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
 
-            $this->redirection($this->website_home_address() . "/users/login");
+            $this->redirection($this->websiteHomeAddress() . "/users/login");
         } else {
             $data['content'] = $this->showDanger('{@localization[nopass]}}');
         }
@@ -541,20 +541,20 @@ class ProfileModel extends BaseModel {
         $this_page['content'] = '';
 
         // Token does not exist
-        if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'") < 1) {
+        if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'") < 1) {
             $this_page['content'] .= $this->showDanger('{@localization[notoken]}}');
 
             return $this_page;
         }
 
         // Get token data
-        $data = $this->db->get_data('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'");
+        $data = $this->db->getData('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'");
 
         // Update email
         $this->user->update_user('email', $data['content'], $data['uid']);
 
         // Remove token
-        $this->db->delete('tokens', "type = 'email' AND token = '{$this->post_and_get('token')}'");
+        $this->db->delete('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'");
 
         $this->redirection(HOMEDIR . 'profile');
     }

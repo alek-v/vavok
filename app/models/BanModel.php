@@ -15,13 +15,13 @@ class BanModel extends BaseModel {
         $data['tname'] = '{@localization[banning]}}';
         $data['content'] = '';
 
-        $user = $this->post_and_get('users');
+        $user = $this->postAndGet('users');
 
-        if (!$this->user->is_administrator(101) && !$this->user->is_administrator(102) && !$this->user->is_moderator(103)) $this->redirection('../?auth_error');
+        if (!$this->user->administrator(101) && !$this->user->administrator(102) && !$this->user->moderator(103)) $this->redirection('../?auth_error');
         
         $data['content'] .= '<p><img src="../themes/images/img/partners.gif" alt=""> <b>' . $this->localization->string('banunban') . '</b></p>';
         
-        if (empty($this->post_and_get('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $form = $this->model('ParsePage');
             $form->load('forms/form');
             $form->set('form_method', 'post');
@@ -45,7 +45,7 @@ class BanModel extends BaseModel {
         }
 
         // edit profile
-        if ($this->post_and_get('action') == 'edit') {
+        if ($this->postAndGet('action') == 'edit') {
             if (!empty($user)) {
                 if (ctype_digit($user) === false) {
                     $userx_id = $this->user->getidfromnick($user);
@@ -149,11 +149,11 @@ class BanModel extends BaseModel {
             }
         }
 
-        if ($this->post_and_get('action') == 'banuser') {
-            $bform = $this->check($this->post_and_get('bform'));
-            $udd38 = $this->check($this->post_and_get('duration'));
+        if ($this->postAndGet('action') == 'banuser') {
+            $bform = $this->check($this->postAndGet('bform'));
+            $udd38 = $this->check($this->postAndGet('duration'));
             $users_id = $this->user->getidfromnick($user);
-            $udd39 = $this->check($this->post_and_get('udd39'));
+            $udd39 = $this->check($this->postAndGet('udd39'));
 
             if (!empty($users_id)) {
                 if ($bform == "min") $ban_time = $udd38;
@@ -164,7 +164,7 @@ class BanModel extends BaseModel {
                     if ($ban_time <= $this->configuration('maxBanTime')) {
                         if (!empty($udd39)) {
                             $newbantime = round(time() + ($ban_time * 60));
-                            $newbandesc = $this->no_br($this->check($udd39), ' ');
+                            $newbandesc = $this->replaceNewLines($this->check($udd39), ' ');
                             $newlastban = time();
         
                             $newallban = $this->user->user_info('allban', $users_id) + 1;
@@ -193,7 +193,7 @@ class BanModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban/?action=edit&users=' . $user, $this->localization->string('back'), '<p>', '</p>');
         }
 
-        if ($this->post_and_get('action') == 'deleteban') {
+        if ($this->postAndGet('action') == 'deleteban') {
             $users_id = $this->user->getidfromnick($user);
 
             if (!empty($users_id)) {
@@ -220,7 +220,7 @@ class BanModel extends BaseModel {
         }
 
         // delete user
-        if ($this->post_and_get('action') == 'deluser') {
+        if ($this->postAndGet('action') == 'deluser') {
             $user = $this->check($user);
             $this->user->delete_user($user);
 
@@ -245,13 +245,13 @@ class BanModel extends BaseModel {
         $data['tname'] = '{@localization[banlist]}}';
         $data['content'] = '';
 
-        if (!$this->user->is_administrator() && !$this->user->is_moderator(103)) $this->redirection('../index.php?error');
+        if (!$this->user->administrator() && !$this->user->moderator(103)) $this->redirection('../index.php?error');
 
         // Number of banned users
         $noi = $this->user->total_banned();
         $items_per_page = 10;
         
-        $navigation = new Navigation($items_per_page, $noi, $this->post_and_get('page'), 'banlist.php?'); // start navigation
+        $navigation = new Navigation($items_per_page, $noi, $this->postAndGet('page'), 'banlist.php?'); // start navigation
         $limit_start = $navigation->start()['start']; // starting point
         
         $sql = "SELECT id, name, banned FROM vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";

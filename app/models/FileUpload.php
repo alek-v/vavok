@@ -19,9 +19,9 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'File Upload';
         $this_page['content'] = '';
 
-        if (!$this->user->is_administrator() && !$this->user->is_moderator(103) && !$this->user->is_moderator(105)) $this->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
 
-        if (empty($this->post_and_get('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $this_page['headt'] = $this->file_upload->get_header_data();
 
             $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
@@ -54,10 +54,10 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'Uploaded Files';
         $this_page['content'] = '';
 
-        if (!$this->user->is_administrator() && !$this->user->is_moderator(103) && !$this->user->is_moderator(105)) $this->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
 
-        if ($this->post_and_get('action') == 'del') {
-            $file_data = $this->db->get_data('uplfiles', "id='{$this->post_and_get('id')}'");
+        if ($this->postAndGet('action') == 'del') {
+            $file_data = $this->db->getData('uplfiles', "id='{$this->postAndGet('id')}'");
 
             // Location of file to delete
             $file_to_delete = PUBLICDIR . ltrim($file_data['fulldir'], '/');
@@ -70,12 +70,12 @@ class FileUpload extends BaseModel {
             }
 
             // Delete from database
-            $this->db->delete("uplfiles", "id='{$this->post_and_get('id')}'");
+            $this->db->delete("uplfiles", "id='{$this->postAndGet('id')}'");
 
             $this->redirection(HOMEDIR . 'adminpanel/uploaded_files?isset=mp_delfiles');
         }
 
-        if (empty($this->post_and_get('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> List of uploaded files</p>'; 
 
             $num_items = $this->db->count_row('uplfiles');
@@ -118,14 +118,14 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'Search';
         $this_page['content'] = '';
 
-        if (!$this->user->is_administrator() && !$this->user->is_moderator(103) && !$this->user->is_moderator(105)) $this->redirection(HOMEDIR . '?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . '?auth_error');
         
-        if (empty($this->post_and_get('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<form action="' . HOMEDIR . 'adminpanel/search_uploads?action=stpc" method="POST">';
             $this_page['content'] .= 'Text:<br><input name="stext" maxlength="30" /><br>';
             $this_page['content'] .= '<br>';
             $this_page['content'] .= '<input type="submit" value="Search"></form><br><br>';
-        } else if ($this->post_and_get('action') == 'stpc') {
+        } else if ($this->postAndGet('action') == 'stpc') {
             $stext = $this->check($_POST["stext"]);
 
             if (empty($stext)) {
@@ -144,7 +144,7 @@ class FileUpload extends BaseModel {
                 $num_items = $noi;
                 $items_per_page = 10;
 
-                $navigation = new Navigation($items_per_page, $num_items, $this->post_and_get('page'), 'search_uploads.php?'); // start navigation
+                $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), 'search_uploads.php?'); // start navigation
 
                 $limit_start = $navigation->start()['start']; // starting point
 

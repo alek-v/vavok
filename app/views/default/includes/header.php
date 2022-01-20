@@ -12,7 +12,7 @@
 	<body class="d-flex flex-column">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light top-navigation">
 			<div class="container-fluid">
-				<a class="navbar-brand" href="{@HOMEDIR}}"><img src="{@HOMEDIR}}themes/default/images/logo.png" width="30" height="30" alt="Logo"></a>
+				<a class="navbar-brand" href="{@HOMEDIR}}"><img src="{@HOMEDIR}}themes/default/images/logo165x30.png" width="165" height="30" alt="Vavok logo" /></a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				  <span class="navbar-toggler-icon"></span>
 				</button>

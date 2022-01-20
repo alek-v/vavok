@@ -5,14 +5,14 @@
  */
 
 class EmailQueue extends BaseModel {
-    private object $mailer;
+    private object $_mailer;
 
     public function __construct()
     {
         parent::__construct();
 
         // Instantiate mailer
-        $this->mailer = new Mailer;
+        $this->_mailer = new Mailer;
     }
 
     public function send()
@@ -37,7 +37,7 @@ class EmailQueue extends BaseModel {
         $i = 0;
         foreach ($this->db->query($sql) as $email) {
                 // send damn mail
-                $result = $this->mailer->send($email['recipient'], $email['subject'], $email['content'], $email['sender_mail'], $email['sender']);
+                $result = $this->_mailer->send($email['recipient'], $email['subject'], $email['content'], $email['sender_mail'], $email['sender']);
 
                 // update sent status
                 $fields = array('sent', 'timesent');

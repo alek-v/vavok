@@ -51,21 +51,21 @@ class ContactModel extends BaseModel {
         $localization->load();
 
         // Check name
-        if (empty($this->post_and_get('name'))) $data['content'] .= $this->showDanger('{@localization[noname]}}');
+        if (empty($this->postAndGet('name'))) $data['content'] .= $this->showDanger('{@localization[noname]}}');
 
         // Check email body
-        if (empty($this->post_and_get('body'))) $data['content'] .= $this->showDanger('{@localization[nobody]}}');
+        if (empty($this->postAndGet('body'))) $data['content'] .= $this->showDanger('{@localization[nobody]}}');
 
         // Validate email address
-        if (!$this->user->validate_email($this->post_and_get('umail'))) $data['content'] .= $this->showDanger('{@localization[noemail]}}');
+        if (!$this->user->validate_email($this->postAndGet('umail'))) $data['content'] .= $this->showDanger('{@localization[noemail]}}');
 
         // Redirect if response is false
-        if ($this->recaptchaResponse($this->post_and_get('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->showDanger('{@localization[wrongcode]}}');
+        if ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->showDanger('{@localization[wrongcode]}}');
 
         // Send email if there is no error
         if (empty($data['content'])) {
             $mail = new Mailer();
-            $mail->queue_email($this->configuration('adminEmail'), $localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->post_and_get('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->post_and_get('name')}\r\nSender's email: {$this->post_and_get('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+            $mail->queue_email($this->configuration('adminEmail'), $localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->postAndGet('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->postAndGet('name')}\r\nSender's email: {$this->postAndGet('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
             // Email sent
             $data['content'] .= $this->showSuccess('{@localization[emailsent]}}');

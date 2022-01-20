@@ -31,7 +31,7 @@ class Core {
 	    $config['rssIcon'] = 0; // RSS icon
 		$config['timeZone'] = empty($config['timeZone']) ? $config['timeZone'] = 0 : $config['timeZone']; // check is there timezone number set
 		$config['siteTime'] = time() + ($config['timeZone'] * 3600); 
-		$config['homeBase'] = str_replace('http://', '', $config['homeUrl']);
+		$config['homeBase'] = isset($config['homeUrl']) ? str_replace('http://', '', $config['homeUrl']) : '';
 		$config['homeBase'] = str_replace('https://', '', $config['homeBase']);
 
 	    // Get complete configuration
@@ -317,18 +317,24 @@ class Core {
 	    return $text;
 	}
 
-	// no new line
-	function no_br($msg, $replace = "") {
+	/**
+	 * Replace lines in text
+	 * 
+	 * @param string $string
+	 * @param string $replace
+	 * @return string $string
+	 */
+	function replaceNewLines($string, $replace = '') {
 	    // convert to unix new lines
-	    $msg = preg_replace("/\r\n/", "\n", $msg); 
+	    $string = preg_replace("/\r\n/", "\n", $string); 
 	    // remove extra new lines
-	    $msg = preg_replace("/\n/", $replace, $msg);
+	    $string = preg_replace("/\n/", $replace, $string);
 
-	    return $msg;
+	    return $string;
 	}
 
 	// file size
-	function formatsize($file_size) {
+	function formatSize($file_size) {
 	    if ($file_size >= 1073741824) {
 	        $file_size = round($file_size / 1073741824 * 100) / 100 . " GB";
 	    } elseif ($file_size >= 1048576) {
@@ -491,7 +497,7 @@ class Core {
 	 * @param string $text
 	 * @return bool
 	 */
-	function is_html($text)
+	public function isTextHtml($text)
 	{
 	   $processed = htmlentities($text);
 	   if($processed == $text) return false;
@@ -504,7 +510,7 @@ class Core {
 	 * @param $string
 	 * @return $string
 	 */
-	public function latin_letters_numbers($string)
+	public function leaveLatinLettersNumbers($string)
 	{
 		return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
 	}
@@ -605,7 +611,7 @@ class Core {
 	}
 
 	// check URL
-	public function validateURL($URL) {
+	public function validateUrl($URL) {
 	    $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
 	    return (bool)preg_match($v, $URL);
 	}
@@ -695,30 +701,6 @@ class Core {
 	}
 
 	/**
-	 * Get message from url
-	 *
-	 * @param string $msg
-	 * @return string
-	 */
-	public function get_isset($msg = '')
-	{
-	    if (!empty($msg)) {
-	        $isset = $msg;
-	    } elseif (isset($_GET['isset'])) {
-	        $isset = $this->check($_GET['isset']);
-	    }
-
-	    include_once APPDIR . 'lang/' . $this->go('users')->get_user_language() . '/isset.php';
-
-	    if (isset($isset) && !empty($issetLang[$isset])) {
-	        $isset_msg = new PageGen('pages/isset.tpl');
-	        $isset_msg->set('message', $issetLang[$isset]);
-	        
-	        return $isset_msg->output();
-	    }
-	}
-
-	/**
 	 * Show number of visitors online
 	 *
 	 * @return string
@@ -740,7 +722,7 @@ class Core {
 	 */
 	public function showCounter()
 	{
-        $counts = $this->db->get_data('counter');
+        $counts = $this->db->getData('counter');
 
         $current_day = $counts['day'];
         $clicks_today = $counts['clicks_today'];
@@ -870,7 +852,7 @@ class Core {
 	}
 
 	// get transfer protocol https or http
-	public function transfer_protocol() {
+	public function transferProtocol() {
 	    if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
 	        if (!empty($_SERVER['HTTPS'])) {
 	            $connectionProtocol = 'https://';
@@ -891,7 +873,7 @@ class Core {
 	 * 
 	 * @return bool
 	 */
-	public function is_secure_connection()
+	public function secureConection()
 	{
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') return true;
 
@@ -918,7 +900,7 @@ class Core {
 	 * @param string $uri
 	 * @return string $clean_requri
 	 */
-	public function clean_request_uri($uri)
+	public function cleanRequestUri($uri)
 	{
 		$clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
 		$clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
@@ -932,15 +914,15 @@ class Core {
 	 * 
 	 * @return string
 	 */
-	public function current_connection()
+	public function currentConnection()
 	{
 		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
 	}
 
 	// complete dynamic website address
-	public function website_home_address()
+	public function websiteHomeAddress()
 	{
-	    return $this->transfer_protocol() . $_SERVER['HTTP_HOST'];
+	    return $this->transferProtocol() . $_SERVER['HTTP_HOST'];
 	}
 
 	function compress_output_gzip($output)
@@ -1072,7 +1054,7 @@ class Core {
 	 * @param bool $unchainged
 	 * @return array|string
 	 */
-	public function post_and_get($return_key = '', $unchainged = '')
+	public function postAndGet($return_key = '', $unchainged = '')
 	{
 		$arrays = array_merge($_POST, $_GET);
 
@@ -1102,7 +1084,7 @@ class Core {
 	 *
 	 * @return string
 	 */
-	public function clean_domain()
+	public function cleanDomain()
 	{
 		return str_replace('www.', '', $_SERVER['SERVER_NAME']);
 	}
@@ -1110,7 +1092,7 @@ class Core {
 	/**
 	 * Users device, computer or phone
 	 */
-	public function user_device() {
+	public function userDevice() {
     	return BrowserDetection::userDevice();
 	}
 
@@ -1120,7 +1102,7 @@ class Core {
 	 * @param object $user_model
 	 * @return void
 	 */
-	public function clean_registrations($user_model)
+	public function cleanRegistrations($user_model)
 	{
 		// Hours user have to confirm registration
 		$confirmationHours = 24;
@@ -1138,7 +1120,7 @@ class Core {
 	 * @param string $page_data
 	 * @return string
 	 */
-	public function page_head_metatags($page_data)
+	public function pageHeadMetatags($page_data)
 	{
 		// Page title
 		if (isset($page_data['tname'])) $title = $page_data['tname'];

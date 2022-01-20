@@ -24,10 +24,10 @@ class BaseModel extends Controller {
         // Check if user is authenticated
         if ($this->user->userAuthenticated()) $this->user_data['authenticated'] = true;
         // Admin status
-        if ($this->user->is_administrator()) $this->user_data['admin_status'] = 'administrator';
-        if ($this->user->is_moderator()) $this->user_data['admin_status'] = 'moderator';
+        if ($this->user->administrator()) $this->user_data['admin_status'] = 'administrator';
+        if ($this->user->moderator()) $this->user_data['admin_status'] = 'moderator';
         // Users laguage
-        $this->user_data['language'] = $this->user->get_user_language();
+        $this->user_data['language'] = $this->user->getUserLanguage();
 
         // Localization
         $this->localization = $this->model('Localization');

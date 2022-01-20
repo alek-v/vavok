@@ -15,18 +15,18 @@ class AdminchatModel extends BaseModel {
         if (!$this->user->check_permissions(basename(__FILE__))) $this->redirection('../?auth_error');
 
         // add to admin chat
-        if ($this->post_and_get('action') == 'acadd') {
+        if ($this->postAndGet('action') == 'acadd') {
             $brow = $this->check($this->user->user_browser());
-            $msg = $this->check(wordwrap($this->post_and_get('msg'), 150, ' ', 1));
+            $msg = $this->check(wordwrap($this->postAndGet('msg'), 150, ' ', 1));
             $msg = substr($msg, 0, 1200);
             $msg = $this->check($msg);
         
             $msg = $this->antiword($msg);
             $msg = $this->smiles($msg);
-            $msg = $this->no_br($msg, '<br />');
+            $msg = $this->replaceNewLines($msg, '<br />');
         
             $text = $msg . '|' . $this->user->show_username() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
-            $text = $this->no_br($text);
+            $text = $this->replaceNewLines($text);
         
             $this->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
         
@@ -47,7 +47,7 @@ class AdminchatModel extends BaseModel {
         }
 
         // empty admin chat
-        if ($this->post_and_get('action') == "acdel") {
+        if ($this->postAndGet('action') == "acdel") {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
                 $this->clearFile(APPDIR . "used/adminchat.dat");
 
@@ -58,7 +58,7 @@ class AdminchatModel extends BaseModel {
 
         $data['content'] .= '<img src="../themes/images/img/menu.gif" alt=""> <b>' . $this->localization->string('adminchat') . '</b><br><br>';
         
-        if (empty($this->post_and_get('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $data['content'] .= '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?r=' . rand(100, 999), $this->localization->string('refresh')) . '<br>';
         
@@ -75,7 +75,7 @@ class AdminchatModel extends BaseModel {
                 $data['content'] .='<br><img src="../themes/images/img/reload.gif" alt=""> <b>' . $this->localization->string('nomsgs') . '</b><br>';
             }
         
-            $navigation = new Navigation(10, $total, $this->post_and_get('page'), HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
+            $navigation = new Navigation(10, $total, $this->postAndGet('page'), HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
         
             $limit_start = $navigation->start()['start']; // starting point
         
@@ -110,7 +110,7 @@ class AdminchatModel extends BaseModel {
             $data['content'] .= $this->sitelink('../pages/smiles.php', $this->localization->string('smile'));
         }
 
-        if ($this->post_and_get('action') == 'prodel') {
+        if ($this->postAndGet('action') == 'prodel') {
             $data['content'] .= '<br>' . $this->localization->string('delacmsgs') . '?<br>';
             $data['content'] .= '<b>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=acdel', $this->localization->string('yessure') . '!') . '</b><br>';
         

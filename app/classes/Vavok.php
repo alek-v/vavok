@@ -28,7 +28,7 @@ class Vavok extends Core {
 		session_start();
 
 		define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
-		define('CLEAN_REQUEST_URI', $this->clean_request_uri(REQUEST_URI)); // Clean URL (REQUEST_URI)
+		define('CLEAN_REQUEST_URI', $this->cleanRequestUri(REQUEST_URI)); // Clean URL (REQUEST_URI)
 		define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
 
 		// For links, images and other mod rewriten directories
@@ -45,10 +45,10 @@ class Vavok extends Core {
 		}
 
 		// Cookie-free domain for uploaded files
-		if (!defined('STATIC_UPLOAD_URL')) define('STATIC_UPLOAD_URL', $this->current_connection() . $_SERVER['HTTP_HOST'] . '/fls');
+		if (!defined('STATIC_UPLOAD_URL')) define('STATIC_UPLOAD_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/fls');
 
 		// Cookie-free domain for themes
-		if (!defined('STATIC_THEMES_URL')) define('STATIC_THEMES_URL', $this->current_connection() . $_SERVER['HTTP_HOST'] . '/themes');
+		if (!defined('STATIC_THEMES_URL')) define('STATIC_THEMES_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/themes');
 
 		// Parameters from URL
         $url = $this->paramsFromUrl();

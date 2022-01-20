@@ -41,8 +41,11 @@ class BlogModel extends BaseModel {
 
         switch ($pg) {
             case isset($pg):
-                // Load page data and merge with existing data
-                if (isset($params) && is_array($params)) $this_page = array_merge($this->blog_page_data($params), $this_page);
+                // Page data
+                $blog_page_data = $this->blog_page_data($params);
+
+                // Merge data with existing data
+                if (!empty($blog_page_data) && is_array($blog_page_data)) $this_page = array_merge($blog_page_data, $this_page);
 
                 // Redirect to blog main page if page does not exist
                 $page_id = !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
@@ -115,7 +118,7 @@ class BlogModel extends BaseModel {
                 if ($comments_per_page == 0) $comments_per_page = $total_comments;
 
                 // Start navigation
-                $navi = new Navigation($items_per_page, $total_comments, $this->post_and_get('page'));
+                $navi = new Navigation($items_per_page, $total_comments, $this->postAndGet('page'));
         
                 $all_comments = $comments->load_comments($this->page_id, $navi->start()['start'], $comments_per_page, $this->user);
 
@@ -185,7 +188,7 @@ class BlogModel extends BaseModel {
                 }
 
                 // start navigation
-                $navi = new Navigation($items_per_page, $total_posts, $this->post_and_get('page'));
+                $navi = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'));
         
                 /**
                  * Get blog category names
@@ -277,7 +280,7 @@ class BlogModel extends BaseModel {
                 $show_page->set('posts', $page_posts->merge($all_posts));
         
                 // page navigation
-                $navigation = new Navigation($items_per_page, $total_posts, $this->post_and_get('page'), './?');
+                $navigation = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'), './?');
                 
                 $show_page->set('navigation', $navigation->get_navigation());
         
@@ -303,15 +306,15 @@ class BlogModel extends BaseModel {
         // Content of the page
         $this_page['content'] = '';
 
-        $ptl = ltrim($this->check($this->post_and_get('ptl')), '/'); // Return page
+        $ptl = ltrim($this->check($this->postAndGet('ptl')), '/'); // Return page
 
         // In case data is missing
-        if ($this->user->userAuthenticated() && (empty($this->post_and_get('comment')) || empty($this->post_and_get('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
+        if ($this->user->userAuthenticated() && (empty($this->postAndGet('comment')) || empty($this->postAndGet('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
 
         $comments = $this->model('Comments');
 
         // Insert data to database
-        $comments->insert($this->post_and_get('comment'), $this->post_and_get('pid'));
+        $comments->insert($this->postAndGet('comment'), $this->postAndGet('pid'));
 
         // Saved, return to page
         $this->redirection(HOMEDIR . $ptl . '?isset=savedok');
@@ -325,7 +328,7 @@ class BlogModel extends BaseModel {
 	protected function blog_page_data($params = [])
 	{
 		// Fetch page
-		$page_data = $this->db->get_data('pages', "pname='" . $params[0] . "'");
+		$page_data = $this->db->getData('pages', "pname='" . $params[0] . "'");
 
 		// return false if there is no data
 		if (empty($page_data['tname']) && empty($page_data['content'])) {

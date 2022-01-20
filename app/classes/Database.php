@@ -156,7 +156,7 @@ class Database extends PDO {
      * @param str $bind
      * @return array
      */
-    public function get_data($table, $where = '', $fields = '*', $bind = '') {
+    public function getData($table, $where = '', $fields = '*', $bind = '') {
         $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
         if (!empty($where))
             $sql .= ' WHERE ' . $where;

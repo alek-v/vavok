@@ -1,4 +1,8 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
 class Controller extends Core {
     // Include and instantiate model class
@@ -55,6 +59,6 @@ class Controller extends Core {
         }
 
         // Show page
-        echo $page->show($localization->show_strings());
+        echo $page->show($localization->getStrings());
     }
 }

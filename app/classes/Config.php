@@ -41,7 +41,7 @@ class Config {
 	/**
 	 * Update .env configuration
 	 */
-	public function update_config_file($data) {
+	public function updateConfigFile($data) {
 		if (!empty($data)) {
 			$file = file(APPDIR . '.env');
 
@@ -63,7 +63,7 @@ class Config {
 	 * @param array $data
 	 * @return void
 	 */
-	public function update_config_data($data)
+	public function updateConfigData($data)
 	{
 		foreach ($data as $key => $value) {
 			$this->db->update('settings', array('value'), array($value), "setting_name = '{$key}'");
