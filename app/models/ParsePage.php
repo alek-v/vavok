@@ -11,10 +11,11 @@ class ParsePage extends Core {
     protected string $lang;             // Language
     protected string $head_data;        // Meta tags
     protected string $notification;     // Notification at page
-    protected array $values = array();  // Values to replace at page template
+    protected array  $values = array(); // Values to replace at page template
 
     /**
      * Load page
+     * Redirect to https
      * 
      * @param string $file
      * @param array $data
@@ -32,8 +33,8 @@ class ParsePage extends Core {
             $this->redirection($redirect);
         }
 
-        // Metadata for all pages
-        // Set missing OG tags when possible too
+        // Metadata of page
+        // Set missing OG (open graph) tags when possible
         $this->head_data = $this->pageHeadMetatags($data);
         $this->title = isset($data['tname']) ? $data['tname'] : '';
         $this->content = isset($data['content']) ? $data['content'] : '';
@@ -43,7 +44,7 @@ class ParsePage extends Core {
     }
 
     /**
-     * Load template
+     * Load template, part of the page
      */
     public function load($file)
     {
@@ -65,16 +66,14 @@ class ParsePage extends Core {
      * @param string $content
      * @return string
      */
-    public function parse_language($content, $localization)
+    private function parseLanguage($content, $localization)
     {
-        $all = $localization;
-
         $search = array();
-        foreach($all as $key => $val) {
+        foreach($localization as $key => $val) {
             array_push($search, '{@localization[' . $key . ']}}');
         }
 
-        return str_replace($search, $all, $content);
+        return str_replace($search, $localization, $content);
     }
 
     /**
@@ -87,14 +86,14 @@ class ParsePage extends Core {
          * If it doesn't return with an error message.
          * Anything else loads the file contents and loops through the array replacing every key for its value.
          */
-        if (!file_exists($this->file)) {
-            return "Error loading template file ($this->file).<br />";
-        }
+        if (!file_exists($this->file)) return "Error loading template file ($this->file).<br />";
 
         $output = file_get_contents($this->file);
 
         foreach ($this->values as $key => $value) {
             $tagToReplace = "{@$key}}";
+            $value = !empty($value) ? $value : '';
+
             $output = str_replace($tagToReplace, $value, $output);
         }
 
@@ -163,7 +162,8 @@ class ParsePage extends Core {
         // Show database queries while debugging
         if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->show_db_queries());
 
-        return preg_replace('/{@(.*?)}}/' , '', $this->parse_language($this->output(), $localization));
+        // Remove empty keys, parse language keys and return page content
+        return preg_replace('/{@(.*?)}}/' , '', $this->parseLanguage($this->output(), $localization));
     }
 
     /**
