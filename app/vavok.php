@@ -1,16 +1,15 @@
 <?php
 
 define('START_TIME', microtime(true));
-define('VERSION', '2.0b');
+define('VERSION', '2.0 RC-1');
 
 // Error reporting
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
 
 // Default time zone
 date_default_timezone_set('UTC');
 
-// Root dir for including application files
+// Base directory
 if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
 
 // Application dir
