@@ -16,28 +16,28 @@ class Page extends BaseModel {
     public function homepage($params = [])
     {
         // Localization from URL
-        $this->page_localization = !empty($params[0]) ? $this->user->get_prefered_language($params[0], 'short') : '';
+        $this->page_localization = !empty($params[0]) ? $this->user->getPreferredLanguage($params[0], 'short') : '';
 
         // Select page with localization or to leave it without localization
         $localization = !empty($params[0]) ? " AND lang = '{$params[0]}'" : '';
 
         // Get localized page
-        $data = $this->db->getData('pages', "pname='index'{$localization}", '*');
+        $data = $this->db->getData('pages', "pname='index'{$localization}");
 
         // Page without localization
-        if (empty($data)) $data = $this->db->getData('pages', "pname='index'", '*');
+        if (empty($data)) $data = $this->db->getData('pages', "pname='index'");
 
         // Update user's language when language is set in URL and it is different then current localization
-        if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
+        if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
             $this->user->change_language(strtolower($this->page_localization));
             // Update user's localization for page that we are now loading
-            $this->user_data['language'] = $this->user->get_prefered_language($this->page_localization);
+            $this->user_data['language'] = $this->user->getPreferredLanguage($this->page_localization);
         }
 
         // Redirect if user's language is not website default language,
         // language is not in URL, example: www.example.com
         // and page with users's language exists, example: www.example.com/de
-        if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->get_prefered_language($this->user->getUserLanguage(), 'short') . '/');
+        if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
 
         // Users data
         $data['user'] = $this->user_data;
@@ -53,16 +53,16 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this_page = $this->db->getData('pages', "pname='{$params[0]}'", '*');
+        $this_page = $this->db->getData('pages', "pname='{$params[0]}'");
 
         // Localization from page's data
-        $this->page_localization = !empty($this_page['lang']) ? $this->user->get_prefered_language($this_page['lang'], 'short') : '';
+        $this->page_localization = !empty($this_page['lang']) ? $this->user->getPreferredLanguage($this_page['lang'], 'short') : '';
 
         // Update user's language when language is set in URL and it is different then current localization
-        if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->get_prefered_language($_SESSION['lang'], 'short')) {
+        if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
             $this->user->change_language(strtolower($this->page_localization));
             // Update user's localization for page that we are now loading
-            $this->user_data['language'] = $this->user->get_prefered_language($this->page_localization);
+            $this->user_data['language'] = $this->user->getPreferredLanguage($this->page_localization);
         }
 
         // Users data
@@ -83,7 +83,7 @@ class Page extends BaseModel {
     public function login($data = [])
     {
         // Check login data while logging in
-        $data = $this->user->check_auth();
+        $data = $this->user->checkAuth();
 
         // Users data
         $data['user'] = $this->user_data;

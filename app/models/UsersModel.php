@@ -468,7 +468,7 @@ class UsersModel extends BaseModel {
         // Page to load after changing language
         $ptl = $this->postAndGet('ptl'); 
 
-        if (!file_exists(APPDIR . "include/lang/" . $this->user->get_prefered_language($language) . "/index.php")) $this->redirection(HOMEDIR . '?error=no_lang');
+        if (!file_exists(APPDIR . "include/lang/" . $this->user->getPreferredLanguage($language) . "/index.php")) $this->redirection(HOMEDIR . '?error=no_lang');
 
         // Set new language
         if (!empty($language)) $this->user->change_language($language);

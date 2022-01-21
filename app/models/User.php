@@ -165,7 +165,7 @@ class User extends Core {
 	    session_regenerate_id();
 	}
 
-	public function check_auth()
+	public function checkAuth()
 	{
 		// Response data
 		$data = [];
@@ -317,7 +317,7 @@ class User extends Core {
 	 */
 	public function change_language($language = '')
 	{
-		$language = $this->get_prefered_language($language);
+		$language = $this->getPreferredLanguage($language);
 		$current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
 
 		// Update language if it is changed and if language is installed
@@ -1203,7 +1203,7 @@ class User extends Core {
 		return password_verify($password, $hash);
 	}
 
-	public function get_prefered_language($language = '', $format = '')
+	public function getPreferredLanguage($language = '', $format = '')
 	{
 		// Get browser preferred language
 		$locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
