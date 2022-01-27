@@ -1,7 +1,7 @@
 <?php
 
 define('START_TIME', microtime(true));
-define('VERSION', '2.0');
+define('VERSION', '2.1');
 
 // Error reporting
 error_reporting(E_ALL);
