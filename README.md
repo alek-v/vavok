@@ -8,4 +8,4 @@
 > 2. Enter database data in app/.env file.
 > 3. Go to your_site.com/install/ to complete installation.
 
-Documentation: https://docs.vavok.net/
+Documentation: https://docs.vavok.net
