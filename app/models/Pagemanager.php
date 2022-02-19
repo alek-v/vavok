@@ -74,7 +74,7 @@ class Pagemanager extends Controller {
 	    $fields[] = 'lastupd';
 	    $fields[] = 'lstupdby';
 
-	    $values[] = $content;
+	    $values[] = $this->pageContentToSave($content);
 	    $values[] = time();
 	    $values[] = $this->user_id;
 
@@ -160,6 +160,40 @@ class Pagemanager extends Controller {
 		$pageData = $this->select_page($id);
 	    // Update data in database
         $this->db->update('pages', array('lang', 'file'), array($lang, $pageData['pname'] . '!.' . $lang . '!.php'), "id='{$id}'");
+	}
+
+	/**
+	 * Process content of the page and display correctly in page editor
+	 * 
+	 * @param str @content
+	 * @return string
+	 */
+	public function processPageContent($content = '')
+	{
+		$content = !empty($content) ? htmlspecialchars($content) : '';
+
+		// Replace {@code}} with {{code}}
+		while (preg_match('/{@(.*)}}/si', $content)) {
+			$content = preg_replace('/{@(.*)}}/si', '{{$1}}', $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Process content of the page to store in database
+	 * 
+	 * @param str @content
+	 * @return string
+	 */
+	private function pageContentToSave($content = '')
+	{
+		// Replace {{code}} with {@code}}
+		while (preg_match('/{{(.*)}}/si', $content)) {
+			$content = preg_replace('/{{(.*)}}/si', '{@$1}}', $content);
+		}
+
+		return $content;
 	}
 
 	/**

@@ -437,8 +437,6 @@ class PagemanagerModel extends BaseModel {
 
                 if ($page_info['crtdby'] != $this->user->user_id() && !$this->user->check_permissions('pageedit', 'edit') && (!$this->user->check_permissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
-                $datamainfile = isset($page_info['content']) ? htmlspecialchars($page_info['content']) : '';
-
                 // Page name
                 $show_up_file = str_replace('.php', '', $file);
                 if (stristr($show_up_file, '!.')) $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
@@ -448,7 +446,7 @@ class PagemanagerModel extends BaseModel {
                 $form = $this->model('ParsePage');
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
-                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=edit&amp;file=' . $file);
+                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $file);
 
                 $select = $this->model('ParsePage');
                 $select->load('forms/select');
@@ -477,7 +475,7 @@ class PagemanagerModel extends BaseModel {
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
                 $form->set('form_name', 'form');
-                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=editfile&amp;file=' . $file);
+                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=editfile&file=' . $file);
 
                 $textarea = $this->model('ParsePage');
                 $textarea->load('forms/textarea');
@@ -485,7 +483,7 @@ class PagemanagerModel extends BaseModel {
                 $textarea->set('textarea_id', 'text_files');
                 $textarea->set('textarea_name', 'text_files');
                 $textarea->set('textarea_rows', 25);
-                $textarea->set('textarea_value', $datamainfile);
+                $textarea->set('textarea_value', $page_editor->processPageContent($page_info['content']));
 
                 $form->set('fields', $textarea->output());
 
