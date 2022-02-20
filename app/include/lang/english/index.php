@@ -12,14 +12,11 @@ $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
 // shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
-$ln_day_of_week = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday','Sunday');
+$ln_day_of_week = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 $ln_all_month = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
 
-// See http://www.php.net/manual/en/function.strftime.php to define the
-// variable below
-$ln_datefmt = '%d. %B %Y.';
-$ln_timefmt = '%H:%M';
-$ln_timespanfmt = '%s days, %s hours, %s minutes i %s seconds';
+$ln_datefmt = 'd.m.Y.';
+$ln_timefmt = 'H:M';
 
 // main
 $lang_home['home'] = 'Main page';
@@ -112,8 +109,7 @@ $language_data = array(
 	'ln_day_of_week' => $ln_day_of_week,
 	'ln_all_month' => $ln_all_month,
 	'ln_datefmt' => $ln_datefmt,
-	'ln_timefmt' => $ln_timefmt,
-	'ln_timespanfmt' => $ln_timespanfmt
+	'ln_timefmt' => $ln_timefmt
 );
 
 ?>

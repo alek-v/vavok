@@ -12,14 +12,11 @@ $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
 // shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bajtova', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
-$ln_day_of_week = array('Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota','Nedelja');
+$ln_day_of_week = array('Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota', 'Nedelja');
 $ln_all_month = array('januar', 'februar', 'mart', 'april', 'maj', 'jun', 'jul', 'avgust', 'septembar', 'oktobar', 'novembar', 'decembar');
 
-// See http://www.php.net/manual/en/function.strftime.php to define the
-// variable below
-$ln_datefmt = '%d. %B %Y.';
-$ln_timefmt = '%H:%M';
-$ln_timespanfmt = '%s dana, %s sati, %s minuta i %s sekundi';
+$ln_datefmt = 'd.m.Y.';
+$ln_timefmt = 'H:M';
 
 // glavno
 $lang_home['home'] = 'Na glavnu';
@@ -114,8 +111,7 @@ $language_data = array(
 	'ln_day_of_week' => $ln_day_of_week,
 	'ln_all_month' => $ln_all_month,
 	'ln_datefmt' => $ln_datefmt,
-	'ln_timefmt' => $ln_timefmt,
-	'ln_timespanfmt' => $ln_timespanfmt
+	'ln_timefmt' => $ln_timefmt
 );
 
 ?>
