@@ -50,7 +50,7 @@ class Pagemanager extends Controller {
 	 * @param string $tags
 	 * @return void
 	 */
-	public function update_tags($id, $tags)
+	public function updateTags($id, $tags)
 	{
 		// Delete current tags
 		$this->db->delete('tags', "page_id = '{$id}'");
@@ -121,14 +121,14 @@ class Pagemanager extends Controller {
 	    }
 
 	    // Update URL tags in header data
-	    $header_data = $this->select_page($id, 'headt, pname');
+	    $header_data = $this->selectPage($id, 'headt, pname');
 
 	    $updated_links = str_replace($header_data['pname'], $pageName, $header_data['headt']);
 
         $new_data = array(
             'headt' => $updated_links
         );
-        $this->head_data($id, $new_data);
+        $this->headData($id, $new_data);
 
 	    // Update other data in database
 	    $fields[] = 'pname';
@@ -157,7 +157,7 @@ class Pagemanager extends Controller {
 	 * @return void
 	 */
 	function language($id, $lang) {
-		$pageData = $this->select_page($id);
+		$pageData = $this->selectPage($id);
 	    // Update data in database
         $this->db->update('pages', array('lang', 'file'), array($lang, $pageData['pname'] . '!.' . $lang . '!.php'), "id='{$id}'");
 	}
@@ -203,7 +203,7 @@ class Pagemanager extends Controller {
 	 * @param array $data
 	 * @return void
 	 */
-	function head_data($id, $data)
+	function headData($id, $data)
 	{
 		/**
 		 * Get database fields
@@ -218,18 +218,8 @@ class Pagemanager extends Controller {
         $this->db->update('pages', $fields, $values, "id='{$id}'");
 	}
 
-	/**
-	 * Read data
-	 */
-
-	// Show page content
-	public function show_page()
-	{
-		echo $this->page_content;
-	}
-
 	// return total number of pages
-	public function total_pages($creator = '') {
+	public function totalPages($creator = '') {
 		$where = '';
 
 		if (!empty($creator)) $where = " WHERE crtdby = '{$creator}'";
@@ -244,7 +234,7 @@ class Pagemanager extends Controller {
 	 * @param str $fields
 	 * @return array
 	 */
-	public function select_page($id , $fields = '*')
+	public function selectPage($id , $fields = '*')
 	{
 		return $this->db->getData('pages', "id='{$id}'", $fields);
 	}
@@ -296,7 +286,7 @@ class Pagemanager extends Controller {
 			$this->page_created_date = $page_data['created'];
 
 			// Head tags
-			$this->head_tags = $this->append_head_tags($page_data['headt']);
+			$this->head_tags = $this->appendHeadTags($page_data['headt']);
 
 			// Published date
 			$this->page_published_date = $page_data['pubdate'];
@@ -317,43 +307,17 @@ class Pagemanager extends Controller {
 	}
 
 	/**
-	 * Return page header tags
-	 */
-	public function load_head_tags() {
-		// include head tags specified for current page
-		echo $this->head_tags;
-
-		echo "\r\n<!-- Vavok CMS http://www.vavok.net -->
-		<title>{$this->page_title}</title>\r\n";
-	}
-
-	/**
-	 * Return page language
-	 *
-	 * @param string $page
-	 * @return bool|string
-	 */
-	private function get_page_language($page)
-	{
-		$lang = $this->db->getData('pages', "pname = '{$page}'", 'lang');
-
-		if (!isset($lang['lang']) || empty($lang['lang'])) return false;
-
-		return $lang['lang'];
-	}
-
-	/**
 	 * Check if page exists
 	 *
-	 * @param $file string
-	 * @param $where string
+	 * @param $search string
+	 * @param $type string
 	 * @return mix int|bool
 	 */
-	function page_exists($file = '', $where = '') {
-		if (!empty($file) && $this->db->count_row('pages', "file='{$file}'") > 0) {
-			return $this->get_page_id("file='{$file}'");
-		} elseif (!empty($where) && ($this->db->count_row('pages', $where) > 0)) {
-			return $this->get_page_id($where);
+	function pageExists($search, $type = 'file') {
+		if ($type == 'file' && $this->db->count_row('pages', "file='{$search}'") > 0) {
+			return $this->getPageId("file='{$search}'");
+		} elseif ($type == 'where' && ($this->db->count_row('pages', $search) > 0)) {
+			return $this->getPageId($search);
 		} else {
 			return false;
 		}
@@ -365,7 +329,7 @@ class Pagemanager extends Controller {
 	 * @param string
 	 * @return bool
 	 */
-	function get_page_id($where)
+	function getPageId($where)
 	{
 		$page_id = $this->db->getData('pages', $where, 'id');
 		return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
@@ -409,30 +373,12 @@ class Pagemanager extends Controller {
 	}
 
 	/**
-	 * Get title for page
-	 *
-	 * @return string
-	 */
-	public function page_title() {
-		if (!empty($this->page_title)) { return $this->page_title; }
-
-	    $page_title = $this->db->getData('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'", 'tname');
-	    $page_title = !empty($page_title) ? $page_title['tname'] : '';
-
-	    if (!empty($page_title)) {
-	        return $page_title;
-	    } else {
-	        return $this->configuration('title');
-	    }
-	}
-
-	/**
 	 * Page tags (keywords)
 	 *
 	 * @param integer $id
 	 * @return string
 	 */
-	public function page_tags($id)
+	public function pageTags($id)
 	{
 		$tags = '';
 
@@ -444,33 +390,12 @@ class Pagemanager extends Controller {
 	}
 
 	/**
-	 * Head tags for all pages
-	 *
-	 * @param string $tags
-	 * @return string
-	 */
-	private function get_head_tags()
-	{
-		$tags = file_get_contents(APPDIR . 'used/headmeta.dat');
-
-        $vk_page = $this->db->getData('pages', "pname='" . trim($_SERVER['PHP_SELF'], '/') . "'");
-        if (!empty($vk_page['headt'])) { $tags .= $vk_page['headt']; }
-
-		// Add missing open graph tags
-		if (!strstr($tags, 'og:type')) { $tags .= "\n" . '<meta property="og:type" content="website" />'; }
-
-		if (!strstr($tags, 'og:title') && !empty($this->page_title) && $this->page_title != $this->configuration('title')) { $tags .= "\n" . '<meta property="og:title" content="' . $this->page_title . '" />'; }
-
-		return $tags;
-	}
-
-	/**
 	 * Append head tags
 	 *
 	 * @param string $tags
 	 * @return void
 	 */
-	public function append_head_tags($tags) {
+	public function appendHeadTags($tags) {
 		return $this->head_tags .= $tags;
 	}
 
@@ -479,7 +404,7 @@ class Pagemanager extends Controller {
 	 * 
 	 * @return str $edmode
 	 */
-	public function edit_mode()
+	public function editMode()
 	{
 		if (!empty($this->postAndGet('edmode'))) {
 		    $edmode = $this->postAndGet('edmode');
