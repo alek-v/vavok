@@ -15,7 +15,7 @@ class Navigation extends Core {
 
 		$this->items_per_page = $items_per_page; // items per page
 		$this->total_items = $total_items; // total items
-		$this->total_pages = $this->total_pages($this->total_items, $this->items_per_page); // total pages
+		$this->total_pages = $this->totalPages($this->total_items, $this->items_per_page); // total pages
 
 		// Get page number
 		$page = $this->postAndGet('page');
@@ -33,7 +33,7 @@ class Navigation extends Core {
 		$this->link = $link; // page where navigation will be
 	}
 
-	function total_pages($total = 0, $limit = 10)
+	function totalPages($total = 0, $limit = 10)
 	{
 		if ($total != 0) {
 			$v_pages = ceil($total / $limit);
@@ -45,7 +45,7 @@ class Navigation extends Core {
 	// start counting numbers required for navigation
 	function start()
 	{
-		$total_pages = $this->total_pages($this->total_items, $this->items_per_page);
+		$total_pages = $this->totalPages($this->total_items, $this->items_per_page);
 		$page = $this->current_page;
 		$limit_start = $this->items_per_page * $page - $this->items_per_page;
 
