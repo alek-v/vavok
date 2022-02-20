@@ -436,7 +436,6 @@ INSERT INTO `settings` (`id`, `setting_name`, `value`, `options`, `setting_group
 (14, 'transferProtocol', NULL, NULL, 'system'),
 (15, 'maxPostChat', NULL, NULL, 'system'),
 (16, 'maxPostNews', NULL, NULL, 'system'),
-(17, 'customPages', NULL, NULL, 'system'),
 (18, 'floodTime', '0', NULL, 'system'),
 (19, 'pvtLimit', '0', NULL, 'system'),
 (20, 'cookieConsent', '0', NULL, 'system'),
