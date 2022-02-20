@@ -20,12 +20,12 @@ class PagemanagerModel extends BaseModel {
         $file = $this->check($this->postAndGet('file'));
         $text_files = $this->postAndGet('text_files', true); // Keep data as received so html codes will be not filtered
         $id = $this->check($this->postAndGet('id'));
-        if (!empty($this->postAndGet('file'))) $page_id = $page_editor->get_page_id("file='{$file}'"); // Get page id we work with
+        if (!empty($this->postAndGet('file'))) $page_id = $page_editor->getPageId("file='{$file}'"); // Get page id we work with
         $config_editfiles = 20; // Files per page
 
         if ($this->postAndGet('action') == 'editfile') {
             if (!empty($file) && !empty($text_files)) {
-                $page_info = $page_editor->select_page($page_id, 'crtdby, published');
+                $page_info = $page_editor->selectPage($page_id, 'crtdby, published');
 
                 if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); } 
 
@@ -50,7 +50,7 @@ class PagemanagerModel extends BaseModel {
 
             $tags = !empty($this->postAndGet('tags')) ? $this->postAndGet('tags') : '';
 
-            if (isset($tags)) { $page_editor->update_tags($id, $tags); }
+            if (isset($tags)) { $page_editor->updateTags($id, $tags); }
 
             $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=tags&id={$id}&isset=mp_editfiles");
         }
@@ -73,7 +73,7 @@ class PagemanagerModel extends BaseModel {
             // update header tags
             if (!empty($file)) {
                 // who created page
-                $page_info = $page_editor->select_page($page_id, 'crtdby');
+                $page_info = $page_editor->selectPage($page_id, 'crtdby');
 
                 // check can user see page
                 if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); }
@@ -88,7 +88,7 @@ class PagemanagerModel extends BaseModel {
                     'headt' => $text_files,
                     'default_img' => $image
                 );
-                $page_editor->head_data($page_id, $data);
+                $page_editor->headData($page_id, $data);
 
                 // redirect
                 $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=headtag&file=$file&isset=mp_editfiles");
@@ -97,14 +97,12 @@ class PagemanagerModel extends BaseModel {
             $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=headtag&file=$file&isset=mp_noeditfiles");
         }
 
-        /**
-         * Rename page
-         */
+        // Rename page
         if ($this->postAndGet('action') == 'save_renamed') {
             $pg = $this->postAndGet('pg'); // new file name
 
             if (!empty($pg) && !empty($file)) {
-                $page_info = $page_editor->select_page($page_id, 'crtdby');
+                $page_info = $page_editor->selectPage($page_id, 'crtdby');
 
                 if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) {
                     header("Location: " . HOMEDIR . "?isset=ap_noaccess");
@@ -120,17 +118,18 @@ class PagemanagerModel extends BaseModel {
 
                 header("Location: " . HOMEDIR . "/adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_editfiles");
                 exit;
-            } 
+            }
+
             header("Location: " . HOMEDIR . "/adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_noedit");
             exit;
         }
 
+        // Add new page
         if ($this->postAndGet('action') == 'addnew') {
-            if (!$this->user->check_permissions('pageedit', 'insert') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); }
+            if (!$this->user->check_permissions('pageedit', 'insert') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
             $newfile = !empty($this->postAndGet('newfile')) ? $this->postAndGet('newfile') : '';
             $type = !empty($this->postAndGet('type')) ? $this->postAndGet('type') : '';
-            $page_structure = !empty($this->postAndGet('page_structure')) ? $this->postAndGet('page_structure') : '';
             $allow_unicode = $this->postAndGet('allow_unicode') == 'on' ? true : false;
 
             // page title
@@ -144,11 +143,6 @@ class PagemanagerModel extends BaseModel {
                 $newfile = $this->trans_unicode($newfile);
             }
 
-            // if page structure is set
-            if (!empty($page_structure)) {
-                $type = $page_structure;
-            }
-
             // page language
             if (!empty($this->postAndGet('lang'))) {
                 $pagelang = $this->postAndGet('lang');
@@ -160,27 +154,25 @@ class PagemanagerModel extends BaseModel {
             }
 
             if (!empty($newfile)) {
-                // page filename
-                $newfiles = $newfile . $pagelang_file . '.php';
-
-                // check if page exists
+                // Check if page exists
                 $includePageLang = !empty($pagelang) ? " AND lang='{$pagelang}'" : '';
 
-                if ($page_editor->page_exists('', "pname='{$newfile}'" . $includePageLang)) {
-                    $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=new&isset=mp_pageexists");
-                }
+                if ($page_editor->pageExists("pname='{$newfile}'" . $includePageLang, 'where')) $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=new&isset=mp_pageexists');
 
-                // full page address
-                if (!empty($page_structure) && $newfile != 'index') {
-                    // user's custom page structure
-                    $page_url = $this->websiteHomeAddress() . '/' . $page_structure . '/' . $newfile;
+                // Full page address used for meta and open graph tags
+                if ($newfile == 'index') {
+                    // Index page
+                    $page_url = $this->websiteHomeAddress() . '/' . $pagelang;
                 } elseif ($type == 'post') {
-                    // blog post
+                    // Blog post
                     $page_url = $this->websiteHomeAddress() . '/blog/' . $newfile;
                 } elseif ($newfile != 'index') {
-                    // page
+                    // Page
                     $page_url = $this->websiteHomeAddress() . '/page/' . $newfile;
                 }
+
+                // page filename
+                $newfiles = $newfile . $pagelang_file . '.php';
 
                 // insert db data
                 $values = array(
@@ -204,7 +196,6 @@ class PagemanagerModel extends BaseModel {
 
                 // file successfully created
                 $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$newfiles&isset=mp_newfiles");
-
             } else {
                 $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=new&isset=mp_noyesfiles");
             }
@@ -260,12 +251,12 @@ class PagemanagerModel extends BaseModel {
             // update database data
             $page_editor->language($pageId, $lang);
 
-            $pageData = $page_editor->select_page($pageId);
+            $pageData = $page_editor->selectPage($pageId);
             $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $pageData['pname'] . "!." . $lang . "!.php&isset=mp_editfiles");
 
         }
 
-        if ($page_editor->edit_mode() == 'visual') {
+        if ($page_editor->editMode() == 'visual') {
             // text editor
             $loadTextEditor = $page_editor->loadPageEditor();
 
@@ -289,10 +280,10 @@ class PagemanagerModel extends BaseModel {
         if (empty($this->postAndGet('action'))) {
             $index_data['content'] .= '<h1>' . $this->localization->string('filelist') . '</h1>';
 
-            $total_pages = $page_editor->total_pages();
+            $total_pages = $page_editor->totalPages();
 
             if ($edit_only_own_pages == 'yes') {
-                $total_pages = $page_editor->total_pages($this->user->user_id);
+                $total_pages = $page_editor->totalPages($this->user->user_id);
             }
 
             // start navigation
@@ -367,7 +358,7 @@ class PagemanagerModel extends BaseModel {
                 $base_file = $file;
 
                 $pageData = new Pagemanager();
-                $page_info = $pageData->select_page($page_id);
+                $page_info = $pageData->selectPage($page_id);
 
                 if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) {
                     $this->redirection(HOMEDIR . "?isset=ap_noaccess");
@@ -427,11 +418,11 @@ class PagemanagerModel extends BaseModel {
 
         if ($this->postAndGet('action') == 'edit') {
             // Coder mode for advanced users / coders
-            $edmode_name = $page_editor->edit_mode() == 'visual' ? 'Visual' : 'Coder';
+            $edmode_name = $page_editor->editMode() == 'visual' ? 'Visual' : 'Coder';
 
             // Check if page exists
-            if ($page_editor->page_exists($file)) {
-                $page_info = $page_editor->select_page($page_id);
+            if ($page_editor->pageExists($file)) {
+                $page_info = $page_editor->selectPage($page_id);
 
                 if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
@@ -454,9 +445,9 @@ class PagemanagerModel extends BaseModel {
                 $select->set('select_id', 'edmode');
                 $select->set('select_name', 'edmode');
 
-                $options = '<option value="' . $page_editor->edit_mode() . '">' . $edmode_name . '</option>';
+                $options = '<option value="' . $page_editor->editMode() . '">' . $edmode_name . '</option>';
 
-                if ($page_editor->edit_mode() == 'coder') {
+                if ($page_editor->editMode() == 'coder') {
                     $options .= '<option value="visual">Visual</option>';
                 } else {
                     $options .= '<option value="coder">Coder</option>';
@@ -507,7 +498,7 @@ class PagemanagerModel extends BaseModel {
         if ($this->postAndGet('action') == 'headtag') {
             if (!$this->user->check_permissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
-            $page_info = $page_editor->select_page($page_id);
+            $page_info = $page_editor->selectPage($page_id);
 
             if (!$this->user->check_permissions('pageedit', 'edit') && !$this->user->administrator() && $page_info['crtdby'] != $this->user->user_id) {
                 header("Location: " . HOMEDIR . "?isset=ap_noaccess");
@@ -639,9 +630,7 @@ class PagemanagerModel extends BaseModel {
         } 
 
         if ($this->postAndGet('action') == 'new') {
-            if (!$this->user->check_permissions('pageedit', 'insert') && !$this->user->administrator()) {
-                $this->redirection(HOMEDIR . "?isset=ap_noaccess");
-            }
+            if (!$this->user->check_permissions('pageedit', 'insert') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
             $index_data['headt'] = '
             <style>
@@ -729,22 +718,6 @@ class PagemanagerModel extends BaseModel {
             $select_type->set('options', '<option value="page">Page</option><option value="post">Post</option>');
 
             /**
-             * Custom page structure
-             */
-            if (!empty($this->configuration('customPages'))) {
-
-                $select_structure = $this->model('ParsePage');
-                $select_structure->load('forms/select');
-                $select_structure->set('label_for', 'page_structure');
-                $select_structure->set('label_value', 'Page structure:');
-                $select_structure->set('select_id', 'page_structure');
-                $select_structure->set('select_name', 'page_structure');
-                $select_structure->set('options', '<option value="">/page/new-page/</option>
-                <option value="' . $this->configuration('customPages') . '">/' . $this->configuration('customPages') . '/' . $this->localization->string('new-page') . '/</option>');
-
-            } else { $select_structure = ''; }
-
-            /**
              * Allow unicode url checkbox
              */
             $checkbox_allow_unicode = $this->model('ParsePage');
@@ -755,16 +728,10 @@ class PagemanagerModel extends BaseModel {
             $checkbox_allow_unicode->set('checkbox_name', 'allow_unicode');
             $checkbox_allow_unicode->set('checkbox_value', 'on');
 
-
             /**
              * All form fields
              */
-            $fields = array($input_new_file, $select_language, $select_type, $select_structure, $checkbox_allow_unicode);
-
-            /**
-             * Remove field is it is empty
-             */
-            if (empty($select_structure)) unset($fields[3]);
+            $fields = array($input_new_file, $select_language, $select_type, $checkbox_allow_unicode);
 
             /**
              * Merge fields
@@ -776,7 +743,6 @@ class PagemanagerModel extends BaseModel {
              */
             $form->set('website_language[save]', $this->localization->string('newpage'));
             $index_data['content'] .= $form->output();
-
         } 
 
         // confirm that you want to delete a page
@@ -805,7 +771,7 @@ class PagemanagerModel extends BaseModel {
             $id = $this->check($this->postAndGet('id'));
 
             // get page data
-            $pageData = $page_editor->select_page($id);
+            $pageData = $page_editor->selectPage($id);
 
             $form = $this->model('ParsePage');
             $form->load('forms/form');
@@ -857,7 +823,7 @@ class PagemanagerModel extends BaseModel {
             $tag_field->set('input_name', 'tags');
             $tag_field->set('input_id', 'tags');
             $tag_field->set('input_type', 'text');
-            $tag_field->set('input_value', $page_editor->page_tags($id));
+            $tag_field->set('input_value', $page_editor->pageTags($id));
 
             $form = $this->model('ParsePage');
             $form->load('forms/form');
