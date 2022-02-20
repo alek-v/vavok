@@ -35,9 +35,7 @@ class Core {
 		$config['homeBase'] = str_replace('https://', '', $config['homeBase']);
 
 	    // Get complete configuration
-	    if ($full_configuration == true) {
-	        return $config;
-	    }
+	    if ($full_configuration == true) return $config;
 
 	    if (!empty($data) && isset($config[$data])) {
 	        return $config[$data];

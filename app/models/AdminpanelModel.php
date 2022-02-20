@@ -135,7 +135,7 @@ class AdminpanelModel extends BaseModel {
          */
         if ($this->postAndGet('action') == 'editone') {
             $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
-        
+
             $values = array(
                 $this->postAndGet('conf_set2'),
                 $this->postAndGet('conf_set8'),
@@ -386,7 +386,7 @@ class AdminpanelModel extends BaseModel {
             $input9->set('input_name', 'conf_set9');
             $input9->set('input_value', $this->configuration('adminEmail'));
             $input9->set('input_maxlength', 50);
-        
+
             $input10 = $this->model('ParsePage');
             $input10->load('forms/input');
             $input10->set('label_for', 'conf_set10');
