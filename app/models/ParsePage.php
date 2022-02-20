@@ -92,7 +92,7 @@ class ParsePage extends Core {
 
         foreach ($this->values as $key => $value) {
             $tagToReplace = "{@$key}}";
-            $value = !empty($value) ? $value : '';
+            $value = isset($value) ? $value : '';
 
             $output = str_replace($tagToReplace, $value, $output);
         }
@@ -164,16 +164,5 @@ class ParsePage extends Core {
 
         // Remove empty keys, parse language keys and return page content
         return preg_replace('/{@(.*?)}}/' , '', $this->parseLanguage($this->output(), $localization));
-    }
-
-    /**
-     * Facebook comments
-     *
-     * @return string
-     */
-    function facebook_comments()
-    {
-    	$pages = new Page();
-    	return '<div class="fb-comments" data-href="' . $pages->media_page_url() . '" data-width="470" data-num-posts="10"></div>';
     }
 }
