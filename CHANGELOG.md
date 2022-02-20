@@ -1,3 +1,4 @@
-# Vavok v2.0
+# Vavok v2.1
 
-- Rewriting code and moving to MVC
+- Fixed showing {@code}} in page editor
+- Removed unused files
