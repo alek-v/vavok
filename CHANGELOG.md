@@ -1,5 +1,6 @@
 # Vavok v2.2
 
+- Code comments updated
 
 # Vavok v2.1
 
