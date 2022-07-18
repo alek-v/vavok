@@ -608,24 +608,24 @@ class Core {
 	    return $responseKeys = json_decode($response, true);
 	}
 
-	// check URL
-	public function validateUrl($URL) {
+	/**
+	 * Validate URL
+	 * 
+	 * @param string $url
+	 * @return str
+	 */
+	public function validateUrl($url)
+	{
 	    $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
-	    return (bool)preg_match($v, $URL);
+	    return (bool)preg_match($v, $url);
 	}
 
-	// is this really number - return integer
-	function clean_int($i) {
-	    if (is_numeric($i)) {
-	        return (int)$i;
-	    }
-	    // return False if we don't get a number
-	    else {
-	        return false;
-	    }
-	}
-
-	// check if sting contain unicode characters
+	/**
+	 * Check if sting contain unicode characters
+	 * 
+	 * @param string $data
+	 * @return bool
+	 */
 	function is_unicode($data) {
 	    if (strlen($data) !== strlen(utf8_decode($data))) {
 	        return true;
@@ -673,7 +673,12 @@ class Core {
 	    return '<div class="alert alert-info" role="alert">' . $notification . '</div>';
 	}
 
-	// add smiles
+	/**
+	 * Show smiles in messages
+	 * 
+	 * @param string $string
+	 * @return str
+	 */
 	function smiles($string) {
 	    $dir = opendir(PUBLICDIR . "themes/images/smiles");
 	    while ($file = readdir($dir)) {
@@ -745,7 +750,11 @@ class Core {
 	    }
 	}
 
-	// show page generation time
+	/**
+	 * Show page generation time
+	 * 
+	 * @return str
+	 */
 	public function showPageGenTime()
 	{
 	    if ($this->configuration('pageGenTime') == 1) {
@@ -768,69 +777,6 @@ class Core {
 		return $this->go('db')->count_row('group_members', "group_name = '{$group_name}'");
 	}
 
-	// get prefered language
-	function getDefaultLanguage() {
-	    if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
-	        return $this->parseDefaultLanguage($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-	    else
-	        return $this->parseDefaultLanguage(null);
-	}
-
-	function parseDefaultLanguage($http_accept, $deflang = "en") {
-	    if (isset($http_accept) && strlen($http_accept) > 1) {
-	        // Split possible languages into array
-	        $x = explode(",", $http_accept);
-	        foreach ($x as $val) {
-	            // check for q-value and create associative array. No q-value means 1 by rule
-	            if (preg_match("/(.*);q=([0-1]{0,1}\.\d{0,4})/i", $val, $matches))
-	                $lang[$matches[1]] = (float)$matches[2];
-	            else
-	                $lang[$val] = 1.0;
-	        } 
-	        // return default language (highest q-value)
-	        $qval = 0.0;
-	        foreach ($lang as $key => $value) {
-	            if ($value > $qval) {
-	                $qval = (float)$value;
-	                $deflang = $key;
-	            } 
-	        } 
-	    } 
-	    return strtolower($deflang);
-	}
-
-	// java script bb codes for text input
-	function java_bbcode($inputName) {
-	    
-	?>
-	<script language="JavaScript">
-	<!--
-	  function tag(text1, text2) 
-	  { 
-	     if ((document.selection)) 
-	     { 
-	       document.form.<?php echo $inputName; ?>.focus(); 
-	       document.form.document.selection.createRange().text = text1+document.form.document.selection.createRange().text+text2; 
-	     } else if(document.forms['form'].elements[<?php echo '\'' . $inputName . '\''; ?>].selectionStart != undefined) { 
-	         var element    = document.forms['form'].elements[<?php echo '\'' . $inputName . '\''; ?>]; 
-	         var str     = element.value; 
-	         var start    = element.selectionStart; 
-	         var length    = element.selectionEnd - element.selectionStart; 
-	         element.value = str.substr(0, start) + text1 + str.substr(start, length) + text2 + str.substr(start + length); 
-	     } else document.form.<?php echo $inputName; ?>.value += text1+text2; 
-	  } 
-	//--> 
-	</script>
-
-	<a href=# onClick="javascript:tag('[url=', ']url name here[/url]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/a.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[img]', '[/img]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/img.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[b]', '[/b]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/b.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[i]', '[/i]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/i.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[u]', '[/u]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/editor/u.gif" alt="" /></a> 
-	<a href=# onClick="javascript:tag('[youtube]', '[/youtube]'); return false;"><img src="<?php echo HOMEDIR; ?>themes/images/socialmedia/youtube.png" width="16" height="16" alt="" /></a> 
-	<?php
-	}
-
 	/**
 	 * Redirection
 	 *
@@ -849,7 +795,11 @@ class Core {
 	    }
 	}
 
-	// get transfer protocol https or http
+	/**
+	 * Return transfer protocol (https or http)
+	 * 
+	 * @return str https://|http://
+	 */
 	public function transferProtocol() {
 	    if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
 	        if (!empty($_SERVER['HTTPS'])) {
@@ -876,6 +826,16 @@ class Core {
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') return true;
 
 		return false;
+	}
+
+	/**
+	 * Current connection that we use to open site
+	 * 
+	 * @return string
+	 */
+	public function currentConnection()
+	{
+		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
 	}
 
 	/**
@@ -908,29 +868,13 @@ class Core {
 	}
 
 	/**
-	 * Current connection that we use to open site
+	 * Site address with connection protocol that is used for current connection
 	 * 
-	 * @return string
+	 * @return str
 	 */
-	public function currentConnection()
-	{
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
-	}
-
-	// complete dynamic website address
 	public function websiteHomeAddress()
 	{
 	    return $this->transferProtocol() . $_SERVER['HTTP_HOST'];
-	}
-
-	function compress_output_gzip($output)
-	{
-	    return gzcompress($output, 3);
-	} 
-
-	function compress_output_deflate($output)
-	{
-	    return gzdeflate($output, 3);
 	}
 
 	// generate meta tags "description" and "keywords"
@@ -976,7 +920,11 @@ class Core {
 	    return $headers;
 	}
 
-	// Detect bots and spiders
+	/**
+	 * Bot or spider name
+	 * 
+	 * @return string
+	 */
 	function detect_bot() {
 	    $user_agents = '';
 	    $searchbot = '';
