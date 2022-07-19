@@ -90,7 +90,6 @@ class AdminpanelModel extends BaseModel {
         
             if (file_exists('backup.php')) $data['content'] .= $this->sitelink('backup.php', $this->localization->string('backup'));
         
-            $data['content'] .= $this->sitelink('serverbenchmark.php', 'Server benchmark'); // update lang
             $data['content'] .= '</p>';
         }
 
