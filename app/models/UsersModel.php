@@ -735,8 +735,8 @@ class UsersModel extends BaseModel {
             $this->user->update_user($fields, $values);
             unset($fields, $values);
 
-            // notification settings
-            if (!isset($inbox_notification)) $inbox_notification = 1;
+            // Notification settings
+            if (!isset($inbox_notification) || empty($inbox_notification)) $inbox_notification = 1;
 
             $check_inb = $this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'");
             if ($check_inb > 0) {
