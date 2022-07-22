@@ -235,4 +235,15 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('adminpanel/search_uploads', $model->search_uploads());
     }
+
+    /**
+    * Add mail to email queue
+    */
+    public function email_queue()
+    {
+        $model = $this->model('EmailQueue');
+ 
+        // Pass page to the view
+        $this->view('index', $model->email_queue());
+    }
 }
