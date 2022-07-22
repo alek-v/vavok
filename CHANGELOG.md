@@ -1,6 +1,8 @@
 # Vavok v2.2
 
+- Added email queue option
 - Code comments updated
+- Renamed method to camel case emailSubscriptionOptions()
 
 # Vavok v2.1
 
