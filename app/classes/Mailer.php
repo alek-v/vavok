@@ -156,9 +156,11 @@ class Mailer extends Core {
 		$this->db->insert('email_queue', $data);
 	}
 
-	// get subscription options
-	// while adding new subscription it can be added without option (blank) or with one from the list
-	function email_sub_options ()
+	/**
+	 * Get subscription options
+	 * While adding new subscription it can be added without option (blank) or with one from the list
+	 */
+	function emailSubscriptionOptions()
 	{
 		$subs = file_get_contents(APPDIR . 'used/subnames.dat');
 
