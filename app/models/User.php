@@ -101,12 +101,22 @@ class User extends Core {
 
 	/**
 	 * Check if user is logged in
+	 * When $start == true then make database request and check data from database
 	 *
+	 * @param boolean
 	 * @return bool
 	 */
-	public function userAuthenticated()
+	public function userAuthenticated($start = '')
 	{
 		if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
+			// Check data from database when parameter $start is true
+			// Logout user if data from session and data from database doesn't match
+			if ($start == true && $_SESSION['permissions'] == 107 && $this->user_info('perm') != 107) {
+				$this->logout($_SESSION['uid']);
+
+				return false;
+			}
+
 	    	// Regular authenticated user
     		if ($_SESSION['permissions'] == 107) return true;
 
@@ -690,10 +700,10 @@ class User extends Core {
 	}
 
 	/**
-	 * Get informations about user
+	 * Get information about user
 	 * 
+	 * @param $info data that method need to return
 	 * @param $users_id ID of user
-	 * @param $info Data that method need to return
 	 * @return string|bool
 	 */
 	public function user_info($info, $users_id = '') {
