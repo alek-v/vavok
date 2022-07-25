@@ -18,14 +18,19 @@ class BaseModel extends Controller {
     {
         // Instantiate database class
         $this->db = new Database;
+
         // Instantiate user class
         $this->user = $this->model('User');
 
         // Check if user is authenticated
-        if ($this->user->userAuthenticated()) $this->user_data['authenticated'] = true;
+        // This time we check data from database, because of this we pass parameter true
+        // Next time when you use method userAuthenticated don't use parameter true and data will be used from session, no new database request
+        if ($this->user->userAuthenticated(true)) $this->user_data['authenticated'] = true;
+
         // Admin status
         if ($this->user->administrator()) $this->user_data['admin_status'] = 'administrator';
         if ($this->user->moderator()) $this->user_data['admin_status'] = 'moderator';
+
         // Users laguage
         $this->user_data['language'] = $this->user->getUserLanguage();
 
