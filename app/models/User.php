@@ -1252,4 +1252,27 @@ class User extends Core {
 
 		return strtolower($language);
 	}
+
+	/**
+	 * Detect page's language and change user's language to page's language
+	 * 
+	 * @param string $page_locale
+	 * @return string|boolean
+	 */
+	public function updatePageLocalization($page_locale)
+	{
+		// Localization from page's data
+		$page_localization = !empty($page_locale) ? $this->getPreferredLanguage($page_locale, 'short') : '';
+
+		// Update user's language when page's language is different then current localization
+		if (!empty($page_localization) && strtolower($page_localization) != $this->getPreferredLanguage($_SESSION['lang'], 'short')) {
+			$this->change_language(strtolower($page_localization));
+			// Update user's localization for page that we are now loading
+			$this->user_data['language'] = $this->getPreferredLanguage($page_localization);
+
+			return $this->user_data['language'];
+		}
+
+		return false;
+	}
 }

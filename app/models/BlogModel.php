@@ -49,12 +49,15 @@ class BlogModel extends BaseModel {
 
                 // Redirect to blog main page if page does not exist
                 $page_id = !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
-        
-                // generate page
+
+                // Update user's localization when page's language is different then current localization
+                $page_localization = $this->user->updatePageLocalization($this_page['lang']);
+                if (!empty($page_localization)) $this->user_data['language'] = $page_localization;
+
+                // Generate page
                 $post = $this->model('ParsePage');
                 $post->load('blog/post');
 
-                // Author
                 // Author link
                 $author_full_name = $this->user->user_info('full_name', $this->page_author);
                 $author_name = !empty($author_full_name) ? $author_full_name : $this->user->getnickfromid($this->page_author);
