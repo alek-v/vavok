@@ -52,7 +52,13 @@ class BlogModel extends BaseModel {
 
                 // Update user's localization when page's language is different then current localization
                 $page_localization = $this->user->updatePageLocalization($this_page['lang']);
-                if (!empty($page_localization)) $this->user_data['language'] = $page_localization;
+                // Localization has been changed, update
+                if (!empty($page_localization)) {
+                    // Update user's localization
+                    $this->user_data['language'] = $page_localization;
+                    // Update user's data for current page and include updated localization
+                    $this_page['user'] = $this->user_data;
+                }
 
                 // Generate page
                 $post = $this->model('ParsePage');

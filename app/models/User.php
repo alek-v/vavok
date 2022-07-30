@@ -1266,11 +1266,11 @@ class User extends Core {
 
 		// Update user's language when page's language is different then current localization
 		if (!empty($page_localization) && strtolower($page_localization) != $this->getPreferredLanguage($_SESSION['lang'], 'short')) {
+			// Update $_SESSION['lang'] with new localization/language
 			$this->change_language(strtolower($page_localization));
-			// Update user's localization for page that we are now loading
-			$this->user_data['language'] = $this->getPreferredLanguage($page_localization);
 
-			return $this->user_data['language'];
+			// Return localization we want to use now
+			return $this->getPreferredLanguage($page_localization);
 		}
 
 		return false;
