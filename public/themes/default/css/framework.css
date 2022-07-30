@@ -183,7 +183,7 @@ textarea {
   color: #ffffff;
   font-weight: bold;
   line-height: 1.2em;
-  margin: 0px -80px 0px 0px;
+  margin: 0px -60px 0px 0px;
   padding-top: 15px;
   border: 2px solid #028400;
   width: 80px;
@@ -245,39 +245,30 @@ textarea {
   h1 {
     text-align: left;
   }
-
   h2 {
     text-align: left;
   }
-
   h3 {
     text-align: left;
   }
-
   h4 {
     text-align: left;
   }
-
   h5 {
     text-align: left;
   }
-
   h6 {
     text-align: left;
   }
-
   .container {
     padding: 0px 0px 0px 0px;
   }
-
   .blog-content {
     text-align: left;
   }
-
   .index-blog-post {
     padding: 20px 20px 20px 20px;
   }
-
   .blog-index h1 {
     font-size: 1.3em;
   }
@@ -296,16 +287,13 @@ textarea {
   .blog-index h6 {
     font-size: 1.3em;
   }
-
   .blog-date {
     display: block;
     margin: 10px -30px 30px 0px;
   }
-
   .blog-title h1, h2, h3, h4, h5, h6 {
     font-size: 1.8em;
   }
-
   .blog-navigation {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
