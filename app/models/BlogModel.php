@@ -62,9 +62,7 @@ class BlogModel extends BaseModel {
                 $author_link = '<a href="' . HOMEDIR . 'users/u/' . $this->page_author . '">' . $author_name . '</a>';
                 $post->set('author_link', $author_link);
         
-                /**
-                 * Time created
-                 */
+                // Time created
                 $post->set('created_date', $this->correctDate($this->page_created_date, 'd.m.Y.'));
         
                 /**
@@ -80,14 +78,10 @@ class BlogModel extends BaseModel {
                 // Date updated
                 $post->set('date_updated', $this->correctDate($this->page_updated_date, 'd.m.Y.'));
         
-                /**
-                 * Content
-                 */
-                $post->set('content', $this->getbbcode($this->page_content));
+                // Content
+                $post->set('content', $this->page_content);
         
-                /**
-                 * Day and month when post is created
-                 */
+                // Day and month when post is created
                 $post->set('date-created-day', date('d', $this->page_created_date));
                 $post->set('date-created-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
 
@@ -103,9 +97,7 @@ class BlogModel extends BaseModel {
                     $post->set('date-published-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', time()) - 1], 0, 3));
                 }
         
-                /**
-                 * Page URL
-                 */
+                // Page URL
                 $post->set('page-link', $this->current_page->media_page_url());
 
                 // comments
