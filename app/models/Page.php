@@ -55,8 +55,11 @@ class Page extends BaseModel {
         // Page data
         $this_page = $this->db->getData('pages', "pname='{$params[0]}'");
 
+        // Page localization
+        $page_localization = isset($this_page['lang']) ? $this_page['lang'] : '';
+
         // Update user's localization when page's language is different then current localization
-        $page_localization = $this->user->updatePageLocalization($this_page['lang']);
+        $page_localization = $this->user->updatePageLocalization($page_localization);
         if (!empty($page_localization)) $this->user_data['language'] = $page_localization;
 
         // Users data
