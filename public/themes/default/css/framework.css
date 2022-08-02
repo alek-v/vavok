@@ -298,6 +298,9 @@ textarea {
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
   }
+  .blog-page p {
+    text-align: left;
+  }
 }
 
 /*# sourceMappingURL=framework.css.map */
