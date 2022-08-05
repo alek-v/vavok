@@ -30,7 +30,7 @@ class Pagemanager extends Controller {
 	}
 
 	/**
-	 * Update, insert and delete informations
+	 * Update, insert and delete information
 	 */
 
 	// insert new page

@@ -171,14 +171,14 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * IP informations
+    * IP information
     */
-    public function ip_informations()
+    public function ip_information()
     {
         $model = $this->model('AdminpanelModel');
  
         // Pass page to the view
-        $this->view('adminpanel/ip_informations', $model->ip_informations());
+        $this->view('adminpanel/ip_information', $model->ip_information());
     }
 
     /**

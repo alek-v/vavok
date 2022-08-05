@@ -7,7 +7,7 @@
 $lang_reg['registration'] = "Registration";
 $lang_reg['againreg'] = "you have already been registered.";
 $lang_reg['passagain'] = "Repeat password";
-$lang_reg['reginfo'] = "All fields are required to register.<br />Registration informations will be sent to your email address";
+$lang_reg['reginfo'] = "All fields are required to register.<br />Registration information will be sent to your email address";
 $lang_reg['keyinfo'] = " including the keycode you need to finish registration";
 $lang_reg['quarantine1'] = "New members cannot write messages exactly";
 $lang_reg['quarantine2'] = "hours after registration";

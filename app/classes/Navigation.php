@@ -12,7 +12,6 @@ class Navigation extends Core {
 
 	public function __construct($items_per_page, $total_items, $link = '', $link2 = '')
 	{
-
 		$this->items_per_page = $items_per_page; // items per page
 		$this->total_items = $total_items; // total items
 		$this->total_pages = $this->totalPages($this->total_items, $this->items_per_page); // total pages

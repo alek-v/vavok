@@ -1,6 +1,5 @@
 <?php
 // (c) vavok.net
-// modified: 04.05.2020. 4:17:33
 
 $lang_apsetting['mainset'] = "Main settings";
 $lang_apsetting['database'] = "database";
@@ -78,7 +77,7 @@ $lang_apsetting['maxrefererdata'] = "Referals to keep in history";
 $lang_apsetting['smilesonpage'] = "Smiles on page";
 $lang_apsetting['showrefpage'] = "Show referal page";
 $lang_apsetting['maxcommssave'] = "Maximum number of comments to be saved";
-$lang_apsetting['maxlogfile'] = "Number of informations of latest errors in log file";
+$lang_apsetting['maxlogfile'] = "Number of information of latest errors in log file";
 $lang_apsetting['maxbantime'] = "Maximum ban time (days)";
 $lang_apsetting['username'] = "username";
 $lang_apsetting['password'] = "Password";

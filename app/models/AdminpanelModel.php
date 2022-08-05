@@ -2341,13 +2341,13 @@ class AdminpanelModel extends BaseModel {
     }
 
     /**
-     * IP informations
+     * IP information
      */
-    public function ip_informations()
+    public function ip_information()
     {
         // Users data
         $page_data['user'] = $this->user_data;
-        $page_data['tname'] = 'IP Informations';
+        $page_data['tname'] = 'IP information';
         $page_data['content'] = '';
 
         if (!$this->user->moderator() && !$this->user->administrator()) $this->redirection('../?auth_error');
@@ -2376,13 +2376,13 @@ class AdminpanelModel extends BaseModel {
 
         $ipData = geo_check_ip($ip);
 
-        $page_data['ip_informations'] = 'IP Address: ' . $ip . '<br />';
+        $page_data['ip_information'] = 'IP Address: ' . $ip . '<br />';
         if (!empty($ipData) && isset($ipData['country'])) {
-            $page_data['ip_informations'] .= 'Country: ' . $ipData['country'] . '<br />';
-            $page_data['ip_informations'] .= 'State/Region: ' . $ipData['regionName'] . '<br />';
-            $page_data['ip_informations'] .= 'City/Town: ' . $ipData['city'] . '<br />';
+            $page_data['ip_information'] .= 'Country: ' . $ipData['country'] . '<br />';
+            $page_data['ip_information'] .= 'State/Region: ' . $ipData['regionName'] . '<br />';
+            $page_data['ip_information'] .= 'City/Town: ' . $ipData['city'] . '<br />';
         } else {
-            $page_data['ip_informations'] .= $this->showDanger('No data available');
+            $page_data['ip_information'] .= $this->showDanger('No data available');
         }
 
         $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';

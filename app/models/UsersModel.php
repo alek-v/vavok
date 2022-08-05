@@ -194,10 +194,10 @@ class UsersModel extends BaseModel {
             } else {
                 if (!empty($this->postAndGet('ptl'))) $data['page_to_load'] = $this->check($this->postAndGet('ptl'));
 
-                // Informations about registration confirmation
+                // information about registration confirmation
                 if ($this->configuration('regConfirm') == 1) $data['registration_key_info'] = '{@localization[keyinfo]}}';
 
-                // Informations about quarantine
+                // information about quarantine
                 if ($this->configuration('quarantine') > 0) $data['quarantine_info'] = '{@localization[quarantine1]}} ' . round($this->configuration('quarantine') / 3600) . ' {@localization[quarantine2]}}';
 
                 // Show reCAPTCHA
@@ -832,7 +832,7 @@ class UsersModel extends BaseModel {
     }
 
     /**
-     * Ban informations
+     * Ban information
      */
     public function ban()
     {
@@ -1002,7 +1002,7 @@ class UsersModel extends BaseModel {
         if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) {
             $ipAddress = $this->model('ParsePage');
             $ipAddress->load('users/user-profile/ip-address');
-            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $this->check($this->user->user_info('ipaddress', $users_id)) . '" target="_blank">'  . $this->check($this->user->user_info('ipaddress', $users_id)) . '</a>');
+            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $this->check($this->user->user_info('ipaddress', $users_id)) . '" target="_blank">'  . $this->check($this->user->user_info('ipaddress', $users_id)) . '</a>');
             $showPage->set('ip-address', $ipAddress->output());
         }
 

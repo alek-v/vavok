@@ -316,7 +316,7 @@ class User extends Core {
 	}
 
 	/**
-	 * Update informations about user
+	 * Update information about user
 	 */
 
 	/**
@@ -369,7 +369,7 @@ class User extends Core {
 	}
 
 	/**
-	 * Update users informations
+	 * Update users information
 	 * 
 	 * @param string|array $fields
 	 * @param string|array $values
@@ -601,7 +601,7 @@ class User extends Core {
 	}
 
 	/**
-	 * Informations about users
+	 * information about users
 	 */
 
 	/**

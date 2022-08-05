@@ -332,7 +332,7 @@ class PagemanagerModel extends BaseModel {
                         $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&amp;file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
                     }
 
-                    // Informations about page
+                    // information about page
                     $index_data['content'] .= ' ' . $this->localization->string('created') . ': ' . $this->correctDate($page_info['created'], 'd.m.y.') . ' ' . $this->localization->string('by') . ' ' . $this->user->getnickfromid($page_info['crtdby']) . ' | ' . $this->localization->string('lastupdate') . ' ' . $this->correctDate($page_info['lastupd'], 'd.m.y.') . ' ' . $this->localization->string('by') . ' ' . $this->user->getnickfromid($page_info['lstupdby']);
                     $index_data['content'] .= '<hr />';
 

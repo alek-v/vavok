@@ -1,7 +1,7 @@
 {@header}}
-    <h1>Informations about IP</h1>
+    <h1>Information about IP</h1>
     <div class="b">
-        {@ip_informations}}
+        {@ip_information}}
     </div>
     {@content}}
 {@footer}}

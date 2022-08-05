@@ -232,19 +232,19 @@ class Page extends BaseModel {
                 if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
                     $data['content'] .= '<b>' . $this->localization->string('guest') . '</b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
                     $data['content'] .= '<b>' . $item['bot'] . '</b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } else {
                     $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getnickfromid($item['user']) . '</a></b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     }
                     $data['content'] .= '<hr />';
                 }
@@ -268,7 +268,7 @@ class Page extends BaseModel {
                 $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getnickfromid($item['user']) . '</a></b> (' . $this->localization->string('time') . ': ' . $time . ')<br />';
 
                 if ($this->user->moderator() || $this->user->administrator()) {
-                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_informations/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                 }
 
                 $data['content'] .= '<hr />';
