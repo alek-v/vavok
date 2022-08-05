@@ -8,6 +8,9 @@
 - Updated framework.scss in default theme
 - Removed bb code parsing from blog pages
 - New method updatePageLocalization() in model User.php
+- Applebot now can be detected in user list
+- Method detect_bot() renamed to camelCase detectBot() in Core.php class
+
 
 # Vavok v2.1
 
