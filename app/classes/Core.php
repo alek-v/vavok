@@ -931,13 +931,13 @@ class Core {
 	 * 
 	 * @return string
 	 */
-	function detect_bot() {
+	public function detectBot()
+	{
 	    $user_agents = '';
 	    $searchbot = '';
 
-	    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-	        $user_agents = $_SERVER['HTTP_USER_AGENT'];
-	    }
+	    if (isset($_SERVER['HTTP_USER_AGENT'])) $user_agents = $_SERVER['HTTP_USER_AGENT'];
+
 	    if (stristr($user_agents, 'Yandex')) {
 	        $searchbot = 'Yandex';
 	    } elseif (stristr($user_agents, 'Slurp')) {
@@ -968,6 +968,8 @@ class Core {
 	        $searchbot = 'ia_archiver';
 	    } elseif (stristr($user_agents, 'facebookexternalhit')) {
 	        $searchbot = 'Facebook External Hit';
+	    } elseif (stristr($user_agents, 'applebot')) {
+	        $searchbot = 'Applebot';
 	    }
 
 	    return $searchbot;

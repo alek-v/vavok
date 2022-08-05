@@ -96,7 +96,7 @@ class User extends Core {
 		define('MY_THEME', $config_themes);
 
 		// Instantiate visit counter and online status if current request is not cronjob or ajax request
-		if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detect_bot());
+		if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detectBot());
 	}
 
 	/**
