@@ -58,6 +58,7 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= '<hr>';
 
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings', $this->localization->string('syssets'));
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscriptions', $this->localization->string('subscriptions'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban', $this->localization->string('ipbanp') . ' (' . $this->linesInFile(APPDIR . 'used/ban.dat') . ')');
 
                 if (file_exists('subscribe.php')) $data['content'] .= $this->sitelink('subscribe.php', $this->localization->string('subscriptions'));

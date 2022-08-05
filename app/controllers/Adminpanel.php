@@ -246,4 +246,15 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('index', $model->email_queue());
     }
+
+    /**
+    * Manage email subscriptions
+    */
+    public function subscriptions()
+    {
+        $model = $this->model('Subscription');
+ 
+        // Pass page to the view
+        $this->view('index', $model->index());
+    }
 }
