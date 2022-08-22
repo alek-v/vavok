@@ -31,7 +31,7 @@ class Controller extends Core {
         // Instantiate page parsing class
         $page = $this->model('ParsePage');
         // Load the file from the view
-        $page->load_page($view, $data);
+        $page->loadPage($view, $data);
 
         // Header
         $header = $this->model('ParsePage');

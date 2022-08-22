@@ -21,7 +21,7 @@ class ParsePage extends Core {
      * @param array $data
      * @return void
      */
-    public function load_page($file, $data)
+    public function loadPage($file, $data)
     {
         // Load template
         $this->load($file);
@@ -36,9 +36,20 @@ class ParsePage extends Core {
         // Metadata of page
         // Set missing OG (open graph) tags when possible
         $this->head_data = $this->pageHeadMetatags($data);
+
         $this->title = isset($data['tname']) ? $data['tname'] : '';
+        $this->page_name = isset($data['pname']) ? $data['pname'] : '';
         $this->content = isset($data['content']) ? $data['content'] : '';
         $this->lang = isset($data['lang']) ? $data['lang'] : '';
+
+        // Page views
+		$this->views = !empty($data['views']) ? $data['views'] : 0;
+
+	    // Update page views
+        // Load page with selected localization
+		$language = is_string($this->lang) && !empty($this->lang) ? " AND lang='" . $this->lang . "'" : '';
+		if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "pname = '" . $this->page_name . "'{$language}");
+
         $this->notification = isset($data['show_notification']) ? $data['show_notification'] : '';
         $this->values = array_merge($this->values, $data);
     }
