@@ -11,6 +11,9 @@
 - Method detect_bot() renamed to camelCase detectBot() in Core.php class
 - Renamed method to camel case emailSubscriptionOptions()
 - Code comments updated
+- Fixed page view counter
+- Renamed method load_page() to camelCase loadPage()
+
 
 
 # Vavok v2.1
