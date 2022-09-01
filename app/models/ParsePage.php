@@ -46,7 +46,7 @@ class ParsePage extends Core {
 		$this->views = !empty($data['views']) ? $data['views'] : 0;
 
 	    // Update page views
-        // Load page with selected localization
+        // Update page with selected localization
 		$language = is_string($this->lang) && !empty($this->lang) ? " AND lang='" . $this->lang . "'" : '';
 		if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "pname = '" . $this->page_name . "'{$language}");
 

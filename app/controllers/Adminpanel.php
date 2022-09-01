@@ -257,4 +257,15 @@ class Adminpanel extends Controller {
         // Pass page to the view
         $this->view('index', $model->index());
     }
+
+    /**
+    * Sitemap generator
+    */
+    public function sitemap()
+    {
+        $model = $this->model('Sitemap');
+ 
+        // Pass page to the view
+        $this->view('adminpanel/sitemap', $model->index());
+    }
 }
