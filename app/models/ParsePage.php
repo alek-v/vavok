@@ -27,7 +27,7 @@ class ParsePage extends Core {
         $this->load($file);
 
         // Check if we use SSL
-        if ($this->configuration('transferProtocol') == 'HTTPS' && !$this->secureConection()) {
+        if ($this->configuration('transferProtocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
             // Redirect to secure connection (HTTPS)
             $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $this->redirection($redirect);

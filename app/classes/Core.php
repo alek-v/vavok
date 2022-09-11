@@ -802,11 +802,12 @@ class Core {
 	}
 
 	/**
-	 * Return transfer protocol (https or http)
+	 * Return preferred transfer protocol from site settings (https or http)
 	 * 
 	 * @return str https://|http://
 	 */
-	public function transferProtocol() {
+	public function transferProtocol()
+	{
 	    if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
 	        if (!empty($_SERVER['HTTPS'])) {
 	            $connectionProtocol = 'https://';
@@ -820,18 +821,6 @@ class Core {
 	    }
 
 	    return $connectionProtocol;
-	}
-
-	/**
-	 * Check if we use SSL
-	 * 
-	 * @return bool
-	 */
-	public function secureConection()
-	{
-		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') return true;
-
-		return false;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 # Vavok v2.2
 
 - Added email queue option
+- Added sitemap generator
 - New option to manage email subscriptions
 - New method updatePageLocalization() in model User.php
 - User authentication improvements
@@ -10,9 +11,10 @@
 - Applebot now can be detected in user list
 - Method detect_bot() renamed to camelCase detectBot() in Core.php class
 - Renamed method to camel case emailSubscriptionOptions()
+- Renamed method load_page() to camelCase loadPage()
 - Code comments updated
 - Fixed page view counter
-- Renamed method load_page() to camelCase loadPage()
+- Removed method secureConection()
 
 
 
