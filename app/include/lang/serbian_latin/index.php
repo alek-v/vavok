@@ -93,6 +93,7 @@ $lang_home['category'] = 'Kategorija';
 $lang_home['updated'] = 'Ažurirano';
 $lang_home['timezone'] = 'Vremenska zona';
 $lang_home['settings'] = 'Podešavanja';
+$lang_home['language'] = 'Jezik';
 
 // cookie consent
 $lang_home['cookies'] = 'Kolačići.'; // Title

@@ -15,6 +15,11 @@
 - Code comments updated
 - Fixed page view counter
 - Removed method secureConection()
+- Show blog categories and blog posts showing data with current site localization
+- Added possibility to manage blog categories with multiple localizations
+- Renamed method media_page_url() to camelCase cleanPageUrl()
+- Updated localization
+- Updated site search and cleaned code
 
 
 

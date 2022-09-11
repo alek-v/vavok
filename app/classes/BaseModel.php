@@ -12,7 +12,7 @@ class BaseModel extends Controller {
 		'authenticated' => false,
 		'admin_status' => 'user',
 		'language' => 'english'
-	];
+        ];
 
     public function __construct()
     {

@@ -490,6 +490,32 @@ class Core {
 	}
 
 	/**
+	 * Current opened URL cleaned for Facebook share, Twitter share, etc to prevent duplicated URL's
+	 * 
+	 * @return string
+	 */
+	public function cleanPageUrl()
+	{
+		// Cleanup request
+		$r = preg_replace('/&page=(\d+)/', '', CLEAN_REQUEST_URI);
+		$r = preg_replace('/page=(\d+)/', '', $r);
+		$r = str_replace('&page=last', '', $r);
+		$r = str_replace('page=last', '', $r);
+
+		// Show language directory without slash
+		$r = str_replace('/en/', '/en', $r);
+		$r = str_replace('/sr/', '/sr', $r);
+
+		// Remove index.php from urls to remove double content
+		$r = str_replace('/index.php', '', $r);
+
+		if (empty($website)) $website = $this->websiteHomeAddress();
+
+		// Return URL
+		return $website . $r;
+	}
+
+	/**
 	 * Check if text is HTML or plain text
 	 * 
 	 * @param string $text
@@ -1079,5 +1105,42 @@ class Core {
 		if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
 
 		return $tags;
+	}
+
+	/**
+	 * Return cyrillic and lating letters in array
+	 * 
+	 * @return array
+	 */
+	public function cyrillicLatinLetters()
+	{
+		$latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
+		$cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
+
+		return array('latin' => $latin, 'cyrillic' => $cyrillic);
+	}
+
+	/**
+	 * Translate cyrillic script to latin
+	 * 
+	 * @param string $str
+	 * @return string
+	 */
+	public function cyrillicToLatin($str)
+	{
+		$str = str_replace($this->cyrillicLatinLetters()['cyrillic'], $this->cyrillicLatinLetters()['latin'], $str);
+		return $str;
+	}
+
+	/**
+	 * Translate latin script to cyrillic
+	 * 
+	 * @param string $str
+	 * @return string
+	 */
+	public function latinToCyrillic($str)
+	{
+		$str = str_replace($this->cyrillicLatinLetters()['latin'], $this->cyrillicLatinLetters()['cyrillic'], $str);
+		return $str;
 	}
 }

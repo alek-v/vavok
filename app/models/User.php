@@ -1245,9 +1245,8 @@ class User extends Core {
 
 		// Return short version
 		if ($format == 'short') {
-			if ($language == 'english') $language = 'en';
-
-			if ($language == 'serbian_latin' || $language == 'serbian_cyrillic') $language = 'sr';
+			if ($language == 'english') $language = 'en'; // Short code for English
+			if ($language == 'serbian_latin' || $language == 'serbian_cyrillic') $language = 'sr'; // Short code for Serbian
 		}
 
 		return strtolower($language);

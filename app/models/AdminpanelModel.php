@@ -736,88 +736,23 @@ class AdminpanelModel extends BaseModel {
         
         if ($this->postAndGet('action') == "setfour") {
             $kbs = $this->configuration('photoFileSize') / 1024;
-        
-            // forum settings
+
             $data['content'] .= '<h1>' . $this->localization->string('forumandgalset') . '</h1>';
         
             $form = $this->model('ParsePage');
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editfour');
-        
-            /**
-             * Allow access to forum
-             */
-            $_49_yes = $this->model('ParsePage');
-            $_49_yes->load('forms/radio_inline');
-            $_49_yes->set('label_for', 'conf_set49');
-            $_49_yes->set('label_value', $this->localization->string('yes'));
-            $_49_yes->set('input_id', 'conf_set49');
-            $_49_yes->set('input_name', 'conf_set49');
-            $_49_yes->set('input_value', 1);
-            if ($this->configuration('forumAccess') == 1) {
-                $_49_yes->set('input_status', 'checked');
-            }
-        
-            $_49_no = $this->model('ParsePage');
-            $_49_no->load('forms/radio_inline');
-            $_49_no->set('label_for', 'conf_set49');
-            $_49_no->set('label_value', $this->localization->string('no'));
-            $_49_no->set('input_id', 'conf_set49');
-            $_49_no->set('input_name', 'conf_set49');
-            $_49_no->set('input_value', 0);
-            if ($this->configuration('forumAccess') == 0) {
-                $_49_no->set('input_status', 'checked');
-            }
-        
-            $forum_access = $this->model('ParsePage');
-            $forum_access->load('forms/radio_group');
-            $forum_access->set('description', $this->localization->string('forumon'));
-            $forum_access->set('radio_group', $forum_access->merge(array($_49_yes, $_49_no)));
-        
-            /**
-             * Forum language dropdown
-             */
-            $_68_yes = $this->model('ParsePage');
-            $_68_yes->load('forms/radio_inline');
-            $_68_yes->set('label_for', 'conf_set68');
-            $_68_yes->set('label_value', $this->localization->string('yes'));
-            $_68_yes->set('input_id', 'conf_set68');
-            $_68_yes->set('input_name', 'conf_set68');
-            $_68_yes->set('input_value', 1);
-            if ($this->configuration('forumChLang') == 1) {
-                $_68_yes->set('input_status', 'checked');
-            }
-        
-            $_68_no = $this->model('ParsePage');
-            $_68_no->load('forms/radio_inline');
-            $_68_no->set('label_for', 'conf_set68');
-            $_68_no->set('label_value', $this->localization->string('no'));
-            $_68_no->set('input_id', 'conf_set68');
-            $_68_no->set('input_name', 'conf_set68');
-            $_68_no->set('input_value', 0);
-            if ($this->configuration('forumChLang') == 0) {
-                $_68_no->set('input_status', 'checked');
-            }
-        
-            $forum_dropdown = $this->model('ParsePage');
-            $forum_dropdown->load('forms/radio_group');
-            $forum_dropdown->set('description', 'Show language dropdown');
-            $forum_dropdown->set('radio_group', $forum_dropdown->merge(array($_68_yes, $_68_no)));
-        
-            /**
-             * Gallery settings
-             */
+
+            // Gallery settings
             $gallery_config = $this->getDataFile('dataconfig/gallery.dat');
             if (!empty($gallery_config)) {
                 $gallery_data = explode("|", $gallery_config[0]);
             } else {
                 $gallery_data = explode("|", '|||||||||||||');
             }
-        
-            /**
-             * Gallery photos per page
-             */
+
+            // Gallery photos per page
             $gallery_set8 = $this->model('ParsePage');
             $gallery_set8->load('forms/input');
             $gallery_set8->set('label_for', 'gallery_set8');
@@ -827,9 +762,7 @@ class AdminpanelModel extends BaseModel {
             $gallery_set8->set('input_value', $gallery_data[8]);
             $gallery_set8->set('input_maxlength', 2);
         
-            /**
-             * Gallery max screen width
-             */
+            // Gallery max screen width
             $screen_width = $this->model('ParsePage');
             $screen_width->load('forms/input');
             $screen_width->set('label_for', 'screen_width');
@@ -838,10 +771,8 @@ class AdminpanelModel extends BaseModel {
             $screen_width->set('input_name', 'screen_width');
             $screen_width->set('input_value', $gallery_data[5]);
             $screen_width->set('input_maxlength', 5);
-        
-            /**
-             * Gallery max screen height
-             */
+
+            // Gallery max screen height
             $screen_height = $this->model('ParsePage');
             $screen_height->load('forms/input');
             $screen_height->set('label_for', 'screen_height');
@@ -850,10 +781,8 @@ class AdminpanelModel extends BaseModel {
             $screen_height->set('input_name', 'screen_height');
             $screen_height->set('input_value', $gallery_data[6]);
             $screen_height->set('input_maxlength', 5);
-        
-            /**
-             * Gallery social network buttons
-             */
+
+            // Gallery social network buttons
             $media_buttons_yes = $this->model('ParsePage');
             $media_buttons_yes->load('forms/radio_inline');
             $media_buttons_yes->set('label_for', 'media_buttons');
@@ -880,10 +809,8 @@ class AdminpanelModel extends BaseModel {
             $sn_buttons->load('forms/radio_group');
             $sn_buttons->set('description', 'Social media like buttons in gallery');
             $sn_buttons->set('radio_group', $sn_buttons->merge(array($media_buttons_yes, $media_buttons_no)));
-        
-            /**
-             * Gallery max upload size
-             */
+
+            // Gallery max upload size
             $conf_set38 = $this->model('ParsePage');
             $conf_set38->load('forms/input');
             $conf_set38->set('label_for', 'conf_set38');
@@ -892,10 +819,8 @@ class AdminpanelModel extends BaseModel {
             $conf_set38->set('input_name', 'conf_set38');
             $conf_set38->set('input_value', (int)$kbs);
             $conf_set38->set('input_maxlength', 8);
-        
-            /**
-             * Gallery max upload pixel size
-             */
+
+            // Gallery max upload pixel size
             $conf_set39 = $this->model('ParsePage');
             $conf_set39->load('forms/input');
             $conf_set39->set('label_for', 'conf_set39');
@@ -904,10 +829,8 @@ class AdminpanelModel extends BaseModel {
             $conf_set39->set('input_name', 'conf_set39');
             $conf_set39->set('input_value', (int)$this->configuration('maxPhotoPixels'));
             $conf_set39->set('input_maxlength', 4);
-        
-            /**
-             * Gallery uploads
-             */
+
+            // Gallery uploads
             $gallery_set0_yes = $this->model('ParsePage');
             $gallery_set0_yes->load('forms/radio_inline');
             $gallery_set0_yes->set('label_for', 'gallery_set0');
@@ -929,15 +852,15 @@ class AdminpanelModel extends BaseModel {
             if ($gallery_data[0] == 0) {
                 $gallery_set0_no->set('input_status', 'checked');
             }
-        
+
             $gallery_uploads = $this->model('ParsePage');
             $gallery_uploads->load('forms/radio_group');
             $gallery_uploads->set('description', 'Users can upload');
             $gallery_uploads->set('radio_group', $gallery_uploads->merge(array($gallery_set0_yes, $gallery_set0_no)));
-        
-            $form->set('fields', $form->merge(array($forum_access, $forum_dropdown, $gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
+
+            $form->set('fields', $form->merge(array($gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
             $data['content'] .= $form->output();
-        
+
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
         }
         
@@ -1956,11 +1879,14 @@ class AdminpanelModel extends BaseModel {
             case 'add-category':
                 // Save category if name is sent
                 if (!empty($this->postAndGet('category')) && !empty($this->postAndGet('value'))) {
+                    // Category localization if choosen
+                    $category_localization = !empty($this->postAndGet('lang')) ? '_' . $this->postAndGet('lang') : '';
+
                     // Calculate category position
-                    $position = $this->db->count_row('settings', "setting_group = 'blog_category'");
+                    $position = $this->db->count_row('settings', "setting_group = 'blog_category{$category_localization}'");
 
                     // Add category
-                    $data = array('setting_group' => 'blog_category', 'setting_name' => $this->postAndGet('category'), 'value' => $this->postAndGet('value'), 'options' => $position);
+                    $data = array('setting_group' => 'blog_category' . $category_localization, 'setting_name' => $this->postAndGet('category'), 'value' => $this->postAndGet('value'), 'options' => $position);
                     $this->db->insert('settings', $data);
         
                     // Show message if category is saved
@@ -1986,19 +1912,36 @@ class AdminpanelModel extends BaseModel {
                 $value->set('input_id', 'value');
                 $value->set('input_type', 'text');
                 $value->set('input_value', '');
-        
-                $fields = array($category, $value);
-        
+
+                // Language select
+                $languages = "SELECT * FROM languages ORDER BY lngeng";
+
+                $options = '<option value="">Don\'t set</option>';
+                foreach ($this->db->query($languages) as $lang) {
+                    $options .= "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
+                }
+
+                $select_language = $this->model('ParsePage');
+                $select_language->load('forms/select');
+                $select_language->set('label_for', 'language');
+                $select_language->set('label_value', $this->localization->string('language') . ' (optional):');
+                $select_language->set('select_id', 'language');
+                $select_language->set('select_name', 'lang');
+                $select_language->set('options', $options);
+
+                // All fields
+                $fields = array($category, $value, $select_language);
+
                 // Create form
                 $form = $this->model('ParsePage');
                 $form->load('forms/form');
                 $form->set('form_action', HOMEDIR . 'adminpanel/blogcategory/?action=add-category');
                 $form->set('form_method', 'post');
                 $form->set('fields', $form->merge($fields));
-        
+
                 $page_data['content'] .= $form->output();
                 break;
-        
+
             case 'edit-category':
                 // Update category if data are sent
                 if (!empty($this->postAndGet('id')) && !empty($this->postAndGet('category')) && !empty($this->postAndGet('value'))) {
@@ -2050,9 +1993,29 @@ class AdminpanelModel extends BaseModel {
         
                 $page_data['content'] .= $form->output();
             break;
-            
+
             case 'delete':
                 if ($this->db->count_row('settings', "id = {$this->postAndGet('id')}") > 0) {
+                    // Update other categories with new positions
+                    $category = $this->db->getData('settings', "id='{$this->postAndGet('id')}'");
+                    $category_position = $category['options'];
+                    $category_group = $category['setting_group'];
+
+                    // Number of categories in this group
+                    $total_in_group = $this->db->count_row('settings', "setting_group = '{$category_group}'");
+
+                    // Calculate do we need to update other categories and update if required
+                    if ($category_position < ($total_in_group - 1)) {
+                        foreach($this->db->query("SELECT * FROM settings WHERE setting_group = '{$category_group}' AND options > {$category_position}") as $category_to_update) {
+                            $new_position = $category_to_update['options'] - 1;
+                            $id = $category_to_update['id'];
+
+                            // Update in databse
+                            $this->db->update('settings', 'options', $new_position, "id = $id");
+                        }
+                    }
+
+                    // Delete category
                     $this->db->delete('settings', "id = {$this->postAndGet('id')}");
         
                     $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Deleted" /> Category deleted');
@@ -2064,13 +2027,13 @@ class AdminpanelModel extends BaseModel {
             case 'move-up':
                 // cat we want to update
                 $cat_info = $this->db->getData('settings', "id='{$this->postAndGet('id')}'");
-
+                $cat_group = $cat_info['setting_group'];
                 $cat_position = $cat_info['options'];
                 $new_position = $cat_position - 1;
 
                 if ($cat_position != 0 && !empty($cat_position)) {
                     // Update cat with position we want to take
-                    $cat_to_down = $this->db->getData('settings', "setting_group = 'blog_category' AND options='{$new_position}'");
+                    $cat_to_down = $this->db->getData('settings', "setting_group = '{$cat_group}' AND options='{$new_position}'");
                     $cat_to_down_position = $cat_to_down['options'] + 1;
                     $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
 
@@ -2083,18 +2046,18 @@ class AdminpanelModel extends BaseModel {
                 }
             break;
 
-            case 'move-down':
-                $total = $this->db->count_row('settings', "setting_group = 'blog_category'");
-                
+            case 'move-down':                
                 // cat we want to update
                 $cat_info = $this->db->getData('settings', "id='{$this->postAndGet('id')}'");
-        
+                $cat_group = $cat_info['setting_group'];
                 $cat_position = $cat_info['options'];
                 $new_position = $cat_position + 1;
                     
+                $total = $this->db->count_row('settings', "setting_group = '{$cat_group}'");
+
                 if ($new_position < $total && (!empty($cat_position) || $cat_position == '0')) {
                     // Update cat with position we want to take
-                    $cat_to_down = $this->db->getData('settings', "setting_group = 'blog_category' AND options='{$new_position}'");
+                    $cat_to_down = $this->db->getData('settings', "setting_group = '{$cat_group}' AND options='{$new_position}'");
                     $cat_to_down_position = $cat_to_down['options'] - 1;
                     $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
                     
@@ -2108,10 +2071,19 @@ class AdminpanelModel extends BaseModel {
             break;
         
             default:
-                if ($this->db->count_row('settings', "setting_group = 'blog_category'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
+                if ($this->db->count_row('settings', "setting_group LIKE 'blog_category%'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
         
                 // Blog categories
-                foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
+                $current_category = '';
+
+                foreach ($this->db->query("SELECT * FROM settings WHERE setting_group LIKE 'blog_category%' ORDER BY options") as $category) {
+                     // Split categories
+                     if ($current_category != $category['setting_group']) {
+                        $current_category = $category['setting_group'];
+
+                        $page_data['content'] .= '<div class="mt-5">category: ' . $current_category . '</div>';
+                    }
+ 
                     $page_data['content'] .= '<div class="a">';
                     $page_data['content'] .= $this->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
                     $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
@@ -2120,12 +2092,13 @@ class AdminpanelModel extends BaseModel {
                     $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
                     $page_data['content'] .= '</div>';
                 }
+
                 break;
         }
-        
+
         $page_data['content'] .= '<p class="mt-5">';
         if ($this->postAndGet('action') !== 'add-category') $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
-        if (!empty($this->postAndGet('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog') . '<br />';
+        if (!empty($this->postAndGet('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog categories') . '<br />';
         $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
         $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';

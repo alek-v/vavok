@@ -24,9 +24,6 @@ class BlogModel extends BaseModel {
 	 */
 	public function index($params = [])
 	{
-        // Instantiate model
-        $this->current_page = $this->model('Pagemanager');
-
         // Users data
 		$this_page['user'] = $this->user_data;
 
@@ -107,7 +104,7 @@ class BlogModel extends BaseModel {
                 }
         
                 // Page URL
-                $post->set('page-link', $this->current_page->media_page_url());
+                $post->set('page-link', $this->cleanPageUrl());
 
                 // comments
                 $comments = $this->model('Comments');
@@ -168,16 +165,20 @@ class BlogModel extends BaseModel {
 
                 // Add meta tags
                 $this_page['headt'] = '<meta name="robots" content="noindex, follow" />' . "\r\n";
-        
+
                 // Page title
                 $this_page['tname'] = 'Blog';
-        
+
                 // Load index template
                 $show_page = $this->model('ParsePage');
                 $show_page->load("blog/index");
-        
+
+                // User's localization short code
+                // We will use it to get pages with this localization
+                $user_localization_short = $this->user->getPreferredLanguage($this_page['user']['language'], 'short');
+
                 // Count total posts
-                $total_posts = empty($this_category) ? $this->db->count_row('pages', "type='post' AND published = '2'") : $this->db->count_row('tags', "tag_name='{$this_category}'");
+                $total_posts = empty($this_category) ? $this->db->count_row('pages', "type='post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='')") : $this->db->count_row('tags', "tag_name='{$this_category}'");
 
                 // When there is no posts
                 if ($total_posts < 1) {
@@ -190,43 +191,29 @@ class BlogModel extends BaseModel {
 
                 // start navigation
                 $navi = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'));
-        
-                /**
-                 * Get blog category names
-                 */
-                foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' ORDER BY options") as $category) {
+
+                // Get blog category names
+                foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' OR setting_group = 'blog_category_{$user_localization_short}' ORDER BY options") as $category) {
                     $page_category = $this->model('ParsePage');
                     $page_category->load('blog/blog_category');
         
-                    /**
-                     * Set category name
-                     */
+                    // Set category name
                     $page_category->set('category_name', $category['setting_name']);
         
-                    /**
-                     * Set category link
-                     */
+                    // Set category link
                     $page_category->set('category_link', HOMEDIR . 'blog/category/' . $category['value'] . '/');
         
                     $all_categories[] = $page_category;
                 }
-        
-                /**
-                 * Don't show <div> with categories if there is no category
-                 */
+
+                // Hide <div> with categories if there is no category
                 if (empty($all_categories)) $show_page->set('bc_style_options', ' display-none');
-        
-                /**
-                 * Merge categories and output from object
-                 */
+
+                // Merge categories and output from object
                 if (isset($all_categories)) $show_page->set('category-list', $page_category->merge($all_categories));
 
-                /**
-                 * Get blog posts
-                 */
-        
-                // Query when category is not set and case when it is set
-                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+                // Get blog posts
+                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='') ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
                 "SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$this_category}' AND tags.page_id = pages.id AND pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
         
                 foreach ($this->db->query($page_sql_query) as $key) {
@@ -238,7 +225,7 @@ class BlogModel extends BaseModel {
                     $page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '">' . $key['tname'] . '</a>');
         
                     // Replace html headings, images and other tags from content
-                    $content = strip_tags($this->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content'])));
+                    $content = !empty($key['content']) ? strip_tags($this->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']))) : '';
         
                     // When there is more then 45 words show only first 45 words
                     if (count(explode(' ', $content)) > 45) $content = implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $content)), 0, 45)) . '...';
@@ -259,7 +246,7 @@ class BlogModel extends BaseModel {
                     $page_posts->set('date-published-year', date('Y', $key['pubdate']));
         
                     // Page URL
-                    $page_posts->set('page-link', $this->current_page->media_page_url());
+                    $page_posts->set('page-link', $this->cleanPageUrl());
         
                     // Page text
                     $page_posts->set('post_text', $content);

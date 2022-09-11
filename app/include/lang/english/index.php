@@ -93,6 +93,7 @@ $lang_home['category'] = 'Category';
 $lang_home['updated'] = 'Updated';
 $lang_home['timezone'] = 'Time zone';
 $lang_home['settings'] = 'Settings';
+$lang_home['language'] = 'Language';
 
 // cookie consent
 $lang_home['cookies'] = 'Cookies.'; // Title

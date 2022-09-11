@@ -676,9 +676,7 @@ class PagemanagerModel extends BaseModel {
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=addnew');
 
-            /**
-             * Page name input
-             */
+            // Page name input
             $input_new_file = $this->model('ParsePage');
             $input_new_file->load('forms/input');
             $input_new_file->set('label_for', 'newfile');
@@ -688,9 +686,7 @@ class PagemanagerModel extends BaseModel {
             $input_new_file->set('input_id', 'newfile');
             $input_new_file->set('input_maxlength', 120);
 
-            /**
-             * Language select
-             */
+            // Language select
             $languages = "SELECT * FROM languages ORDER BY lngeng";
 
             $options = '<option value="">Don\'t set</option>';
@@ -706,9 +702,7 @@ class PagemanagerModel extends BaseModel {
             $select_language->set('select_name', 'lang');
             $select_language->set('options', $options);
 
-            /**
-             * Page type select
-             */
+            // Page type select
             $select_type = $this->model('ParsePage');
             $select_type->load('forms/select');
             $select_type->set('label_for', 'type');
@@ -717,9 +711,7 @@ class PagemanagerModel extends BaseModel {
             $select_type->set('select_name', 'type');
             $select_type->set('options', '<option value="page">Page</option><option value="post">Post</option>');
 
-            /**
-             * Allow unicode url checkbox
-             */
+            // Allow unicode url checkbox
             $checkbox_allow_unicode = $this->model('ParsePage');
             $checkbox_allow_unicode->load('forms/checkbox');
             $checkbox_allow_unicode->set('label_for', 'allow-unicode');
@@ -728,19 +720,13 @@ class PagemanagerModel extends BaseModel {
             $checkbox_allow_unicode->set('checkbox_name', 'allow_unicode');
             $checkbox_allow_unicode->set('checkbox_value', 'on');
 
-            /**
-             * All form fields
-             */
+            // All form fields
             $fields = array($input_new_file, $select_language, $select_type, $checkbox_allow_unicode);
 
-            /**
-             * Merge fields
-             */
+            // Merge fields
             $form->set('fields', $form->merge($fields));
 
-            /**
-             * Show form
-             */
+            // Show form
             $form->set('website_language[save]', $this->localization->string('newpage'));
             $index_data['content'] .= $form->output();
         } 

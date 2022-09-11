@@ -283,28 +283,6 @@ class Pagemanager extends Controller {
 		return $pageEditor;
 	}
 
-	// url for facebook share, twitter etc to prevent duplicated url's
-	public function media_page_url() {
-
-		// Clean up request
-		$r = preg_replace('/&page=(\d+)/', '', CLEAN_REQUEST_URI);
-		$r = preg_replace('/page=(\d+)/', '', $r);
-		$r = str_replace('&page=last', '', $r);
-		$r = str_replace('page=last', '', $r);
-
-		// remove language dir from main page
-		$r = str_replace('/en/', '', $r);
-		$r = str_replace('/sr/', '', $r);
-
-		// remove index.php from urls to remove double content
-		$r = str_replace('/index.php', '/', $r);
-
-		if (empty($website)) { $website = $this->websiteHomeAddress(); }
-
-		// return url
-		return $website . $r;
-	}
-
 	/**
 	 * Page tags (keywords)
 	 *
