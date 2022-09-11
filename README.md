@@ -1,5 +1,5 @@
 
-<a href="https://vavok.net"><img src="https://www.vavok.net/themes/vavok3/images/logo.png" height="40" alt="Vavok logo" /></a>
+<a href="https://vavok.net"><img src="https://vavok.net/themes/vavok3/images/logo.png" width="230" height="41" alt="Vavok logo" /></a>
 
 # Vavok CMS
 
@@ -9,3 +9,5 @@
 > 3. Go to your_site.com/install/ to complete installation.
 
 Documentation: https://docs.vavok.net
+
+Updating old code to MVC pattern is still in progress
