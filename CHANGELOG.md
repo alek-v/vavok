@@ -1,3 +1,10 @@
+# Vavok v2.3
+- Renamed method count_row() to camelCase countRow()
+- Fixed: After file upload show the file location
+- Fixed bot detection
+
+
+
 # Vavok v2.2
 
 - Added email queue option

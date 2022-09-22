@@ -121,7 +121,7 @@ class AdminchatModel extends BaseModel {
             $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=prodel', $this->localization->string('cleanchat'));
         }
         
-        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;

@@ -64,5 +64,5 @@
     </ul>
 
     <h2>Contact Us</h2>
-    <p>If you have any questions about this Cookies Policy, You can <a href="{@HOMEDIR}}mail">contact us here</a></p>
+    <p>If you have any questions about this Cookies Policy, You can <a href="{@HOMEDIR}}contact">contact us here</a>.</p>
 {@footer}}

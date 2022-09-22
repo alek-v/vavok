@@ -742,8 +742,8 @@ class Core {
 	 */
 	public function showOnline()
 	{
-        $online = $this->db->count_row('online');
-        $registered = $this->db->count_row('online', "user > 0");
+        $online = $this->db->countRow('online');
+        $registered = $this->db->countRow('online', "user > 0");
 
 		$online = '<p class="site_online_users"><a href="/pages/online">Online: ' . $registered . ' / ' . $online . '</a></p>';
 
@@ -806,7 +806,7 @@ class Core {
 	 */
 	public function count_group_members($group_name)
 	{
-		return $this->go('db')->count_row('group_members', "group_name = '{$group_name}'");
+		return $this->go('db')->countRow('group_members', "group_name = '{$group_name}'");
 	}
 
 	/**
@@ -941,54 +941,46 @@ class Core {
 	    return $headers;
 	}
 
-	/**
-	 * Bot or spider name
-	 * 
-	 * @return string
-	 */
-	public function detectBot()
-	{
-	    $user_agents = '';
-	    $searchbot = '';
+    /**
+     * Bot or spider name
+     * 
+     * @return string|bool
+     */
+    function detectBot()
+    {
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-	    if (isset($_SERVER['HTTP_USER_AGENT'])) $user_agents = $_SERVER['HTTP_USER_AGENT'];
+        // List of the bot user agents and names
+        $bot_list = array(
+            'Yandex' => 'Yandex',
+            'Slurp' => 'Yahoo! Slurp',
+            'Yahoo' => 'Yahoo!',
+            'mediapartners-google' => 'Mediapartners-Google',
+            'Googlebot-Image' => 'Googlebot-Image',
+            'google' => 'Googlebot',
+            'lycos' => 'Lycos',
+            'SurveyBot' => 'SurveyBot',
+            'bingbot' => 'Bing',
+            'msnbot' => 'msnbot',
+            'Baiduspider' => 'Baidu Spider',
+            'Sosospider' => 'Soso Spider',
+            'ia_archiver' => 'ia_archiver',
+            'facebookexternalhit' => 'Facebook Bot',
+            'applebot' => 'Apple Bot',
+            'SemrushBot' => 'SemrushBot',
+            'SiteAuditBot' => 'Semrush SiteAuditBot'
+        );
 
-	    if (stristr($user_agents, 'Yandex')) {
-	        $searchbot = 'Yandex';
-	    } elseif (stristr($user_agents, 'Slurp')) {
-	        $searchbot = 'Yahoo! Slurp';
-	    } elseif (stristr($user_agents, 'yahoo')) {
-	        $searchbot = 'Yahoo!';
-	    } elseif (stristr($user_agents, 'mediapartners-google')) {
-	        $searchbot = 'Mediapartners-Google';
-	    } elseif (stristr($user_agents, 'Googlebot-Image')) {
-	        $searchbot = 'Googlebot-Image';
-	    } elseif (stristr($user_agents, 'google')) {
-	        $searchbot = 'Googlebot';
-	    } elseif (stristr($user_agents, 'StackRambler')) {
-	        $searchbot = 'Rambler';
-	    } elseif (stristr($user_agents, 'lycos')) {
-	        $searchbot = 'Lycos';
-	    } elseif (stristr($user_agents, 'SurveyBot')) {
-	        $searchbot = 'Survey';
-	    } elseif (stristr($user_agents, 'bingbot')) {
-	        $searchbot = 'Bing';
-	    } elseif (stristr($user_agents, 'msnbot')) {
-	        $searchbot = 'msnbot';
-	    } elseif (stristr($user_agents, 'Baiduspider')) {
-	        $searchbot = 'Baidu Spider';
-	    } elseif (stristr($user_agents, 'Sosospider')) {
-	        $searchbot = 'Soso Spider';
-	    } elseif (stristr($user_agents, 'ia_archiver')) {
-	        $searchbot = 'ia_archiver';
-	    } elseif (stristr($user_agents, 'facebookexternalhit')) {
-	        $searchbot = 'Facebook External Hit';
-	    } elseif (stristr($user_agents, 'applebot')) {
-	        $searchbot = 'Applebot';
-	    }
+        // Bot user agents to search
+        $bot_names = array_keys($bot_list);
 
-	    return $searchbot;
-	}
+        // Return name of the bot if user agent is found
+        foreach($bot_names as $bot) {
+            if (str_contains($user_agent, $bot) && !empty($user_agent)) return $bot_list[$bot];
+        }
+
+        return false;
+    }
 
 	/**
 	 * Home link
@@ -1112,7 +1104,7 @@ class Core {
 	 * 
 	 * @return array
 	 */
-	public function cyrillicLatinLetters()
+	private function cyrillicLatinLetters()
 	{
 		$latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
 		$cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");

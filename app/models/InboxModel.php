@@ -14,7 +14,7 @@ class InboxModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Update notification data
-        if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
+        if ($this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
 
         $data['headt'] = '<meta name="robots" content="noindex">';
         $data['tname'] = '{@localization[inbox]}}';
@@ -75,7 +75,7 @@ class InboxModel extends BaseModel {
         $data['content'] = '';
 
         // Update notification data
-        if ($this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
+        if ($this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
 
         $data['headt'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
@@ -90,7 +90,7 @@ class InboxModel extends BaseModel {
         } else {
             $data['who'] = $who;
 
-            $pms = $this->db->count_row('inbox', "(byuid='" . $this->user->user_id() . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $this->user->user_id() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
+            $pms = $this->db->countRow('inbox', "(byuid='" . $this->user->user_id() . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $this->user->user_id() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
     
             $num_items = $pms;
             $items_per_page = 50;

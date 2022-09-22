@@ -18,7 +18,7 @@ class Sitemap extends BaseModel {
         if (!$this->user->administrator(101)) $this->redirection('./');
         
         if ($this->postAndGet('action') == 'generate') {
-            $total = $this->db->count_row('pages');
+            $total = $this->db->countRow('pages');
         
             $sitemap = '<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';

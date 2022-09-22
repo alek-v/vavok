@@ -150,7 +150,7 @@ class User extends Core {
 	    $this->db->delete('online', "user = '{$user_id}'");
 
 	    // Remove login token from database if token exists
-	    if (isset($_COOKIE['cookie_login']) && $this->db->count_row('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->db->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
+	    if (isset($_COOKIE['cookie_login']) && $this->db->countRow('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->db->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
 
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
@@ -280,7 +280,7 @@ class User extends Core {
 	        $this->db->insert('login_attempts', $values);
 	        
 	        // Finally we count the number of recent attempts from this ip address  
-	        $attempts = $this->db->count_row('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
+	        $attempts = $this->db->countRow('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
 
 	        return $attempts;
 	    } catch (PDOEXCEPTION $e) {
@@ -463,7 +463,7 @@ class User extends Core {
 
 		foreach ($default_permissions[$permission_id] as $key => $value) {
             // Insert data to database if data does not exsist
-            if ($this->db->count_row('specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
+            if ($this->db->countRow('specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
                 $values = array(
                     'permname' => $key,
                     'permacc' => $value,
@@ -495,13 +495,13 @@ class User extends Core {
 	// private messages
 	public function getpmcount($uid, $view = "all") {
 	    if ($view == "all") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND (deleted <> '" . $_SESSION['uid'] . "' OR deleted IS NULL)");
+	        $nopm = $this->db->countRow('inbox', "touid='" . $uid . "' AND (deleted <> '" . $_SESSION['uid'] . "' OR deleted IS NULL)");
 	    } elseif ($view == "snt") {
-	        $nopm = $this->db->count_row('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $_SESSION['uid'] . "' OR deleted IS NULL)");
+	        $nopm = $this->db->countRow('inbox', "byuid='" . $uid . "' AND (deleted <> '" . $_SESSION['uid'] . "' OR deleted IS NULL)");
 	    } elseif ($view == "str") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND starred='1'");
+	        $nopm = $this->db->countRow('inbox', "touid='" . $uid . "' AND starred='1'");
 	    } elseif ($view == "urd") {
-	        $nopm = $this->db->count_row('inbox', "touid='" . $uid . "' AND unread='1'");
+	        $nopm = $this->db->countRow('inbox', "touid='" . $uid . "' AND unread='1'");
 	    } 
 	    return $nopm;
 	}
@@ -514,7 +514,7 @@ class User extends Core {
 	 */
 	function getunreadpm($uid)
 	{
-	    return $this->db->count_row('inbox', "touid='{$uid}' AND unread='1'");
+	    return $this->db->countRow('inbox', "touid='{$uid}' AND unread='1'");
 	}
 
 	// number of private msg's
@@ -928,7 +928,7 @@ class User extends Core {
 	    $xuser = $this->getidfromnick($login);
 	    $statwho = '<font color="#CCCCCC">[Off]</font>';
 
-	    $result = $this->db->count_row('online', "user='{$xuser}'");
+	    $result = $this->db->countRow('online', "user='{$xuser}'");
 
 	    if ($result > 0 && $xuser > 0) $statwho = '<font color="#00FF00">[On]</font>';
 
@@ -959,7 +959,7 @@ class User extends Core {
 	    // Administrator have access to all site functions
 	    if ($this->administrator(101)) return true;
 
-	    if ($this->db->count_row('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") > 0) {
+	    if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") > 0) {
 	        $check_data = $this->db->getData('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'", 'permacc');
 	        $perms = explode(',', $check_data['permacc']);
 
@@ -992,7 +992,7 @@ class User extends Core {
 
 	// number of registered members
 	function regmemcount() {
-	    return $this->db->count_row('vavok_users');
+	    return $this->db->countRow('vavok_users');
 	}
 
 	/**
@@ -1018,7 +1018,7 @@ class User extends Core {
 	 */
 	public function username_exists($username)
 	{
-	    return $this->db->count_row('vavok_users', "name='{$username}'") > 0 ? true : false;
+	    return $this->db->countRow('vavok_users', "name='{$username}'") > 0 ? true : false;
 	}
 
 	/**
@@ -1029,7 +1029,7 @@ class User extends Core {
 	 */
 	public function email_exists($email)
 	{
-	    return $this->db->count_row('vavok_about', "email='{$email}'") > 0 ? true : false;
+	    return $this->db->countRow('vavok_about', "email='{$email}'") > 0 ? true : false;
 	}
 
 	/**
@@ -1040,7 +1040,7 @@ class User extends Core {
 	 */
 	public function id_exists($id)
 	{
-	    return $this->db->count_row('vavok_users', "id='{$id}'") > 0 ? true : false;
+	    return $this->db->countRow('vavok_users', "id='{$id}'") > 0 ? true : false;
 	}
 
 	/**
@@ -1050,7 +1050,7 @@ class User extends Core {
 	 */
 	public function total_admins()
 	{
-		return $this->db->count_row('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
+		return $this->db->countRow('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
 	}
 
 	/**
@@ -1060,7 +1060,7 @@ class User extends Core {
 	 */
 	public function total_banned()
 	{
-		return $this->db->count_row('vavok_users', "banned='1' OR banned='2'");
+		return $this->db->countRow('vavok_users', "banned='1' OR banned='2'");
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ class User extends Core {
 	 */
 	public function total_unconfirmed()
 	{
-		return $this->db->count_row('vavok_profil', "regche='1' OR regche='2'");
+		return $this->db->countRow('vavok_profil', "regche='1' OR regche='2'");
 	}
 
 	/**
@@ -1158,7 +1158,7 @@ class User extends Core {
 
 	// is ignored
 	function isignored($tid, $uid) {
-	    $ign = $this->db->count_row('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
+	    $ign = $this->db->countRow('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    }
@@ -1191,7 +1191,7 @@ class User extends Core {
 
 	// is buddy
 	function isbuddy($tid, $uid) {
-	    $ign = $this->db->count_row('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
+	    $ign = $this->db->countRow('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
 	    if ($ign > 0) {
 	        return true;
 	    }

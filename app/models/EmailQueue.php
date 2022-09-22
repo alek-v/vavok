@@ -156,11 +156,11 @@ class EmailQueue extends BaseModel {
             $last = isset($_GET['last']) == true ? $this->check($_GET['last']) : 0;
 
             if (!empty($subName)) {
-                $send_count = $this->db->count_row('subs', "subscription_name = '" . $subName . "'");
+                $send_count = $this->db->countRow('subs', "subscription_name = '" . $subName . "'");
             }
             // Queue mail for all subscribers
             else {
-                $send_count = $this->db->count_row('subs');
+                $send_count = $this->db->countRow('subs');
             }
 
             $next = $last + $news_queue_limit;
@@ -201,7 +201,7 @@ class EmailQueue extends BaseModel {
         }
 
         $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 

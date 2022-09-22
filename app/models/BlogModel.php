@@ -178,7 +178,7 @@ class BlogModel extends BaseModel {
                 $user_localization_short = $this->user->getPreferredLanguage($this_page['user']['language'], 'short');
 
                 // Count total posts
-                $total_posts = empty($this_category) ? $this->db->count_row('pages', "type='post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='')") : $this->db->count_row('tags', "tag_name='{$this_category}'");
+                $total_posts = empty($this_category) ? $this->db->countRow('pages', "type='post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='')") : $this->db->countRow('tags', "tag_name='{$this_category}'");
 
                 // When there is no posts
                 if ($total_posts < 1) {

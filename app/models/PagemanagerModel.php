@@ -116,11 +116,11 @@ class PagemanagerModel extends BaseModel {
                 // rename page
                 $page_editor->rename($pg, $page_id);
 
-                header("Location: " . HOMEDIR . "/adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_editfiles");
+                header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_editfiles");
                 exit;
             }
 
-            header("Location: " . HOMEDIR . "/adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_noedit");
+            header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_noedit");
             exit;
         }
 
@@ -460,7 +460,7 @@ class PagemanagerModel extends BaseModel {
 
                 $index_data['content'] .= '<hr />';
 
-                $index_data['content'] .= '<p>Updating page ' . $show_up_file . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=renamepg&amp;pg=' . $file, 'rename') . '</p>'; // update lang
+                $index_data['content'] .= '<p>Updating page ' . $show_up_file . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=renamepg&pg=' . $file, 'rename') . '</p>'; // update lang
 
                 $form = $this->model('ParsePage');
                 $form->load('forms/form');
@@ -626,7 +626,7 @@ class PagemanagerModel extends BaseModel {
 
             $index_data['content'] .= '<hr />';
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&amp;file=' . $pg, $this->localization->string('back'), '<p>', '</p>');
+            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $pg, $this->localization->string('back'), '<p>', '</p>');
         } 
 
         if ($this->postAndGet('action') == 'new') {
@@ -840,7 +840,7 @@ class PagemanagerModel extends BaseModel {
         $index_data['content'] .= '</p>';
 
         $index_data['content'] .= '<p>';
-        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $index_data['content'] .= $this->homelink();
         $index_data['content'] .= '</p>';
 

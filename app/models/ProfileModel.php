@@ -276,7 +276,7 @@ class ProfileModel extends BaseModel {
 		/**
 		 * Send email confirmation link if it is changed and save data into database
 		 */
-		if ($this->user->user_info('email') != $email && $this->db->count_row('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
+		if ($this->user->user_info('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
 			/**
 			 * Insert data to database
 			 */
@@ -541,7 +541,7 @@ class ProfileModel extends BaseModel {
         $this_page['content'] = '';
 
         // Token does not exist
-        if ($this->db->count_row('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'") < 1) {
+        if ($this->db->countRow('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'") < 1) {
             $this_page['content'] .= $this->showDanger('{@localization[notoken]}}');
 
             return $this_page;

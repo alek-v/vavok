@@ -11,6 +11,7 @@ class Counter {
     function __construct($is_reg, $users_ip, $users_browser, $bot)
     {
         $this->db = new Database;
+        $this->bot = $bot != false && !empty($bot) ? $bot : '';
 
         $day = date("d");
         $hour = date("H");
@@ -42,7 +43,7 @@ class Counter {
         // delete entries that are older than the time (minutes) set in $bz_sess_timeout - inactive users
         $this->db->delete('online',  "date + " . $bz_seconds . " < " . $bz_date);
 
-        if ($this->db->count_row('online', "usr_chck = '{$xmatch}'") > 0) {
+        if ($this->db->countRow('online', "usr_chck = '{$xmatch}'") > 0) {
             while ($bz_row = $this->db->getData('online', "usr_chck = '{$xmatch}'")) {
                 if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
                     $fields = array();
@@ -65,7 +66,7 @@ class Counter {
                     'page' => $_SERVER['PHP_SELF'],
                     'user' => $user_id,
                     'usr_chck' => $xmatch,
-                    'bot' => $bot
+                    'bot' => $this->bot
                     );
 
                     $this->db->insert('online', $values);
@@ -79,7 +80,7 @@ class Counter {
             'page' => $_SERVER['PHP_SELF'],
             'user' => $user_id,
             'usr_chck' => $xmatch,
-            'bot' => $bot
+            'bot' => $this->bot
             );
             $this->db->insert('online', $values);
             unset($values);

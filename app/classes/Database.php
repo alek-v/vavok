@@ -169,7 +169,7 @@ class Database extends PDO {
     }
 
     // count number of rows
-    public function count_row($table, $where = '') {
+    public function countRow($table, $where = '') {
         $sql = 'SELECT count(*) FROM ' . DB_PREFIX . $table;
         if (!empty($where))
             $sql .= ' WHERE ' . $where;

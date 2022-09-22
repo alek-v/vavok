@@ -229,7 +229,7 @@ class BanModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', $this->localization->string('back'), '<p>', '</p>');
         } 
 
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -266,7 +266,7 @@ class BanModel extends BaseModel {
 
         $data['navigation'] = $navigation->get_navigation();
 
-        $data['bottom_links'] = $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $data['bottom_links'] = $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $data['bottom_links'] .= $this->homelink();
 
         return $data;

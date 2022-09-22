@@ -48,7 +48,7 @@ class Subscription extends BaseModel {
 
         // List of subscriptions
         if (empty($this->postAndGet('action'))) {
-            $num_items = $this->db->count_row('subs');
+            $num_items = $this->db->countRow('subs');
             $items_per_page = 10;
 
             // Navigation
@@ -79,7 +79,7 @@ class Subscription extends BaseModel {
         }
 
         $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
 

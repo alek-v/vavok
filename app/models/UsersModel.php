@@ -529,7 +529,7 @@ class UsersModel extends BaseModel {
             exit;
         }
 
-        $num_items = $this->db->count_row('`ignore`', "name='{$this->user->user_id()}'");
+        $num_items = $this->db->countRow('`ignore`', "name='{$this->user->user_id()}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'users/ignore/?'); // start navigation
@@ -594,7 +594,7 @@ class UsersModel extends BaseModel {
             }
         }
 
-        $num_items = $this->db->count_row('buddy', "name='{$this->user->user_id()}'");
+        $num_items = $this->db->countRow('buddy', "name='{$this->user->user_id()}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'users/contacts/?'); // start navigation
@@ -738,7 +738,7 @@ class UsersModel extends BaseModel {
             // Notification settings
             if (!isset($inbox_notification) || empty($inbox_notification)) $inbox_notification = 1;
 
-            $check_inb = $this->db->count_row('notif', "uid='{$this->user->user_id()}' AND type='inbox'");
+            $check_inb = $this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'");
             if ($check_inb > 0) {
                 $this->db->update('notif', 'active', $inbox_notification, "uid='{$this->user->user_id()}' AND type='inbox'");
             } else {

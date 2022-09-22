@@ -231,7 +231,7 @@ class Logfiles extends BaseModel {
             $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerlog', $this->localization->string('delallerdata')) . '<br>';
         }
 
-        $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $this_page['content'] .= $this->homelink() . '</p>';
 
         return $this_page;

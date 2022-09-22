@@ -1,7 +1,11 @@
 <?php
+/**
+ * Author: Aleksandar Vranešević
+ * Site:   https://vavok.net
+ */
 
 define('START_TIME', microtime(true));
-define('VERSION', '2.2');
+define('VERSION', '2.3');
 
 // Error reporting
 error_reporting(E_ALL);

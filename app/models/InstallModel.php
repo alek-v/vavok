@@ -23,7 +23,7 @@ class InstallModel extends Controller {
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
 
-        if ($this->table_exists == true && $this->db->count_row('vavok_users') > 0) $this->redirection(HOMEDIR);
+        if ($this->table_exists == true && $this->db->countRow('vavok_users') > 0) $this->redirection(HOMEDIR);
     }
 
     public function index()

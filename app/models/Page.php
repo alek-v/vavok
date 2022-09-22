@@ -151,9 +151,9 @@ class Page extends BaseModel {
         $hour = (int)date("H", time());
         $hday = date("j", time())-1;
 
-        $pcounter_guest = $this->db->count_row('online', "user='0'");
+        $pcounter_guest = $this->db->countRow('online', "user='0'");
 
-        $pcounter_online = $this->db->count_row('online');
+        $pcounter_online = $this->db->countRow('online');
 
         $pcounter_reg = $pcounter_online - $pcounter_guest;
 
@@ -201,8 +201,8 @@ class Page extends BaseModel {
         
         $data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/online.gif" alt=""> <b>' . $this->localization->string('whoisonline') . '</b></p>';
         
-        $total = $this->db->count_row('online');
-        $totalreg = $this->db->count_row('online', "user > 0");
+        $total = $this->db->countRow('online');
+        $totalreg = $this->db->countRow('online', "user > 0");
         
         if (!empty($this->postAndGet('list'))) {
             $list = $this->check($this->postAndGet('list'));

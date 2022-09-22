@@ -24,7 +24,7 @@ class Comments extends Controller {
 	// Count number of comments
 	public function count_comments($pid)
 	{
-		return $this->db->count_row('comments', 'pid=' . $pid);
+		return $this->db->countRow('comments', 'pid=' . $pid);
 	}
 
 	// Load comments

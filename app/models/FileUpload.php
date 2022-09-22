@@ -22,15 +22,18 @@ class FileUpload extends BaseModel {
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
 
         if (empty($this->postAndGet('action'))) {
-            $this_page['headt'] = $this->file_upload->get_header_data();
-
-            $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+            $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
             $this_page['content'] .= $this->homelink() . '</p>';
 
             return $this_page;
         }
     }
 
+    /**
+     * Upload file and return file location or error
+     * 
+     * @return string
+     */
     public function finish_upload()
     {
         $this_page['content'] = '';
@@ -44,7 +47,8 @@ class FileUpload extends BaseModel {
             $this_page['content'] .= $upload_data['error'];
         }
 
-        $this_page['content'] .= $this_page['content'];
+        // Return data with file location or error
+        echo $this_page['content'];
     }
 
     public function uploaded_files()
@@ -78,7 +82,7 @@ class FileUpload extends BaseModel {
         if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> List of uploaded files</p>'; 
 
-            $num_items = $this->db->count_row('uplfiles');
+            $num_items = $this->db->countRow('uplfiles');
 
             if ($num_items > 0) {
                 $items_per_page = 10;
@@ -89,7 +93,7 @@ class FileUpload extends BaseModel {
         
                 if ($num_items > 0) {
                     foreach ($this->db->query("SELECT * FROM uplfiles ORDER BY id LIMIT $limit_start, $items_per_page") as $item) {
-                        $lnk = '<div class="a"><a href="' . $item['fulldir'] . '">' . $item['name'] . '</a> | <a href="?action=del&amp;id=' . $item['id'] . '">[DEL]</a></div>';
+                        $lnk = '<div class="a"><a href="' . $item['fulldir'] . '">' . $item['name'] . '</a> | <a href="?action=del&id=' . $item['id'] . '">[DEL]</a></div>';
                         $this_page['content'] .= $lnk . "<br />";
                     }
                 }
@@ -101,7 +105,7 @@ class FileUpload extends BaseModel {
         }
 
         $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
 
@@ -140,7 +144,7 @@ class FileUpload extends BaseModel {
                 $select_fields = "*";
                 $ord_fields = "id DESC";
 
-                $noi = $this->db->count_row($where_table, "{$cond} LIKE '%{$stext}%'");
+                $noi = $this->db->countRow($where_table, "{$cond} LIKE '%{$stext}%'");
                 $num_items = $noi;
                 $items_per_page = 10;
 
@@ -165,7 +169,7 @@ class FileUpload extends BaseModel {
 
         $this_page['content'] .= '<p>';
         $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back')) . '<br />';
-        $this_page['content'] .= $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
 

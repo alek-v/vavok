@@ -224,7 +224,7 @@ class Pagemanager extends Controller {
 
 		if (!empty($creator)) $where = " WHERE crtdby = '{$creator}'";
 
-		return $this->db->count_row('pages' . $where);
+		return $this->db->countRow('pages' . $where);
 	}
 
 	/**
@@ -247,9 +247,9 @@ class Pagemanager extends Controller {
 	 * @return mix int|bool
 	 */
 	function pageExists($search, $type = 'file') {
-		if ($type == 'file' && $this->db->count_row('pages', "file='{$search}'") > 0) {
+		if ($type == 'file' && $this->db->countRow('pages', "file='{$search}'") > 0) {
 			return $this->getPageId("file='{$search}'");
-		} elseif ($type == 'where' && ($this->db->count_row('pages', $search) > 0)) {
+		} elseif ($type == 'where' && ($this->db->countRow('pages', $search) > 0)) {
 			return $this->getPageId($search);
 		} else {
 			return false;

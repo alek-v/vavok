@@ -12,7 +12,7 @@ class AdminpanelModel extends BaseModel {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@localization[admpanel]}}';
+        $data['tname'] = '{@localization[adminpanel]}}';
         $data['content'] = '';
 
         if (!$this->user->check_permissions('adminpanel', 'show')) $this->redirection('../?auth_error');
@@ -103,7 +103,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
         }
 
-        if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', $this->localization->string('admpanel'), '<p>', '</p>');
+        if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', $this->localization->string('adminpanel'), '<p>', '</p>');
 
         $data['content'] .= $this->homelink('<p>', '</p>');
 
@@ -1080,7 +1080,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', $this->localization->string('back'), '<p>', '</p>');
         }
         
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $data['content'] .= $this->homelink() . '</p>';
 
         // Pass data to the view
@@ -1120,7 +1120,7 @@ class AdminpanelModel extends BaseModel {
 
         $data['content'] .= $navigation->get_navigation();
 
-        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1186,7 +1186,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '</div>';
         }
 
-        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1207,7 +1207,7 @@ class AdminpanelModel extends BaseModel {
         $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitstats]}}') . '<br />';
         $data['content'] .= $this->sitelink('../pages/online', '{@localization[usronline]}}') . '</p>';
         
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[admpanel]}}') . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1501,7 +1501,7 @@ class AdminpanelModel extends BaseModel {
             }
         }
         
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1610,7 +1610,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=delallip', $this->localization->string('dellist'), '<p>', '</p>');
         }
 
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
@@ -1770,7 +1770,7 @@ class AdminpanelModel extends BaseModel {
         }
         
         $data['content'] .= '<p>';
-        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $data['content'] .= $this->homelink();
         $data['content'] .= '</p>';
 
@@ -1818,7 +1818,7 @@ class AdminpanelModel extends BaseModel {
                 $select_fields = "*";
                 $ord_fields = "pubdate DESC";
         
-                $noi = $this->db->count_row($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
+                $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
                 $items_per_page = 10;
         
                 $navigation = new Navigation($items_per_page, $noi, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
@@ -1856,7 +1856,7 @@ class AdminpanelModel extends BaseModel {
             $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', $this->localization->string('back'), '<p>', '<br />');
         }
 
-        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel'), '', '<br />');
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel'), '', '<br />');
         $page_data['content'] .= $this->homelink('', '</p>');
 
         return $page_data;
@@ -1883,7 +1883,7 @@ class AdminpanelModel extends BaseModel {
                     $category_localization = !empty($this->postAndGet('lang')) ? '_' . $this->postAndGet('lang') : '';
 
                     // Calculate category position
-                    $position = $this->db->count_row('settings', "setting_group = 'blog_category{$category_localization}'");
+                    $position = $this->db->countRow('settings', "setting_group = 'blog_category{$category_localization}'");
 
                     // Add category
                     $data = array('setting_group' => 'blog_category' . $category_localization, 'setting_name' => $this->postAndGet('category'), 'value' => $this->postAndGet('value'), 'options' => $position);
@@ -1995,14 +1995,14 @@ class AdminpanelModel extends BaseModel {
             break;
 
             case 'delete':
-                if ($this->db->count_row('settings', "id = {$this->postAndGet('id')}") > 0) {
+                if ($this->db->countRow('settings', "id = {$this->postAndGet('id')}") > 0) {
                     // Update other categories with new positions
                     $category = $this->db->getData('settings', "id='{$this->postAndGet('id')}'");
                     $category_position = $category['options'];
                     $category_group = $category['setting_group'];
 
                     // Number of categories in this group
-                    $total_in_group = $this->db->count_row('settings', "setting_group = '{$category_group}'");
+                    $total_in_group = $this->db->countRow('settings', "setting_group = '{$category_group}'");
 
                     // Calculate do we need to update other categories and update if required
                     if ($category_position < ($total_in_group - 1)) {
@@ -2053,7 +2053,7 @@ class AdminpanelModel extends BaseModel {
                 $cat_position = $cat_info['options'];
                 $new_position = $cat_position + 1;
                     
-                $total = $this->db->count_row('settings', "setting_group = '{$cat_group}'");
+                $total = $this->db->countRow('settings', "setting_group = '{$cat_group}'");
 
                 if ($new_position < $total && (!empty($cat_position) || $cat_position == '0')) {
                     // Update cat with position we want to take
@@ -2071,7 +2071,7 @@ class AdminpanelModel extends BaseModel {
             break;
         
             default:
-                if ($this->db->count_row('settings', "setting_group LIKE 'blog_category%'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
+                if ($this->db->countRow('settings', "setting_group LIKE 'blog_category%'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
         
                 // Blog categories
                 $current_category = '';
@@ -2099,7 +2099,7 @@ class AdminpanelModel extends BaseModel {
         $page_data['content'] .= '<p class="mt-5">';
         if ($this->postAndGet('action') !== 'add-category') $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
         if (!empty($this->postAndGet('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog categories') . '<br />';
-        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
@@ -2209,14 +2209,14 @@ class AdminpanelModel extends BaseModel {
         }
         
         if (!isset($act) || empty($act)) {
-            $nitems = $this->db->count_row('pages');
+            $nitems = $this->db->countRow('pages');
             $total = $nitems;
         
             if ($total < 1) {
                 $page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
             }
         
-            $nitems = $this->db->count_row('pages', 'tname is not null');
+            $nitems = $this->db->countRow('pages', 'tname is not null');
             $num_items = $nitems;
         
             $items_per_page = 30;
@@ -2303,7 +2303,7 @@ class AdminpanelModel extends BaseModel {
         }
         
         $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
@@ -2355,7 +2355,7 @@ class AdminpanelModel extends BaseModel {
             $page_data['ip_information'] .= $this->showDanger('No data available');
         }
 
-        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('admpanel')) . '<br />';
+        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
         $page_data['content'] .= $this->homelink() . '</p>';
 
         return $page_data;
