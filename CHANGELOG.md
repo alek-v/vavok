@@ -2,6 +2,7 @@
 - Renamed method count_row() to camelCase countRow()
 - Fixed: After file upload show the file location
 - Fixed bot detection
+- Fixed how blog categories are shown (grouped) in administration panel
 
 
 

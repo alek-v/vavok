@@ -2074,23 +2074,36 @@ class AdminpanelModel extends BaseModel {
                 if ($this->db->countRow('settings', "setting_group LIKE 'blog_category%'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
         
                 // Blog categories
-                $current_category = '';
+                $blog_categories = array();
 
                 foreach ($this->db->query("SELECT * FROM settings WHERE setting_group LIKE 'blog_category%' ORDER BY options") as $category) {
-                     // Split categories
-                     if ($current_category != $category['setting_group']) {
-                        $current_category = $category['setting_group'];
+                    // Check if category key exists and create key if it doesn't exist
+                    // While creating array key put information about category group
+                    if (!isset($blog_categories[$category['setting_group']])) $blog_categories[$category['setting_group']] = 'Category Group: ' . $category['setting_group'];
 
-                        $page_data['content'] .= '<div class="mt-5">category: ' . $current_category . '</div>';
+                    // Put data into the array key
+                    $blog_categories[$category['setting_group']] .= '<div class="a">';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=delete&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Delete" /> Delete') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-up&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/ups.gif" alt="Up" /> Move up') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
+                    $blog_categories[$category['setting_group']] .= '</div>';
+                }
+
+                // Number of categories
+                $count_categories = count($blog_categories);
+
+                // Show categories
+                foreach ($blog_categories as $category) {
+                    // Split the view of categories
+                    if ($count_categories > 1) {
+                        $page_data['content'] .= '<div class="mb-5">' . $category . '</div>';
+                    } else {
+                        $page_data['content'] .= $category;
                     }
- 
-                    $page_data['content'] .= '<div class="a">';
-                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
-                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
-                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=delete&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Delete" /> Delete') . ' ';
-                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-up&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/ups.gif" alt="Up" /> Move up') . ' ';
-                    $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
-                    $page_data['content'] .= '</div>';
+
+                    $count_categories--;
                 }
 
                 break;
