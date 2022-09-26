@@ -5,7 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '2.3');
+define('VERSION', '3.0');
 
 // Error reporting
 error_reporting(E_ALL);
@@ -37,18 +37,6 @@ if (file_exists(APPDIR . '.env')) {
     }
 }
 
-/*
-require_once 'classes/Core.php';
-require_once 'classes/Vavok.php';
-require_once 'classes/Database.php';
-require_once 'classes/Controller.php';
-require_once 'classes/BrowserDetection.php';
-require_once 'classes/Navigation.php';
-require_once 'classes/Mailer.php';
-require_once 'classes/Config.php';
-require_once 'classes/Counter.php';
-require_once 'classes/BaseModel.php';
-*/
 require 'vendor/autoload.php';
 
 $vavok = new App\Classes\Vavok();
