@@ -4,6 +4,9 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\BaseModel;
+use App\Classes\Navigation;
+
 class Logfiles extends BaseModel {
     /**
      * Read data from log files

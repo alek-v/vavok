@@ -4,6 +4,9 @@
  * URI:       https://vavok.net
  */
 
+use App\Classes\Controller;
+use App\Classes\Database;
+
 class Comments extends Controller {
 	protected object $db;
 	protected object $user;

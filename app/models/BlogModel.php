@@ -4,6 +4,9 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\BaseModel;
+use App\Classes\Navigation;
+
 class BlogModel extends BaseModel {
     protected object $current_page;
 	protected $page_name;             // Page name

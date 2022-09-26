@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+namespace App\Classes;
+
 class Core {
 	protected object $db;
 

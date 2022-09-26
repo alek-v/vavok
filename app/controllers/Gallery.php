@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\Controller;
+
 class Gallery {
     /**
      * Default page

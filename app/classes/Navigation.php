@@ -4,6 +4,8 @@
  * URL:       https://vavok.net
  */
 
+namespace App\Classes;
+
 class Navigation extends Core {
 	public $items_per_page;
 	public $total_items;

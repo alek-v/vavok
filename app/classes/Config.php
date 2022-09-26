@@ -5,6 +5,8 @@
  * Package:   Class for managing website configuration
  */
 
+namespace App\Classes;
+
 class Config {
 	protected object $db;
 

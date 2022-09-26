@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\BaseModel;
+
 class FileUpload extends BaseModel {
     public function __construct()
     {

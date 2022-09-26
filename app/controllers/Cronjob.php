@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\Controller;
+
 class Cronjob extends Controller {
     public function __construct()
     {

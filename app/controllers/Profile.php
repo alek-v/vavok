@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\Controller;
+
 class Profile extends Controller {
     /**
      * Profile page

@@ -4,11 +4,9 @@
  * URL:       https://vavok.net
  */
 
-// Import the PHPMailer class into the global namespace
+namespace App\Classes;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
-
-require APPDIR . 'vendor/autoload.php';
 
 class Mailer extends Core {
     protected object $db;

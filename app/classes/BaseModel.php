@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+namespace App\Classes;
+
 class BaseModel extends Controller {
     protected object $db;
     protected object $user;

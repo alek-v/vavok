@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\Core;
+
 class Upload extends Core {
 	public function upload($directory = '', $localization = '')
 	{

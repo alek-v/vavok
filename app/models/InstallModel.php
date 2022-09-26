@@ -1,5 +1,9 @@
 <?php
 
+use App\Classes\Controller;
+use App\Classes\Database;
+use App\Classes\Config;
+
 class InstallModel extends Controller {
     protected object $db;
     protected object $user;

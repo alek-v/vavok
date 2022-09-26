@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\BaseModel;
+
 class ProfileModel extends BaseModel {
     /**
      * Profile page

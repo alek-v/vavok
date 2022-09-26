@@ -4,6 +4,11 @@
  * URL:       https://vavok.net
  */
 
+use App\Classes\Core;
+use App\Classes\Database;
+use App\Classes\Counter;
+use App\Classes\BrowserDetection;
+
 class User extends Core {
 	protected object $db;
 

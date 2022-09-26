@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+namespace App\Classes;
+
 class Controller extends Core {
     /**
      * Include and instantiate model class

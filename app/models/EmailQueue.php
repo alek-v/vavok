@@ -4,6 +4,9 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\BaseModel;
+use App\Classes\Mailer;
+
 class EmailQueue extends BaseModel {
     private object $_mailer;
 

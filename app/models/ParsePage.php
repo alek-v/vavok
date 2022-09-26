@@ -4,6 +4,8 @@
  * Site:      https://vavok.net
  */
 
+use App\Classes\Core;
+
 class ParsePage extends Core {
     protected string $file;             // Template
     protected string $title;            // Page title

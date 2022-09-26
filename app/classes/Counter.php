@@ -5,6 +5,8 @@
  * Online, hit & click counter
  */
 
+namespace App\Classes;
+
 class Counter {
     private object $db;
 

@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\Controller;
+
 class Adminpanel extends Controller {
     /**
      * Index page

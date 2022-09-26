@@ -1,5 +1,7 @@
 <?php
 
+use App\Classes\Controller;
+
 class Pages extends Controller {
     /**
      * Homepage

@@ -1,3 +1,9 @@
+# Vavok v3.0
+- Use namespaces
+- Use composer autoload
+
+
+
 # Vavok v2.3
 - Renamed method count_row() to camelCase countRow()
 - Fixed: After file upload show the file location

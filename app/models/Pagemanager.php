@@ -5,6 +5,9 @@
  * Package:   Class for managing pages
  */
 
+use App\Classes\Controller;
+use App\Classes\Database;
+
 class Pagemanager extends Controller {
 	public $page_name;             // Page name
 	public $page_language;         // Page language

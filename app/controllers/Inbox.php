@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\Controller;
+
 class Inbox extends Controller {
     public function index()
     {

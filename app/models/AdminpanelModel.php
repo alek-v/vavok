@@ -4,6 +4,10 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\BaseModel;
+use App\Classes\Navigation;
+use App\Classes\Config;
+
 class AdminpanelModel extends BaseModel {
     /**
      * Index page

@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\Controller;
+
 class Contact extends Controller {
     /**
      * Index page

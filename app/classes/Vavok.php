@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+namespace App\Classes;
+
 class Vavok extends Core {
     protected $currentController = 'Pages';
     protected $currentMethod = 'index';

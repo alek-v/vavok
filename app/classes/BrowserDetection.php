@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Classes;
+
 class BrowserDetection {
   private $_user_agent;
   private $_name;

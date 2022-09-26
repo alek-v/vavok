@@ -4,6 +4,9 @@
  * URL:       http://vavok.net
  */
 
+namespace App\Classes;
+use \PDO;
+
 class Database extends PDO {
     private $error;
     private $sql;

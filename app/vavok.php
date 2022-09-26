@@ -37,6 +37,7 @@ if (file_exists(APPDIR . '.env')) {
     }
 }
 
+/*
 require_once 'classes/Core.php';
 require_once 'classes/Vavok.php';
 require_once 'classes/Database.php';
@@ -47,5 +48,7 @@ require_once 'classes/Mailer.php';
 require_once 'classes/Config.php';
 require_once 'classes/Counter.php';
 require_once 'classes/BaseModel.php';
+*/
+require 'vendor/autoload.php';
 
-$vavok = new Vavok();
+$vavok = new App\Classes\Vavok();

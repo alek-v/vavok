@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Classes;
+
 class SimpleImage {
    var $image;
    var $image_type;
