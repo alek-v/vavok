@@ -29,7 +29,6 @@ class Vavok extends Core {
 
 		define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
 		define('CLEAN_REQUEST_URI', $this->cleanRequestUri(REQUEST_URI)); // Clean URL (REQUEST_URI)
-		define('SUB_SELF', substr($_SERVER['PHP_SELF'], 1));
 
 		// For links, images and other mod rewriten directories
 		if (!defined('HOMEDIR')) {

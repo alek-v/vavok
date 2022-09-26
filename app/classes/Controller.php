@@ -5,8 +5,13 @@
  */
 
 class Controller extends Core {
-    // Include and instantiate model class
-    public function model($model)
+    /**
+     * Include and instantiate model class
+     * 
+     * @param string $model
+     * @return object
+     */
+    public function model(string $model): object
     {
         // Require model file
         require_once '../app/models/' . $model . '.php';
@@ -15,8 +20,14 @@ class Controller extends Core {
         return new $model();
     }
 
-    // Load the view
-    public function view($view, $data = [])
+    /**
+     * Load the view and show the page content
+     * 
+     * @param string $view
+     * @param array $data
+     * @return void
+     */
+    public function view(string $view, array $data = []): void
     {
         // Users data
         $user = $data['user'];
