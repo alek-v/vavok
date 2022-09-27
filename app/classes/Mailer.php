@@ -9,13 +9,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 class Mailer extends Core {
-    protected object $db;
-
-	function __construct()
-	{
-        $this->db = new Database;
-	}
-
 	/**
 	 * Send email
 	 *
@@ -165,6 +158,3 @@ class Mailer extends Core {
 		return array_filter(explode('||', $subs));
 	}
 }
-
-
-?>

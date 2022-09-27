@@ -10,12 +10,10 @@ use App\Classes\Counter;
 use App\Classes\BrowserDetection;
 
 class User extends Core {
-	protected object $db;
-
 	public function __construct()
 	{
 		// Instantiate database connection
-		$this->db = new Database;
+		parent::__construct();
 
 		// Session from cookie
 		if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
@@ -368,7 +366,7 @@ class User extends Core {
 	    $this->db->delete("subs", "user_id = '{$users_id}'");
 	    $this->db->delete("notif", "uid = '{$users_id}'");
 	    $this->db->delete("specperm", "uid = '{$users_id}'");
-	    if ($this->db->table_exists('group_members')) $this->db->delete('group_members', "uid = '{$users_id}'");
+	    if ($this->db->tableExists('group_members')) $this->db->delete('group_members', "uid = '{$users_id}'");
 
 	    return $users;
 	}

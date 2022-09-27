@@ -26,7 +26,8 @@ class Pagemanager extends Controller {
 	 */
 	function __construct($page_name = '', $page_language = '')
 	{
-		$this->db = new Database;
+		// Instantiate database
+		parent::__construct();
 
  		// User id with active login
 		$this->user_id = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;

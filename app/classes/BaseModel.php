@@ -7,7 +7,6 @@
 namespace App\Classes;
 
 class BaseModel extends Controller {
-    protected object $db;
     protected object $user;
     protected object $localization;
 	protected array  $user_data = [
@@ -19,7 +18,7 @@ class BaseModel extends Controller {
     public function __construct()
     {
         // Instantiate database class
-        $this->db = new Database;
+        parent::__construct();
 
         // Instantiate user class
         $this->user = $this->model('User');

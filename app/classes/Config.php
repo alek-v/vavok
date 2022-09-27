@@ -7,14 +7,7 @@
 
 namespace App\Classes;
 
-class Config {
-	protected object $db;
-
-	public function __construct()
-	{
-		$this->db = new Database;
-	}
-
+class Config extends Core {
 	/**
 	 * Update configuration
 	 */

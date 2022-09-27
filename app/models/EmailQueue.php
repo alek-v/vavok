@@ -12,6 +12,7 @@ class EmailQueue extends BaseModel {
 
     public function __construct()
     {
+        // Instantiate database
         parent::__construct();
 
         // Instantiate mailer

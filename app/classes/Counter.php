@@ -7,12 +7,12 @@
 
 namespace App\Classes;
 
-class Counter {
-    private object $db;
-
-    function __construct($is_reg, $users_ip, $users_browser, $bot)
+class Counter extends Core {
+    public function __construct($is_reg, $users_ip, $users_browser, $bot)
     {
-        $this->db = new Database;
+        // Instantiate database
+        parent::__construct();
+
         $this->bot = $bot != false && !empty($bot) ? $bot : '';
 
         $day = date("d");

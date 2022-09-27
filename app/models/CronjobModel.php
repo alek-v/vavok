@@ -4,7 +4,8 @@
  * Site:   https://vavok.net
  */
 
-use App\Classes\BaseModel;
+use App\Classes\Controller;
+use App\Classes\Database;
 
 class CronjobModel extends Controller {
     protected object $db;

@@ -5,6 +5,7 @@
  */
 
 use App\Classes\BaseModel;
+use App\Classes\Navigation;
 
 class FileUpload extends BaseModel {
     public function __construct()

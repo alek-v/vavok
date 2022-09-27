@@ -173,7 +173,7 @@ class ParsePage extends Core {
         if ($this->configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->showPageGenTime());
 
         // Show database queries while debugging
-        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->show_db_queries());
+        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->showDbQueries());
 
         // Remove empty keys, parse language keys and return page content
         return preg_replace('/{@(.*?)}}/' , '', $this->parseLanguage($this->output(), $localization));
