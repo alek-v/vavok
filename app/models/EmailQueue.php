@@ -5,6 +5,7 @@
  */
 
 use App\Classes\BaseModel;
+use App\Classes\Database;
 use App\Classes\Mailer;
 
 class EmailQueue extends BaseModel {
