@@ -11,8 +11,9 @@ class Comments extends Controller {
 	protected object $db;
 	protected object $user;
 
-	function __construct() {
-		$this->db = new Database;
+	function __construct()
+	{
+		$this->db = Database::instance();
 	}
 
 	// Insert new comment

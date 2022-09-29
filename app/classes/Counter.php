@@ -11,7 +11,7 @@ class Counter extends Core {
     public function __construct($is_reg, $users_ip, $users_browser, $bot)
     {
         // Instantiate database
-        parent::__construct();
+        $this->db = Database::instance();
 
         $this->bot = $bot != false && !empty($bot) ? $bot : '';
 

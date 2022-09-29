@@ -13,7 +13,7 @@ class User extends Core {
 	public function __construct()
 	{
 		// Instantiate database connection
-		parent::__construct();
+		$this->db = Database::instance();
 
 		// Session from cookie
 		if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {

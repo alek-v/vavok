@@ -18,7 +18,7 @@ class BaseModel extends Controller {
     public function __construct()
     {
         // Instantiate database class
-        parent::__construct();
+        $this->db = Database::instance();
 
         // Instantiate user class
         $this->user = $this->model('User');

@@ -5,7 +5,6 @@ use App\Classes\Database;
 use App\Classes\Config;
 
 class InstallModel extends Controller {
-    protected object $db;
     protected object $user;
     protected object $localization;
 	protected array  $user_data = [
@@ -17,7 +16,7 @@ class InstallModel extends Controller {
 
     public function __construct()
     {
-        $this->db = new Database;
+        $this->db = Database::instance();
 
         // Localization
         $this->localization = $this->model('Localization');

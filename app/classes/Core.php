@@ -7,11 +7,9 @@
 namespace App\Classes;
 
 class Core {
-	protected object $db;
-
 	public function __construct()
 	{
-		$this->db = new Database;
+		$this->db = Database::instance();
 	}
 
 	/**

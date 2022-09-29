@@ -9,22 +9,38 @@ use \PDO;
 use App\Contracts\Database as DBInterface;
 
 class Database extends PDO implements DBInterface {
+    protected static $connection = null;
     private $error;
     private $sql;
 
-    public function __construct() {
+    public function __construct()
+    {
+        // PDO options
         $options = array(
             PDO::ATTR_PERSISTENT => false,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4'
             );
 
+        // Make a connection
         try {
-            parent::__construct('mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
+            self::$connection = parent::__construct('mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
         }
         catch (PDOException $e) {
             echo 'Database error: ' . $this->error = $e->getMessage();
         }
+    }
+
+    /**
+     * Database instance
+     *
+     * @return object
+     */
+    public static function instance(): object
+    {
+        if (self::$connection === null) self::$connection = new self;
+
+        return self::$connection;
     }
 
     /**

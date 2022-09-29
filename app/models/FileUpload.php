@@ -10,7 +10,7 @@ use App\Classes\Navigation;
 class FileUpload extends BaseModel {
     public function __construct()
     {
-        parent::__construct();
+        $this->db = Database::instance();
 
         $this->file_upload = $this->model('Upload');
     }

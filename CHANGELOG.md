@@ -1,6 +1,8 @@
 # Vavok v3.0
 - Use namespaces
 - Use composer autoload
+- Updated dependencies
+- Use static method to make a connection with a database
 
 
 

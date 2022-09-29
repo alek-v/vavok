@@ -13,7 +13,7 @@ class EmailQueue extends BaseModel {
     public function __construct()
     {
         // Instantiate database
-        parent::__construct();
+        $this->db = Database::instance();
 
         // Instantiate mailer
         $this->_mailer = new Mailer;
