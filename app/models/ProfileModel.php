@@ -11,16 +11,16 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		$data['headt'] = '
-		<style>
-		    .photo img {
-		        max-width: 100px;
-		        max-height: 100px;
-		        overflow: hidden;
-		    }
-		</style>
-		';
-		$data['tname'] = $this->localization->string('profsettings');
+        $data['headt'] = '
+        <style>
+            .photo img {
+                max-width: 100px;
+                max-height: 100px;
+                overflow: hidden;
+            }
+        </style>
+        ';
+        $data['tname'] = $this->localization->string('profsettings');
 
         $form = $this->model('ParsePage');
         $form->load('forms/form');
@@ -227,91 +227,91 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
+        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
 
-		// check email
-		if (!empty($this->postAndGet('email')) && !$this->user->validate_email($this->postAndGet('email'))) $this->redirection('profile.php?isset=noemail');
+        // check email
+        if (!empty($this->postAndGet('email')) && !$this->user->validate_email($this->postAndGet('email'))) $this->redirection('profile.php?isset=noemail');
 
-		$my_name = $this->replaceNewLines($this->postAndGet('my_name'));
-		$surname = $this->replaceNewLines($this->postAndGet('surname'));
-		$city = $this->replaceNewLines($this->postAndGet('otkel'));
-		$street = $this->replaceNewLines($this->postAndGet('street'));
-		$zip = $this->replaceNewLines($this->postAndGet('zip'));
-		$infa = $this->replaceNewLines($this->postAndGet('infa'));
-		$email = htmlspecialchars(strtolower($this->postAndGet('email')));
-		$site = $this->replaceNewLines($this->postAndGet('site'));
-		$browser = $this->replaceNewLines($this->user->user_browser());
-		$ip = $this->replaceNewLines($this->user->find_ip());
-		$sex = $this->replaceNewLines($this->postAndGet('pol'));
-		$happy = $this->replaceNewLines($this->postAndGet('happy'));
-		$timezone = $this->replaceNewLines($this->postAndGet('timezone'));
+        $my_name = $this->replaceNewLines($this->postAndGet('my_name'));
+        $surname = $this->replaceNewLines($this->postAndGet('surname'));
+        $city = $this->replaceNewLines($this->postAndGet('otkel'));
+        $street = $this->replaceNewLines($this->postAndGet('street'));
+        $zip = $this->replaceNewLines($this->postAndGet('zip'));
+        $infa = $this->replaceNewLines($this->postAndGet('infa'));
+        $email = htmlspecialchars(strtolower($this->postAndGet('email')));
+        $site = $this->replaceNewLines($this->postAndGet('site'));
+        $browser = $this->replaceNewLines($this->user->user_browser());
+        $ip = $this->replaceNewLines($this->user->find_ip());
+        $sex = $this->replaceNewLines($this->postAndGet('pol'));
+        $happy = $this->replaceNewLines($this->postAndGet('happy'));
+        $timezone = $this->replaceNewLines($this->postAndGet('timezone'));
 
-		$fields = array();
-		$fields[] = 'city';
-		$fields[] = 'about';
-		$fields[] = 'site';
-		$fields[] = 'sex';
-		$fields[] = 'birthday';
-		$fields[] = 'rname';
-		$fields[] = 'surname';
-		$fields[] = 'address';
-		$fields[] = 'zip';
-		$fields[] = 'timezone';
+        $fields = array();
+        $fields[] = 'city';
+        $fields[] = 'about';
+        $fields[] = 'site';
+        $fields[] = 'sex';
+        $fields[] = 'birthday';
+        $fields[] = 'rname';
+        $fields[] = 'surname';
+        $fields[] = 'address';
+        $fields[] = 'zip';
+        $fields[] = 'timezone';
 
-		$values = array();
-		$values[] = $city;
-		$values[] = $infa;
-		$values[] = $site;
-		$values[] = $sex;
-		$values[] = $happy;
-		$values[] = $my_name;
-		$values[] = $surname;
-		$values[] = $street;
-		$values[] = $zip;
-		$values[] = $timezone;
+        $values = array();
+        $values[] = $city;
+        $values[] = $infa;
+        $values[] = $site;
+        $values[] = $sex;
+        $values[] = $happy;
+        $values[] = $my_name;
+        $values[] = $surname;
+        $values[] = $street;
+        $values[] = $zip;
+        $values[] = $timezone;
 
-		/**
-		 * Update profile data
-		 */
-		$this->user->update_user($fields, $values);
+        /**
+         * Update profile data
+         */
+        $this->user->update_user($fields, $values);
 
-		/**
-		 * Send email confirmation link if it is changed and save data into database
-		 */
-		if ($this->user->user_info('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
-			/**
-			 * Insert data to database
-			 */
-			$token = $this->generatePassword();
+        /**
+         * Send email confirmation link if it is changed and save data into database
+         */
+        if ($this->user->user_info('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
+            /**
+             * Insert data to database
+             */
+            $token = $this->generatePassword();
 
-			$now = new DateTime();
-			$now->add(new DateInterval("P1D"));
-			$new_time = $now->format('Y-m-d H:i:s');
+            $now = new DateTime();
+            $now->add(new DateInterval("P1D"));
+            $new_time = $now->format('Y-m-d H:i:s');
 
-			$data = array(
-				'uid' => $this->user->user_id(),
-				'type' => 'email',
-				'content' => $email,
-				'token' => $token,
-				'expiration_time' => $new_time
-			);
+            $data = array(
+                'uid' => $this->user->user_id(),
+                'type' => 'email',
+                'content' => $email,
+                'token' => $token,
+                'expiration_time' => $new_time
+            );
 
-			$this->db->insert('tokens', $data);
+            $this->db->insert('tokens', $data);
 
-			/**
-			 * Add email to the queue
-			 */
-			$mailQueue = new Mailer;
+            /**
+             * Add email to the queue
+             */
+            $mailQueue = new Mailer;
 
-			$msg = "Hello {$this->user->show_username()}<br /><br />
+            $msg = "Hello {$this->user->show_username()}<br /><br />
             In order to add this email to your profile at site {$this->websiteHomeAddress()}
             please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
-			$msg .= '<br /><br />If you received this email by mistake please ignore it.';
+            $msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
-			$mailQueue->queue_email($email, 'Confirm new email address', $msg);
-		}
+            $mailQueue->queue_email($email, 'Confirm new email address', $msg);
+        }
 
-		$this->redirection('./profile');
+        $this->redirection('./profile');
     }
 
     /**
@@ -322,14 +322,14 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-		if ($this->postAndGet('confirmed') == 'yes') {
-			$delete_id = $this->user->user_id();
+        if ($this->postAndGet('confirmed') == 'yes') {
+            $delete_id = $this->user->user_id();
 
-			$this->user->delete_user($delete_id);
-			$this->user->logout($delete_id);
+            $this->user->delete_user($delete_id);
+            $this->user->logout($delete_id);
 
-			$this->redirection(HOMEDIR);
-		}
+            $this->redirection(HOMEDIR);
+        }
 
         // Page title
         $data['tname'] = '{@localization[deleteProfile]}}';
@@ -427,15 +427,15 @@ class ProfileModel extends BaseModel {
 
         // Page data
         $data['tname'] = 'Change Photography';
-		$data['headt'] = '
-		<style>
-		    .photo img {
-		        max-width: 100px;
-		        max-height: 100px;
-		        overflow: hidden;
-		    }
-		</style>
-		';
+        $data['headt'] = '
+        <style>
+            .photo img {
+                max-width: 100px;
+                max-height: 100px;
+                overflow: hidden;
+            }
+        </style>
+        ';
         $data['content'] = '';
 
         // File path cannot be empty

@@ -102,15 +102,13 @@ $lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">
 $lang_home['purecookieButton'] = 'Understood'; // Button text
 
 $language_data = array(
-	'language' => $language,
-	'ln_loc' => $ln_loc,
-	'ln_charset' => $ln_charset,
-	'ln_text_dir' => $ln_text_dir,
-	'ln_byteUnits' => $ln_byteUnits,
-	'ln_day_of_week' => $ln_day_of_week,
-	'ln_all_month' => $ln_all_month,
-	'ln_datefmt' => $ln_datefmt,
-	'ln_timefmt' => $ln_timefmt
+    'language' => $language,
+    'ln_loc' => $ln_loc,
+    'ln_charset' => $ln_charset,
+    'ln_text_dir' => $ln_text_dir,
+    'ln_byteUnits' => $ln_byteUnits,
+    'ln_day_of_week' => $ln_day_of_week,
+    'ln_all_month' => $ln_all_month,
+    'ln_datefmt' => $ln_datefmt,
+    'ln_timefmt' => $ln_timefmt
 );
-
-?>

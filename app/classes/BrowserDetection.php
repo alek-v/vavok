@@ -159,8 +159,8 @@ class BrowserDetection {
 
   public static function userDevice() {
 
-  	if (isset($_SERVER['HTTP_USER_AGENT'])) { $user_agents = $_SERVER['HTTP_USER_AGENT']; } else { $user_agents = ''; }
-  	
+      if (isset($_SERVER['HTTP_USER_AGENT'])) { $user_agents = $_SERVER['HTTP_USER_AGENT']; } else { $user_agents = ''; }
+      
     if (stristr($user_agents, "symbian") == true || stristr($user_agents, "midp") == true || stristr($user_agents, "android") == true || stristr($user_agents, "mobi") == true) {
         return 'phone';
     } elseif (stristr($user_agents, "unix") == true || stristr($user_agents, "msie") == true || stristr($user_agents, "windows") == true || stristr($user_agents, "macintosh") == true || stristr($user_agents, "macos") == true || stristr($user_agents, "bsd") == true) {
@@ -178,6 +178,4 @@ class BrowserDetection {
       "<strong>Browser User Agent String:</strong> {$this->getUserAgent()}<br/>\n" .
       "<strong>Platform:</strong> {$this->getPlatform()}<br/>";
    }
-} 
-
-?>
+}

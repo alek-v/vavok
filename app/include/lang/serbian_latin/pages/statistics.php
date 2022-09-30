@@ -24,8 +24,4 @@ $lang_count['uniquevsts'] = "Posete";
 $lang_count['visitss'] = "poseta";
 $lang_count['statnotformed'] = "Statistika nije sačinjena";
 
-
 $lang_home = array_merge($lang_home, $lang_count);
-
-
-?>

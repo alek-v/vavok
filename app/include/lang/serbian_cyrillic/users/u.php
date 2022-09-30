@@ -34,5 +34,3 @@ $lang_user['updateprofile'] = "Измени профил";
 $lang_user['site'] = "Сајт";
 
 $lang_home = array_merge($lang_home, $lang_user);
-
-?>

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `lastvst` varchar(30) NULL,                        -- last visit
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
   `phone` varchar(30) NULL,
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
   `reported` char(1) NOT NULL default '0',
   `deleted` int(11) NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `ignore` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `buddy` (
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `mlog` (
   `details` TEXT NOT NULL,
   `actdt` int(100) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `subs` (
   `date_subscribed` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `subscription_name` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `online` (
   `user` int(20),
   `usr_chck` varchar(60),
   `bot` text COMMENT 'bot'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `default_img` varchar(120) DEFAULT NULL COMMENT 'default image to show for bot''s and article headers',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstupdby`, `file`, `crtdby`, `headt`, `published`, `pubdate`, `content`, `type`, `views`, `default_img`) VALUES
 (1, 'Hello World', 'index', '', 0, 0, 2, 'index.php', 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/themes/images/img/hello-world.png\" alt=\"Hello World\" width=\"320\" height=\"320\" /></p>\r\n<p>&nbsp;</p>', NULL, 0, NULL);
@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
   `lstinb` varchar(120) NOT NULL DEFAULT '' COMMENT 'last notification of received message',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `splist` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `specperm` (
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -204,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `uplfiles` (
   `ext` varchar(5) NOT NULL COMMENT 'extension',
   `fulldir` varchar(200) NOT NULL COMMENT 'full file address',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ;
 
 
 
@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `lngeng` varchar(30) NOT NULL,
   `iso-2` varchar(35) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8mb4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ;
 
 INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
 (1, 'Abkhazian', 'AB'),
@@ -375,7 +375,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `datetime` datetime DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -392,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `email_queue` (
   `timeadded` datetime NOT NULL,
   `priority` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -403,7 +403,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `date` datetime NOT NULL,
   `pid` int(11) NOT NULL COMMENT 'page id where comment will be shown',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -417,7 +417,7 @@ CREATE TABLE IF NOT EXISTS `settings` (
   PRIMARY KEY (`id`),
   KEY `setting_name` (`setting_name`(250)),
   KEY `setting_group` (`setting_group`(250))
-) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `settings` (`id`, `setting_name`, `value`, `options`, `setting_group`) VALUES
 (1, 'keypass', NULL, NULL, 'system'),
@@ -469,7 +469,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
   UNIQUE KEY `UNIQUE` (`id`),
   KEY `page_id` (`page_id`),
   KEY `tag_name` (`tag_name`(250))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
@@ -481,7 +481,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `token` varchar(255) NOT NULL,
   `expiration_time` datetime NOT NULL COMMENT 'time until token is valid',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- Reserved tokens: login, email
 
 
@@ -491,4 +491,4 @@ CREATE TABLE IF NOT EXISTS `group_members` (
   `group_name` varchar(500) NOT NULL,
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;

@@ -118,5 +118,3 @@ $lang_page['unsubcodefail'] = "Код за одјаву неправилан";
 $lang_page['unsubfail'] = "Одјава са новости неуспешна";
 
 $lang_home = array_merge($lang_home, $lang_page);
-
-?>

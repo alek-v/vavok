@@ -16,4 +16,3 @@ $available_mails = array(
         'host' => 'mail.example.com'
     )
 );
-?>

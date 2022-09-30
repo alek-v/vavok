@@ -104,15 +104,13 @@ $lang_home['purecookieButton'] = 'Prihvatam'; // Button text
 // ob_start("cyr_to_lat_skiptags");
 
 $language_data = array(
-	'language' => $language,
-	'ln_loc' => $ln_loc,
-	'ln_charset' => $ln_charset,
-	'ln_text_dir' => $ln_text_dir,
-	'ln_byteUnits' => $ln_byteUnits,
-	'ln_day_of_week' => $ln_day_of_week,
-	'ln_all_month' => $ln_all_month,
-	'ln_datefmt' => $ln_datefmt,
-	'ln_timefmt' => $ln_timefmt
+    'language' => $language,
+    'ln_loc' => $ln_loc,
+    'ln_charset' => $ln_charset,
+    'ln_text_dir' => $ln_text_dir,
+    'ln_byteUnits' => $ln_byteUnits,
+    'ln_day_of_week' => $ln_day_of_week,
+    'ln_all_month' => $ln_all_month,
+    'ln_datefmt' => $ln_datefmt,
+    'ln_timefmt' => $ln_timefmt
 );
-
-?>

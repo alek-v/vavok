@@ -1,3 +1,13 @@
+# Vavok v3.1
+- Composer setup moved to app root directory
+- New method selectData() in Database class
+- Removed ?> from the end of the scripts
+- All tabs replaced with spaces
+- Use InnoDB instead of MyISAM
+- Deprecated method getData() in Database class
+
+
+
 # Vavok v3.0
 - Use namespaces
 - Use composer autoload
@@ -15,7 +25,6 @@
 
 
 # Vavok v2.2
-
 - Added email queue option
 - Added sitemap generator
 - New option to manage email subscriptions

@@ -29,4 +29,3 @@ $lang_siterules['mainrules'] = "
 
 
 $lang_home = array_merge($lang_home, $lang_siterules);
-?>

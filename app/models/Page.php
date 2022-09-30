@@ -21,14 +21,16 @@ class Page extends BaseModel {
         // Localization from URL
         $this->page_localization = !empty($params[0]) ? $this->user->getPreferredLanguage($params[0], 'short') : '';
 
-        // Select page with localization or to leave it without localization
-        $localization = !empty($params[0]) ? " AND lang = '{$params[0]}'" : '';
-
-        // Get localized page
-        $data = $this->db->getData('pages', "pname='index'{$localization}");
+        // Try to get localized page
+        $data = !empty($params[0])
+        ? $this->db->selectData('pages', "pname = :pname AND lang = :lang", array(
+            ':pname' => 'index',
+            ':lang' => $params[0]
+        ))
+        : '';
 
         // Page without localization
-        if (empty($data)) $data = $this->db->getData('pages', "pname='index'");
+        if (empty($data)) $data = $this->db->selectData('pages', "pname = :pname", array(':pname' => 'index'));
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
@@ -56,7 +58,7 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this_page = $this->db->getData('pages', "pname='{$params[0]}'");
+        $this_page = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
 
         // Page localization
         $page_localization = isset($this_page['lang']) ? $this_page['lang'] : '';

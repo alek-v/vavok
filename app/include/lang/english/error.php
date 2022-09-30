@@ -19,5 +19,3 @@ $lang_error['unknownerror'] = "Unknown error";
 
 
 $lang_home = array_merge($lang_home, $lang_error);
-
-?>

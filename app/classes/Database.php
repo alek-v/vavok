@@ -52,18 +52,19 @@ class Database extends PDO implements DBInterface {
      */
     public function insert(string $table, array $values = array()): void
     {
-        foreach ($values as $field => $v)
+        foreach ($values as $field => $v) {
             $ins[] = ':' . $field;
+        }
 
-            $ins = implode(',', $ins);
-            $fields = implode(',', array_keys($values));
-            $sql = "INSERT INTO " . DB_PREFIX . "{$table} ($fields) VALUES ($ins)";
+        $ins = implode(',', $ins);
+        $fields = implode(',', array_keys($values));
+        $sql = "INSERT INTO " . DB_PREFIX . "{$table} ($fields) VALUES ($ins)";
 
-            $sth = $this->prepare($sql);
-            foreach ($values as $f => $v) {
-                $sth->bindValue(':' . $f, $v);
-            }
-            $sth->execute();
+        $sth = $this->prepare($sql);
+        foreach ($values as $f => $v) {
+            $sth->bindValue(':' . $f, $v);
+        }
+        $sth->execute();
 
         // Count number of db queries while debugging
         $this->dbQueries();
@@ -72,12 +73,13 @@ class Database extends PDO implements DBInterface {
     /**
      * Get data from the database
      * 
-     * @param str $table
-     * @param str $where
-     * @param str $fields
+     * @param string $table
+     * @param string $where
+     * @param array $bind use named placeholders
+     * @param string $fields
      * @return array|bool
      */
-    public function getData($table, $where = '', $fields = '*'): array|bool
+    public function selectData(string $table, string $where = '', array $bind = array(), string $fields = '*'): array|bool
     {
         $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
         if (!empty($where))
@@ -87,10 +89,34 @@ class Database extends PDO implements DBInterface {
         // Count number of db queries while debugging
         $this->dbQueries();
 
-        $pdostmt = $this->prepare($sql);
-        $pdostmt->execute();
+        $statement = $this->prepare($sql);
+        $statement->execute($bind);
 
-        return $pdostmt->fetch(PDO::FETCH_ASSOC);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get data from the database
+     * Deprecated, use selectData() method
+     * 
+     * @param string $table
+     * @param string $where
+     * @param string $fields
+     * @return array|bool
+     */
+    public function getData(string $table, string $where = '', string $fields = '*'): array|bool
+    {
+        $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
+        if (!empty($where))
+            $sql .= ' WHERE ' . $where;
+        $sql .= ';';
+
+        // Count number of db queries while debugging
+        $this->dbQueries();
+
+        $query = $this->query($sql);
+
+        return $query->fetch(PDO::FETCH_ASSOC);            
     }
 
     /**
@@ -239,4 +265,3 @@ class Database extends PDO implements DBInterface {
         return '<p class="site_db_queries">DB queries: ' . $queries . '</p>';
     }
 }
-?>

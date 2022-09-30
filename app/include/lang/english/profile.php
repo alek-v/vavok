@@ -35,5 +35,3 @@ $lang_profil['badextlrg'] = "File format unallowed. It must be";
 $lang_profil['notoken'] = 'Token does not exist';
 
 $lang_home = array_merge($lang_home, $lang_profil);
-
-?>

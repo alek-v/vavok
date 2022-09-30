@@ -9,26 +9,26 @@ use App\Classes\Navigation;
 
 class BlogModel extends BaseModel {
     protected object $current_page;
-	protected $page_name;             // Page name
-	protected $page_language;         // Page language
-	protected $page_title;            // Title
-	protected $page_content;          // Content
-	protected $published;             // Visitors can see page
-	protected $page_author;           // Page author
-	protected $page_created_date;     // Page created date
-	protected $head_tags;             // Head tags
-	protected $page_published_date;   // Date when post is published
+    protected $page_name;             // Page name
+    protected $page_language;         // Page language
+    protected $page_title;            // Title
+    protected $page_content;          // Content
+    protected $published;             // Visitors can see page
+    protected $page_author;           // Page author
+    protected $page_created_date;     // Page created date
+    protected $head_tags;             // Head tags
+    protected $page_published_date;   // Date when post is published
 
-	/**
-	 * Blog
-	 * 
-	 * @param array $params
-	 * @return array
-	 */
-	public function index($params = [])
-	{
+    /**
+     * Blog
+     * 
+     * @param array $params
+     * @return array
+     */
+    public function index($params = [])
+    {
         // Users data
-		$this_page['user'] = $this->user_data;
+        $this_page['user'] = $this->user_data;
 
         // Content of the page
         $this_page['content'] = '';
@@ -283,16 +283,16 @@ class BlogModel extends BaseModel {
         }
     }
 
-	/**
-	 * Blog
-	 * 
-	 * @param array $params
-	 * @return array
-	 */
-	public function save_comment()
-	{
+    /**
+     * Blog
+     * 
+     * @param array $params
+     * @return array
+     */
+    public function save_comment()
+    {
         // Users data
-		$this_page['user'] = $this->user_data;
+        $this_page['user'] = $this->user_data;
 
         // Content of the page
         $this_page['content'] = '';
@@ -311,54 +311,54 @@ class BlogModel extends BaseModel {
         $this->redirection(HOMEDIR . $ptl . '?isset=savedok');
     }
 
-	/**
-	 * Load page
-	 * 
-	 * @param array $params
-	 */
-	protected function blog_page_data($params = [])
-	{
-		// Fetch page
-		$page_data = $this->db->getData('pages', "pname='" . $params[0] . "'");
+    /**
+     * Load page
+     * 
+     * @param array $params
+     */
+    protected function blog_page_data($params = [])
+    {
+        // Fetch page
+        $page_data = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
 
-		// return false if there is no data
-		if (empty($page_data['tname']) && empty($page_data['content'])) {
-			return false;
-		} else {
-			// Update page title
-			$this->page_title = $page_data['tname'];
+        // return false if there is no data
+        if (empty($page_data['tname']) && empty($page_data['content'])) {
+            return false;
+        } else {
+            // Update page title
+            $this->page_title = $page_data['tname'];
 
-			// Update language
-			if (!empty($page_data['lang']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' lang="' . $page_data['lang'] . '"');
+            // Update language
+            if (!empty($page_data['lang']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' lang="' . $page_data['lang'] . '"');
 
-			// Page content
-			$this->page_content = $page_data['content'];
+            // Page content
+            $this->page_content = $page_data['content'];
 
-			// Published status
-			$this->published = $page_data['published'];
+            // Published status
+            $this->published = $page_data['published'];
 
-			// Page id
-			$this->page_id = $page_data['id'];
+            // Page id
+            $this->page_id = $page_data['id'];
 
-			// Author
-			$this->page_author = $page_data['crtdby'];
+            // Author
+            $this->page_author = $page_data['crtdby'];
 
-			// Date created
-			$this->page_created_date = $page_data['created'];
+            // Date created
+            $this->page_created_date = $page_data['created'];
 
-			// Head tags
-			$this->head_tags = $page_data['headt'];
+            // Head tags
+            $this->head_tags = $page_data['headt'];
 
-			// Published date
-			$this->page_published_date = $page_data['pubdate'];
+            // Published date
+            $this->page_published_date = $page_data['pubdate'];
 
-			// Published date
-			$this->page_updated_date = $page_data['lastupd'];
+            // Published date
+            $this->page_updated_date = $page_data['lastupd'];
 
-			// Page views
-			$this->views = !empty($page_data['views']) ? $page_data['views'] : 0;
+            // Page views
+            $this->views = !empty($page_data['views']) ? $page_data['views'] : 0;
 
-			return $page_data;
-		}
-	}
+            return $page_data;
+        }
+    }
 }

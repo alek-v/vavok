@@ -9,4 +9,3 @@ $lang_setting['topicsinforumpp'] = "Тема у форуму";
 $lang_setting['msgsininboxpp'] = "Порука у сандучету";
 
 $lang_home = array_merge($lang_home, $lang_setting);
-?>

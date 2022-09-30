@@ -45,12 +45,12 @@ class ParsePage extends Core {
         $this->lang = isset($data['lang']) ? $data['lang'] : '';
 
         // Page views
-		$this->views = !empty($data['views']) ? $data['views'] : 0;
+        $this->views = !empty($data['views']) ? $data['views'] : 0;
 
-	    // Update page views
+        // Update page views
         // Update page with selected localization
-		$language = is_string($this->lang) && !empty($this->lang) ? " AND lang='" . $this->lang . "'" : '';
-		if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "pname = '" . $this->page_name . "'{$language}");
+        $language = is_string($this->lang) && !empty($this->lang) ? " AND lang='" . $this->lang . "'" : '';
+        if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "pname = '" . $this->page_name . "'{$language}");
 
         $this->notification = isset($data['show_notification']) ? $data['show_notification'] : '';
         $this->values = array_merge($this->values, $data);
@@ -157,7 +157,7 @@ class ParsePage extends Core {
         if (!empty($this->lang)) $this->set('page_language', ' lang="' . $this->lang . '"');
 
         // Cookie consent
-        if ($this->configuration('cookieConsent') == 1) include APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        if ($this->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
 
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);

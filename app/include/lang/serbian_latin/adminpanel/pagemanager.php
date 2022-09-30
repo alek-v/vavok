@@ -27,5 +27,3 @@ $lang_home['pgaddress'] = "Adresa strane";
 $lang_home['with'] = 'sa';
 $lang_home['or'] = 'ili';
 $lang_home['pagetitle'] = 'Naslov stranice';
-
-?>

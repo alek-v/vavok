@@ -118,5 +118,3 @@ $lang_page['unsubcodefail'] = "Unsubscription code invalid";
 $lang_page['unsubfail'] = "Unsubscribing failed";
 
 $lang_home = array_merge($lang_home, $lang_page);
-
-?>

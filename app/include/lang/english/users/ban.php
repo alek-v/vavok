@@ -14,5 +14,3 @@ $lang_ban['siterules'] = "Site rules";
 
 
 $lang_home = array_merge($lang_home, $lang_ban);
-
-?>

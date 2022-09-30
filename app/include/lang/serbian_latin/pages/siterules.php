@@ -28,6 +28,3 @@ Pravila za korisnike sajta " . $sajtx . "<br><br>
 
 
 $lang_home = array_merge($lang_home, $lang_siterules);
-
-
-?>

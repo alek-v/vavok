@@ -17,6 +17,3 @@ $lang_error['dberrmsg'] = "Bezuspešno povezivanje sa bazom.<br>Ovaj problem se 
 $lang_error['unknownerror'] = "Nepoznata greška";
 
 $lang_home = array_merge($lang_home, $lang_error);
-
-
-?>

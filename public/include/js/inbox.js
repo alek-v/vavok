@@ -2,8 +2,8 @@
 (c) vavok.net
 */
 window.onload=function() {
-	var objDiv = document.getElementById("message_box");
-	objDiv.scrollTop = objDiv.scrollHeight;
+    var objDiv = document.getElementById("message_box");
+    objDiv.scrollTop = objDiv.scrollHeight;
 }
 
 var GetMsgUrl = "/inbox/receive_message";
@@ -17,17 +17,17 @@ const Who = urlParams.get('who'); // with who is user chatting
 window.onload = initJavaScript;
 
 function initJavaScript() {
-	document.forms['message-form'].elements['pmtext'].setAttribute('autocomplete','off'); //this non standard attribute prevents firefox' autofill function to clash with this script
-	receiveChatText(); //initiates the first data query
+    document.forms['message-form'].elements['pmtext'].setAttribute('autocomplete','off'); //this non standard attribute prevents firefox' autofill function to clash with this script
+    receiveChatText(); //initiates the first data query
 }
 
 //initiates the first data query
 function receiveChatText() {
-	if (httpReceiveMsg.readyState == 4 || httpReceiveMsg.readyState == 0) {
-	  	httpReceiveMsg.open("GET",GetMsgUrl + '?lastid=' + lastID + '&who=' + Who, true);
-	    httpReceiveMsg.onreadystatechange = handlehhttpReceiveMsg; 
-	  	httpReceiveMsg.send(null);
-	}
+    if (httpReceiveMsg.readyState == 4 || httpReceiveMsg.readyState == 0) {
+          httpReceiveMsg.open("GET",GetMsgUrl + '?lastid=' + lastID + '&who=' + Who, true);
+        httpReceiveMsg.onreadystatechange = handlehhttpReceiveMsg; 
+          httpReceiveMsg.send(null);
+    }
 }
 
 //deals with the servers' reply to requesting new content
@@ -36,13 +36,13 @@ function handlehhttpReceiveMsg() {
     results = httpReceiveMsg.responseText.split(':|:'); //the fields are seperated by :|:
 
     if (results.length > 2) {
-	    for(i=0;i < (results.length);i=i+5) { //goes through the result one message at a time
-	    	if (lastID !== 0) {
-	    		insertNewMessage(results[i],results[i+1], results[i+3], results[i+4]); //inserts the new content into the page
-	    	}
+        for(i=0;i < (results.length);i=i+5) { //goes through the result one message at a time
+            if (lastID !== 0) {
+                insertNewMessage(results[i],results[i+1], results[i+3], results[i+4]); //inserts the new content into the page
+            }
 
-	    	lastID = results[i+2];
-	    }
+            lastID = results[i+2];
+        }
     }
 
     setTimeout('receiveChatText();', 2000); //executes the next data query in 4 seconds
@@ -51,20 +51,20 @@ function handlehhttpReceiveMsg() {
 
 // Inserts the new content into the page
 function insertNewMessage(liName, liText, id, time_sent) {
-	insertO = document.getElementById("outputList");
-	oSpan = document.createElement('span');
-	oSpan.className = 'msg'; // oSpan.setAttribute('class','name');
-	oName = document.createTextNode(liName);
-	oText = document.createTextNode(liText);
-	oSpan.appendChild(oName);
-	oSpan.innerHTML = ('<a href="/users/u/' + id + '" class="btn btn-primary">' + liName + '</a> ' + time_sent + '<br />' + liText + '<hr />');
-	insertO.insertBefore(oSpan, insertO.firstChild);
+    insertO = document.getElementById("outputList");
+    oSpan = document.createElement('span');
+    oSpan.className = 'msg'; // oSpan.setAttribute('class','name');
+    oName = document.createTextNode(liName);
+    oText = document.createTextNode(liText);
+    oSpan.appendChild(oName);
+    oSpan.innerHTML = ('<a href="/users/u/' + id + '" class="btn btn-primary">' + liName + '</a> ' + time_sent + '<br />' + liText + '<hr />');
+    insertO.insertBefore(oSpan, insertO.firstChild);
 }
 
 //deals with the servers' reply to sending a comment
 function handlehHttpSendChat() {
   if (httpSendChat.readyState == 4) {
-  	receiveChatText(); //refreshes the chat after a new comment has been added (this makes it more responsive)
+      receiveChatText(); //refreshes the chat after a new comment has been added (this makes it more responsive)
   }
 }
 

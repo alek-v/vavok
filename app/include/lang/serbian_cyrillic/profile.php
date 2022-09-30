@@ -35,5 +35,3 @@ $lang_profil['badextlrg'] = "Недозвољен формат фајла. Мо�
 $lang_profil['notoken'] = 'Токен не постоји';
 
 $lang_home = array_merge($lang_home, $lang_profil);
-
-?>

@@ -9,10 +9,10 @@ namespace App\Classes;
 class BaseModel extends Controller {
     protected object $user;
     protected object $localization;
-	protected array  $user_data = [
-		'authenticated' => false,
-		'admin_status' => 'user',
-		'language' => 'english'
+    protected array  $user_data = [
+        'authenticated' => false,
+        'admin_status' => 'user',
+        'language' => 'english'
         ];
 
     public function __construct()

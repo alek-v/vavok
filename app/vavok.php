@@ -5,7 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '3.0');
+define('VERSION', '3.1');
 
 // Error reporting
 error_reporting(E_ALL);
@@ -23,8 +23,8 @@ if (!defined('APPDIR')) define('APPDIR', __DIR__ . '/');
 if (!defined('PUBLICDIR')) define('PUBLICDIR', rtrim($_SERVER['SCRIPT_FILENAME'], 'index.php'));
 
 // Define configuration constants from .env file
-if (file_exists(APPDIR . '.env')) {
-    $enviroment = file(APPDIR . '.env');
+if (file_exists(BASEDIR . '.env')) {
+    $enviroment = file(BASEDIR . '.env');
 
     for ($i=0; $i < count($enviroment); $i++) {
         if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
@@ -37,6 +37,6 @@ if (file_exists(APPDIR . '.env')) {
     }
 }
 
-require 'vendor/autoload.php';
+require BASEDIR . 'vendor/autoload.php';
 
 $vavok = new App\Classes\Vavok();

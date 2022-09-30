@@ -665,9 +665,9 @@ class PagemanagerModel extends BaseModel {
                 .custom { padding: 0.5em 0.8em 0.8em 2em; }
                 * html a:hover { background: transparent; }
                 .classic {background: #FFFFAA; border: 1px solid #FFAD33; }
-                .critical { background: #FFCCAA; border: 1px solid #FF3334;	}
-                .help { background: #9FDAEE; border: 1px solid #2BB0D7;	}
-                .info { background: #9FDAEE; border: 1px solid #2BB0D7;	padding: 20px;}
+                .critical { background: #FFCCAA; border: 1px solid #FF3334;    }
+                .help { background: #9FDAEE; border: 1px solid #2BB0D7;    }
+                .info { background: #9FDAEE; border: 1px solid #2BB0D7;    padding: 20px;}
                 .warning { background: #FFFFAA; border: 1px solid #FFAD33; }
             </style>
             ';

@@ -1,6 +1,5 @@
 <?php
 // (c) vavok.net
-// modified: 21.06.2020. 20:17:58
 
 $lang_home['rows'] = "Rows";
 $lang_home['filelist'] = "File list";
@@ -27,6 +26,3 @@ $lang_home['pgaddress'] = "Page address";
 $lang_home['with'] = 'with';
 $lang_home['or'] = 'or';
 $lang_home['pagetitle'] = 'Page title';
-
-
-?>

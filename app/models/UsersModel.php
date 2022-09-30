@@ -631,7 +631,7 @@ class UsersModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Page data
-		$data['tname'] = '{@localization[mymenu]}}';
+        $data['tname'] = '{@localization[mymenu]}}';
 
         // Pass data
         return $data;

@@ -15,5 +15,3 @@ If your browser uses its own algorithm for compression, or if you are using any 
 ";
 
 $lang_home = array_merge($lang_home, $lang_traffic);
-
-?>

@@ -50,7 +50,7 @@ function eraseCookie(name) {
 function cookieConsent() {
   if (!getCookie('purecookieDismiss')) {
     document.body.innerHTML += '<div class="cookieConsentContainer" id="cookieConsentContainer"><div class="cookieTitle">' + purecookieTitle + '</div><div class="cookieDesc"><p>' + purecookieDesc + ' ' + purecookieLink + '</p></div><div class="cookieButton"><a onClick="purecookieDismiss();">' + purecookieButton + '</a></div></div>';
-	pureFadeIn("cookieConsentContainer");
+    pureFadeIn("cookieConsentContainer");
   }
 }
 

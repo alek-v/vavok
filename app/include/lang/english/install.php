@@ -33,5 +33,3 @@ $lang_install = array(
 
 
 $lang_home = array_merge($lang_home, $lang_install);
-
-?>

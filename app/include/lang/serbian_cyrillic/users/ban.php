@@ -13,5 +13,3 @@ $lang_ban['siterules'] = "Правила сајта";
 
 
 $lang_home = array_merge($lang_home, $lang_ban);
-
-?>

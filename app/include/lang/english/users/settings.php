@@ -9,5 +9,3 @@ $lang_setting['topicsinforumpp'] = "Topics in forum";
 $lang_setting['msgsininboxpp'] = "Messages in inbox on page";
 
 $lang_home = array_merge($lang_home, $lang_setting);
-
-?>

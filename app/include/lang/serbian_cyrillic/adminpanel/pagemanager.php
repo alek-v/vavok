@@ -27,6 +27,3 @@ $lang_home['pgaddress'] = "Адреса стране";
 $lang_home['with'] = 'са';
 $lang_home['or'] = 'или';
 $lang_home['pagetitle'] = 'Наслов странице';
-
-
-?>

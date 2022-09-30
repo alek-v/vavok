@@ -89,24 +89,24 @@ class Counter extends Core {
         } 
 
         // counter
-        $counts = $this->db->getData('counter');
+        $counts = $this->db->selectData('counter');
 
         $current_day = $counts['day'];
         $clicks_today = $counts['clicks_today'];
         $total_clicks = $counts['clicks_total'];
         $new_visits_today = $counts['visits_today']; // visits today
-    	$new_total_visits = $counts['visits_total']; // total visits
+        $new_total_visits = $counts['visits_total']; // total visits
 
         // current day
         if (empty($current_day) || !isset($current_day)) {
-        	$current_day = $day;
-    	}
+            $current_day = $day;
+        }
 
-    	if ($current_day != $day) {
-    		$current_day = $day;
-    		$clicks_today = 0;
-    		$new_visits_today = 0;
-    	}
+        if ($current_day != $day) {
+            $current_day = $day;
+            $clicks_today = 0;
+            $new_visits_today = 0;
+        }
 
         // clicks
         $new_clicks_today = $clicks_today + 1; // clicks today
@@ -139,5 +139,3 @@ class Counter extends Core {
         $this->db->update('counter', $fields, $values);
     }
 }
-
-?>

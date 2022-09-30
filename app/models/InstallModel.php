@@ -7,11 +7,11 @@ use App\Classes\Config;
 class InstallModel extends Controller {
     protected object $user;
     protected object $localization;
-	protected array  $user_data = [
-		'authenticated' => false,
-		'admin_status' => 'user',
-		'language' => 'english'
-	];
+    protected array  $user_data = [
+        'authenticated' => false,
+        'admin_status' => 'user',
+        'language' => 'english'
+    ];
     protected bool $table_exists;
 
     public function __construct()

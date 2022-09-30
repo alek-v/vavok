@@ -26,7 +26,3 @@ $lang_count['statnotformed'] = "Статистика није сачињена";
 
 
 $lang_home = array_merge($lang_home, $lang_count);
-
-
-
-?>

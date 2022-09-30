@@ -83,7 +83,4 @@ $lang_apsetting['username'] = "Korisničko ime";
 $lang_apsetting['password'] = "Šifra";
 $lang_apsetting['dbname'] = "Ime baze";
 
-
 $lang_home = array_merge($lang_home, $lang_apsetting);
-
-?>

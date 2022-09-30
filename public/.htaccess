@@ -99,7 +99,7 @@ ErrorDocument 502 /errors/error_502
 
 # Pagespeed module
 <IfModule pagespeed_module>
-	ModPagespeed off
+    ModPagespeed off
 </IfModule>
 
 # Commpression mod_deflate

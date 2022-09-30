@@ -11,7 +11,4 @@ $lang_ban['wasbanned'] = "Bili ste kažnjeni";
 $lang_ban['endbanadvice'] = "Kazna vam je istekla, pokušajte da ne kršite pravila<br>Savetujem da pročitate";
 $lang_ban['siterules'] = "Pravila sajta";
 
-
 $lang_home = array_merge($lang_home, $lang_ban);
-
-?>

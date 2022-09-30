@@ -77,4 +77,3 @@ var purecookieLink = \'{@localization[purecookieLink]}}\'; // Cookie policy link
 var purecookieButton = "{@localization[purecookieButton]}}"; // Button text
 </script>';
 $this->head_data .= '<script src="' . $this->websiteHomeAddress() . '/themes/default/js/cookie-consent/purecookie.min.js" async></script>';
-?>

@@ -15,12 +15,13 @@ interface Database {
     /**
      * Get data from the database
      * 
-     * @param str $table
-     * @param str $where
-     * @param str $fields
+     * @param string $table
+     * @param string $where
+     * @param array $bind use named placeholders
+     * @param string $fields
      * @return array|bool
      */
-    public function getData($table, $where = '', $fields = '*'): array|bool;
+    public function selectData(string $table, string $where = '', array $bind = array(), string $fields = '*'): array|bool;
 
     /**
      * Count number of rows
