@@ -5,7 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '3.1');
+define('VERSION', '4.0');
 
 // Error reporting
 error_reporting(E_ALL);

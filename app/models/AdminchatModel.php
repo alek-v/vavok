@@ -15,25 +15,25 @@ class AdminchatModel extends BaseModel {
         $data['tname'] = '{@localization[adminchat]}}';
         $data['content'] = '';
 
-        if (!$this->user->check_permissions(basename(__FILE__))) $this->redirection('../?auth_error');
+        if (!$this->user->checkPermissions(basename(__FILE__))) $this->container['core']->redirection('../?auth_error');
 
         // add to admin chat
-        if ($this->postAndGet('action') == 'acadd') {
-            $brow = $this->check($this->user->user_browser());
-            $msg = $this->check(wordwrap($this->postAndGet('msg'), 150, ' ', 1));
+        if ($this->container['core']->postAndGet('action') == 'acadd') {
+            $brow = $this->container['core']->check($this->user->user_browser());
+            $msg = $this->container['core']->check(wordwrap($this->container['core']->postAndGet('msg'), 150, ' ', 1));
             $msg = substr($msg, 0, 1200);
-            $msg = $this->check($msg);
+            $msg = $this->container['core']->check($msg);
         
-            $msg = $this->antiword($msg);
-            $msg = $this->smiles($msg);
-            $msg = $this->replaceNewLines($msg, '<br />');
+            $msg = $this->container['core']->antiword($msg);
+            $msg = $this->container['core']->smiles($msg);
+            $msg = $this->container['core']->replaceNewLines($msg, '<br />');
         
-            $text = $msg . '|' . $this->user->show_username() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
-            $text = $this->replaceNewLines($text);
+            $text = $msg . '|' . $this->user->show_username() . '|' . $this->container['core']->correctDate(time(), "d.m.y") . '|' . $this->container['core']->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
+            $text = $this->container['core']->replaceNewLines($text);
         
-            $this->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
+            $this->container['core']->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
         
-            $file = $this->getDataFile('adminchat.dat');
+            $file = $this->container['core']->getDataFile('adminchat.dat');
             $i = count($file);
             if ($i >= 300) {
                 $fp = fopen(APPDIR . "used/adminchat.dat", "w");
@@ -50,35 +50,35 @@ class AdminchatModel extends BaseModel {
         }
 
         // empty admin chat
-        if ($this->postAndGet('action') == "acdel") {
+        if ($this->container['core']->postAndGet('action') == "acdel") {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-                $this->clearFile(APPDIR . "used/adminchat.dat");
+                $this->container['core']->clearFile(APPDIR . "used/adminchat.dat");
 
                 header ('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=mp_admindelchat');
                 exit;
             }
         }
 
-        $data['content'] .= '<img src="../themes/images/img/menu.gif" alt=""> <b>' . $this->localization->string('adminchat') . '</b><br><br>';
+        $data['content'] .= '<img src="../themes/images/img/menu.gif" alt=""> <b>{@localization[adminchat]}}</b><br><br>';
         
-        if (empty($this->postAndGet('action'))) {
+        if (empty($this->container['core']->postAndGet('action'))) {
             $data['content'] .= '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?r=' . rand(100, 999), $this->localization->string('refresh')) . '<br>';
+            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminchat/?r=' . rand(100, 999), '{@localization[refresh]}}') . '<br>';
         
-            $data['content'] .='<hr><form action="adminchat/?action=acadd" method="post"><b>' . $this->localization->string('message') . '</b><br>';
+            $data['content'] .='<hr><form action="adminchat/?action=acadd" method="post"><b>{@localization[message]}}</b><br>';
             $data['content'] .='<textarea cols="80" rows="5" name="msg"></textarea><br>';
         
-            $data['content'] .='<input type="submit" value="' . $this->localization->string('save') . '" /></form><hr>';
+            $data['content'] .='<input type="submit" value="{@localization[save]}}" /></form><hr>';
         
-            $file = $this->getDataFile('adminchat.dat');
+            $file = $this->container['core']->getDataFile('adminchat.dat');
             $file = array_reverse($file);
             $total = count($file);
         
             if ($total < 1) {
-                $data['content'] .='<br><img src="../themes/images/img/reload.gif" alt=""> <b>' . $this->localization->string('nomsgs') . '</b><br>';
+                $data['content'] .='<br><img src="../themes/images/img/reload.gif" alt=""> <b>{@localization[nomsgs]}}</b><br>';
             }
         
-            $navigation = new Navigation(10, $total, $this->postAndGet('page'), HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
+            $navigation = new Navigation(10, $total, $this->container['core']->postAndGet('page'), HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
         
             $limit_start = $navigation->start()['start']; // starting point
         
@@ -91,14 +91,14 @@ class AdminchatModel extends BaseModel {
             for ($i = $limit_start; $i < $end; $i++) {
                 $chat_data = explode("|", $file[$i]); 
         
-                $statwho = $this->user->user_online($chat_data[1]); 
+                $statwho = $this->user->userOnline($chat_data[1]); 
         
-                $data_text = $this->getbbcode($chat_data[0]);
+                $data_text = $this->container['core']->getbbcode($chat_data[0]);
         
-                $data['content'] .= '<div class=b><b>' . $this->sitelink(HOMEDIR . 'users/u/' . $chat_data[1], $chat_data[1]) . '</b> ' . $statwho;
+                $data['content'] .= '<div class=b><b>' . $this->container['core']->sitelink(HOMEDIR . 'users/u/' . $chat_data[1], $chat_data[1]) . '</b> ' . $statwho;
         
                 if (date('d.m.y') == $chat_data[2]) {
-                    $chat_data[2] = '<font color="#FF0000">' . $this->localization->string('today') . '</font>';
+                    $chat_data[2] = '<font color="#FF0000">{@localization[today]}}</font>';
                 }
         
                 $data['content'] .='<small> (' . $chat_data[2] . ' / ' . $chat_data[3] . ')</small></div>' . $data_text . '<br><small><font color="#CC00CC">[' . $chat_data[4] . ', ' . $chat_data[5] . ']</font></small>';
@@ -110,22 +110,22 @@ class AdminchatModel extends BaseModel {
         
             $data['content'] .= '<br><br>';
         
-            $data['content'] .= $this->sitelink('../pages/smiles.php', $this->localization->string('smile'));
+            $data['content'] .= $this->container['core']->sitelink('../pages/smiles.php', '{@localization[smile]}}');
         }
 
-        if ($this->postAndGet('action') == 'prodel') {
-            $data['content'] .= '<br>' . $this->localization->string('delacmsgs') . '?<br>';
-            $data['content'] .= '<b>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=acdel', $this->localization->string('yessure') . '!') . '</b><br>';
+        if ($this->container['core']->postAndGet('action') == 'prodel') {
+            $data['content'] .= '<br>{@localization[delacmsgs]}}?<br>';
+            $data['content'] .= '<b>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=acdel', '{@localization[yessure]}}' . '!') . '</b><br>';
         
-            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/', $this->localization->string('back'));
+            $data['content'] .= '<br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminchat/', '{@localization[back]}}');
         } 
         
         if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
-            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=prodel', $this->localization->string('cleanchat'));
+            $data['content'] .= '<br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=prodel', '{@localization[cleanchat]}}');
         }
         
-        $data['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->container['core']->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
+        $data['content'] .= $this->container['core']->homelink() . '</p>';
 
         return $data;
     }    

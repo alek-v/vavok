@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
 
 
 
-CREATE TABLE IF NOT EXISTS `ignore` (
+CREATE TABLE IF NOT EXISTS `blocklist` (
   `id` int(10) NOT NULL auto_increment,
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',

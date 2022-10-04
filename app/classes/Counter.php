@@ -1,17 +1,21 @@
 <?php 
 /**
- * Author:    Aleksandar Vranešević
- * Site:      https://vavok.net
- * Online, hit & click counter
+ * Online, hit and click counter
  */
 
 namespace App\Classes;
 
 class Counter extends Core {
-    public function __construct($is_reg, $users_ip, $users_browser, $bot)
+    protected object $container;
+    protected object $db;
+
+    public function __construct($is_reg, $users_ip, $users_browser, $bot, $container)
     {
-        // Instantiate database
-        $this->db = Database::instance();
+        // Container with a dependencies
+        $this->container = $container;
+
+        // Database connection
+        $this->db = $this->container['db'];
 
         $this->bot = $bot != false && !empty($bot) ? $bot : '';
 
@@ -46,7 +50,7 @@ class Counter extends Core {
         $this->db->delete('online',  "date + " . $bz_seconds . " < " . $bz_date);
 
         if ($this->db->countRow('online', "usr_chck = '{$xmatch}'") > 0) {
-            while ($bz_row = $this->db->getData('online', "usr_chck = '{$xmatch}'")) {
+            while ($bz_row = $this->db->selectData('online', "usr_chck = :xmatch", [':xmatch' => $xmatch])) {
                 if (isset($bz_row['usr_chck']) && $bz_row['usr_chck'] == $xmatch) {
                     $fields = array();
                     $fields[] = 'date';

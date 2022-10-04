@@ -5,7 +5,8 @@
  */
 
 namespace App\Classes;
-use \PDO;
+use PDO;
+use PDOException;
 use App\Contracts\Database as DBInterface;
 
 class Database extends PDO implements DBInterface {
@@ -25,9 +26,8 @@ class Database extends PDO implements DBInterface {
         // Make a connection
         try {
             self::$connection = parent::__construct('mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
-        }
-        catch (PDOException $e) {
-            echo 'Database error: ' . $this->error = $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'Database error: ' . $this->error = $e->getMessage(); exit;
         }
     }
 
@@ -98,6 +98,8 @@ class Database extends PDO implements DBInterface {
     /**
      * Get data from the database
      * Deprecated, use selectData() method
+     * 
+     * @deprecated since version 4.0
      * 
      * @param string $table
      * @param string $where

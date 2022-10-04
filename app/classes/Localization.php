@@ -1,8 +1,6 @@
 <?php
-/**
- * Author:    Aleksandar Vranešević
- * URL:       https://vavok.net
- */
+
+namespace App\Classes;
 
 class Localization {
     protected $language_data;
@@ -44,7 +42,7 @@ class Localization {
     /**
      * Return single string
      * 
-     * @param str $string
+     * @param string $string
      * @return string
      */
     public function string($string) {

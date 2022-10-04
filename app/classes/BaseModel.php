@@ -5,8 +5,9 @@
  */
 
 namespace App\Classes;
+use App\Classes\Localizaion;
 
-class BaseModel extends Controller {
+class BaseModel {
     protected object $user;
     protected object $localization;
     protected array  $user_data = [
@@ -14,14 +15,17 @@ class BaseModel extends Controller {
         'admin_status' => 'user',
         'language' => 'english'
         ];
+    protected object $container;
+    protected object $db;
 
-    public function __construct()
+    public function __construct($container)
     {
-        // Instantiate database class
-        $this->db = Database::instance();
-
-        // Instantiate user class
-        $this->user = $this->model('User');
+        // Dependency injection container
+        $this->container = $container;
+        // User object
+        $this->user = $container['user'];
+        // Database connection
+        $this->db = $this->container['db'];
 
         // Check if user is authenticated
         // This time we check data from database, because of this we pass parameter true
@@ -36,7 +40,7 @@ class BaseModel extends Controller {
         $this->user_data['language'] = $this->user->getUserLanguage();
 
         // Localization
-        $this->localization = $this->model('Localization');
+        $this->localization = new Localization;
         $this->localization->load();
     }
 }

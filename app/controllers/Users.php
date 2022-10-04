@@ -44,7 +44,11 @@ class Users extends Controller {
     {
         // Load page model
         $model = $this->model('UsersModel');
-        $model->register();
+
+        $page_data = $model->register();
+        $template = $page_data['page_template'];
+
+        $this->view($template, $page_data);
     }
 
     /**
@@ -79,8 +83,11 @@ class Users extends Controller {
         // Load model
         $model = $this->model('UsersModel');
 
+        $page_data = $model->resendkey();
+        $template = $page_data['page_template'];
+
         // Pass page data to the view
-        $this->view('users/register/resendkey', $model->resendkey());
+        $this->view($template, $page_data);
     }
 
     /**

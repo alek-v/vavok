@@ -1,32 +1,50 @@
 <?php
 
-use App\Classes\Controller;
 use App\Classes\Database;
+use App\Classes\BaseModel;
 use App\Classes\Config;
+use App\Classes\Core;
+use App\Classes\User;
+use App\Classes\Validations;
+use Pimple\Container;
 
-class InstallModel extends Controller {
+class InstallModel extends BaseModel {
+    private bool $table_exists;
+    protected object $container;
+    protected object $db;
     protected object $user;
-    protected object $localization;
-    protected array  $user_data = [
-        'authenticated' => false,
-        'admin_status' => 'user',
-        'language' => 'english'
-    ];
-    protected bool $table_exists;
 
     public function __construct()
     {
         $this->db = Database::instance();
 
-        // Localization
-        $this->localization = $this->model('Localization');
-        $this->localization->load();
-    
         // Check if install is already completed
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
 
-        if ($this->table_exists == true && $this->db->countRow('vavok_users') > 0) $this->redirection(HOMEDIR);
+        // There are databaase tables and administrator is registered, make a redirection
+        if ($this->table_exists == true && $this->db->countRow('vavok_users') > 0) {
+            header('Location: ' . HOMEDIR);
+            exit;
+        }
+
+        // Tables are imported into the database
+        if ($this->table_exists == true) {
+            // Instantiate dependency injection container
+            $container = new Container();
+
+            // Globaly used methods
+            $container['db'] = fn($c) => $this->db;
+            $container['core'] = fn($c) => new Core($c);
+            $container['user'] = fn($c) => new User($c);
+
+            $this->container = $container;
+            $this->user = $container['user'];
+            $this->core = $container['core'];
+        }
+
+        // Set default theme manually when user table doesn't exist and user class is not instantiated
+        if (!defined('MY_THEME')) define('MY_THEME', 'default');
     }
 
     public function index()
@@ -34,9 +52,9 @@ class InstallModel extends Controller {
         // Users data
         $this_page['tname'] = 'Install';
         $this_page['content'] = '';
-    
+
+        // Import database tables into the database
         if ($this->table_exists == false) {
-            // import mysql data
             // Name of the file
             $filename = APPDIR . 'include/mysql/db.sql';
             // Temporary variable, used to store current query
@@ -60,8 +78,6 @@ class InstallModel extends Controller {
             }
         }
 
-        $this->user = $this->model('User');
-
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
@@ -72,19 +88,17 @@ class InstallModel extends Controller {
 
     public function register()
     {
-        $this->user = $this->model('User');
-
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
-        $this_page['site_address'] = $this->websiteHomeAddress();
+        $this_page['site_address'] = $this->container['core']->websiteHomeAddress();
 
         return $this_page;
     }
 
     public function register_admin()
     {
-        $this->user = $this->model('User');
+        $this->validations = new Validations;
 
         // Users data
         $this_page['user'] = $this->user_data;
@@ -102,78 +116,85 @@ class InstallModel extends Controller {
         $email = $_POST['email'];
         $osite = $_POST['osite'];
 
-        if ($name != "" && $password != "" && $email != "" && $osite != "") {
-            if ($str1 < 21 && $str1 > 2 && $str2 < 21 && $str2 > 2) {
-                if ($password == $password2) {
-                    if ($this->user->validate_email($email)) {
-                        if ($this->validateUrl($osite)) {
-                            $osite_name = ucfirst(str_replace("http://", "", $osite));
-                            $osite_name = str_replace("https://", "", $osite_name);
-    
-                            // write data to config file
-                            // init class
-                            $myconfig = new Config;
-    
-                            $values = array(
-                            'keypass' => $this->generatePassword(),
-                            'webtheme' => 'default',
-                            'quarantine' => 0,
-                            'showtime' => 0,
-                            'pageGenTime' => 0,
-                            'pgFbComm' => 0,
-                            'showOnline' => 0,
-                            'adminNick' => $name,
-                            'adminEmail' => $email,
-                            'timeZone' => 0, // time zone
-                            'title' => $osite_name,
-                            'homeUrl' => $osite,
-                            'bookGuestAdd' => 0,
-                            'transferProtocol' => 'auto',
-                            'maxPostChat' => 2000,
-                            'maxPostNews' => 10000,
-                            'floodTime' => 10,
-                            'photoList' => 5,
-                            'photoFileSize' => 40000,
-                            'maxPhotoPixels' => 640,
-                            'siteDefaultLang' => 'english',
-                            'mPanel' => 'adminpanel',
-                            'subMailPacket' => 50,
-                            'dosLimit' => 480,
-                            'showCounter' => 6,
-                            'maxBanTime' => 43200
-                            );
-    
-                            $myconfig->updateConfigData($values);
-    
-                            // write to database
-                            $this->user->register($name, $password, 0, '', 'default', $email); // register user
-                            $user_id = $this->user->getidfromnick($name);
-                            $this->db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+        $validation_error = '';
 
-                            $this_page['content'] .= '<p>Installation competed successfully<br></p>';
-
-                            $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login">Login</a></b></p>';
-                        } else {
-                            $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
-                            $this_page['content'] .= '<p><a href="register">Back</a></p>';
-                        } 
-                    } else {
-                        $this_page['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
-                        $this_page['content'] .= '<p><a href="register">Back</a></p>';
-                    } 
-                } else {
-                    $this_page['content'] .= '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
-                    $this_page['content'] .= '<p><a href="register">Back</a></p>';
-                } 
-     
-            } else {
-                $this_page['content'] .= '<p><b>Your username or your password are too short</b></p>';
-                $this_page['content'] .= '<p><a href="register">Back</a></p>';
-            } 
-        } else {
+        if (empty($name) || empty($password) || empty($email) || empty($osite)) {
             $this_page['content'] .= '<p><b>You didn\'t write all of the required information! Please complete all the empty fields</b></p>';
-            $this_page['content'] .= '<p><a href="register">Back</a></p>';
+
+            $validation_error = 1;
         }
+        if ($str1 < 2 || $str2 < 7) {
+            $this_page['content'] .= '<p><b>Your username or your password are too short</b></p>';
+
+            $validation_error = 1;
+        }
+        if ($password !== $password2) {
+            $this_page['content'] .= '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
+
+            $validation_error = 1;
+        }
+        if (!$this->validations->validateEmail($email)) {
+            $this_page['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
+
+            $validation_error = 1;
+        }
+        if (!$this->validations->validateUrl($osite)) {
+            $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
+
+            $validation_error = 1;
+        }
+
+        if ($validation_error == 1) {
+            $this_page['content'] .= '<p><a href="register">Back</a></p>';
+
+            return $this_page;
+        }
+
+        $osite_name = ucfirst(str_replace("http://", "", $osite));
+        $osite_name = str_replace("https://", "", $osite_name);
+
+        // write data to config file
+        // init class
+        $myconfig = new Config($this->container);
+
+        $values = array(
+        'keypass' => $this->container['core']->generatePassword(),
+        'webtheme' => 'default',
+        'quarantine' => 0,
+        'showtime' => 0,
+        'pageGenTime' => 0,
+        'pgFbComm' => 0,
+        'showOnline' => 0,
+        'adminNick' => $name,
+        'adminEmail' => $email,
+        'timeZone' => 0, // time zone
+        'title' => $osite_name,
+        'homeUrl' => $osite,
+        'bookGuestAdd' => 0,
+        'transferProtocol' => 'auto',
+        'maxPostChat' => 2000,
+        'maxPostNews' => 10000,
+        'floodTime' => 10,
+        'photoList' => 5,
+        'photoFileSize' => 40000,
+        'maxPhotoPixels' => 640,
+        'siteDefaultLang' => 'english',
+        'mPanel' => 'adminpanel',
+        'subMailPacket' => 50,
+        'dosLimit' => 480,
+        'showCounter' => 6,
+        'maxBanTime' => 43200
+        );
+
+        $myconfig->updateConfigData($values);
+
+        // write to database
+        $this->user->register($name, $password, 0, '', 'default', $email); // register user
+        $user_id = $this->user->getIdFromNick($name);
+        $this->db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+
+        $this_page['content'] .= '<p>Installation has been competed successfully<br></p>';
+        $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login">Login</a></b></p>';
 
         return $this_page;
     }

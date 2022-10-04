@@ -128,7 +128,7 @@ ErrorDocument 502 /errors/error_502
   AddOutputFilterByType DEFLATE text/xml
 </IfModule>
 
-# deny adding www. or other subdomain to site address
+# Redirect when www subdomain is at site address
 # The [L] flag stands for "Last", meaning that if this condition is true, execute the RewriteRule and do not attempt to match other RewriteConds or perform other operations on the request.
 # The [R] flag stands for "Redirect". You can pass in an option to R to set the HTTP status code of the redirect. Example [R=302] or [R=404].
 # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]

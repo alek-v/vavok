@@ -9,6 +9,8 @@ use App\Classes\Controller;
 class Cronjob extends Controller {
     public function __construct()
     {
+        parent::__construct();
+
         // Don't update visitors counter if current request is a cronjob
         if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
     }

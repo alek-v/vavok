@@ -4,26 +4,35 @@
  * URL:       https://vavok.net
  */
 
-use App\Classes\Core;
-use App\Classes\Database;
+namespace App\Classes;
 use App\Classes\Counter;
 use App\Classes\BrowserDetection;
+use App\Classes\Mailer;
+use App\Classes\Validations;
+use DateTime;
+use DateInterval;
 
-class User extends Core {
-    public function __construct()
+class User {
+    protected object $container;
+    protected object $db;
+    protected object $validations;
+
+    public function __construct(object $container)
     {
-        // Instantiate database connection
-        $this->db = Database::instance();
+        $this->container = $container;
+
+        // Database connection
+        $this->db = $container['db'];
 
         // Session from cookie
         if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
             // Search for token in database and get tokend data if exists
-            $cookie_data = $this->db->getData('tokens', "token = '{$this->check($_COOKIE['cookie_login'])}'", 'uid, token');
+            $cookie_data = $this->db->selectData('tokens', 'token = :token', [':token' => $this->container['core']->check($_COOKIE['cookie_login'])], 'uid, token');
             $cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
             $token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
 
             // Get user's data
-            $cookie_check = $this->db->getData('vavok_users', "id='{$cookie_id}'", 'name, perm, lang');
+            $cookie_check = $this->db->selectData('vavok_users', 'id = :id', [':id' => $cookie_id], 'name, perm, lang');
 
             // If user exists write session data
             if (isset($cookie_check['name']) && !empty($cookie_check['name']) && ($_COOKIE['cookie_login'] === $token_value)) {
@@ -38,14 +47,14 @@ class User extends Core {
             } else {
                 // Token from cookie is not valid or it is expired, delete cookie
                 setcookie('cookie_login', '', time() - 3600);
-                setcookie('cookie_login', '', 1, '/', $this->cleanDomain());
+                setcookie('cookie_login', '', 1, '/', $this->container['core']->cleanDomain());
             }
         }
 
         // Get user data
         if (!empty($_SESSION['uid'])) {
-            $vavok_users = $this->db->getData('vavok_users', "id='{$_SESSION['uid']}'");
-            $user_profil = $this->db->getData('vavok_profil', "uid='{$_SESSION['uid']}'", 'regche');
+            $vavok_users = $this->db->selectData('vavok_users', 'id = :id', [':id' => $_SESSION['uid']]);
+            $user_profil = $this->db->selectData('vavok_profil', 'uid = :uid', [':uid' => $_SESSION['uid']], 'regche');
 
             // Update last visit
             $this->db->update('vavok_profil', 'lastvst', time(), "uid='{$_SESSION['uid']}'");
@@ -57,7 +66,7 @@ class User extends Core {
             if (!empty($vavok_users['lang']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang'])) $_SESSION['lang'] = $vavok_users['lang'];
 
             // Check if user is banned
-            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirection(HOMEDIR . 'users/ban');
+            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->container['core']->redirection(HOMEDIR . 'users/ban');
 
              // activate account
             if (isset($user_profil['regche']) && $user_profil['regche'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
@@ -76,30 +85,28 @@ class User extends Core {
         if (empty($_SESSION['counton'])) $_SESSION['counton'] = 0;
         $_SESSION['counton']++;
 
-        // pages visited at this session
+        // Pages visited at this session
         $this->visited_pages = $_SESSION['counton'];
 
-        // visitor's time on the site
-        $this->time_on_site = $this->makeTime(round(time() - $_SESSION['currs']));
+        // Visitor's time on the site
+        $this->time_on_site = $this->container['core']->makeTime(round(time() - $_SESSION['currs']));
 
-        /**
-         * User settings
-         */
+        // User settings
 
         // If timezone is not defined use default
-        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration('timeZone'));
+        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->container['core']->configuration('timeZone'));
 
         // Site theme
-        $config_themes = $this->configuration('webtheme');
+        $config_themes = $this->container['core']->configuration('webtheme');
 
         // If theme does not exist use default theme
         // For admin panel use default theme
-        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->container['core']->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
         define('MY_THEME', $config_themes);
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
-        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detectBot());
+        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->container['core']->detectBot(), $this->container);
     }
 
     /**
@@ -124,7 +131,7 @@ class User extends Core {
             if ($_SESSION['permissions'] == 107) return true;
 
             // Administrator, check if access permissions are changed
-            if ($this->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
+            if ($this->container['core']->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
                 // Everything is ok
                 return true;
             } else {
@@ -158,7 +165,7 @@ class User extends Core {
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
          */
-        $rootDomain = '.' . $this->cleanDomain();
+        $rootDomain = '.' . $this->container['core']->cleanDomain();
 
         // destroy cookies
         setcookie('cookie_login', '', time() - 3600);
@@ -180,6 +187,8 @@ class User extends Core {
 
     public function checkAuth()
     {
+        $this->validations = new Validations;
+
         // Response data
         $data = [];
 
@@ -187,28 +196,28 @@ class User extends Core {
         $max_time_in_seconds = 600;
         $max_attempts = 10;
 
-        if (!empty($this->postAndGet('log')) && !empty($this->postAndGet('pass')) && $this->postAndGet('log') != 'System') {
-            if ($this->login_attempt_count($max_time_in_seconds, $this->postAndGet('log'), $this->find_ip()) > $max_attempts) {
+        if (!empty($this->container['core']->postAndGet('log')) && !empty($this->container['core']->postAndGet('pass')) && $this->container['core']->postAndGet('log') != 'System') {
+            if ($this->loginAttemptCount($max_time_in_seconds, $this->container['core']->postAndGet('log'), $this->find_ip()) > $max_attempts) {
                 $data['show_notification'] = "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
-                Try again in " . explode(':', $this->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
+                Try again in " . explode(':', $this->container['core']->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
             }
 
             // User is logging in with email
-            if ($this->validate_email($this->postAndGet('log'))) {
-                $userx_id = $this->id_from_email($this->postAndGet('log'));
+            if ($this->validations->validateEmail($this->container['core']->postAndGet('log'))) {
+                $userx_id = $this->id_from_email($this->container['core']->postAndGet('log'));
             }
 
             // User is logging in with username
             else {
-                $userx_id = $this->getidfromnick($this->postAndGet('log'));
+                $userx_id = $this->getIdFromNick($this->container['core']->postAndGet('log'));
             }
 
             // compare sent data and data from database
-            if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
+            if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->container['core']->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
                 // user want to remember login
-                if ($this->postAndGet('cookietrue') == 1) {
+                if ($this->container['core']->postAndGet('cookietrue') == 1) {
                     // Encrypt data to save in cookie
-                    $token = $this->leaveLatinLettersNumbers($this->password_encrypt($this->postAndGet('pass', true) . $this->generatePassword()));
+                    $token = $this->container['core']->leaveLatinLettersNumbers($this->password_encrypt($this->container['core']->postAndGet('pass', true) . $this->container['core']->generatePassword()));
 
                     // Set token expire time
                     $now = new DateTime();
@@ -219,10 +228,10 @@ class User extends Core {
                     $this->db->insert('tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
 
                     // Save cookie with token in users's device
-                    SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->cleanDomain()); // one year
+                    SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->container['core']->cleanDomain()); // one year
                 }
 
-                $_SESSION['log'] = $this->getnickfromid($userx_id);
+                $_SESSION['log'] = $this->getNickFromId($userx_id);
                 $_SESSION['permissions'] = $this->user_info('perm', $userx_id);
                 $_SESSION['uid'] = $userx_id;
 
@@ -240,12 +249,12 @@ class User extends Core {
                     $userx_id);
         
                 // Redirect user to confirm registration
-                if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
+                if ($this->user_info('regche', $userx_id) == 1) $this->container['core']->redirection(HOMEDIR . 'users/key/?log=' . $this->container['core']->postAndGet('log'));
         
                 // Redirect user if he is banned
-                if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->postAndGet('log'));
+                if ($this->user_info('banned', $userx_id) == 1) $this->container['core']->redirection(HOMEDIR . 'users/ban/?log=' . $this->container['core']->postAndGet('log'));
 
-                $this->redirection(HOMEDIR . $this->postAndGet('ptl'));
+                $this->container['core']->redirection(HOMEDIR . $this->container['core']->postAndGet('ptl'));
             }
 
             $data['show_notification'] = '{@localization[wronguserorpass]}}';
@@ -265,30 +274,33 @@ class User extends Core {
         setcookie(session_name(), '', 0, '/');
     }
 
-    // count login attempts
-    public function login_attempt_count($seconds, $username, $ip)
+    /**
+     * Count login attempts
+     * 
+     * @param int $seconds
+     * @param string $username
+     * @param string $ip
+     * @return int
+     */
+    public function loginAttemptCount($seconds, $username, $ip): int
     {
-        try {
-            // First we delete old attempts from the table
-            $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
-            $oldest = date("Y-m-d H:i:s", $oldest);
-            $this->db->delete('login_attempts', "`datetime` < '{$oldest}'");
-            
-            // Next we insert this attempt into the table
-            $values = array(
-            'address' => $ip,
-            'datetime' =>  date("Y-m-d H:i:s"),
-            'username' => $username
-            );
-            $this->db->insert('login_attempts', $values);
-            
-            // Finally we count the number of recent attempts from this ip address  
-            $attempts = $this->db->countRow('login_attempts', " `address` = '" . $_SERVER['REMOTE_ADDR'] . "' AND `username` = '" . $username . "'");
+        // First we delete old attempts from the table
+        $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
+        $oldest = date("Y-m-d H:i:s", $oldest);
+        $this->db->delete('login_attempts', "`datetime` < '{$oldest}'");
+        
+        // Next we insert this attempt into the table
+        $values = array(
+        'address' => $ip,
+        'datetime' =>  date("Y-m-d H:i:s"),
+        'username' => $username
+        );
+        $this->db->insert('login_attempts', $values);
+        
+        // Finally we count the number of recent attempts from this ip address  
+        $attempts = $this->db->countRow('login_attempts', " `address` = '{$_SERVER['REMOTE_ADDR']}' AND `username` = '{$username}'");
 
-            return $attempts;
-        } catch (PDOEXCEPTION $e) {
-            echo "Error: " . $e;
-        }
+        return $attempts;
     }
 
     // register user
@@ -299,16 +311,16 @@ class User extends Core {
             'pass' => $this->password_encrypt($pass),
             'perm' => '107',
             'skin' => $theme,
-            'browsers' => $this->check($this->user_browser()),
+            'browsers' => $this->container['core']->check($this->user_browser()),
             'ipadd' => $this->find_ip(),
             'timezone' => 0,
             'banned' => 0,
             'newmsg' => 0,
-            'lang' => $this->configuration('siteDefaultLang')
+            'lang' => $this->container['core']->configuration('siteDefaultLang')
         );
         $this->db->insert('vavok_users', $values);
 
-        $user_id = $this->db->getData('vavok_users', "name='{$name}'", 'id')['id'];
+        $user_id = $this->db->selectData('vavok_users', 'name = :name', [':name' => $name], 'id')['id'];
 
         $this->db->insert('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
         $this->db->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
@@ -347,28 +359,31 @@ class User extends Core {
         }
     }
 
-    // delete user from database
-    public function delete_user($users)
+    /**
+     * Delete user
+     * 
+     * @param string|int $username
+     * @return void
+     */
+    public function deleteUser($users): void
     {
-        // check if it is really user's id
+        // Check if it is really user's id
         if (preg_match("/^([0-9]+)$/", $users)) {
             $users_id = $users;
         } else {
-            $users_id = $this->getidfromnick($users);
+            $users_id = $this->getIdFromNick($users);
         }
 
-        $this->db->delete("vavok_users", "id = '{$users_id}'");
-        $this->db->delete("vavok_profil", "uid = '{$users_id}'");
-        $this->db->delete("vavok_about", "uid = '{$users_id}'");
-        $this->db->delete("inbox", "byuid = '{$users_id}' OR touid = '{$users_id}'");
-        $this->db->delete("ignore", "target = '{$users_id}' OR name = '{$users_id}'");
-        $this->db->delete("buddy", "target = '{$users_id}' OR name = '{$users_id}'");
-        $this->db->delete("subs", "user_id = '{$users_id}'");
-        $this->db->delete("notif", "uid = '{$users_id}'");
-        $this->db->delete("specperm", "uid = '{$users_id}'");
+        $this->db->delete('vavok_users', "id = '{$users_id}'");
+        $this->db->delete('vavok_profil', "uid = '{$users_id}'");
+        $this->db->delete('vavok_about', "uid = '{$users_id}'");
+        $this->db->delete('inbox', "byuid = '{$users_id}' OR touid = '{$users_id}'");
+        $this->db->delete('blocklist', "target = '{$users_id}' OR name = '{$users_id}'");
+        $this->db->delete('buddy', "target = '{$users_id}' OR name = '{$users_id}'");
+        $this->db->delete('subs', "user_id = '{$users_id}'");
+        $this->db->delete('notif', "uid = '{$users_id}'");
+        $this->db->delete('specperm', "uid = '{$users_id}'");
         if ($this->db->tableExists('group_members')) $this->db->delete('group_members', "uid = '{$users_id}'");
-
-        return $users;
     }
 
     /**
@@ -531,7 +546,8 @@ class User extends Core {
     }
 
     public function isstarred($pmid) {
-        $strd = $this->db->getData('inbox', "id='{$pmid}'", 'starred');
+        $strd = $this->db->selectData('inbox', 'id = :id', [':id' => $pmid], 'starred');
+
         if ($strd['starred'] == 1) {
             return true;
         } else {
@@ -544,7 +560,7 @@ class User extends Core {
         $text = base64_decode($text);
 
         // format message
-        $text = $this->getbbcode($this->smiles($this->antiword($text)));
+        $text = $this->container['core']->getbbcode($this->container['core']->smiles($this->container['core']->antiword($text)));
 
         // strip slashes
         if (function_exists('get_magic_quotes_gpc')) {
@@ -562,19 +578,21 @@ class User extends Core {
 
         $this->db->insert('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
-        $user_profile = $this->db->getData('vavok_profil', "uid='{$who}'", 'lastvst');
-        $last_notif = $this->db->getData('notif', "uid='{$who}' AND type='inbox'", 'lstinb, type'); 
+        $user_profile = $this->db->selectData('vavok_profil', 'uid = :uid', [':uid' => $who], 'lastvst');
+        $last_notif = $this->db->selectData('notif', 'uid = :uid AND :type', [':uid' => $who, ':type' => 'inbox'], 'lstinb, type'); 
+
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
             $this->db->insert('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
-        } 
+        }
+
         $notif_expired = $last_notif['lstinb'] + 864000;
 
         if (($user_profile['lastvst'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
-            $user_mail = $this->db->getData('vavok_about', "uid='{$who}'", 'email');
+            $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
-            $send_mail = new Mailer();
-            $send_mail->queue_email($user_mail['email'], "Message on " . $this->configuration('homeUrl'), "Hello " . $vavok->go('users')->getnickfromid($who) . "\r\n\r\nYou have new message on site " . $this->configuration('homeUrl'), '', '', 'normal'); // update lang
+            $send_mail = new Mailer($this->container);
+            $send_mail->queue_email($user_mail['email'], "Message on " . $this->container['core']->configuration('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->container['core']->configuration('homeUrl'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -633,7 +651,7 @@ class User extends Core {
      * @param bool $uid
      * @return str|bool $unick
      */
-    public function getnickfromid($uid)
+    public function getNickFromId($uid)
     {
         $unick = $this->user_info('nickname', $uid);
         return $unick = !empty($unick) ? $unick : false;
@@ -645,9 +663,9 @@ class User extends Core {
      * @param string $nick
      * @return int
      */
-    public function getidfromnick($nick)
+    public function getIdFromNick($nick)
     {
-        $uid = $this->db->getData('vavok_users', "name='{$nick}'", 'id');
+        $uid = $this->db->selectData('vavok_users', 'name = :name', [':name' => $nick], 'id');
         $id = !empty($uid['id']) ? $uid['id'] : 0;
 
         return $id;
@@ -661,7 +679,7 @@ class User extends Core {
      */
     public function id_from_email($email)
     {
-        $id = $this->db->getData('vavok_about', "email='{$email}'", 'uid');
+        $id = $this->db->selectData('vavok_about', 'email = :email', [':email' => $email], 'uid');
         $id = !empty($id['uid']) ? $id['uid'] : false;
 
         return $id;
@@ -715,175 +733,169 @@ class User extends Core {
 
         switch ($info) {
             case 'email':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'email');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'email');
                 $data = !empty($data['email']) ? $data['email'] : '';
                 return $data;
                 break;
             
             case 'full_name':
-                $uinfo = $this->db->getData('vavok_about', "uid='{$users_id}'", 'rname, surname');
+                $uinfo = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname, surname');
                 $data = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
                 return $data;
                 break;
 
             case 'firstname':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'rname');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname');
                 $data = !empty($data) ? $data['rname'] : '';
                 return $data;
                 break;
 
             case 'lastname':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'surname');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'surname');
                 $data = !empty($data) ? $data['surname'] : '';
                 return $data;
                 break;
 
             case 'city':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'city');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'city');
                 $data = !empty($data) ? $data['city'] : '';
                 return $data;
                 break;
 
             case 'address':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'address');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'address');
                 $data = !empty($data) ? $data['address'] : '';
                 return $data;
                 break;
 
             case 'zip':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'zip');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'zip');
                 $data = !empty($data) ? $data['zip'] : '';
                 return $data;
                 break;
 
             case 'about':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'about');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'about');
                 $data = !empty($data) ? $data['about'] : '';
                 return $data;
                 break;
 
             case 'site':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'site');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'site');
                 $data = !empty($data) ? $data['site'] : '';
                 return $data;
                 break;
 
             case 'birthday':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'birthday');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'birthday');
                 $data = !empty($data) ? $data['birthday'] : '';
                 return $data;
                 break;
 
             case 'gender':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'sex');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'sex');
                 $data = !empty($data) ? $data['sex'] : '';
                 return $data;
                 break;
 
             case 'photo':
-                $data = $this->db->getData('vavok_about', "uid='{$users_id}'", 'photo');
+                $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'photo');
                 $data = !empty($data) ? $data['photo'] : '';
                 return $data;
                 break;
 
             case 'nickname':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'name');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'name');
                 $data = !empty($data) ? $data['name'] : '';
                 return $data;
                 break;
 
             case 'language':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'lang');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'lang');
                 $data = !empty($data) ? $data['lang'] : '';
                 return $data;
                 break;
 
             case 'banned':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'banned');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'banned');
                 $data = !empty($data) ? $data['banned'] : '';
                 return $data;
                 break;
 
             case 'password':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'pass');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'pass');
                 $data = !empty($data) ? $data['pass'] : '';
                 return $data;
                 break;
 
             case 'perm':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'perm');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'perm');
                 $data = !empty($data) ? $data['perm'] : '';
                 return $data;
                 break;
 
             case 'browser':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'browsers');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'browsers');
                 $data = !empty($data) ? $data['browsers'] : '';
                 return $data;
                 break;
 
             case 'ipaddress':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'ipadd');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'ipadd');
                 $data = !empty($data) ? $data['ipadd'] : '';
                 return $data;
                 break;
 
             case 'timezone':
-                $data = $this->db->getData('vavok_users', "id='{$users_id}'", 'timezone');
+                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'timezone');
                 $data = !empty($data) ? $data['timezone'] : '';
                 return $data;
                 break;
 
             case 'bantime':
-                $data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'bantime');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'bantime');
                 $data = !empty($data['bantime']) ? $data['bantime'] : 0;
                 return $data;
                 break;
 
             case 'bandesc':
-                $data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'bandesc');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'bandesc');
                 $data = !empty($data) ? $data['bandesc'] : '';
                 return $data;
                 break;
 
             case 'allban':
-                $data = $this->db->getData('vavok_profil', "id='{$users_id}'", 'allban');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'allban');
                 $data = !empty($data) ? $data['allban'] : '';
                 return $data;
                 break;
 
             case 'regche':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'regche');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'regche');
                 $data = !empty($data) ? $data['regche'] : '';
                 return $data;
                 break;
 
             case 'status':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'perstat');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'perstat');
                 $data = !empty($data) ? $data['perstat'] : '';
                 return $data;
                 break;
 
             case 'regdate':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'regdate');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'regdate');
                 $data = !empty($data) ? $data['regdate'] : '';
                 return $data;
                 break;
 
-            case 'forummes':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'forummes');
-                $data = !empty($data) ? $data['forummes'] : '';
-                return $data;
-                break;
-
             case 'lastvisit':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'lastvst');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'lastvst');
                 $data = !empty($data) ? $data['lastvst'] : '';
                 return $data;
                 break;
 
             case 'subscribed':
-                $data = $this->db->getData('vavok_profil', "uid='{$users_id}'", 'subscri');
+                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'subscri');
                 $data = !empty($data) ? $data['subscri'] : '';
                 return $data;
                 break;
@@ -902,7 +914,7 @@ class User extends Core {
         if ($this->userAuthenticated()) {
             return $this->user_info('language', $_SESSION['uid']);
         } else {
-            return $this->configuration('siteDefaultLang');
+            return $this->container['core']->configuration('siteDefaultLang');
         }
     }
 
@@ -926,9 +938,9 @@ class User extends Core {
      * @param string $login
      * @return string
      */
-    public function user_online($login)
+    public function userOnline($login)
     {
-        $xuser = $this->getidfromnick($login);
+        $xuser = $this->getIdFromNick($login);
         $statwho = '<font color="#CCCCCC">[Off]</font>';
 
         $result = $this->db->countRow('online', "user='{$xuser}'");
@@ -940,20 +952,29 @@ class User extends Core {
 
     /**
      * Administrator status name
+     * 
+     * @param int $message
+     * @return string
      */
-    function user_status($message) {
-        $message = str_replace('101', '{@localization[access101]}}', $message);
-        $message = str_replace('102', '{@localization[access102]}}', $message);
-        $message = str_replace('103', '{@localization[access103]}}', $message);
-        $message = str_replace('105', '{@localization[access105]}}', $message);
-        $message = str_replace('106', '{@localization[access106]}}', $message);
-        $message = str_replace('107', '{@localization[access107]}}', $message);
+    public function userStatus(int $message): string
+    {
+        $message = str_replace(101, '{@localization[access101]}}', $message);
+        $message = str_replace(102, '{@localization[access102]}}', $message);
+        $message = str_replace(103, '{@localization[access103]}}', $message);
+        $message = str_replace(105, '{@localization[access105]}}', $message);
+        $message = str_replace(106, '{@localization[access106]}}', $message);
+        $message = str_replace(107, '{@localization[access107]}}', $message);
         return $message;
     }
 
-    // check permissions for admin panel
-    // check if user have permitions to see, edit, delete, etc selected part of the website
-    function check_permissions($permname, $needed = 'show') {
+    /**
+     * Check if user have a permission to see, edit, delete, etc selected part of the website
+     * @param string $permname
+     * @param string $needed
+     * @return bool
+     */
+    public function checkPermissions($permname, $needed = 'show'): bool
+    {
         // Check if user is logged in
         if (!$this->userAuthenticated()) return false;
 
@@ -962,26 +983,24 @@ class User extends Core {
         // Administrator have access to all site functions
         if ($this->administrator(101)) return true;
 
-        if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") > 0) {
-            $check_data = $this->db->getData('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'", 'permacc');
-            $perms = explode(',', $check_data['permacc']);
+        if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") == 0) return false;
 
-            if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
-                return true;
-            } elseif ($needed == 'edit' && (in_array(2, $perms) || in_array('edit', $perms))) {
-                return true;
-            } elseif ($needed == 'del' && (in_array(3, $perms) || in_array('del', $perms))) {
-                return true;
-            } elseif ($needed == 'insert' && (in_array(4, $perms) || in_array('insert', $perms))) {
-                return true;
-            } elseif ($needed == 'editunpub' && (in_array(5, $perms) || in_array('editunpub', $perms))) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+        $check_data = $this->db->selectData('specperm', 'uid = :uid AND permname = :permname', [':uid' => $_SESSION['uid'], ':permname' => $permname], 'permacc');
+        $perms = explode(',', $check_data['permacc']);
+
+        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
+            return true;
+        } elseif ($needed == 'edit' && (in_array(2, $perms) || in_array('edit', $perms))) {
+            return true;
+        } elseif ($needed == 'del' && (in_array(3, $perms) || in_array('del', $perms))) {
+            return true;
+        } elseif ($needed == 'insert' && (in_array(4, $perms) || in_array('insert', $perms))) {
+            return true;
+        } elseif ($needed == 'editunpub' && (in_array(5, $perms) || in_array('editunpub', $perms))) {
+            return true;
         }
+
+        return false;
     }
 
     // Current user id
@@ -1076,35 +1095,12 @@ class User extends Core {
         return $this->db->countRow('vavok_profil', "regche='1' OR regche='2'");
     }
 
-    /**
-     * Validations
-     */
-
     // username validation
     function validate_username($username)
     {
         if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) {
             return true;
         } else { return false; }
-    }
-
-    // email validation with support for unicode emails
-    function validate_email($email) {
-        // check unicode email
-        if ($this->is_unicode($email)) {
-            if (preg_match("/^(?!\.)((?!.*\.{2})[a-zA-Z0-9\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}\.!#$%&'*+-\/=?^_`{|}~\-\d]+)@(?!\.)([a-zA-Z0-9\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}\-\.\d]+)((\.([a-zA-Z\x{0080}-\x{00FF}\x{0100}-\x{017F}\x{0180}-\x{024F}\x{0250}-\x{02AF}\x{0300}-\x{036F}\x{0370}-\x{03FF}\x{0400}-\x{04FF}\x{0500}-\x{052F}\x{0530}-\x{058F}\x{0590}-\x{05FF}\x{0600}-\x{06FF}\x{0700}-\x{074F}\x{0750}-\x{077F}\x{0780}-\x{07BF}\x{07C0}-\x{07FF}\x{0900}-\x{097F}\x{0980}-\x{09FF}\x{0A00}-\x{0A7F}\x{0A80}-\x{0AFF}\x{0B00}-\x{0B7F}\x{0B80}-\x{0BFF}\x{0C00}-\x{0C7F}\x{0C80}-\x{0CFF}\x{0D00}-\x{0D7F}\x{0D80}-\x{0DFF}\x{0E00}-\x{0E7F}\x{0E80}-\x{0EFF}\x{0F00}-\x{0FFF}\x{1000}-\x{109F}\x{10A0}-\x{10FF}\x{1100}-\x{11FF}\x{1200}-\x{137F}\x{1380}-\x{139F}\x{13A0}-\x{13FF}\x{1400}-\x{167F}\x{1680}-\x{169F}\x{16A0}-\x{16FF}\x{1700}-\x{171F}\x{1720}-\x{173F}\x{1740}-\x{175F}\x{1760}-\x{177F}\x{1780}-\x{17FF}\x{1800}-\x{18AF}\x{1900}-\x{194F}\x{1950}-\x{197F}\x{1980}-\x{19DF}\x{19E0}-\x{19FF}\x{1A00}-\x{1A1F}\x{1B00}-\x{1B7F}\x{1D00}-\x{1D7F}\x{1D80}-\x{1DBF}\x{1DC0}-\x{1DFF}\x{1E00}-\x{1EFF}\x{1F00}-\x{1FFF}\x{20D0}-\x{20FF}\x{2100}-\x{214F}\x{2C00}-\x{2C5F}\x{2C60}-\x{2C7F}\x{2C80}-\x{2CFF}\x{2D00}-\x{2D2F}\x{2D30}-\x{2D7F}\x{2D80}-\x{2DDF}\x{2F00}-\x{2FDF}\x{2FF0}-\x{2FFF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{3100}-\x{312F}\x{3130}-\x{318F}\x{3190}-\x{319F}\x{31C0}-\x{31EF}\x{31F0}-\x{31FF}\x{3200}-\x{32FF}\x{3300}-\x{33FF}\x{3400}-\x{4DBF}\x{4DC0}-\x{4DFF}\x{4E00}-\x{9FFF}\x{A000}-\x{A48F}\x{A490}-\x{A4CF}\x{A700}-\x{A71F}\x{A800}-\x{A82F}\x{A840}-\x{A87F}\x{AC00}-\x{D7AF}\x{F900}-\x{FAFF}]){2,63})+)$/u", $email)) {
-                return true; 
-            } else {
-                return false; 
-            }
-        } else {
-
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) { // non-unicode email
-                return true;
-            } else {
-                return false;
-            }
-        }
     }
 
     /**
@@ -1161,7 +1157,7 @@ class User extends Core {
 
     // is ignored
     function isignored($tid, $uid) {
-        $ign = $this->db->countRow('`ignore`', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
+        $ign = $this->db->countRow('blocklist', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
         if ($ign > 0) {
             return true;
         }
@@ -1222,7 +1218,7 @@ class User extends Core {
         $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
         // Use default language
-        if (empty($language)) $language = $this->configuration('siteDefaultLang');
+        if (empty($language)) $language = $this->container['core']->configuration('siteDefaultLang');
 
         if ($language == 'en') {
             $language = 'english';

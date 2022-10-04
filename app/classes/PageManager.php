@@ -1,41 +1,31 @@
 <?php
 /**
- * Author:    Aleksandar Vranešević
- * URI:       https://vavok.net
- * Package:   Class for managing pages
+ * Manage (create, update, delete) pages on the site
+ * 
+ * @todo Move this class to classes directory
  */
 
-use App\Classes\Controller;
+namespace App\Classes;
 use App\Classes\Database;
 
-class Pagemanager extends Controller {
-    public $page_name;             // Page name
-    public $page_language;         // Page language
-    public $page_title;            // Title
-    public $page_content;          // Content
-    public $published;             // Visitors can see page
-    public $page_author;           // Page author
-    public $page_created_date;     // Page created date
-    public $head_tags;             // Head tags
-    public $page_published_date;   // Date when post is published
+class PageManager {
+    protected $page_title;            // Title
+    protected $page_content;          // Content
+    protected $published;             // Visitors can see page
+    protected $page_author;           // Page author
+    protected $page_created_date;     // Page created date
+    protected $head_tags;             // Head tags
+    protected $page_published_date;   // Date when post is published
+    protected object $container;
     protected object $db;
 
-    /**
-     * @param string $page_name
-     * @param string $page_language
-     */
-    function __construct($page_name = '', $page_language = '')
+    public function __construct($container)
     {
-        // Instantiate database
-        $this->db = Database::instance();
+        // Container with instances
+        $this->container = $container;
 
-         // User id with active login
-        $this->user_id = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;
+        $this->db = $this->container['db'];
     }
-
-    /**
-     * Update, insert and delete information
-     */
 
     // insert new page
     function insert($values) {
@@ -72,21 +62,29 @@ class Pagemanager extends Controller {
         }
     }
 
-    // update page
-    function update($id, $content) {
+    /**
+     * Update page content
+     * 
+     * @param int $id
+     * @param string $content
+     * @return bool
+     */
+    function update($id, $content): bool
+    {
         $fields[] = 'content';
         $fields[] = 'lastupd';
         $fields[] = 'lstupdby';
 
         $values[] = $this->pageContentToSave($content);
         $values[] = time();
-        $values[] = $this->user_id;
+        $values[] = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;
 
         $this->db->update('pages', $fields, $values, "`id`='" . $id . "'");
 
         // update cached index and menu pages
         // this pages must be cached other pages are not cached
-        $file = $this->db->getData('pages', "id = '{$id}'", 'file')['file'];
+        $file = $this->db->selectData('pages', "id = :id", [':id' => $id], 'file')['file'];
+
         if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
             $this->updateCached($file, $content);
         }
@@ -103,7 +101,7 @@ class Pagemanager extends Controller {
      */
     function updateCached($file, $content)
     {
-        $this->writeDataFile('datamain/' . $file, $content);
+        $this->container['core']->writeDataFile('datamain/' . $file, $content);
         return true;
     }
 
@@ -238,9 +236,9 @@ class Pagemanager extends Controller {
      * @param str $fields
      * @return array
      */
-    public function selectPage($id , $fields = '*')
+    public function selectPage($id , $fields = '*'): array
     {
-        return $this->db->getData('pages', "id='{$id}'", $fields);
+        return $this->db->selectData('pages', "id = :id", ['id' => $id], $fields);
     }
 
     /**
@@ -248,27 +246,29 @@ class Pagemanager extends Controller {
      *
      * @param $search string
      * @param $type string
-     * @return mix int|bool
+     * @return int|bool
      */
-    function pageExists($search, $type = 'file') {
+    function pageExists($search, $type = 'file', $bind = []) {
         if ($type == 'file' && $this->db->countRow('pages', "file='{$search}'") > 0) {
-            return $this->getPageId("file='{$search}'");
-        } elseif ($type == 'where' && ($this->db->countRow('pages', $search) > 0)) {
-            return $this->getPageId($search);
-        } else {
-            return false;
+            return $this->getPageId('file = :file', [':file' => $search]);
+        } elseif ($type == 'where') {
+            return $this->getPageId($search, $bind);
         }
+
+        return false;
     }
 
     /**
      * Return page id
      *
-     * @param string
+     * @param string $where
+     * @param array $bind
      * @return bool
      */
-    function getPageId($where)
+    function getPageId($where, $bind)
     {
-        $page_id = $this->db->getData('pages', $where, 'id');
+        //$page_id = $this->db->getData('pages', $where, 'id');
+        $page_id = $this->db->selectData('pages', $where, $bind, 'id');
         return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
     }
 
@@ -321,8 +321,8 @@ class Pagemanager extends Controller {
      */
     public function editMode()
     {
-        if (!empty($this->postAndGet('edmode'))) {
-            $edmode = $this->postAndGet('edmode');
+        if (!empty($this->container['core']->postAndGet('edmode'))) {
+            $edmode = $this->container['core']->postAndGet('edmode');
             $_SESSION['edmode'] = $edmode;
         } elseif (!empty($_SESSION['edmode'])) {
             // Use edit mode from session

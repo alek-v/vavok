@@ -4,9 +4,9 @@
  * Site:      https://vavok.net
  */
 
-use App\Classes\Core;
+namespace App\Classes;
 
-class ParsePage extends Core {
+class ParsePage {
     protected string $file;             // Template
     protected string $title;            // Page title
     protected string $content;          // Content
@@ -14,6 +14,16 @@ class ParsePage extends Core {
     protected string $head_data;        // Meta tags
     protected string $notification;     // Notification at page
     protected array  $values = array(); // Values to replace at page template
+    protected object $container;
+    protected object $db;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+
+        // Database connection
+        $this->db = $container['db'];
+    }
 
     /**
      * Load page
@@ -29,15 +39,15 @@ class ParsePage extends Core {
         $this->load($file);
 
         // Check if we use SSL
-        if ($this->configuration('transferProtocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
+        if ($this->container['core']->configuration('transferProtocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
             // Redirect to secure connection (HTTPS)
             $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $this->redirection($redirect);
+            $this->container['core']->redirection($redirect);
         }
 
         // Metadata of page
         // Set missing OG (open graph) tags when possible
-        $this->head_data = $this->pageHeadMetatags($data);
+        $this->head_data = $this->container['core']->pageHeadMetatags($data);
 
         $this->title = isset($data['tname']) ? $data['tname'] : '';
         $this->page_name = isset($data['pname']) ? $data['pname'] : '';
@@ -129,8 +139,8 @@ class ParsePage extends Core {
         $output = '';
 
         foreach ($templates as $ParsePage) {
-            $content = (get_class($ParsePage) !== "ParsePage")
-            ? "Error, incorrect type - expected Template."
+            $content = (get_class($ParsePage) !== "App\Classes\ParsePage")
+            ? "Error, incorrect type " . get_class($ParsePage) . " - expected template object."
             : $ParsePage->output();
             $output .= $content . $separator;
         } 
@@ -157,7 +167,7 @@ class ParsePage extends Core {
         if (!empty($this->lang)) $this->set('page_language', ' lang="' . $this->lang . '"');
 
         // Cookie consent
-        if ($this->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        if ($this->container['core']->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
 
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);
@@ -166,11 +176,11 @@ class ParsePage extends Core {
         $this->set('title', $this->title);
 
         // Notification
-        if (!empty($this->notification)) $this->set('show_notification', $this->showDanger($this->notification));
+        if (!empty($this->notification)) $this->set('show_notification', $this->container['core']->showDanger($this->notification));
 
-        if ($this->configuration('showOnline') == 1) $this->set('show_online', $this->showOnline());
-        if ($this->configuration('showCounter') != 6) $this->set('show_counter', $this->showCounter());
-        if ($this->configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->showPageGenTime());
+        if ($this->container['core']->configuration('showOnline') == 1) $this->set('show_online', $this->container['core']->showOnline());
+        if ($this->container['core']->configuration('showCounter') != 6) $this->set('show_counter', $this->container['core']->showCounter());
+        if ($this->container['core']->configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->container['core']->showPageGenTime());
 
         // Show database queries while debugging
         if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->showDbQueries());

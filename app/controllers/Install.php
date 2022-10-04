@@ -18,6 +18,9 @@ class Install extends Controller {
         $this->view('pages/installer', $model->index());
     }
 
+    /**
+     * Administrator registration
+     */
     public function register()
     {
         $model = $this->model('InstallModel');
@@ -26,6 +29,9 @@ class Install extends Controller {
         $this->view('pages/installer_register_admin', $model->register());
     }
 
+    /**
+     * Complete administrator registration
+     */
     public function register_admin()
     {
         $model = $this->model('InstallModel');

@@ -1,20 +1,35 @@
 <?php
 
-use App\Classes\Core;
+namespace App\Classes;
 
-class Upload extends Core {
-    public function upload($directory = '', $localization = '')
+class Upload {
+    protected object $container;
+    protected object $db;
+    protected object $localization;
+
+    public function __construct($container, $localization = '')
     {
-        if (isset($localization) && !empty($localization)) $this->localization = $localization;
+        $this->container = $container;
+        $this->db = $container['db'];
+        $this->localization = $localization;
+    }
 
+    /**
+     * Upload the file
+     * 
+     * @param string $directory
+     * @return array
+     */
+    public function upload($directory = '')
+    {
         if (isset($_POST['width']) && !empty($_POST['width'])) {
-            $width = $this->check($_POST['width']);
+            $width = $this->container['core']->check($_POST['width']);
         }
         if (isset($_POST['rename']) && !empty($_POST['rename'])) {
-            $rename = $this->check($_POST['rename']);
+            $rename = $this->container['core']->check($_POST['rename']);
         } 
         if (isset($_POST['lowercase']) && !empty($_POST['lowercase'])) {
-            $lowercase = $this->check($_POST['lowercase']);
+            $lowercase = $this->container['core']->check($_POST['lowercase']);
         } else {
             $lowercase = '';
         }
@@ -122,6 +137,6 @@ class Upload extends Core {
             }
         }
 
-        return array('file_address' => $this->websiteHomeAddress() . $upload_URL);
+        return array('file_address' => $this->container['core']->websiteHomeAddress() . $upload_URL);
     }
 }

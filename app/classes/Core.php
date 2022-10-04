@@ -7,9 +7,11 @@
 namespace App\Classes;
 
 class Core {
-    public function __construct()
+    protected object $db;
+
+    public function __construct(object $container)
     {
-        $this->db = Database::instance();
+        $this->db = $container['db'];
     }
 
     /**
@@ -640,32 +642,6 @@ class Core {
         return $responseKeys = json_decode($response, true);
     }
 
-    /**
-     * Validate URL
-     * 
-     * @param string $url
-     * @return str
-     */
-    public function validateUrl($url)
-    {
-        $v = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
-        return (bool)preg_match($v, $url);
-    }
-
-    /**
-     * Check if sting contain unicode characters
-     * 
-     * @param string $data
-     * @return bool
-     */
-    function is_unicode($data) {
-        if (strlen($data) !== strlen(utf8_decode($data))) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     // Show fatal error and stop script execution
     public function fatalError($error) {
         echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
@@ -676,7 +652,7 @@ class Core {
      * Show success notification
      * 
      * @param string $error
-     * @return str
+     * @return string
      */
     public function showSuccess($success)
     {
@@ -687,7 +663,7 @@ class Core {
      * Show error notification to user
      * 
      * @param string $error
-     * @return str
+     * @return string
      */
     public function showDanger($error)
     {
@@ -698,7 +674,7 @@ class Core {
      * Show notification to user
      * 
      * @param string $notification
-     * @return str
+     * @return string
      */
     public function showNotification($notification)
     {
@@ -709,7 +685,7 @@ class Core {
      * Show smiles in messages
      * 
      * @param string $string
-     * @return str
+     * @return string
      */
     function smiles($string) {
         $dir = opendir(PUBLICDIR . "themes/images/smiles");
@@ -725,12 +701,12 @@ class Core {
             $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'themes/images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
         } 
 
-        $string = str_replace(" ;)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=";)" />', $string);
-        $string = str_replace(" :)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=":)" />', $string);
-        $string = str_replace(" :(", ' <img src="' . HOMEDIR . 'themes/images/smiles/(.gif" alt=":(" />', $string);
-        $string = str_replace(" :D", ' <img src="' . HOMEDIR . 'themes/images/smiles/D.gif" alt=":D" />', $string);
-        $string = str_replace(" :E", ' <img src="' . HOMEDIR . 'themes/images/smiles/E.gif" alt=":E" />', $string);
-        $string = str_replace(" :P", ' <img src="' . HOMEDIR . 'themes/images/smiles/P.gif" alt=":P" />', $string);
+        $string = str_replace(";)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=";)" />', $string);
+        $string = str_replace(":)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=":)" />', $string);
+        $string = str_replace(":(", ' <img src="' . HOMEDIR . 'themes/images/smiles/(.gif" alt=":(" />', $string);
+        $string = str_replace(":D", ' <img src="' . HOMEDIR . 'themes/images/smiles/D.gif" alt=":D" />', $string);
+        $string = str_replace(":E", ' <img src="' . HOMEDIR . 'themes/images/smiles/E.gif" alt=":E" />', $string);
+        $string = str_replace(":P", ' <img src="' . HOMEDIR . 'themes/images/smiles/P.gif" alt=":P" />', $string);
 
        return $string;
     }
@@ -1071,7 +1047,7 @@ class Core {
 
         foreach ($this->db->query("SELECT regdate, uid FROM vavok_profil WHERE regche = '1'") as $userCheck) {
             // Delete user if registration is not confirmed within $confirmationHours
-            if (($userCheck['regdate'] + $confirmationTime) < time()) $user_model->delete_user($userCheck['uid']);
+            if (($userCheck['regdate'] + $confirmationTime) < time()) $user_model->deleteUser($userCheck['uid']);
         }
     }
 

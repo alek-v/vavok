@@ -5,10 +5,21 @@
  */
 
 namespace App\Classes;
+use App\Classes\Validations;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
-class Mailer extends Core {
+class Mailer {
+    protected object $container;
+    protected object $db;
+    protected object $validations;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+        $this->db = $container['db'];
+    }
+
     /**
      * Send email
      *
@@ -21,6 +32,8 @@ class Mailer extends Core {
      */
     function send($usermail, $subject, $msg, $mailfrom = '', $name = '')
     {
+        $this->validations = new Validations;
+
         /**
          * Generate default email
          */
@@ -36,10 +49,10 @@ class Mailer extends Core {
         /**
          * Default name
          */
-        if (empty($name)) $name = $this->configuration('title');
+        if (empty($name)) $name = $this->container['core']->configuration('title');
 
-        // support for unicode emails
-        if ($this->is_unicode($usermail) && function_exists('idn_to_ascii')) {
+        // Support for unicode emails
+        if ($this->validations->isUnicode($usermail) && function_exists('idn_to_ascii')) {
             // convert to ascii
             $usermail = idn_to_ascii($usermail);
         }
@@ -62,7 +75,7 @@ class Mailer extends Core {
             }
         }
 
-        //Create a new PHPMailer instance
+        // Create a new PHPMailer instance
         $mail = new PHPMailer();
 
         /**
@@ -100,10 +113,10 @@ class Mailer extends Core {
         //Set the subject line
         $mail->Subject = $subject;
         // Convert to HTML if message is plain text
-        if ($this->isTextHtml($msg)) {
+        if ($this->container['core']->isTextHtml($msg)) {
             $mail->msgHTML($msg);
         } else {
-            $mail->msgHTML($this->getbbcode($msg));
+            $mail->msgHTML($this->container['core']->getbbcode($msg));
         }
         //Replace the plain text body with one created manually
         $mail->AltBody = $msg;

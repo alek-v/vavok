@@ -5,8 +5,27 @@
  */
 
 namespace App\Classes;
+use App\Classes\ParsePage;
+use App\Classes\Localization;
+use Pimple\Container;
 
-class Controller extends Core {
+class Controller {
+    protected object $container;
+
+    public function __construct()
+    {
+        // Instantiate dependency injection container
+        $container = new Container();
+
+        // Globaly used methods
+        $container['db'] = fn() => Database::instance();
+        $container['core'] = fn($c) => new Core($c);
+        $container['user'] = fn($c) => new User($c);
+        $container['parse_page'] = $container->factory(fn($c) => new ParsePage($c));
+
+        $this->container = $container;
+    }
+
     /**
      * Include and instantiate model class
      * 
@@ -19,7 +38,7 @@ class Controller extends Core {
         require_once '../app/models/' . $model . '.php';
 
         // Instantiate model
-        return new $model();
+        return new $model($this->container);
     }
 
     /**
@@ -37,29 +56,29 @@ class Controller extends Core {
         unset($data['user']);
 
         // Localization
-        $localization = $this->model('Localization');
+        $localization = new Localization;
         // Load localization data depending of current $view (page)
         $localization->load($user['language'], $view);
 
         // Instantiate page parsing class
-        $page = $this->model('ParsePage');
+        $page = $this->container['parse_page'];
         // Load the file from the view
         $page->loadPage($view, $data);
 
         // Header
-        $header = $this->model('ParsePage');
+        $header =$this->container['parse_page'];
         $header->load('includes/header');
         // Set header for current page
         $page->set('header', $page->merge(array($header)));
 
         // Footer
-        $footer = $this->model('ParsePage');
+        $footer =$this->container['parse_page'];
         $footer->load('includes/footer');
         // Set footer for current page
         $page->set('footer', $page->merge(array($footer)));
 
         // Authentications
-        $auth = $this->model('ParsePage');
+        $auth =$this->container['parse_page'];
 
         // Load file for authenticated user
         if ($user['authenticated']) $auth->load('includes/authenticated');
@@ -69,7 +88,7 @@ class Controller extends Core {
         // Administrators
         if ($user['admin_status'] == 'administrator' || $user['admin_status'] == 'moderator') {
             // Add link to admin panel
-            $admins = $this->model('ParsePage');
+            $admins = $this->container['parse_page'];
             $admins->load('includes/admin_link');
 
             // Set authentication data for current page

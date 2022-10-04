@@ -7,9 +7,9 @@
 namespace App\Classes;
 
 class Vavok extends Core {
-    protected $currentController = 'Pages';
-    protected $currentMethod = 'index';
-    protected $params = [];
+    protected string $currentController = 'Pages';
+    protected string $currentMethod = 'index';
+    protected array  $params = [];
 
     public function __construct()
     {
@@ -87,12 +87,12 @@ class Vavok extends Core {
         // Require the controller
         require_once APPDIR . 'controllers/'. $this->currentController . '.php';
 
-        // Instantiate controller class
-        $this->currentController = new $this->currentController;
+        $controller = new $this->currentController;
+
         // Check for second part of url
         if (isset($url[1])) {
-            // Check to see if method exists in controller
-            if (method_exists($this->currentController, $url[1])) {
+            // Does such a method exists in the controller
+            if (method_exists($controller, $url[1])) {
                 $this->currentMethod = $url[1];
                 // Unset 1 index
                 unset($url[1]);
@@ -102,7 +102,11 @@ class Vavok extends Core {
         // Get params
         $this->params = $url ? array_values($url) : [];
 
-        // Call a callback with array of params
-        call_user_func_array([$this->currentController, $this->currentMethod], [$this->params]);
+        // Method of the controller to call
+        $method_to_call = $this->currentMethod;
+
+        // Call a method of the controller and show the page
+        // This method will have a contact with model and the view
+        $controller->$method_to_call($this->params);
     }
 }

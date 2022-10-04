@@ -1,3 +1,12 @@
+# Vavok v4.0
+- Use Pimple as dependency container
+- Some models moved to classes directory
+- New classes added, trying to make code follow SOLID principles
+- Deprecated getData() method in Database class
+- Code comments updated
+
+
+
 # Vavok v3.1
 - Composer setup moved to app root directory
 - New method selectData() in Database class

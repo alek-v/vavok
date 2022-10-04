@@ -5,19 +5,18 @@
  */
 
 use App\Classes\BaseModel;
-use App\Classes\Database;
 use App\Classes\Mailer;
+use App\Classes\PageManager;
 
 class EmailQueue extends BaseModel {
     private object $_mailer;
 
-    public function __construct()
+    public function __construct($container)
     {
-        // Instantiate database
-        $this->db = Database::instance();
+        parent::__construct($container);
 
         // Instantiate mailer
-        $this->_mailer = new Mailer;
+        $this->_mailer = new Mailer($container);
     }
 
     /**
@@ -40,7 +39,7 @@ class EmailQueue extends BaseModel {
         $sql = "SELECT * FROM email_queue WHERE sent = 0 ORDER BY FIELD(priority,
                 'high',
                 'normal',
-                'low') LIMIT 0, " . $this->configuration('subMailPacket');
+                'low') LIMIT 0, " . $this->container['core']->configuration('subMailPacket');
 
         $i = 0;
         foreach ($this->db->query($sql) as $email) {
@@ -60,7 +59,7 @@ class EmailQueue extends BaseModel {
         }
 
         // Update time of last sent mail
-        if ($i > 0) $this->writeDataFile('email_queue_sent.dat', $new_time);
+        if ($i > 0) $this->container['core']->writeDataFile('email_queue_sent.dat', $new_time);
     }
 
     /**
@@ -85,12 +84,12 @@ class EmailQueue extends BaseModel {
         $page_data['content'] = '';
 
         // Checking access permitions
-        if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->redirection('../');
+        if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->container['core']->redirection('../');
 
         $news_queue_limit = 1000; // how manu emails to add to queue at once
 
         // text editor
-        $emailEditor = $this->model('Pagemanager');
+        $emailEditor = new PageManager($this->container);
         $loadTextEditor = $emailEditor->loadPageEditor();
 
         // choose field selector
@@ -99,7 +98,7 @@ class EmailQueue extends BaseModel {
         // add to page header
         $page_data['headt'] = $textEditor;
 
-        if (empty($this->postAndGet('action'))) {
+        if (empty($this->container['core']->postAndGet('action'))) {
             $subNames = $this->_mailer->emailSubscriptionOptions();
 
             $page_data['content'] .= '<h1>Add emails to the queue</h1>';
@@ -128,7 +127,7 @@ class EmailQueue extends BaseModel {
             </div>';
         }
 
-        if ($this->postAndGet('action') == 'add') {
+        if ($this->container['core']->postAndGet('action') == 'add') {
             $page_data['headt'] .= '
             <script type="text/javascript">
             function formAutoSubmit () {
@@ -143,7 +142,7 @@ class EmailQueue extends BaseModel {
             window.onload = startSendingDelayed;
             </script>';
 
-            $dates = $this->correctDate(time(), 'd.m.Y. / H:i');
+            $dates = $this->container['core']->correctDate(time(), 'd.m.Y. / H:i');
 
             // check is it plain text email or html
             $msg = $_POST['msg'];
@@ -154,11 +153,11 @@ class EmailQueue extends BaseModel {
                 $msg = str_replace('&nbsp;', '', strip_tags(no_br($msg, "\n")));
             }
 
-            $theme = $this->check($_POST['theme']); // subject
-            $subName = isset($_POST['subname']) == true ? $this->check($_POST['subname']) : ''; // subscription name
-            $sender = $this->check($_POST['sender']); // sender name
-            $email = $this->check($_POST['email']); // sender email
-            $last = isset($_GET['last']) == true ? $this->check($_GET['last']) : 0;
+            $theme = $this->container['core']->check($_POST['theme']); // subject
+            $subName = isset($_POST['subname']) == true ? $this->container['core']->check($_POST['subname']) : ''; // subscription name
+            $sender = $this->container['core']->check($_POST['sender']); // sender name
+            $email = $this->container['core']->check($_POST['email']); // sender email
+            $last = isset($_GET['last']) == true ? $this->container['core']->check($_GET['last']) : 0;
 
             if (!empty($subName)) {
                 $send_count = $this->db->countRow('subs', "subscription_name = '" . $subName . "'");
@@ -206,8 +205,8 @@ class EmailQueue extends BaseModel {
         }
 
         $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $page_data['content'] .= $this->homelink();
+        $page_data['content'] .= $this->container['core']->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
+        $page_data['content'] .= $this->container['core']->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;

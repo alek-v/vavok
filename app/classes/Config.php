@@ -2,12 +2,17 @@
 /**
  * Author:    Aleksandar Vranešević
  * URL:       https://vavok.net
- * Package:   Class for managing website configuration
  */
 
 namespace App\Classes;
 
-class Config extends Core {
+class Config {
+    public function __construct($container)
+    {
+        $this->container = $container;
+        $this->db = $container['db'];
+    }
+
     /**
      * Update configuration
      */
