@@ -4,10 +4,8 @@
 # Vavok CMS
 
 # Install
-> 1. Go to app directory and install composer dependencies.
-> 2. Enter database data in app/.env file.
-> 3. Go to your_site.com/install/ to complete installation.
+> 1. Go to root directory and install composer dependencies.
+> 2. Enter database data in .env file.
+> 3. Go to your_site.com/install to complete installation of the CMS.
 
 Documentation: https://docs.vavok.net
-
-Updating old code to MVC pattern is still in progress
