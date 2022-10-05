@@ -9,11 +9,6 @@ use App\Classes\Navigation;
 use App\Classes\Upload;
 
 class FileUpload extends BaseModel {
-    public function __construct($container)
-    {
-        parent::__construct($container);
-    }
-
     public function index()
     {
         // Users data
