@@ -740,8 +740,15 @@ class User {
             
             case 'full_name':
                 $uinfo = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname, surname');
-                $data = !empty($uinfo['rname'] . $uinfo['surname']) ? rtrim($uinfo['rname'] . ' ' . $uinfo['surname']) : false;
-                return $data;
+
+                $first_name = isset($uinfo['rname']) ? $uinfo['rname'] : '';
+                $last_name = isset($uinfo['surname']) ? $uinfo['surname'] : '';
+                $full_name = $first_name . ' ' . $last_name;
+
+                // Return false when there is no first and last name
+                if (empty(str_replace(' ', '', $full_name))) return false;
+
+                return $full_name;
                 break;
 
             case 'firstname':
