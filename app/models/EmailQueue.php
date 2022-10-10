@@ -72,7 +72,7 @@ class EmailQueue extends BaseModel {
     }
 
     /**
-     * Add mails to email queue
+     * Add mails to the email queue
      */
     public function email_queue()
     {
@@ -86,9 +86,10 @@ class EmailQueue extends BaseModel {
         // Checking access permitions
         if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->container['core']->redirection('../');
 
-        $news_queue_limit = 1000; // how manu emails to add to queue at once
+         // How manu emails to add to queue at once
+        $news_queue_limit = 1000;
 
-        // text editor
+        // Text editor
         $emailEditor = new PageManager($this->container);
         $loadTextEditor = $emailEditor->loadPageEditor();
 
@@ -99,27 +100,47 @@ class EmailQueue extends BaseModel {
         $page_data['headt'] = $textEditor;
 
         if (empty($this->container['core']->postAndGet('action'))) {
-            $subNames = $this->_mailer->emailSubscriptionOptions();
+            $sub_names = $this->_mailer->emailSubscriptionOptions();
 
             $page_data['content'] .= '<h1>Add emails to the queue</h1>';
 
             $page_data['content'] .= '<form action="./email_queue?action=add" method="post" />';
-            $page_data['content'] .= '<p>Sender name:<br /><input type="text" name="sender" value=""><br /></p>';
-            $page_data['content'] .= '<p>Sender email:<br /><input type="text" name="email" value=""><br /></p>';
-            $page_data['content'] .= '<p>Subject:<br /><input type="text" name="theme" value=""><br /></p>';
-            $page_data['content'] .= '<label for="msg">Email content:</label>';
-            $page_data['content'] .= '<textarea col="20" row="20" id="msg" name="msg"></textarea><br />';
-            $page_data['content'] .= '<label for="subname">Subscription name:</label>
-            <select id="subname" name="subname">
+            $page_data['content'] .= '<div class="form-group">
+            <label for="sender">Sender name:</label>
+            <input class="form-control" id="sender" type="text" name="sender" value="">
+            </div>';
+            $page_data['content'] .= '<div class="form-group">
+            <label for="email">Sender\'s email:</label>
+            <input class="form-control" id="email" type="text" name="email" value="">
+            </div>';
+            $page_data['content'] .= '<div class="form-group">
+            <label for="theme">Subject:</label>
+            <input class="form-control" id="theme" type="text" name="theme" value="">
+            </div>';
+            $page_data['content'] .= '<div class="form-group">
+            <label for="msg">Email content:</label>';
+            $page_data['content'] .= '<textarea class="form-control" rows="15" id="msg" name="msg"></textarea>
+            </div>';
+            $page_data['content'] .= '<div class="form-group">
+            <label for="subname">Subscription name:</label>
+            <select class="form-control" id="subname" name="subname">
                 <option value="">Send to all</option>';
-                foreach ($subNames as $option) {
+                foreach ($sub_names as $option) {
                     $page_data['content'] .= '<option value="' . $option . '">' . $option . '</option>';
                 }
+            $page_data['content'] .= '</select>
+            </div>';
+            $page_data['content'] .= '<div class="form-group">';
+            $page_data['content'] .= '<label for="type">Email Type:</label>';
+            $page_data['content'] .= '<select class="form-control" id="type" name="type">';
+            $page_data['content'] .= '<option value="html">HTML</option>';
+            $page_data['content'] .= '<option value="plain">Plain text</option>';
             $page_data['content'] .= '</select>';
-            $page_data['content'] .= '<p><input type="submit" value="Add to email queue"></p>';
-            $page_data['content'] .= '</form><hr>';
+            $page_data['content'] .= '</div>';
+            $page_data['content'] .= '<button type="submit" class="btn btn-primary">Add to the email queue</button>';
+            $page_data['content'] .= '</form>';
 
-            $page_data['content'] .= '
+            $page_data['content'] .= '<hr>
             <div>
                 <p>*optional</p>
                 <p><strong>{unsubscribe-link}</strong> - place for link to unsubscribe<br />
@@ -143,24 +164,21 @@ class EmailQueue extends BaseModel {
             </script>';
 
             $dates = $this->container['core']->correctDate(time(), 'd.m.Y. / H:i');
-
-            // check is it plain text email or html
-            $msg = $_POST['msg'];
-
-            // this is plain text email
-            // we need to strip tags
-            if (!stristr($msg, '<html')) {
-                $msg = str_replace('&nbsp;', '', strip_tags(no_br($msg, "\n")));
-            }
-
             $theme = $this->container['core']->check($_POST['theme']); // subject
-            $subName = isset($_POST['subname']) == true ? $this->container['core']->check($_POST['subname']) : ''; // subscription name
+            $sub_name = isset($_POST['subname']) == true ? $this->container['core']->check($_POST['subname']) : ''; // subscription name
             $sender = $this->container['core']->check($_POST['sender']); // sender name
             $email = $this->container['core']->check($_POST['email']); // sender email
+            $type = $this->container['core']->check($_POST['type']); // sender email
             $last = isset($_GET['last']) == true ? $this->container['core']->check($_GET['last']) : 0;
+            $msg = $_POST['msg'];
 
-            if (!empty($subName)) {
-                $send_count = $this->db->countRow('subs', "subscription_name = '" . $subName . "'");
+            // Strip tags in case we are sending plain text mail
+            if ($type == 'plain') {
+                $msg = str_replace('&nbsp;', '', strip_tags($this->container['core']->replaceNewLines($msg, "\n")));
+            }
+
+            if (!empty($sub_name)) {
+                $send_count = $this->db->countRow('subs', "subscription_name = '{$sub_name}'");
             }
             // Queue mail for all subscribers
             else {
@@ -172,8 +190,8 @@ class EmailQueue extends BaseModel {
                 $next = $send_count;
             }
 
-            if (!empty($subName)) {
-                $sql = "SELECT * FROM subs WHERE subscription_name = '" . $subName . "' ORDER BY id LIMIT $last, " . $news_queue_limit;
+            if (!empty($sub_name)) {
+                $sql = "SELECT * FROM subs WHERE subscription_name = '" . $sub_name . "' ORDER BY id LIMIT $last, " . $news_queue_limit;
             }
             // Queue mail for all subscribers
             else {
@@ -188,20 +206,22 @@ class EmailQueue extends BaseModel {
             if ($last < $send_count) {
                 $per = round(100 * $last / $send_count);
 
-                $page_data['content'] .= '<br>Adding to queue, please wait... <img src="../themes/images/img/loading.gif" alt="" /><br>Successfully added: ' . (int)$per . '%<br><br>';
+                $page_data['content'] .= '<p>Adding to the queue, please wait... <img src="../themes/images/img/loading.gif" alt="" /><br>Successfully added: ' . (int)$per . '%</p>';
 
                 $page_data['content'] .= '<form name="sendmail" class="sendmail" id="sendmail" action="./email_queue?action=add&last=' . $last . '" method="post" />';
                 $page_data['content'] .= '<input type="hidden" name="sender" value="' . $sender . '">';
                 $page_data['content'] .= '<input type="hidden" name="email" value="' . $email . '">';
                 $page_data['content'] .= '<input type="hidden" name="theme" value="' . $theme . '">';
                 $page_data['content'] .= '<input type="hidden" name="msg" value="' . $msg . '">';
+                $page_data['content'] .= '<input type="hidden" name="subname" value="' . $sub_name . '">';
+                $page_data['content'] .= '<input type="hidden" name="type" value="' . $type . '">';
                 $page_data['content'] .= '<input type="submit" value="Continue adding to queue"></form><hr>';
             } else {
                 $page_data['content'] .= '<img src="../themes/images/img/reload.gif" alt="" /> Email added to the queue for all subscribers!<br>';
             }
 
-            $page_data['content'] .= '<br>Users subscribed to news: ' . (int)$send_count . '<br>';
-            $page_data['content'] .= '<p><br><br><img src="../themes/images/img/back.gif" alt="" /> <a href="./email_queue">{@localization[back]}}</a></p>'; // update lang
+            $page_data['content'] .= '<p>Users subscribed to news: ' . (int)$send_count . '</p>';
+            $page_data['content'] .= '<p><img src="../themes/images/img/back.gif" alt="" /> <a href="./email_queue">{@localization[back]}}</a></p>'; // update lang
         }
 
         $page_data['content'] .= '<p>';

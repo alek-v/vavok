@@ -63,18 +63,17 @@ class Subscription extends BaseModel {
             if ($num_items > 0) {
                 $sql = "SELECT user_id, user_mail, subscription_name FROM subs ORDER BY id LIMIT $limit_start, $items_per_page";
         
-                if ($num_items > 0) {
-                    foreach ($this->db->query($sql) as $item) {
-                        $this_page['content'] .= $this->container['core']->sitelink('../pages/user.php?uz=' . $item['user_id'], $this->user->getNickFromId($item['user_id']), '<b>', '</b>');
-                        $this_page['content'] .= '<b><font color="#FF0000"> (' . $item['user_mail'] . ')</font></b>';
-        
-                        if (!empty($item['subscription_name'])) {
-                            $this_page['content'] .= ' <strong>' . $item['subscription_name'] . '</strong>';
-                        }
-        
-                        $this_page['content'] .= ' ' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/subscriptions/?action=delmail&users=' . $item['user_id'], '[{@localization[delete]}]') . '<hr>';
+                foreach ($this->db->query($sql) as $item) {
+                    $this_page['content'] .= $this->container['core']->sitelink('../pages/user.php?uz=' . $item['user_id'], $this->user->getNickFromId($item['user_id']), '<b>', '</b>');
+                    $this_page['content'] .= '<b><font color="#FF0000"> (' . $item['user_mail'] . ')</font></b>';
+    
+                    if (!empty($item['subscription_name'])) {
+                        $this_page['content'] .= ' <strong>' . $item['subscription_name'] . '</strong>';
                     }
+    
+                    $this_page['content'] .= ' ' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/subscriptions/?action=delmail&users=' . $item['user_id'], '[{@localization[delete]}}]') . '<hr>';
                 }
+
                 $this_page['content'] .= $navigation->get_navigation();
             } else {
                 $this_page['content'] .= '<p><img src="/themes/images/img/reload.gif" alt="" /> No subscriptions</p>'; // update lang
