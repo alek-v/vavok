@@ -9,6 +9,7 @@ use App\Classes\Counter;
 use App\Classes\BrowserDetection;
 use App\Classes\Mailer;
 use App\Classes\Validations;
+use Pimple\Container;
 use DateTime;
 use DateInterval;
 
@@ -17,7 +18,7 @@ class User {
     protected object $db;
     protected object $validations;
 
-    public function __construct(object $container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
 

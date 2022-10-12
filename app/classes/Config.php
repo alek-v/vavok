@@ -5,9 +5,10 @@
  */
 
 namespace App\Classes;
+use Pimple\Container;
 
 class Config {
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->db = $container['db'];

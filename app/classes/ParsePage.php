@@ -5,6 +5,7 @@
  */
 
 namespace App\Classes;
+use Pimple\Container;
 
 class ParsePage {
     protected string $file;             // Template
@@ -17,7 +18,7 @@ class ParsePage {
     protected object $container;
     protected object $db;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
 

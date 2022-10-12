@@ -1,12 +1,11 @@
 <?php
 /**
  * Manage (create, update, delete) pages on the site
- * 
- * @todo Move this class to classes directory
  */
 
 namespace App\Classes;
 use App\Classes\Database;
+use Pimple\Container;
 
 class PageManager {
     protected $page_title;            // Title
@@ -19,7 +18,7 @@ class PageManager {
     protected object $container;
     protected object $db;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         // Container with instances
         $this->container = $container;

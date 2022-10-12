@@ -5,11 +5,12 @@
  */
 
 namespace App\Classes;
+use Pimple\Container;
 
 class Core {
     protected object $db;
 
-    public function __construct(object $container)
+    public function __construct(Container $container)
     {
         $this->db = $container['db'];
     }

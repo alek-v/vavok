@@ -4,12 +4,13 @@
  */
 
 namespace App\Classes;
+use Pimple\Container;
 
 class Counter extends Core {
     protected object $container;
     protected object $db;
 
-    public function __construct($is_reg, $users_ip, $users_browser, $bot, $container)
+    public function __construct($is_reg, $users_ip, $users_browser, $bot, Container $container)
     {
         // Container with a dependencies
         $this->container = $container;

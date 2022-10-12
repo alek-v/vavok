@@ -6,6 +6,7 @@
 
 namespace App\Classes;
 use App\Classes\Localizaion;
+use Pimple\Container;
 
 class BaseModel {
     protected object $user;
@@ -18,7 +19,7 @@ class BaseModel {
     protected object $container;
     protected object $db;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         // Dependency injection container
         $this->container = $container;

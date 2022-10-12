@@ -7,11 +7,12 @@
 use App\Classes\BaseModel;
 use App\Classes\Mailer;
 use App\Classes\PageManager;
+use Pimple\Container;
 
 class EmailQueue extends BaseModel {
     private object $_mailer;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         parent::__construct($container);
 

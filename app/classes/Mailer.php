@@ -6,6 +6,7 @@
 
 namespace App\Classes;
 use App\Classes\Validations;
+use Pimple\Container;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
@@ -14,7 +15,7 @@ class Mailer {
     protected object $db;
     protected object $validations;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
         $this->db = $container['db'];
