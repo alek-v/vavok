@@ -8,12 +8,10 @@ namespace App\Classes;
 use Pimple\Container;
 
 class BlogComments {
-    protected object $container;
     protected object $db;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
         $this->db = $container['db'];
     }
 

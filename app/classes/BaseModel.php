@@ -16,13 +16,10 @@ class BaseModel {
         'admin_status' => 'user',
         'language' => 'english'
         ];
-    protected object $container;
     protected object $db;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        // Dependency injection container
-        $this->container = $container;
         // User object
         $this->user = $container['user'];
         // Database connection

@@ -4,13 +4,11 @@ namespace App\Classes;
 use Pimple\Container;
 
 class Upload {
-    protected object $container;
     protected object $db;
     protected object $localization;
 
-    public function __construct(Container $container, $localization = '')
+    public function __construct(protected Container $container, $localization = '')
     {
-        $this->container = $container;
         $this->db = $container['db'];
         $this->localization = $localization;
     }

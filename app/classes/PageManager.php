@@ -15,14 +15,10 @@ class PageManager {
     protected $page_created_date;     // Page created date
     protected $head_tags;             // Head tags
     protected $page_published_date;   // Date when post is published
-    protected object $container;
     protected object $db;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        // Container with instances
-        $this->container = $container;
-
         $this->db = $this->container['db'];
     }
 

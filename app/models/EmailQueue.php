@@ -12,7 +12,7 @@ use Pimple\Container;
 class EmailQueue extends BaseModel {
     private object $_mailer;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
         parent::__construct($container);
 

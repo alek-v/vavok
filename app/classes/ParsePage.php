@@ -15,13 +15,10 @@ class ParsePage {
     protected string $head_data;        // Meta tags
     protected string $notification;     // Notification at page
     protected array  $values = array(); // Values to replace at page template
-    protected object $container;
     protected object $db;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
-
         // Database connection
         $this->db = $container['db'];
     }

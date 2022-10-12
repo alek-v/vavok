@@ -14,14 +14,11 @@ use DateTime;
 use DateInterval;
 
 class User {
-    protected object $container;
     protected object $db;
     protected object $validations;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
-        $this->container = $container;
-
         // Database connection
         $this->db = $container['db'];
 

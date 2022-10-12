@@ -10,7 +10,7 @@ use Pimple\Container;
 class Core {
     protected object $db;
 
-    public function __construct(Container $container)
+    public function __construct(protected Container $container)
     {
         $this->db = $container['db'];
     }

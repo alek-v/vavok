@@ -6,25 +6,20 @@
 namespace App\Classes;
 use Pimple\Container;
 
-class Counter extends Core {
-    protected object $container;
+class Counter {
     protected object $db;
 
-    public function __construct($is_reg, $users_ip, $users_browser, $bot, Container $container)
+    public function __construct($is_reg, $users_ip, $users_browser, $bot, protected Container $container)
     {
-        // Container with a dependencies
-        $this->container = $container;
-
         // Database connection
         $this->db = $this->container['db'];
-
         $this->bot = $bot != false && !empty($bot) ? $bot : '';
 
         $day = date("d");
         $hour = date("H");
         // $daysm=date("t");
         $found = 0;
-        $user = "";
+        $user = '';
         $arrtimehour = mktime(date("H"), 0, 0, date("m"), date("d"), date("Y"));
         $arrtimeday = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
 
