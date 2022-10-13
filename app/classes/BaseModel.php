@@ -8,7 +8,7 @@ namespace App\Classes;
 use App\Classes\Localizaion;
 use Pimple\Container;
 
-class BaseModel {
+abstract class BaseModel {
     protected object $user;
     protected object $localization;
     protected array  $user_data = [

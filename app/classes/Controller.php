@@ -9,7 +9,7 @@ use App\Classes\ParsePage;
 use App\Classes\Localization;
 use Pimple\Container;
 
-class Controller {
+abstract class Controller {
     protected object $container;
 
     public function __construct()
@@ -50,15 +50,10 @@ class Controller {
      */
     public function view(string $view, array $data = []): void
     {
-        // Users data
-        $user = $data['user'];
-        // Unser array with users data
-        unset($data['user']);
-
         // Localization
         $localization = new Localization;
         // Load localization data depending of current $view (page)
-        $localization->load($user['language'], $view);
+        $localization->load($data['user']['language'], $view);
 
         // Instantiate page parsing class
         $page = $this->container['parse_page'];
@@ -74,27 +69,27 @@ class Controller {
         // Footer
         $footer =$this->container['parse_page'];
         $footer->load('includes/footer');
-        // Set footer for current page
+        // Set footer for the page
         $page->set('footer', $page->merge(array($footer)));
 
         // Authentications
-        $auth =$this->container['parse_page'];
+        $auth = $this->container['parse_page'];
 
         // Load file for authenticated user
-        if ($user['authenticated']) $auth->load('includes/authenticated');
+        if ($data['user']['authenticated']) $auth->load('includes/authenticated');
         // Load file for user that is not authenticated
-        if (!$user['authenticated']) $auth->load('includes/not_authenticated');
+        if (!$data['user']['authenticated']) $auth->load('includes/not_authenticated');
 
         // Administrators
-        if ($user['admin_status'] == 'administrator' || $user['admin_status'] == 'moderator') {
-            // Add link to admin panel
+        if ($data['user']['admin_status'] == 'administrator' || $data['user']['admin_status'] == 'moderator') {
+            // Add link to the administration panel
             $admins = $this->container['parse_page'];
             $admins->load('includes/admin_link');
 
-            // Set authentication data for current page
+            // Set authentication data for the page
             $page->set('authentication', $page->merge(array($auth, $admins)));
         } else {
-            // Set authentication data for current page
+            // Set authentication data for the page
             $page->set('authentication', $page->merge(array($auth)));
         }
 
