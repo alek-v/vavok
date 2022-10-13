@@ -99,8 +99,10 @@ class ParsePage {
 
     /**
      * Outputs the content of the template, replacing the keys for its respective values
+     * 
+     * @return string $output
      */
-    public function output()
+    public function output(): string
     {
         /**
          * Try to verify if the file exists.
@@ -112,10 +114,12 @@ class ParsePage {
         $output = file_get_contents($this->file);
 
         foreach ($this->values as $key => $value) {
-            $tagToReplace = "{@$key}}";
-            $value = isset($value) ? $value : '';
+            $keyToReplace = "{@$key}}";
 
-            $output = str_replace($tagToReplace, $value, $output);
+            // Validate value that will replace the key
+            $value = isset($value) && !is_array($value) ? $value : '';
+
+            $output = str_replace($keyToReplace, $value, $output);
         }
 
         return $output;
