@@ -184,7 +184,7 @@ class Core {
      */
     public function getDataFile($filename)
     {
-        return file(APPDIR . 'used/' . $filename);
+        return file(STORAGEDIR . $filename);
     }
 
     /**
@@ -198,11 +198,11 @@ class Core {
     public function writeDataFile($filename, $data, $append_data = '')
     {
         if ($append_data == 1) {
-            file_put_contents(APPDIR . 'used/' . $filename, $data, FILE_APPEND);
+            file_put_contents(STORAGEDIR . $filename, $data, FILE_APPEND);
             return;
         }
 
-        file_put_contents(APPDIR . 'used/' . $filename, $data, LOCK_EX);
+        file_put_contents(STORAGEDIR . $filename, $data, LOCK_EX);
     }
 
     // Multibyte ucfirst by plemieux
@@ -350,7 +350,7 @@ class Core {
 
     // badword / anti spam function
     function antiword($string) {
-        $words = file_get_contents(APPDIR . "used/antiword.dat");
+        $words = file_get_contents(STORAGEDIR . "antiword.dat");
         $wordlist = explode("|", $words);
 
         foreach($wordlist as $value) {
@@ -603,7 +603,7 @@ class Core {
     // antiflood
     function flooder($ip, $phpself = '') {
         $old_db = $this->getDataFile('flood.dat');
-        $new_db = fopen(APPDIR . "used/flood.dat", "w");
+        $new_db = fopen(STORAGEDIR . "flood.dat", "w");
         flock ($new_db, LOCK_EX);
         $result = false;
 
@@ -1064,7 +1064,7 @@ class Core {
         if (isset($page_data['tname'])) $title = $page_data['tname'];
 
         // Tags for all pages at the website
-        $tags = file_get_contents(APPDIR . 'used/headmeta.dat');
+        $tags = file_get_contents(STORAGEDIR . 'headmeta.dat');
 
         // Tags for this page only
         if (isset($page_data['headt'])) $tags .= $page_data['headt'];

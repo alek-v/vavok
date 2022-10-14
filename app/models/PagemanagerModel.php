@@ -573,7 +573,7 @@ class PagemanagerModel extends BaseModel {
 
             $index_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
-            $headtags = trim(file_get_contents(APPDIR . 'used/headmeta.dat'));
+            $headtags = trim(file_get_contents(STORAGEDIR . 'headmeta.dat'));
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');

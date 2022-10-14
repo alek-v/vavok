@@ -16,8 +16,11 @@ date_default_timezone_set('UTC');
 // Base directory
 if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
 
-// Application dir
+// Application directory
 if (!defined('APPDIR')) define('APPDIR', __DIR__ . '/');
+
+// Storage directory
+if (!defined('STORAGEDIR')) define('STORAGEDIR', BASEDIR . '/storage/');
 
 // Public directory
 if (!defined('PUBLICDIR')) define('PUBLICDIR', rtrim($_SERVER['SCRIPT_FILENAME'], 'index.php'));

@@ -36,7 +36,7 @@ class AdminchatModel extends BaseModel {
             $file = $this->container['core']->getDataFile('adminchat.dat');
             $i = count($file);
             if ($i >= 300) {
-                $fp = fopen(APPDIR . "used/adminchat.dat", "w");
+                $fp = fopen(STORAGEDIR . "adminchat.dat", "w");
                 flock ($fp, LOCK_EX);
                 unset($file[0]);
                 unset($file[1]);
@@ -52,7 +52,7 @@ class AdminchatModel extends BaseModel {
         // empty admin chat
         if ($this->container['core']->postAndGet('action') == "acdel") {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-                $this->container['core']->clearFile(APPDIR . "used/adminchat.dat");
+                $this->container['core']->clearFile(STORAGEDIR . "adminchat.dat");
 
                 header ('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=mp_admindelchat');
                 exit;

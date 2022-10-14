@@ -459,21 +459,21 @@ class ProfileModel extends BaseModel {
                 if ($av_string == "gif" || $av_string == "jpg" || $av_string == "jpeg" || $av_string == "png") {
                     if ($av_file) {
                         // Remove old photo
-                        if (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpg")) {
-                            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpg");
-                        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".png")) {
-                            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".png");
-                        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".gif")) {
-                            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".gif");
-                        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpeg")) {
-                            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpeg");
+                        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg");
                         }
 
                         // Add new photo
-                        copy($_FILES['file']['tmp_name'], APPDIR . "used/dataphoto/" . $this->user->user_id() . "." . $av_string);
+                        copy($_FILES['file']['tmp_name'], STORAGEDIR . "dataphoto/" . $this->user->user_id() . "." . $av_string);
                         $ch = $_FILES['file']['tmp_name'];
                         chmod($ch, 0777);
-                        chmod(APPDIR . "used/dataphoto/" . $this->user->user_id() . "." . $av_string . "", 0777);
+                        chmod(STORAGEDIR . "dataphoto/" . $this->user->user_id() . "." . $av_string . "", 0777);
 
                         $this->user->update_user('photo', 'gallery/photo/' . $this->user->user_id());
 
@@ -513,14 +513,14 @@ class ProfileModel extends BaseModel {
         $data['tname'] = 'Remove Photography';
         $data['content'] = '';
 
-        if (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpg")) {
-            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpg");
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".png")) {
-            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".png");
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".gif")) {
-            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".gif");
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpeg")) {
-            unlink(APPDIR . "used/dataphoto/" . $this->user->user_id() . ".jpeg");
+        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg");
         }
 
         // Update database

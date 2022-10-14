@@ -18,14 +18,14 @@ class Gallery {
     {
         $uz = $params[0];
 
-        if (file_exists(APPDIR . "used/dataphoto/" . $uz . ".jpg")) {
-            $filename = APPDIR . "used/dataphoto/" . $uz . ".jpg";
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $uz . ".png")) {
-            $filename = APPDIR . "used/dataphoto/" . $uz . ".png";
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $uz . ".gif")) {
-            $filename = APPDIR . "used/dataphoto/" . $uz . ".gif";
-        } elseif (file_exists(APPDIR . "used/dataphoto/" . $uz . ".jpeg")) {
-            $filename = APPDIR . "used/dataphoto/" . $uz . ".jpeg";
+        if (file_exists(STORAGEDIR . "dataphoto/" . $uz . ".jpg")) {
+            $filename = STORAGEDIR . "dataphoto/" . $uz . ".jpg";
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $uz . ".png")) {
+            $filename = STORAGEDIR . "dataphoto/" . $uz . ".png";
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $uz . ".gif")) {
+            $filename = STORAGEDIR . "dataphoto/" . $uz . ".gif";
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $uz . ".jpeg")) {
+            $filename = STORAGEDIR . "dataphoto/" . $uz . ".jpeg";
         }
 
         $ext = substr($filename, strrpos($filename, '.') + 1);

@@ -68,8 +68,7 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings', '{@localization[syssets]}}');
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/subscriptions', '{@localization[subscriptions]}}');
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/email_queue', 'Add to email queue');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->container['core']->linesInFile(APPDIR . 'used/ban.dat') . ')');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/?action=sysmng', '{@localization[sysmng]}}');
+                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->container['core']->linesInFile(STORAGEDIR . 'ban.dat') . ')');
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles', '{@localization[logcheck]}}');
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/sitemap', 'Sitemap Generator');
             }
@@ -84,19 +83,11 @@ class AdminpanelModel extends BaseModel {
 
         if ($this->container['core']->postAndGet('action') == 'clrmlog' && $this->user->administrator(101)) {
             $this->db->query("DELETE FROM mlog");
-        
+
             $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt="" /> {@localization[mlogcleaned]}}</p>';
-        } 
- 
-        if ($this->container['core']->postAndGet('action') == "sysmng" && $this->user->administrator(101)) {
-            $data['content'] .= '<p>';
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck', '{@localization[chksystem]}}');
-            $data['content'] .= $this->container['core']->sitelink('./?action=clear', '{@localization[cleansys]}}');
-        
-            $data['content'] .= '</p>';
         }
 
-        if ($this->container['core']->postAndGet('action') == "opttbl" && $this->user->administrator(101)) {
+        if ($this->container['core']->postAndGet('action') == 'opttbl' && $this->user->administrator(101)) {
             $alltables = mysqli_query("SHOW TABLES");
 
             while ($table = mysqli_fetch_assoc($alltables)) {
@@ -1051,7 +1042,7 @@ class AdminpanelModel extends BaseModel {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
-        
+
             $select_set21 = $this->container['parse_page'];
             $select_set21->load('forms/select');
             $select_set21->set('label_for', 'conf_set21');
@@ -1059,7 +1050,7 @@ class AdminpanelModel extends BaseModel {
             $select_set21->set('select_id', 'conf_set21');
             $select_set21->set('select_name', 'conf_set21');
             $select_set21->set('options', $options);
-        
+
             // reCAPTCHA site key
             $captcha_sitekey = $this->container['parse_page'];
             $captcha_sitekey->load('forms/input');
@@ -1069,7 +1060,7 @@ class AdminpanelModel extends BaseModel {
             $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
             $captcha_sitekey->set('input_value', $this->container['core']->configuration('recaptcha_sitekey'));
             $captcha_sitekey->set('input_maxlength', 50);
-        
+
             // reCAPTCHA secret key
             $captcha_secret = $this->container['parse_page'];
             $captcha_secret->load('forms/input');
@@ -1079,13 +1070,13 @@ class AdminpanelModel extends BaseModel {
             $captcha_secret->set('input_name', 'recaptcha_secretkey');
             $captcha_secret->set('input_value', $this->container['core']->configuration('recaptcha_secretkey'));
             $captcha_secret->set('input_maxlength', 50);
-        
+
             $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
             $data['content'] .= $form->output();
-        
+
             $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
-        
+
         $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
         $data['content'] .= $this->container['core']->homelink() . '</p>';
 
@@ -1560,7 +1551,7 @@ class AdminpanelModel extends BaseModel {
         }
 
         if ($this->container['core']->postAndGet('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->container['core']->clearFile('../used/ban.dat');
+            $this->container['core']->clearFile(STORAGEDIR . 'ban.dat');
 
             $this->container['core']->redirection(HOMEDIR . 'adminpanel/ipban');
         }
@@ -1624,167 +1615,6 @@ class AdminpanelModel extends BaseModel {
 
         $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
         $data['content'] .= $this->container['core']->homelink() . '</p>';
-
-        return $data;
-    }
-
-    /**
-     * System check
-     */
-    public function systemcheck()
-    {
-        // Users data
-        $data['user'] = $this->user_data;
-        $data['tname'] = 'System Check';
-        $data['content'] = '';
-
-        if (!$this->user->administrator(101)) $this->container['core']->redirection(HOMEDIR);
-
-        function prev_dir($string) {
-            $d1 = strrpos($string, "/");
-            $d2 = substr($string, $d1, 999);
-            $string = str_replace($d2, "", $string);
-        
-            return $string;
-        }
-
-        switch ($this->container['core']->postAndGet('action')) {
-            default:
-                $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/menu.gif" alt=""> {@localization[checksys]}}<hr>';
-
-                $did = $this->container['core']->check($this->container['core']->postAndGet('did'));
-
-                if (!empty($did) && (!is_dir(APPDIR . "used" . "$did") || !file_exists(APPDIR . "used" . "$did"))) {
-                    header('Location: ' . HOMEDIR . 'adminpanel/systemcheck');
-                    exit;
-                }
-
-                foreach (scandir(APPDIR . "used" . "$did") as $value) {
-                    if ($value != "." && $value != ".." && $value != ".htaccess") {
-                        if (is_file(APPDIR . "used" . "$did/$value")) {
-                            $files[] = "$did/$value";
-                        } elseif (is_dir(APPDIR . "used" . "$did/$value")) {
-                            $dires[] = "$did/$value";
-                        }
-                    }
-                }
-        
-                if ($did == '') {
-                    if (file_exists(APPDIR . "used/.htaccess")) {
-                        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&file=/.htaccess', '[Chmod - ' . $this->permissions(APPDIR . "used/.htaccess") . ']') . ' - <font color="#00FF00">{@localization[file]}} .htaccess {@localization[exist]}}</font><br>';
-        
-                        if (is_writeable(APPDIR . "used/.htaccess")) {
-                            $data['content'] .= '<font color="#FF0000">{@localization[wrhtacc]}}</font><br>';
-                        }
-                    } else {
-                        $data['content'] .= '<font color="#FF0000">{@localization[warning]}!!! {@localization[file]}} .htaccess {@localization[noexist]}!<br></font>';
-                    }
-                }
-        
-                if ((count($files) + count($dires)) > 0) {
-                    if (count($files) > 0) {
-                        if (!empty($did)) {
-                            if (file_exists(APPDIR . "used" . "$did/.htaccess")) {
-                                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&file=' . $did . '/.htaccess', '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$did/.htaccess") . ']') . ' - <font color="#00FF00">{@localization[file]}} .htaccess {@localization[exist]}}</font><br>';
-        
-                                if (is_writeable(APPDIR . "used" . "$did/.htaccess")) {
-                                    $data['content'] .= '<font color="#FF0000">{@localization[wrhtacc]}}</font><br>';
-                                }
-                            }
-                        }
-
-                        $data['content'] .= $this->localization->string('filecheck') . ': <br />';
-
-                        $usedfiles = 0;
-                        foreach ($files as $value) {
-                            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&file=' . $value, '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$value") . ']') . ' - used' . $value . ' (' . $this->formatSize(filesize(APPDIR . "used" . "$value")) . ') - ';
-        
-                            if (is_writeable(APPDIR . "used" . "$value")) {
-                                $data['content'] .= '<font color="#00FF00">{@localization[filecheck]}}</font><br>';
-                            } else {
-                                $data['content'] .= '<font color="#FF0000">{@localization[filenowrit]}}</font><br>';
-                            }
-                            $usedfiles += filesize(APPDIR . "used" . "$value");
-                        }
-                        $data['content'] .= '<hr>{@localization[filessize]}}: ' . $this->formatSize($usedfiles) . '<hr>';
-                    }
-
-                    if (count($dires) > 0) {
-                        $data['content'] .= $this->localization->string('checkdirs') . ': <br>';
-
-                        foreach ($dires as $value) {
-                            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?action=pod_chmod&file=' . $value, '[CHMOD - ' . $this->permissions(APPDIR . "used" . "$value") . ']') . ' - ' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . $value, 'used' . $value) . ' (' . $this->formatSize($this->readDirectory(APPDIR . "used" . "$value")) . ') - ';
-        
-                            if (is_writeable(APPDIR . "used" . "$value")) {
-                                $data['content'] .= '<font color="#00FF00">{@localization[filecheck]}}</font><br>';
-                            } else {
-                                $data['content'] .= '<font color="#FF0000">{@localization[filenowrit]}}</font><br>';
-                            }
-        
-                            $useddires = $this->readDirectory(APPDIR . "used" . "$value");
-                        }
-                        $data['content'] .= '<hr>{@localization[dirsize]}}: ' . $this->formatSize($useddires) . '<hr>';
-                    }
-                } else {
-                    $data['content'] .= $this->localization->string('dirempty') . '!<hr>';
-                }
-
-                if ($did != '') {
-                    if (prev_dir($did) != '') {
-                        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($did), '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> ' . $this->localization->string('back')) . '<br>';
-                    }
-                    $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/', '{@localization[checksys]}}') . '<br>';
-                }
-
-                break; 
-                // CHMOD
-            case ('pod_chmod'):
-                $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/menu.gif" alt=""> {@localization[chchmod]}}<hr>';
-        
-                if ($this->container['core']->postAndGet('file') && file_exists(APPDIR . "used/" . $this->container['core']->postAndGet('file'))) {
-                    $data['content'] .= '<form action="' . HOMEDIR . 'adminpanel/systemcheck/?action=chmod" method=post>';
-                    if (is_file(APPDIR . "used/" . $this->container['core']->postAndGet('file'))) {
-                        $data['content'] .= $this->localization->string('file') . ': ../used' . $this->container['core']->postAndGet('file') . '<br>';
-                    } elseif (is_dir(APPDIR . "used/" . $this->container['core']->postAndGet('file'))) {
-                        $data['content'] .= $this->localization->string('folder') . ': ../used' . $this->container['core']->postAndGet('file') . '<br>';
-                    } 
-                    $data['content'] .= 'CHMOD: <br><input type="text" name="mode" value="' . $this->permissions(APPDIR . "used/" . $this->container['core']->postAndGet('file')) . '" maxlength="3" /><br>
-                    <input name="file" type="hidden" value="' . $this->container['core']->postAndGet('file') . '" />
-                    <input type=submit value="{@localization[save]}"></form><hr>';
-                } else {
-                    $data['content'] .= 'No file name!<hr>';
-                }
-        
-                if (!empty(prev_dir($this->container['core']->postAndGet('file')))) {
-                    $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($this->container['core']->postAndGet('file')), '{@localization[back]}}') . '<br>';
-                }
-        
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/', '{@localization[checksys]}}') . '<br>';
-            break;
-        
-            case ('chmod'):
-                if (!empty($this->container['core']->postAndGet('file')) && !empty($this->container['core']->postAndGet('mode'))) {
-                    if (chmod(APPDIR . "used/" . $this->container['core']->postAndGet('file'), octdec($this->container['core']->postAndGet('mode'))) != false) {
-                        $data['content'] .= $this->localization->string('chmodok') . '!<hr>';
-                    } else {
-                        $data['content'] .= $this->localization->string('chmodnotok') . '!<hr>';
-                    }
-                } else {
-                    $data['content'] .= $this->localization->string('noneededdata') . '!<hr>';
-                } 
-        
-                if (!empty(prev_dir($this->container['core']->postAndGet('file')))) {
-                    $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/?did=' . prev_dir($this->container['core']->postAndGet('file')), '{@localization[back]}}') . '<br>';
-                }
-        
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/systemcheck/', '{@localization[checksys]}}') . '<br>';
-            break;
-        }
-        
-        $data['content'] .= '<p>';
-        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $data['content'] .= $this->container['core']->homelink();
-        $data['content'] .= '</p>';
 
         return $data;
     }

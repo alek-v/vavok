@@ -57,7 +57,7 @@ class Mailer {
 
         $available_authentication = false;
 
-        require APPDIR . 'used/.available_emails.php';
+        require STORAGEDIR . '.available_emails.php';
 
         /**
          * Check if data for authentication exists for email we use to send email
@@ -164,7 +164,7 @@ class Mailer {
      */
     function emailSubscriptionOptions()
     {
-        $subs = file_get_contents(APPDIR . 'used/subnames.dat');
+        $subs = file_get_contents(STORAGEDIR . 'subnames.dat');
 
         return array_filter(explode('||', $subs));
     }

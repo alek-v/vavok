@@ -29,7 +29,7 @@ class EmailQueue extends BaseModel {
         $diff_time = 1;
 
         // When last email packag has been sent
-        $time_sent = intval(file_get_contents(APPDIR . 'used/email_queue_sent.dat'));
+        $time_sent = intval(file_get_contents(STORAGEDIR . 'email_queue_sent.dat'));
 
         // Check if sending of new package is too early
         if ($diff_time * 60 + $time_sent > time()) exit;

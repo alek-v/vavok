@@ -21,23 +21,23 @@ class Logfiles extends BaseModel {
         if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->container['core']->redirection("./?isset=ap_noaccess");
 
         if ($this->container['core']->postAndGet('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error401.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error402.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error403.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error404.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error406.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error500.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error502.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/dberror.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/error.dat");
-            $this->container['core']->clearFile(APPDIR . "used/datalog/ban.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error401.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error402.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error403.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error404.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error406.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error500.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error502.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/dberror.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/error.dat");
+            $this->container['core']->clearFile(STORAGEDIR . "datalog/ban.dat");
         
             $this->container['core']->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
         if ($this->container['core']->postAndGet('action') == 'delerid' && !empty($this->container['core']->postAndGet('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
             $err = $this->container['core']->postAndGet('err');
-            $this->container['core']->clearFile(APPDIR . 'used/datalog/' . $err . '.dat');
+            $this->container['core']->clearFile(STORAGEDIR . 'datalog/' . $err . '.dat');
 
             $this->container['core']->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
@@ -47,14 +47,14 @@ class Logfiles extends BaseModel {
         $config_loglist = 10;
 
         $errorFile = array(
-            '401' => APPDIR . 'used/datalog/error401.dat',
-            '402' => APPDIR . 'used/datalog/error402.dat',
-            '403' => APPDIR . 'used/datalog/error403.dat',
-            '404' => APPDIR . 'used/datalog/error404.dat',
-            '406' => APPDIR . 'used/datalog/error406.dat',
-            '500' => APPDIR . 'used/datalog/error500.dat',
-            '502' => APPDIR . 'used/datalog/error502.dat',
-            'other' => APPDIR . 'used/datalog/error.dat'
+            '401' => STORAGEDIR . 'datalog/error401.dat',
+            '402' => STORAGEDIR . 'datalog/error402.dat',
+            '403' => STORAGEDIR . 'datalog/error403.dat',
+            '404' => STORAGEDIR . 'datalog/error404.dat',
+            '406' => STORAGEDIR . 'datalog/error406.dat',
+            '500' => STORAGEDIR . 'datalog/error500.dat',
+            '502' => STORAGEDIR . 'datalog/error502.dat',
+            'other' => STORAGEDIR . 'datalog/error.dat'
         );
 
         if (!empty(file_get_contents($errorFile['401']))) {

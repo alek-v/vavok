@@ -74,7 +74,7 @@ class ErrorModel extends BaseModel {
             $this->container['core']->writeDataFile($logdat, $write . PHP_EOL, 1);
         
             // Remove lines from file
-            $this->container['core']->limitFileLines(APPDIR . 'used/' . $logdat, $this->container['core']->configuration('maxLogData'));
+            $this->container['core']->limitFileLines(STORAGEDIR . '' . $logdat, $this->container['core']->configuration('maxLogData'));
         }
 
         $this_page['error_number_info'] = $error_number_info;
