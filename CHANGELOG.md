@@ -1,3 +1,11 @@
+# Vavok v4.1
+    Refactor:
+        - Check if attribute is Container while passing a container as attribute
+        - Use Validations trait instead of using Validations class
+        - Change storage directory location
+
+
+
 # Vavok v4.0
 - Use Pimple as dependency container
 - Some models moved to classes directory
