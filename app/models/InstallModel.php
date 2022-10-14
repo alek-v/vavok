@@ -5,10 +5,12 @@ use App\Classes\BaseModel;
 use App\Classes\Config;
 use App\Classes\Core;
 use App\Classes\User;
-use App\Classes\Validations;
+use App\Traits\Validations;
 use Pimple\Container;
 
 class InstallModel extends BaseModel {
+    use Validations;
+
     private bool $table_exists;
     protected object $container;
     protected object $db;
@@ -98,8 +100,6 @@ class InstallModel extends BaseModel {
 
     public function register_admin()
     {
-        $this->validations = new Validations;
-
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
@@ -133,12 +133,12 @@ class InstallModel extends BaseModel {
 
             $validation_error = 1;
         }
-        if (!$this->validations->validateEmail($email)) {
+        if (!$this->validateEmail($email)) {
             $this_page['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
 
             $validation_error = 1;
         }
-        if (!$this->validations->validateUrl($osite)) {
+        if (!$this->validateUrl($osite)) {
             $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
 
             $validation_error = 1;

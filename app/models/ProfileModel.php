@@ -1,9 +1,11 @@
 <?php
 
 use App\Classes\BaseModel;
-use App\Classes\Validations;
+use App\Traits\Validations;
 
 class ProfileModel extends BaseModel {
+    use Validations;
+
     /**
      * Profile page
      */
@@ -225,15 +227,13 @@ class ProfileModel extends BaseModel {
      */
     public function save()
     {
-        $this->validations = new Validations;
-
         // Users data
         $data['user'] = $this->user_data;
 
-        if (!empty($this->container['core']->postAndGet('site')) && !$this->validations->validateUrl($this->container['core']->postAndGet('site'))) $this->container['core']->redirection('profile.php?isset=insite');
+        if (!empty($this->container['core']->postAndGet('site')) && !$this->validateUrl($this->container['core']->postAndGet('site'))) $this->container['core']->redirection('profile.php?isset=insite');
 
         // check email
-        if (!empty($this->container['core']->postAndGet('email')) && !$this->validations->validateEmail($this->container['core']->postAndGet('email'))) $this->container['core']->redirection('profile.php?isset=noemail');
+        if (!empty($this->container['core']->postAndGet('email')) && !$this->validateEmail($this->container['core']->postAndGet('email'))) $this->container['core']->redirection('profile.php?isset=noemail');
 
         $my_name = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('my_name'));
         $surname = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('surname'));

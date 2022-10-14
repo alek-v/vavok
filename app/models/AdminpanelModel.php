@@ -8,10 +8,10 @@ use App\Classes\BaseModel;
 use App\Classes\Navigation;
 use App\Classes\Config;
 use App\Classes\Mailer;
-use App\Classes\Validations;
+use App\Traits\Validations;
 
 class AdminpanelModel extends BaseModel {
-    protected object $validations;
+    use Validations;
 
     /**
      * Index page
@@ -1448,10 +1448,8 @@ class AdminpanelModel extends BaseModel {
             $udd40 = !empty($this->container['core']->postAndGet('udd40')) ? $this->container['core']->postAndGet('udd40') : '';
             $udd43 = !empty($this->container['core']->postAndGet('udd43')) ? $this->container['core']->postAndGet('udd43') : '';
 
-            $this->validations = new Validations;
-
-            if ($this->validations->validateEmail($udd4)) {
-                if (empty($udd5) || $this->validations->validateUrl($udd5) === true) {
+            if ($this->validateEmail($udd4)) {
+                if (empty($udd5) || $this->validateUrl($udd5) === true) {
                     if (!empty($users_id)) {
                         if (!empty($udd6)) {
                             list($uday, $umonth, $uyear) = explode(".", $udd6);

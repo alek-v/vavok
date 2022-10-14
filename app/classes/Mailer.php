@@ -5,14 +5,15 @@
  */
 
 namespace App\Classes;
-use App\Classes\Validations;
+use App\Traits\Validations;
 use Pimple\Container;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 class Mailer {
+    use Validations;
+
     protected object $db;
-    protected object $validations;
 
     public function __construct(protected Container $container)
     {
@@ -31,8 +32,6 @@ class Mailer {
      */
     function send($usermail, $subject, $msg, $mailfrom = '', $name = '')
     {
-        $this->validations = new Validations;
-
         /**
          * Generate default email
          */
@@ -51,7 +50,7 @@ class Mailer {
         if (empty($name)) $name = $this->container['core']->configuration('title');
 
         // Support for unicode emails
-        if ($this->validations->isUnicode($usermail) && function_exists('idn_to_ascii')) {
+        if ($this->isUnicode($usermail) && function_exists('idn_to_ascii')) {
             // convert to ascii
             $usermail = idn_to_ascii($usermail);
         }

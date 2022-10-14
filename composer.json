@@ -2,7 +2,8 @@
     "autoload": {
         "psr-4": {
             "App\\Classes\\": "app/classes/",
-            "App\\Contracts\\": "app/contracts"
+            "App\\Contracts\\": "app/contracts",
+            "App\\Traits\\": "app/traits"
         }
     },
     "require": {

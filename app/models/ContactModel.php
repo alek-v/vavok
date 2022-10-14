@@ -6,10 +6,10 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Mailer;
-use App\Classes\Validations;
+use App\Traits\Validations;
 
 class ContactModel extends BaseModel {
-    protected object $validations;
+    use Validations;
 
     /**
      * Index page
@@ -47,8 +47,6 @@ class ContactModel extends BaseModel {
      */
     public function send()
     {
-        $this->validations = new Validations;
-
         // Users data
         $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[contact]}}';
@@ -61,7 +59,7 @@ class ContactModel extends BaseModel {
         if (empty($this->container['core']->postAndGet('body'))) $data['content'] .= $this->container['core']->showDanger('{@localization[nobody]}}');
 
         // Validate email address
-        if (!$this->validations->validateEmail($this->container['core']->postAndGet('umail'))) $data['content'] .= $this->container['core']->showDanger('{@localization[noemail]}}');
+        if (!$this->validateEmail($this->container['core']->postAndGet('umail'))) $data['content'] .= $this->container['core']->showDanger('{@localization[noemail]}}');
 
         // Redirect if response is false
         if ($this->container['core']->recaptchaResponse($this->container['core']->postAndGet('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->container['core']->showDanger('{@localization[wrongcode]}}');

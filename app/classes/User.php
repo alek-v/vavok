@@ -8,14 +8,15 @@ namespace App\Classes;
 use App\Classes\Counter;
 use App\Classes\BrowserDetection;
 use App\Classes\Mailer;
-use App\Classes\Validations;
+use App\Traits\Validations;
 use Pimple\Container;
 use DateTime;
 use DateInterval;
 
 class User {
+    use Validations;
+
     protected object $db;
-    protected object $validations;
 
     public function __construct(protected Container $container)
     {
@@ -185,8 +186,6 @@ class User {
 
     public function checkAuth()
     {
-        $this->validations = new Validations;
-
         // Response data
         $data = [];
 
@@ -201,7 +200,7 @@ class User {
             }
 
             // User is logging in with email
-            if ($this->validations->validateEmail($this->container['core']->postAndGet('log'))) {
+            if ($this->validateEmail($this->container['core']->postAndGet('log'))) {
                 $userx_id = $this->id_from_email($this->container['core']->postAndGet('log'));
             }
 

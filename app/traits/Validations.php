@@ -3,16 +3,16 @@
  * Data validation
  */
 
-namespace App\Classes;
+namespace App\Traits;
 
-class Validations {
+trait Validations {
     /**
      * Email validation with support for unicode emails
      * 
      * @param string $email
      * @return bool
      */
-    function validateEmail(string $email): bool
+    public function validateEmail(string $email): bool
     {
         // Check unicode email
         if ($this->isUnicode($email)) {
@@ -50,7 +50,7 @@ class Validations {
      * @param string $data
      * @return bool
      */
-    function isUnicode(string $data): bool
+    public function isUnicode(string $data): bool
     {
         if (strlen($data) !== strlen(utf8_decode($data))) {
             return true;

@@ -3,13 +3,13 @@
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
 use App\Classes\Mailer;
-use App\Classes\Validations;
+use App\Traits\Validations;
 
 class UsersModel extends BaseModel {
+    use Validations;
+
     public function register()
     {
-        $this->validations = new Validations;
-
         // Users data
         $data['user'] = $this->user_data;
         // Meta tag for this page
@@ -65,7 +65,7 @@ class UsersModel extends BaseModel {
                 return $data;
             }
             // Continue if email is valid
-            elseif (!$this->validations->validateEmail($this->container['core']->postAndGet('meil'))) {
+            elseif (!$this->validateEmail($this->container['core']->postAndGet('meil'))) {
                 $data['content'] .= $this->container['core']->showDanger($this->localization->string('badmail'));
                 $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
