@@ -40,7 +40,7 @@ class EmailQueue extends BaseModel {
         $sql = "SELECT * FROM email_queue WHERE sent = 0 ORDER BY FIELD(priority,
                 'high',
                 'normal',
-                'low') LIMIT 0, " . $this->container['core']->configuration('subMailPacket');
+                'low') LIMIT 0, " . $this->configuration('subMailPacket');
 
         $i = 0;
         foreach ($this->db->query($sql) as $email) {
@@ -60,7 +60,7 @@ class EmailQueue extends BaseModel {
         }
 
         // Update time of last sent mail
-        if ($i > 0) $this->container['core']->writeDataFile('email_queue_sent.dat', $new_time);
+        if ($i > 0) $this->writeDataFile('email_queue_sent.dat', $new_time);
     }
 
     /**
@@ -85,7 +85,7 @@ class EmailQueue extends BaseModel {
         $page_data['content'] = '';
 
         // Checking access permitions
-        if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->container['core']->redirection('../');
+        if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->redirection('../');
 
          // How manu emails to add to queue at once
         $news_queue_limit = 1000;
@@ -100,7 +100,7 @@ class EmailQueue extends BaseModel {
         // add to page header
         $page_data['headt'] = $textEditor;
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $sub_names = $this->_mailer->emailSubscriptionOptions();
 
             $page_data['content'] .= '<h1>Add emails to the queue</h1>';
@@ -149,7 +149,7 @@ class EmailQueue extends BaseModel {
             </div>';
         }
 
-        if ($this->container['core']->postAndGet('action') == 'add') {
+        if ($this->postAndGet('action') == 'add') {
             $page_data['headt'] .= '
             <script type="text/javascript">
             function formAutoSubmit () {
@@ -164,18 +164,18 @@ class EmailQueue extends BaseModel {
             window.onload = startSendingDelayed;
             </script>';
 
-            $dates = $this->container['core']->correctDate(time(), 'd.m.Y. / H:i');
-            $theme = $this->container['core']->check($_POST['theme']); // subject
-            $sub_name = isset($_POST['subname']) == true ? $this->container['core']->check($_POST['subname']) : ''; // subscription name
-            $sender = $this->container['core']->check($_POST['sender']); // sender name
-            $email = $this->container['core']->check($_POST['email']); // sender email
-            $type = $this->container['core']->check($_POST['type']); // sender email
-            $last = isset($_GET['last']) == true ? $this->container['core']->check($_GET['last']) : 0;
+            $dates = $this->correctDate(time(), 'd.m.Y. / H:i');
+            $theme = $this->check($_POST['theme']); // subject
+            $sub_name = isset($_POST['subname']) == true ? $this->check($_POST['subname']) : ''; // subscription name
+            $sender = $this->check($_POST['sender']); // sender name
+            $email = $this->check($_POST['email']); // sender email
+            $type = $this->check($_POST['type']); // sender email
+            $last = isset($_GET['last']) == true ? $this->check($_GET['last']) : 0;
             $msg = $_POST['msg'];
 
             // Strip tags in case we are sending plain text mail
             if ($type == 'plain') {
-                $msg = str_replace('&nbsp;', '', strip_tags($this->container['core']->replaceNewLines($msg, "\n")));
+                $msg = str_replace('&nbsp;', '', strip_tags($this->replaceNewLines($msg, "\n")));
             }
 
             if (!empty($sub_name)) {
@@ -226,8 +226,8 @@ class EmailQueue extends BaseModel {
         }
 
         $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->container['core']->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $page_data['content'] .= $this->container['core']->homelink();
+        $page_data['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
+        $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;

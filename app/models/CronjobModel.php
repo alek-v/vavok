@@ -24,6 +24,6 @@ class CronjobModel extends BaseModel {
      */
     public function clean_unconfirmed_reg()
     {
-        $this->container['core']->cleanRegistrations($this->container['user']);
+        $this->cleanRegistrations($this->container['user']);
     }
 }

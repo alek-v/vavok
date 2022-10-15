@@ -16,11 +16,11 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'File Upload';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->container['core']->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
 
-        if (empty($this->container['core']->postAndGet('action'))) {
-            $this_page['content'] .= '<p>' . $this->container['core']->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-            $this_page['content'] .= $this->container['core']->homelink() . '</p>';
+        if (empty($this->postAndGet('action'))) {
+            $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
+            $this_page['content'] .= $this->homelink() . '</p>';
 
             return $this_page;
         }
@@ -59,10 +59,10 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'Uploaded Files';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->container['core']->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
 
-        if ($this->container['core']->postAndGet('action') == 'del') {
-            $file_data = $this->db->selectData('uplfiles', 'id = :id', [':id' => $this->container['core']->postAndGet('id')]);
+        if ($this->postAndGet('action') == 'del') {
+            $file_data = $this->db->selectData('uplfiles', 'id = :id', [':id' => $this->postAndGet('id')]);
 
             // Location of file to delete
             $file_to_delete = PUBLICDIR . ltrim($file_data['fulldir'], '/');
@@ -75,12 +75,12 @@ class FileUpload extends BaseModel {
             }
 
             // Delete from database
-            $this->db->delete("uplfiles", "id='{$this->container['core']->postAndGet('id')}'");
+            $this->db->delete("uplfiles", "id='{$this->postAndGet('id')}'");
 
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/uploaded_files?isset=mp_delfiles');
+            $this->redirection(HOMEDIR . 'adminpanel/uploaded_files?isset=mp_delfiles');
         }
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> List of uploaded files</p>'; 
 
             $num_items = $this->db->countRow('uplfiles');
@@ -106,8 +106,8 @@ class FileUpload extends BaseModel {
         }
 
         $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->container['core']->homelink();
+        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
+        $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
 
         return $this_page;
@@ -123,15 +123,15 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'Search';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->container['core']->redirection(HOMEDIR . '?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . '?auth_error');
         
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<form action="' . HOMEDIR . 'adminpanel/search_uploads?action=stpc" method="POST">';
             $this_page['content'] .= 'Text:<br><input name="stext" maxlength="30" /><br>';
             $this_page['content'] .= '<br>';
             $this_page['content'] .= '<input type="submit" value="Search"></form><br><br>';
-        } else if ($this->container['core']->postAndGet('action') == 'stpc') {
-            $stext = $this->container['core']->check($_POST["stext"]);
+        } else if ($this->postAndGet('action') == 'stpc') {
+            $stext = $this->check($_POST["stext"]);
 
             if (empty($stext)) {
                 $this_page['content'] .= "<br />Please fill all fields<br />";
@@ -149,7 +149,7 @@ class FileUpload extends BaseModel {
                 $num_items = $noi;
                 $items_per_page = 10;
 
-                $navigation = new Navigation($items_per_page, $num_items, $this->container['core']->postAndGet('page'), 'search_uploads.php?'); // start navigation
+                $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), 'search_uploads.php?'); // start navigation
 
                 $limit_start = $navigation->start()['start']; // starting point
 
@@ -169,9 +169,9 @@ class FileUpload extends BaseModel {
         }
 
         $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back')) . '<br />';
-        $this_page['content'] .= $this->container['core']->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->container['core']->homelink();
+        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back')) . '<br />';
+        $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
+        $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
 
         return $this_page;

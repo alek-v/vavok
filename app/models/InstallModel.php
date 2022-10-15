@@ -3,7 +3,6 @@
 use App\Classes\Database;
 use App\Classes\BaseModel;
 use App\Classes\Config;
-use App\Classes\Core;
 use App\Classes\User;
 use App\Traits\Validations;
 use Pimple\Container;
@@ -11,10 +10,9 @@ use Pimple\Container;
 class InstallModel extends BaseModel {
     use Validations;
 
-    private bool $table_exists;
-    protected object $container;
+    protected Container $container;
     protected object $db;
-    protected object $user;
+    private bool $table_exists;
 
     public function __construct()
     {
@@ -24,7 +22,7 @@ class InstallModel extends BaseModel {
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
 
-        // There are databaase tables and administrator is registered, make a redirection
+        // Database tables are installed and administrator is registered, make a redirection
         if ($this->table_exists == true && $this->db->countRow('vavok_users') > 0) {
             header('Location: ' . HOMEDIR);
             exit;
@@ -37,12 +35,10 @@ class InstallModel extends BaseModel {
 
             // Globaly used methods
             $container['db'] = fn($c) => $this->db;
-            $container['core'] = fn($c) => new Core($c);
             $container['user'] = fn($c) => new User($c);
 
             $this->container = $container;
             $this->user = $container['user'];
-            $this->core = $container['core'];
         }
 
         // Set default theme manually when user table doesn't exist and user class is not instantiated
@@ -93,7 +89,7 @@ class InstallModel extends BaseModel {
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
-        $this_page['site_address'] = $this->container['core']->websiteHomeAddress();
+        $this_page['site_address'] = $this->websiteHomeAddress();
 
         return $this_page;
     }
@@ -153,12 +149,11 @@ class InstallModel extends BaseModel {
         $osite_name = ucfirst(str_replace("http://", "", $osite));
         $osite_name = str_replace("https://", "", $osite_name);
 
-        // write data to config file
-        // init class
+        // Write configuration data
         $myconfig = new Config($this->container);
 
         $values = array(
-        'keypass' => $this->container['core']->generatePassword(),
+        'keypass' => $this->generatePassword(),
         'webtheme' => 'default',
         'quarantine' => 0,
         'showtime' => 0,
@@ -188,7 +183,7 @@ class InstallModel extends BaseModel {
 
         $myconfig->updateConfigData($values);
 
-        // write to database
+        // Insert data into the database
         $this->user->register($name, $password, 0, '', 'default', $email); // register user
         $user_id = $this->user->getIdFromNick($name);
         $this->db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");

@@ -211,11 +211,11 @@ class ProfileModel extends BaseModel {
 
         if (!empty($this->user->user_info('photo'))) {
             $data['profile_photo'] = '<img src="../' . $this->user->user_info('photo') . '" alt="User\'s photo" /><br /> ';
-            $data['profile_photo'] .= $this->container['core']->sitelink(HOMEDIR . 'profile/photo', 'Change photo') . '<br />';
-            $data['profile_photo'] .= $this->container['core']->sitelink(HOMEDIR . 'profile/removephoto', 'Remove photo'); // update lang
+            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photo') . '<br />';
+            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/removephoto', 'Remove photo'); // update lang
         } else {
             $data['profile_photo'] = '<img src="../themes/images/img/no_picture.jpg" alt="No profile picture" /><br /> ';
-            $data['profile_photo'] .= $this->container['core']->sitelink(HOMEDIR . 'profile/photo', 'Change photography');
+            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photography');
         }
 
         // Pass page to the view
@@ -230,24 +230,24 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-        if (!empty($this->container['core']->postAndGet('site')) && !$this->validateUrl($this->container['core']->postAndGet('site'))) $this->container['core']->redirection('profile.php?isset=insite');
+        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
 
         // check email
-        if (!empty($this->container['core']->postAndGet('email')) && !$this->validateEmail($this->container['core']->postAndGet('email'))) $this->container['core']->redirection('profile.php?isset=noemail');
+        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection('profile.php?isset=noemail');
 
-        $my_name = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('my_name'));
-        $surname = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('surname'));
-        $city = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('otkel'));
-        $street = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('street'));
-        $zip = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('zip'));
-        $infa = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('infa'));
-        $email = htmlspecialchars(strtolower($this->container['core']->postAndGet('email')));
-        $site = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('site'));
-        $browser = $this->container['core']->replaceNewLines($this->user->user_browser());
-        $ip = $this->container['core']->replaceNewLines($this->user->find_ip());
-        $sex = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('pol'));
-        $happy = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('happy'));
-        $timezone = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('timezone'));
+        $my_name = $this->replaceNewLines($this->postAndGet('my_name'));
+        $surname = $this->replaceNewLines($this->postAndGet('surname'));
+        $city = $this->replaceNewLines($this->postAndGet('otkel'));
+        $street = $this->replaceNewLines($this->postAndGet('street'));
+        $zip = $this->replaceNewLines($this->postAndGet('zip'));
+        $infa = $this->replaceNewLines($this->postAndGet('infa'));
+        $email = htmlspecialchars(strtolower($this->postAndGet('email')));
+        $site = $this->replaceNewLines($this->postAndGet('site'));
+        $browser = $this->replaceNewLines($this->user->user_browser());
+        $ip = $this->replaceNewLines($this->user->find_ip());
+        $sex = $this->replaceNewLines($this->postAndGet('pol'));
+        $happy = $this->replaceNewLines($this->postAndGet('happy'));
+        $timezone = $this->replaceNewLines($this->postAndGet('timezone'));
 
         $fields = array();
         $fields[] = 'city';
@@ -285,7 +285,7 @@ class ProfileModel extends BaseModel {
             /**
              * Insert data to database
              */
-            $token = $this->container['core']->generatePassword();
+            $token = $this->generatePassword();
 
             $now = new DateTime();
             $now->add(new DateInterval("P1D"));
@@ -307,14 +307,14 @@ class ProfileModel extends BaseModel {
             $mailQueue = new Mailer;
 
             $msg = "Hello {$this->user->show_username()}<br /><br />
-            In order to add this email to your profile at site {$this->container['core']->websiteHomeAddress()}
-            please follow link to confirm email address " . '<a href="' . $this->container['core']->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->container['core']->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
+            In order to add this email to your profile at site {$this->websiteHomeAddress()}
+            please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
             $msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
             $mailQueue->queue_email($email, 'Confirm new email address', $msg);
         }
 
-        $this->container['core']->redirection('./profile');
+        $this->redirection('./profile');
     }
 
     /**
@@ -325,13 +325,13 @@ class ProfileModel extends BaseModel {
         // Users data
         $data['user'] = $this->user_data;
 
-        if ($this->container['core']->postAndGet('confirmed') == 'yes') {
+        if ($this->postAndGet('confirmed') == 'yes') {
             $delete_id = $this->user->user_id();
 
             $this->user->deleteUser($delete_id);
             $this->user->logout($delete_id);
 
-            $this->container['core']->redirection(HOMEDIR);
+            $this->redirection(HOMEDIR);
         }
 
         // Page title
@@ -352,9 +352,9 @@ class ProfileModel extends BaseModel {
         $data['tname'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
-        if ($this->container['core']->postAndGet('newpar') !== $this->container['core']->postAndGet('newpar2'))
+        if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2'))
         {
-            $data['content'] = $this->container['core']->showDanger('{@localization[nonewpass]}}');
+            $data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
             // Pass page to the view
             $this->view('profile/newpassword', $data);
@@ -362,13 +362,13 @@ class ProfileModel extends BaseModel {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->password_check($this->container['core']->postAndGet('oldpar', true), $this->user->user_info('password'))) {
+        if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->user_info('password'))) {
             // Update password
-            $this->user->update_user('pass', $this->user->password_encrypt($this->container['core']->postAndGet('newpar', true)));
+            $this->user->update_user('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
 
-            $this->container['core']->redirection($this->container['core']->websiteHomeAddress() . "/users/login");
+            $this->redirection($this->websiteHomeAddress() . "/users/login");
         } else {
-            $data['content'] = $this->container['core']->showDanger('{@localization[nopass]}}');
+            $data['content'] = $this->showDanger('{@localization[nopass]}}');
         }
 
         // Pass page to the view
@@ -442,7 +442,7 @@ class ProfileModel extends BaseModel {
         $data['content'] = '';
 
         // File path cannot be empty
-        if (empty($_FILES['file']['tmp_name'])) $this->container['core']->redirection(HOMEDIR . 'profile/photo');
+        if (empty($_FILES['file']['tmp_name'])) $this->redirection(HOMEDIR . 'profile/photo');
 
         // Uploading
         $avat_size = $_FILES['file']['size'];
@@ -483,19 +483,19 @@ class ProfileModel extends BaseModel {
                         $this->view('profile/savephoto', $data);
                         exit;
                     } else {
-                        $data['content'] .= $this->container['core']->showDanger('Error uploading photography');
+                        $data['content'] .= $this->showDanger('Error uploading photography');
                     }
                 } else {
-                    $data['content'] .= $this->container['core']->showDanger($this->localization->string('badfileext'));
+                    $data['content'] .= $this->showDanger($this->localization->string('badfileext'));
                 }
             } else {
-                $data['content'] .= $this->container['core']->showDanger('Photography must be under 1024px');
+                $data['content'] .= $this->showDanger('Photography must be under 1024px');
             }
         } else {
-            $data['content'] .= $this->container['core']->showDanger($this->localization->string('filemustb') . ' under 5 MB');
+            $data['content'] .= $this->showDanger($this->localization->string('filemustb') . ' under 5 MB');
         }
 
-        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
+        $data['content'] .= $this->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
 
         // Pass page to the view
         return $data;
@@ -526,8 +526,8 @@ class ProfileModel extends BaseModel {
         // Update database
         $this->user->update_user('photo', '');
 
-        $data['content'] .= $this->container['core']->showSuccess('Your photography has been successfully deleted!'); // update lang
-        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
+        $data['content'] .= $this->showSuccess('Your photography has been successfully deleted!'); // update lang
+        $data['content'] .= $this->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
 
         // Pass page to the view
         return $data;
@@ -546,21 +546,21 @@ class ProfileModel extends BaseModel {
         $this_page['content'] = '';
 
         // Token does not exist
-        if ($this->db->countRow('tokens', "type = 'email' AND token = '{$this->container['core']->postAndGet('token')}'") < 1) {
-            $this_page['content'] .= $this->container['core']->showDanger('{@localization[notoken]}}');
+        if ($this->db->countRow('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'") < 1) {
+            $this_page['content'] .= $this->showDanger('{@localization[notoken]}}');
 
             return $this_page;
         }
 
         // Get token data
-        $data = $this->db->selectData('tokens', 'type = :type AND token = :token', [':type' => 'email', ':token' => $this->container['core']->postAndGet('token')]);
+        $data = $this->db->selectData('tokens', 'type = :type AND token = :token', [':type' => 'email', ':token' => $this->postAndGet('token')]);
 
         // Update email
         $this->user->update_user('email', $data['content'], $data['uid']);
 
         // Remove token
-        $this->db->delete('tokens', "type = 'email' AND token = '{$this->container['core']->postAndGet('token')}'");
+        $this->db->delete('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'");
 
-        $this->container['core']->redirection(HOMEDIR . 'profile');
+        $this->redirection(HOMEDIR . 'profile');
     }
 }

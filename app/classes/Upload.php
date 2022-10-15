@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Classes;
+use App\Traits\Core;
 use Pimple\Container;
 
 class Upload {
+    use Core;
+
     protected object $db;
     protected object $localization;
 
@@ -22,13 +25,13 @@ class Upload {
     public function upload($directory = '')
     {
         if (isset($_POST['width']) && !empty($_POST['width'])) {
-            $width = $this->container['core']->check($_POST['width']);
+            $width = $this->check($_POST['width']);
         }
         if (isset($_POST['rename']) && !empty($_POST['rename'])) {
-            $rename = $this->container['core']->check($_POST['rename']);
+            $rename = $this->check($_POST['rename']);
         } 
         if (isset($_POST['lowercase']) && !empty($_POST['lowercase'])) {
-            $lowercase = $this->container['core']->check($_POST['lowercase']);
+            $lowercase = $this->check($_POST['lowercase']);
         } else {
             $lowercase = '';
         }
@@ -136,6 +139,6 @@ class Upload {
             }
         }
 
-        return array('file_address' => $this->container['core']->websiteHomeAddress() . $upload_URL);
+        return array('file_address' => $this->websiteHomeAddress() . $upload_URL);
     }
 }

@@ -8,6 +8,7 @@ use App\Classes\BaseModel;
 use App\Classes\Localization;
 
 class ErrorModel extends BaseModel {
+
     /**
      * Log error
      * 
@@ -19,9 +20,9 @@ class ErrorModel extends BaseModel {
         $this->localization = new Localization;
         $this->localization->load('', 'error');
 
-        $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->container['core']->check($_SERVER['HTTP_REFERER']) : 'No referer';
+        $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';
         $http_referer = str_replace(':|:', '|', $http_referer);
-        $request_uri = $this->container['core']->check(str_replace(':|:', '|', REQUEST_URI));
+        $request_uri = $this->check(str_replace(':|:', '|', REQUEST_URI));
         $hostname = gethostbyaddr($this->user->find_ip());
         $hostname = str_replace(':|:', '|', $hostname);
 
@@ -71,10 +72,10 @@ class ErrorModel extends BaseModel {
 
         if (isset($write) && !empty($logdat)) {
             // Write new data to log file
-            $this->container['core']->writeDataFile($logdat, $write . PHP_EOL, 1);
+            $this->writeDataFile($logdat, $write . PHP_EOL, 1);
         
             // Remove lines from file
-            $this->container['core']->limitFileLines(STORAGEDIR . '' . $logdat, $this->container['core']->configuration('maxLogData'));
+            $this->limitFileLines(STORAGEDIR . '' . $logdat, $this->configuration('maxLogData'));
         }
 
         $this_page['error_number_info'] = $error_number_info;

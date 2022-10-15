@@ -5,9 +5,12 @@
  */
 
 namespace App\Classes;
+use App\Traits\Core;
 use Pimple\Container;
 
 class ParsePage {
+    use Core;
+
     protected string $file;             // Template
     protected string $title;            // Page title
     protected string $content;          // Content
@@ -37,15 +40,15 @@ class ParsePage {
         $this->load($file);
 
         // Check if we use SSL
-        if ($this->container['core']->configuration('transferProtocol') == 'HTTPS' && $this->container['core']->currentConnection() == 'http://') {
+        if ($this->configuration('transferProtocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
             // Redirect to secure connection (HTTPS)
             $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            $this->container['core']->redirection($redirect);
+            $this->redirection($redirect);
         }
 
         // Metadata of page
         // Set missing OG (open graph) tags when possible
-        $this->head_data = $this->container['core']->pageHeadMetatags($data);
+        $this->head_data = $this->pageHeadMetatags($data);
 
         $this->title = isset($data['tname']) ? $data['tname'] : '';
         $this->page_name = isset($data['pname']) ? $data['pname'] : '';
@@ -169,7 +172,7 @@ class ParsePage {
         if (!empty($this->lang)) $this->set('page_language', ' lang="' . $this->lang . '"');
 
         // Cookie consent
-        if ($this->container['core']->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        if ($this->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
 
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);
@@ -178,11 +181,11 @@ class ParsePage {
         $this->set('title', $this->title);
 
         // Notification
-        if (!empty($this->notification)) $this->set('show_notification', $this->container['core']->showDanger($this->notification));
+        if (!empty($this->notification)) $this->set('show_notification', $this->showDanger($this->notification));
 
-        if ($this->container['core']->configuration('showOnline') == 1) $this->set('show_online', $this->container['core']->showOnline());
-        if ($this->container['core']->configuration('showCounter') != 6) $this->set('show_counter', $this->container['core']->showCounter());
-        if ($this->container['core']->configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->container['core']->showPageGenTime());
+        if ($this->configuration('showOnline') == 1) $this->set('show_online', $this->showOnline());
+        if ($this->configuration('showCounter') != 6) $this->set('show_counter', $this->showCounter());
+        if ($this->configuration('pageGenTime') == 1) $this->set('show_generation_time', $this->showPageGenTime());
 
         // Show database queries while debugging
         if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->showDbQueries());

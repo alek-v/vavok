@@ -4,17 +4,9 @@
  * Site:   https://vavok.net
  */
 
-namespace App\Classes;
-use Pimple\Container;
+namespace App\Traits;
 
-class Core {
-    protected object $db;
-
-    public function __construct(protected Container $container)
-    {
-        $this->db = $container['db'];
-    }
-
+trait Core {
     /**
      * Get website configuration
      *
@@ -1028,10 +1020,13 @@ class Core {
     }
 
     /**
-     * Users device, computer or phone
+     * User's device, computer or a phone
+     * 
+     * @return string
      */
-    public function userDevice() {
-        return BrowserDetection::userDevice();
+    public function userDevice(): string
+    {
+        return \App\Classes\BrowserDetection::userDevice();
     }
 
     /**

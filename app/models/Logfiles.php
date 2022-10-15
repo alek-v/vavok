@@ -18,31 +18,31 @@ class Logfiles extends BaseModel {
         $this_page['tname'] = 'Log data';
         $this_page['content'] = '';
 
-        if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->container['core']->redirection("./?isset=ap_noaccess");
+        if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->redirection("./?isset=ap_noaccess");
 
-        if ($this->container['core']->postAndGet('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error401.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error402.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error403.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error404.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error406.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error500.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error502.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/dberror.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/error.dat");
-            $this->container['core']->clearFile(STORAGEDIR . "datalog/ban.dat");
+        if ($this->postAndGet('action') == "delerlog" && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+            $this->clearFile(STORAGEDIR . "datalog/error401.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error402.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error403.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error404.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error406.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error500.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error502.dat");
+            $this->clearFile(STORAGEDIR . "datalog/dberror.dat");
+            $this->clearFile(STORAGEDIR . "datalog/error.dat");
+            $this->clearFile(STORAGEDIR . "datalog/ban.dat");
         
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
+            $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
-        if ($this->container['core']->postAndGet('action') == 'delerid' && !empty($this->container['core']->postAndGet('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $err = $this->container['core']->postAndGet('err');
-            $this->container['core']->clearFile(STORAGEDIR . 'datalog/' . $err . '.dat');
+        if ($this->postAndGet('action') == 'delerid' && !empty($this->postAndGet('err')) && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+            $err = $this->postAndGet('err');
+            $this->clearFile(STORAGEDIR . 'datalog/' . $err . '.dat');
 
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
+            $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }
 
-        $list = isset($_GET['list']) ? $list = $this->container['core']->check($_GET['list']) : $list = '404';
+        $list = isset($_GET['list']) ? $list = $this->check($_GET['list']) : $list = '404';
         
         $config_loglist = 10;
 
@@ -106,14 +106,14 @@ class Logfiles extends BaseModel {
         }
 
         $listNames = array(
-            '401' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=401', '<strong><u>401</u>' . $time401 . '</strong>'), 
-            '402' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=402', '<strong><u>402</u>' . $time402 . '</strong>'),
-            '403' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=403', '<strong><u>403</u>' . $time403 . '</strong>'),
-            '404' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=404', '<strong><u>404</u>' . $time404 . '</strong>'),
-            '406' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=406', '<strong><u>406</u>' . $time406 . '</strong>'),
-            '500' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=500', '<strong><u>500</u>' . $time500 . '</strong>'),
-            '502' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=502', '<strong><u>502</u>' . $time502 . '</strong>'),
-            'other' => $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?list=other', '<strong><u>{@localization[other]}}</u>' . $timeother . '</strong>')
+            '401' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=401', '<strong><u>401</u>' . $time401 . '</strong>'), 
+            '402' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=402', '<strong><u>402</u>' . $time402 . '</strong>'),
+            '403' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=403', '<strong><u>403</u>' . $time403 . '</strong>'),
+            '404' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=404', '<strong><u>404</u>' . $time404 . '</strong>'),
+            '406' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=406', '<strong><u>406</u>' . $time406 . '</strong>'),
+            '500' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=500', '<strong><u>500</u>' . $time500 . '</strong>'),
+            '502' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=502', '<strong><u>502</u>' . $time502 . '</strong>'),
+            'other' => $this->sitelink(HOMEDIR . 'adminpanel/logfiles?list=other', '<strong><u>{@localization[other]}}</u>' . $timeother . '</strong>')
         );
 
         function getLogNavigation($listNames) {
@@ -142,7 +142,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error401.dat');
+            $opis = $this->getDataFile('datalog/error401.dat');
             $err = 'error401';
         }
         if ($list == 402) {
@@ -150,7 +150,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error402.dat');
+            $opis = $this->getDataFile('datalog/error402.dat');
             $err = 'error402';
         }
         if ($list == 403) {
@@ -158,7 +158,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error403.dat');
+            $opis = $this->getDataFile('datalog/error403.dat');
             $err = 'error403';
         }
         if ($list == 404) {
@@ -166,7 +166,7 @@ class Logfiles extends BaseModel {
 
             $this_page['content'] .= getLogNavigation($listNames);
 
-            $opis = $this->container['core']->getDataFile('datalog/error404.dat');
+            $opis = $this->getDataFile('datalog/error404.dat');
             $err = 'error404';
         }
         if ($list == 406) {
@@ -174,7 +174,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error406.dat');
+            $opis = $this->getDataFile('datalog/error406.dat');
             $err = 'error406';
         }
         if ($list == 500) {
@@ -182,7 +182,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error500.dat');
+            $opis = $this->getDataFile('datalog/error500.dat');
             $err = 'error500';
         }
         if ($list == 502) {
@@ -190,7 +190,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error502.dat');
+            $opis = $this->getDataFile('datalog/error502.dat');
             $err = 'error502';
         }
         if ($list == 'other') {
@@ -198,7 +198,7 @@ class Logfiles extends BaseModel {
         
             $this_page['content'] .= getLogNavigation($listNames);
         
-            $opis = $this->container['core']->getDataFile('datalog/error.dat');
+            $opis = $this->getDataFile('datalog/error.dat');
             $err = 'error';
         }
 
@@ -218,7 +218,7 @@ class Logfiles extends BaseModel {
             $dtlog = explode(":|:", $opis[$i]);
         
             $this_page['content'] .= '<img src="{@HOMEDIR}}themes/images/img/files.gif" alt=""> <b><font color="#FF0000">Fajl: ' . $dtlog[2] . '</font></b><br>';
-            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->container['core']->correctDate($dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
+            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->correctDate($dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
             $this_page['content'] .= 'Referer: ' . $dtlog[7] . '<br>';
             $this_page['content'] .= 'Host: ' . $dtlog[5] . '<br>';
             $this_page['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_information?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';
@@ -228,14 +228,14 @@ class Logfiles extends BaseModel {
 
         if ($this->user->administrator()) {
             if (isset($err)) {
-                $this_page['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerid&err=' . $err, $this->localization->string('delaboerr') . ' ' . $err) . '<br>';
+                $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerid&err=' . $err, $this->localization->string('delaboerr') . ' ' . $err) . '<br>';
             }
 
-            $this_page['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerlog', $this->localization->string('delallerdata')) . '<br>';
+            $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerlog', $this->localization->string('delallerdata')) . '<br>';
         }
 
-        $this_page['content'] .= '<p>' . $this->container['core']->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->container['core']->homelink() . '</p>';
+        $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
+        $this_page['content'] .= $this->homelink() . '</p>';
 
         return $this_page;
     }

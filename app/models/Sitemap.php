@@ -17,9 +17,9 @@ class Sitemap extends BaseModel {
         $this_page['tname'] = 'Sitemap Generator';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator(101)) $this->container['core']->redirection('./');
+        if (!$this->user->administrator(101)) $this->redirection('./');
         
-        if ($this->container['core']->postAndGet('action') == 'generate') {
+        if ($this->postAndGet('action') == 'generate') {
             $total = $this->db->countRow('pages');
         
             $sitemap = '<?xml version="1.0" encoding="UTF-8"?>
@@ -27,22 +27,22 @@ class Sitemap extends BaseModel {
         
             foreach ($this->db->query("SELECT pname, lastupd, headt, type FROM pages WHERE published = '2' OR published = '0'") as $page) {
                 // date updated
-                $dateUpdated = $this->container['core']->correctDate($page['lastupd'], 'Y-m-d');
+                $dateUpdated = $this->correctDate($page['lastupd'], 'Y-m-d');
 
                 // url
                 if (!empty($page['headt']) && stristr($page['headt'], 'og:url')) {
                     preg_match('/<meta property="og:url" content="([^"]*)/i', $page['headt'], $matches);
                     $loc = $matches[1];
         
-                    if ($this->container['core']->configuration('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
+                    if ($this->configuration('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
                 } elseif ($page['pname'] == 'index') {
-                    $loc = $this->container['core']->websiteHomeAddress();
+                    $loc = $this->websiteHomeAddress();
                 } else {
                     // check for blog posts
                     if ($page['type'] == 'post') {
-                        $loc = $this->container['core']->websiteHomeAddress() . '/blog/' . $page['pname'];
+                        $loc = $this->websiteHomeAddress() . '/blog/' . $page['pname'];
                     } else { // it is regular page
-                        $loc = $this->container['core']->websiteHomeAddress() . '/page/' . $page['pname'];
+                        $loc = $this->websiteHomeAddress() . '/page/' . $page['pname'];
                     }
                 }
 
@@ -74,7 +74,7 @@ class Sitemap extends BaseModel {
             exit;
         }
 
-        $this_page['homelink'] = $this->container['core']->homelink('<p>', '</p>');
+        $this_page['homelink'] = $this->homelink('<p>', '</p>');
 
         return $this_page;
     }

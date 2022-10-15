@@ -23,71 +23,71 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[adminpanel]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions('adminpanel', 'show')) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->checkPermissions('adminpanel', 'show')) $this->redirection('../?auth_error');
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             // Moderator access level or bigger
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminchat', '{@localization[admchat]}}');
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/adminlist', '{@localization[modlist]}}');
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', '{@localization[notconf]}}');
-            $data['content'] .= $this->container['core']->sitelink('pages/userlist', '{@localization[userlist]}} (' . $this->user->regmemcount() . ')');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat', '{@localization[admchat]}}');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminlist', '{@localization[modlist]}}');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', '{@localization[notconf]}}');
+            $data['content'] .= $this->sitelink('pages/userlist', '{@localization[userlist]}} (' . $this->user->regmemcount() . ')');
 
             // Super moderator access level or bigger
             if ($this->user->moderator(103) || $this->user->moderator(105) || $this->user->administrator()) {
-                if (file_exists('reports.php')) $data['content'] .= $this->container['core']->sitelink('reports.php', '{@localization[usrcomp]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/file_upload', '{@localization[upload]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/uploaded_files', '{@localization[uplFiles]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/search_uploads', 'Search uploaded files');
+                if (file_exists('reports.php')) $data['content'] .= $this->sitelink('reports.php', '{@localization[usrcomp]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/file_upload', '{@localization[upload]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/uploaded_files', '{@localization[uplFiles]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', 'Search uploaded files');
             }
 
             // Head moderator access level or bigger
             if ($this->user->administrator() || $this->user->moderator(103)) {
                 $data['content'] .= '<hr>';
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/addban', '{@localization[banunban]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/banlist', '{@localization[banlist]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', '{@localization[banunban]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/banlist', '{@localization[banlist]}}');
             }
 
             // Administrator access level or bigger
             if ($this->user->administrator()) {
                 $data['content'] .= '<hr>';
 
-                if (file_exists('antiword.php')) $data['content'] .= $this->container['core']->sitelink('antiword.php', '{@localization[badword]}}');
+                if (file_exists('antiword.php')) $data['content'] .= $this->sitelink('antiword.php', '{@localization[badword]}}');
 
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/statistics', '{@localization[statistics]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[mngprof]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/statistics', '{@localization[statistics]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[mngprof]}}');
             }
 
             if ($this->user->administrator() || $this->user->checkPermissions('pageedit')) {
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[mngpage]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[mngpage]}}');
             }
 
             // Head administrator access level
             if ($this->user->administrator(101)) {
                 $data['content'] .= '<hr>';
 
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings', '{@localization[syssets]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/subscriptions', '{@localization[subscriptions]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/email_queue', 'Add to email queue');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->container['core']->linesInFile(STORAGEDIR . 'ban.dat') . ')');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/logfiles', '{@localization[logcheck]}}');
-                $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/sitemap', 'Sitemap Generator');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings', '{@localization[syssets]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscriptions', '{@localization[subscriptions]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/email_queue', 'Add to email queue');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->linesInFile(STORAGEDIR . 'ban.dat') . ')');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles', '{@localization[logcheck]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/sitemap', 'Sitemap Generator');
             }
         }
 
-        if ($this->container['core']->postAndGet('action') == 'clear' && $this->user->administrator(101)) {
+        if ($this->postAndGet('action') == 'clear' && $this->user->administrator(101)) {
             $data['content'] .= '<p>';
-            if (file_exists('delusers.php')) $data['content'] .= $this->container['core']->sitelink('delusers.php', '{@localization[cleanusers]}}');
-            $data['content'] .= $this->container['core']->sitelink('./?action=clrmlog', '{@localization[cleanmodlog]}}');
+            if (file_exists('delusers.php')) $data['content'] .= $this->sitelink('delusers.php', '{@localization[cleanusers]}}');
+            $data['content'] .= $this->sitelink('./?action=clrmlog', '{@localization[cleanmodlog]}}');
             $data['content'] .= '</p>';
         }
 
-        if ($this->container['core']->postAndGet('action') == 'clrmlog' && $this->user->administrator(101)) {
+        if ($this->postAndGet('action') == 'clrmlog' && $this->user->administrator(101)) {
             $this->db->query("DELETE FROM mlog");
 
             $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt="" /> {@localization[mlogcleaned]}}</p>';
         }
 
-        if ($this->container['core']->postAndGet('action') == 'opttbl' && $this->user->administrator(101)) {
+        if ($this->postAndGet('action') == 'opttbl' && $this->user->administrator(101)) {
             $alltables = mysqli_query("SHOW TABLES");
 
             while ($table = mysqli_fetch_assoc($alltables)) {
@@ -100,9 +100,9 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
         }
 
-        if (!empty($this->container['core']->postAndGet('action'))) $data['content'] .= $this->container['core']->sitelink('./', '{@localization[adminpanel]}}', '<p>', '</p>');
+        if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', '{@localization[adminpanel]}}', '<p>', '</p>');
 
-        $data['content'] .= $this->container['core']->homelink('<p>', '</p>');
+        $data['content'] .= $this->homelink('<p>', '</p>');
 
         // Pass data to the view
         return $data;
@@ -119,27 +119,27 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
-        if (!$this->user->administrator(101)) $this->container['core']->redirection('../pages/error.php?error=auth');
+        if (!$this->user->administrator(101)) $this->redirection('../pages/error.php?error=auth');
 
         $site_configuration = new Config($this->container);
         
         /**
          * Мain settings update
          */
-        if ($this->container['core']->postAndGet('action') == 'editone') {
+        if ($this->postAndGet('action') == 'editone') {
             $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
 
             $values = array(
-                $this->container['core']->postAndGet('conf_set2'),
-                $this->container['core']->postAndGet('conf_set8'),
-                $this->container['core']->postAndGet('conf_set9'),
-                $this->container['core']->postAndGet('conf_set10'),
-                $this->container['core']->postAndGet('conf_set11'),
-                $this->container['core']->postAndGet('conf_set14'),
-                $this->container['core']->postAndGet('conf_set47'),
-                (int)$this->container['core']->postAndGet('conf_set61'),
-                (int)$this->container['core']->postAndGet('conf_set62'),
-                (int)$this->container['core']->postAndGet('conf_set63')
+                $this->postAndGet('conf_set2'),
+                $this->postAndGet('conf_set8'),
+                $this->postAndGet('conf_set9'),
+                $this->postAndGet('conf_set10'),
+                $this->postAndGet('conf_set11'),
+                $this->postAndGet('conf_set14'),
+                $this->postAndGet('conf_set47'),
+                (int)$this->postAndGet('conf_set61'),
+                (int)$this->postAndGet('conf_set62'),
+                (int)$this->postAndGet('conf_set63')
             );
         
             /**
@@ -147,10 +147,10 @@ class AdminpanelModel extends BaseModel {
              */
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+            $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
         
-        if ($this->container['core']->postAndGet('action') == 'edittwo') {
+        if ($this->postAndGet('action') == 'edittwo') {
             $fields = array(
                 'showtime',
                 'pageGenTime',
@@ -160,11 +160,11 @@ class AdminpanelModel extends BaseModel {
             );
         
             $values = array(
-                (int)$this->container['core']->postAndGet('conf_set4'),
-                (int)$this->container['core']->postAndGet('conf_set5'),
-                (int)$this->container['core']->postAndGet('conf_set7'),
-                (int)$this->container['core']->postAndGet('conf_set32'), // cookie consent
-                (int)$this->container['core']->postAndGet('conf_set74')
+                (int)$this->postAndGet('conf_set4'),
+                (int)$this->postAndGet('conf_set5'),
+                (int)$this->postAndGet('conf_set7'),
+                (int)$this->postAndGet('conf_set32'), // cookie consent
+                (int)$this->postAndGet('conf_set74')
             );
         
             /**
@@ -172,10 +172,10 @@ class AdminpanelModel extends BaseModel {
              */
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+            $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         } 
         
-        if ($this->container['core']->postAndGet('action') == 'editthree') {
+        if ($this->postAndGet('action') == 'editthree') {
             $fields = array(
                 'bookGuestAdd',
                 'maxPostChat',
@@ -184,21 +184,21 @@ class AdminpanelModel extends BaseModel {
             );
         
             $values = array(
-                (int)$this->container['core']->postAndGet('conf_set20'),
-                (int)$this->container['core']->postAndGet('conf_set22'),
-                (int)$this->container['core']->postAndGet('conf_set24'),
-                (int)$this->container['core']->postAndGet('conf_set56')
+                (int)$this->postAndGet('conf_set20'),
+                (int)$this->postAndGet('conf_set22'),
+                (int)$this->postAndGet('conf_set24'),
+                (int)$this->postAndGet('conf_set56')
             );
         
             /**
              * Update settings
              */
             $site_configuration->updateConfigData(array_combine($fields, $values));
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+            $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         
         }
         
-        if ($this->container['core']->postAndGet('action') == 'editfour') {
+        if ($this->postAndGet('action') == 'editfour') {
             // Update main config
             $fields = array(
                 'photoFileSize',
@@ -208,10 +208,10 @@ class AdminpanelModel extends BaseModel {
             );
         
             $values = array(
-                (int)$this->container['core']->postAndGet('conf_set38') * 1024,
-                (int)$this->container['core']->postAndGet('conf_set39'),
-                (int)$this->container['core']->postAndGet('conf_set49'),
-                (int)$this->container['core']->postAndGet('conf_set68')
+                (int)$this->postAndGet('conf_set38') * 1024,
+                (int)$this->postAndGet('conf_set39'),
+                (int)$this->postAndGet('conf_set49'),
+                (int)$this->postAndGet('conf_set68')
             );
         
             /**
@@ -220,15 +220,15 @@ class AdminpanelModel extends BaseModel {
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
             // update gallery settings
-            $gallery_file = $this->container['core']->getDataFile('dataconfig/gallery.dat');
+            $gallery_file = $this->getDataFile('dataconfig/gallery.dat');
             if (empty($gallery_file)) $gallery_file = '||||||||||';
             $gallery_data = explode("|", $gallery_file[0]);
         
-            $gallery_data[0] = (int)$this->container['core']->postAndGet('gallery_set0'); // users can upload
-            $gallery_data[8] = (int)$this->container['core']->postAndGet('gallery_set8'); // photos per page
-            $gallery_data[5] = (int)$this->container['core']->postAndGet('screen_width');
-            $gallery_data[6] = (int)$this->container['core']->postAndGet('screen_height');
-            $gallery_data[7] = (int)$this->container['core']->postAndGet('media_buttons');
+            $gallery_data[0] = (int)$this->postAndGet('gallery_set0'); // users can upload
+            $gallery_data[8] = (int)$this->postAndGet('gallery_set8'); // photos per page
+            $gallery_data[5] = (int)$this->postAndGet('screen_width');
+            $gallery_data[6] = (int)$this->postAndGet('screen_height');
+            $gallery_data[7] = (int)$this->postAndGet('media_buttons');
         
             $gallery_text = '';
             for ($u = 0; $u < 10; $u++) {
@@ -236,22 +236,22 @@ class AdminpanelModel extends BaseModel {
             }
         
             if (isset($gallery_text)) {
-                $this->container['core']->writeDataFile('dataconfig/gallery.dat', $gallery_text);
+                $this->writeDataFile('dataconfig/gallery.dat', $gallery_text);
             }
         
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+            $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         }
         
-        if ($this->container['core']->postAndGet('action') == 'editfive') {
+        if ($this->postAndGet('action') == 'editfive') {
             /**
              * Update settings
              */
-            $site_configuration->updateConfigData(array_combine(array('pvtLimit'), array((int)$this->container['core']->postAndGet('conf_set30'))));
+            $site_configuration->updateConfigData(array_combine(array('pvtLimit'), array((int)$this->postAndGet('conf_set30'))));
         
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+            $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
         
-        if ($this->container['core']->postAndGet('action') == 'editseven') {
+        if ($this->postAndGet('action') == 'editseven') {
             $fields = array(
                 'pgFbComm',
                 'refererLog',
@@ -259,64 +259,64 @@ class AdminpanelModel extends BaseModel {
             );
 
             $values = array(
-                $this->container['core']->postAndGet('conf_set6'),
-                (int)$this->container['core']->postAndGet('conf_set51'),
-                $this->container['core']->postAndGet('conf_set70')
+                $this->postAndGet('conf_set6'),
+                (int)$this->postAndGet('conf_set51'),
+                $this->postAndGet('conf_set70')
             );
 
             // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
+            $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
 
-        if ($this->container['core']->postAndGet('action') == 'editeight') {
+        if ($this->postAndGet('action') == 'editeight') {
             $fields = array(
                 'maxLogData',
                 'maxBanTime'
             );
 
             $values = array(
-                (int)$this->container['core']->postAndGet('conf_set58'),
-                round($this->container['core']->postAndGet('conf_set76') * 1440)
+                (int)$this->postAndGet('conf_set58'),
+                round($this->postAndGet('conf_set76') * 1440)
             );
 
             // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
 
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
+            $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         }
 
         // Site security options
-        if ($this->container['core']->postAndGet('action') == 'editsecurity') {
+        if ($this->postAndGet('action') == 'editsecurity') {
             $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
 
             $values = array(
-                $this->container['core']->postAndGet('conf_set1'),
-                $this->container['core']->postAndGet('conf_set3'),
-                $this->container['core']->postAndGet('conf_set21'),
-                (int)$this->container['core']->postAndGet('conf_set29'),
-                $this->container['core']->postAndGet('recaptcha_sitekey'),
-                $this->container['core']->postAndGet('recaptcha_secretkey')
+                $this->postAndGet('conf_set1'),
+                $this->postAndGet('conf_set3'),
+                $this->postAndGet('conf_set21'),
+                (int)$this->postAndGet('conf_set29'),
+                $this->postAndGet('recaptcha_sitekey'),
+                $this->postAndGet('recaptcha_secretkey')
             );
 
             // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
 
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/settings/?action=security&isset=success");
+            $this->redirection(HOMEDIR . "adminpanel/settings/?action=security&isset=success");
         }
 
-        if (empty($this->container['core']->postAndGet('action'))) {
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=setone', '{@localization[mainset]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=settwo', '{@localization[shwinfo]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', '{@localization[bookchatnews]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=setfour', '{@localization[forumgallery]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=setseven', '{@localization[pagemanage]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=security', '{@localization[security]}}');
-            $data['content'] .=  $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/?action=seteight', '{@localization[other]}}');
+        if (empty($this->postAndGet('action'))) {
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setone', '{@localization[mainset]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=settwo', '{@localization[shwinfo]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', '{@localization[bookchatnews]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setfour', '{@localization[forumgallery]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setseven', '{@localization[pagemanage]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=security', '{@localization[security]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=seteight', '{@localization[other]}}');
         }
 
         // main settings
-        if ($this->container['core']->postAndGet('action') == 'setone') {
+        if ($this->postAndGet('action') == 'setone') {
             $data['content'] .=  '<h1>{@localization[mainset]}}</h1>';
 
             $form = $this->container['parse_page'];
@@ -324,10 +324,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editone');
         
-            $options = '<option value="' . $this->container['core']->configuration('siteDefaultLang') . '">' . $this->container['core']->configuration('siteDefaultLang') . '</option>';
+            $options = '<option value="' . $this->configuration('siteDefaultLang') . '">' . $this->configuration('siteDefaultLang') . '</option>';
             $dir = opendir(APPDIR . 'include/lang');
             while ($file = readdir($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->container['core']->configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
                     $options .= '<option value="' . $file . '">' . $file . '</option>';
                 }
             }
@@ -340,13 +340,13 @@ class AdminpanelModel extends BaseModel {
             $select_lang->set('select_name', 'conf_set47');
             $select_lang->set('options', $options);
 
-            $config_themes_show = str_replace('web_', '', $this->container['core']->configuration('webtheme'));
+            $config_themes_show = str_replace('web_', '', $this->configuration('webtheme'));
             $config_themes_show = ucfirst($config_themes_show);
 
-            $options = '<option value="' . $this->container['core']->configuration('webtheme') . '">' . $config_themes_show . '</option>';
+            $options = '<option value="' . $this->configuration('webtheme') . '">' . $config_themes_show . '</option>';
             $dir = opendir (PUBLICDIR . 'themes');
             while ($file = readdir ($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->container['core']->configuration('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
                     $nfile = str_replace("web_", "", $file);
                     $nfile = ucfirst($nfile);
                     $options .= '<option value="' . $file . '">' . $nfile . '</option>';
@@ -368,7 +368,7 @@ class AdminpanelModel extends BaseModel {
             $input8->set('label_value', '{@localization[adminusername]}}');
             $input8->set('input_id', 'conf_set8');
             $input8->set('input_name', 'conf_set8');
-            $input8->set('input_value', $this->container['core']->configuration('adminNick'));
+            $input8->set('input_value', $this->configuration('adminNick'));
             $input8->set('input_maxlength', 20);
         
             $input9 = $this->container['parse_page'];
@@ -377,7 +377,7 @@ class AdminpanelModel extends BaseModel {
             $input9->set('label_value', '{@localization[adminemail]}}');
             $input9->set('input_id', 'conf_set9');
             $input9->set('input_name', 'conf_set9');
-            $input9->set('input_value', $this->container['core']->configuration('adminEmail'));
+            $input9->set('input_value', $this->configuration('adminEmail'));
             $input9->set('input_maxlength', 50);
 
             $input10 = $this->container['parse_page'];
@@ -386,7 +386,7 @@ class AdminpanelModel extends BaseModel {
             $input10->set('label_value', '{@localization[timezone]}}');
             $input10->set('input_id', 'conf_set10');
             $input10->set('input_name', 'conf_set10');
-            $input10->set('input_value', $this->container['core']->configuration('timeZone'));
+            $input10->set('input_value', $this->configuration('timeZone'));
             $input10->set('input_maxlength', 3);
         
             $input11 = $this->container['parse_page'];
@@ -395,7 +395,7 @@ class AdminpanelModel extends BaseModel {
             $input11->set('label_value', '{@localization[pagetitle]}}');
             $input11->set('input_id', 'conf_set11');
             $input11->set('input_name', 'conf_set11');
-            $input11->set('input_value', $this->container['core']->configuration('title'));
+            $input11->set('input_value', $this->configuration('title'));
             $input11->set('input_maxlength', 100);
         
             $input14 = $this->container['parse_page'];
@@ -404,7 +404,7 @@ class AdminpanelModel extends BaseModel {
             $input14->set('label_value', '{@localization[siteurl]}}');
             $input14->set('input_id', 'conf_set14');
             $input14->set('input_name', 'conf_set14');
-            $input14->set('input_value', $this->container['core']->configuration('homeUrl'));
+            $input14->set('input_value', $this->configuration('homeUrl'));
             $input14->set('input_maxlength', 50);
         
             // Registration opened or closed
@@ -415,7 +415,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_yes->set('input_id', 'conf_set61');
             $input_radio61_yes->set('input_name', 'conf_set61');
             $input_radio61_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('openReg') == 1) {
+            if ($this->configuration('openReg') == 1) {
                 $input_radio61_yes->set('input_status', 'checked');
             }
         
@@ -426,7 +426,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_no->set('input_id', 'conf_set61');
             $input_radio61_no->set('input_name', 'conf_set61');
             $input_radio61_no->set('input_value', 0);
-            if ($this->container['core']->configuration('openReg') == 0) {
+            if ($this->configuration('openReg') == 0) {
                 $input_radio61_no->set('input_status', 'checked');
             }
         
@@ -443,7 +443,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_yes->set('input_id', 'conf_set62');
             $input_radio62_yes->set('input_name', 'conf_set62');
             $input_radio62_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('regConfirm') == 1) {
+            if ($this->configuration('regConfirm') == 1) {
                 $input_radio62_yes->set('input_status', 'checked');
             }
         
@@ -454,7 +454,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_no->set('input_id', 'conf_set62');
             $input_radio62_no->set('input_name', 'conf_set62');
             $input_radio62_no->set('input_value', 0);
-            if ($this->container['core']->configuration('regConfirm') == 0) {
+            if ($this->configuration('regConfirm') == 0) {
                 $input_radio62_no->set('input_status', 'checked');
             }
         
@@ -471,7 +471,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_yes->set('input_id', 'conf_set63');
             $input_radio63_yes->set('input_name', 'conf_set63');
             $input_radio63_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('siteOff') == 1) {
+            if ($this->configuration('siteOff') == 1) {
                 $input_radio63_yes->set('input_status', 'checked');
             }
         
@@ -482,7 +482,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_no->set('input_id', 'conf_set63');
             $input_radio63_no->set('input_name', 'conf_set63');
             $input_radio63_no->set('input_value', 0);
-            if ($this->container['core']->configuration('siteOff') == 0) {
+            if ($this->configuration('siteOff') == 0) {
                 $input_radio63_no->set('input_status', 'checked');
             }
         
@@ -494,10 +494,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $radio_group_one, $radio_group_two, $radio_group_three)));
             $data['content'] .= $form->output();
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
         
-        if ($this->container['core']->postAndGet('action') == "settwo") {
+        if ($this->postAndGet('action') == "settwo") {
             $data['content'] .= '<h1>{@localization[shwinfo]}}</h1>';
         
             $form = $this->container['parse_page'];
@@ -515,7 +515,7 @@ class AdminpanelModel extends BaseModel {
             $_4_yes->set('input_id', 'conf_set4');
             $_4_yes->set('input_name', 'conf_set4');
             $_4_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('showtime') == 1) {
+            if ($this->configuration('showtime') == 1) {
                 $_4_yes->set('input_status', 'checked');
             }
         
@@ -526,7 +526,7 @@ class AdminpanelModel extends BaseModel {
             $_4_no->set('input_id', 'conf_set4');
             $_4_no->set('input_name', 'conf_set4');
             $_4_no->set('input_value', 0);
-            if ($this->container['core']->configuration('showtime') == 0) {
+            if ($this->configuration('showtime') == 0) {
                 $_4_no->set('input_status', 'checked');
             }
         
@@ -545,7 +545,7 @@ class AdminpanelModel extends BaseModel {
             $_5_yes->set('input_id', 'conf_set5');
             $_5_yes->set('input_name', 'conf_set5');
             $_5_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('pageGenTime') == 1) {
+            if ($this->configuration('pageGenTime') == 1) {
                 $_5_yes->set('input_status', 'checked');
             }
         
@@ -556,7 +556,7 @@ class AdminpanelModel extends BaseModel {
             $_5_no->set('input_id', 'conf_set5');
             $_5_no->set('input_name', 'conf_set5');
             $_5_no->set('input_value', 0);
-            if ($this->container['core']->configuration('pageGenTime') == 0) {
+            if ($this->configuration('pageGenTime') == 0) {
                 $_5_no->set('input_status', 'checked');
             }
         
@@ -575,7 +575,7 @@ class AdminpanelModel extends BaseModel {
             $_7_yes->set('input_id', 'conf_set7');
             $_7_yes->set('input_name', 'conf_set7');
             $_7_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('showOnline') == 1) {
+            if ($this->configuration('showOnline') == 1) {
                 $_7_yes->set('input_status', 'checked');
             }
         
@@ -586,7 +586,7 @@ class AdminpanelModel extends BaseModel {
             $_7_no->set('input_id', 'conf_set7');
             $_7_no->set('input_name', 'conf_set7');
             $_7_no->set('input_value', 0);
-            if ($this->container['core']->configuration('showOnline') == 0) {
+            if ($this->configuration('showOnline') == 0) {
                 $_7_no->set('input_status', 'checked');
             }
         
@@ -605,7 +605,7 @@ class AdminpanelModel extends BaseModel {
             $_32_yes->set('input_id', 'conf_set32');
             $_32_yes->set('input_name', 'conf_set32');
             $_32_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('cookieConsent') == 1) {
+            if ($this->configuration('cookieConsent') == 1) {
                 $_32_yes->set('input_status', 'checked');
             }
         
@@ -616,7 +616,7 @@ class AdminpanelModel extends BaseModel {
             $_32_no->set('input_id', 'conf_set32');
             $_32_no->set('input_name', 'conf_set32');
             $_32_no->set('input_value', 0);
-            if ($this->container['core']->configuration('cookieConsent') == 0) {
+            if ($this->configuration('cookieConsent') == 0) {
                 $_32_no->set('input_status', 'checked');
             }
         
@@ -630,9 +630,9 @@ class AdminpanelModel extends BaseModel {
              */
             $incounters = array(6 => "{@localization[dontshow]}}", 1 => "{@localization[vsttotalvst]}}", 2 => "{@localization[clicktotalclick]}}", 3 => "{@localization[clickvisits]}}", 4 => "{@localization[totclicktotvst]}}");
         
-            $options = '<option value="' . $this->container['core']->configuration('showCounter') . '">' . $incounters[$this->container['core']->configuration('showCounter')] . '</option>';
+            $options = '<option value="' . $this->configuration('showCounter') . '">' . $incounters[$this->configuration('showCounter')] . '</option>';
             foreach($incounters as $k => $v) {
-                if ($k != $this->container['core']->configuration('showCounter')) {
+                if ($k != $this->configuration('showCounter')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
@@ -648,10 +648,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('fields', $form->merge(array($show_clock, $page_gen, $show_online, $cookie_consent, $show_counter)));
             $data['content'] .= $form->output();
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
         
-        if ($this->container['core']->postAndGet('action') == "setthree") {
+        if ($this->postAndGet('action') == "setthree") {
             $data['content'] .= '<h1>{@localization[gbnewschatset]}}</h1>';
 
             $form = $this->container['parse_page'];
@@ -669,7 +669,7 @@ class AdminpanelModel extends BaseModel {
             $_20_yes->set('input_id', 'conf_set20');
             $_20_yes->set('input_name', 'conf_set20');
             $_20_yes->set('input_value', 1);
-            if ($this->container['core']->configuration('bookGuestAdd') == 1) {
+            if ($this->configuration('bookGuestAdd') == 1) {
                 $_20_yes->set('input_status', 'checked');
             }
 
@@ -680,7 +680,7 @@ class AdminpanelModel extends BaseModel {
             $_20_no->set('input_id', 'conf_set20');
             $_20_no->set('input_name', 'conf_set20');
             $_20_no->set('input_value', 0);
-            if ($this->container['core']->configuration('bookGuestAdd') == 0) {
+            if ($this->configuration('bookGuestAdd') == 0) {
                 $_20_no->set('input_status', 'checked');
             }
 
@@ -698,7 +698,7 @@ class AdminpanelModel extends BaseModel {
             $input22->set('label_value', '{@localization[maxinchat]}}');
             $input22->set('input_id', 'conf_set22');
             $input22->set('input_name', 'conf_set22');
-            $input22->set('input_value', $this->container['core']->configuration('maxPostChat'));
+            $input22->set('input_value', $this->configuration('maxPostChat'));
             $input22->set('input_maxlength', 4);
         
             /**
@@ -710,7 +710,7 @@ class AdminpanelModel extends BaseModel {
             $input24->set('label_value', '{@localization[maxnews]}}');
             $input24->set('input_id', 'conf_set24');
             $input24->set('input_name', 'conf_set24');
-            $input24->set('input_value', $this->container['core']->configuration('maxPostNews'));
+            $input24->set('input_value', $this->configuration('maxPostNews'));
             $input24->set('input_maxlength', 5);
         
             /**
@@ -722,17 +722,17 @@ class AdminpanelModel extends BaseModel {
             $input56->set('label_value', '{@localization[onepassmail]}}');
             $input56->set('input_id', 'conf_set56');
             $input56->set('input_name', 'conf_set56');
-            $input56->set('input_value', $this->container['core']->configuration('subMailPacket'));
+            $input56->set('input_value', $this->configuration('subMailPacket'));
             $input56->set('input_maxlength', 3);
         
             $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
             $data['content'] .= $form->output();
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
         
-        if ($this->container['core']->postAndGet('action') == "setfour") {
-            $kbs = $this->container['core']->configuration('photoFileSize') / 1024;
+        if ($this->postAndGet('action') == "setfour") {
+            $kbs = $this->configuration('photoFileSize') / 1024;
 
             $data['content'] .= '<h1>{@localization[forumandgalset]}}</h1>';
         
@@ -742,7 +742,7 @@ class AdminpanelModel extends BaseModel {
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editfour');
 
             // Gallery settings
-            $gallery_config = $this->container['core']->getDataFile('dataconfig/gallery.dat');
+            $gallery_config = $this->getDataFile('dataconfig/gallery.dat');
             if (!empty($gallery_config)) {
                 $gallery_data = explode("|", $gallery_config[0]);
             } else {
@@ -824,7 +824,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set39->set('label_value', '{@localization[photopx]}}');
             $conf_set39->set('input_id', 'conf_set39');
             $conf_set39->set('input_name', 'conf_set39');
-            $conf_set39->set('input_value', (int)$this->container['core']->configuration('maxPhotoPixels'));
+            $conf_set39->set('input_value', (int)$this->configuration('maxPhotoPixels'));
             $conf_set39->set('input_maxlength', 4);
 
             // Gallery uploads
@@ -858,10 +858,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('fields', $form->merge(array($gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
             $data['content'] .= $form->output();
 
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
         
-        if ($this->container['core']->postAndGet('action') == 'setseven') {
+        if ($this->postAndGet('action') == 'setseven') {
             $data['content'] .= '<h1>{@localization[pagessets]}}</h1>';
         
             $form = $this->container['parse_page'];
@@ -878,7 +878,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set51->set('label_value', '{@localization[maxrefererdata]}}');
             $conf_set51->set('input_id', 'referals');
             $conf_set51->set('input_name', 'conf_set51');
-            $conf_set51->set('input_value', $this->container['core']->configuration('refererLog'));
+            $conf_set51->set('input_value', $this->configuration('refererLog'));
             $conf_set51->set('input_maxlength', 3);
         
             /**
@@ -891,7 +891,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set70yes->set('input_id', 'referal-yes');
             $conf_set70yes->set('input_name', 'conf_set70');
             $conf_set70yes->set('input_value', 1);
-            if ($this->container['core']->configuration('showRefPage') == 1) {
+            if ($this->configuration('showRefPage') == 1) {
                 $conf_set70yes->set('input_status', 'checked');
             }
         
@@ -902,7 +902,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set70no->set('input_id', 'referal-no');
             $conf_set70no->set('input_name', 'conf_set70');
             $conf_set70no->set('input_value', 0);
-            if ($this->container['core']->configuration('showRefPage') == 0) {
+            if ($this->configuration('showRefPage') == 0) {
                 $conf_set70no->set('input_status', 'checked');
             }
         
@@ -921,7 +921,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6yes->set('input_id', 'fb_comm_yes');
             $conf_set6yes->set('input_name', 'conf_set6');
             $conf_set6yes->set('input_value', 1);
-            if ($this->container['core']->configuration('pgFbComm') == 1) {
+            if ($this->configuration('pgFbComm') == 1) {
                 $conf_set6yes->set('input_status', 'checked');
             }
 
@@ -932,7 +932,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6no->set('input_id', 'fb_comm_no');
             $conf_set6no->set('input_name', 'conf_set6');
             $conf_set6no->set('input_value', 0);
-            if ($this->container['core']->configuration('pgFbComm') == 0) {
+            if ($this->configuration('pgFbComm') == 0) {
                 $conf_set6no->set('input_status', 'checked');
             }
 
@@ -944,10 +944,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('fields', $form->merge(array($conf_set51, $show_refpage, $fb_comm)));
             $data['content'] .= $form->output();
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
 
-        if ($this->container['core']->postAndGet('action') == "seteight") {
+        if ($this->postAndGet('action') == "seteight") {
             $data['content'] .= '<h1>{@localization[other]}}</h1>';
         
             $form = $this->container['parse_page'];
@@ -964,7 +964,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set58->set('label_value', '{@localization[maxlogfile]}}');
             $conf_set58->set('input_id', 'conf_set58');
             $conf_set58->set('input_name', 'conf_set58');
-            $conf_set58->set('input_value', $this->container['core']->configuration('maxLogData'));
+            $conf_set58->set('input_value', $this->configuration('maxLogData'));
             $conf_set58->set('input_maxlength', 3);
 
             /**
@@ -976,16 +976,16 @@ class AdminpanelModel extends BaseModel {
             $conf_set76->set('label_value', '{@localization[maxbantime]}}');
             $conf_set76->set('input_id', 'conf_set76');
             $conf_set76->set('input_name', 'conf_set76');
-            $conf_set76->set('input_value', round($this->container['core']->configuration('maxBanTime') / 1440));
+            $conf_set76->set('input_value', round($this->configuration('maxBanTime') / 1440));
             $conf_set76->set('input_maxlength', 3);
         
             $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
             $data['content'] .= $form->output();
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
         
-        if ($this->container['core']->postAndGet('action') == 'security') {
+        if ($this->postAndGet('action') == 'security') {
             $data['content'] .= '<h1>{@localization[security]}}</h1>';
         
             $form = $this->container['parse_page'];
@@ -999,7 +999,7 @@ class AdminpanelModel extends BaseModel {
             $input29->set('label_value', '{@localization[floodtime]}}');
             $input29->set('input_id', 'conf_set29');
             $input29->set('input_name', 'conf_set29');
-            $input29->set('input_value', $this->container['core']->configuration('floodTime'));
+            $input29->set('input_value', $this->configuration('floodTime'));
             $input29->set('input_maxlength', 3);
         
             $input1 = $this->container['parse_page'];
@@ -1008,15 +1008,15 @@ class AdminpanelModel extends BaseModel {
             $input1->set('label_value', '{@localization[passkey]}}');
             $input1->set('input_id', 'conf_set1');
             $input1->set('input_name', 'conf_set1');
-            $input1->set('input_value', $this->container['core']->configuration('keypass'));
+            $input1->set('input_value', $this->configuration('keypass'));
             $input1->set('input_maxlength', 25);
         
             // quarantine time
             $quarantine = array(0 => "{@localization[disabled]}}", 21600 => "6 {@localization[hours]}}", 43200 => "12 {@localization[hours]}}", 86400 => "24 {@localization[hours]}}", 129600 => "36 {@localization[hours]}}", 172800 => "48 {@localization[hours]}}");
         
-            $options = '<option value="' . $this->container['core']->configuration('quarantine') . '">' . $quarantine[$this->container['core']->configuration('quarantine')] . '</option>';
+            $options = '<option value="' . $this->configuration('quarantine') . '">' . $quarantine[$this->configuration('quarantine')] . '</option>';
             foreach($quarantine as $k => $v) {
-                if ($k != $this->container['core']->configuration('quarantine')) {
+                if ($k != $this->configuration('quarantine')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
@@ -1032,8 +1032,8 @@ class AdminpanelModel extends BaseModel {
             // transfer protocol
             $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
         
-            $transfer_protocol = $this->container['core']->configuration('transferProtocol');
-            if (empty($this->container['core']->configuration('transferProtocol'))) $transfer_protocol = 'auto';
+            $transfer_protocol = $this->configuration('transferProtocol');
+            if (empty($this->configuration('transferProtocol'))) $transfer_protocol = 'auto';
             
             $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
         
@@ -1058,7 +1058,7 @@ class AdminpanelModel extends BaseModel {
             $captcha_sitekey->set('label_value', 'reCAPTCHA site key');
             $captcha_sitekey->set('input_id', 'recaptcha_sitekey');
             $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
-            $captcha_sitekey->set('input_value', $this->container['core']->configuration('recaptcha_sitekey'));
+            $captcha_sitekey->set('input_value', $this->configuration('recaptcha_sitekey'));
             $captcha_sitekey->set('input_maxlength', 50);
 
             // reCAPTCHA secret key
@@ -1068,17 +1068,17 @@ class AdminpanelModel extends BaseModel {
             $captcha_secret->set('label_value', 'reCAPTCHA secret key');
             $captcha_secret->set('input_id', 'recaptcha_secretkey');
             $captcha_secret->set('input_name', 'recaptcha_secretkey');
-            $captcha_secret->set('input_value', $this->container['core']->configuration('recaptcha_secretkey'));
+            $captcha_secret->set('input_value', $this->configuration('recaptcha_secretkey'));
             $captcha_secret->set('input_maxlength', 50);
 
             $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
             $data['content'] .= $form->output();
 
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
 
-        $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
+        $data['content'] .= $this->homelink() . '</p>';
 
         // Pass data to the view
         return $data;
@@ -1094,14 +1094,14 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[modlist]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions(basename(__FILE__))) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
 
         $data['content'] .= '<p><img src="../themes/images/img/user.gif" alt=""> <b>{@localization[adminlistl]}}</b></p>'; 
 
         $num_items = $this->user->total_admins();
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $num_items, $this->container['core']->postAndGet('page'), HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
+        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
         $end = $navigation->start()['end']; // ending point
@@ -1109,7 +1109,7 @@ class AdminpanelModel extends BaseModel {
         if ($num_items > 0) {
             foreach ($this->db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
                 if ($item['perm'] == 101 or $item['perm'] == 102 or $item['perm'] == 103 or $item['perm'] == 105 or $item['perm'] == 106) {
-                    $lnk = '<div class="a">' . $this->container['core']->sitelink(HOMEDIR . 'users/u/' . $item['id'], $item['name']) . ' - ' . $this->user->userStatus($item['perm']) . '</div>';
+                    $lnk = '<div class="a">' . $this->sitelink(HOMEDIR . 'users/u/' . $item['id'], $item['name']) . ' - ' . $this->user->userStatus($item['perm']) . '</div>';
                     $data['content'] .= $lnk . '<br>';
                 }
             }
@@ -1117,8 +1117,8 @@ class AdminpanelModel extends BaseModel {
 
         $data['content'] .= $navigation->get_navigation();
 
-        $data['content'] .= '<p>' . $this->container['core']->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1130,36 +1130,36 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[uncomfreg]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions(basename(__FILE__))) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
 
-        if ($this->container['core']->postAndGet('action') == 'conf' && !empty($this->container['core']->postAndGet('usr'))) {
+        if ($this->postAndGet('action') == 'conf' && !empty($this->postAndGet('usr'))) {
             $fields = array('regche', 'regkey');
             $values = array('', '');
-            $this->user->update_user($fields, $values, $this->container['core']->postAndGet('usr'));
+            $this->user->update_user($fields, $values, $this->postAndGet('usr'));
 
-            $vav_name = $this->user->getNickFromId($this->container['core']->postAndGet('usr'));
+            $vav_name = $this->user->getNickFromId($this->postAndGet('usr'));
 
             $message = $this->localization->string('hello') . " " . $vav_name . "!\r\n
-            " . $this->localization->string('sitemod') . " " . $this->container['core']->configuration('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n
+            " . $this->localization->string('sitemod') . " " . $this->configuration('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n
             " . $this->localization->string('youcanlog') . ".\r\n\r\n
             " . $this->localization->string('bye') . "!\r\n
             " . $this->user->getNickFromId($this->user->user_id()) . "\r\n
-            " . ucfirst($this->container['core']->configuration('homeBase'));
+            " . ucfirst($this->configuration('homeBase'));
 
             $newMail = new Mailer($this->container);
-            $newMail->queue_email($this->user->user_info('email', $this->container['core']->postAndGet('usr')), $this->localization->string('msgfrmst') . " " . $this->container['core']->configuration('title'), $message, '', '', 'high');
+            $newMail->queue_email($this->user->user_info('email', $this->postAndGet('usr')), $this->localization->string('msgfrmst') . " " . $this->configuration('title'), $message, '', '', 'high');
 
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
+            $this->redirection(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
         }
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $noi = $this->user->total_unconfirmed();
             $num_items = $noi;
             $items_per_page = 20;
             $num_pages = ceil($num_items / $items_per_page);
 
-            if (($this->container['core']->postAndGet('page') > $num_pages) && $this->container['core']->postAndGet('page') != 1) $page = $num_pages;
-            $limit_start = ($this->container['core']->postAndGet('page')-1) * $items_per_page;
+            if (($this->postAndGet('page') > $num_pages) && $this->postAndGet('page') != 1) $page = $num_pages;
+            $limit_start = ($this->postAndGet('page')-1) * $items_per_page;
             if ($limit_start < 0) {
                 $limit_start = 0;
             }
@@ -1168,10 +1168,10 @@ class AdminpanelModel extends BaseModel {
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
-                    $lnk = $this->container['core']->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->container['core']->correctDate($item['regdate'], 'd.m.Y. / H:i') . ')';
+                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->correctDate($item['regdate'], 'd.m.Y. / H:i') . ')';
                     if ($item['regche'] == 1) {
                         $bt = $this->localization->string('notconfirmed') . '!';
-                        $bym = $this->container['core']->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg/?action=conf&usr=' . $item['uid'], '{@localization[confirms]}}');
+                        $bym = $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg/?action=conf&usr=' . $item['uid'], '{@localization[confirms]}}');
                     } else {
                         $bt = 'Confirmed';
                     }
@@ -1182,15 +1182,15 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptyunconf') . '!</p>';
             }
         
-            $navigation = new Navigation($items_per_page, $num_items, $this->container['core']->postAndGet('page'), HOMEDIR . 'adminpanel/unconfirmed_reg/');
+            $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/unconfirmed_reg/');
         
             $data['content'] .= '<div class="mt-5">';
                 $data['content'] .= $navigation->get_navigation();
             $data['content'] .= '</div>';
         }
 
-        $data['content'] .= '<p>' . $this->container['core']->sitelink('./', '{@localization[adminpanel]}}') . '<br />';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br />';
+        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1205,13 +1205,13 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[sitestats]}}';
         $data['content'] = '';
 
-        if (!$this->user->administrator()) $this->container['core']->redirection('../?errorAuth');
+        if (!$this->user->administrator()) $this->redirection('../?errorAuth');
   
-        $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitstats]}}') . '<br />';
-        $data['content'] .= $this->container['core']->sitelink('../pages/online', '{@localization[usronline]}}') . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitstats]}}') . '<br />';
+        $data['content'] .= $this->sitelink('../pages/online', '{@localization[usronline]}}') . '</p>';
         
-        $data['content'] .= '<p>' . $this->container['core']->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1226,12 +1226,12 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[usrprofile]}}';
         $data['content'] = '';
 
-        if (!$this->user->administrator()) $this->container['core']->redirection('./?error=noauth');
+        if (!$this->user->administrator()) $this->redirection('./?error=noauth');
 
-        $user = $this->container['core']->check($this->container['core']->postAndGet('users'));
+        $user = $this->check($this->postAndGet('users'));
         $users_id = $this->user->getIdFromNick($user);
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
@@ -1251,17 +1251,17 @@ class AdminpanelModel extends BaseModel {
         }
 
         // change profile
-        if ($this->container['core']->postAndGet('action') == 'edit') {
+        if ($this->postAndGet('action') == 'edit') {
             if (!empty($user) && $this->user->username_exists($user) && $this->user->id_exists($users_id)) {
                 $data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/profiles.gif" alt="Profile" /> {@localization[usrprofile]}} ' . $user . '<br>';
 
-                if ($this->user->show_username() != $this->container['core']->configuration('adminNick') && $user == $this->container['core']->configuration('adminNick')) {
+                if ($this->user->show_username() != $this->configuration('adminNick') && $user == $this->configuration('adminNick')) {
                     $data['content'] .= '<br>{@localization[noauthtoedit]}!<br>';
                     return $data;
                     exit;
                 }
 
-                if (($this->user->show_username() != $this->container['core']->configuration('adminNick')) && ($this->user->user_info('perm', $users_id) == 101 || $this->user->user_info('perm', $users_id) == 102 || $this->user->user_info('perm', $users_id) == 103 || $this->user->user_info('perm', $users_id) == 105) && $this->user->show_username() != $user) {
+                if (($this->user->show_username() != $this->configuration('adminNick')) && ($this->user->user_info('perm', $users_id) == 101 || $this->user->user_info('perm', $users_id) == 102 || $this->user->user_info('perm', $users_id) == 103 || $this->user->user_info('perm', $users_id) == 105) && $this->user->show_username() != $user) {
                     $data['content'] .= '<br>{@localization[noauthtoban]}!<br>';
                     return $data;
                     exit;
@@ -1282,7 +1282,7 @@ class AdminpanelModel extends BaseModel {
         
                 $userx_access = (int)$this->user->user_info('perm', $users_id);
         
-                if ($_SESSION['permissions'] == 101 && $this->user->show_username() == $this->container['core']->configuration('adminNick')) {
+                if ($_SESSION['permissions'] == 101 && $this->user->show_username() == $this->configuration('adminNick')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
         
                     if ($userx_access == 0 || empty($userx_access)) $userx_access = 107;
@@ -1391,7 +1391,7 @@ class AdminpanelModel extends BaseModel {
                 $lastvst->set('label_for', 'lastvst');
                 $lastvst->set('label_value', '{@localization[lastvst]}}');
                 $lastvst->set('input_id', 'lastvst');
-                $lastvst->set('input_placeholder', $this->container['core']->correctDate($this->user->user_info('lastvisit', $users_id), 'j.m.Y. / H:i'));
+                $lastvst->set('input_placeholder', $this->correctDate($this->user->user_info('lastvisit', $users_id), 'j.m.Y. / H:i'));
         
                 $ip = $this->container['parse_page'];
                 $ip->load('forms/input_readonly');
@@ -1405,11 +1405,11 @@ class AdminpanelModel extends BaseModel {
         
                 $data['content'] .= '<p>';
                 if ($userx_access > 106) {
-                    $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/?action=poddel&users=' . $user, '{@localization[deluser]}}', '<b>', '</b>') . '<br />';
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/?action=poddel&users=' . $user, '{@localization[deluser]}}', '<b>', '</b>') . '<br />';
                 }
                 // Website permissions for various sections
                 if (file_exists('specperm.php')) {
-                    $data['content'] .= $this->container['core']->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
+                    $data['content'] .= $this->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
                 }
         
                 $data['content'] .= '</p>';
@@ -1417,27 +1417,27 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= $this->localization->string('usrnoexist') . '!';
             }
         
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[back]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[back]}}', '<p>', '</p>');
         }
         
         // update changes
-        if ($this->container['core']->postAndGet('action') == 'upgrade') {
-            $udd1 = !empty($this->container['core']->postAndGet('udd1')) ? $this->container['core']->postAndGet('udd1') : '';
-            $udd2 = !empty($this->container['core']->postAndGet('udd2')) ? $this->container['core']->postAndGet('udd2') : '';
-            $udd3 = !empty($this->container['core']->postAndGet('udd3')) ? $this->container['core']->postAndGet('udd3') : '';
-            $udd4 = !empty($this->container['core']->postAndGet('udd4')) ? $this->container['core']->postAndGet('udd4') : '';
-            $udd5 = !empty($this->container['core']->postAndGet('udd5')) ? $this->container['core']->postAndGet('udd5') : '';
-            $udd6 = !empty($this->container['core']->postAndGet('udd6')) ? $this->container['core']->postAndGet('udd6') : '';
-            $udd7 = !empty($this->container['core']->postAndGet('udd7')) ? $this->container['core']->postAndGet('udd7') : ''; // access level
-            $udd8 = !empty($this->container['core']->postAndGet('udd8')) ? $this->container['core']->postAndGet('udd8') : '';
-            $udd9 = !empty($this->container['core']->postAndGet('udd9')) ? $this->container['core']->postAndGet('udd9') : '';
-            $udd10 = !empty($this->container['core']->postAndGet('udd10')) ? $this->container['core']->postAndGet('udd10') : '';
-            $udd11 = !empty($this->container['core']->postAndGet('udd11')) ? $this->container['core']->postAndGet('udd11') : '';
-            $udd12 = !empty($this->container['core']->postAndGet('udd12')) ? $this->container['core']->postAndGet('udd12') : '';
-            $udd13 = !empty($this->container['core']->postAndGet('udd13')) ? $this->container['core']->postAndGet('udd13') : '';
-            $udd29 = !empty($this->container['core']->postAndGet('udd29')) ? $this->container['core']->postAndGet('udd29') : '';
-            $udd40 = !empty($this->container['core']->postAndGet('udd40')) ? $this->container['core']->postAndGet('udd40') : '';
-            $udd43 = !empty($this->container['core']->postAndGet('udd43')) ? $this->container['core']->postAndGet('udd43') : '';
+        if ($this->postAndGet('action') == 'upgrade') {
+            $udd1 = !empty($this->postAndGet('udd1')) ? $this->postAndGet('udd1') : '';
+            $udd2 = !empty($this->postAndGet('udd2')) ? $this->postAndGet('udd2') : '';
+            $udd3 = !empty($this->postAndGet('udd3')) ? $this->postAndGet('udd3') : '';
+            $udd4 = !empty($this->postAndGet('udd4')) ? $this->postAndGet('udd4') : '';
+            $udd5 = !empty($this->postAndGet('udd5')) ? $this->postAndGet('udd5') : '';
+            $udd6 = !empty($this->postAndGet('udd6')) ? $this->postAndGet('udd6') : '';
+            $udd7 = !empty($this->postAndGet('udd7')) ? $this->postAndGet('udd7') : ''; // access level
+            $udd8 = !empty($this->postAndGet('udd8')) ? $this->postAndGet('udd8') : '';
+            $udd9 = !empty($this->postAndGet('udd9')) ? $this->postAndGet('udd9') : '';
+            $udd10 = !empty($this->postAndGet('udd10')) ? $this->postAndGet('udd10') : '';
+            $udd11 = !empty($this->postAndGet('udd11')) ? $this->postAndGet('udd11') : '';
+            $udd12 = !empty($this->postAndGet('udd12')) ? $this->postAndGet('udd12') : '';
+            $udd13 = !empty($this->postAndGet('udd13')) ? $this->postAndGet('udd13') : '';
+            $udd29 = !empty($this->postAndGet('udd29')) ? $this->postAndGet('udd29') : '';
+            $udd40 = !empty($this->postAndGet('udd40')) ? $this->postAndGet('udd40') : '';
+            $udd43 = !empty($this->postAndGet('udd43')) ? $this->postAndGet('udd43') : '';
 
             if ($this->validateEmail($udd4)) {
                 if (empty($udd5) || $this->validateUrl($udd5) === true) {
@@ -1450,7 +1450,7 @@ class AdminpanelModel extends BaseModel {
                         if (!empty($udd1)) $newpass = $this->user->password_encrypt($udd1);
         
                         // Update password
-                        if (!empty($newpass)) $this->user->update_user('pass', $this->container['core']->replaceNewLines($newpass), $users_id);
+                        if (!empty($newpass)) $this->user->update_user('pass', $this->replaceNewLines($newpass), $users_id);
         
                         // Update default access permissions
                         if ($udd7 != $this->user->user_info('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
@@ -1458,7 +1458,7 @@ class AdminpanelModel extends BaseModel {
                         // Update data
                         $this->user->update_user(
                             array('city', 'about', 'email', 'site', 'rname', 'perstat', 'browsers'),
-                            array($this->container['core']->replaceNewLines($this->container['core']->check($udd2)), $this->container['core']->check($udd3), $this->container['core']->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->container['core']->replaceNewLines($this->container['core']->check($udd5)), $this->container['core']->replaceNewLines($this->container['core']->check($udd29)), $this->container['core']->replaceNewLines($this->container['core']->check($udd40)), $this->container['core']->replaceNewLines($this->container['core']->check($udd13))), $users_id
+                            array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
                         );
         
                         $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
@@ -1467,7 +1467,7 @@ class AdminpanelModel extends BaseModel {
                             $data['content'] .= '<font color=red>{@localization[passchanged]}}: ' . $udd1 . '</font> <br>';
                         }
         
-                        $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
+                        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
                     } else {
                         $data['content'] .= $this->localization->string('usrnoexist') . '!<br>';
                     }
@@ -1478,34 +1478,34 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= $this->localization->string('emailnotok') . '<br>';
             }
 
-            $data['content'] .= '<br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
+            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
         }
         
         // confirm delete
-        if ($this->container['core']->postAndGet('action') == 'poddel') {
+        if ($this->postAndGet('action') == 'poddel') {
             $data['content'] .= $this->localization->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/?action=deluser&users=' . $user, '{@localization[deluser]}}', '<b>', '</b>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/?action=deluser&users=' . $user, '{@localization[deluser]}}', '<b>', '</b>');
         
-            $data['content'] .= '<br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
+            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
         } 
         
         // delete user
-        if ($this->container['core']->postAndGet('action') == 'deluser') {
-            if ($user != $this->container['core']->configuration('adminNick')) {
+        if ($this->postAndGet('action') == 'deluser') {
+            if ($user != $this->configuration('adminNick')) {
                 if ($this->user->user_info('perm', $users_id) < 101 || $this->user->user_info('perm', $users_id) > 105) {
                     $this->user->deleteUser($user);
                     $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';
         
-                    $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}', '<p>', '</p>');
+                    $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}', '<p>', '</p>');
                 } else {
                     $data['content'] .= $this->localization->string('noaccessdel') . '<br>';
-                    $data['content'] .= '<br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
+                    $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
                 }
             }
         }
         
-        $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1520,21 +1520,21 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = 'IP Ban';
         $data['content'] = '';
 
-        if (!$this->user->administrator()) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->administrator()) $this->redirection('../?auth_error');
 
-        if ($this->container['core']->postAndGet('action') == 'zaban' && $this->user->administrator()) {
-            $ips = $this->container['core']->check($this->container['core']->postAndGet('ips'));
+        if ($this->postAndGet('action') == 'zaban' && $this->user->administrator()) {
+            $ips = $this->check($this->postAndGet('ips'));
         
-            if (!empty($ips) && substr_count($ips, '.') == 3) $this->container['core']->writeDataFile('ban.dat', "|$ips|" . PHP_EOL, 1);
+            if (!empty($ips) && substr_count($ips, '.') == 3) $this->writeDataFile('ban.dat', "|$ips|" . PHP_EOL, 1);
         
-            $data['notification'] = $this->container['core']->showSuccess('IP has been banned');
+            $data['notification'] = $this->showSuccess('IP has been banned');
         }
 
-        if ($this->container['core']->postAndGet('action') == 'razban' && $this->user->administrator()) {
-            if (!empty($this->container['core']->postAndGet('id')) || $this->container['core']->postAndGet('id') == 0) $id = $this->container['core']->postAndGet('id');
+        if ($this->postAndGet('action') == 'razban' && $this->user->administrator()) {
+            if (!empty($this->postAndGet('id')) || $this->postAndGet('id') == 0) $id = $this->postAndGet('id');
         
             if (isset($id)) {
-                $file = $this->container['core']->getDataFile('ban.dat');
+                $file = $this->getDataFile('ban.dat');
                 unset($file[$id]);
         
                 $file_data = '';
@@ -1542,21 +1542,21 @@ class AdminpanelModel extends BaseModel {
                     $file_data .= $value;
                 }
         
-                $this->container['core']->writeDataFile('ban.dat', $file_data);
+                $this->writeDataFile('ban.dat', $file_data);
             }
 
             // Notification
             // Update localization
-            $data['notification'] = $this->container['core']->showSuccess('IP ban has been removed');
+            $data['notification'] = $this->showSuccess('IP ban has been removed');
         }
 
-        if ($this->container['core']->postAndGet('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->container['core']->clearFile(STORAGEDIR . 'ban.dat');
+        if ($this->postAndGet('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
+            $this->clearFile(STORAGEDIR . 'ban.dat');
 
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/ipban');
+            $this->redirection(HOMEDIR . 'adminpanel/ipban');
         }
 
-        $file = $this->container['core']->getDataFile('ban.dat');
+        $file = $this->getDataFile('ban.dat');
         $total = count($file);
 
         $navigation = new Navigation(10, $total, HOMEDIR . 'adminpanel/ipban/?'); // start navigation
@@ -1570,14 +1570,14 @@ class AdminpanelModel extends BaseModel {
         }
         
         for ($i = $limit_start; $i < $end; $i++) {
-            $file = $this->container['core']->getDataFile('ban.dat');
+            $file = $this->getDataFile('ban.dat');
             $file = array_reverse($file);
             $file_data = explode("|", $file[$i]);
             $i2 = round($i + 1);
         
             $num = $total - $i-1;
         
-            $data['content'] .= $i2 . '. ' . $file_data[1] . ' <br>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel/ipban/?action=razban&id=' . $num, '{@localization[delban]}}') . '<hr>';
+            $data['content'] .= $i2 . '. ' . $file_data[1] . ' <br>' . $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=razban&id=' . $num, '{@localization[delban]}}') . '<hr>';
         } 
 
         if ($total < 1) {
@@ -1610,11 +1610,11 @@ class AdminpanelModel extends BaseModel {
         $data['content'] .= '<p>{@localization[allbanips]}}: ' . $total . '</p>';
 
         if ($total > 1) {
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/ipban/?action=delallip', '{@localization[dellist]}}', '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=delallip', '{@localization[dellist]}}', '<p>', '</p>');
         }
 
-        $data['content'] .= '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->container['core']->homelink() . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
+        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1629,9 +1629,9 @@ class AdminpanelModel extends BaseModel {
         $page_data['tname'] = '{@localization[search]}}';
         $page_data['content'] = '';
 
-        if (!$this->user->administrator()) $this->container['core']->redirection(HOMEDIR);
+        if (!$this->user->administrator()) $this->redirection(HOMEDIR);
 
-        if (empty($this->container['core']->postAndGet('action'))) {
+        if (empty($this->postAndGet('action'))) {
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
@@ -1649,9 +1649,9 @@ class AdminpanelModel extends BaseModel {
             $form->set('fields', $input->output());
             $page_data['content'] .= $form->output();
 
-            $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[back]}}', '<p>', '<br />');
-        } elseif ($this->container['core']->postAndGet('action') == 'stpc') {
-            if (empty($this->container['core']->postAndGet('stext'))) {
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[back]}}', '<p>', '<br />');
+        } elseif ($this->postAndGet('action') == 'stpc') {
+            if (empty($this->postAndGet('stext'))) {
                 $page_data['content'] .= '<p>Please fill all fields</p>';
             } else {
                 // begin search
@@ -1663,7 +1663,7 @@ class AdminpanelModel extends BaseModel {
                 $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
                 $items_per_page = 10;
         
-                $navigation = new Navigation($items_per_page, $noi, $this->container['core']->postAndGet('page'), HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
+                $navigation = new Navigation($items_per_page, $noi, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
         
                 $limit_start = $navigation->start()['start']; // starting point
         
@@ -1686,7 +1686,7 @@ class AdminpanelModel extends BaseModel {
                                 $itemLang = '';
                             }
 
-                        $tlink = $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $item['file'], $tname . $itemLang) . '<br />';
+                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $item['file'], $tname . $itemLang) . '<br />';
                     }
 
                     $page_data['content'] .= $tlink;
@@ -1695,11 +1695,11 @@ class AdminpanelModel extends BaseModel {
                 $page_data['content'] .= $navigation->get_navigation();
             }
 
-            $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagesearch', '{@localization[back]}}', '<p>', '<br />');
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', '{@localization[back]}}', '<p>', '<br />');
         }
 
-        $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}', '', '<br />');
-        $page_data['content'] .= $this->container['core']->homelink('', '</p>');
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}', '', '<br />');
+        $page_data['content'] .= $this->homelink('', '</p>');
 
         return $page_data;
     }
@@ -1714,25 +1714,25 @@ class AdminpanelModel extends BaseModel {
         $page_data['tname'] = 'Blog';
         $page_data['content'] = '';
 
-        if (!$this->user->administrator()) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->administrator()) $this->redirection('../?auth_error');
 
-        $action = $this->container['core']->postAndGet('action');
+        $action = $this->postAndGet('action');
         switch ($action) {
             case 'add-category':
                 // Save category if name is sent
-                if (!empty($this->container['core']->postAndGet('category')) && !empty($this->container['core']->postAndGet('value'))) {
+                if (!empty($this->postAndGet('category')) && !empty($this->postAndGet('value'))) {
                     // Category localization if choosen
-                    $category_localization = !empty($this->container['core']->postAndGet('lang')) ? '_' . $this->container['core']->postAndGet('lang') : '';
+                    $category_localization = !empty($this->postAndGet('lang')) ? '_' . $this->postAndGet('lang') : '';
 
                     // Calculate category position
                     $position = $this->db->countRow('settings', "setting_group = 'blog_category{$category_localization}'");
 
                     // Add category
-                    $data = array('setting_group' => 'blog_category' . $category_localization, 'setting_name' => $this->container['core']->postAndGet('category'), 'value' => $this->container['core']->postAndGet('value'), 'options' => $position);
+                    $data = array('setting_group' => 'blog_category' . $category_localization, 'setting_name' => $this->postAndGet('category'), 'value' => $this->postAndGet('value'), 'options' => $position);
                     $this->db->insert('settings', $data);
         
                     // Show message if category is saved
-                    $page_data['content'] .= $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category saved</p>');
+                    $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category saved</p>');
                 }
         
                 // Category input
@@ -1786,16 +1786,16 @@ class AdminpanelModel extends BaseModel {
 
             case 'edit-category':
                 // Update category if data are sent
-                if (!empty($this->container['core']->postAndGet('id')) && !empty($this->container['core']->postAndGet('category')) && !empty($this->container['core']->postAndGet('value'))) {
+                if (!empty($this->postAndGet('id')) && !empty($this->postAndGet('category')) && !empty($this->postAndGet('value'))) {
                     // Update category
-                    $this->db->update('settings', array('setting_name', 'value'), array($this->container['core']->postAndGet('category'), $this->container['core']->postAndGet('value')), "id = '{$this->container['core']->postAndGet('id')}'");
+                    $this->db->update('settings', array('setting_name', 'value'), array($this->postAndGet('category'), $this->postAndGet('value')), "id = '{$this->postAndGet('id')}'");
         
                     // Show message if category is updated
-                    $page_data['content'] .= $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category updated</p>');
+                    $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Saved" /> Category updated</p>');
                 }
         
                 // Category data
-                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->container['core']->postAndGet('id')]);
+                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->postAndGet('id')]);
         
                 // Category input
                 $category = $this->container['parse_page'];
@@ -1822,7 +1822,7 @@ class AdminpanelModel extends BaseModel {
                 $category_id->load('forms/input');
                 $category_id->set('input_name', 'id');
                 $category_id->set('input_type', 'hidden');
-                $category_id->set('input_value', $this->container['core']->postAndGet('id'));
+                $category_id->set('input_value', $this->postAndGet('id'));
         
                 $fields = array($category, $value, $category_id);
         
@@ -1837,9 +1837,9 @@ class AdminpanelModel extends BaseModel {
             break;
 
             case 'delete':
-                if ($this->db->countRow('settings', "id = {$this->container['core']->postAndGet('id')}") > 0) {
+                if ($this->db->countRow('settings', "id = {$this->postAndGet('id')}") > 0) {
                     // Update other categories with new positions
-                    $category = $this->db->selectData('settings', 'id = :id', [':id' => $this->container['core']->postAndGet('id')]);
+                    $category = $this->db->selectData('settings', 'id = :id', [':id' => $this->postAndGet('id')]);
                     $category_position = $category['options'];
                     $category_group = $category['setting_group'];
 
@@ -1858,17 +1858,17 @@ class AdminpanelModel extends BaseModel {
                     }
 
                     // Delete category
-                    $this->db->delete('settings', "id = {$this->container['core']->postAndGet('id')}");
+                    $this->db->delete('settings', "id = {$this->postAndGet('id')}");
         
-                    $page_data['content'] .= $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Deleted" /> Category deleted');
+                    $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Deleted" /> Category deleted');
                 } else {
-                    $page_data['content'] .= $this->container['core']->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> This category does not exist');
+                    $page_data['content'] .= $this->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> This category does not exist');
                 }
             break;
 
             case 'move-up':
                 // cat we want to update
-                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->container['core']->postAndGet('id')]);
+                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->postAndGet('id')]);
                 $cat_group = $cat_info['setting_group'];
                 $cat_position = $cat_info['options'];
                 $new_position = $cat_position - 1;
@@ -1880,17 +1880,17 @@ class AdminpanelModel extends BaseModel {
                     $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
 
                     // Now, update our cat
-                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->container['core']->postAndGet('id')}'");
+                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->postAndGet('id')}'");
 
-                    $page_data['content'] .= $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
+                    $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
                 } else {
-                    $page_data['content'] .= $this->container['core']->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
+                    $page_data['content'] .= $this->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
                 }
             break;
 
             case 'move-down':                
                 // cat we want to update
-                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->container['core']->postAndGet('id')]);
+                $cat_info = $this->db->selectData('settings', 'id = :id', [':id' => $this->postAndGet('id')]);
                 $cat_group = $cat_info['setting_group'];
                 $cat_position = $cat_info['options'];
                 $new_position = $cat_position + 1;
@@ -1904,16 +1904,16 @@ class AdminpanelModel extends BaseModel {
                     $this->db->exec("UPDATE settings SET options='{$cat_to_down_position}' WHERE id='{$cat_to_down['id']}'");
                     
                     // Now, update our cat
-                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->container['core']->postAndGet('id')}'");
+                    $this->db->exec("UPDATE settings SET options='{$new_position}' WHERE id='{$this->postAndGet('id')}'");
         
-                    $page_data['content'] .= $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
+                    $page_data['content'] .= $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Updated" /> Category position updated');
                 } else {
-                    $page_data['content'] .= $this->container['core']->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
+                    $page_data['content'] .= $this->showDanger('<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Error" /> Category position not updated');
                 }
             break;
         
             default:
-                if ($this->db->countRow('settings', "setting_group LIKE 'blog_category%'") == 0) $this->container['core']->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
+                if ($this->db->countRow('settings', "setting_group LIKE 'blog_category%'") == 0) $this->showNotification('<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""/> There is no any category');
         
                 // Blog categories
                 $blog_categories = array();
@@ -1925,11 +1925,11 @@ class AdminpanelModel extends BaseModel {
 
                     // Put data into the array key
                     $blog_categories[$category['setting_group']] .= '<div class="a">';
-                    $blog_categories[$category['setting_group']] .= $this->container['core']->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
-                    $blog_categories[$category['setting_group']] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
-                    $blog_categories[$category['setting_group']] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=delete&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Delete" /> Delete') . ' ';
-                    $blog_categories[$category['setting_group']] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-up&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/ups.gif" alt="Up" /> Move up') . ' ';
-                    $blog_categories[$category['setting_group']] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'blog/category/' . $category['value'] . '/', $category['setting_name']) . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=edit-category&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="Edit" /> Edit') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=delete&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/error.gif" alt="Delete" /> Delete') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-up&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/ups.gif" alt="Up" /> Move up') . ' ';
+                    $blog_categories[$category['setting_group']] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=move-down&id=' . $category['id'], '<img src="' . HOMEDIR . 'themes/images/img/downs.gif" alt="Down" /> Move down');
                     $blog_categories[$category['setting_group']] .= '</div>';
                 }
 
@@ -1952,10 +1952,10 @@ class AdminpanelModel extends BaseModel {
         }
 
         $page_data['content'] .= '<p class="mt-5">';
-        if ($this->container['core']->postAndGet('action') !== 'add-category') $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
-        if (!empty($this->container['core']->postAndGet('action'))) $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog categories') . '<br />';
-        $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->container['core']->homelink();
+        if ($this->postAndGet('action') !== 'add-category') $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
+        if (!empty($this->postAndGet('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog categories') . '<br />';
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
+        $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;
@@ -1971,13 +1971,13 @@ class AdminpanelModel extends BaseModel {
         $page_data['tname'] = 'Page Title';
         $page_data['content'] = '';
 
-        $act = $this->container['core']->postAndGet('act');
+        $act = $this->postAndGet('act');
 
-        if (!$this->user->administrator()) $this->container['core']->redirection('../?error');
+        if (!$this->user->administrator()) $this->redirection('../?error');
         
         if ($act == 'addedit') {
-            $tfile = $this->container['core']->check($this->container['core']->postAndGet('tfile'));
-            $msg = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('msg'));
+            $tfile = $this->check($this->postAndGet('tfile'));
+            $msg = $this->replaceNewLines($this->postAndGet('msg'));
         
             // Get page data
             $pageData = $this->db->selectData('pages', 'file = :file', [':file' => $tfile], 'file, headt');
@@ -2004,15 +2004,15 @@ class AdminpanelModel extends BaseModel {
             $values = array($msg, $headData);
             $this->db->update('pages', $fields, $values, "file='{$tfile}'");
 
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=" . $pageData['file'] . "&isset=savedok");
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=" . $pageData['file'] . "&isset=savedok");
         } 
         
         if ($act == 'savenew') {
-            $tpage = $this->container['core']->check($this->container['core']->postAndGet('tpage'));
+            $tpage = $this->check($this->postAndGet('tpage'));
             $tpage = strtolower($tpage);
             $tpage = str_replace(' ', '-', $tpage);
 
-            $msg = $this->container['core']->replaceNewLines($this->container['core']->postAndGet('msg'));
+            $msg = $this->replaceNewLines($this->postAndGet('msg'));
 
             $last_notif = $this->db->selectData('pages', 'pname = :pname', [':pname' => $tpage], '`tname`, `pname`, `file`, `headt`');
 
@@ -2052,15 +2052,15 @@ class AdminpanelModel extends BaseModel {
                 $PBPage = true;
             } 
 
-            $this->container['core']->redirection(HOMEDIR . "adminpanel/pagetitle/?isset=savedok");
+            $this->redirection(HOMEDIR . "adminpanel/pagetitle/?isset=savedok");
         }
 
         if ($act == 'del') {
-            $tid = $this->container['core']->check($this->container['core']->postAndGet('tid'));
+            $tid = $this->check($this->postAndGet('tid'));
         
             $this->db->delete('pages', "pname = '{$tid}'");
         
-            $this->container['core']->redirection(HOMEDIR . 'adminpanel/pagetitle');
+            $this->redirection(HOMEDIR . 'adminpanel/pagetitle');
         }
         
         if (!isset($act) || empty($act)) {
@@ -2076,7 +2076,7 @@ class AdminpanelModel extends BaseModel {
         
             $items_per_page = 30;
         
-            $navigation = new Navigation($items_per_page, $num_items, $this->container['core']->postAndGet('page'), HOMEDIR . 'adminpanel/pagetitle/?'); // start navigation
+            $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagetitle/?'); // start navigation
 
             $limit_start = $navigation->start()['start']; // starting point
 
@@ -2092,11 +2092,11 @@ class AdminpanelModel extends BaseModel {
 
             $page_data['content'] .= $navigation->get_navigation();
 
-            $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
         }
         
         if ($act == 'edit') {
-            $pgfile = $this->container['core']->check($this->container['core']->postAndGet('pgfile'));
+            $pgfile = $this->check($this->postAndGet('pgfile'));
         
             $page_title = $this->db->selectData('pages', 'file = :file', ['file' => $pgfile], 'tname, pname');
         
@@ -2124,7 +2124,7 @@ class AdminpanelModel extends BaseModel {
         
             $page_data['content'] .= '<hr>';
         
-            $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
         } 
 
         if ($act == "addnew") {
@@ -2154,12 +2154,12 @@ class AdminpanelModel extends BaseModel {
         
             $page_data['content'] .= '<hr />';
         
-            $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
         }
         
         $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->container['core']->homelink();
+        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
+        $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;
@@ -2175,9 +2175,9 @@ class AdminpanelModel extends BaseModel {
         $page_data['tname'] = 'IP information';
         $page_data['content'] = '';
 
-        if (!$this->user->moderator() && !$this->user->administrator()) $this->container['core']->redirection('../?auth_error');
+        if (!$this->user->moderator() && !$this->user->administrator()) $this->redirection('../?auth_error');
 
-        $ip = $this->container['core']->postAndGet('ip');
+        $ip = $this->postAndGet('ip');
 
         if (empty($ip)) exit('please set ip address');
 
@@ -2207,11 +2207,11 @@ class AdminpanelModel extends BaseModel {
             $page_data['ip_information'] .= 'State/Region: ' . $ipData['regionName'] . '<br />';
             $page_data['ip_information'] .= 'City/Town: ' . $ipData['city'] . '<br />';
         } else {
-            $page_data['ip_information'] .= $this->container['core']->showDanger('No data available');
+            $page_data['ip_information'] .= $this->showDanger('No data available');
         }
 
-        $page_data['content'] = '<p>' . $this->container['core']->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->container['core']->homelink() . '</p>';
+        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
+        $page_data['content'] .= $this->homelink() . '</p>';
 
         return $page_data;
     }    

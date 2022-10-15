@@ -5,8 +5,11 @@
  */
 
 namespace App\Classes;
+use App\Traits\Core;
 
-class Vavok extends Core {
+class Vavok {
+    use Core;
+
     protected string $currentController = 'Pages';
     protected string $currentMethod = 'index';
     protected array  $params = [];
@@ -51,10 +54,10 @@ class Vavok extends Core {
         // Cookie-free domain for themes
         if (!defined('STATIC_THEMES_URL')) define('STATIC_THEMES_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/themes');
 
-        // Parameters from URL
+        // Parameters from the URL
         $url = $this->paramsFromUrl();
 
-        // Look in URL for the first value
+        // Look in the URL for the first value
         if (isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {
             // If exists, set as controller
             $this->currentController = ucwords($url[0]);

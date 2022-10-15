@@ -19,7 +19,6 @@ abstract class Controller {
 
         // Globaly used methods
         $container['db'] = fn() => Database::instance();
-        $container['core'] = fn($c) => new Core($c);
         $container['user'] = fn($c) => new User($c);
         $container['parse_page'] = $container->factory(fn($c) => new ParsePage($c));
 

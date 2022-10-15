@@ -8,12 +8,14 @@ namespace App\Classes;
 use App\Classes\Counter;
 use App\Classes\BrowserDetection;
 use App\Classes\Mailer;
+use App\Traits\Core;
 use App\Traits\Validations;
 use Pimple\Container;
 use DateTime;
 use DateInterval;
 
 class User {
+    use Core;
     use Validations;
 
     protected object $db;
@@ -26,7 +28,7 @@ class User {
         // Session from cookie
         if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
             // Search for token in database and get tokend data if exists
-            $cookie_data = $this->db->selectData('tokens', 'token = :token', [':token' => $this->container['core']->check($_COOKIE['cookie_login'])], 'uid, token');
+            $cookie_data = $this->db->selectData('tokens', 'token = :token', [':token' => $this->check($_COOKIE['cookie_login'])], 'uid, token');
             $cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
             $token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
 
@@ -46,7 +48,7 @@ class User {
             } else {
                 // Token from cookie is not valid or it is expired, delete cookie
                 setcookie('cookie_login', '', time() - 3600);
-                setcookie('cookie_login', '', 1, '/', $this->container['core']->cleanDomain());
+                setcookie('cookie_login', '', 1, '/', $this->cleanDomain());
             }
         }
 
@@ -65,7 +67,7 @@ class User {
             if (!empty($vavok_users['lang']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['lang'])) $_SESSION['lang'] = $vavok_users['lang'];
 
             // Check if user is banned
-            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->container['core']->redirection(HOMEDIR . 'users/ban');
+            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirection(HOMEDIR . 'users/ban');
 
              // activate account
             if (isset($user_profil['regche']) && $user_profil['regche'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
@@ -88,24 +90,24 @@ class User {
         $this->visited_pages = $_SESSION['counton'];
 
         // Visitor's time on the site
-        $this->time_on_site = $this->container['core']->makeTime(round(time() - $_SESSION['currs']));
+        $this->time_on_site = $this->makeTime(round(time() - $_SESSION['currs']));
 
         // User settings
 
         // If timezone is not defined use default
-        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->container['core']->configuration('timeZone'));
+        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration('timeZone'));
 
         // Site theme
-        $config_themes = $this->container['core']->configuration('webtheme');
+        $config_themes = $this->configuration('webtheme');
 
         // If theme does not exist use default theme
         // For admin panel use default theme
-        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->container['core']->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
 
         define('MY_THEME', $config_themes);
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
-        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->container['core']->detectBot(), $this->container);
+        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detectBot(), $this->container);
     }
 
     /**
@@ -130,7 +132,7 @@ class User {
             if ($_SESSION['permissions'] == 107) return true;
 
             // Administrator, check if access permissions are changed
-            if ($this->container['core']->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
+            if ($this->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
                 // Everything is ok
                 return true;
             } else {
@@ -164,7 +166,7 @@ class User {
         /**
          * Root domain, with dot '.' session is accessible from all subdomains
          */
-        $rootDomain = '.' . $this->container['core']->cleanDomain();
+        $rootDomain = '.' . $this->cleanDomain();
 
         // destroy cookies
         setcookie('cookie_login', '', time() - 3600);
@@ -193,28 +195,28 @@ class User {
         $max_time_in_seconds = 600;
         $max_attempts = 10;
 
-        if (!empty($this->container['core']->postAndGet('log')) && !empty($this->container['core']->postAndGet('pass')) && $this->container['core']->postAndGet('log') != 'System') {
-            if ($this->loginAttemptCount($max_time_in_seconds, $this->container['core']->postAndGet('log'), $this->find_ip()) > $max_attempts) {
+        if (!empty($this->postAndGet('log')) && !empty($this->postAndGet('pass')) && $this->postAndGet('log') != 'System') {
+            if ($this->loginAttemptCount($max_time_in_seconds, $this->postAndGet('log'), $this->find_ip()) > $max_attempts) {
                 $data['show_notification'] = "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
-                Try again in " . explode(':', $this->container['core']->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
+                Try again in " . explode(':', $this->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
             }
 
             // User is logging in with email
-            if ($this->validateEmail($this->container['core']->postAndGet('log'))) {
-                $userx_id = $this->id_from_email($this->container['core']->postAndGet('log'));
+            if ($this->validateEmail($this->postAndGet('log'))) {
+                $userx_id = $this->id_from_email($this->postAndGet('log'));
             }
 
             // User is logging in with username
             else {
-                $userx_id = $this->getIdFromNick($this->container['core']->postAndGet('log'));
+                $userx_id = $this->getIdFromNick($this->postAndGet('log'));
             }
 
             // compare sent data and data from database
-            if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->container['core']->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
+            if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
                 // user want to remember login
-                if ($this->container['core']->postAndGet('cookietrue') == 1) {
+                if ($this->postAndGet('cookietrue') == 1) {
                     // Encrypt data to save in cookie
-                    $token = $this->container['core']->leaveLatinLettersNumbers($this->password_encrypt($this->container['core']->postAndGet('pass', true) . $this->container['core']->generatePassword()));
+                    $token = $this->leaveLatinLettersNumbers($this->password_encrypt($this->postAndGet('pass', true) . $this->generatePassword()));
 
                     // Set token expire time
                     $now = new DateTime();
@@ -225,7 +227,7 @@ class User {
                     $this->db->insert('tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
 
                     // Save cookie with token in users's device
-                    SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->container['core']->cleanDomain()); // one year
+                    SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->cleanDomain()); // one year
                 }
 
                 $_SESSION['log'] = $this->getNickFromId($userx_id);
@@ -246,12 +248,12 @@ class User {
                     $userx_id);
         
                 // Redirect user to confirm registration
-                if ($this->user_info('regche', $userx_id) == 1) $this->container['core']->redirection(HOMEDIR . 'users/key/?log=' . $this->container['core']->postAndGet('log'));
+                if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
         
                 // Redirect user if he is banned
-                if ($this->user_info('banned', $userx_id) == 1) $this->container['core']->redirection(HOMEDIR . 'users/ban/?log=' . $this->container['core']->postAndGet('log'));
+                if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->postAndGet('log'));
 
-                $this->container['core']->redirection(HOMEDIR . $this->container['core']->postAndGet('ptl'));
+                $this->redirection(HOMEDIR . $this->postAndGet('ptl'));
             }
 
             $data['show_notification'] = '{@localization[wronguserorpass]}}';
@@ -308,12 +310,12 @@ class User {
             'pass' => $this->password_encrypt($pass),
             'perm' => '107',
             'skin' => $theme,
-            'browsers' => $this->container['core']->check($this->user_browser()),
+            'browsers' => $this->check($this->user_browser()),
             'ipadd' => $this->find_ip(),
             'timezone' => 0,
             'banned' => 0,
             'newmsg' => 0,
-            'lang' => $this->container['core']->configuration('siteDefaultLang')
+            'lang' => $this->configuration('siteDefaultLang')
         );
         $this->db->insert('vavok_users', $values);
 
@@ -557,7 +559,7 @@ class User {
         $text = base64_decode($text);
 
         // format message
-        $text = $this->container['core']->getbbcode($this->container['core']->smiles($this->container['core']->antiword($text)));
+        $text = $this->getbbcode($this->smiles($this->antiword($text)));
 
         // strip slashes
         if (function_exists('get_magic_quotes_gpc')) {
@@ -589,7 +591,7 @@ class User {
             $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
             $send_mail = new Mailer($this->container);
-            $send_mail->queue_email($user_mail['email'], "Message on " . $this->container['core']->configuration('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->container['core']->configuration('homeUrl'), '', '', 'normal'); // update lang
+            $send_mail->queue_email($user_mail['email'], "Message on " . $this->configuration('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration('homeUrl'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -918,7 +920,7 @@ class User {
         if ($this->userAuthenticated()) {
             return $this->user_info('language', $_SESSION['uid']);
         } else {
-            return $this->container['core']->configuration('siteDefaultLang');
+            return $this->configuration('siteDefaultLang');
         }
     }
 
@@ -1222,7 +1224,7 @@ class User {
         $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
         // Use default language
-        if (empty($language)) $language = $this->container['core']->configuration('siteDefaultLang');
+        if (empty($language)) $language = $this->configuration('siteDefaultLang');
 
         if ($language == 'en') {
             $language = 'english';

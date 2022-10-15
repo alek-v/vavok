@@ -49,7 +49,7 @@ class BlogModel extends BaseModel {
                 if (!empty($blog_page_data) && is_array($blog_page_data)) $this_page = array_merge($blog_page_data, $this_page);
 
                 // Redirect to blog main page if page does not exist
-                $page_id = !empty($this->page_id) or $this->container['core']->redirection(HOMEDIR . 'blog/');
+                $page_id = !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
 
                 // Update user's localization when page's language is different then current localization
                 $page_localization = $this->user->updatePageLocalization($this_page['lang']);
@@ -73,20 +73,20 @@ class BlogModel extends BaseModel {
                 $post->set('author_link', $author_link);
         
                 // Time created
-                $post->set('created_date', $this->container['core']->correctDate($this->page_created_date, 'd.m.Y.'));
+                $post->set('created_date', $this->correctDate($this->page_created_date, 'd.m.Y.'));
         
                 /**
                  * Time published
                  * If article is not published and page is viewed by administrator use current time
                  */
                 if (!empty($this->page_published_date)) {
-                    $post->set('published_date', $this->container['core']->correctDate($this->page_published_date, 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate($this->page_published_date, 'd.m.Y.'));
                 } else {
-                    $post->set('published_date', $this->container['core']->correctDate(time(), 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate(time(), 'd.m.Y.'));
                 }
         
                 // Date updated
-                $post->set('date_updated', $this->container['core']->correctDate($this->page_updated_date, 'd.m.Y.'));
+                $post->set('date_updated', $this->correctDate($this->page_updated_date, 'd.m.Y.'));
         
                 // Content
                 $post->set('content', $this->page_content);
@@ -108,7 +108,7 @@ class BlogModel extends BaseModel {
                 }
         
                 // Page URL
-                $post->set('page-link', $this->container['core']->cleanPageUrl());
+                $post->set('page-link', $this->cleanPageUrl());
 
                 // comments
                 $comments = new BlogComments($this->container);
@@ -120,7 +120,7 @@ class BlogModel extends BaseModel {
                 if ($comments_per_page == 0) $comments_per_page = $total_comments;
 
                 // Start navigation
-                $navi = new Navigation($items_per_page, $total_comments, $this->container['core']->postAndGet('page'));
+                $navi = new Navigation($items_per_page, $total_comments, $this->postAndGet('page'));
         
                 $all_comments = $comments->loadComments($this->page_id, $navi->start()['start'], $comments_per_page);
 
@@ -187,14 +187,14 @@ class BlogModel extends BaseModel {
                 // When there is no posts
                 if ($total_posts < 1) {
                     $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is nothing here</p>';
-                    $this_page['content'] .= $this->container['core']->sitelink( HOMEDIR . 'blog/', $this->localization->string('backtoblog'), '<p>', '</p>');
+                    $this_page['content'] .= $this->sitelink( HOMEDIR . 'blog/', $this->localization->string('backtoblog'), '<p>', '</p>');
 
                     return $this_page;
                     break;
                 }
 
                 // start navigation
-                $navi = new Navigation($items_per_page, $total_posts, $this->container['core']->postAndGet('page'));
+                $navi = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'));
 
                 // Get blog category names
                 foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' OR setting_group = 'blog_category_{$user_localization_short}' ORDER BY options") as $category) {
@@ -229,7 +229,7 @@ class BlogModel extends BaseModel {
                     $page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '">' . $key['tname'] . '</a>');
         
                     // Replace html headings, images and other tags from content
-                    $content = !empty($key['content']) ? strip_tags($this->container['core']->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']))) : '';
+                    $content = !empty($key['content']) ? strip_tags($this->erase_img(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']))) : '';
         
                     // When there is more then 45 words show only first 45 words
                     if (count(explode(' ', $content)) > 45) $content = implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $content)), 0, 45)) . '...';
@@ -250,7 +250,7 @@ class BlogModel extends BaseModel {
                     $page_posts->set('date-published-year', date('Y', $key['pubdate']));
         
                     // Page URL
-                    $page_posts->set('page-link', $this->container['core']->cleanPageUrl());
+                    $page_posts->set('page-link', $this->cleanPageUrl());
         
                     // Page text
                     $page_posts->set('post_text', $content);
@@ -272,7 +272,7 @@ class BlogModel extends BaseModel {
                 $show_page->set('posts', $page_posts->merge($all_posts));
         
                 // page navigation
-                $navigation = new Navigation($items_per_page, $total_posts, $this->container['core']->postAndGet('page'), './?');
+                $navigation = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'), './?');
                 
                 $show_page->set('navigation', $navigation->get_navigation());
         
@@ -298,18 +298,18 @@ class BlogModel extends BaseModel {
         // Content of the page
         $this_page['content'] = '';
 
-        $ptl = ltrim($this->container['core']->check($this->container['core']->postAndGet('ptl')), '/'); // Return page
+        $ptl = ltrim($this->check($this->postAndGet('ptl')), '/'); // Return page
 
         // In case data is missing
-        if ($this->user->userAuthenticated() && (empty($this->container['core']->postAndGet('comment')) || empty($this->container['core']->postAndGet('pid')))) { $this->container['core']->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
+        if ($this->user->userAuthenticated() && (empty($this->postAndGet('comment')) || empty($this->postAndGet('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
 
         $comments = new BlogComments($this->container);
 
         // Insert data to database
-        $comments->insert($this->container['core']->postAndGet('comment'), $this->container['core']->postAndGet('pid'));
+        $comments->insert($this->postAndGet('comment'), $this->postAndGet('pid'));
 
         // Saved, return to page
-        $this->container['core']->redirection(HOMEDIR . $ptl . '?isset=savedok');
+        $this->redirection(HOMEDIR . $ptl . '?isset=savedok');
     }
 
     /**

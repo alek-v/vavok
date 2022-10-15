@@ -5,9 +5,12 @@
 
 namespace App\Classes;
 use App\Classes\Database;
+use App\Traits\Core;
 use Pimple\Container;
 
 class PageManager {
+    use Core;
+
     protected $page_title;            // Title
     protected $page_content;          // Content
     protected $published;             // Visitors can see page
@@ -96,7 +99,7 @@ class PageManager {
      */
     function updateCached($file, $content)
     {
-        $this->container['core']->writeDataFile('datamain/' . $file, $content);
+        $this->writeDataFile('datamain/' . $file, $content);
         return true;
     }
 
@@ -316,8 +319,8 @@ class PageManager {
      */
     public function editMode()
     {
-        if (!empty($this->container['core']->postAndGet('edmode'))) {
-            $edmode = $this->container['core']->postAndGet('edmode');
+        if (!empty($this->postAndGet('edmode'))) {
+            $edmode = $this->postAndGet('edmode');
             $_SESSION['edmode'] = $edmode;
         } elseif (!empty($_SESSION['edmode'])) {
             // Use edit mode from session

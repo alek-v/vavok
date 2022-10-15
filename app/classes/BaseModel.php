@@ -6,9 +6,12 @@
 
 namespace App\Classes;
 use App\Classes\Localizaion;
+use App\Traits\Core;
 use Pimple\Container;
 
 abstract class BaseModel {
+    use Core;
+
     protected object $user;
     protected object $localization;
     protected array  $user_data = [

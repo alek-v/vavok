@@ -5,12 +5,14 @@
  */
 
 namespace App\Classes;
+use App\Traits\Core;
 use App\Traits\Validations;
 use Pimple\Container;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 class Mailer {
+    use Core;
     use Validations;
 
     protected object $db;
@@ -47,7 +49,7 @@ class Mailer {
         /**
          * Default name
          */
-        if (empty($name)) $name = $this->container['core']->configuration('title');
+        if (empty($name)) $name = $this->configuration('title');
 
         // Support for unicode emails
         if ($this->isUnicode($usermail) && function_exists('idn_to_ascii')) {
@@ -111,10 +113,10 @@ class Mailer {
         //Set the subject line
         $mail->Subject = $subject;
         // Convert to HTML if message is plain text
-        if ($this->container['core']->isTextHtml($msg)) {
+        if ($this->isTextHtml($msg)) {
             $mail->msgHTML($msg);
         } else {
-            $mail->msgHTML($this->container['core']->getbbcode($msg));
+            $mail->msgHTML($this->getbbcode($msg));
         }
         //Replace the plain text body with one created manually
         $mail->AltBody = $msg;

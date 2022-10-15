@@ -20,10 +20,10 @@ class SearchModel extends BaseModel {
         $this_page['content'] = '';
 
         // String to search for
-        $search_item = isset($params[0]) ? $params[0] : $this->container['core']->postAndGet('item');
+        $search_item = isset($params[0]) ? $params[0] : $this->postAndGet('item');
 
-        $itemCyr = $this->container['core']->latinToCyrillic(htmlspecialchars_decode($search_item)); // translate to cyrillic to search for cyrillic post
-        $itemLat = $this->container['core']->cyrillicToLatin(htmlspecialchars_decode($search_item)); // translate to latin to search for latin post
+        $itemCyr = $this->latinToCyrillic(htmlspecialchars_decode($search_item)); // translate to cyrillic to search for cyrillic post
+        $itemLat = $this->cyrillicToLatin(htmlspecialchars_decode($search_item)); // translate to latin to search for latin post
 
         // Add meta tags
         $this_page['headt'] .= '<meta name="robots" content="noindex, follow" />';
@@ -67,7 +67,7 @@ class SearchModel extends BaseModel {
             $items = count($page_ids);
             unset($page_ids);
 
-            $thisPageNav = new Navigation(20, $items, $this->container['core']->postAndGet('page'));
+            $thisPageNav = new Navigation(20, $items, $this->postAndGet('page'));
 
             $searchItems = array();
             $page_ids = array();
@@ -121,7 +121,7 @@ class SearchModel extends BaseModel {
 
             if ($items < 1) {
                 $this_page['content'] .= $resultsPage->output();
-                $this_page['content'] .= $this->container['core']->showNotification('No search results, try another phrase');
+                $this_page['content'] .= $this->showNotification('No search results, try another phrase');
 
                 return $this_page;
             }

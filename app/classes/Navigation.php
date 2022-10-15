@@ -5,8 +5,11 @@
  */
 
 namespace App\Classes;
+use App\Traits\Core;
 
-class Navigation extends Core {
+class Navigation {
+    use Core;
+
     public $items_per_page;
     public $total_items;
     public $page;

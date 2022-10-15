@@ -42,7 +42,7 @@ class Page extends BaseModel {
         // Redirect if user's language is not website default language,
         // language is not in URL, example: www.example.com
         // and page with users's language exists, example: www.example.com/de
-        if ($this->container['core']->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->container['core']->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
+        if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
 
         // Users data
         $data['user'] = $this->user_data;
@@ -125,7 +125,7 @@ class Page extends BaseModel {
         $items_per_page = 10;
  
         // Start navigation
-        $navigation = new Navigation($items_per_page, $num_items, $this->container['core']->postAndGet('page'), HOMEDIR . 'pages/userlist/?');
+        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'pages/userlist/?');
 
         // Starting point
         $limit_start = $navigation->start()['start'];
@@ -133,13 +133,13 @@ class Page extends BaseModel {
         if ($num_items > 0) {
             foreach ($this->db->query("SELECT id, name FROM vavok_users ORDER BY name LIMIT $limit_start, $items_per_page") as $item) {
                 $data['content'] .= '<div class="a">';
-                $data['content'] .= '<a href="' . HOMEDIR . 'users/u/' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $this->container['core']->correctDate($this->user->user_info('regdate', $item['id']), 'd.m.Y.'); // update lang
+                $data['content'] .= '<a href="' . HOMEDIR . 'users/u/' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $this->correctDate($this->user->user_info('regdate', $item['id']), 'd.m.Y.'); // update lang
                 $data['content'] .= '</div>';
             }
         }
 
         $data['content'] .= $navigation->get_navigation();
-        $data['content'] .= $this->container['core']->homelink();
+        $data['content'] .= $this->homelink();
 
         return $data;
     }
@@ -154,7 +154,7 @@ class Page extends BaseModel {
         $data['tname'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
-        if ($this->container['core']->configuration('showCounter') == 6 && !$this->user->administrator()) $this->container['core']->redirection(HOMEDIR);
+        if ($this->configuration('showCounter') == 6 && !$this->user->administrator()) $this->redirection(HOMEDIR);
 
         $hour = (int)date("H", time());
         $hday = date("j", time())-1;
@@ -173,7 +173,7 @@ class Page extends BaseModel {
         $total_visits = $counts['visits_total']; // total visits
     
         $data['content'] .= '{@localization[temponline]}}: ';
-        if ($this->container['core']->configuration('showOnline') == 1 || $this->user->administrator()) {
+        if ($this->configuration('showOnline') == 1 || $this->user->administrator()) {
             $data['content'] .= '<a href="{@HOMEDIR}}pages/online">' . (int)$pcounter_online . '</a><br />';
         } else {
             $data['content'] .= '<b>' . (int)$pcounter_online . '</b><br />';
@@ -187,7 +187,7 @@ class Page extends BaseModel {
         $data['content'] .= '{@localization[totvisits]}}: <b>' . (int)$total_visits . '</b><br />';
         $data['content'] .= '{@localization[totopenpages]}}: <b>' . (int)$total_clicks . '</b><br /><br />';
         
-        $data['content'] .= $this->container['core']->homelink('<p>', '</p>');
+        $data['content'] .= $this->homelink('<p>', '</p>');
 
         return $data;
     }
@@ -202,7 +202,7 @@ class Page extends BaseModel {
         $data['tname'] = 'Online';
         $data['content'] = '';
 
-        if ($this->container['core']->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->container['core']->redirection("../");
+        if ($this->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->redirection("../");
 
         // page settings
         $data_on_page = 10; // online users per page
@@ -212,8 +212,8 @@ class Page extends BaseModel {
         $total = $this->db->countRow('online');
         $totalreg = $this->db->countRow('online', "user > 0");
         
-        if (!empty($this->container['core']->postAndGet('list'))) {
-            $list = $this->container['core']->check($this->container['core']->postAndGet('list'));
+        if (!empty($this->postAndGet('list'))) {
+            $list = $this->check($this->postAndGet('list'));
         } else {
             if ($totalreg > 0) {
                 $list = 'reg';
@@ -235,24 +235,24 @@ class Page extends BaseModel {
             $full_query = "SELECT * FROM online ORDER BY date DESC LIMIT $start, " . $data_on_page;
         
             foreach ($this->db->query($full_query) as $item) {
-                $time = $this->container['core']->correctDate($item['date'], 'H:i');
+                $time = $this->correctDate($item['date'], 'H:i');
         
                 if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
                     $data['content'] .= '<b>{@localization[guest]}}</b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->container['core']->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
                     $data['content'] .= '<b>' . $item['bot'] . '</b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->container['core']->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } else {
                     $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getNickFromId($item['user']) . '</a></b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->container['core']->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     }
                     $data['content'] .= '<hr />';
                 }
@@ -271,12 +271,12 @@ class Page extends BaseModel {
             $full_query = "SELECT * FROM online WHERE user > 0 ORDER BY date DESC LIMIT $start, " . $data_on_page;
         
             foreach ($this->db->query($full_query) as $item) {
-                $time = $this->container['core']->correctDate($item['date'], 'H:i');
+                $time = $this->correctDate($item['date'], 'H:i');
         
                 $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getNickFromId($item['user']) . '</a></b> ({@localization[time]}}: ' . $time . ')<br />';
 
                 if ($this->user->moderator() || $this->user->administrator()) {
-                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->container['core']->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                 }
 
                 $data['content'] .= '<hr />';
@@ -286,12 +286,12 @@ class Page extends BaseModel {
         $data['content'] .= $navigation->get_navigation();
 
         if ($list != 'full') {
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'pages/online/?list=full', $this->localization->string('showguest'), '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'pages/online/?list=full', $this->localization->string('showguest'), '<p>', '</p>');
         } else {
-            $data['content'] .= $this->container['core']->sitelink(HOMEDIR . 'pages/online/?list=reg', $this->localization->string('hideguest'), '<p>', '</p>');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'pages/online/?list=reg', $this->localization->string('hideguest'), '<p>', '</p>');
         }
 
-        $data['content'] .= $this->container['core']->homelink('<p>', '</p>');
+        $data['content'] .= $this->homelink('<p>', '</p>');
 
         return $data;
     }
@@ -304,7 +304,7 @@ class Page extends BaseModel {
         // Users data
         $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Cookies Policy';
-        $this_page['homeurl'] = $this->container['core']->configuration('homeUrl');
+        $this_page['homeurl'] = $this->configuration('homeUrl');
 
         return $this_page;
     }
