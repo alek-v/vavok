@@ -90,34 +90,44 @@ class UsersModel extends BaseModel {
                 $registration_key = '';
             }
 
-            // register user
-            $this->user->register($this->postAndGet('log'), $password, $this->configuration('regConfirm'), $registration_key, MY_THEME, $mail, $this->localization->string('autopmreg')); // register user
+            // Register user
+            $this->user->register($this->postAndGet('log'), $password, $this->configuration('regConfirm'), $registration_key, MY_THEME, $mail, $this->localization->string('autopmreg'));
 
-            // Send email with registration data
+            // Create email with confirmation of registration
+            // Email text when user need to confirm registration
             if ($this->configuration('regConfirm') == 1) {
                 $needkey = "<p>" . $this->localization->string('emailpart5') . "</p>
                 <p>" . $this->localization->string('yourkey') . ": " . $registration_key . "</p>
                 <p>" . $this->localization->string('emailpart6') . ":</p>
-                <p>" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "</p>
+                <p><a href=\"" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "\">" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "</a></p>
                 <p>" . $this->localization->string('emailpart7') . "</p>";
             } else {
                 $needkey = '<br />';
             }
 
-            $subject = $this->localization->string('regonsite') . ' ' . $this->configuration('title');
+            // Email text
             $regmail = "<p>" . $this->localization->string('hello') . " " . $this->postAndGet('log') . "!</p>
             <p>" . $this->localization->string('emailpart1') . " " . $this->configuration('homeUrl') . "</p>
             <p>" . $this->localization->string('emailpart2') . ":</p>
             <p>" . $this->localization->string('username') . ": " . $this->postAndGet('log') . "</p>
             " . $needkey . "
-            <p>" . $this->localization->string('emailpart3') . "</p>
             <p>" . $this->localization->string('emailpart4') . "</p>";
+
+            // Email subject
+            $subject = $this->localization->string('regonsite') . ' ' . $this->configuration('title');
+
+            // Insert email text into the email template
+            $template = $this->container['parse_page'];
+            $template->load('email_templates/default');
+            $template->set('subject', $subject);
+            $template->set('body', $regmail);
+            $email_body = $template->output();
 
             // Send confirmation email
             $newMail = new Mailer($this->container);
 
             // Add to the email queue
-            $newMail->queue_email($mail, $subject, $regmail, '', '', $priority = 'high');
+            $newMail->queueEmail($mail, $subject, $email_body, '', '', $priority = 'high');
 
             // Registration completed successfully
             $completed = 'successfully';
@@ -423,7 +433,7 @@ class UsersModel extends BaseModel {
             " . $this->localization->string('ycchngpass');
 
             $send_mail = new Mailer($this->container);
-            $send_mail->queue_email($this->postAndGet('mailsus'), $subject, $mail);
+            $send_mail->queueEmail($this->postAndGet('mailsus'), $subject, $mail);
 
             // Update users profile
             $this->user->update_user('pass', $new, $userx_id);

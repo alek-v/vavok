@@ -1147,7 +1147,7 @@ class AdminpanelModel extends BaseModel {
             " . ucfirst($this->configuration('homeBase'));
 
             $newMail = new Mailer($this->container);
-            $newMail->queue_email($this->user->user_info('email', $this->postAndGet('usr')), $this->localization->string('msgfrmst') . " " . $this->configuration('title'), $message, '', '', 'high');
+            $newMail->queueEmail($this->user->user_info('email', $this->postAndGet('usr')), $this->localization->string('msgfrmst') . " " . $this->configuration('title'), $message, '', '', 'high');
 
             $this->redirection(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
         }

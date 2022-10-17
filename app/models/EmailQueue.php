@@ -200,7 +200,7 @@ class EmailQueue extends BaseModel {
             }
 
             foreach ($this->db->query($sql) as $res) {
-                $this->_mailer->queue_email($res["user_mail"], $theme, $msg, $email, $sender);
+                $this->_mailer->queueEmail($res["user_mail"], $theme, $msg, $email, $sender);
             } 
 
             $last = $next;

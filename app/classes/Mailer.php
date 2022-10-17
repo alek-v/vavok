@@ -140,7 +140,7 @@ class Mailer {
      * @param string $priority
      * @return void
      */
-    function queue_email($usermail, $subject, $message, $sender_mail = '', $sender_name = '', $priority = '')
+    function queueEmail($usermail, $subject, $message, $sender_mail = '', $sender_name = '', $priority = '')
     {
         // User who added email to the queue
         $user_id = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;

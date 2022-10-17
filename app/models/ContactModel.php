@@ -67,7 +67,7 @@ class ContactModel extends BaseModel {
         // Send email if there is no error
         if (empty($data['content'])) {
             $mail = new Mailer($this->container);
-            $mail->queue_email($this->configuration('adminEmail'), $this->localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->postAndGet('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->postAndGet('name')}\r\nSender's email: {$this->postAndGet('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $this->localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+            $mail->queueEmail($this->configuration('adminEmail'), $this->localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->postAndGet('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->postAndGet('name')}\r\nSender's email: {$this->postAndGet('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $this->localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
 
             // Email sent
             $data['content'] .= $this->showSuccess('{@localization[emailsent]}}');

@@ -311,7 +311,7 @@ class ProfileModel extends BaseModel {
             please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
             $msg .= '<br /><br />If you received this email by mistake please ignore it.';
 
-            $mailQueue->queue_email($email, 'Confirm new email address', $msg);
+            $mailQueue->queueEmail($email, 'Confirm new email address', $msg);
         }
 
         $this->redirection('./profile');
