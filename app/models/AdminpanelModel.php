@@ -308,8 +308,7 @@ class AdminpanelModel extends BaseModel {
         if (empty($this->postAndGet('action'))) {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setone', '{@localization[mainset]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=settwo', '{@localization[shwinfo]}}');
-            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', '{@localization[bookchatnews]}}');
-            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setfour', '{@localization[forumgallery]}}');
+            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', 'Chat log and email settings');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setseven', '{@localization[pagemanage]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=security', '{@localization[security]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=seteight', '{@localization[other]}}');
@@ -522,7 +521,7 @@ class AdminpanelModel extends BaseModel {
             $_4_no = $this->container['parse_page'];
             $_4_no->load('forms/radio_inline');
             $_4_no->set('label_for', 'conf_set4');
-            $_4_no->set('label_value',  $this->localization->string('no'));
+            $_4_no->set('label_value',  '{@localization[no]}}');
             $_4_no->set('input_id', 'conf_set4');
             $_4_no->set('input_name', 'conf_set4');
             $_4_no->set('input_value', 0);
@@ -582,7 +581,7 @@ class AdminpanelModel extends BaseModel {
             $_7_no = $this->container['parse_page'];
             $_7_no->load('forms/radio_inline');
             $_7_no->set('label_for', 'conf_set7');
-            $_7_no->set('label_value',  $this->localization->string('no'));
+            $_7_no->set('label_value',  '{@localization[no]}}');
             $_7_no->set('input_id', 'conf_set7');
             $_7_no->set('input_name', 'conf_set7');
             $_7_no->set('input_value', 0);
@@ -650,44 +649,14 @@ class AdminpanelModel extends BaseModel {
         
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
-        
+
         if ($this->postAndGet('action') == "setthree") {
-            $data['content'] .= '<h1>{@localization[gbnewschatset]}}</h1>';
+            $data['content'] .= '<h1>Chat log and email settings</h1>';
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editthree');
-
-            /**
-             * Allow guests to write in guestbook
-             */
-            $_20_yes = $this->container['parse_page'];
-            $_20_yes->load('forms/radio_inline');
-            $_20_yes->set('label_for', 'conf_set20');
-            $_20_yes->set('label_value', '{@localization[yes]}}');
-            $_20_yes->set('input_id', 'conf_set20');
-            $_20_yes->set('input_name', 'conf_set20');
-            $_20_yes->set('input_value', 1);
-            if ($this->configuration('bookGuestAdd') == 1) {
-                $_20_yes->set('input_status', 'checked');
-            }
-
-            $_20_no = $this->container['parse_page'];
-            $_20_no->load('forms/radio_inline');
-            $_20_no->set('label_for', 'conf_set20');
-            $_20_no->set('label_value', '{@localization[no]}}');
-            $_20_no->set('input_id', 'conf_set20');
-            $_20_no->set('input_name', 'conf_set20');
-            $_20_no->set('input_value', 0);
-            if ($this->configuration('bookGuestAdd') == 0) {
-                $_20_no->set('input_status', 'checked');
-            }
-
-            $gb_write = $this->container['parse_page'];
-            $gb_write->load('forms/radio_group');
-            $gb_write->set('description', '{@localization[allowguestingb]}}');
-            $gb_write->set('radio_group', $gb_write->merge(array($_20_yes, $_20_no)));
         
             /**
              * Max chat posts
@@ -700,19 +669,7 @@ class AdminpanelModel extends BaseModel {
             $input22->set('input_name', 'conf_set22');
             $input22->set('input_value', $this->configuration('maxPostChat'));
             $input22->set('input_maxlength', 4);
-        
-            /**
-             * Max news posts
-             */
-            $input24 = $this->container['parse_page'];
-            $input24->load('forms/input');
-            $input24->set('label_for', 'conf_set24');
-            $input24->set('label_value', '{@localization[maxnews]}}');
-            $input24->set('input_id', 'conf_set24');
-            $input24->set('input_name', 'conf_set24');
-            $input24->set('input_value', $this->configuration('maxPostNews'));
-            $input24->set('input_maxlength', 5);
-        
+
             /**
              * Mails in one package
              */
@@ -725,142 +682,12 @@ class AdminpanelModel extends BaseModel {
             $input56->set('input_value', $this->configuration('subMailPacket'));
             $input56->set('input_maxlength', 3);
         
-            $form->set('fields', $form->merge(array($gb_write, $input22, $input24, $input56)));
+            $form->set('fields', $form->merge(array($input22, $input56)));
             $data['content'] .= $form->output();
         
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
-        
-        if ($this->postAndGet('action') == "setfour") {
-            $kbs = $this->configuration('photoFileSize') / 1024;
 
-            $data['content'] .= '<h1>{@localization[forumandgalset]}}</h1>';
-        
-            $form = $this->container['parse_page'];
-            $form->load('forms/form');
-            $form->set('form_method', 'post');
-            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editfour');
-
-            // Gallery settings
-            $gallery_config = $this->getDataFile('dataconfig/gallery.dat');
-            if (!empty($gallery_config)) {
-                $gallery_data = explode("|", $gallery_config[0]);
-            } else {
-                $gallery_data = explode("|", '|||||||||||||');
-            }
-
-            // Gallery photos per page
-            $gallery_set8 = $this->container['parse_page'];
-            $gallery_set8->load('forms/input');
-            $gallery_set8->set('label_for', 'gallery_set8');
-            $gallery_set8->set('label_value', '{@localization[photosperpg]}}');
-            $gallery_set8->set('input_id', 'gallery_set8');
-            $gallery_set8->set('input_name', 'gallery_set8');
-            $gallery_set8->set('input_value', $gallery_data[8]);
-            $gallery_set8->set('input_maxlength', 2);
-        
-            // Gallery max screen width
-            $screen_width = $this->container['parse_page'];
-            $screen_width->load('forms/input');
-            $screen_width->set('label_for', 'screen_width');
-            $screen_width->set('label_value', 'Maximum width in gallery');
-            $screen_width->set('input_id', 'screen_width');
-            $screen_width->set('input_name', 'screen_width');
-            $screen_width->set('input_value', $gallery_data[5]);
-            $screen_width->set('input_maxlength', 5);
-
-            // Gallery max screen height
-            $screen_height = $this->container['parse_page'];
-            $screen_height->load('forms/input');
-            $screen_height->set('label_for', 'screen_height');
-            $screen_height->set('label_value', 'Maximum height in gallery');
-            $screen_height->set('input_id', 'screen_height');
-            $screen_height->set('input_name', 'screen_height');
-            $screen_height->set('input_value', $gallery_data[6]);
-            $screen_height->set('input_maxlength', 5);
-
-            // Gallery social network buttons
-            $media_buttons_yes = $this->container['parse_page'];
-            $media_buttons_yes->load('forms/radio_inline');
-            $media_buttons_yes->set('label_for', 'media_buttons');
-            $media_buttons_yes->set('label_value', '{@localization[yes]}}');
-            $media_buttons_yes->set('input_id', 'media_buttons');
-            $media_buttons_yes->set('input_name', 'media_buttons');
-            $media_buttons_yes->set('input_value', 1);
-            if ($gallery_data[7] == 1) {
-                $media_buttons_yes->set('input_status', 'checked');
-            }
-        
-            $media_buttons_no = $this->container['parse_page'];
-            $media_buttons_no->load('forms/radio_inline');
-            $media_buttons_no->set('label_for', 'media_buttons');
-            $media_buttons_no->set('label_value', '{@localization[no]}}');
-            $media_buttons_no->set('input_id', 'media_buttons');
-            $media_buttons_no->set('input_name', 'media_buttons');
-            $media_buttons_no->set('input_value', 0);
-            if ($gallery_data[7] == 0) {
-                $media_buttons_no->set('input_status', 'checked');
-            }
-        
-            $sn_buttons = $this->container['parse_page'];
-            $sn_buttons->load('forms/radio_group');
-            $sn_buttons->set('description', 'Social media like buttons in gallery');
-            $sn_buttons->set('radio_group', $sn_buttons->merge(array($media_buttons_yes, $media_buttons_no)));
-
-            // Gallery max upload size
-            $conf_set38 = $this->container['parse_page'];
-            $conf_set38->load('forms/input');
-            $conf_set38->set('label_for', 'conf_set38');
-            $conf_set38->set('label_value', '{@localization[photomaxkb]}}');
-            $conf_set38->set('input_id', 'conf_set38');
-            $conf_set38->set('input_name', 'conf_set38');
-            $conf_set38->set('input_value', (int)$kbs);
-            $conf_set38->set('input_maxlength', 8);
-
-            // Gallery max upload pixel size
-            $conf_set39 = $this->container['parse_page'];
-            $conf_set39->load('forms/input');
-            $conf_set39->set('label_for', 'conf_set39');
-            $conf_set39->set('label_value', '{@localization[photopx]}}');
-            $conf_set39->set('input_id', 'conf_set39');
-            $conf_set39->set('input_name', 'conf_set39');
-            $conf_set39->set('input_value', (int)$this->configuration('maxPhotoPixels'));
-            $conf_set39->set('input_maxlength', 4);
-
-            // Gallery uploads
-            $gallery_set0_yes = $this->container['parse_page'];
-            $gallery_set0_yes->load('forms/radio_inline');
-            $gallery_set0_yes->set('label_for', 'gallery_set0');
-            $gallery_set0_yes->set('label_value', '{@localization[yes]}}');
-            $gallery_set0_yes->set('input_id', 'gallery_set0');
-            $gallery_set0_yes->set('input_name', 'gallery_set0');
-            $gallery_set0_yes->set('input_value', 1);
-            if ($gallery_data[0] == 1) {
-                $gallery_set0_yes->set('input_status', 'checked');
-            }
-        
-            $gallery_set0_no = $this->container['parse_page'];
-            $gallery_set0_no->load('forms/radio_inline');
-            $gallery_set0_no->set('label_for', 'gallery_set0');
-            $gallery_set0_no->set('label_value', '{@localization[no]}}');
-            $gallery_set0_no->set('input_id', 'gallery_set0');
-            $gallery_set0_no->set('input_name', 'gallery_set0');
-            $gallery_set0_no->set('input_value', 0);
-            if ($gallery_data[0] == 0) {
-                $gallery_set0_no->set('input_status', 'checked');
-            }
-
-            $gallery_uploads = $this->container['parse_page'];
-            $gallery_uploads->load('forms/radio_group');
-            $gallery_uploads->set('description', 'Users can upload');
-            $gallery_uploads->set('radio_group', $gallery_uploads->merge(array($gallery_set0_yes, $gallery_set0_no)));
-
-            $form->set('fields', $form->merge(array($gallery_set8, $screen_width, $screen_height, $sn_buttons, $conf_set38, $conf_set39, $gallery_uploads)));
-            $data['content'] .= $form->output();
-
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
-        }
-        
         if ($this->postAndGet('action') == 'setseven') {
             $data['content'] .= '<h1>{@localization[pagessets]}}</h1>';
         

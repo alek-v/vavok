@@ -23,17 +23,19 @@ class Localization {
 
         require APPDIR . 'include/lang/' . $language . '/index.php';
 
-        // Additional language files
+        // Additional localization files
         $langdir = explode('/', REQUEST_URI);
 
-        // Language based on filename like controller
+        // Localization based on controller filename
         if (file_exists(APPDIR . "include/lang/" . $language . "/" . $langdir[1] . ".php")) require APPDIR . "include/lang/" . $language . "/" . $langdir[1] . ".php";
-        // Language file based on first two params from URL
+
+        // Localization file based on first two params from URL
         if (isset($langdir[1]) && isset($langdir[2]) && !empty($langdir[1]) && !empty($langdir[2]) && file_exists(APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php"))  require APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php";        
-        // Language file based on view
+
+        // Localization file based on the view
         if (!empty($view) && file_exists(APPDIR . "include/lang/" . $language . "/" . $view . ".php")) require APPDIR . "include/lang/" . $language . "/" . $view . ".php";        
 
-        // Language data
+        // Localization data
         $this->language_data = $language_data;
         $this->strings = $lang_home;
         $this->all = array_merge($this->language_data, $this->strings);

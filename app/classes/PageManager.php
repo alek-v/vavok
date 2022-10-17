@@ -4,7 +4,6 @@
  */
 
 namespace App\Classes;
-use App\Classes\Database;
 use App\Traits\Core;
 use Pimple\Container;
 

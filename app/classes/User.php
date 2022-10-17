@@ -5,9 +5,6 @@
  */
 
 namespace App\Classes;
-use App\Classes\Counter;
-use App\Classes\BrowserDetection;
-use App\Classes\Mailer;
 use App\Traits\Core;
 use App\Traits\Validations;
 use Pimple\Container;

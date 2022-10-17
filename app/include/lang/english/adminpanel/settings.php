@@ -1,13 +1,8 @@
 <?php
-// (c) vavok.net
 
 $lang_apsetting['mainset'] = "Main settings";
 $lang_apsetting['database'] = "database";
 $lang_apsetting['shwinfo'] = "Show info"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Guestbook - chat - news";
-$lang_apsetting['forumgallery'] = "Forum - gallery";
-$lang_apsetting['downvoteinbx'] = "Download - vote - inbox";
-$lang_apsetting['advert'] = "Advert";
 $lang_apsetting['pagemanage'] = "Page management";
 $lang_apsetting['other'] = "Other";
 $lang_apsetting['language'] = "Language";

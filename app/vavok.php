@@ -42,4 +42,4 @@ if (file_exists(BASEDIR . '.env')) {
 
 require BASEDIR . 'vendor/autoload.php';
 
-$vavok = new App\Classes\Vavok();
+new App\Classes\Vavok();

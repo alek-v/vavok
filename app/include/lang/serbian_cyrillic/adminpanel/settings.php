@@ -1,14 +1,8 @@
 <?php
-// (c) vavok.net
-// modified: 05.06.2020. 20:05:26
 
 $lang_apsetting['mainset'] = "Основна подешавања";
 $lang_apsetting['database'] = "база података";
 $lang_apsetting['shwinfo'] = "Приказивање информација"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Књига гостију - Ћаскање - Вести";
-$lang_apsetting['forumgallery'] = "Форум - Галерија";
-$lang_apsetting['downvoteinbx'] = "Преузимање - Анкета - Сандуче";
-$lang_apsetting['advert'] = "Реклама";
 $lang_apsetting['pagemanage'] = "Управљање страницама";
 $lang_apsetting['other'] = "Друго";
 $lang_apsetting['language'] = "Језик";

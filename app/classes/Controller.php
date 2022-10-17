@@ -5,8 +5,6 @@
  */
 
 namespace App\Classes;
-use App\Classes\ParsePage;
-use App\Classes\Localization;
 use Pimple\Container;
 
 abstract class Controller {

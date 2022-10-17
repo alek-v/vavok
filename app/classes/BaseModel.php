@@ -5,21 +5,20 @@
  */
 
 namespace App\Classes;
-use App\Classes\Localizaion;
 use App\Traits\Core;
 use Pimple\Container;
 
 abstract class BaseModel {
     use Core;
 
-    protected object $user;
-    protected object $localization;
-    protected array  $user_data = [
+    protected Database $db;
+    protected User $user;
+    protected Localization $localization;
+    protected array $user_data = [
         'authenticated' => false,
         'admin_status' => 'user',
         'language' => 'english'
         ];
-    protected object $db;
 
     public function __construct(protected Container $container)
     {
@@ -40,7 +39,7 @@ abstract class BaseModel {
         // Users laguage
         $this->user_data['language'] = $this->user->getUserLanguage();
 
-        // Localization
+        // Localization, use additional localization files
         $this->localization = new Localization;
         $this->localization->load();
     }

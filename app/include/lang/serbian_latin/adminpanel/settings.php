@@ -1,13 +1,8 @@
 <?php
-// modified: 05.06.2020. 20:13:06
 
 $lang_apsetting['mainset'] = "Osnovna podešavanja";
 $lang_apsetting['database'] = "baza podataka";
 $lang_apsetting['shwinfo'] = "Prikaz informacija"; // clock, counter, visitors online, page generation time...
-$lang_apsetting['bookchatnews'] = "Knjiga gostiju - chat - novosti";
-$lang_apsetting['forumgallery'] = "Forum/galerija";
-$lang_apsetting['downvoteinbx'] = "Preuzimanje - anketa - sanduče";
-$lang_apsetting['advert'] = "Reklama";
 $lang_apsetting['pagemanage'] = "Upravljanje stranicama";
 $lang_apsetting['other'] = "Drugo";
 $lang_apsetting['language'] = "Jezik";
