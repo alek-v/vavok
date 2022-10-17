@@ -5,10 +5,8 @@
  */
 
 use App\Classes\BaseModel;
-use App\Classes\Localization;
 
 class ErrorModel extends BaseModel {
-
     /**
      * Log error
      * 
@@ -16,8 +14,7 @@ class ErrorModel extends BaseModel {
      */
     protected function log_error($params = [])
     {
-        // Localization
-        $this->localization = new Localization;
+        // Load additional localization data
         $this->localization->load('', 'error');
 
         $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';

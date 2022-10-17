@@ -8,17 +8,19 @@ namespace App\Classes;
 use Pimple\Container;
 
 abstract class Controller {
-    protected object $container;
+    protected Container $container;
 
     public function __construct()
     {
         // Instantiate dependency injection container
         $container = new Container();
 
-        // Globaly used methods
         $container['db'] = fn() => Database::instance();
         $container['user'] = fn($c) => new User($c);
         $container['parse_page'] = $container->factory(fn($c) => new ParsePage($c));
+        $localization = new Localization;
+        $localization->load();
+        $container['localization'] = $localization;
 
         $this->container = $container;
     }
@@ -47,11 +49,6 @@ abstract class Controller {
      */
     public function view(string $view, array $data = []): void
     {
-        // Localization
-        $localization = new Localization;
-        // Load localization data depending of current $view (page)
-        $localization->load($data['user']['language'], $view);
-
         // Instantiate page parsing class
         $page = $this->container['parse_page'];
         // Load the file from the view
@@ -91,6 +88,6 @@ abstract class Controller {
         }
 
         // Pass localization data to method and show the page
-        echo $page->show($localization->getStrings());
+        echo $page->show($this->container['localization']->getStrings());
     }
 }

@@ -22,10 +22,9 @@ abstract class BaseModel {
 
     public function __construct(protected Container $container)
     {
-        // User object
-        $this->user = $container['user'];
-        // Database connection
         $this->db = $this->container['db'];
+        $this->user = $container['user'];
+        $this->localization = $container['localization'];
 
         // Check if user is authenticated
         // This time we check data from database, because of this we pass parameter true
@@ -38,9 +37,5 @@ abstract class BaseModel {
 
         // Users laguage
         $this->user_data['language'] = $this->user->getUserLanguage();
-
-        // Localization, use additional localization files
-        $this->localization = new Localization;
-        $this->localization->load();
     }
 }
