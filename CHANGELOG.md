@@ -1,8 +1,13 @@
 # Vavok v4.1
+    Feature:
+        - Use HTML templates for emails
     Refactor:
         - Check if attribute is Container while passing a container as attribute
         - Use Validations trait instead of using Validations class
         - Change storage directory location
+        - Use Core trait instead of using Core class
+        - Use localization object from dependency injection container
+        - Update localization class, new method loadAdditional() to add additional localization data
 
 
 
