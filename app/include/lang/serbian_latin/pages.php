@@ -11,7 +11,8 @@ $lang_pages = [
     'showguest' => 'Pokaži goste',
     'hideguest' => 'Sakrij goste',
     'whereareusr' => 'Ko je gde?',
-    'hidden' => 'Skrivenih'
+    'hidden' => 'Skrivenih',
+    'userlist' => 'Spisak korisnika'
 ];
 
 $lang_home = array_merge($lang_home, $lang_pages);

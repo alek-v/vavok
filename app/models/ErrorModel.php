@@ -15,7 +15,7 @@ class ErrorModel extends BaseModel {
     protected function log_error($params = [])
     {
         // Load additional localization data
-        $this->localization->load('', 'error');
+        $this->localization->loadAdditional('error');
 
         $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';
         $http_referer = str_replace(':|:', '|', $http_referer);

@@ -11,7 +11,8 @@ $lang_pages = [
     'showguest' => 'Show guests',
     'hideguest' => 'Hide guests',
     'whereareusr' => 'Where are users?',
-    'hidden' => 'Hidden'
+    'hidden' => 'Hidden',
+    'userlist' => 'List of the user\'s'
 ];
 
 $lang_home = array_merge($lang_home, $lang_pages);

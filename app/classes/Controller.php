@@ -18,9 +18,7 @@ abstract class Controller {
         $container['db'] = fn() => Database::instance();
         $container['user'] = fn($c) => new User($c);
         $container['parse_page'] = $container->factory(fn($c) => new ParsePage($c));
-        $localization = new Localization;
-        $localization->load();
-        $container['localization'] = $localization;
+        $container['localization'] = new Localization();
 
         $this->container = $container;
     }

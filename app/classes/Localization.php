@@ -6,14 +6,11 @@ class Localization {
     protected $language_data;
     protected $strings;
     protected $all;
-    
-    /**
-     * Load localization files
-     */  
-    function load($language = '', $view = '')
+
+    public function __construct()
     {
         // Use language from session
-        $language = empty($language) && isset($_SESSION['lang']) ? $_SESSION['lang'] : $language;
+        $language = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
 
         // Check if language exist and set english if requested language doesn't exist
         if (!file_exists(APPDIR . 'include/lang/' . $language . '/index.php')) {
@@ -30,13 +27,29 @@ class Localization {
         if (file_exists(APPDIR . "include/lang/" . $language . "/" . $langdir[1] . ".php")) require APPDIR . "include/lang/" . $language . "/" . $langdir[1] . ".php";
 
         // Localization file based on first two params from URL
-        if (isset($langdir[1]) && isset($langdir[2]) && !empty($langdir[1]) && !empty($langdir[2]) && file_exists(APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php"))  require APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php";        
-
-        // Localization file based on the view
-        if (!empty($view) && file_exists(APPDIR . "include/lang/" . $language . "/" . $view . ".php")) require APPDIR . "include/lang/" . $language . "/" . $view . ".php";        
+        if (isset($langdir[1]) && isset($langdir[2]) && !empty($langdir[1]) && !empty($langdir[2]) && file_exists(APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php"))  require APPDIR . "include/lang/" . $language . "/" . $langdir[1] . "/" . $langdir[2] . ".php";
 
         // Localization data
         $this->language_data = $language_data;
+        $this->strings = $lang_home;
+        $this->all = array_merge($this->language_data, $this->strings);
+    }
+
+    /**
+     * Load localization files
+     *
+     * @param string $additional
+     * @return void
+     */
+    public function loadAdditional(string $additional): void
+    {
+        // Current data with a localization
+        $lang_home = $this->strings;
+
+        // File with additional localization data
+        if (!empty($additional) && file_exists(APPDIR . "include/lang/" . $this->language_data['language'] . "/" . $additional . ".php")) require APPDIR . "include/lang/" . $this->language_data['language'] . "/" . $additional . ".php";
+
+        // Update properties with a new data
         $this->strings = $lang_home;
         $this->all = array_merge($this->language_data, $this->strings);
     }
@@ -47,16 +60,18 @@ class Localization {
      * @param string $string
      * @return string
      */
-    public function string($string) {
+    public function string(string $string): string
+    {
         return $this->all[$string];
     }
 
     /**
-     * Return strings only, no nested arrays
+     * Return array with astrings only, no nested arrays
      * 
      * @return array
      */
-    public function getStrings() {
+    public function getStrings(): array
+    {
         return $this->strings;
     }
 

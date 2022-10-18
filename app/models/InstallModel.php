@@ -11,7 +11,7 @@ class InstallModel extends BaseModel {
     use Validations;
 
     protected Container $container;
-    protected object $db;
+    protected Database $db;
     private bool $table_exists;
 
     public function __construct()
@@ -33,7 +33,6 @@ class InstallModel extends BaseModel {
             // Instantiate dependency injection container
             $container = new Container();
 
-            // Globaly used methods
             $container['db'] = fn($c) => $this->db;
             $container['user'] = fn($c) => new User($c);
 
