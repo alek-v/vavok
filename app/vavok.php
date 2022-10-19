@@ -5,13 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '4.1');
-
-// Error reporting
-error_reporting(E_ALL);
-
-// Default time zone
-date_default_timezone_set('UTC');
+define('VERSION', '4.2');
 
 // Base directory
 if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
@@ -39,6 +33,21 @@ if (file_exists(BASEDIR . '.env')) {
         if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
     }
 }
+
+// Error reporting
+error_reporting(E_ALL);
+
+// Don't show errors in the production
+if (SITE_STAGE == 'prod') {
+    // Don't display errors
+    ini_set('display_errors', 0);
+
+    // Write errors to log
+    ini_set('log_errors', 1);
+}
+
+// Default time zone
+date_default_timezone_set('UTC');
 
 require BASEDIR . 'vendor/autoload.php';
 
