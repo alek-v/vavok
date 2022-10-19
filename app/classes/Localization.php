@@ -3,9 +3,9 @@
 namespace App\Classes;
 
 class Localization {
-    protected $language_data;
-    protected $strings;
-    protected $all;
+    private array $language_data;
+    private array $strings;
+    private array $all;
 
     public function __construct()
     {

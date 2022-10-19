@@ -53,13 +53,13 @@ abstract class Controller {
         $page->loadPage($view, $data);
 
         // Header
-        $header =$this->container['parse_page'];
+        $header = $this->container['parse_page'];
         $header->load('includes/header');
         // Set header for current page
         $page->set('header', $page->merge(array($header)));
 
         // Footer
-        $footer =$this->container['parse_page'];
+        $footer = $this->container['parse_page'];
         $footer->load('includes/footer');
         // Set footer for the page
         $page->set('footer', $page->merge(array($footer)));
