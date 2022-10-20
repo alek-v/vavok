@@ -261,6 +261,16 @@ class Adminpanel extends Controller {
     }
 
     /**
+     * Email subscription options
+     */
+    public function subscription_options()
+    {
+        $model = $this->model('Subscription');
+
+        $this->view('adminpanel/email_subscriptions', $model->subscription_options());
+    }
+
+    /**
     * Sitemap generator
     */
     public function sitemap()

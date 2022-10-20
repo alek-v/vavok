@@ -162,12 +162,66 @@ class Mailer {
 
     /**
      * Get subscription options
-     * While adding new subscription it can be added without option (blank) or with one from the list
+     *
+     * @return array
      */
-    function emailSubscriptionOptions()
+    public function emailSubscriptionOptions(): array
     {
-        $subs = file_get_contents(STORAGEDIR . 'subnames.dat');
+        $subs = json_decode(file_get_contents(STORAGEDIR . 'subnames.dat'), true);
 
-        return array_filter(explode('||', $subs));
+        return $subs = !empty($subs) ? $subs : array();
+    }
+
+    /**
+     * Save email subscription options
+     *
+     * @param array $options
+     * @return bool
+     */
+    public function saveSubscriptionOptions(array $options): bool
+    {
+        $options = json_encode($options);
+
+        file_put_contents(STORAGEDIR . 'subnames.dat', $options);
+
+        return true;
+    }
+
+    /**
+     * Add email subscription options
+     *
+     * @param string $option
+     * @param string $description
+     * @return bool
+     */
+    public function addSubscriptionOption(string $option, string $description): bool
+    {
+        $all_options = $this->emailSubscriptionOptions();
+
+        // Add new value to the array
+        $all_options[$option] = $description;
+
+        $this->saveSubscriptionOptions($all_options);
+
+        return true;
+    }
+
+    /**
+     * Delete subscription option
+     *
+     * @param string $option
+     * @return bool
+     */
+    public function deleteSubscriptionOption(string $option): bool
+    {
+        $all_options = $this->emailSubscriptionOptions();
+
+        // Remove the key
+        unset($all_options[$option]);
+
+        // Save options
+        $this->saveSubscriptionOptions($all_options);
+
+        return true;
     }
 }

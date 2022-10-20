@@ -144,8 +144,8 @@ class EmailQueue extends BaseModel {
             $page_data['content'] .= '<hr>
             <div>
                 <p>*optional</p>
-                <p><strong>{unsubscribe-link}</strong> - place for link to unsubscribe<br />
-                <strong>{unsubscribe-link-name}</strong> - name of clickable link (only for HTML emails)</p>
+                <p><strong>{unsubscribe-link}</strong> - use this code to place for link to unsubscribe<br />
+                <strong>{unsubscribe-link-name}</strong> - use this code to place a name of clickable link (only for HTML emails)</p>
             </div>';
         }
 

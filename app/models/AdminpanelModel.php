@@ -27,17 +27,16 @@ class AdminpanelModel extends BaseModel {
 
         if (empty($this->postAndGet('action'))) {
             // Moderator access level or bigger
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat', '{@localization[admchat]}}');
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat', '{@localization[admin_chat]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminlist', '{@localization[modlist]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', '{@localization[notconf]}}');
             $data['content'] .= $this->sitelink('pages/userlist', '{@localization[userlist]}} (' . $this->user->regmemcount() . ')');
 
             // Super moderator access level or bigger
             if ($this->user->moderator(103) || $this->user->moderator(105) || $this->user->administrator()) {
-                if (file_exists('reports.php')) $data['content'] .= $this->sitelink('reports.php', '{@localization[usrcomp]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/file_upload', '{@localization[upload]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/uploaded_files', '{@localization[uplFiles]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', 'Search uploaded files');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', '{@localization[search_uploaded_files]}}');
             }
 
             // Head moderator access level or bigger
@@ -54,11 +53,11 @@ class AdminpanelModel extends BaseModel {
                 if (file_exists('antiword.php')) $data['content'] .= $this->sitelink('antiword.php', '{@localization[badword]}}');
 
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/statistics', '{@localization[statistics]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[mngprof]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[profile_management]}}');
             }
 
             if ($this->user->administrator() || $this->user->checkPermissions('pageedit')) {
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[mngpage]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[pages_management]}}');
             }
 
             // Head administrator access level
@@ -67,16 +66,16 @@ class AdminpanelModel extends BaseModel {
 
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings', '{@localization[syssets]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscriptions', '{@localization[subscriptions]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/email_queue', 'Add to email queue');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/email_queue', '{@localization[add_to_email_queue]}}');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscription_options', '{@localization[subscription_options]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->linesInFile(STORAGEDIR . 'ban.dat') . ')');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles', '{@localization[logcheck]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/sitemap', 'Sitemap Generator');
+                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/sitemap', '{@localization[sitemap_generator]}}');
             }
         }
 
         if ($this->postAndGet('action') == 'clear' && $this->user->administrator(101)) {
             $data['content'] .= '<p>';
-            if (file_exists('delusers.php')) $data['content'] .= $this->sitelink('delusers.php', '{@localization[cleanusers]}}');
             $data['content'] .= $this->sitelink('./?action=clrmlog', '{@localization[cleanmodlog]}}');
             $data['content'] .= '</p>';
         }
@@ -1006,7 +1005,7 @@ class AdminpanelModel extends BaseModel {
                     $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->user_info('ipadd', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
                 }
             } else {
-                $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptyunconf') . '!</p>';
+                $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('no_unconfirmed_registrations') . '!</p>';
             }
         
             $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/unconfirmed_reg/');
@@ -1034,8 +1033,8 @@ class AdminpanelModel extends BaseModel {
 
         if (!$this->user->administrator()) $this->redirection('../?errorAuth');
   
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitstats]}}') . '<br />';
-        $data['content'] .= $this->sitelink('../pages/online', '{@localization[usronline]}}') . '</p>';
+        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitor_statistics]}}') . '<br />';
+        $data['content'] .= $this->sitelink('../pages/online', '{@localization[users_online]}}') . '</p>';
         
         $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
@@ -1098,7 +1097,7 @@ class AdminpanelModel extends BaseModel {
 
                 if ($casenick == 0) $data['content'] .= '<p><b><font color="red">{@localization[myprofile]}!</font></b></p>';
 
-                if ($this->user->user_info('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[confban]}}</b></font></p>';
+                if ($this->user->user_info('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
         
                 if ($this->user->user_info('regche', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
         

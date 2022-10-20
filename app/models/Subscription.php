@@ -6,6 +6,7 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Classes\Mailer;
 
 class Subscription extends BaseModel {
     public function index()
@@ -84,6 +85,49 @@ class Subscription extends BaseModel {
         $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $this_page['content'] .= $this->homelink();
         $this_page['content'] .= '</p>';
+
+        return $this_page;
+    }
+
+    public function subscription_options()
+    {
+        // Users data
+        $this_page['user'] = $this->user_data;
+        $this_page['tname'] = '{@localization[subscription_options]}}';
+        $this_page['content'] = '';
+
+        // Authentication
+        if (!$this->user->administrator(101)) $this->redirection(HOMEDIR . '?error');
+
+        $mailer = new Mailer($this->container);
+
+        // Delete subscription option
+        if (!empty($this->postAndGet('delete'))) {
+            $mailer->deleteSubscriptionOption($this->postAndGet('delete'));
+        }
+
+        // Add new subscription option
+        if (!empty($this->postAndGet('subscription_option')) && !empty($this->postAndGet('subscription_description'))) {
+            $mailer->addSubscriptionOption($this->postAndGet('subscription_option'), $this->postAndGet('subscription_description'));
+        }
+
+        // Array with a current subscription options
+        $all_options = $mailer->emailSubscriptionOptions();
+
+        if (empty($all_options)) $this_page['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" /> There is no subscription option defined';
+
+        // Show options
+        $this_page['all_options'] = '';
+        foreach($all_options as $key => $val) {
+            $this_page['all_options'] .= '<div class="row mt-3 bg-light rounded d-flex align-items-center">';
+            $this_page['all_options'] .= '<div class="col-2 m-2">{@localization[option]}}: ' . $key . '</div>';
+            $this_page['all_options'] .= '<div class="col-3 m-2">{@localization[description]}}: ' . $val . '</div>';
+            $this_page['all_options'] .= '<div class="col-2 m-2"><a href="./subscription_options?delete=' . $key . '" class="btn btn-danger">{@localization[delete]}}</a></div>';
+            $this_page['all_options'] .= '</div>';
+        }
+
+        $this_page['bottom_links'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
+        $this_page['bottom_links'] .= $this->homelink() . '</p>';
 
         return $this_page;
     }

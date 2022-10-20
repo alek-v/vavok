@@ -133,9 +133,9 @@ class BanModel extends BaseModel {
                             $data['content'] .= '<hr>';
         
                             $data['content'] .= $this->localization->string('maxbantime') . ' ' . $this->formatTime(round($this->configuration('maxBanTime') * 60)) . '<br />';
-                            $data['content'] .= $this->localization->string('bandesc1') . '<br />';
+                            $data['content'] .= $this->localization->string('please_state_ban_description') . '<br />';
                         } else {
-                            $data['content'] .= '<b><font color="#FF0000">{@localization[confban]}}</font></b><br />';
+                            $data['content'] .= '<b><font color="#FF0000">{@localization[user_is_banned]}}</font></b><br />';
                             if (ctype_digit($this->user->user_info('lastban', $userx_id))) {
                                 $data['content'] .= $this->localization->string('bandate') . ': ' . $this->correctDate($this->user->user_info('lastban', $userx_id)) . '<br />';
                             }
@@ -180,7 +180,7 @@ class BanModel extends BaseModel {
                             $this->user->update_user($fields, $values, $users_id);
         
                             $data['content'] .= $this->localization->string('usrdata') . ' ' . $user . ' {@localization[edited]}!<br />';
-                            $data['content'] .= '<b><font color="FF0000">{@localization[confban]}}</font></b><br /><br />';
+                            $data['content'] .= '<b><font color="FF0000">{@localization[user_is_banned]}}</font></b><br /><br />';
                         } else {
                             $data['content'] .= $this->localization->string('noreason') . '!<br />';
                         } 

@@ -12,7 +12,7 @@ class AdminchatModel extends BaseModel {
     {
         // Users data
         $data['user'] = $this->user_data;
-        $data['tname'] = '{@localization[adminchat]}}';
+        $data['tname'] = '{@localization[admin_chat]}}';
         $data['content'] = '';
 
         if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
@@ -59,7 +59,7 @@ class AdminchatModel extends BaseModel {
             }
         }
 
-        $data['content'] .= '<img src="../themes/images/img/menu.gif" alt=""> <b>{@localization[adminchat]}}</b><br><br>';
+        $data['content'] .= '<img src="../themes/images/img/menu.gif" alt=""> <b>{@localization[admin_chat]}}</b><br><br>';
 
         if (empty($this->postAndGet('action'))) {
             $data['content'] .= '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';

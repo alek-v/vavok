@@ -842,7 +842,7 @@ class PagemanagerModel extends BaseModel {
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', $this->localization->string('pagetitle')) . '<br />';
         }
         if (!empty($this->postAndGet('action'))) {
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('mngpage')) . '<br />';
+            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('pages_management')) . '<br />';
         }
         $index_data['content'] .= '</p>';
 
