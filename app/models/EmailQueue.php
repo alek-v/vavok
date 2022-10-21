@@ -82,7 +82,7 @@ class EmailQueue extends BaseModel {
         $page_data['content'] = '';
 
         // Checking access permitions
-        if (!$this->user_data['authenticated'] || !$this->user->administrator(101)) $this->redirection('../');
+        if (!$this->user->administrator(101)) $this->redirection('../');
 
          // How manu emails to add to queue at once
         $news_queue_limit = 1000;

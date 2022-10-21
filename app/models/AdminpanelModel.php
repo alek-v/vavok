@@ -1435,8 +1435,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function pagesearch()
     {
-        // Users data
-        $page_data['user'] = $this->user_data;
         $page_data['tname'] = '{@localization[search]}}';
         $page_data['content'] = '';
 
@@ -1520,8 +1518,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function blogcategory()
     {
-        // Users data
-        $page_data['user'] = $this->user_data;
         $page_data['tname'] = 'Blog';
         $page_data['content'] = '';
 
@@ -1777,8 +1773,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function pagetitle()
     {
-        // Users data
-        $page_data['user'] = $this->user_data;
         $page_data['tname'] = 'Page Title';
         $page_data['content'] = '';
 
@@ -1981,8 +1975,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function ip_information()
     {
-        // Users data
-        $page_data['user'] = $this->user_data;
         $page_data['tname'] = 'IP information';
         $page_data['content'] = '';
 

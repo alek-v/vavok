@@ -847,8 +847,6 @@ class UsersModel extends BaseModel {
      */
     public function users_profile($params)
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['content'] = '';
 
         $requested_user = isset($params[0]) ? $this->check($params[0]) : '';
