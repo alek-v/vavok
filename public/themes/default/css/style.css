@@ -18,6 +18,10 @@ form {
   margin: 40px 0px;
 }
 
+.side-space {
+  padding: 0px 10px;
+}
+
 .top-navigation {
   box-shadow: 0px 0px 2px 0px gray;
 }
@@ -125,7 +129,6 @@ form {
   .container {
     display: block;
   }
-
   .services_element {
     display: block;
     margin: 40px 0px;
@@ -134,7 +137,6 @@ form {
     display: flex;
     justify-content: center;
   }
-
   nav {
     margin-bottom: 10px;
   }

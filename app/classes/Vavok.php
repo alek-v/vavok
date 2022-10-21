@@ -33,9 +33,9 @@ class Vavok {
         session_start();
 
         define('REQUEST_URI', urldecode($_SERVER['REQUEST_URI']));
-        define('CLEAN_REQUEST_URI', $this->cleanRequestUri(REQUEST_URI)); // Clean URL (REQUEST_URI)
+        define('CLEAN_REQUEST_URI', $this->cleanRequestUri(REQUEST_URI));
 
-        // For links, images and other mod rewriten directories
+        // For links, images and other mod rewritten directories
         if (!defined('HOMEDIR')) {
             $path = $_SERVER['HTTP_HOST'] . CLEAN_REQUEST_URI;
             $patharray = explode('/', $path);
@@ -57,8 +57,8 @@ class Vavok {
         // Parameters from the URL
         $url = $this->paramsFromUrl();
 
-        // Look in the URL for the first value
-        if (isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {
+        // Find a controller to use
+        if (isset($url[0]) && file_exists(APPDIR . 'controllers/' . ucwords($url[0]). '.php')) {
             // If exists, set as controller
             $this->currentController = ucwords($url[0]);
             // Unset 0 Index
@@ -66,35 +66,33 @@ class Vavok {
         }
         // Site pages
         elseif (isset($url[0]) && $url[0] == 'page' && isset($url[1])) {
-            // Set as controller
-            $this->currentController = ('Pages');
-            // Set dynamic page
+            // Page name
             $url[2] = $url[1];
-            // Set method
+            // Method to call
             $url[1] = 'dynamic';
-            // Unset 0 Index
+            // Unset 0 index (page)
             unset($url[0]);
         }
-        // Error page
-        elseif (isset($url[0]) && strlen($url[0]) != 2 && !file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {
+        // Error page 404
+        elseif (isset($url[0]) && strlen($url[0]) != 2) {
             // Set as controller
-            $this->currentController = ('Errors');
+            $this->currentController = 'Errors';
             // Set dynamic page
             $url[2] = 'error_404';
             // Set method
             $url[1] = 'error_404';
-            // Unset 0 Index
+            // Unset 0 index (page)
             unset($url[0]);
         }
 
         // Require the controller
-        require_once APPDIR . 'controllers/'. $this->currentController . '.php';
+        require APPDIR . 'controllers/'. $this->currentController . '.php';
 
         $controller = new $this->currentController;
 
         // Check for second part of url
         if (isset($url[1])) {
-            // Does such a method exists in the controller
+            // Check if method exists in the controller
             if (method_exists($controller, $url[1])) {
                 $this->currentMethod = $url[1];
                 // Unset 1 index

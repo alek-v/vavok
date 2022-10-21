@@ -15,7 +15,7 @@ class User {
     use Core;
     use Validations;
 
-    protected object $db;
+    protected Database $db;
 
     public function __construct(protected Container $container)
     {

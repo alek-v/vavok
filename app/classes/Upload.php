@@ -7,13 +7,13 @@ use Pimple\Container;
 class Upload {
     use Core;
 
-    protected object $db;
-    protected object $localization;
+    protected Database $db;
+    protected Localization $localization;
 
-    public function __construct(protected Container $container, $localization = '')
+    public function __construct(protected Container $container)
     {
         $this->db = $container['db'];
-        $this->localization = $localization;
+        $this->localization = $container['localization'];
     }
 
     /**
@@ -84,14 +84,11 @@ class Upload {
         $first_dir = date('y');
         if (!is_dir("../fls/" . $first_dir)) {
             @mkdir(PUBLICDIR . "fls/" . $first_dir, 0777);
-            @touch(PUBLICDIR . "fls/" . $first_dir . "/index.php");
         }
 
         $second_dir = date('n');
         if (!is_dir(PUBLICDIR . "fls/" . $first_dir . "/" . $second_dir)) {
             @mkdir(PUBLICDIR . "fls/" . $first_dir . "/" . $second_dir, 0777);
-            @touch(PUBLICDIR . "fls/" . $first_dir . "/" . $second_dir . "/index.php");
-            @copy(PUBLICDIR . "fls/.htaccess", "../fls/" . $first_dir . "/" . $second_dir . "/.htaccess");
         }
 
         $uploadFile = PUBLICDIR . "fls/" . $first_dir . "/" . $second_dir . "/" . $upload_Name;

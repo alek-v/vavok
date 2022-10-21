@@ -14,15 +14,7 @@ DirectoryIndex index.php index.html
 
 AddDefaultCharset UTF-8
 
-<Files ~ "used|storage">
-   Order allow,deny
-   Deny from all
-</Files>
-<Files ~ "(.dat|.tpl|error_log|.env|.htaccess)$">
-   Order allow,deny
-   Deny from all
-</Files>
-
+# Error pages
 ErrorDocument 400 /errors/error_400
 ErrorDocument 401 /errors/error_401
 ErrorDocument 402 /errors/error_402
@@ -97,11 +89,6 @@ ErrorDocument 502 /errors/error_502
    
 </IfModule>
 
-# Pagespeed module
-<IfModule pagespeed_module>
-    ModPagespeed off
-</IfModule>
-
 # Commpression mod_deflate
 <IfModule mod_deflate.c>
   # Compress HTML, CSS, JavaScript, Text, XML and fonts
@@ -127,14 +114,3 @@ ErrorDocument 502 /errors/error_502
   AddOutputFilterByType DEFLATE text/plain
   AddOutputFilterByType DEFLATE text/xml
 </IfModule>
-
-# Redirect when www subdomain is at site address
-# The [L] flag stands for "Last", meaning that if this condition is true, execute the RewriteRule and do not attempt to match other RewriteConds or perform other operations on the request.
-# The [R] flag stands for "Redirect". You can pass in an option to R to set the HTTP status code of the redirect. Example [R=302] or [R=404].
-# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-# RewriteRule ^(.*)$ http://%1%{REQUEST_URI} [R=301,QSA,NC,L]
-
-# Redirect to www.
-# RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
-# RewriteCond %{HTTPS}s ^on(s)|
-# RewriteRule ^ http%1://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
