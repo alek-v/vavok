@@ -77,9 +77,6 @@ class EmailQueue extends BaseModel {
      */
     public function email_queue()
     {
-        // Users data
-        $page_data['user'] = $this->user_data;
-
         // Page data
         $page_data['tname'] = 'eMail queue';
         $page_data['content'] = '';

@@ -11,8 +11,6 @@ use App\Classes\PageManager;
 class PagemanagerModel extends BaseModel {
     public function index()
     {
-        // Users data
-        $index_data['user'] = $this->user_data;
         $index_data['tname'] = 'Page Manager';
         $index_data['content'] = '';
 

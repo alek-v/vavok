@@ -10,8 +10,6 @@ class UsersModel extends BaseModel {
 
     public function register()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
@@ -232,8 +230,6 @@ class UsersModel extends BaseModel {
      */
     public function confirmkey()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
@@ -264,8 +260,6 @@ class UsersModel extends BaseModel {
      */
     public function key()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
@@ -311,8 +305,6 @@ class UsersModel extends BaseModel {
      */
     public function resendkey()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';
         // Page title
@@ -384,8 +376,6 @@ class UsersModel extends BaseModel {
      */
     public function lostpassword()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Page title
         $data['tname'] = '{@localization[lostpass]}}';
         // Meta tag for this page
@@ -459,8 +449,6 @@ class UsersModel extends BaseModel {
      */
     public function changelang()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Get language
         $language = $this->postAndGet('lang');
 
@@ -487,8 +475,6 @@ class UsersModel extends BaseModel {
      */
     public function ignore()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
@@ -555,8 +541,6 @@ class UsersModel extends BaseModel {
      */
     public function contacts()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
@@ -612,9 +596,6 @@ class UsersModel extends BaseModel {
 
     public function mymenu()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         // Disable access for unregistered users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
@@ -630,8 +611,6 @@ class UsersModel extends BaseModel {
      */
     public function settings($params = [])
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
@@ -822,8 +801,6 @@ class UsersModel extends BaseModel {
      */
     public function ban()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[banned]}}';
         $data['content'] = '';
 

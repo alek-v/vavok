@@ -18,8 +18,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function index()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[adminpanel]}}';
         $data['content'] = '';
 
@@ -112,9 +110,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function settings()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
@@ -915,8 +910,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function adminlist()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[modlist]}}';
         $data['content'] = '';
 
@@ -951,8 +944,6 @@ class AdminpanelModel extends BaseModel {
 
     public function unconfirmed_reg()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[uncomfreg]}}';
         $data['content'] = '';
 
@@ -1026,8 +1017,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function statistics()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[sitestats]}}';
         $data['content'] = '';
 
@@ -1047,8 +1036,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function users()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[usrprofile]}}';
         $data['content'] = '';
 
@@ -1341,8 +1328,6 @@ class AdminpanelModel extends BaseModel {
      */
     public function ipban()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = 'IP Ban';
         $data['content'] = '';
 

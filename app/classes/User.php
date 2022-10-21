@@ -16,6 +16,11 @@ class User {
     use Validations;
 
     protected Database $db;
+    public array $user_data = [
+        'authenticated' => false,
+        'admin_status' => 'user',
+        'language' => 'english'
+    ];
 
     public function __construct(protected Container $container)
     {
@@ -105,6 +110,18 @@ class User {
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
         if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detectBot(), $this->container);
+
+        // Check if user is authenticated
+        // This time we check data from database, because of this we pass parameter true
+        // Next time when you use method userAuthenticated don't use parameter true and data will be used from session, no new database request
+        if ($this->userAuthenticated(true)) $this->user_data['authenticated'] = true;
+
+        // Admin status
+        if ($this->administrator()) $this->user_data['admin_status'] = 'administrator';
+        if ($this->moderator()) $this->user_data['admin_status'] = 'moderator';
+
+        // Users laguage
+        $this->user_data['language'] = $this->getUserLanguage();
     }
 
     /**

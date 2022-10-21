@@ -12,8 +12,6 @@ class Sitemap extends BaseModel {
      */
     public function index()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Sitemap Generator';
         $this_page['content'] = '';
 

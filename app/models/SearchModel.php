@@ -13,8 +13,6 @@ class SearchModel extends BaseModel {
      */
     public function index($params = [])
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = '{@localization[search]}}';
         $this_page['headt'] = '';
         $this_page['content'] = '';

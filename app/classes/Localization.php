@@ -83,4 +83,14 @@ class Localization {
     public function show_all() {
         return $this->all;
     }
+
+    /**
+     * Current used localization
+     *
+     * @return string
+     */
+    public function currentLocalization(): string
+    {
+        return $this->language_data['language'];
+    }
 }

@@ -10,9 +10,6 @@ use App\Classes\Navigation;
 class InboxModel extends BaseModel {
     public function index()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         // Disable access for unregistered users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
@@ -73,8 +70,6 @@ class InboxModel extends BaseModel {
 
     public function dialog()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['content'] = '';
 
         // Update notification data
@@ -133,8 +128,6 @@ class InboxModel extends BaseModel {
             $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getIdFromNick($this->postAndGet('who')));
         }
 
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[inbox]}}';
         $data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
         $data['links'] .= $this->homelink('<p>', '</p>');
@@ -148,9 +141,6 @@ class InboxModel extends BaseModel {
      */
     public function send_message()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR . 'pages/login');
 
         // This is ajax request
@@ -190,9 +180,6 @@ class InboxModel extends BaseModel {
      */
     public function receive_message()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         // This is ajax request
         // Counter will not threat this as new click/visit
         if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);

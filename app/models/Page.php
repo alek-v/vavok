@@ -44,9 +44,6 @@ class Page extends BaseModel {
         // and page with users's language exists, example: www.example.com/de
         if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
 
-        // Users data
-        $data['user'] = $this->user_data;
-
         return $data = isset($data['tname']) ? $data : die('error404');
     }
 
@@ -70,11 +67,7 @@ class Page extends BaseModel {
         $page_localization = isset($this_page['lang']) ? $this_page['lang'] : '';
 
         // Update user's localization when page's language is different then current localization
-        $page_localization = $this->user->updatePageLocalization($page_localization);
-        if (!empty($page_localization)) $this->user_data['language'] = $page_localization;
-
-        // Users data
-        $this_page['user'] = $this->user_data;
+        $this->user->updatePageLocalization($page_localization);
 
         return $this_page;
     }
@@ -89,9 +82,6 @@ class Page extends BaseModel {
     {
         // Check login data while logging in
         $data = $this->user->checkAuth();
-
-        // Users data
-        $data['user'] = $this->user_data;
 
         $data['tname'] = '{@localization[login]}}';
         $data['headt'] = '<meta name="robots" content="noindex">';
@@ -116,8 +106,6 @@ class Page extends BaseModel {
      */
     public function userlist()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[userlist]}}';
         $data['content'] = '';
 
@@ -149,8 +137,6 @@ class Page extends BaseModel {
      */
     public function statistics()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
@@ -197,8 +183,6 @@ class Page extends BaseModel {
      */
     public function online()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = 'Online';
         $data['content'] = '';
 

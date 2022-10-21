@@ -85,8 +85,6 @@ class InstallModel extends BaseModel {
 
     public function register()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
         $this_page['site_address'] = $this->websiteHomeAddress();
 
@@ -95,8 +93,6 @@ class InstallModel extends BaseModel {
 
     public function register_admin()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Register admin';
         $this_page['content'] = '';
 

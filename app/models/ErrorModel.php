@@ -91,8 +91,6 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Error 403';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 
@@ -112,8 +110,6 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Error 404';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 
@@ -130,8 +126,6 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Error 500';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 

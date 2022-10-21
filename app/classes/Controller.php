@@ -47,6 +47,12 @@ abstract class Controller {
      */
     public function view(string $view, array $data = []): void
     {
+        // Check if localization has been changed
+        if ($this->container['user']->getUserLanguage() != $this->container['localization']->currentLocalization()) {
+            // Load new localization data if localization has been changed
+            $this->container['localization'] = new Localization();
+        }
+
         // Instantiate page parsing class
         $page = $this->container['parse_page'];
         // Load the file from the view
@@ -68,12 +74,13 @@ abstract class Controller {
         $auth = $this->container['parse_page'];
 
         // Load file for authenticated user
-        if ($data['user']['authenticated']) $auth->load('includes/authenticated');
+        //if ($data['user']['authenticated']) $auth->load('includes/authenticated');
+        if ($this->container['user']->user_data['authenticated']) $auth->load('includes/authenticated');
         // Load file for user that is not authenticated
-        if (!$data['user']['authenticated']) $auth->load('includes/not_authenticated');
+        if (!$this->container['user']->user_data['authenticated']) $auth->load('includes/not_authenticated');
 
         // Administrators
-        if ($data['user']['admin_status'] == 'administrator' || $data['user']['admin_status'] == 'moderator') {
+        if ($this->container['user']->user_data['admin_status'] == 'administrator' || $this->container['user']->user_data['admin_status'] == 'moderator') {
             // Add link to the administration panel
             $admins = $this->container['parse_page'];
             $admins->load('includes/admin_link');
@@ -84,7 +91,7 @@ abstract class Controller {
             // Set authentication data for the page
             $page->set('authentication', $page->merge(array($auth)));
         }
-
+//var_dump($this->container['localization']->getStrings());
         // Pass localization data to method and show the page
         echo $page->show($this->container['localization']->getStrings());
     }

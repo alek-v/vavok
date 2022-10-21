@@ -11,7 +11,6 @@ class AdminchatModel extends BaseModel {
     public function index()
     {
         // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[admin_chat]}}';
         $data['content'] = '';
 

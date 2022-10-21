@@ -9,7 +9,6 @@ use App\Classes\Navigation;
 use App\Classes\BlogComments;
 
 class BlogModel extends BaseModel {
-    protected object $current_page;
     protected $page_name;             // Page name
     protected $page_language;         // Page language
     protected $page_title;            // Title
@@ -28,9 +27,6 @@ class BlogModel extends BaseModel {
      */
     public function index($params = [])
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
-
         // Content of the page
         $this_page['content'] = '';
 
@@ -52,14 +48,7 @@ class BlogModel extends BaseModel {
                 $page_id = !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
 
                 // Update user's localization when page's language is different then current localization
-                $page_localization = $this->user->updatePageLocalization($this_page['lang']);
-                // Localization has been changed, update
-                if (!empty($page_localization)) {
-                    // Update user's localization
-                    $this->user_data['language'] = $page_localization;
-                    // Update user's data for current page and include updated localization
-                    $this_page['user'] = $this->user_data;
-                }
+                $this->user->updatePageLocalization($this_page['lang']);
 
                 // Generate page
                 $post = $this->container['parse_page'];
@@ -74,11 +63,9 @@ class BlogModel extends BaseModel {
         
                 // Time created
                 $post->set('created_date', $this->correctDate($this->page_created_date, 'd.m.Y.'));
-        
-                /**
-                 * Time published
-                 * If article is not published and page is viewed by administrator use current time
-                 */
+
+                // Time published
+                // If article is not published and page is viewed by administrator use current time
                 if (!empty($this->page_published_date)) {
                     $post->set('published_date', $this->correctDate($this->page_published_date, 'd.m.Y.'));
                 } else {
@@ -95,10 +82,8 @@ class BlogModel extends BaseModel {
                 $post->set('date-created-day', date('d', $this->page_created_date));
                 $post->set('date-created-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
 
-                /**
-                 * Day and month when post is published
-                 * If article is not published and page is viewed by administrator use current time
-                 */
+                // Day and month when post is published
+                // If article is not published and page is viewed by administrator use current time
                 if (!empty($this->page_published_date)) {
                     $post->set('date-published-day', date('d', $this->page_published_date));
                     $post->set('date-published-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_published_date) - 1], 0, 3));
@@ -179,7 +164,7 @@ class BlogModel extends BaseModel {
 
                 // User's localization short code
                 // We will use it to get pages with this localization
-                $user_localization_short = $this->user->getPreferredLanguage($this_page['user']['language'], 'short');
+                $user_localization_short = $this->user->getPreferredLanguage($this->user->user_data['language'], 'short');
 
                 // Count total posts
                 $total_posts = empty($this_category) ? $this->db->countRow('pages', "type='post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='')") : $this->db->countRow('tags', "tag_name='{$this_category}'");
@@ -292,9 +277,6 @@ class BlogModel extends BaseModel {
      */
     public function save_comment()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
-
         // Content of the page
         $this_page['content'] = '';
 

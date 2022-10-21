@@ -13,8 +13,6 @@ class Logfiles extends BaseModel {
      */
     public function index()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Log data';
         $this_page['content'] = '';
 

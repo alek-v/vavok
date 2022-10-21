@@ -11,9 +11,6 @@ class ProfileModel extends BaseModel {
      */
     public function index()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         $data['headt'] = '
         <style>
             .photo img {
@@ -227,9 +224,6 @@ class ProfileModel extends BaseModel {
      */
     public function save()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
 
         // check email
@@ -322,9 +316,6 @@ class ProfileModel extends BaseModel {
      */
     public function delete()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         if ($this->postAndGet('confirmed') == 'yes') {
             $delete_id = $this->user->user_id();
 
@@ -346,9 +337,6 @@ class ProfileModel extends BaseModel {
      */
     public function newpass()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         $data['tname'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
@@ -380,9 +368,6 @@ class ProfileModel extends BaseModel {
      */
     public function photo()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         $data['tname'] = 'Change Photo';
         $data['headt'] = '<style>
         .photo img {
@@ -425,9 +410,6 @@ class ProfileModel extends BaseModel {
      */
     public function savephoto()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         // Page data
         $data['tname'] = 'Change Photography';
         $data['headt'] = '
@@ -506,9 +488,6 @@ class ProfileModel extends BaseModel {
      */
     public function removephoto()
     {
-        // Users data
-        $data['user'] = $this->user_data;
-
         // Page data
         $data['tname'] = 'Remove Photography';
         $data['content'] = '';

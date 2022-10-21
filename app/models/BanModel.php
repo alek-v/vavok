@@ -13,8 +13,6 @@ class BanModel extends BaseModel {
      */
     public function addban()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[banning]}}';
         $data['content'] = '';
 
@@ -243,8 +241,6 @@ class BanModel extends BaseModel {
      */
     public function banlist()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[banlist]}}';
         $data['content'] = '';
 

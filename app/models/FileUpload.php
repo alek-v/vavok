@@ -11,8 +11,6 @@ use App\Classes\Upload;
 class FileUpload extends BaseModel {
     public function index()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'File Upload';
         $this_page['content'] = '';
 
@@ -54,8 +52,6 @@ class FileUpload extends BaseModel {
 
     public function uploaded_files()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Uploaded Files';
         $this_page['content'] = '';
 
@@ -118,8 +114,6 @@ class FileUpload extends BaseModel {
      */
     public function search_uploads()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Search';
         $this_page['content'] = '';
 

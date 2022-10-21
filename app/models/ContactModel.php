@@ -16,8 +16,6 @@ class ContactModel extends BaseModel {
      */
     public function index()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[contact]}}';
         // Add data to page <head> to show Google reCAPTCHA
         $data['headt'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
@@ -47,8 +45,6 @@ class ContactModel extends BaseModel {
      */
     public function send()
     {
-        // Users data
-        $data['user'] = $this->user_data;
         $data['tname'] = '{@localization[contact]}}';
         $data['content'] = '';
 
