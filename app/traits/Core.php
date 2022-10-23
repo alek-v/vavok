@@ -42,36 +42,35 @@ trait Core {
     /**
      * Return correct date
      *
-     * @param bool $timestamp
+     * @param int $timestamp
      * @param string $format
-     * @param string $myzone
+     * @param string $my_zone
+     * @param bool $show_zone_info
      * @return string
      */
-    public function correctDate($timestamp = '', $format = 'd.m.Y.', $myzone = '', $show_zone_info = '')
+    public function correctDate(int $timestamp = 0, string $format = 'd.m.Y.', string $my_zone = '', bool $show_zone_info = false): string
     {
         $timezone = $this->configuration('timeZone');
 
-        if (empty($timestamp)) $timestamp = time();
-
-        if (empty($format)) $format = "d.m.y. / H:i";
-
-        if (!empty($myzone)) $timezone = $myzone;
+        if ($timestamp == 0) $timestamp = time();
+        if (empty($format)) $format = 'd.m.y. / H:i';
+        if (!empty($my_zone)) $timezone = $my_zone;
 
         if (stristr($timezone, '-')) {
             $clock = str_replace('-', '', $timezone);
             $clock = floatval($clock);
             $seconds = $clock * 3600; // number of seconds
-            $rdate = date($format, $timestamp - ($seconds)); // return date
+            $return_date = date($format, $timestamp - ($seconds)); // return date
         } else {
             $clock = str_replace('+', '', $timezone);
             $clock = floatval($clock);
             $seconds = $clock * 3600; // number of seconds
-            $rdate = date($format, $timestamp + ($seconds)); // return date
+            $return_date = date($format, $timestamp + ($seconds)); // return date
         }
 
         $zone_info = $show_zone_info == true ? ' UTC ' . $timezone : '';
 
-        return $rdate . $zone_info;
+        return $return_date . $zone_info;
     }
 
     // Make time

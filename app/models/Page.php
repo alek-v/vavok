@@ -18,7 +18,7 @@ class Page extends BaseModel {
      */
     public function homepage($params = [])
     {
-        // Localization from URL
+        // Localization from the URL
         $this->page_localization = !empty($params[0]) ? $this->user->getPreferredLanguage($params[0], 'short') : '';
 
         // Try to get localized page
@@ -35,8 +35,6 @@ class Page extends BaseModel {
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
             $this->user->change_language(strtolower($this->page_localization));
-            // Update user's localization for page that we are now loading
-            $this->user_data['language'] = $this->user->getPreferredLanguage($this->page_localization);
         }
 
         // Redirect if user's language is not website default language,
@@ -285,8 +283,6 @@ class Page extends BaseModel {
      */
     public function cookies_policy()
     {
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['tname'] = 'Cookies Policy';
         $this_page['homeurl'] = $this->configuration('homeUrl');
 

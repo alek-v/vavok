@@ -216,7 +216,7 @@ class Logfiles extends BaseModel {
             $dtlog = explode(":|:", $opis[$i]);
         
             $this_page['content'] .= '<img src="{@HOMEDIR}}themes/images/img/files.gif" alt=""> <b><font color="#FF0000">Fajl: ' . $dtlog[2] . '</font></b><br>';
-            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->correctDate($dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
+            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->correctDate((int)$dtlog[3], 'd.m.Y. / H:i:s') . '<br>';
             $this_page['content'] .= 'Referer: ' . $dtlog[7] . '<br>';
             $this_page['content'] .= 'Host: ' . $dtlog[5] . '<br>';
             $this_page['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_information?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';
