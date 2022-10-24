@@ -91,13 +91,16 @@ class UsersModel extends BaseModel {
             // Register user
             $this->user->register($this->postAndGet('log'), $password, $this->configuration('regConfirm'), $registration_key, MY_THEME, $mail, $this->localization->string('autopmreg'));
 
+            // User's ID
+            $users_id = $this->user->getIdFromNick($this->postAndGet('log'));
+
             // Create email with confirmation of registration
             // Email text when user need to confirm registration
             if ($this->configuration('regConfirm') == 1) {
                 $needkey = "<p>" . $this->localization->string('emailpart5') . "</p>
                 <p>" . $this->localization->string('yourkey') . ": " . $registration_key . "</p>
                 <p>" . $this->localization->string('emailpart6') . ":</p>
-                <p><a href=\"" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "\">" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "</a></p>
+                <p><a href=\"" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "&uid={$users_id}\">" . $this->websiteHomeAddress() . "/users/confirmkey/?key=" . $registration_key . "&uid={$users_id}</a></p>
                 <p>" . $this->localization->string('emailpart7') . "</p>";
             } else {
                 $needkey = '<br />';
@@ -138,7 +141,7 @@ class UsersModel extends BaseModel {
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
-                $form->set('form_action', '{@HOMEDIR}}users/confirmkey');
+                $form->set('form_action', '{@HOMEDIR}}users/confirmkey?uid=' . $users_id);
 
                 $input = $this->container['parse_page'];
                 $input->load('forms/input');
@@ -149,7 +152,7 @@ class UsersModel extends BaseModel {
                 $input->set('input_name', 'key');
                 $input->set('input_placeholder', '');
 
-                $form->set('website_language[save]', $this->localization->string('confirm'));
+                $form->set('localization[save]', $this->localization->string('confirm'));
                 $form->set('fields', $input->output());
                 $data['content'] .= $form->output();
 
@@ -282,7 +285,7 @@ class UsersModel extends BaseModel {
         $input->set('input_id', 'key');
         $input->set('input_maxlength', 20);
 
-        $form->set('website_language[save]', $this->localization->string('confirm'));
+        $form->set('localization[save]', $this->localization->string('confirm'));
         $form->set('fields', $input->output());
         $data['content'] .= $form->output();
 
@@ -291,7 +294,7 @@ class UsersModel extends BaseModel {
         $form->load('forms/form');
         $form->set('form_method', 'post');
         $form->set('form_action', '{@HOMEDIR}}users/resendkey/?uid=' . $recipient_id);
-        $form->set('website_language[save]', $this->localization->string('resend'));
+        $form->set('localization[save]', $this->localization->string('resend'));
         $data['content'] .= $form->output();
     
         $data['content'] .= '<p>' . $this->localization->string('actinfodel') . '</p>';
@@ -319,10 +322,10 @@ class UsersModel extends BaseModel {
 
         // Check if user really need to confirm registration
         if ($this->user->user_info('regche', $recipient_id) != 1) {
-            $data['content'] .= $this->showNotification('{@localization[regalreadyconfirmed]}}');
+            $data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
 
             // Pass page data to the view
-            $data['page_template'] = 'users/register/resendkey';
+            $data['page_template'] = 'users/register/resend_key';
             return $data;
         }
 
@@ -339,14 +342,15 @@ class UsersModel extends BaseModel {
         $target = new DateTime(date("Y-m-d H:i:s")); // Current time
         $interval = $origin->diff($target);
 
-        // Redirect if it is too early to send new message
+        // Show notification if it is too early to resend email
         // User can resend message every 10 minutes
         if ((int)$interval->format('%i') < 10) {
-            $data['content'] .= $this->showNotification('{@localization[tooearlytoresend]}}');
+            $data['content'] .= $this->showNotification('{@localization[too_early_to_resend]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
 
             // Pass page data to the view
-            $data['page_template'] = 'users/register/resendkey';
+            $data['page_template'] = 'users/register/resend_key';
+
             return $data;
         }
 
@@ -426,7 +430,7 @@ class UsersModel extends BaseModel {
             $send_mail->queueEmail($this->postAndGet('mailsus'), $subject, $mail);
 
             // Update users profile
-            $this->user->update_user('pass', $new, $userx_id);
+            $this->user->updateUser('pass', $new, $userx_id);
 
             // New password has been generated
             $data['content'] .= $this->showNotification($this->localization->string('passgen'));
@@ -680,7 +684,7 @@ class UsersModel extends BaseModel {
             $values[] = $this->user->find_ip();
             $values[] = $user_timezone;
 
-            $this->user->update_user($fields, $values);
+            $this->user->updateUser($fields, $values);
             unset($fields, $values);
 
             // Update language
@@ -697,7 +701,7 @@ class UsersModel extends BaseModel {
             $values[] = $randkey;
             $values[] = time();
 
-            $this->user->update_user($fields, $values);
+            $this->user->updateUser($fields, $values);
             unset($fields, $values);
 
             // Notification settings
@@ -833,8 +837,8 @@ class UsersModel extends BaseModel {
 
             $data['content'] .= '<p>{@localization[endbanadvice]}} ' . $this->sitelink('siterules.php', $this->localization->string('siterules'), '<strong>', '</strong>') . '</p>';
         
-            $this->user->update_user('banned', 0);
-            $this->user->update_user(array('bantime', 'bandesc'), array('', ''));
+            $this->user->updateUser('banned', 0);
+            $this->user->updateUser(array('bantime', 'bandesc'), array('', ''));
         }
 
         $data['content'] .= $this->homelink('<p>', '</p>');

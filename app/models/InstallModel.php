@@ -12,36 +12,28 @@ class InstallModel extends BaseModel {
 
     protected Container $container;
     protected Database $db;
+    protected User $user;
     private bool $table_exists;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
-        $this->db = Database::instance();
+        $this->container = $container;
+        $this->db = $container['db'];
 
         // Check if install is already completed
         $result = $this->db->query("SHOW TABLES LIKE 'vavok_users'");
         $this->table_exists = $result !== false && $result->rowCount() > 0;
 
         // Database tables are installed and administrator is registered, make a redirection
-        if ($this->table_exists == true && $this->db->countRow('vavok_users') > 0) {
+        if ($this->table_exists && $this->db->countRow('vavok_users') > 0) {
             header('Location: ' . HOMEDIR);
             exit;
         }
 
         // Tables are imported into the database
-        if ($this->table_exists == true) {
-            // Instantiate dependency injection container
-            $container = new Container();
-
-            $container['db'] = fn($c) => $this->db;
-            $container['user'] = fn($c) => new User($c);
-
-            $this->container = $container;
+        if ($this->table_exists) {
             $this->user = $container['user'];
         }
-
-        // Set default theme manually when user table doesn't exist and user class is not instantiated
-        if (!defined('MY_THEME')) define('MY_THEME', 'default');
     }
 
     public function index()
@@ -75,8 +67,6 @@ class InstallModel extends BaseModel {
             }
         }
 
-        // Users data
-        $this_page['user'] = $this->user_data;
         $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
         $this_page['content'] .= '<p><a href="{@HOMEDIR}}install/register" class="btn btn-outline-primary sitelink">Next step</a></p>';
 
@@ -183,7 +173,7 @@ class InstallModel extends BaseModel {
         $user_id = $this->user->getIdFromNick($name);
         $this->db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
 
-        $this_page['content'] .= '<p>Installation has been competed successfully<br></p>';
+        $this_page['content'] .= '<p>Installation has been completed successfully<br></p>';
         $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login">Login</a></b></p>';
 
         return $this_page;

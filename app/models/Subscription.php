@@ -24,7 +24,7 @@ class Subscription extends BaseModel {
             if (!empty($users_id)) {
                 $fields = array('subscri', 'newscod');
                 $values = array('', '');
-                $this->user->update_user($fields, $values, $users_id);
+                $this->user->updateUser($fields, $values, $users_id);
 
                 $this->db->delete('subs', "user_id='" . $users_id . "'");
 

@@ -256,7 +256,7 @@ class User {
                 session_regenerate_id();
 
                 // Update data in profile
-                $this->update_user(
+                $this->updateUser(
                     array('ipadd', 'browsers'),
                     array($this->find_ip(), $this->user_browser()),
                     $userx_id);
@@ -335,7 +335,7 @@ class User {
 
         $user_id = $this->db->selectData('vavok_users', 'name = :name', [':name' => $name], 'id')['id'];
 
-        $this->db->insert('vavok_profil', array('uid' => $user_id, 'opentem' => 0, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'forummes' => 0, 'chat' => 0));
+        $this->db->insert('vavok_profil', array('uid' => $user_id, 'commadd' => 0, 'subscri' => 0, 'regdate' => time(), 'regche' => $regkeys, 'regkey' => $rkey, 'lastvst' => time(), 'chat' => 0));
         $this->db->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
         $this->db->insert('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
@@ -407,7 +407,7 @@ class User {
      * @param integer $user_id
      * @return void
      */
-    public function update_user($fields, $values, $user_id = '')
+    public function updateUser($fields, $values, $user_id = '')
     {
         $user_id = empty($user_id) ? $_SESSION['uid'] : $user_id;
 
@@ -419,7 +419,7 @@ class User {
         $vavok_users_valid_fields = array('name', 'pass', 'perm', 'skin', 'browsers', 'ipadd', 'timezone', 'banned', 'newmsg', 'lang');
 
         // vavok_profil table fields
-        $vavok_profil_valid_fields = array('opentem', 'forummes', 'chat', 'commadd', 'subscri', 'newscod', 'perstat', 'regdate', 'regche', 'regkey', 'bantime', 'bandesc', 'lastban', 'allban', 'lastvst');
+        $vavok_profil_valid_fields = array('chat', 'commadd', 'subscri', 'newscod', 'perstat', 'regdate', 'regche', 'regkey', 'bantime', 'bandesc', 'lastban', 'allban', 'lastvst');
 
         // vavok_about table fields
         $vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'rname', 'surname', 'photo', 'address', 'zip', 'country', 'phone');
@@ -480,7 +480,7 @@ class User {
     public function update_default_permissions($user_id, $permission_id)
     {
         // Access level
-        $this->update_user('perm', $permission_id, $user_id);
+        $this->updateUser('perm', $permission_id, $user_id);
 
         $default_permissions = array(
             101 => array(),

@@ -1,4 +1,4 @@
 {@header}}
-    <p>{@localization[confinfo]}}</p>
+    <p>{@localization[confirmation_info]}}</p>
     {@content}}
 {@footer}}

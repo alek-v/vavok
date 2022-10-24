@@ -952,7 +952,7 @@ class AdminpanelModel extends BaseModel {
         if ($this->postAndGet('action') == 'conf' && !empty($this->postAndGet('usr'))) {
             $fields = array('regche', 'regkey');
             $values = array('', '');
-            $this->user->update_user($fields, $values, $this->postAndGet('usr'));
+            $this->user->updateUser($fields, $values, $this->postAndGet('usr'));
 
             $vav_name = $this->user->getNickFromId($this->postAndGet('usr'));
 
@@ -1058,7 +1058,7 @@ class AdminpanelModel extends BaseModel {
             $input_users->set('input_id', 'users');
             $input_users->set('input_maxlength', 20);
 
-            $form->set('website_language[save]', '{@localization[showdata]}}');
+            $form->set('localization[save]', '{@localization[showdata]}}');
             $form->set('fields', $input_users->output());
             $data['content'] .= $form->output();
         }
@@ -1263,13 +1263,13 @@ class AdminpanelModel extends BaseModel {
                         if (!empty($udd1)) $newpass = $this->user->password_encrypt($udd1);
         
                         // Update password
-                        if (!empty($newpass)) $this->user->update_user('pass', $this->replaceNewLines($newpass), $users_id);
+                        if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
         
                         // Update default access permissions
                         if ($udd7 != $this->user->user_info('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
         
                         // Update data
-                        $this->user->update_user(
+                        $this->user->updateUser(
                             array('city', 'about', 'email', 'site', 'rname', 'perstat', 'browsers'),
                             array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
                         );
@@ -1411,7 +1411,7 @@ class AdminpanelModel extends BaseModel {
         $input->set('input_name', 'ips');
         $input->set('input_id', 'ips');
 
-        $form->set('website_language[save]', '{@localization[confirm]}}');
+        $form->set('localization[save]', '{@localization[confirm]}}');
         $form->set('fields', $input->output());
         $data['content'] .= $form->output();
 
@@ -1445,7 +1445,7 @@ class AdminpanelModel extends BaseModel {
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/pagesearch/?action=stpc');
-            $form->set('website_language[save]', '{@localization[search]}}');
+            $form->set('localization[save]', '{@localization[search]}}');
 
             $input = $this->container['parse_page'];
             $input->load('forms/input');

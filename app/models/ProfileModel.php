@@ -270,7 +270,7 @@ class ProfileModel extends BaseModel {
         /**
          * Update profile data
          */
-        $this->user->update_user($fields, $values);
+        $this->user->updateUser($fields, $values);
 
         /**
          * Send email confirmation link if it is changed and save data into database
@@ -352,7 +352,7 @@ class ProfileModel extends BaseModel {
         // Check if old password is correct and update users password with new password
         if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->user_info('password'))) {
             // Update password
-            $this->user->update_user('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
+            $this->user->updateUser('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
 
             $this->redirection($this->websiteHomeAddress() . "/users/login");
         } else {
@@ -457,7 +457,7 @@ class ProfileModel extends BaseModel {
                         chmod($ch, 0777);
                         chmod(STORAGEDIR . "dataphoto/" . $this->user->user_id() . "." . $av_string . "", 0777);
 
-                        $this->user->update_user('photo', 'gallery/photo/' . $this->user->user_id());
+                        $this->user->updateUser('photo', 'gallery/photo/' . $this->user->user_id());
 
                         $data['user_id'] = $this->user->user_id();
 
@@ -503,7 +503,7 @@ class ProfileModel extends BaseModel {
         }
 
         // Update database
-        $this->user->update_user('photo', '');
+        $this->user->updateUser('photo', '');
 
         $data['content'] .= $this->showSuccess('Your photography has been successfully deleted!'); // update lang
         $data['content'] .= $this->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
@@ -535,7 +535,7 @@ class ProfileModel extends BaseModel {
         $data = $this->db->selectData('tokens', 'type = :type AND token = :token', [':type' => 'email', ':token' => $this->postAndGet('token')]);
 
         // Update email
-        $this->user->update_user('email', $data['content'], $data['uid']);
+        $this->user->updateUser('email', $data['content'], $data['uid']);
 
         // Remove token
         $this->db->delete('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'");

@@ -732,7 +732,7 @@ class PagemanagerModel extends BaseModel {
             $form->set('fields', $form->merge($fields));
 
             // Show form
-            $form->set('website_language[save]', $this->localization->string('newpage'));
+            $form->set('localization[save]', $this->localization->string('newpage'));
             $index_data['content'] .= $form->output();
         } 
 

@@ -37,7 +37,7 @@ class BanModel extends BaseModel {
             $input->set('input_id', 'users');
             $input->set('maxlength', 20);
         
-            $form->set('website_language[save]', $this->localization->string('confirm'));
+            $form->set('localization[save]', $this->localization->string('confirm'));
             $form->set('fields', $input->output());
         
             $data['content'] .= $form->output();
@@ -124,7 +124,7 @@ class BanModel extends BaseModel {
                             $input_textarea->set('textarea_id', 'udd39');
                             $input_textarea->set('textarea_name', 'udd39');
         
-                            $form->set('website_language[save]', $this->localization->string('confirm'));
+                            $form->set('localization[save]', $this->localization->string('confirm'));
                             $form->set('fields', $form->merge(array($input_duration, $input_radio_1, $input_radio_2, $input_radio_3, $input_textarea)));
                             $data['content'] .= $form->output();
         
@@ -171,11 +171,11 @@ class BanModel extends BaseModel {
                             $newallban = $this->user->user_info('allban', $users_id) + 1;
 
                             // Update users data
-                            $this->user->update_user('banned', 1, $users_id);
+                            $this->user->updateUser('banned', 1, $users_id);
 
                             $fields = array('bantime', 'bandesc', 'lastban', 'allban');
                             $values = array($newbantime, $newbandesc, $newlastban, $newallban);
-                            $this->user->update_user($fields, $values, $users_id);
+                            $this->user->updateUser($fields, $values, $users_id);
         
                             $data['content'] .= $this->localization->string('usrdata') . ' ' . $user . ' {@localization[edited]}!<br />';
                             $data['content'] .= '<b><font color="FF0000">{@localization[user_is_banned]}}</font></b><br /><br />';
@@ -203,11 +203,11 @@ class BanModel extends BaseModel {
 
                 if ($newallban > 0) $newallban = $newallban--;
 
-                $this->user->update_user('banned', 0, $users_id);
+                $this->user->updateUser('banned', 0, $users_id);
 
                 $fields = array('bantime', 'bandesc', 'allban');
                 $values = array(0, '', $newallban);
-                $this->user->update_user($fields, $values, $users_id);
+                $this->user->updateUser($fields, $values, $users_id);
 
                 $data['content'] .= $this->localization->string('usrdata') . ' ' . $user . ' {@localization[edited]}!<br />';
                 $data['content'] .= '<b><font color="00FF00">{@localization[confUnBan]}}</font></b><br /><br />';
