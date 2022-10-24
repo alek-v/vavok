@@ -317,6 +317,9 @@ class UsersModel extends BaseModel {
         $recipient_id = $this->postAndGet('uid');
         $recipient_mail = $this->postAndGet('recipient');
 
+        // Page template
+        $data['page_template'] = 'users/register/resend_key';
+
         // if user id is not in url, get it from submited email
         if (empty($recipient_id)) $recipient_id = $this->user->id_from_email($recipient_mail);
 
@@ -324,8 +327,6 @@ class UsersModel extends BaseModel {
         if ($this->user->user_info('regche', $recipient_id) != 1) {
             $data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
 
-            // Pass page data to the view
-            $data['page_template'] = 'users/register/resend_key';
             return $data;
         }
 
@@ -348,9 +349,6 @@ class UsersModel extends BaseModel {
             $data['content'] .= $this->showNotification('{@localization[too_early_to_resend]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
 
-            // Pass page data to the view
-            $data['page_template'] = 'users/register/resend_key';
-
             return $data;
         }
 
@@ -370,6 +368,9 @@ class UsersModel extends BaseModel {
         } else {
             $data['content'] .= $this->showNotification('{@localization[confmailwillbesent]}}');
         }
+
+        // Back link
+        $data['back_link'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
 
         // Pass data to the controller
         return $data;
