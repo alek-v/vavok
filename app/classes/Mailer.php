@@ -59,7 +59,7 @@ class Mailer {
 
         $available_authentication = false;
 
-        require STORAGEDIR . '.available_emails.php';
+        require STORAGEDIR . 'available_emails.php';
 
         /**
          * Check if data for authentication exists for email we use to send email

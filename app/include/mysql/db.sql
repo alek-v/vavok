@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `vavok_users` (
-  `id` int(100) NOT NULL auto_increment,             -- member id
+  `id` int(9) NOT NULL auto_increment,               -- member id
   `name` varchar(40) NOT NULL,                       -- nick
   `pass` varchar(120) NOT NULL,                      -- pass
   `perm` int(4) NOT NULL default '0',                -- permissions (accessr)
@@ -16,14 +16,11 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
-
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
-  `id` int(100) NOT NULL auto_increment,
-  `uid` int(100) NOT NULL default '0',               -- user unique id from vavok_users table
-  `opentem` int(100) NOT NULL default '0',           -- forum topics
-  `forummes` int(100) NOT NULL default '0',          -- forum posts
-  `chat` int(100) NOT NULL default '0',              -- chat posts
-  `commadd` int(100) NOT NULL default '0',           -- comments
+  `id` int(9) NOT NULL auto_increment,
+  `uid` int(9) NOT NULL default '0',                 -- user unique id from vavok_users table
+  `chat` int(9) NOT NULL default '0',              -- chat posts
+  `commadd` int(9) NOT NULL default '0',           -- comments
   `subscri` char(1) NOT NULL default '0',            -- subscribed to site news status
   `newscod` varchar(100) NULL,                       -- unsubscription code
   `perstat` varchar(50) NULL,                        -- personal status
@@ -42,8 +39,8 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
 
 
 CREATE TABLE IF NOT EXISTS `vavok_about` (
-  `id` int(100) NOT NULL auto_increment,
-  `uid` int(100) NOT NULL default '0',
+  `id` int(9) NOT NULL auto_increment,
+  `uid` int(9) NOT NULL default '0',
   `birthday` varchar(40) NULL,                       -- birthday
   `sex` char(1) NOT NULL default 'n',                -- sex
   `email` varchar(80) NULL,                          -- email
@@ -65,15 +62,15 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
 
 -- inbox
 CREATE TABLE IF NOT EXISTS `inbox` (
-  `id` int(100) NOT NULL auto_increment,
+  `id` int(9) NOT NULL auto_increment,
   `text` MEDIUMTEXT NOT NULL,
-  `byuid` int(100) NOT NULL default '0',
-  `touid` int(100) NOT NULL default '0',
+  `byuid` int(9) NOT NULL default '0',
+  `touid` int(9) NOT NULL default '0',
   `unread` char(1) NOT NULL default '1',
-  `timesent` int(100) NOT NULL default '0',
+  `timesent` int(10) NOT NULL default '0',
   `starred` char(1) NOT NULL default '0',
   `reported` char(1) NOT NULL default '0',
-  `deleted` int(11) NULL,
+  `deleted` int(9) NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
@@ -99,17 +96,17 @@ CREATE TABLE IF NOT EXISTS `buddy` (
 
 -- Moder log
 CREATE TABLE IF NOT EXISTS `mlog` (
-  `id` int(100) NOT NULL auto_increment,
+  `id` int(9) NOT NULL auto_increment,
   `action` varchar(10) NULL,
   `details` TEXT NOT NULL,
-  `actdt` int(100) NOT NULL default '0',
+  `actdt` int(9) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 
 CREATE TABLE IF NOT EXISTS `subs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
   `user_mail` varchar(80) DEFAULT NULL,
   `user_pass` varchar(80) DEFAULT NULL,
@@ -135,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `online` (
 
 -- site pages
 CREATE TABLE IF NOT EXISTS `pages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `tname` varchar(120) NULL COMMENT 'page title',
   `pname` varchar(120) NOT NULL COMMENT 'page name',
   `lang` varchar(120) NULL COMMENT 'language',
@@ -162,8 +159,8 @@ INSERT INTO `pages` (`id`, `tname`, `pname`, `lang`, `created`, `lastupd`, `lstu
 
 -- notifications
 CREATE TABLE IF NOT EXISTS `notif` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(100) NOT NULL DEFAULT '0',
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `uid` int(9) NOT NULL DEFAULT '0',
   `type` varchar(20) NOT NULL COMMENT 'notification department',
   `active` int(2) NULL,
   `lstinb` varchar(120) NOT NULL DEFAULT '' COMMENT 'last notification of received message',
@@ -175,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
 
 -- special permitions list
 CREATE TABLE IF NOT EXISTS `splist` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `permid` varchar(120) NOT NULL COMMENT 'permission id',
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
@@ -186,8 +183,8 @@ CREATE TABLE IF NOT EXISTS `splist` (
 
 -- special permitions
 CREATE TABLE IF NOT EXISTS `specperm` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(100) NOT NULL default '0',
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `uid` int(9) NOT NULL default '0',
   `permname` varchar(120) NOT NULL COMMENT 'permission name',
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
@@ -198,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `specperm` (
 
 -- uploaded files
 CREATE TABLE IF NOT EXISTS `uplfiles` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `name` varchar(170) NOT NULL COMMENT 'file name',
   `date` int(30) NOT NULL COMMENT 'upload date',
   `ext` varchar(5) NOT NULL COMMENT 'extension',
@@ -355,12 +352,12 @@ INSERT INTO `languages` (`id`, `lngeng`, `iso-2`) VALUES
 
 
 CREATE TABLE IF NOT EXISTS `counter` (
-  `day` int(11) NOT NULL,
-  `month` int(11) NOT NULL,
-  `visits_today` int(11) NOT NULL,
+  `day` int(9) NOT NULL,
+  `month` int(9) NOT NULL,
+  `visits_today` int(9) NOT NULL,
   `visits_total` int(11) NOT NULL,
-  `clicks_today` int(11) NOT NULL,
-  `clicks_total` int(11) NOT NULL,
+  `clicks_today` int(9) NOT NULL,
+  `clicks_total` int(9) NOT NULL,
   UNIQUE KEY `day` (`day`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -370,7 +367,7 @@ INSERT INTO `counter` (`day`, `month`, `visits_today`, `visits_total`, `clicks_t
 
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `address` varchar(45) DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
@@ -397,11 +394,11 @@ CREATE TABLE IF NOT EXISTS `email_queue` (
 
 
 CREATE TABLE IF NOT EXISTS `comments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `uid` int(9) NOT NULL,
   `comment` text NOT NULL,
   `date` datetime NOT NULL,
-  `pid` int(11) NOT NULL COMMENT 'page id where comment will be shown',
+  `pid` int(9) NOT NULL COMMENT 'page id where comment will be shown',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -409,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
 
 -- Site settings
 CREATE TABLE IF NOT EXISTS `settings` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
   `setting_name` varchar(255) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
   `options` varchar(255) DEFAULT NULL,
@@ -463,8 +460,8 @@ COMMIT;
 
 
 CREATE TABLE IF NOT EXISTS `tags` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `page_id` int(11) NOT NULL,
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `page_id` int(9) NOT NULL,
   `tag_name` varchar(2255) NOT NULL,
   UNIQUE KEY `UNIQUE` (`id`),
   KEY `page_id` (`page_id`),
@@ -474,8 +471,8 @@ CREATE TABLE IF NOT EXISTS `tags` (
 
 
 CREATE TABLE IF NOT EXISTS `tokens` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL COMMENT 'user id',
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `uid` int(9) NOT NULL COMMENT 'user id',
   `type` varchar(255) NOT NULL COMMENT 'token type',
   `content` text DEFAULT NULL,
   `token` varchar(255) NOT NULL,
@@ -486,8 +483,8 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 
 
 CREATE TABLE IF NOT EXISTS `group_members` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL COMMENT 'user id',
+  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `uid` int(9) NOT NULL COMMENT 'user id',
   `group_name` varchar(500) NOT NULL,
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`)
