@@ -481,9 +481,9 @@ trait Core {
      * Get reCAPTCHA validation response
      * 
      * @param string $captcha
-     * @return bool
+     * @return array
      */
-    public function recaptchaResponse(string $captcha): bool
+    public function recaptchaResponse(string $captcha): array
     {
         // Return success if there is no secret key or disabled reCAPTCHA
         if (empty($this->configuration('recaptcha_secretkey'))) return array('success' => true);
@@ -491,6 +491,7 @@ trait Core {
         // Post request to Google, check captcha code
         $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
         $response = file_get_contents($url);
+
         return $responseKeys = json_decode($response, true);
     }
 
