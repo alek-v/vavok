@@ -6,11 +6,16 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Traits\Files;
 
 class AdminchatModel extends BaseModel {
-    public function index()
+    use Files;
+
+    /**
+     * @return array
+     */
+    public function index(): array
     {
-        // Users data
         $data['tname'] = '{@localization[admin_chat]}}';
         $data['content'] = '';
 
@@ -22,36 +27,27 @@ class AdminchatModel extends BaseModel {
             $msg = $this->check(wordwrap($this->postAndGet('msg'), 150, ' ', 1));
             $msg = substr($msg, 0, 1200);
             $msg = $this->check($msg);
-        
+
             $msg = $this->antiword($msg);
             $msg = $this->smiles($msg);
             $msg = $this->replaceNewLines($msg, '<br />');
-        
+
             $text = $msg . '|' . $this->user->show_username() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
             $text = $this->replaceNewLines($text);
-        
+
             $this->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
-        
-            $file = $this->getDataFile('adminchat.dat');
-            $i = count($file);
-            if ($i >= 300) {
-                $fp = fopen(STORAGEDIR . "adminchat.dat", "w");
-                flock ($fp, LOCK_EX);
-                unset($file[0]);
-                unset($file[1]);
-                fputs($fp, implode("", $file));
-                flock ($fp, LOCK_UN);
-                fclose($fp);
-            }
+
+            // Limit number of messages in the file
+            $this->limitFileLines(STORAGEDIR . 'adminchat.dat', 300);
 
             header('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=addon');
             exit;
         }
 
         // empty admin chat
-        if ($this->postAndGet('action') == "acdel") {
+        if ($this->postAndGet('action') == 'acdel') {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-                $this->clearFile(STORAGEDIR . "adminchat.dat");
+                $this->clearFile(STORAGEDIR . 'adminchat.dat');
 
                 header ('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=mp_admindelchat');
                 exit;

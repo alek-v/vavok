@@ -7,14 +7,18 @@
 use App\Classes\BaseModel;
 use App\Classes\Mailer;
 use App\Traits\Validations;
+use App\Traits\Notifications;
 
 class ContactModel extends BaseModel {
     use Validations;
+    use Notifications;
 
     /**
      * Index page
+     *
+     * @return array
      */
-    public function index()
+    public function index(): array
     {
         $data['tname'] = '{@localization[contact]}}';
         // Add data to page <head> to show Google reCAPTCHA

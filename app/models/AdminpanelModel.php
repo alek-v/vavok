@@ -9,14 +9,20 @@ use App\Classes\Navigation;
 use App\Classes\Config;
 use App\Classes\Mailer;
 use App\Traits\Validations;
+use App\Traits\Files;
+use App\Traits\Notifications;
 
 class AdminpanelModel extends BaseModel {
     use Validations;
+    use Files;
+    use Notifications;
 
     /**
      * Index page
+     *
+     * @return array
      */
-    public function index()
+    public function index(): array
     {
         $data['tname'] = '{@localization[adminpanel]}}';
         $data['content'] = '';

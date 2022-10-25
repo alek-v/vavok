@@ -25,25 +25,25 @@ class Mailer {
     /**
      * Send email
      *
-     * @param string $usermail
+     * @param string $user_mail
      * @param string $subject
      * @param string $msg
-     * @param string $mailfrom
+     * @param string $mail_from
      * @param string $name
      * @return bool
      */
-    function send($usermail, $subject, $msg, $mailfrom = '', $name = '')
+    function send(string $user_mail, string $subject, string $msg, string $mail_from = '', string $name = ''): bool
     {
         /**
          * Generate default email
          */
-        if (empty($mailfrom)) {
-            $mailfrom = $_SERVER['HTTP_HOST'];
+        if (empty($mail_from)) {
+            $mail_from = $_SERVER['HTTP_HOST'];
 
-            if (substr($mailfrom, 0, 2) == 'm.') $mailfrom = substr($mailfrom, 2);
-            if (substr($mailfrom, 0, 4) == 'www.') $mailfrom = substr($mailfrom, 4);
+            if (substr($mail_from, 0, 2) == 'm.') $mail_from = substr($mail_from, 2);
+            if (substr($mail_from, 0, 4) == 'www.') $mail_from = substr($mail_from, 4);
 
-            $mailfrom = 'no_reply@' . $mailfrom;
+            $mail_from = 'no_reply@' . $mail_from;
         }
 
         /**
@@ -52,9 +52,9 @@ class Mailer {
         if (empty($name)) $name = $this->configuration('title');
 
         // Support for unicode emails
-        if ($this->isUnicode($usermail) && function_exists('idn_to_ascii')) {
+        if ($this->isUnicode($user_mail) && function_exists('idn_to_ascii')) {
             // convert to ascii
-            $usermail = idn_to_ascii($usermail);
+            $user_mail = idn_to_ascii($user_mail);
         }
 
         $available_authentication = false;
@@ -65,7 +65,7 @@ class Mailer {
          * Check if data for authentication exists for email we use to send email
          */
         foreach ($available_mails as $key) {
-            if (in_array($mailfrom, $key)) {
+            if (in_array($mail_from, $key)) {
                 $available_authentication = true; // Use authentication, data for authentication is available
 
                 $mail_username = $key['username'];
@@ -83,15 +83,10 @@ class Mailer {
          */
         if (!$available_authentication) {
             //Set who the message is to be sent from
-            $mail->setFrom($mailfrom, $name);
+            $mail->setFrom($mail_from, $name);
         } else {
             //Tell PHPMailer to use SMTP
             $mail->isSMTP();
-            //Enable SMTP debugging
-            //SMTP::DEBUG_OFF = off (for production use)
-            //SMTP::DEBUG_CLIENT = client messages
-            //SMTP::DEBUG_SERVER = client and server messages
-            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
             //Set the hostname of the mail server
             $mail->Host = $mail_host;
             //Set the SMTP port number - likely to be 25, 465 or 587
@@ -109,7 +104,7 @@ class Mailer {
         // Set charset
         $mail->CharSet = 'utf-8';
         //Set who the message is to be sent to
-        $mail->addAddress($usermail);
+        $mail->addAddress($user_mail);
         //Set the subject line
         $mail->Subject = $subject;
         // Convert to HTML if message is plain text
@@ -121,18 +116,16 @@ class Mailer {
         //Replace the plain text body with one created manually
         $mail->AltBody = $msg;
 
-        //send the message
-        if (!$mail->send()) {
-            return false;
-        } else {
-            return true;
-        }
+        // Send the message
+        if (!$mail->send()) return false;
+
+        return true;
     }
 
     /**
      * Add email to the queue
      * 
-     * @param string $usermail
+     * @param string $user_mail
      * @param string $subject
      * @param string $message
      * @param string $sender_mail
@@ -140,7 +133,7 @@ class Mailer {
      * @param string $priority
      * @return void
      */
-    function queueEmail($usermail, $subject, $message, $sender_mail = '', $sender_name = '', $priority = '')
+    function queueEmail(string $user_mail, string $subject, string $message, string $sender_mail = '', string $sender_name = '', string $priority = ''): void
     {
         // User who added email to the queue
         $user_id = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;
@@ -149,7 +142,7 @@ class Mailer {
             'uad' => $user_id,
             'sender' => $sender_name,
             'sender_mail' => $sender_mail,
-            'recipient' => $usermail,
+            'recipient' => $user_mail,
             'subject' => $subject,
             'content' => $message,
             'sent' => 0,

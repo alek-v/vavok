@@ -14,7 +14,7 @@ if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
 if (!defined('APPDIR')) define('APPDIR', __DIR__ . '/');
 
 // Storage directory
-if (!defined('STORAGEDIR')) define('STORAGEDIR', BASEDIR . '/storage/');
+if (!defined('STORAGEDIR')) define('STORAGEDIR', BASEDIR . 'storage/');
 
 // Public directory
 if (!defined('PUBLICDIR')) define('PUBLICDIR', rtrim($_SERVER['SCRIPT_FILENAME'], 'index.php'));

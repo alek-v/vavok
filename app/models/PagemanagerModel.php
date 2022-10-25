@@ -7,14 +7,22 @@
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
 use App\Classes\PageManager;
+use App\Traits\Files;
+use App\Traits\Notifications;
 
 class PagemanagerModel extends BaseModel {
-    public function index()
+    use Files;
+    use Notifications;
+
+    /**
+     * @return array
+     */
+    public function index(): array
     {
         $index_data['tname'] = 'Page Manager';
         $index_data['content'] = '';
 
-        // Checking access permitions
+        // Checking access permissions
         if (!$this->user->administrator() && !$this->user->checkPermissions('pageedit', 'show')) $this->redirection('../?auth_error');
 
         $page_editor = new PageManager($this->container);
@@ -275,7 +283,7 @@ class PagemanagerModel extends BaseModel {
             $index_data['headt'] = $textEditor;
         }
 
-        // check if user can edit only pages that are made by themself or have permitions to edit all pages
+        // check if user can edit only pages that are made by themself or have permissions to edit all pages
         if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
             $edit_only_own_pages = 'yes';
         } else {

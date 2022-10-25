@@ -6,9 +6,15 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Traits\Notifications;
 
 class InboxModel extends BaseModel {
-    public function index()
+    use Notifications;
+
+    /**
+     * @return array
+     */
+    public function index(): array
     {
         // Disable access for unregistered users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);

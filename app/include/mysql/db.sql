@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `notif` (
 
 
 
--- special permitions list
+-- special permissions list
 CREATE TABLE IF NOT EXISTS `splist` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
   `permid` varchar(120) NOT NULL COMMENT 'permission id',
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `splist` (
 
 
 
--- special permitions
+-- special permissions
 CREATE TABLE IF NOT EXISTS `specperm` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
   `uid` int(9) NOT NULL default '0',

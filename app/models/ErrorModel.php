@@ -5,14 +5,18 @@
  */
 
 use App\Classes\BaseModel;
+use App\Traits\Files;
 
 class ErrorModel extends BaseModel {
+    use Files;
+
     /**
      * Log error
      * 
      * @param array $params
+     * @return array
      */
-    protected function log_error($params = [])
+    protected function log_error(array $params = []): array
     {
         // Load additional localization data
         $this->localization->loadAdditional('error');
@@ -85,8 +89,9 @@ class ErrorModel extends BaseModel {
      * Error 403
      * 
      * @param array $params
+     * @return array
      */
-    public function error_403($params = [])
+    public function error_403(array $params = []): array
     {
         // Log error
         $error_info = $this->log_error($params);
@@ -101,8 +106,9 @@ class ErrorModel extends BaseModel {
      * Error 404
      * 
      * @param array $params
+     * @return array
      */
-    public function error_404($params = [])
+    public function error_404(array $params = []): array
     {
         // Send page status code
         header("HTTP/1.0 404 Not Found");
@@ -120,8 +126,9 @@ class ErrorModel extends BaseModel {
      * Error 500
      * 
      * @param array $params
+     * @return array
      */
-    public function error_500($params = [])
+    public function error_500(array $params = []): array
     {
         // Log error
         $error_info = $this->log_error($params);

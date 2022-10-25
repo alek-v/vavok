@@ -98,104 +98,6 @@ trait Core {
         return $file_time;
     }
 
-    // clear file
-    function clearFile($files) {
-        $file = file($files);
-        $fp = fopen($files, "a+");
-        flock ($fp, LOCK_EX);
-        ftruncate ($fp, 0);
-        fflush ($fp);
-        flock ($fp, LOCK_UN);
-        fclose($fp);
-
-        return $files;
-    }
-
-    // Clear directory
-    function clearDirectory($directory) {
-        $di = new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS);
-        $ri = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST);
-
-        foreach($ri as $file) {
-            $file->isDir() ?  rmdir($file) : unlink($file);
-        }
-    }
-
-    // Read directory size
-    function readDirectory($dir) {
-        if ($path = opendir($dir)) while ($file_name = readdir($path)) {
-            $size = 0;
-            if (($file_name !== '.') && ($file_name !== "..") && ($file_name !== ".htaccess")) {
-                if (is_dir($dir . "/" . $file_name)) $size = $this->readDirectory($dir . "/" . $file_name);
-                else $size += filesize($dir . "/" . $file_name);
-            }
-        }
-
-        return $size;
-    }
-
-    // count number of lines in file
-    function linesInFile($files) {
-        $count_lines = 0;
-        if (file_exists($files)) {
-            $lines = file($files);
-            $count_lines = count($lines);
-        }
-
-        return $count_lines;
-    }
-
-    /**
-     * Limit number of lines in file
-     * 
-     * @param string $file_name
-     * @param integer $max
-     * @return void
-     */
-    function limitFileLines($file_name, $max = 100)
-    {
-        $file = file($file_name);
-        $i = count($file);
-        if ($i >= $max) {
-            $fp = fopen($file_name, "w");
-            flock ($fp, LOCK_EX);
-            unset($file[0]);
-            unset($file[1]);
-            fputs($fp, implode('', $file));
-            flock ($fp, LOCK_UN);
-            fclose($fp);
-        }
-    }
-
-    /**
-     * Read file from data directory
-     *
-     * @param string $filename
-     * @return array
-     */
-    public function getDataFile($filename)
-    {
-        return file(STORAGEDIR . $filename);
-    }
-
-    /**
-     * Write to file in data directory
-     *
-     * @param string $filename
-     * @param string $data
-     * @param integer $append_data, 1 is to append new data
-     * @return void
-     */
-    public function writeDataFile($filename, $data, $append_data = '')
-    {
-        if ($append_data == 1) {
-            file_put_contents(STORAGEDIR . $filename, $data, FILE_APPEND);
-            return;
-        }
-
-        file_put_contents(STORAGEDIR . $filename, $data, LOCK_EX);
-    }
-
     // Multibyte ucfirst by plemieux
     function my_mb_ucfirst($str) {
         $fc = mb_strtoupper(mb_substr($str, 0, 1));
@@ -518,7 +420,7 @@ trait Core {
     public function isTextHtml($text)
     {
        $processed = htmlentities($text);
-       if($processed == $text) return false;
+       if ($processed == $text) return false;
        return true; 
     }
 
@@ -539,7 +441,7 @@ trait Core {
      * @param string $str
      * @return string
      */
-    public function check($str)
+    public function check(string $str): string
     {
         $str = str_replace("|", "&#124;", $str);
         $str = htmlspecialchars($str);
@@ -550,27 +452,11 @@ trait Core {
         $str = str_replace("`", "", $str);
         $str = str_replace("^", "&#94;", $str);
         $str = str_replace("%", "&#37;", $str);
-        $str = str_replace("№", "&#8470;", $str);
-        $str = str_replace("™", "&#153;", $str);
         $str = str_replace("”", "&#8221;", $str);
         $str = str_replace("“", "&#8220;", $str);
-        $str = str_replace("…", "&#8230;", $str);
-        $str = str_replace("°", "&#176;", $str);
         $str = preg_replace("/&#58;/", ":", $str, 3);
         $str = str_replace("\\r\\n", "\r\n", $str); // we want new lines
         return $str;
-    }
-
-    /**
-     * Read file permissions CHMOD
-     * 
-     * @param string $file
-     * @return $file
-     */
-    public function permissions($file)
-    {
-        $file = decoct(fileperms("$file")) % 1000;
-        return $file;
     }
 
     /**
@@ -589,32 +475,6 @@ trait Core {
         $makepass .= $salt[mt_rand(0, $len - 1)];
 
         return $makepass;
-    } 
-
-    // antiflood
-    function flooder($ip, $phpself = '') {
-        $old_db = $this->getDataFile('flood.dat');
-        $new_db = fopen(STORAGEDIR . "flood.dat", "w");
-        flock ($new_db, LOCK_EX);
-        $result = false;
-
-        foreach($old_db as $old_db_line) {
-            $old_db_arr = explode("|", $old_db_line);
-
-            if (($old_db_arr[0] + $this->configuration('floodTime')) > time()) {
-                fputs ($new_db, $old_db_line);
-
-                if ($old_db_arr[1] == $ip && $old_db_arr[2] == $_SERVER['PHP_SELF']) {
-                    $result = true;
-                }
-            }
-        }
-
-        fflush($new_db);
-        flock ($new_db, LOCK_UN);
-        fclose($new_db);
-
-        return $result;
     }
 
     /**
@@ -623,7 +483,7 @@ trait Core {
      * @param string $captcha
      * @return bool
      */
-    public function recaptchaResponse($captcha)
+    public function recaptchaResponse(string $captcha): bool
     {
         // Return success if there is no secret key or disabled reCAPTCHA
         if (empty($this->configuration('recaptcha_secretkey'))) return array('success' => true);
@@ -632,45 +492,6 @@ trait Core {
         $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
         $response = file_get_contents($url);
         return $responseKeys = json_decode($response, true);
-    }
-
-    // Show fatal error and stop script execution
-    public function fatalError($error) {
-        echo '<div style="text-align: center;margin-top: 40px;">Error: ' . $error . '</div>';
-        exit;
-    }
-
-    /**
-     * Show success notification
-     * 
-     * @param string $error
-     * @return string
-     */
-    public function showSuccess($success)
-    {
-        return '<div class="alert alert-success" role="alert">' . $success . '</div>';
-    }
-
-    /**
-     * Show error notification to user
-     * 
-     * @param string $error
-     * @return string
-     */
-    public function showDanger($error)
-    {
-        return '<div class="alert alert-danger" role="alert">' . $error . '</div>';
-    }
-
-    /**
-     * Show notification to user
-     * 
-     * @param string $notification
-     * @return string
-     */
-    public function showNotification($notification)
-    {
-        return '<div class="alert alert-info" role="alert">' . $notification . '</div>';
     }
 
     /**

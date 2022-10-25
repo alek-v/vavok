@@ -4,11 +4,16 @@ use App\Classes\BaseModel;
 use App\Classes\Navigation;
 use App\Classes\Mailer;
 use App\Traits\Validations;
+use App\Traits\Notifications;
 
 class UsersModel extends BaseModel {
     use Validations;
+    use Notifications;
 
-    public function register()
+    /**
+     * @return array
+     */
+    public function register(): array
     {
         // Meta tag for this page
         $data['headt'] = '<meta name="robots" content="noindex">';

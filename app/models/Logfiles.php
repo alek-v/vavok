@@ -6,8 +6,11 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Traits\Files;
 
 class Logfiles extends BaseModel {
+    use Files;
+
     /**
      * Read data from log files
      */

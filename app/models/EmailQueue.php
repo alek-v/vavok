@@ -7,9 +7,12 @@
 use App\Classes\BaseModel;
 use App\Classes\Mailer;
 use App\Classes\PageManager;
+use App\Traits\Files;
 use Pimple\Container;
 
 class EmailQueue extends BaseModel {
+    use Files;
+
     private object $_mailer;
 
     public function __construct(protected Container $container)
@@ -22,8 +25,10 @@ class EmailQueue extends BaseModel {
 
     /**
      * Send using cronjob
+     *
+     * @return void
      */
-    public function send()
+    public function send(): void
     {
         // New package to be sent every $diff_time minutes
         $diff_time = 1;
@@ -81,7 +86,7 @@ class EmailQueue extends BaseModel {
         $page_data['tname'] = 'eMail queue';
         $page_data['content'] = '';
 
-        // Checking access permitions
+        // Checking access permissions
         if (!$this->user->administrator(101)) $this->redirection('../');
 
          // How manu emails to add to queue at once

@@ -2,9 +2,11 @@
 
 use App\Classes\BaseModel;
 use App\Traits\Validations;
+use App\Traits\Notifications;
 
 class ProfileModel extends BaseModel {
     use Validations;
+    use Notifications;
 
     /**
      * Profile page

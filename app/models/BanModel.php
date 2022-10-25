@@ -6,12 +6,17 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Traits\Notifications;
 
 class BanModel extends BaseModel {
+    use Notifications;
+
     /**
      * Add ban
+     *
+     * @return array
      */
-    public function addban()
+    public function addban(): array
     {
         $data['tname'] = '{@localization[banning]}}';
         $data['content'] = '';
