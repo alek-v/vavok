@@ -2,16 +2,21 @@
 
 namespace App\Traits;
 
+use App\Classes\FileException;
+
 trait Files {
     /**
      * Clear file
      *
-     * @param string $file
+     * @param string $filename
      * @return bool
+     * @throws FileException
      */
-    public function clearFile(string $file): bool
+    public function clearFile(string $filename): bool
     {
-        file_put_contents($file, '');
+        $result = file_put_contents($filename, '');
+
+        if ($result === false) throw new FileException('File ' . $filename . ' is not writeable.');
 
         return true;
     }
@@ -19,41 +24,40 @@ trait Files {
     /**
      * Count number of lines in the file
      *
-     * @param string $file
+     * @param string $filename
      * @return int
+     * @throws FileException
      */
-    public function linesInFile(string $file): int
+    public function linesInFile(string $filename): int
     {
         $count_lines = 0;
-        if (file_exists($file)) $count_lines = count(file($file));
+        if (file_exists($filename)) $count_lines = count(file($filename));
+        else throw new FileException('File ' . $filename . ' does not exist.');
 
         return $count_lines;
     }
 
     /**
-     * Limit number of lines in file
+     * Limit number of lines in file located in storage directory
      *
-     * @param string $file_name
+     * @param string $filename
      * @param integer $max
      * @return void
+     * @throws FileException
      */
-    public function limitFileLines(string $file_name, int $max = 100): void
+    public function limitFileLines(string $filename, int $max = 100): void
     {
-        $file = file($file_name);
+        $file = file(STORAGEDIR . $filename);
         $i = count($file);
-        if ($i >= $max) {
-            $fp = fopen($file_name, "w");
-            flock($fp, LOCK_EX);
+        if ($i > $max) {
             unset($file[0]);
-            unset($file[1]);
-            fputs($fp, implode('', $file));
-            flock($fp, LOCK_UN);
-            fclose($fp);
+            $file_content = implode('', $file);
+            $this->writeDataFile($filename, $file_content);
         }
     }
 
     /**
-     * Read file from data directory
+     * Read file from storage directory
      *
      * @param string $filename
      * @return array
@@ -70,14 +74,28 @@ trait Files {
      * @param string $data
      * @param ?int $append_data, 1 is to append new data
      * @return void
+     * @throws FileException
      */
     public function writeDataFile(string $filename, string $data, ?int $append_data = null): void
     {
         if ($append_data == 1) {
-            file_put_contents(STORAGEDIR . $filename, $data, FILE_APPEND);
-            return;
+            $result = file_put_contents(STORAGEDIR . $filename, $data, FILE_APPEND);
+        } else {
+            $result = file_put_contents(STORAGEDIR . $filename, $data, LOCK_EX);
         }
 
-        file_put_contents(STORAGEDIR . $filename, $data, LOCK_EX);
+        if (!$result) throw new FileException('File ' . STORAGEDIR . $filename . ' is not writeable.');
+    }
+
+    /**
+     * Make file in storage directory writeable
+     * @param string $filename
+     * @return void
+     * @throws FileException
+     */
+    public function makeFileWriteable(string $filename): void
+    {
+        $result = chmod(STORAGEDIR . $filename, 0777);
+        if (!$result) throw new FileException('Cannot change CHMOD permissions of the file ' . STORAGEDIR . $filename);
     }
 }
