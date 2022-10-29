@@ -12,8 +12,7 @@ use DateTime;
 use DateInterval;
 
 class User {
-    use Core;
-    use Validations;
+    use Core, Validations;
 
     protected Database $db;
     public array $user_data = [

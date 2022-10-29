@@ -10,8 +10,7 @@ use App\Traits\Validations;
 use App\Traits\Notifications;
 
 class ContactModel extends BaseModel {
-    use Validations;
-    use Notifications;
+    use Validations, Notifications;
 
     /**
      * Index page

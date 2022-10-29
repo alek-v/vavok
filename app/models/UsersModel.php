@@ -7,8 +7,7 @@ use App\Traits\Validations;
 use App\Traits\Notifications;
 
 class UsersModel extends BaseModel {
-    use Validations;
-    use Notifications;
+    use Validations, Notifications;
 
     /**
      * @return array

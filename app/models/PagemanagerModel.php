@@ -11,8 +11,7 @@ use App\Traits\Files;
 use App\Traits\Notifications;
 
 class PagemanagerModel extends BaseModel {
-    use Files;
-    use Notifications;
+    use Files, Notifications;
 
     /**
      * @return array
@@ -157,7 +156,7 @@ class PagemanagerModel extends BaseModel {
             if (!empty($this->postAndGet('lang'))) {
                 $pagelang = $this->postAndGet('lang');
 
-                $pagelang_file = '!.' . $pagelang . '!';
+                $pagelang_file = '_' . $pagelang;
             } else {
                 $pagelang = '';
                 $pagelang_file = '';
@@ -265,7 +264,7 @@ class PagemanagerModel extends BaseModel {
             $page_editor->language($pageId, $lang);
 
             $pageData = $page_editor->selectPage($pageId);
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $pageData['pname'] . "!." . $lang . "!.php&isset=mp_editfiles");
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $pageData['pname'] . "_" . $lang . ".php&isset=mp_editfiles");
 
         }
 
@@ -283,11 +282,11 @@ class PagemanagerModel extends BaseModel {
             $index_data['headt'] = $textEditor;
         }
 
+        $edit_only_own_pages = '';
+
         // check if user can edit only pages that are made by themself or have permissions to edit all pages
         if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
             $edit_only_own_pages = 'yes';
-        } else {
-            $edit_only_own_pages = '';
         }
 
         if (empty($this->postAndGet('action'))) {
@@ -319,10 +318,9 @@ class PagemanagerModel extends BaseModel {
                     $file_lang = '';
                 } 
 
-                $filename = preg_replace("/!.(.*)!.php/", "$2", $page_info['file']);
-                $filename = str_replace(".php", "", $filename);
-
-                $filename = $filename . ' ' . strtoupper($file_lang) . '';
+                // Page name
+                $filename = $page_info['pname'];
+                $filename = $filename . ' ' . strtoupper($file_lang);
 
                 if (empty($edit_only_own_pages)) {
                     $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $page_info['file'], $filename, '<b>', '</b>');
@@ -355,8 +353,8 @@ class PagemanagerModel extends BaseModel {
                     $index_data['content'] .= ' {@localization[created]}}: ' . $this->correctDate($page_info['created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['crtdby']) . ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['lastupd'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['lstupdby']);
                     $index_data['content'] .= '<hr />';
                 } 
-            
-            unset($page_info);
+
+                unset($page_info);
             } 
 
             // navigation
@@ -443,7 +441,6 @@ class PagemanagerModel extends BaseModel {
 
                 // Page name
                 $show_up_file = str_replace('.php', '', $file);
-                if (stristr($show_up_file, '!.')) $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
 
                 $index_data['content'] .= '<p>Edit mode: ' . $edmode_name . '</p>';
 
@@ -521,9 +518,6 @@ class PagemanagerModel extends BaseModel {
             // show page name
             if (!stristr($file, '/')) {
                 $show_up_file = str_replace('.php', '', $file);
-                if (stristr($show_up_file, '!.')) {
-                    $show_up_file = preg_replace("/(.*)!.(.*)!/", "$1", $show_up_file);
-                } 
             } else {
                 $show_up_file = $file;
             }
