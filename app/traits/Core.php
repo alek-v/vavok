@@ -496,12 +496,13 @@ trait Core {
     }
 
     /**
-     * Show smiles in messages
+     * Show smiles in message
      * 
      * @param string $string
      * @return string
      */
-    function smiles($string) {
+    function smiles(string $string): string
+    {
         $dir = opendir(PUBLICDIR . "themes/images/smiles");
         while ($file = readdir($dir)) {
             if (preg_match ("/.gif/", $file)) {
@@ -515,11 +516,10 @@ trait Core {
             $string = str_replace(":$smval:", '<img src="' . HOMEDIR . 'themes/images/smiles/' . $smval . '.gif" alt=":' . $smval . ':" />', $string);
         } 
 
-        $string = str_replace(";)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=";)" />', $string);
+        $string = str_replace(";)", ' <img src="' . HOMEDIR . 'themes/images/smiles/;).gif" alt=";)" />', $string);
         $string = str_replace(":)", ' <img src="' . HOMEDIR . 'themes/images/smiles/).gif" alt=":)" />', $string);
         $string = str_replace(":(", ' <img src="' . HOMEDIR . 'themes/images/smiles/(.gif" alt=":(" />', $string);
         $string = str_replace(":D", ' <img src="' . HOMEDIR . 'themes/images/smiles/D.gif" alt=":D" />', $string);
-        $string = str_replace(":E", ' <img src="' . HOMEDIR . 'themes/images/smiles/E.gif" alt=":E" />', $string);
         $string = str_replace(":P", ' <img src="' . HOMEDIR . 'themes/images/smiles/P.gif" alt=":P" />', $string);
 
        return $string;
