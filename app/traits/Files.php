@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Classes\FileException;
+use App\Exceptions\FileException;
 
 trait Files {
     /**
