@@ -14,7 +14,7 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'File Upload';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
 
         if (empty($this->postAndGet('action'))) {
             $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
@@ -55,7 +55,7 @@ class FileUpload extends BaseModel {
         $this_page['tname'] = 'Uploaded Files';
         $this_page['content'] = '';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection('../pages/login.php');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
 
         if ($this->postAndGet('action') == 'del') {
             $file_data = $this->db->selectData('uplfiles', 'id = :id', [':id' => $this->postAndGet('id')]);

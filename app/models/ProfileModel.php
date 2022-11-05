@@ -225,10 +225,10 @@ class ProfileModel extends BaseModel {
      */
     public function save()
     {
-        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection('profile.php?isset=insite');
+        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection(HOMEDIR. 'profile?isset=insite');
 
         // check email
-        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection('profile.php?isset=noemail');
+        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection(HOMEDIR . 'profile?isset=noemail');
 
         $my_name = $this->replaceNewLines($this->postAndGet('my_name'));
         $surname = $this->replaceNewLines($this->postAndGet('surname'));

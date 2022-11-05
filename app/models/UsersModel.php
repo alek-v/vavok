@@ -564,16 +564,16 @@ class UsersModel extends BaseModel {
                 if ($this->user->ignoreres($this->user->user_id(), $this->postAndGet('who')) == 1 && !$this->user->isbuddy($this->postAndGet('who'), $this->user->user_id)) {
                     $this->db->insert('buddy', array('name' => $this->user->user_id(), 'target' => $this->postAndGet('who')));
     
-                    header ("Location: buddy.php?isset=kontakt_add");
+                    header ("Location: " . HOMEDIR . "users/contacts/?isset=kontakt_add");
                     exit;
                 } else {
-                    header ("Location: buddy.php?isset=kontakt_noadd");
+                    header ("Location: " . HOMEDIR . "users/contacts/?isset=kontakt_noadd");
                     exit;
                 }
             } elseif ($this->postAndGet('todo') == 'del') {
                 $this->db->delete('buddy', "name='{$this->user->user_id()}' AND target='" . $this->postAndGet('who') . "'");
     
-                $this->redirection('buddy.php?isset=kontakt_del');
+                $this->redirection(HOMEDIR . 'users/contacts/?isset=kontakt_del');
             }
         }
 
@@ -824,7 +824,6 @@ class UsersModel extends BaseModel {
         if ($time_ban > 0) {
             $data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
             $data['content'] .= '<b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b>';
-            //$this_page['content'] .= '<strong>You are logged out</strong>'; TODO - update lang and show message
 
             $data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
 
@@ -839,8 +838,6 @@ class UsersModel extends BaseModel {
             if (!empty($bandesc)) {
                 $data['content'] .= '<p><b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b></p>';
             }
-
-            $data['content'] .= '<p>{@localization[endbanadvice]}} ' . $this->sitelink('siterules.php', $this->localization->string('siterules'), '<strong>', '</strong>') . '</p>';
         
             $this->user->updateUser('banned', 0);
             $this->user->updateUser(array('bantime', 'bandesc'), array('', ''));
