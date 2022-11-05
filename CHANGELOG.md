@@ -1,3 +1,76 @@
+<<<<<<< HEAD
+||||||| e10742a
+# Vavok v4.3 - 5.11.2022.
+
+    feat: Add option to create newsletter categories (options)
+    refactor: Delete unused files
+    refactor: Remove unnecessary USE for traits
+    refactor: Add exceptions while writing to the file
+    refactor: Split code into traits, make code to follow more SOLID
+    refactor: Add backlink when confirmation code is resent
+    refactor: Send only int as timestamp to correctDate() method, remove unused code
+    refactor: Remove unused code
+    refactor: Remove duplicated code
+    refactor: Disable displaying errors in production
+    fix: Show ;) emoji properly
+    fix: Property declaration has been fixed
+    fix: Registration confirmation code fixed
+
+
+
+# Vavok v4.2
+    Feature:
+        - Add option to create newsletter categories (options)
+    Refactor:
+        - Split code into traits, make code to follow more SOLID
+        - Add backlink when confirmation code is resent
+        - Remove unused files
+        - Send only int as timestamp to correctDate() method, remove unused code
+        - Remove unused code
+        - Remove duplicated code
+        - Disable displaying errors in the production
+    Fixed:
+        - Property declaration has been fixed
+        - Registration confirmation code fixed
+
+
+
+=======
+# Vavok v4.3 - 5.11.2022.
+
+    feat: Add option to create newsletter categories (options)
+    refactor: Delete unused files
+    refactor: Remove unnecessary USE for traits
+    refactor: Add exceptions while writing to the file
+    refactor: Split code into traits, make code to follow more SOLID
+    refactor: Add backlink when confirmation code is resent
+    refactor: Send only int as timestamp to correctDate() method, remove unused code
+    refactor: Remove unused code
+    refactor: Remove duplicated code
+    refactor: Disable displaying errors in production
+    fix: Show ;) emoji properly
+    fix: Registration confirmation code fixed
+
+
+
+# Vavok v4.2
+    Feature:
+        - Add option to create newsletter categories (options)
+    Refactor:
+        - Split code into traits, make code to follow more SOLID
+        - Add backlink when confirmation code is resent
+        - Remove unused files
+        - Send only int as timestamp to correctDate() method, remove unused code
+        - Remove unused code
+        - Remove duplicated code
+        - Disable displaying errors in the production
+    Fixed:
+        - Property declaration has been fixed
+        - Registration confirmation code fixed
+
+
+
+>>>>>>> 4.3-branch
 # Vavok v4.1
     Feature:
         - Use HTML templates for emails
