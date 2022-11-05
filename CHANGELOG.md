@@ -11,7 +11,6 @@
     refactor: Remove duplicated code
     refactor: Disable displaying errors in production
     fix: Show ;) emoji properly
-    fix: Property declaration has been fixed
     fix: Registration confirmation code fixed
 
 
