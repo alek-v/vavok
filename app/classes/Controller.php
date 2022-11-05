@@ -91,7 +91,7 @@ abstract class Controller {
             // Set authentication data for the page
             $page->set('authentication', $page->merge(array($auth)));
         }
-//var_dump($this->container['localization']->getStrings());
+
         // Pass localization data to method and show the page
         echo $page->show($this->container['localization']->getStrings());
     }

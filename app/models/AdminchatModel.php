@@ -6,7 +6,7 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
-use App\Classes\FileException;
+use App\Exceptions\FileException;
 use App\Traits\Files;
 
 class AdminchatModel extends BaseModel {

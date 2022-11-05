@@ -12,8 +12,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 class Mailer {
-    use Core;
-    use Validations;
+    use Core, Validations;
 
     protected object $db;
 

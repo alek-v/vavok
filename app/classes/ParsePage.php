@@ -10,8 +10,7 @@ use App\Traits\Notifications;
 use Pimple\Container;
 
 class ParsePage {
-    use Core;
-    use Notifications;
+    use Core, Notifications;
 
     protected string $file;             // Template
     protected string $title;            // Page title

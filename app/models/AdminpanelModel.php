@@ -13,9 +13,7 @@ use App\Traits\Files;
 use App\Traits\Notifications;
 
 class AdminpanelModel extends BaseModel {
-    use Validations;
-    use Files;
-    use Notifications;
+    use Validations, Files, Notifications;
 
     /**
      * Index page

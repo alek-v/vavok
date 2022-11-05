@@ -1,20 +1,3 @@
-# Vavok v4.2
-    Feature:
-        - Add option to create newsletter categories (options)
-    Refactor:
-        - Split code into traits, make code to follow more SOLID
-        - Add backlink when confirmation code is resent
-        - Remove unused files
-        - Send only int as timestamp to correctDate() method, remove unused code
-        - Remove unused code
-        - Remove duplicated code
-        - Disable displaying errors in the production
-    Fixed:
-        - Property declaration has been fixed
-        - Registration confirmation code fixed
-
-
-
 # Vavok v4.1
     Feature:
         - Use HTML templates for emails
