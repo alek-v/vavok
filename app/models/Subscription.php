@@ -15,7 +15,7 @@ class Subscription extends BaseModel {
         $this_page['content'] = '';
 
         // Authentication
-        if (!$this->user->administrator(101)) $this->redirection('../index.php?error');
+        if (!$this->user->administrator(101)) $this->redirection('../?error');
 
         // Delete subscription
         if ($this->postAndGet('action') == 'delmail' && $_SESSION['permissions'] == 101) {
@@ -63,7 +63,7 @@ class Subscription extends BaseModel {
                 $sql = "SELECT user_id, user_mail, subscription_name FROM subs ORDER BY id LIMIT $limit_start, $items_per_page";
         
                 foreach ($this->db->query($sql) as $item) {
-                    $this_page['content'] .= $this->sitelink('../pages/user.php?uz=' . $item['user_id'], $this->user->getNickFromId($item['user_id']), '<b>', '</b>');
+                    $this_page['content'] .= $this->sitelink(HOMEDIR . 'users/u/' . $item['user_id'], $this->user->getNickFromId($item['user_id']), '<b>', '</b>');
                     $this_page['content'] .= '<b><font color="#FF0000"> (' . $item['user_mail'] . ')</font></b>';
     
                     if (!empty($item['subscription_name'])) {

@@ -566,8 +566,6 @@ trait Core {
 
             if ($counter_configuration == 4) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $total_visits . ' | ' . $total_clicks . '</a>';
 
-            if ($counter_configuration == 5) $info = '<a href="' . HOMEDIR . 'pages/statistics"><img src="' . HOMEDIR . 'gallery/count.php" alt=""></a>';
-
             return '<p class="site_counter">' . $info . '</p>';
         }
     }
