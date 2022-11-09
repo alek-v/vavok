@@ -42,11 +42,11 @@ Documentation can be found here: https://docs.vavok.net
 11. Show online users, registered users, and guests. This option can be shown for all users, per site settings.
 12. Manage profiles of the users, edit data, delete profile option
 13. Page manager (builder), create, edit, and delete pages and blog posts
-14. Manage site settings
-    Default language
-    Open or close users registration
-    Turn off or on the registration confirmation
-    Manage reCaptcha site key
+14. Manage site settings  
+Default language  
+Open or close users registration  
+Turn off or on the registration confirmation  
+Manage reCaptcha site key
 15. List of newsletter subscribers
 16. Add email to the queue
 17. Manage subscription options
@@ -67,12 +67,12 @@ composer install
 
 Requirements:
 
-> PHP 8.0 or newer
-> MySQL or MariaDB
+PHP 8.0 or newer  
+MySQL or MariaDB
 
 
 
 ## Dev Dependencies
 
-Pimple
+Pimple  
 PHPMailer
