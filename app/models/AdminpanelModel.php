@@ -52,8 +52,6 @@ class AdminpanelModel extends BaseModel {
             if ($this->user->administrator()) {
                 $data['content'] .= '<hr>';
 
-                if (file_exists('antiword.php')) $data['content'] .= $this->sitelink('antiword.php', '{@localization[badword]}}');
-
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/statistics', '{@localization[statistics]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[profile_management]}}');
             }
@@ -98,7 +96,7 @@ class AdminpanelModel extends BaseModel {
                 }
             }
 
-            $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // update lang
+            $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // todo: update lang
         }
 
         if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', '{@localization[adminpanel]}}', '<p>', '</p>');
@@ -1231,7 +1229,7 @@ class AdminpanelModel extends BaseModel {
         
                 $data['content'] .= '</p>';
             } else {
-                $data['content'] .= $this->localization->string('usrnoexist') . '!';
+                $data['content'] .= $this->localization->string('user_does_not_exist') . '!';
             }
         
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[back]}}', '<p>', '</p>');
@@ -1286,7 +1284,7 @@ class AdminpanelModel extends BaseModel {
         
                         $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
                     } else {
-                        $data['content'] .= $this->localization->string('usrnoexist') . '!<br>';
+                        $data['content'] .= $this->localization->string('user_does_not_exist') . '!<br>';
                     }
                 } else {
                     $data['content'] .= $this->localization->string('urlnotok') . '!<br>';

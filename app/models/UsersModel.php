@@ -871,9 +871,9 @@ class UsersModel extends BaseModel {
 
         // Show error page if user doesn't exist
         if (!isset($users_id) || !$this->user->id_exists($users_id)) {
-            $this_page['tname'] = 'User doesn\'t exist';
+            $this_page['tname'] = 'User does not exist';
 
-            $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('usrnoexist'));
+            $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
 
             $this_page['content'] .= $this->homelink('<p>', '</p>');
 
@@ -944,14 +944,11 @@ class UsersModel extends BaseModel {
         // City
         if (!empty($this->user->user_info('city', $users_id))) $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->user_info('city', $users_id)) . '<br>');
 
-        // Abou user
+        // About user
         if (!empty($this->user->user_info('about', $users_id))) $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->user_info('about', $users_id)) . ' <br>');
 
         // User's birthday
         if (!empty($this->user->user_info('birthday', $users_id)) && $this->user->user_info('birthday', $users_id) != "..") $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->user_info('birthday', $users_id)) . '<br>');
-
-        // Forum posts
-        if ($this->configuration('forumAccess') == 1) $showPage->set('forumPosts', $this->localization->string('formposts') . ': ' . (int)$this->user->user_info('forummes', $users_id) . '<br>');
 
         // User's browser
         if (!empty($this->user->user_info('browser', $users_id))) $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->user_info('browser', $users_id)) . ' <br>');
@@ -987,7 +984,7 @@ class UsersModel extends BaseModel {
                 $userMenu->set('ignore', '{@localization[ignore]}}<br />');
             }
 
-            if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) $userMenu->set('banUser', '<a href="../' . $this->configuration('mPanel') . '/addban/?action=edit&users=' . $uz . '">{@localization[bandelban]}}</a><br>');
+            if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) $userMenu->set('banUser', '<a href="' . HOMEDIR . $this->configuration('mPanel') . '/addban/?action=edit&users=' . $uz . '">{@localization[bandelban]}}</a><br>');
 
             if ($this->user->userAuthenticated() && $this->user->administrator(101)) $userMenu->set('updateProfile', '<a href="' . HOMEDIR . $this->configuration('mPanel') . '/users/?action=edit&users=' . $uz . '">{@localization[update]}}</a><br>');
 
