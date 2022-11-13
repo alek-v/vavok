@@ -31,9 +31,6 @@ class Navigation {
         // Set page number
         $this->current_page = $page; // number of current page
 
-        // Compatibility with older navigations - deprecated 16.10.2021. 15:01:15
-        if (is_numeric($link) && !empty($link2)) $link = $link2;
-
         $this->link = $link; // page where navigation will be
     }
 

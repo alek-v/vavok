@@ -96,32 +96,6 @@ class Database extends PDO implements DBInterface {
     }
 
     /**
-     * Get data from the database
-     * Deprecated, use selectData() method
-     * 
-     * @deprecated since version 4.0
-     * 
-     * @param string $table
-     * @param string $where
-     * @param string $fields
-     * @return array|bool
-     */
-    public function getData(string $table, string $where = '', string $fields = '*'): array|bool
-    {
-        $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
-        if (!empty($where))
-            $sql .= ' WHERE ' . $where;
-        $sql .= ';';
-
-        // Count number of db queries while debugging
-        $this->dbQueries();
-
-        $query = $this->query($sql);
-
-        return $query->fetch(PDO::FETCH_ASSOC);            
-    }
-
-    /**
      * Count number of rows
      * 
      * @param string $table

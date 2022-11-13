@@ -264,7 +264,6 @@ class PageManager {
      */
     function getPageId($where, $bind)
     {
-        //$page_id = $this->db->getData('pages', $where, 'id');
         $page_id = $this->db->selectData('pages', $where, $bind, 'id');
         return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
     }
