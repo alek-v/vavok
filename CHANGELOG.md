@@ -1,3 +1,12 @@
+# Vavok v4.5 - 14.11.2022.
+
+    refactor: Update localization
+    refactor: Change code to remove too much nested if statements
+    remove: Deprecated method getData() has been removed
+    docs: Update readme
+
+
+
 # Vavok v4.4 - 5.11.2022.
 
     feat: Add option to create newsletter categories (options)
