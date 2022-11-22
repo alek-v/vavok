@@ -65,7 +65,7 @@ class SearchModel extends BaseModel {
             $items = count($page_ids);
             unset($page_ids);
 
-            $thisPageNav = new Navigation(20, $items, $this->postAndGet('page'));
+            $thisPageNav = new Navigation(20, $items);
 
             $searchItems = array();
             $page_ids = array();

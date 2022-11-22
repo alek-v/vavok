@@ -30,7 +30,7 @@ class InboxModel extends BaseModel {
         $items_per_page = 10;
     
         // navigation
-        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'inbox?');
+        $navigation = new Navigation($items_per_page, HOMEDIR . 'inbox?');
         $limit_start = $navigation->start()['start']; // starting point
     
         if ($num_items > 0) {

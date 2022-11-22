@@ -15,7 +15,7 @@ class Navigation {
     public $page;
     public $link;
 
-    public function __construct($items_per_page, $total_items, $link = '', $link2 = '')
+    public function __construct($items_per_page, $total_items, $link = '')
     {
         $this->items_per_page = $items_per_page; // items per page
         $this->total_items = $total_items; // total items

@@ -54,7 +54,7 @@ class Subscription extends BaseModel {
             $items_per_page = 10;
 
             // Navigation
-            $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/subscriptions/?'); // start navigation
+            $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/subscriptions/?'); // start navigation
         
             $limit_start = $navigation->start()['start']; // starting point
             $end = $navigation->start()['end']; // ending point

@@ -521,7 +521,7 @@ class UsersModel extends BaseModel {
         $num_items = $this->db->countRow('blocklist', "name='{$this->user->user_id()}'");
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'users/ignore/?'); // start navigation
+        $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'users/ignore/?'); // start navigation
 
         $limit_start = $navigation->start()['start'];
 
@@ -580,7 +580,7 @@ class UsersModel extends BaseModel {
         $num_items = $this->db->countRow('buddy', "name='{$this->user->user_id()}'");
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'users/contacts/?'); // start navigation
+        $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'users/contacts/?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 

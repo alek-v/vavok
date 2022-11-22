@@ -82,7 +82,7 @@ class AdminchatModel extends BaseModel {
                 $data['content'] .='<p><img src="../themes/images/img/reload.gif" alt=""> <b>{@localization[no_messages]}}</b></p>';
             }
 
-            $navigation = new Navigation(10, $total, $this->postAndGet('page'), HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
+            $navigation = new Navigation(10, $total, HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
         
             $limit_start = $navigation->start()['start']; // starting point
         

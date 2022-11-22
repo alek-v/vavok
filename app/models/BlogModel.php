@@ -105,7 +105,7 @@ class BlogModel extends BaseModel {
                 if ($comments_per_page == 0) $comments_per_page = $total_comments;
 
                 // Start navigation
-                $navi = new Navigation($items_per_page, $total_comments, $this->postAndGet('page'));
+                $navi = new Navigation($items_per_page, $total_comments);
         
                 $all_comments = $comments->loadComments($this->page_id, $navi->start()['start'], $comments_per_page);
 
@@ -179,7 +179,7 @@ class BlogModel extends BaseModel {
                 }
 
                 // start navigation
-                $navi = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'));
+                $navi = new Navigation($items_per_page, $total_posts);
 
                 // Get blog category names
                 foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'blog_category' OR setting_group = 'blog_category_{$user_localization_short}' ORDER BY options") as $category) {
@@ -257,7 +257,7 @@ class BlogModel extends BaseModel {
                 $show_page->set('posts', $page_posts->merge($all_posts));
         
                 // page navigation
-                $navigation = new Navigation($items_per_page, $total_posts, $this->postAndGet('page'), './?');
+                $navigation = new Navigation($items_per_page, $total_posts, './?');
                 
                 $show_page->set('navigation', $navigation->get_navigation());
         

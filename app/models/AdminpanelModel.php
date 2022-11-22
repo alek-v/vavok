@@ -922,7 +922,7 @@ class AdminpanelModel extends BaseModel {
         $num_items = $this->user->total_admins();
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
+        $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
         $end = $navigation->start()['end']; // ending point
@@ -1001,7 +1001,7 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('no_unconfirmed_registrations') . '!</p>';
             }
         
-            $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/unconfirmed_reg/');
+            $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/unconfirmed_reg/');
         
             $data['content'] .= '<div class="mt-5">';
                 $data['content'] .= $navigation->get_navigation();
@@ -1474,7 +1474,7 @@ class AdminpanelModel extends BaseModel {
                 $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
                 $items_per_page = 10;
         
-                $navigation = new Navigation($items_per_page, $noi, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
+                $navigation = new Navigation($items_per_page, $noi, HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
         
                 $limit_start = $navigation->start()['start']; // starting point
         
@@ -1873,22 +1873,22 @@ class AdminpanelModel extends BaseModel {
         if (!isset($act) || empty($act)) {
             $nitems = $this->db->countRow('pages');
             $total = $nitems;
-        
+
             if ($total < 1) {
                 $page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
             }
-        
+
             $nitems = $this->db->countRow('pages', 'tname is not null');
             $num_items = $nitems;
-        
+
             $items_per_page = 30;
-        
-            $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagetitle/?'); // start navigation
+
+            $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/pagetitle/?'); // start navigation
 
             $limit_start = $navigation->start()['start']; // starting point
 
             $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
-        
+
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
                     $lnk = $item['pname'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&pgfile=' . $item['file'] . '">' . $item['tname'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=headtag&file=' . $item['file'] . '">[Edit Meta]</a> | <img src="' . HOMEDIR . 'themes/images/img/close.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=del&tid=' . $item['pname'] . '">[DEL]</a>'; 

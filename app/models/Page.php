@@ -111,7 +111,7 @@ class Page extends BaseModel {
         $items_per_page = 10;
  
         // Start navigation
-        $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), HOMEDIR . 'pages/userlist/?');
+        $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'pages/userlist/?');
 
         // Starting point
         $limit_start = $navigation->start()['start'];

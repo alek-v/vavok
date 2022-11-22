@@ -266,7 +266,7 @@ class BanModel extends BaseModel {
         $noi = $this->user->total_banned();
         $items_per_page = 10;
 
-        $navigation = new Navigation($items_per_page, $noi, $this->postAndGet('page'), 'banlist?'); // start navigation
+        $navigation = new Navigation($items_per_page, $noi, 'banlist?'); // start navigation
         $limit_start = $navigation->start()['start']; // starting point
 
         $sql = "SELECT id, name, banned FROM vavok_users WHERE banned='1' OR banned='2' ORDER BY banned LIMIT $limit_start, $items_per_page";

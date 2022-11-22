@@ -299,7 +299,7 @@ class PagemanagerModel extends BaseModel {
             }
 
             // start navigation
-            $navi = new Navigation($config_editfiles, $total_pages, $this->postAndGet('page'));
+            $navi = new Navigation($config_editfiles, $total_pages);
 
             if ($edit_only_own_pages == 'yes') {
                 $sql = "SELECT * FROM pages WHERE crtdby='{$this->user->user_id}' ORDER BY pname LIMIT {$navi->start()['start']}, $config_editfiles";
@@ -358,7 +358,7 @@ class PagemanagerModel extends BaseModel {
             } 
 
             // navigation
-            $navigation = new Navigation($config_editfiles, $total_pages, $this->postAndGet('page'), HOMEDIR . 'adminpanel/pagemanager/?');
+            $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
             $index_data['content'] .= $navigation->get_navigation();
 
             $index_data['content'] .= '<p>{@localization[totpages]}}: <b>' . (int)$total_pages . '</b></p>';

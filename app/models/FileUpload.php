@@ -143,7 +143,7 @@ class FileUpload extends BaseModel {
                 $num_items = $noi;
                 $items_per_page = 10;
 
-                $navigation = new Navigation($items_per_page, $num_items, $this->postAndGet('page'), 'search_uploads.php?'); // start navigation
+                $navigation = new Navigation($items_per_page, $num_items, 'search_uploads.php?'); // start navigation
 
                 $limit_start = $navigation->start()['start']; // starting point
 
