@@ -102,7 +102,7 @@ class Database extends PDO implements DBInterface {
      * @param string $where
      * @return integer
      */
-    public function countRow($table, $where = ''): int
+    public function countRow(string $table, string $where = ''): int
     {
         $sql = 'SELECT count(*) FROM ' . DB_PREFIX . $table;
         if (!empty($where))
@@ -130,7 +130,7 @@ class Database extends PDO implements DBInterface {
      * @param string|array $values
      * @param string $where
      */
-    public function update($table, $fields, $values, $where = ''): int
+    public function update(string $table, string|array $fields, string|array $values, string $where = ''): int
     {
         if (!empty($where)) $where = ' WHERE ' . $where;
 
@@ -177,7 +177,7 @@ class Database extends PDO implements DBInterface {
      * @param string $where
      * @return int
      */
-    public function delete($table, $where): int
+    public function delete(string $table, string $where): int
     {
         $sql = "DELETE FROM " . DB_PREFIX . "{$table} WHERE {$where};";
 
@@ -193,7 +193,7 @@ class Database extends PDO implements DBInterface {
      * @param string $table
      * @return boolean
      */
-    public function tableExists($table): bool
+    public function tableExists(string $table): bool
     {
         // Try a select statement against the table
         // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
@@ -203,11 +203,10 @@ class Database extends PDO implements DBInterface {
             if (!empty($result)) {
                 return true;
             }
-        } 
-        catch (Exception $e) {
+        } catch (Exception $e) {
             // We got an exception == table not found
             return false;
-        } 
+        }
         // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
         return $result !== false;
     }
@@ -217,10 +216,9 @@ class Database extends PDO implements DBInterface {
      *
      * @return void
      */
-    private function dbQueries()
+    private function dbQueries(): void
     {
-        if (defined('SITE_STAGE') && SITE_STAGE == 'debug')
-        {
+        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') {
             if (!isset($_SESSION['db_queries'])) $_SESSION['db_queries'] = 0;
             $_SESSION['db_queries'] = $_SESSION['db_queries'] + 1;
         }
