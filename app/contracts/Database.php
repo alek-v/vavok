@@ -30,7 +30,7 @@ interface Database {
      * @param string $where
      * @return integer
      */
-    public function countRow($table, $where = ''): int;
+    public function countRow(string $table, string $where = ''): int;
 
     /**
      * Update
@@ -45,7 +45,7 @@ interface Database {
      * @param string|array $values
      * @param string $where
      */
-    public function update($table, $fields, $values, $where = ''): int;
+    public function update(string $table, string|array $fields, string|array $values, string $where = ''): int;
 
     /**
      * Delete
@@ -54,5 +54,5 @@ interface Database {
      * @param string $where
      * @return int
      */
-    public function delete($table, $where): int;
+    public function delete(string $table, string $where): int;
 }
