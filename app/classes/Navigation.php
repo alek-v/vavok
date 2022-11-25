@@ -34,7 +34,14 @@ class Navigation {
         $this->link = $link; // page where navigation will be
     }
 
-    function totalPages($total = 0, $limit = 10)
+    /**
+     * Return number of pages
+     * 
+     * @param int $total
+     * @param int $limit
+     * @return int
+     */
+    private function totalPages(int $total = 0, int $limit = 10): int
     {
         if ($total != 0) {
             $v_pages = ceil($total / $limit);

@@ -28,11 +28,11 @@ class InboxModel extends BaseModel {
 
         $num_items = $this->user->getpmcount($this->user->user_id());
         $items_per_page = 10;
-    
+
         // navigation
-        $navigation = new Navigation($items_per_page, HOMEDIR . 'inbox?');
+        $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'inbox?');
         $limit_start = $navigation->start()['start']; // starting point
-    
+
         if ($num_items > 0) {
         $sql = "SELECT * FROM inbox
         WHERE touid='{$this->user->user_id()}' AND (deleted IS NULL OR deleted <> '{$this->user->user_id()}')
