@@ -5,10 +5,11 @@
 
 namespace App\Classes;
 use App\Traits\Core;
+use App\Traits\Files;
 use Pimple\Container;
 
 class PageManager {
-    use Core;
+    use Core, Files;
 
     protected $page_title;            // Title
     protected $page_content;          // Content
