@@ -80,7 +80,8 @@ class Localization {
      * 
      * @return array
      */
-    public function show_all() {
+    public function showAll(): array
+    {
         return $this->all;
     }
 

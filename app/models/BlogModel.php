@@ -80,16 +80,16 @@ class BlogModel extends BaseModel {
         
                 // Day and month when post is created
                 $post->set('date-created-day', date('d', $this->page_created_date));
-                $post->set('date-created-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
+                $post->set('date-created-month', mb_substr($this->localization->showAll()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
 
                 // Day and month when post is published
                 // If article is not published and page is viewed by administrator use current time
                 if (!empty($this->page_published_date)) {
                     $post->set('date-published-day', date('d', $this->page_published_date));
-                    $post->set('date-published-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', $this->page_published_date) - 1], 0, 3));
+                    $post->set('date-published-month', mb_substr($this->localization->showAll()['ln_all_month'][date('n', $this->page_published_date) - 1], 0, 3));
                 } else {
                     $post->set('date-published-day', date('d', time()));
-                    $post->set('date-published-month', mb_substr($this->localization->show_all()['ln_all_month'][date('n', time()) - 1], 0, 3));
+                    $post->set('date-published-month', mb_substr($this->localization->showAll()['ln_all_month'][date('n', time()) - 1], 0, 3));
                 }
         
                 // Page URL
@@ -223,13 +223,13 @@ class BlogModel extends BaseModel {
                     $page_posts->set('date-created-day', date('d', $key['created']));
         
                     // Month when article is created
-                    $page_posts->set('date-created-month', $this->localization->show_all()['ln_all_month'][date('n', $key['created']) - 1]);
+                    $page_posts->set('date-created-month', $this->localization->showAll()['ln_all_month'][date('n', $key['created']) - 1]);
         
                     // Day when article is published
                     $page_posts->set('date-published-day', date('d', $key['pubdate']));
         
                     // Month when article is published
-                    $page_posts->set('date-published-month', $this->localization->show_all()['ln_all_month'][date('n', $key['pubdate']) - 1]);
+                    $page_posts->set('date-published-month', $this->localization->showAll()['ln_all_month'][date('n', $key['pubdate']) - 1]);
         
                     // Year when article is published
                     $page_posts->set('date-published-year', date('Y', $key['pubdate']));
