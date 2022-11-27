@@ -56,13 +56,13 @@ class Mailer {
             $user_mail = idn_to_ascii($user_mail);
         }
 
+        // Default value
         $available_authentication = false;
 
-        require STORAGEDIR . 'available_emails.php';
+        // Email accounts with authentication data
+        $available_mails = $this->emailAccounts();
 
-        /**
-         * Check if data for authentication exists for email we use to send email
-         */
+        // Check if data for authentication exist for email we use to send email
         foreach ($available_mails as $key) {
             if (in_array($mail_from, $key)) {
                 $available_authentication = true; // Use authentication, data for authentication is available
@@ -77,9 +77,7 @@ class Mailer {
         // Create a new PHPMailer instance
         $mail = new PHPMailer();
 
-        /**
-         * First try to send with authentication if authentication data exists
-         */
+        // First, try to send with authentication if authentication data exists
         if (!$available_authentication) {
             //Set who the message is to be sent from
             $mail->setFrom($mail_from, $name);
@@ -215,5 +213,18 @@ class Mailer {
         $this->saveSubscriptionOptions($all_options);
 
         return true;
+    }
+
+    /**
+     * Email accounts with authentication
+     * 
+     * @return array
+     */
+    private function emailAccounts(): array
+    {
+        // Include file with authentication data
+        require STORAGEDIR . 'available_emails.php';
+
+        return $available_mails;
     }
 }
