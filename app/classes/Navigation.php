@@ -10,28 +10,24 @@ use App\Traits\Core;
 class Navigation {
     use Core;
 
-    public $items_per_page;
-    public $total_items;
-    public $page;
-    public $link;
+    private $total_pages;
+    private $current_page;
 
-    public function __construct($items_per_page, $total_items, $link = '')
+    public function __construct(private $items_per_page, private $total_items, private $link = '')
     {
-        $this->items_per_page = $items_per_page; // items per page
-        $this->total_items = $total_items; // total items
-        $this->total_pages = $this->totalPages($this->total_items, $this->items_per_page); // total pages
+        $this->items_per_page = $items_per_page;
+        $this->total_items = $total_items;
+        $this->total_pages = $this->totalPages($this->total_items, $this->items_per_page);
 
         // Get page number
         $page = $this->postAndGet('page');
-        if ($page == 'end') $page = intval($this->total_pages);
-        else if (is_numeric($page)) $page = intval($page);
+        if (!is_numeric($page)) $page = intval($page);
         if ($page < 2) $page = 1;
         if ($page > $this->total_pages) $page = $this->total_pages;
+        $this->current_page = $page;
 
-        // Set page number
-        $this->current_page = $page; // number of current page
-
-        $this->link = $link; // page where navigation will be
+        // Page where navigation will be
+        $this->link = $link;
     }
 
     /**
@@ -50,10 +46,14 @@ class Navigation {
         else return 1;
     }
 
-    // start counting numbers required for navigation
-    function start()
+    /**
+     * Start counting numbers required for navigation
+     * 
+     * @return array
+     */
+    public function start(): array
     {
-        $total_pages = $this->totalPages($this->total_items, $this->items_per_page);
+        $total_pages = $this->total_pages;
         $page = $this->current_page;
         $limit_start = $this->items_per_page * $page - $this->items_per_page;
 
@@ -70,15 +70,21 @@ class Navigation {
                 );
     }
 
-    // site navigaton
-    public function get_navigation($link = '', $lnks = 3)
+    /**
+     * Return navigation
+     * 
+     * @param string $link
+     * @param int $links
+     * @return string
+     */
+    public function get_navigation(string $link = '', int $links = 3): string
     {
         $page = $this->current_page;
-        $total = $this->total_items;
+        $total_items = $this->total_items;
         $link = $this->link;
+
         // Reduce number of links in pagination for smaller screens
-        if ($this->userDevice() == 'phone') $lnks = 1;
-        //$lnks = 1;
+        if ($this->userDevice() == 'phone') $links = 1;
 
         // Variable for navigation links
         $navigation = '';
@@ -87,40 +93,40 @@ class Navigation {
         if ($page > 1 && $this->total_pages > 1) {
             // Dont show file.php?page=1, only file.php if this is first page
             // We dont want to create duplicated pages with the same content file.php and file.php?page=1
-            $navigation .= $page == 2 ? $this->show_link($link, '{@localization[prev]}}') : $this->show_link($link . 'page=' . ($page - 1), '{@localization[prev]}}');
+            $navigation .= $page == 2 ? $this->showLink($link, '{@localization[prev]}}') : $this->showLink($link . 'page=' . ($page - 1), '{@localization[prev]}}');
         } else {
-            $navigation .= $this->disabled_link('{@localization[prev]}}');
+            $navigation .= $this->disabledLink('{@localization[prev]}}');
         }
 
-        if ($total > 0) {
-            $ba = ceil($total / $this->items_per_page);
+        if ($total_items > 0) {
+            $total_pages = ceil($total_items / $this->items_per_page);
 
             $start = $this->items_per_page * ($page - 1);
-            $min = $start - $this->items_per_page * ($lnks - 1);
-            $max = $start + $this->items_per_page * $lnks;
+            $min = $start - $this->items_per_page * ($links - 1);
+            $max = $start + $this->items_per_page * $links;
 
-            if ($min < $total && $min > 0) {
+            if ($min < $total_items && $min > 0) {
                 // Show dots '...' after page 1 when there is a lot of links after page 1
                 if ($min - $this->items_per_page > 0) {
-                    $navigation .= $this->show_link($link, '1') . $this->disabled_link('...');
+                    $navigation .= $this->showLink($link, '1') . $this->disabledLink('...');
                 } else {
-                    $navigation .= $this->show_link($link, '1');
+                    $navigation .= $this->showLink($link, '1');
                 }
             }
 
-            for($i = $min; $i < $max;) {
-                if ($i < $total && $i >= 0) {
+            for ($i = $min; $i < $max;) {
+                if ($i < $total_items && $i >= 0) {
                     $ii = floor(1 + $i / $this->items_per_page);
 
                     // Active page
                     if ($start == $i) {
-                        $navigation .= $this->active_link($ii);
+                        $navigation .= $this->activeLink($ii);
                     }
                     // Page one without '?page=1' to prevent duplicated pages page.php and page.php?page=1
                     elseif ($ii == 1) {
-                        $navigation .= $this->show_link($link, $ii);
+                        $navigation .= $this->showLink($link, $ii);
                     } else {
-                        $navigation .= $this->show_link($link . 'page=' . $ii, $ii);
+                        $navigation .= $this->showLink($link . 'page=' . $ii, $ii);
                     } 
                 } 
 
@@ -128,25 +134,25 @@ class Navigation {
             }
 
             // Links at the end of navigation and after possible dots '...'
-            if ($max < $total) {
+            if ($max < $total_items) {
                 // Show dots and link after dots
-                if ($max + $this->items_per_page < $total) {
-                    $navigation .= $this->disabled_link('...') . $this->show_link($link . 'page=' . $ba, $ba);
+                if ($max + $this->items_per_page < $total_items) {
+                    $navigation .= $this->disabledLink('...') . $this->showLink($link . 'page=' . $total_pages, $total_pages);
                 }
                 // Last link, no dots before link
                 else {
-                    $navigation .= $this->show_link($link . 'page=' . $ba, $ba);
+                    $navigation .= $this->showLink($link . 'page=' . $total_pages, $total_pages);
                 }
             }
         }
 
         // Next page link
-        if ($total > ($this->items_per_page * $page)) {
-            $navigation .= $this->show_link($link . 'page=' . ($page + 1), '{@localization[next]}}');
+        if ($total_items > ($this->items_per_page * $page)) {
+            $navigation .= $this->showLink($link . 'page=' . ($page + 1), '{@localization[next]}}');
         }
         // Disabled link when current page is last page
         else {
-            $navigation .= $this->disabled_link('{@localization[next]}}');
+            $navigation .= $this->disabledLink('{@localization[next]}}');
         }
 
         // HTML before links, using Bootstrap
@@ -163,9 +169,9 @@ class Navigation {
      * Show disabled page/link
      * 
      * @param string $name
-     * @return str
+     * @return string
      */
-    protected function disabled_link($name)
+    private function disabledLink(string $name): string
     {
         return '<li class="page-item disabled">
           <span class="page-link">' . $name . '</span>
@@ -177,9 +183,9 @@ class Navigation {
      * 
      * @param string $link
      * @param string $name
-     * @return str
+     * @return string
      */
-    protected function show_link($link, $name)
+    private function showLink(string $link, string $name): string
     {
         // Remove unwanted characters from end of the link
         $link = rtrim(rtrim($link, '&amp;'), '?');
@@ -191,9 +197,9 @@ class Navigation {
      * Show active page/link
      * 
      * @param string $name
-     * @return str
+     * @return string
      */
-    protected function active_link($name)
+    private function activeLink(string $name): string
     {
         return '<li class="page-item active" aria-current="page">
           <span class="page-link">' . $name . '</span>
