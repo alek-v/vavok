@@ -73,7 +73,7 @@ class Subscription extends BaseModel {
                     $this_page['content'] .= ' ' . $this->sitelink(HOMEDIR . 'adminpanel/subscriptions/?action=delmail&users=' . $item['user_id'], '[{@localization[delete]}}]') . '<hr>';
                 }
 
-                $this_page['content'] .= $navigation->get_navigation();
+                $this_page['content'] .= $navigation->getNavigation();
             } else {
                 $this_page['content'] .= '<p><img src="/themes/images/img/reload.gif" alt="" /> No subscriptions</p>'; // update lang
             }

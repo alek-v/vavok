@@ -359,7 +359,7 @@ class PagemanagerModel extends BaseModel {
 
             // navigation
             $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
-            $index_data['content'] .= $navigation->get_navigation();
+            $index_data['content'] .= $navigation->getNavigation();
 
             $index_data['content'] .= '<p>{@localization[totpages]}}: <b>' . (int)$total_pages . '</b></p>';
         }

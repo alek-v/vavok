@@ -95,7 +95,7 @@ class FileUpload extends BaseModel {
                     }
                 }
         
-                $this_page['content'] .= $navigation->get_navigation();
+                $this_page['content'] .= $navigation->getNavigation();
             } else {
                 $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> No uploaded files!</p>';
             }
@@ -158,7 +158,7 @@ class FileUpload extends BaseModel {
                 $this_page['content'] .= 'Items: ' . $noi;
                 $this_page['content'] .= '</p>';
 
-                $this_page['content'] .= $navigation->get_navigation();
+                $this_page['content'] .= $navigation->getNavigation();
             }
         }
 

@@ -539,7 +539,7 @@ class UsersModel extends BaseModel {
             $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('ignorempty') . '<br><br>';
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         // Pass page to the controller
         return $data;
@@ -597,7 +597,7 @@ class UsersModel extends BaseModel {
             $data['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> {@localization[nobuddy]}}</p>';
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         // Pass page to the controller
         return $data;

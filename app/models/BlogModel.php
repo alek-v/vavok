@@ -259,7 +259,7 @@ class BlogModel extends BaseModel {
                 // page navigation
                 $navigation = new Navigation($items_per_page, $total_posts, './?');
                 
-                $show_page->set('navigation', $navigation->get_navigation());
+                $show_page->set('navigation', $navigation->getNavigation());
         
                 $this_page['content'] .= $show_page->output();
         

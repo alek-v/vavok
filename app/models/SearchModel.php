@@ -128,7 +128,7 @@ class SearchModel extends BaseModel {
             $this_page['content'] .= $resultsPage->output();
 
             $navigation = new Navigation(20, $items, "./");
-            $this_page['content'] .= $navigation->get_navigation();
+            $this_page['content'] .= $navigation->getNavigation();
         }
 
         return $this_page;

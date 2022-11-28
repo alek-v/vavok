@@ -936,7 +936,7 @@ class AdminpanelModel extends BaseModel {
             }
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
@@ -1004,7 +1004,7 @@ class AdminpanelModel extends BaseModel {
             $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/unconfirmed_reg/');
         
             $data['content'] .= '<div class="mt-5">';
-                $data['content'] .= $navigation->get_navigation();
+                $data['content'] .= $navigation->getNavigation();
             $data['content'] .= '</div>';
         }
 
@@ -1397,7 +1397,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptylist') . '</p>';
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         $data['content'] .= '<hr>';
 
@@ -1503,7 +1503,7 @@ class AdminpanelModel extends BaseModel {
                     $page_data['content'] .= $tlink;
                 }
 
-                $page_data['content'] .= $navigation->get_navigation();
+                $page_data['content'] .= $navigation->getNavigation();
             }
 
             $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', '{@localization[back]}}', '<p>', '<br />');
@@ -1897,7 +1897,7 @@ class AdminpanelModel extends BaseModel {
                 }
             }
 
-            $page_data['content'] .= $navigation->get_navigation();
+            $page_data['content'] .= $navigation->getNavigation();
 
             $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
         }

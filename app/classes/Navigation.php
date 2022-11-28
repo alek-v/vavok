@@ -10,10 +10,10 @@ use App\Traits\Core;
 class Navigation {
     use Core;
 
-    private $total_pages;
-    private $current_page;
+    private int $total_pages;
+    private int $current_page;
 
-    public function __construct(private $items_per_page, private $total_items, private $link = '')
+    public function __construct(private int $items_per_page, private int $total_items, private string $link = '')
     {
         $this->items_per_page = $items_per_page;
         $this->total_items = $total_items;
@@ -40,10 +40,10 @@ class Navigation {
     private function totalPages(int $total = 0, int $limit = 10): int
     {
         if ($total != 0) {
-            $v_pages = ceil($total / $limit);
-            return $v_pages;
+            return ceil($total / $limit);
         }
-        else return 1;
+
+        return 1;
     }
 
     /**
@@ -72,16 +72,17 @@ class Navigation {
 
     /**
      * Return navigation
-     * 
-     * @param string $link
-     * @param int $links
+     *
      * @return string
      */
-    public function get_navigation(string $link = '', int $links = 3): string
+    public function getNavigation(): string
     {
         $page = $this->current_page;
         $total_items = $this->total_items;
         $link = $this->link;
+
+        // Number of links in the pagination
+        $links = 3;
 
         // Reduce number of links in pagination for smaller screens
         if ($this->userDevice() == 'phone') $links = 1;
@@ -101,8 +102,11 @@ class Navigation {
         if ($total_items > 0) {
             $total_pages = ceil($total_items / $this->items_per_page);
 
+            // Where start rows for current page
             $start = $this->items_per_page * ($page - 1);
+            // Row number from where to show links to the previous pages
             $min = $start - $this->items_per_page * ($links - 1);
+            // Row number from where to show links to the next pages
             $max = $start + $this->items_per_page * $links;
 
             if ($min < $total_items && $min > 0) {
@@ -115,21 +119,23 @@ class Navigation {
             }
 
             for ($i = $min; $i < $max;) {
+                // Don't show more pages than actually exist
                 if ($i < $total_items && $i >= 0) {
+                    // Page where we at current iteration
                     $ii = floor(1 + $i / $this->items_per_page);
 
                     // Active page
-                    if ($start == $i) {
-                        $navigation .= $this->activeLink($ii);
-                    }
-                    // Page one without '?page=1' to prevent duplicated pages page.php and page.php?page=1
+                    if ($start == $i) $navigation .= $this->activeLink($ii);
+
+                    // Page one without '?page=1' to prevent duplicated pages (page.php and page.php?page=1)
                     elseif ($ii == 1) {
                         $navigation .= $this->showLink($link, $ii);
                     } else {
                         $navigation .= $this->showLink($link . 'page=' . $ii, $ii);
-                    } 
-                } 
+                    }
+                }
 
+                // Row from where next iteration will start
                 $i = $i + $this->items_per_page;
             }
 

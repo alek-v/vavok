@@ -112,7 +112,7 @@ class AdminchatModel extends BaseModel {
             }
 
             $data['content'] .= '<hr>';
-            $data['content'] .= $navigation->get_navigation();
+            $data['content'] .= $navigation->getNavigation();
         }
 
         if ($this->postAndGet('action') == 'confirm_to_clear_chat') {

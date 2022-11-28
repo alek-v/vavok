@@ -124,7 +124,7 @@ class Page extends BaseModel {
             }
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
         $data['content'] .= $this->homelink();
 
         return $data;
@@ -265,7 +265,7 @@ class Page extends BaseModel {
             }
         }
 
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         if ($list != 'full') {
             $data['content'] .= $this->sitelink(HOMEDIR . 'pages/online/?list=full', $this->localization->string('showguest'), '<p>', '</p>');

@@ -62,7 +62,7 @@ class InboxModel extends BaseModel {
         }
 
         // navigation    
-        $data['content'] .= $navigation->get_navigation();
+        $data['content'] .= $navigation->getNavigation();
 
         } else {
             $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt=""> No messages</p>';

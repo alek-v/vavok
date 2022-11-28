@@ -279,7 +279,7 @@ class BanModel extends BaseModel {
             $data['content'] .= $this->showNotification('<img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('noentry'));
         }
 
-        $data['navigation'] = $navigation->get_navigation();
+        $data['navigation'] = $navigation->getNavigation();
 
         $data['bottom_links'] = $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
         $data['bottom_links'] .= $this->homelink();

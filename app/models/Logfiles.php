@@ -225,7 +225,7 @@ class Logfiles extends BaseModel {
             $this_page['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_information?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';
         }
 
-        $this_page['content'] .= $navigation->get_navigation();
+        $this_page['content'] .= $navigation->getNavigation();
 
         if ($this->user->administrator()) {
             if (isset($err)) {
