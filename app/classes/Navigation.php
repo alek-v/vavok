@@ -15,8 +15,6 @@ class Navigation {
 
     public function __construct(private int $items_per_page, private int $total_items, private string $link = '')
     {
-        $this->items_per_page = $items_per_page;
-        $this->total_items = $total_items;
         $this->total_pages = $this->totalPages($this->total_items, $this->items_per_page);
 
         // Get page number
@@ -25,9 +23,6 @@ class Navigation {
         if ($page < 2) $page = 1;
         if ($page > $this->total_pages) $page = $this->total_pages;
         $this->current_page = $page;
-
-        // Page where navigation will be
-        $this->link = $link;
     }
 
     /**
