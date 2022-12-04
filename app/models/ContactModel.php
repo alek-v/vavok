@@ -45,8 +45,10 @@ class ContactModel extends BaseModel {
 
     /**
      * Send email
+     *
+     * @return array
      */
-    public function send()
+    public function send(): array
     {
         $data['tname'] = '{@localization[contact]}}';
         $data['content'] = '';
@@ -65,8 +67,30 @@ class ContactModel extends BaseModel {
 
         // Send email if there is no error
         if (empty($data['content'])) {
+            $email_content = $this->postAndGet('body') . "<br /><br /><br />
+            -----------------------------------------<br />
+            Sender: {$this->postAndGet('name')}<br />
+            Sender's email: {$this->postAndGet('umail')}<br />
+            Browser: {$this->user->user_browser()}<br />
+            IP: {$this->user->find_ip()}<br />
+            {$this->localization->string('datesent')}: " . date('d.m.Y. / H:i');
+
+            // Insert email text into the email template
+            $template = $this->container['parse_page'];
+            $template->load('email_templates/default');
+            $template->set('subject', $this->localization->string('message_from_site') . ' ' . $this->configuration('title'));
+            $template->set('body', $email_content);
+            $email_body = $template->output();
+
             $mail = new Mailer($this->container);
-            $mail->queueEmail($this->configuration('adminEmail'), $this->localization->string('msgfrmst') . ' ' . $this->configuration('title'), $this->postAndGet('body') . "\r\n\r\n\r\n-----------------------------------------\r\nSender: {$this->postAndGet('name')}\r\nSender's email: {$this->postAndGet('umail')}\r\nBrowser: " . $this->user->user_browser() . "\r\nIP: " . $this->user->find_ip() . "\r\n" . $this->localization->string('datesent') . ": " . date('d.m.Y. / H:i'), '', '', 'normal');
+            $mail->queueEmail(
+                $this->configuration('adminEmail'),
+                $this->localization->string('message_from_site') . ' ' . $this->configuration('title'),
+                $email_body,
+                '',
+                '',
+                'normal'
+            );
 
             // Email sent
             $data['content'] .= $this->showSuccess('{@localization[emailsent]}}');
