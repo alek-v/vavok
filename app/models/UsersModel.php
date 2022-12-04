@@ -427,9 +427,7 @@ class UsersModel extends BaseModel {
             " . $this->localization->string('yournewdata') . " " . $this->configuration('homeUrl') . "<br /><br />
             " . $this->localization->string('username') . ": " . $this->postAndGet('logus') . "<br />
             " . $this->localization->string('pass') . ": " . $newpas . "<br /><br />
-            " . $this->localization->string('lnkforautolog') . ":<br />
-            " . $this->configuration('homeUrl') . "/pages/input.php?log=" . $this->postAndGet('logus') . "&pass=" . $newpas . "&cookietrue=1<br /><br />
-            " . $this->localization->string('ycchngpass');
+            " . $this->localization->string('you_can_change_password');
 
             $send_mail = new Mailer($this->container);
             $send_mail->queueEmail($this->postAndGet('mailsus'), $subject, $mail);
