@@ -130,7 +130,7 @@ class User {
      * @param boolean
      * @return bool
      */
-    public function userAuthenticated($start = '')
+    public function userAuthenticated(bool $start = false): bool
     {
         if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
             // Check data from database when parameter $start is true
@@ -155,9 +155,9 @@ class User {
 
                 return false;
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -166,7 +166,7 @@ class User {
      * @param integer $user_id
      * @return void
      */
-    public function logout($user_id = '')
+    public function logout(int $user_id = null): void
     {
         if (empty($user_id)) $user_id = $_SESSION['uid'];
 
@@ -176,9 +176,7 @@ class User {
         // Remove login token from database if token exists
         if (isset($_COOKIE['cookie_login']) && $this->db->countRow('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->db->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
 
-        /**
-         * Root domain, with dot '.' session is accessible from all subdomains
-         */
+        // Root domain, with dot '.' session is accessible from all subdomains
         $rootDomain = '.' . $this->cleanDomain();
 
         // destroy cookies
@@ -199,7 +197,12 @@ class User {
         session_regenerate_id();
     }
 
-    public function checkAuth()
+    /**
+     * User authentication
+     * 
+     * @return array with response data
+     */
+    public function checkAuth(): array
     {
         // Response data
         $data = [];
@@ -247,11 +250,10 @@ class User {
                 $_SESSION['permissions'] = $this->user_info('perm', $userx_id);
                 $_SESSION['uid'] = $userx_id;
 
-                unset($_SESSION['lang']); // use language settings from profile
+                // Use language settings from profile
+                unset($_SESSION['lang']);
 
-                /**
-                 * Get new session id to prevent session fixation
-                 */
+                // Get new session id to prevent session fixation
                 session_regenerate_id();
 
                 // Update data in profile
@@ -278,7 +280,7 @@ class User {
     /**
      * Destroy session
      */
-    public function destroy_current_session()
+    public function destroy_current_session(): void
     {
         session_unset();
         session_destroy();
@@ -294,7 +296,7 @@ class User {
      * @param string $ip
      * @return int
      */
-    public function loginAttemptCount($seconds, $username, $ip): int
+    public function loginAttemptCount(int $seconds, string $username, string $ip): int
     {
         // First we delete old attempts from the table
         $oldest = strtotime(date("Y-m-d H:i:s") . " - " . $seconds . " seconds");
@@ -315,8 +317,19 @@ class User {
         return $attempts;
     }
 
-    // register user
-    public function register($name, $pass, $regkeys, $rkey, $theme, $mail, $auto_message = '')
+    /**
+     * Register user
+     * 
+     * @param string $name
+     * @param string $pass
+     * @param string $regkeys
+     * @param string $rkey
+     * @param string $theme
+     * @param string $mail
+     * @param string @auto_message
+     * @return void
+     */
+    public function register(string $name, string $pass, string $regkeys, string $rkey, string $theme, string $mail, string $auto_message = ''): void
     {
         $values = array(
             'name' => $name,
@@ -343,16 +356,12 @@ class User {
     }
 
     /**
-     * Update information about user
-     */
-
-    /**
      * Change user's language
      *
      * @param string $language
      * @return void
      */
-    public function change_language($language = '')
+    public function change_language(string $language = ''): void
     {
         $language = $this->getPreferredLanguage($language);
         $current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
@@ -377,7 +386,7 @@ class User {
      * @param string|int $username
      * @return void
      */
-    public function deleteUser($users): void
+    public function deleteUser(string|int $users): void
     {
         // Check if it is really user's id
         if (preg_match("/^([0-9]+)$/", $users)) {
@@ -403,10 +412,10 @@ class User {
      * 
      * @param string|array $fields
      * @param string|array $values
-     * @param integer $user_id
+     * @param int $user_id
      * @return void
      */
-    public function updateUser($fields, $values, $user_id = '')
+    public function updateUser(string|array $fields, string|array $values, int $user_id = null): void
     {
         $user_id = empty($user_id) ? $_SESSION['uid'] : $user_id;
 
@@ -438,7 +447,7 @@ class User {
      * @param string $data here we choose if we want fields or values to be returned
      * @return array|bool
      */
-    protected function filter_user_fields_values($fields, $values, $valid_fields, $data)
+    private function filter_user_fields_values(array $fields, array $values, array $valid_fields, string $data): array|bool
     {
         // Check $fields variable and return data if variable is string
         if (!is_array($fields)) {
@@ -476,7 +485,7 @@ class User {
      * @param int $permission_id
      * @return void
      */
-    public function update_default_permissions($user_id, $permission_id)
+    public function update_default_permissions(int $user_id, int $permission_id): void
     {
         // Access level
         $this->updateUser('perm', $permission_id, $user_id);
@@ -512,15 +521,11 @@ class User {
      * @param string $key
      * @return bool
      */
-    public function confirm_registration($key)
+    public function confirm_registration(string $key): bool
     {
         if (!$this->db->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) return false;
         return true;
     }
-
-    /**
-     * Inbox
-     */
 
     // private messages
     public function getpmcount($uid, $view = "all") {
@@ -539,10 +544,10 @@ class User {
     /**
      * Get number of unread pms
      * 
-     * @param integer $uid
-     * @return integer
+     * @param int $uid
+     * @return int
      */
-    function getunreadpm($uid)
+    function getunreadpm(int $uid): int
     {
         return $this->db->countRow('inbox', "touid='{$uid}' AND unread='1'");
     }
@@ -614,11 +619,11 @@ class User {
      *  Private message by system
      * 
      * @param string $msg
-     * @param integer $who
-     * @param integer $sender_id
+     * @param int $who
+     * @param int $sender_id
      * @return void
      */
-    public function autopm($msg, $who, $sender_id = '')
+    public function autopm(string $msg, int $who, int $sender_id = null): void
     {
         $sender = !empty($sender_id) ? $sender_id : 0;
 
@@ -634,15 +639,11 @@ class User {
     }
 
     /**
-     * information about users
-     */
-
-    /**
      * Username
      * 
      * @return string
      */
-    public function show_username()
+    public function show_username(): string
     {
         return isset($_SESSION['log']) && !empty($_SESSION['log']) ? $_SESSION['log'] : '';
     }
@@ -650,9 +651,9 @@ class User {
     /**
      * Users id
      * 
-     * @return integer
+     * @return int
      */
-    public function user_id()
+    public function user_id(): int
     {
         return isset($_SESSION['uid']) && !empty($_SESSION['uid']) ? $_SESSION['uid'] : 0;
     }
@@ -661,9 +662,9 @@ class User {
      * Get user nick from user id number
      *
      * @param bool $uid
-     * @return str|bool $unick
+     * @return string|bool $unick
      */
-    public function getNickFromId($uid)
+    public function getNickFromId($uid): string|bool
     {
         $unick = $this->user_info('nickname', $uid);
         return $unick = !empty($unick) ? $unick : false;
@@ -675,7 +676,7 @@ class User {
      * @param string $nick
      * @return int
      */
-    public function getIdFromNick($nick)
+    public function getIdFromNick(string $nick): int
     {
         $uid = $this->db->selectData('vavok_users', 'name = :name', [':name' => $nick], 'id');
         $id = !empty($uid['id']) ? $uid['id'] : 0;
@@ -689,7 +690,7 @@ class User {
      * @param string $email
      * @return int|bool
      */
-    public function id_from_email($email)
+    public function id_from_email(string $email): int|bool
     {
         $id = $this->db->selectData('vavok_about', 'email = :email', [':email' => $email], 'uid');
         $id = !empty($id['uid']) ? $id['uid'] : false;
@@ -735,11 +736,12 @@ class User {
     /**
      * Get information about user
      * 
-     * @param $info data that method need to return
-     * @param $users_id ID of user
+     * @param string $info data that method need to return
+     * @param int $users_id ID of user
      * @return string|bool
      */
-    public function user_info($info, $users_id = '') {
+    public function user_info(string $info, int $users_id = null): string|bool
+    {
         // If $users_id is not set use user if of logged in user
         $users_id = empty($users_id) && isset($_SESSION['uid']) ? $_SESSION['uid'] : $users_id;
 
