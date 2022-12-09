@@ -33,9 +33,7 @@ class Mailer {
      */
     function send(string $user_mail, string $subject, string $msg, string $mail_from = '', string $name = ''): bool
     {
-        /**
-         * Generate default email
-         */
+        // Generate default email
         if (empty($mail_from)) {
             $mail_from = $_SERVER['HTTP_HOST'];
 
@@ -45,14 +43,12 @@ class Mailer {
             $mail_from = 'no_reply@' . $mail_from;
         }
 
-        /**
-         * Default name
-         */
+        // Default name
         if (empty($name)) $name = $this->configuration('title');
 
         // Support for unicode emails
-        if ($this->isUnicode($user_mail) && function_exists('idn_to_ascii')) {
-            // convert to ascii
+        if (mb_detect_encoding($user_mail) != 'ASCII') {
+            // Convert to ASCII
             $user_mail = idn_to_ascii($user_mail);
         }
 
