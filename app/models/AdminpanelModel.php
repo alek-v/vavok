@@ -966,7 +966,7 @@ class AdminpanelModel extends BaseModel {
             " . ucfirst($this->configuration('homeBase'));
 
             $newMail = new Mailer($this->container);
-            $newMail->queueEmail($this->user->user_info('email', $this->postAndGet('usr')), $this->localization->string('message_from_site') . " " . $this->configuration('title'), $message, '', '', 'high');
+            $newMail->queueEmail($this->user->userInfo('email', $this->postAndGet('usr')), $this->localization->string('message_from_site') . " " . $this->configuration('title'), $message, '', '', 'high');
 
             $this->redirection(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
         }
@@ -995,7 +995,7 @@ class AdminpanelModel extends BaseModel {
                         $bt = 'Confirmed';
                     }
 
-                    $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->user_info('ipadd', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->user_info('browser', $item['uid']) . ' ' . $bym . '</p>';
+                    $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->userInfo('ipadd', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->userInfo('browser', $item['uid']) . ' ' . $bym . '</p>';
                 }
             } else {
                 $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('no_unconfirmed_registrations') . '!</p>';
@@ -1076,7 +1076,7 @@ class AdminpanelModel extends BaseModel {
                     exit;
                 }
 
-                if (($this->user->show_username() != $this->configuration('adminNick')) && ($this->user->user_info('perm', $users_id) == 101 || $this->user->user_info('perm', $users_id) == 102 || $this->user->user_info('perm', $users_id) == 103 || $this->user->user_info('perm', $users_id) == 105) && $this->user->show_username() != $user) {
+                if (($this->user->show_username() != $this->configuration('adminNick')) && ($this->user->userInfo('perm', $users_id) == 101 || $this->user->userInfo('perm', $users_id) == 102 || $this->user->userInfo('perm', $users_id) == 103 || $this->user->userInfo('perm', $users_id) == 105) && $this->user->show_username() != $user) {
                     $data['content'] .= '<br>{@localization[noauthtoban]}!<br>';
                     return $data;
                     exit;
@@ -1086,16 +1086,16 @@ class AdminpanelModel extends BaseModel {
 
                 if ($casenick == 0) $data['content'] .= '<p><b><font color="red">{@localization[myprofile]}!</font></b></p>';
 
-                if ($this->user->user_info('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
+                if ($this->user->userInfo('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
         
-                if ($this->user->user_info('regche', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
+                if ($this->user->userInfo('regche', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
         
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
                 $form->set('form_action', HOMEDIR . 'adminpanel/users/?action=upgrade&users=' . $user);
         
-                $userx_access = (int)$this->user->user_info('perm', $users_id);
+                $userx_access = (int)$this->user->userInfo('perm', $users_id);
         
                 if ($_SESSION['permissions'] == 101 && $this->user->show_username() == $this->configuration('adminNick')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
@@ -1131,7 +1131,7 @@ class AdminpanelModel extends BaseModel {
                 $udd2->set('label_value', '{@localization[city]}}');
                 $udd2->set('input_id', 'udd2');
                 $udd2->set('input_name', 'udd2');
-                $udd2->set('input_value', $this->user->user_info('city', $users_id));
+                $udd2->set('input_value', $this->user->userInfo('city', $users_id));
         
                 $udd3 = $this->container['parse_page'];
                 $udd3->load('forms/input');
@@ -1139,7 +1139,7 @@ class AdminpanelModel extends BaseModel {
                 $udd3->set('label_value', '{@localization[aboutyou]}}');
                 $udd3->set('input_id', 'udd3');
                 $udd3->set('input_name', 'udd3');
-                $udd3->set('input_value', $this->user->user_info('about', $users_id));
+                $udd3->set('input_value', $this->user->userInfo('about', $users_id));
         
                 $udd4 = $this->container['parse_page'];
                 $udd4->load('forms/input');
@@ -1147,7 +1147,7 @@ class AdminpanelModel extends BaseModel {
                 $udd4->set('label_value', '{@localization[yemail]}}');
                 $udd4->set('input_id', 'udd4');
                 $udd4->set('input_name', 'udd4');
-                $udd4->set('input_value', $this->user->user_info('email', $users_id));
+                $udd4->set('input_value', $this->user->userInfo('email', $users_id));
         
                 $udd5 = $this->container['parse_page'];
                 $udd5->load('forms/input');
@@ -1155,7 +1155,7 @@ class AdminpanelModel extends BaseModel {
                 $udd5->set('label_value', '{@localization[site]}}');
                 $udd5->set('input_id', 'udd5');
                 $udd5->set('input_name', 'udd5');
-                $udd5->set('input_value', $this->user->user_info('site', $users_id));
+                $udd5->set('input_value', $this->user->userInfo('site', $users_id));
         
                 $udd13 = $this->container['parse_page'];
                 $udd13->load('forms/input');
@@ -1163,7 +1163,7 @@ class AdminpanelModel extends BaseModel {
                 $udd13->set('label_value', '{@localization[browser]}}');
                 $udd13->set('input_id', 'udd13');
                 $udd13->set('input_name', 'udd13');
-                $udd13->set('input_value', $this->user->user_info('browser', $users_id));
+                $udd13->set('input_value', $this->user->userInfo('browser', $users_id));
         
                 $udd29 = $this->container['parse_page'];
                 $udd29->load('forms/input');
@@ -1171,7 +1171,7 @@ class AdminpanelModel extends BaseModel {
                 $udd29->set('label_value', '{@localization[name]}}');
                 $udd29->set('input_id', 'udd29');
                 $udd29->set('input_name', 'udd29');
-                $udd29->set('input_value', $this->user->user_info('firstname', $users_id));
+                $udd29->set('input_value', $this->user->userInfo('firstname', $users_id));
         
                 $udd40 = $this->container['parse_page'];
                 $udd40->load('forms/input');
@@ -1179,9 +1179,9 @@ class AdminpanelModel extends BaseModel {
                 $udd40->set('label_value', '{@localization[perstatus]}}');
                 $udd40->set('input_id', 'udd40');
                 $udd40->set('input_name', 'udd40');
-                $udd40->set('input_value', $this->user->user_info('status', $users_id));
+                $udd40->set('input_value', $this->user->userInfo('status', $users_id));
         
-                if ($this->user->user_info('subscribed', $users_id) == 1) {
+                if ($this->user->userInfo('subscribed', $users_id) == 1) {
                     $value = $this->localization->string('subscribed');
                 } else {
                     $value = $this->localization->string('notsubed');
@@ -1199,21 +1199,21 @@ class AdminpanelModel extends BaseModel {
                 $allban->set('label_for', 'allban');
                 $allban->set('label_value', '{@localization[numbbans]}}');
                 $allban->set('input_id', 'allban');
-                $allban->set('input_placeholder', (int)$this->user->user_info('allban', $users_id));
+                $allban->set('input_placeholder', (int)$this->user->userInfo('allban', $users_id));
         
                 $lastvst = $this->container['parse_page'];
                 $lastvst->load('forms/input_readonly');
                 $lastvst->set('label_for', 'lastvst');
                 $lastvst->set('label_value', '{@localization[lastvst]}}');
                 $lastvst->set('input_id', 'lastvst');
-                $lastvst->set('input_placeholder', $this->correctDate($this->user->user_info('lastvisit', $users_id), 'j.m.Y. / H:i'));
+                $lastvst->set('input_placeholder', $this->correctDate($this->user->userInfo('lastvisit', $users_id), 'j.m.Y. / H:i'));
         
                 $ip = $this->container['parse_page'];
                 $ip->load('forms/input_readonly');
                 $ip->set('label_for', 'ip');
                 $ip->set('label_value', 'IP');
                 $ip->set('input_id', 'ip');
-                $ip->set('input_placeholder', $this->user->user_info('ipaddress', $users_id));
+                $ip->set('input_placeholder', $this->user->userInfo('ipaddress', $users_id));
         
                 $form->set('fields', $form->merge(array($udd7, $udd1, $udd2, $udd3, $udd4, $udd5, $udd13, $udd29, $udd40, $subscribed, $allban, $lastvst, $ip)));
                 $data['content'] .= $form->output();
@@ -1268,7 +1268,7 @@ class AdminpanelModel extends BaseModel {
                         if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
         
                         // Update default access permissions
-                        if ($udd7 != $this->user->user_info('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
+                        if ($udd7 != $this->user->userInfo('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
         
                         // Update data
                         $this->user->updateUser(
@@ -1307,7 +1307,7 @@ class AdminpanelModel extends BaseModel {
         // delete user
         if ($this->postAndGet('action') == 'deluser') {
             if ($user != $this->configuration('adminNick')) {
-                if ($this->user->user_info('perm', $users_id) < 101 || $this->user->user_info('perm', $users_id) > 105) {
+                if ($this->user->userInfo('perm', $users_id) < 101 || $this->user->userInfo('perm', $users_id) > 105) {
                     $this->user->deleteUser($user);
                     $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';
         

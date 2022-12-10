@@ -135,7 +135,7 @@ class User {
         if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
             // Check data from database when parameter $start is true
             // Logout user if data from session and data from database doesn't match
-            if ($start == true && $_SESSION['permissions'] == 107 && $this->user_info('perm') != 107) {
+            if ($start == true && $_SESSION['permissions'] == 107 && $this->userInfo('perm') != 107) {
                 $this->logout($_SESSION['uid']);
 
                 return false;
@@ -145,7 +145,7 @@ class User {
             if ($_SESSION['permissions'] == 107) return true;
 
             // Administrator, check if access permissions are changed
-            if ($this->check($_SESSION['log']) == $this->user_info('nickname') && $_SESSION['permissions'] == $this->user_info('perm')) {
+            if ($this->check($_SESSION['log']) == $this->userInfo('nickname') && $_SESSION['permissions'] == $this->userInfo('perm')) {
                 // Everything is ok
                 return true;
             } else {
@@ -228,7 +228,7 @@ class User {
             }
 
             // compare sent data and data from database
-            if (!empty($this->user_info('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->user_info('password', $userx_id))) {
+            if (!empty($this->userInfo('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->userInfo('password', $userx_id))) {
                 // user want to remember login
                 if ($this->postAndGet('cookietrue') == 1) {
                     // Encrypt data to save in cookie
@@ -247,7 +247,7 @@ class User {
                 }
 
                 $_SESSION['log'] = $this->getNickFromId($userx_id);
-                $_SESSION['permissions'] = $this->user_info('perm', $userx_id);
+                $_SESSION['permissions'] = $this->userInfo('perm', $userx_id);
                 $_SESSION['uid'] = $userx_id;
 
                 // Use language settings from profile
@@ -263,10 +263,10 @@ class User {
                     $userx_id);
         
                 // Redirect user to confirm registration
-                if ($this->user_info('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
+                if ($this->userInfo('regche', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
         
                 // Redirect user if he is banned
-                if ($this->user_info('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->postAndGet('log'));
+                if ($this->userInfo('banned', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/ban/?log=' . $this->postAndGet('log'));
 
                 $this->redirection(HOMEDIR . $this->postAndGet('ptl'));
             }
@@ -666,7 +666,7 @@ class User {
      */
     public function getNickFromId($uid): string|bool
     {
-        $unick = $this->user_info('nickname', $uid);
+        $unick = $this->userInfo('nickname', $uid);
         return $unick = !empty($unick) ? $unick : false;
     }
 
@@ -737,20 +737,18 @@ class User {
      * Get information about user
      * 
      * @param string $info data that method need to return
-     * @param int $users_id ID of user
+     * @param int|null $users_id ID of user
      * @return string|bool
      */
-    public function user_info(string $info, int $users_id = null): string|bool
+    public function userInfo(string $info, ?int $users_id = null): string|bool
     {
-        // If $users_id is not set use user if of logged in user
+        // If $users_id is not set use user if of logged-in user
         $users_id = empty($users_id) && isset($_SESSION['uid']) ? $_SESSION['uid'] : $users_id;
 
         switch ($info) {
             case 'email':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'email');
-                $data = !empty($data['email']) ? $data['email'] : '';
-                return $data;
-                break;
+                return isset($data['email']) && !empty($data['email']) ? $data['email'] : '';
             
             case 'full_name':
                 $uinfo = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname, surname');
@@ -763,167 +761,113 @@ class User {
                 if (empty(str_replace(' ', '', $full_name))) return false;
 
                 return $full_name;
-                break;
 
             case 'firstname':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname');
-                $data = !empty($data) ? $data['rname'] : '';
-                return $data;
-                break;
+                return isset($data['rname']) && !empty($data['rname']) ? $data['rname'] : '';
 
             case 'lastname':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'surname');
-                $data = !empty($data) ? $data['surname'] : '';
-                return $data;
-                break;
+                return isset($data['surname']) && !empty($data['surname']) ? $data['surname'] : '';
 
             case 'city':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'city');
-                $data = !empty($data) ? $data['city'] : '';
-                return $data;
-                break;
+                return isset($data['city']) && !empty($data['city']) ? $data['city'] : '';
 
             case 'address':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'address');
-                $data = !empty($data) ? $data['address'] : '';
-                return $data;
-                break;
+                return isset($data['address']) && !empty($data['address']) ? $data['address'] : '';
 
             case 'zip':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'zip');
-                $data = !empty($data) ? $data['zip'] : '';
-                return $data;
-                break;
+                return isset($data['zip']) && !empty($data['zip']) ? $data['zip'] : '';
 
             case 'about':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'about');
-                $data = !empty($data) ? $data['about'] : '';
-                return $data;
-                break;
+                return isset($data['about']) && !empty($data['about']) ? $data['about'] : '';
 
             case 'site':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'site');
-                $data = !empty($data) ? $data['site'] : '';
-                return $data;
-                break;
+                return isset($data['site']) && !empty($data['site']) ? $data['site'] : '';
 
             case 'birthday':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'birthday');
-                $data = !empty($data) ? $data['birthday'] : '';
-                return $data;
-                break;
+                return isset($data['birthday']) && !empty($data['birthday']) ? $data['birthday'] : '';
 
             case 'gender':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'sex');
-                $data = !empty($data) ? $data['sex'] : '';
-                return $data;
-                break;
+                return isset($data['sex']) && !empty($data['sex']) ? $data['sex'] : '';
 
             case 'photo':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'photo');
-                $data = !empty($data) ? $data['photo'] : '';
-                return $data;
-                break;
+                return isset($data['photo']) && !empty($data['photo']) ? $data['photo'] : '';
 
             case 'nickname':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'name');
-                $data = !empty($data) ? $data['name'] : '';
-                return $data;
-                break;
+                return isset($data['name']) && !empty($data['name']) ? $data['name'] : '';
 
             case 'language':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'lang');
-                $data = !empty($data) ? $data['lang'] : '';
-                return $data;
-                break;
+                return isset($data['lang']) && !empty($data['lang']) ? $data['lang'] : '';
 
             case 'banned':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'banned');
-                $data = !empty($data) ? $data['banned'] : '';
-                return $data;
-                break;
+                return isset($data['banned']) && !empty($data['banned']) ? $data['banned'] : '';
 
             case 'password':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'pass');
-                $data = !empty($data) ? $data['pass'] : '';
-                return $data;
-                break;
+                return isset($data['pass']) && !empty($data['pass']) ? $data['pass'] : '';
 
             case 'perm':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'perm');
-                $data = !empty($data) ? $data['perm'] : '';
-                return $data;
-                break;
+                return isset($data['perm']) && !empty($data['perm']) ? $data['perm'] : '';
 
             case 'browser':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'browsers');
-                $data = !empty($data) ? $data['browsers'] : '';
-                return $data;
-                break;
+                return isset($data['browsers']) && !empty($data['browsers']) ? $data['browsers'] : '';
 
             case 'ipaddress':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'ipadd');
-                $data = !empty($data) ? $data['ipadd'] : '';
-                return $data;
-                break;
+                return isset($data['ipadd']) && !empty($data['ipadd']) ? $data['ipadd'] : '';
 
             case 'timezone':
                 $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'timezone');
-                $data = !empty($data) ? $data['timezone'] : '';
-                return $data;
-                break;
+                return isset($data['timezone']) && !empty($data['timezone']) ? $data['timezone'] : '';
 
             case 'bantime':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'bantime');
-                $data = !empty($data['bantime']) ? $data['bantime'] : 0;
-                return $data;
-                break;
+                return isset($data['bantime']) && !empty($data['bantime']) ? $data['bantime'] : 0;
 
             case 'bandesc':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'bandesc');
-                $data = !empty($data) ? $data['bandesc'] : '';
-                return $data;
-                break;
+                return isset($data['bandesc']) && !empty($data['bandesc']) ? $data['bandesc'] : '';
 
             case 'allban':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'allban');
-                $data = !empty($data) ? $data['allban'] : '';
-                return $data;
-                break;
+                return isset($data['allban']) && !empty($data['allban']) ? $data['allban'] : '';
 
             case 'regche':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'regche');
-                $data = !empty($data) ? $data['regche'] : '';
-                return $data;
-                break;
+                return isset($data['regche']) && !empty($data['regche']) ? $data['regche'] : '';
 
             case 'status':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'perstat');
-                $data = !empty($data) ? $data['perstat'] : '';
-                return $data;
-                break;
+                return isset($data['perstat']) && !empty($data['perstat']) ? $data['perstat'] : '';
 
             case 'regdate':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'regdate');
-                $data = !empty($data) ? $data['regdate'] : '';
-                return $data;
-                break;
+                return isset($data['regdate']) && !empty($data['regdate']) ? $data['regdate'] : '';
 
             case 'lastvisit':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'lastvst');
-                $data = !empty($data) ? $data['lastvst'] : '';
-                return $data;
-                break;
+                return isset($data['lastvst']) && !empty($data['lastvst']) ? $data['lastvst'] : '';
 
             case 'subscribed':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'subscri');
-                $data = !empty($data) ? $data['subscri'] : '';
-                return $data;
-                break;
+                return isset($data['subscri']) && !empty($data['subscri']) ? $data['subscri'] : '';
 
             default:
                 return false;
-                break;
         }
     }
 
@@ -933,7 +877,7 @@ class User {
         if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
 
         if ($this->userAuthenticated()) {
-            return $this->user_info('language', $_SESSION['uid']);
+            return $this->userInfo('language', $_SESSION['uid']);
         } else {
             return $this->configuration('siteDefaultLang');
         }
@@ -1138,7 +1082,7 @@ class User {
 
         if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
 
-        $permission = $this->user_info('perm', $id);
+        $permission = $this->userInfo('perm', $id);
         $perm = !empty($permission) ? intval($permission) : 0;
         
         if (!empty($num) && $perm === $num && ($perm === 103 || $perm === 105 || $perm === 106)) {
@@ -1164,7 +1108,7 @@ class User {
 
         if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
 
-        $permission = $this->user_info('perm', $id);
+        $permission = $this->userInfo('perm', $id);
         $perm = !empty($permission) ? intval($permission) : 0;
 
         if (!empty($num) && $perm === $num && ($perm === 101 || $perm === 102)) {

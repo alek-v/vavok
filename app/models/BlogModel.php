@@ -55,7 +55,7 @@ class BlogModel extends BaseModel {
                 $post->load('blog/post');
 
                 // Author link
-                $author_full_name = $this->user->user_info('full_name', $this->page_author);
+                $author_full_name = $this->user->userInfo('full_name', $this->page_author);
                 $author_name = !empty($author_full_name) ? $author_full_name : $this->user->getNickFromId($this->page_author);
         
                 $author_link = '<a href="' . HOMEDIR . 'users/u/' . $this->page_author . '">' . $author_name . '</a>';

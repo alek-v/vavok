@@ -31,7 +31,7 @@ class ContactModel extends BaseModel {
             $usernameAndMail = $this->container['parse_page'];
             $usernameAndMail->load("contact/usernameAndMail_registered");
             $usernameAndMail->set('log', $this->user->show_username());
-            $usernameAndMail->set('user_email', $this->user->user_info('email'));
+            $usernameAndMail->set('user_email', $this->user->userInfo('email'));
         }
 
         // Show reCAPTCHA

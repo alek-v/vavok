@@ -37,7 +37,7 @@ class ProfileModel extends BaseModel {
         $my_name->set('label_value', $this->localization->string('name'));
         $my_name->set('input_id', 'my_name');
         $my_name->set('input_name', 'my_name');
-        $my_name->set('input_value', $this->user->user_info('firstname'));
+        $my_name->set('input_value', $this->user->userInfo('firstname'));
 
         /**
          * Last name
@@ -48,7 +48,7 @@ class ProfileModel extends BaseModel {
         $surname->set('label_value', $this->localization->string('surname'));
         $surname->set('input_id', 'surname');
         $surname->set('input_name', 'surname');
-        $surname->set('input_value', $this->user->user_info('lastname'));
+        $surname->set('input_value', $this->user->userInfo('lastname'));
 
         /**
          * City
@@ -59,7 +59,7 @@ class ProfileModel extends BaseModel {
         $otkel->set('label_value', $this->localization->string('city'));
         $otkel->set('input_id', 'otkel');
         $otkel->set('input_name', 'otkel');
-        $otkel->set('input_value', $this->user->user_info('city'));
+        $otkel->set('input_value', $this->user->userInfo('city'));
 
         /**
          * Street
@@ -70,7 +70,7 @@ class ProfileModel extends BaseModel {
         $street->set('label_value', $this->localization->string('street'));
         $street->set('input_id', 'street');
         $street->set('input_name', 'street');
-        $street->set('input_value', $this->user->user_info('address'));
+        $street->set('input_value', $this->user->userInfo('address'));
 
         /**
          * Postal code
@@ -81,7 +81,7 @@ class ProfileModel extends BaseModel {
         $zip->set('label_value', $this->localization->string('postal'));
         $zip->set('input_id', 'zip');
         $zip->set('input_name', 'zip');
-        $zip->set('input_value', $this->user->user_info('zip'));
+        $zip->set('input_value', $this->user->userInfo('zip'));
 
         /**
          * Timezone
@@ -92,7 +92,7 @@ class ProfileModel extends BaseModel {
         $timezone->set('label_value', $this->localization->string('timezone'));
         $timezone->set('input_id', 'timezone');
         $timezone->set('input_name', 'timezone');
-        $timezone->set('input_value', $this->user->user_info('timezone'));
+        $timezone->set('input_value', $this->user->userInfo('timezone'));
 
         /**
          * About user
@@ -103,7 +103,7 @@ class ProfileModel extends BaseModel {
         $infa->set('label_value', $this->localization->string('aboutyou'));
         $infa->set('input_id', 'infa');
         $infa->set('input_name', 'infa');
-        $infa->set('input_value', $this->user->user_info('about'));
+        $infa->set('input_value', $this->user->userInfo('about'));
 
         /**
          * Email
@@ -114,7 +114,7 @@ class ProfileModel extends BaseModel {
         $email->set('label_value', $this->localization->string('yemail'));
         $email->set('input_id', 'email');
         $email->set('input_name', 'email');
-        $email->set('input_value', $this->user->user_info('email'));
+        $email->set('input_value', $this->user->userInfo('email'));
 
         /**
          * Site
@@ -125,7 +125,7 @@ class ProfileModel extends BaseModel {
         $site->set('label_value', $this->localization->string('site'));
         $site->set('input_id', 'site');
         $site->set('input_name', 'site');
-        $site->set('input_value', $this->user->user_info('site'));
+        $site->set('input_value', $this->user->userInfo('site'));
 
         /**
          * Site
@@ -136,7 +136,7 @@ class ProfileModel extends BaseModel {
         $birthday->set('label_value', $this->localization->string('birthday') . ' (dd.mm.yyyy)');
         $birthday->set('input_id', 'happy');
         $birthday->set('input_name', 'happy');
-        $birthday->set('input_value', $this->user->user_info('birthday'));
+        $birthday->set('input_value', $this->user->userInfo('birthday'));
 
         /**
          * Gender
@@ -148,7 +148,7 @@ class ProfileModel extends BaseModel {
         $gender_m->set('input_id', 'pol');
         $gender_m->set('input_name', 'pol');
         $gender_m->set('input_value', 'm');
-        if ($this->user->user_info('gender') == 'm') $gender_m->set('input_status', 'checked');
+        if ($this->user->userInfo('gender') == 'm') $gender_m->set('input_status', 'checked');
 
         $gender_f = $this->container['parse_page'];
         $gender_f->load('forms/radio_inline');
@@ -157,7 +157,7 @@ class ProfileModel extends BaseModel {
         $gender_f->set('input_id', 'pol');
         $gender_f->set('input_name', 'pol');
         $gender_f->set('input_value', 'z');
-        if ($this->user->user_info('gender') == 'z') $gender_f->set('input_status', 'checked');
+        if ($this->user->userInfo('gender') == 'z') $gender_f->set('input_status', 'checked');
 
         $gender = $this->container['parse_page'];
         $gender->load('forms/radio_group');
@@ -207,8 +207,8 @@ class ProfileModel extends BaseModel {
         $form->set('fields', $form->merge(array($newpar, $newpar2, $oldpar)));
         $data['change_password'] = $form->output();
 
-        if (!empty($this->user->user_info('photo'))) {
-            $data['profile_photo'] = '<img src="../' . $this->user->user_info('photo') . '" alt="User\'s photo" /><br /> ';
+        if (!empty($this->user->userInfo('photo'))) {
+            $data['profile_photo'] = '<img src="../' . $this->user->userInfo('photo') . '" alt="User\'s photo" /><br /> ';
             $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photo') . '<br />';
             $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/removephoto', 'Remove photo'); // update lang
         } else {
@@ -276,7 +276,7 @@ class ProfileModel extends BaseModel {
         /**
          * Send email confirmation link if it is changed and save data into database
          */
-        if ($this->user->user_info('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
+        if ($this->user->userInfo('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
             /**
              * Insert data to database
              */
@@ -351,7 +351,7 @@ class ProfileModel extends BaseModel {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->user_info('password'))) {
+        if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->userInfo('password'))) {
             // Update password
             $this->user->updateUser('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
 
@@ -379,9 +379,9 @@ class ProfileModel extends BaseModel {
         </style>';
         $data['content'] = '';
 
-        if (!empty($this->user->user_info('photo'))) {
+        if (!empty($this->user->userInfo('photo'))) {
             $data['photo'] = '<div class="photo">';
-            $data['photo'] .= '<h1>Your photo</h1><br /><img src="../' . $this->user->user_info('photo') . '" alt="Users photo" />';
+            $data['photo'] .= '<h1>Your photo</h1><br /><img src="../' . $this->user->userInfo('photo') . '" alt="Users photo" />';
             $data['photo'] .= '</div>';
         }
 

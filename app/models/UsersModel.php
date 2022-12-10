@@ -328,14 +328,14 @@ class UsersModel extends BaseModel {
         if (empty($recipient_id)) $recipient_id = $this->user->id_from_email($recipient_mail);
 
         // Check if user really need to confirm registration
-        if ($this->user->user_info('regche', $recipient_id) != 1) {
+        if ($this->user->userInfo('regche', $recipient_id) != 1) {
             $data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
 
             return $data;
         }
 
         // Get users email if it is not submited
-        if (empty($recipient_mail)) $recipient_mail = $this->user->user_info('email', $recipient_id);
+        if (empty($recipient_mail)) $recipient_mail = $this->user->userInfo('email', $recipient_id);
 
         $email = $this->db->selectData('email_queue', 'recipient = :recipient', [':recipient' => $recipient_mail]);
 
@@ -398,7 +398,7 @@ class UsersModel extends BaseModel {
         if (!empty($this->postAndGet('logus')) && !empty($this->postAndGet('mailsus'))) {
             $userx_id = $this->user->getIdFromNick($this->postAndGet('logus'));
 
-            $checkmail = trim($this->user->user_info('email', $userx_id));
+            $checkmail = trim($this->user->userInfo('email', $userx_id));
 
             // Username and email does not match
             if ($this->postAndGet('mailsus') != $checkmail) {
@@ -643,7 +643,7 @@ class UsersModel extends BaseModel {
              * Site newsletter
              */
             if ($this->postAndGet('subnews') == 1) {
-                $email_check = $this->db->selectData('subs', 'user_mail = :user_mail', [':user_mail' => $this->user->user_info('email')], 'user_mail');
+                $email_check = $this->db->selectData('subs', 'user_mail = :user_mail', [':user_mail' => $this->user->userInfo('email')], 'user_mail');
 
                 if (!empty($email_check['user_mail'])) {
                     $result = 'error2'; // Error! Email already exist in database!
@@ -655,7 +655,7 @@ class UsersModel extends BaseModel {
                 if (empty($result)) {
                     $randkey = $this->generatePassword();
                     
-                    $this->db->insert('subs', array('user_id' => $this->user->user_id(), 'user_mail' => $this->user->user_info('email'), 'user_pass' => $randkey));
+                    $this->db->insert('subs', array('user_id' => $this->user->user_id(), 'user_mail' => $this->user->userInfo('email'), 'user_pass' => $randkey));
 
                     $result = 'ok'; // sucessfully subscribed to site news!
                     $subnewss = 1;
@@ -728,10 +728,10 @@ class UsersModel extends BaseModel {
         $form->set('form_method', 'post');
         $form->set('form_action', HOMEDIR . 'users/settings/save');
 
-        $options = '<option value="' . $this->user->user_info('language') . '">' . $this->user->user_info('language') . '</option>';
+        $options = '<option value="' . $this->user->userInfo('language') . '">' . $this->user->userInfo('language') . '</option>';
         $dir = opendir(APPDIR . 'include/lang');
         while ($file = readdir ($dir)) {
-            if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $this->user->user_info('language')) && strlen($file) > 2) {
+            if (!preg_match("/[^a-z0-9_-]/", $file) && ($file != $this->user->userInfo('language')) && strlen($file) > 2) {
                 $options .= '<option value="' . $file . '">' . $file . '</option>';
             } 
         }
@@ -754,7 +754,7 @@ class UsersModel extends BaseModel {
         $subnews_yes->set('input_id', 'subnews');
         $subnews_yes->set('input_name', 'subnews');
         $subnews_yes->set('input_value', 1);
-        if ($this->user->user_info('subscribed') == 1) $subnews_yes->set('input_status', 'checked');
+        if ($this->user->userInfo('subscribed') == 1) $subnews_yes->set('input_status', 'checked');
 
         $subnews_no = $this->container['parse_page'];
         $subnews_no->load('forms/radio_inline');
@@ -763,7 +763,7 @@ class UsersModel extends BaseModel {
         $subnews_no->set('input_id', 'subnews');
         $subnews_no->set('input_name', 'subnews');
         $subnews_no->set('input_value', 0);
-        if ($this->user->user_info('subscribed') == 0 || empty($this->user->user_info('subscribed'))) $subnews_no->set('input_status', 'checked');
+        if ($this->user->userInfo('subscribed') == 0 || empty($this->user->userInfo('subscribed'))) $subnews_no->set('input_status', 'checked');
 
         $subnews = $this->container['parse_page'];
         $subnews->load('forms/radio_group');
@@ -814,10 +814,10 @@ class UsersModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection('../');
 
         // Ban description
-        $bandesc = $this->user->user_info('bandesc');
+        $bandesc = $this->user->userInfo('bandesc');
 
         // Ban time
-        $time_ban = round($this->user->user_info('bantime') - time());
+        $time_ban = round($this->user->userInfo('bantime') - time());
 
         if ($time_ban > 0) {
             $data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
@@ -825,7 +825,7 @@ class UsersModel extends BaseModel {
 
             $data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
 
-            $data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->user_info('allban') . '</b><br>';
+            $data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->userInfo('allban') . '</b><br>';
             $data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
 
             // Remove session - logout user
@@ -886,9 +886,9 @@ class UsersModel extends BaseModel {
         $showPage->load('users/user-profile/user-profile');
 
         // Show gender image
-        if ($this->user->user_info('gender', $users_id) == 'N' || $this->user->user_info('gender', $users_id) == 'n' || empty($this->user->user_info('gender', $users_id))) {
+        if ($this->user->userInfo('gender', $users_id) == 'N' || $this->user->userInfo('gender', $users_id) == 'n' || empty($this->user->userInfo('gender', $users_id))) {
             $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/anonim.gif" width="32" height="32" alt="" />');
-        } elseif ($this->user->user_info('gender', $users_id) == 'M' or $this->user->user_info('gender', $users_id) == 'm') {
+        } elseif ($this->user->userInfo('gender', $users_id) == 'M' or $this->user->userInfo('gender', $users_id) == 'm') {
             $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/man.png" width="32" height="32" alt="Male" />');
         } else {
             $showPage->set('sex-img', '<img src="' . STATIC_THEMES_URL . '/images/img/women.gif" width="32" height="32" alt="Female" />');
@@ -901,70 +901,70 @@ class UsersModel extends BaseModel {
         $showPage->set('user-online', $this->user->userOnline($uz));
 
         // Message if user need to confirm registration
-        if ($this->user->user_info('regche', $users_id) == 1) $showPage->set('regCheck', '<b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '!</font></b><br>');
+        if ($this->user->userInfo('regche', $users_id) == 1) $showPage->set('regCheck', '<b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '!</font></b><br>');
 
-        if ($this->user->user_info('banned', $users_id) == 1 && $this->user->user_info('bantime', $users_id) > time()) {
+        if ($this->user->userInfo('banned', $users_id) == 1 && $this->user->userInfo('bantime', $users_id) > time()) {
             $profileBanned = $this->container['parse_page'];
             $profileBanned->load('users/user-profile/banned');
             $profileBanned->set('banned', $this->localization->string('userbanned') . '!');
-            $time_ban = round($this->user->user_info('bantime', $users_id) - time());
+            $time_ban = round($this->user->userInfo('bantime', $users_id) - time());
             $profileBanned->set('timeLeft', $this->localization->string('bantimeleft') . ': ' . formatTime($time_ban));
-            $profileBanned->set('reason', $this->localization->string('reason') . ': ' . $this->user->user_info('bandesc', $users_id));
+            $profileBanned->set('reason', $this->localization->string('reason') . ': ' . $this->user->userInfo('bandesc', $users_id));
             $showPage->set('banned', $profileBanned->output());
         }
 
         // Personal status
-        if (!empty($this->user->user_info('status', $users_id))) {
+        if (!empty($this->user->userInfo('status', $users_id))) {
             $personalStatus = $this->container['parse_page'];
             $personalStatus->load('users/user-profile/status');
             $personalStatus->set('status', $this->localization->string('status') . ':');
-            $personalStatus->set('personalStatus', $this->check($this->user->user_info('status', $users_id)));
+            $personalStatus->set('personalStatus', $this->check($this->user->userInfo('status', $users_id)));
             $showPage->set('personalStatus', $personalStatus->output());
         }
 
         $showPage->set('sex', $this->localization->string('sex'));
 
         // First name
-        if (!empty($this->user->user_info('firstname', $users_id))) $showPage->set('firstname', $this->user->user_info('firstname', $users_id));
+        if (!empty($this->user->userInfo('firstname', $users_id))) $showPage->set('firstname', $this->user->userInfo('firstname', $users_id));
 
         // Last name
-        if (!empty($this->user->user_info('lastname', $users_id))) $showPage->set('lastname', $this->user->user_info('lastname', $users_id));
+        if (!empty($this->user->userInfo('lastname', $users_id))) $showPage->set('lastname', $this->user->userInfo('lastname', $users_id));
 
         // User's gender
-        if ($this->user->user_info('gender', $users_id) == 'N' or $this->user->user_info('gender', $users_id) == 'n' || empty($this->user->user_info('gender', $users_id))) {
+        if ($this->user->userInfo('gender', $users_id) == 'N' or $this->user->userInfo('gender', $users_id) == 'n' || empty($this->user->userInfo('gender', $users_id))) {
             $showPage->set('usersSex', $this->localization->string('notchosen'));
-        } elseif ($this->user->user_info('gender', $users_id) == 'M' or $this->user->user_info('gender', $users_id) == 'm') {
+        } elseif ($this->user->userInfo('gender', $users_id) == 'M' or $this->user->userInfo('gender', $users_id) == 'm') {
             $showPage->set('usersSex', $this->localization->string('male'));
         } else {
             $showPage->set('usersSex', $this->localization->string('female'));
         }
 
         // City
-        if (!empty($this->user->user_info('city', $users_id))) $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->user_info('city', $users_id)) . '<br>');
+        if (!empty($this->user->userInfo('city', $users_id))) $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->userInfo('city', $users_id)) . '<br>');
 
         // About user
-        if (!empty($this->user->user_info('about', $users_id))) $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->user_info('about', $users_id)) . ' <br>');
+        if (!empty($this->user->userInfo('about', $users_id))) $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->userInfo('about', $users_id)) . ' <br>');
 
         // User's birthday
-        if (!empty($this->user->user_info('birthday', $users_id)) && $this->user->user_info('birthday', $users_id) != "..") $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->user_info('birthday', $users_id)) . '<br>');
+        if (!empty($this->user->userInfo('birthday', $users_id)) && $this->user->userInfo('birthday', $users_id) != "..") $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->userInfo('birthday', $users_id)) . '<br>');
 
         // User's browser
-        if (!empty($this->user->user_info('browser', $users_id))) $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->user_info('browser', $users_id)) . ' <br>');
+        if (!empty($this->user->userInfo('browser', $users_id))) $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->userInfo('browser', $users_id)) . ' <br>');
 
         // Website
-        if (!empty($this->user->user_info('site', $users_id)) && $this->user->user_info('site', $users_id) != 'http://' && $this->user->user_info('site', $users_id) != 'https://') $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->user_info('site', $users_id)) . '" target="_blank">' . $this->user->user_info('site', $users_id) . '</a><br>');
+        if (!empty($this->user->userInfo('site', $users_id)) && $this->user->userInfo('site', $users_id) != 'http://' && $this->user->userInfo('site', $users_id) != 'https://') $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->userInfo('site', $users_id)) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a><br>');
 
         // Registration date
-        if (!empty($this->user->user_info('regdate', $users_id))) $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->user_info('regdate', $users_id)), 'd.m.Y.') . '<br>');
+        if (!empty($this->user->userInfo('regdate', $users_id))) $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('regdate', $users_id)), 'd.m.Y.') . '<br>');
 
         // Last visit
-        $timezone = $this->user->userAuthenticated() ? $this->user->user_info('timezone') : $this->configuration('timezone');
-        $showPage->set('lastVisit', $this->localization->string('lastvisit') . ': ' . $this->correctDate($this->user->user_info('lastvisit', $users_id), 'd.m.Y. / H:i', $timezone, true));
+        $timezone = $this->user->userAuthenticated() ? $this->user->userInfo('timezone') : $this->configuration('timezone');
+        $showPage->set('lastVisit', $this->localization->string('lastvisit') . ': ' . $this->correctDate($this->user->userInfo('lastvisit', $users_id), 'd.m.Y. / H:i', $timezone, true));
 
         if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) {
             $ipAddress = $this->container['parse_page'];
             $ipAddress->load('users/user-profile/ip-address');
-            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $this->check($this->user->user_info('ipaddress', $users_id)) . '" target="_blank">'  . $this->check($this->user->user_info('ipaddress', $users_id)) . '</a>');
+            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $this->check($this->user->userInfo('ipaddress', $users_id)) . '" target="_blank">'  . $this->check($this->user->userInfo('ipaddress', $users_id)) . '</a>');
             $showPage->set('ip-address', $ipAddress->output());
         }
 
@@ -994,13 +994,13 @@ class UsersModel extends BaseModel {
             $showPage->set('userMenu', $adminMenu->output());
         }
 
-        if (!empty($this->user->user_info('photo', $users_id))) {
-            $ext = strtolower(substr($this->user->user_info('photo', $users_id), strrpos($this->user->user_info('photo', $users_id), '.') + 1));
+        if (!empty($this->user->userInfo('photo', $users_id))) {
+            $ext = strtolower(substr($this->user->userInfo('photo', $users_id), strrpos($this->user->userInfo('photo', $users_id), '.') + 1));
 
             if ($users_id != $this->user->user_id()) {
-                $showPage->set('userPhoto', '<img src="' . HOMEDIR . $this->user->user_info('photo', $users_id) . '" alt="Profile picture" /><br>');
+                $showPage->set('userPhoto', '<img src="' . HOMEDIR . $this->user->userInfo('photo', $users_id) . '" alt="Profile picture" /><br>');
             } else {
-                $showPage->set('userPhoto', '<a href="' . HOMEDIR . 'profile/photo"><img src="' . HOMEDIR . $this->user->user_info('photo', $users_id) . '" alt="Profile picture" /></a>');
+                $showPage->set('userPhoto', '<a href="' . HOMEDIR . 'profile/photo"><img src="' . HOMEDIR . $this->user->userInfo('photo', $users_id) . '" alt="Profile picture" /></a>');
             }
         }
 
