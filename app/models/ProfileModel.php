@@ -185,7 +185,7 @@ class ProfileModel extends BaseModel {
         $newpar->set('input_name', 'newpar');
 
         /**
-         * New pass agin
+         * New pass again
          */
         $newpar2= $this->container['parse_page'];
         $newpar2->load('forms/input');
@@ -225,10 +225,10 @@ class ProfileModel extends BaseModel {
      */
     public function save()
     {
-        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection(HOMEDIR. 'profile?isset=insite');
+        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection(HOMEDIR. 'profile/?isset=insite');
 
         // check email
-        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection(HOMEDIR . 'profile?isset=noemail');
+        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection(HOMEDIR . 'profile/?isset=noemail');
 
         $my_name = $this->replaceNewLines($this->postAndGet('my_name'));
         $surname = $this->replaceNewLines($this->postAndGet('surname'));
@@ -268,18 +268,12 @@ class ProfileModel extends BaseModel {
         $values[] = $zip;
         $values[] = $timezone;
 
-        /**
-         * Update profile data
-         */
+        // Update profile data
         $this->user->updateUser($fields, $values);
 
-        /**
-         * Send email confirmation link if it is changed and save data into database
-         */
+        // Send email confirmation link if it is changed and save data into database
         if ($this->user->userInfo('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
-            /**
-             * Insert data to database
-             */
+            // Insert data to database
             $token = $this->generatePassword();
 
             $now = new DateTime();
@@ -296,9 +290,7 @@ class ProfileModel extends BaseModel {
 
             $this->db->insert('tokens', $data);
 
-            /**
-             * Add email to the queue
-             */
+            // Add email to the queue
             $mailQueue = new Mailer;
 
             $msg = "Hello {$this->user->showUsername()}<br /><br />
@@ -309,7 +301,7 @@ class ProfileModel extends BaseModel {
             $mailQueue->queueEmail($email, 'Confirm new email address', $msg);
         }
 
-        $this->redirection('./profile');
+        $this->redirection(HOMEDIR . 'profile');
     }
 
     /**

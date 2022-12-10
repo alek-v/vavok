@@ -419,7 +419,7 @@ class User {
     {
         $user_id = empty($user_id) ? $_SESSION['uid'] : $user_id;
 
-        // Fields and values must be array, we are using array_values to sort keys when any is removed while filtering
+        // Fields and values must be an array, we are using array_values to sort keys when any is removed while filtering
         if (!is_array($fields)) $fields = array($fields);
         if (!is_array($values)) $values = array($values);
 
@@ -445,22 +445,13 @@ class User {
      * @param array $values
      * @param array $valid_fields
      * @param string $data here we choose if we want fields or values to be returned
-     * @return array|bool
+     * @return array
      */
-    private function filter_user_fields_values(array $fields, array $values, array $valid_fields, string $data): array|bool
+    private function filter_user_fields_values(array $fields, array $values, array $valid_fields, string $data): array
     {
-        // Check $fields variable and return data if variable is string
-        if (array_search($fields, $valid_fields)) {
-            // Return field or value
-            if ($data == 'fields') return $fields;
-            if ($data == 'values') return $values;
-        } else {
-            return false;
-        }
-
         // Filter fields and values in array
         foreach ($fields as $key => $value) {
-            // Remove field and value that don't belog to this table
+            // Remove field and value that don't belong to this table
             if (array_search($value, $valid_fields) === false) {
                 // Find key number of value and remove value
                 $value_number = array_search($value, $fields);
@@ -473,7 +464,9 @@ class User {
             }
         }
 
-        if ($data == 'fields') { return $fields; } else { return $values; }
+        if ($data == 'fields') return $fields;
+
+        return $values;
     }
 
     /**
