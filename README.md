@@ -62,8 +62,9 @@ Manage reCaptcha site key
 ```bash
 composer install
 ```
-2. Enter database data in the .env file
-3. Go to your_site.com/install to complete the installation
+2. Rename .env_sample to .env
+3. Enter database data in the .env file
+4. Go to your_site.com/install to complete the installation
 
 Requirements:
 
