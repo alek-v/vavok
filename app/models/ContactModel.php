@@ -30,7 +30,7 @@ class ContactModel extends BaseModel {
         } else {
             $usernameAndMail = $this->container['parse_page'];
             $usernameAndMail->load("contact/usernameAndMail_registered");
-            $usernameAndMail->set('log', $this->user->show_username());
+            $usernameAndMail->set('log', $this->user->showUsername());
             $usernameAndMail->set('user_email', $this->user->userInfo('email'));
         }
 
@@ -72,7 +72,7 @@ class ContactModel extends BaseModel {
             Sender: {$this->postAndGet('name')}<br />
             Sender's email: {$this->postAndGet('umail')}<br />
             Browser: {$this->user->user_browser()}<br />
-            IP: {$this->user->find_ip()}<br />
+            IP: {$this->user->findIpAddress()}<br />
             {$this->localization->string('datesent')}: " . date('d.m.Y. / H:i');
 
             // Insert email text into the email template

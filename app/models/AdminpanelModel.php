@@ -1070,19 +1070,19 @@ class AdminpanelModel extends BaseModel {
             if (!empty($user) && $this->user->username_exists($user) && $this->user->id_exists($users_id)) {
                 $data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/profiles.gif" alt="Profile" /> {@localization[usrprofile]}} ' . $user . '<br>';
 
-                if ($this->user->show_username() != $this->configuration('adminNick') && $user == $this->configuration('adminNick')) {
+                if ($this->user->showUsername() != $this->configuration('adminNick') && $user == $this->configuration('adminNick')) {
                     $data['content'] .= '<br>{@localization[noauthtoedit]}!<br>';
                     return $data;
                     exit;
                 }
 
-                if (($this->user->show_username() != $this->configuration('adminNick')) && ($this->user->userInfo('perm', $users_id) == 101 || $this->user->userInfo('perm', $users_id) == 102 || $this->user->userInfo('perm', $users_id) == 103 || $this->user->userInfo('perm', $users_id) == 105) && $this->user->show_username() != $user) {
+                if (($this->user->showUsername() != $this->configuration('adminNick')) && ($this->user->userInfo('perm', $users_id) == 101 || $this->user->userInfo('perm', $users_id) == 102 || $this->user->userInfo('perm', $users_id) == 103 || $this->user->userInfo('perm', $users_id) == 105) && $this->user->showUsername() != $user) {
                     $data['content'] .= '<br>{@localization[noauthtoban]}!<br>';
                     return $data;
                     exit;
                 }
 
-                $casenick = strcasecmp($user, $this->user->show_username());
+                $casenick = strcasecmp($user, $this->user->showUsername());
 
                 if ($casenick == 0) $data['content'] .= '<p><b><font color="red">{@localization[myprofile]}!</font></b></p>';
 
@@ -1097,7 +1097,7 @@ class AdminpanelModel extends BaseModel {
         
                 $userx_access = (int)$this->user->userInfo('perm', $users_id);
         
-                if ($_SESSION['permissions'] == 101 && $this->user->show_username() == $this->configuration('adminNick')) {
+                if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration('adminNick')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
         
                     if ($userx_access == 0 || empty($userx_access)) $userx_access = 107;
@@ -1268,7 +1268,7 @@ class AdminpanelModel extends BaseModel {
                         if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
         
                         // Update default access permissions
-                        if ($udd7 != $this->user->userInfo('perm', $users_id)) $this->user->update_default_permissions($users_id, $udd7);
+                        if ($udd7 != $this->user->userInfo('perm', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
         
                         // Update data
                         $this->user->updateUser(

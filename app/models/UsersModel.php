@@ -202,7 +202,7 @@ class UsersModel extends BaseModel {
 
         if ($this->configuration('openReg') == 1) {
             if ($this->user->userAuthenticated()) {
-                $data['content'] = $this->showDanger($this->user->show_username() . ', {@localization[againreg]}}');
+                $data['content'] = $this->showDanger($this->user->showUsername() . ', {@localization[againreg]}}');
 
                 // Load the view
                 $data['page_template'] = 'users/register/already_registered';
@@ -246,7 +246,7 @@ class UsersModel extends BaseModel {
         $recipient_id = $this->postAndGet('uid');
 
         if (!empty($this->postAndGet('key'))) {
-            if (!$this->user->confirm_registration($this->postAndGet('key'))) {
+            if (!$this->user->confirmRegistration($this->postAndGet('key'))) {
                 $data['content'] .= $this->showDanger($this->localization->string('keynotok'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back')) . '</p>';
             } else {
@@ -325,7 +325,7 @@ class UsersModel extends BaseModel {
         $data['page_template'] = 'users/register/resend_key';
 
         // if user id is not in url, get it from submited email
-        if (empty($recipient_id)) $recipient_id = $this->user->id_from_email($recipient_mail);
+        if (empty($recipient_id)) $recipient_id = $this->user->idFromEmail($recipient_mail);
 
         // Check if user really need to confirm registration
         if ($this->user->userInfo('regche', $recipient_id) != 1) {
@@ -465,7 +465,7 @@ class UsersModel extends BaseModel {
         if (!file_exists(APPDIR . "include/lang/" . $this->user->getPreferredLanguage($language) . "/index.php")) $this->redirection(HOMEDIR . '?error=no_lang');
 
         // Set new language
-        if (!empty($language)) $this->user->change_language($language);
+        if (!empty($language)) $this->user->changeLanguage($language);
 
         // Ignore language url's, /index.php will do the work
         if ($ptl == '/en/' || $ptl == '/sr/') $ptl = '';
@@ -684,14 +684,14 @@ class UsersModel extends BaseModel {
             $fields[] = 'timezone';
 
             $values = array();
-            $values[] = $this->user->find_ip();
+            $values[] = $this->user->findIpAddress();
             $values[] = $user_timezone;
 
             $this->user->updateUser($fields, $values);
             unset($fields, $values);
 
             // Update language
-            $this->user->change_language($this->postAndGet('lang'));
+            $this->user->changeLanguage($this->postAndGet('lang'));
 
             // update email notificatoins
             $fields = array();

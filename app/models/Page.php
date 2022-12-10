@@ -34,7 +34,7 @@ class Page extends BaseModel {
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
-            $this->user->change_language(strtolower($this->page_localization));
+            $this->user->changeLanguage(strtolower($this->page_localization));
         }
 
         // Redirect if user's language is not website default language,

@@ -26,7 +26,7 @@ class InboxModel extends BaseModel {
         $data['tname'] = '{@localization[inbox]}}';
         $data['content'] = '';
 
-        $num_items = $this->user->getpmcount($this->user->user_id());
+        $num_items = $this->user->getNumberOfMessages($this->user->user_id());
         $items_per_page = 10;
 
         // navigation
@@ -113,7 +113,7 @@ class InboxModel extends BaseModel {
                 $tmopm = date("d m y - h:i:s", $pm['timesent']);
                 $data['content'] .= "$tmopm<br />";
         
-                $data['content'] .= $this->user->parsepm($pm['text']);
+                $data['content'] .= $this->user->parseMessage($pm['text']);
         
                 $data['content'] .= '<hr />';
             }
@@ -201,7 +201,7 @@ class InboxModel extends BaseModel {
         }
 
         foreach($this->db->query($sql) as $item) {
-            echo $this->user->getNickFromId($item['byuid']) . ':|:' . $this->user->parsepm($item['text']) . ':|:' . $item['id'] . ':|:' . $item['byuid'] . ':|:' . date("d.m.y. - H:i:s", $item['timesent']);
+            echo $this->user->getNickFromId($item['byuid']) . ':|:' . $this->user->parseMessage($item['text']) . ':|:' . $item['id'] . ':|:' . $item['byuid'] . ':|:' . date("d.m.y. - H:i:s", $item['timesent']);
 
             // update read status
             if ($this->user->user_id() == $item['touid']) {

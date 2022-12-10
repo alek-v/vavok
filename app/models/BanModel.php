@@ -85,7 +85,7 @@ class BanModel extends BaseModel {
                 return $data;
             }
 
-            if ($user == $this->user->show_username()) {
+            if ($user == $this->user->showUsername()) {
                 $data['content'] .= '<p><b><font color="#FF0000">{@localization[myprofile]}}!</font></b></p>';
             }
 

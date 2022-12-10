@@ -30,7 +30,7 @@ class AdminchatModel extends BaseModel {
             $msg = $this->check($msg);
             $msg = $this->replaceNewLines($msg, '<br />');
 
-            $text = $msg . '|' . $this->user->show_username() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->find_ip() . '|';
+            $text = $msg . '|' . $this->user->showUsername() . '|' . $this->correctDate(time(), "d.m.y") . '|' . $this->correctDate(time(), "H:i") . '|' . $brow . '|' . $this->user->findIpAddress() . '|';
             $text = $this->replaceNewLines($text);
 
             try {

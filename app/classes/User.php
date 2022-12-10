@@ -45,7 +45,7 @@ class User {
                     $_SESSION['lang'] = $cookie_check['lang'];
 
                     // Update ip address
-                    $this->db->update('vavok_users', 'ipadd', $this->find_ip(), "id = '{$cookie_id}'");
+                    $this->db->update('vavok_users', 'ipadd', $this->findIpAddress(), "id = '{$cookie_id}'");
             } else {
                 // Token from cookie is not valid or it is expired, delete cookie
                 setcookie('cookie_login', '', time() - 3600);
@@ -79,7 +79,7 @@ class User {
                 session_destroy();
             }
         } else {
-            if (empty($_SESSION['lang'])) $this->change_language();
+            if (empty($_SESSION['lang'])) $this->changeLanguage();
         }
 
         // Count visited pages and time on site
@@ -108,7 +108,7 @@ class User {
         define('MY_THEME', $config_themes);
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
-        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->find_ip(), $this->user_browser(), $this->detectBot(), $this->container);
+        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->findIpAddress(), $this->user_browser(), $this->detectBot(), $this->container);
 
         // Check if user is authenticated
         // This time we check data from database, because of this we pass parameter true
@@ -119,7 +119,7 @@ class User {
         if ($this->administrator()) $this->user_data['admin_status'] = 'administrator';
         if ($this->moderator()) $this->user_data['admin_status'] = 'moderator';
 
-        // Users laguage
+        // Users language
         $this->user_data['language'] = $this->getUserLanguage();
     }
 
@@ -188,7 +188,7 @@ class User {
         setcookie(session_name(), '', time() - 3600, $rootDomain);
 
         // Destoy session
-        $this->destroy_current_session();
+        $this->destroyCurrentSession();
 
         // Start new session
         session_start();
@@ -212,14 +212,14 @@ class User {
         $max_attempts = 10;
 
         if (!empty($this->postAndGet('log')) && !empty($this->postAndGet('pass')) && $this->postAndGet('log') != 'System') {
-            if ($this->loginAttemptCount($max_time_in_seconds, $this->postAndGet('log'), $this->find_ip()) > $max_attempts) {
+            if ($this->loginAttemptCount($max_time_in_seconds, $this->postAndGet('log'), $this->findIpAddress()) > $max_attempts) {
                 $data['show_notification'] = "<p>I'm sorry, you've made too many attempts to log in too quickly.<br>
                 Try again in " . explode(':', $this->makeTime($max_time_in_seconds))[0] . ' minutes.</p>'; // update lang
             }
 
             // User is logging in with email
             if ($this->validateEmail($this->postAndGet('log'))) {
-                $userx_id = $this->id_from_email($this->postAndGet('log'));
+                $userx_id = $this->idFromEmail($this->postAndGet('log'));
             }
 
             // User is logging in with username
@@ -259,7 +259,7 @@ class User {
                 // Update data in profile
                 $this->updateUser(
                     array('ipadd', 'browsers'),
-                    array($this->find_ip(), $this->user_browser()),
+                    array($this->findIpAddress(), $this->user_browser()),
                     $userx_id);
         
                 // Redirect user to confirm registration
@@ -280,7 +280,7 @@ class User {
     /**
      * Destroy session
      */
-    public function destroy_current_session(): void
+    private function destroyCurrentSession(): void
     {
         session_unset();
         session_destroy();
@@ -337,7 +337,7 @@ class User {
             'perm' => '107',
             'skin' => $theme,
             'browsers' => $this->check($this->user_browser()),
-            'ipadd' => $this->find_ip(),
+            'ipadd' => $this->findIpAddress(),
             'timezone' => 0,
             'banned' => 0,
             'newmsg' => 0,
@@ -352,7 +352,7 @@ class User {
         $this->db->insert('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
         // Send private message
-        if (!empty($auto_message)) $this->autopm($auto_message, $user_id);
+        if (!empty($auto_message)) $this->autoMessage($auto_message, $user_id);
     }
 
     /**
@@ -361,7 +361,7 @@ class User {
      * @param string $language
      * @return void
      */
-    public function change_language(string $language = ''): void
+    public function changeLanguage(string $language = ''): void
     {
         $language = $this->getPreferredLanguage($language);
         $current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
@@ -386,13 +386,13 @@ class User {
      * @param string|int $username
      * @return void
      */
-    public function deleteUser(string|int $users): void
+    public function deleteUser(string|int $username): void
     {
         // Check if it is really user's id
-        if (preg_match("/^([0-9]+)$/", $users)) {
-            $users_id = $users;
+        if (preg_match("/^([0-9]+)$/", $username)) {
+            $users_id = $username;
         } else {
-            $users_id = $this->getIdFromNick($users);
+            $users_id = $this->getIdFromNick($username);
         }
 
         $this->db->delete('vavok_users', "id = '{$users_id}'");
@@ -412,7 +412,7 @@ class User {
      * 
      * @param string|array $fields
      * @param string|array $values
-     * @param int $user_id
+     * @param int|null $user_id
      * @return void
      */
     public function updateUser(string|array $fields, string|array $values, int $user_id = null): void
@@ -450,14 +450,12 @@ class User {
     private function filter_user_fields_values(array $fields, array $values, array $valid_fields, string $data): array|bool
     {
         // Check $fields variable and return data if variable is string
-        if (!is_array($fields)) {
-            if (array_search($fields, $valid_fields)) {
-                // Return field or value
-                if ($data == 'fields') return $fields;
-                if ($data == 'values') return $values;
-            } else {
-                return false;
-            }
+        if (array_search($fields, $valid_fields)) {
+            // Return field or value
+            if ($data == 'fields') return $fields;
+            if ($data == 'values') return $values;
+        } else {
+            return false;
         }
 
         // Filter fields and values in array
@@ -485,7 +483,7 @@ class User {
      * @param int $permission_id
      * @return void
      */
-    public function update_default_permissions(int $user_id, int $permission_id): void
+    public function updateDefaultPermissions(int $user_id, int $permission_id): void
     {
         // Access level
         $this->updateUser('perm', $permission_id, $user_id);
@@ -521,14 +519,21 @@ class User {
      * @param string $key
      * @return bool
      */
-    public function confirm_registration(string $key): bool
+    public function confirmRegistration(string $key): bool
     {
         if (!$this->db->update('vavok_profil', array('regche', 'regkey'), array('', ''), "regkey='{$key}'")) return false;
         return true;
     }
 
-    // private messages
-    public function getpmcount($uid, $view = "all") {
+    /**
+     * Number of private messages
+     *
+     * @param int $uid
+     * @param string $view
+     * @return int
+     */
+    public function getNumberOfMessages(int $uid, string $view = 'all'): int
+    {
         if ($view == "all") {
             $nopm = $this->db->countRow('inbox', "touid='" . $uid . "' AND (deleted <> '" . $_SESSION['uid'] . "' OR deleted IS NULL)");
         } elseif ($view == "snt") {
@@ -547,39 +552,42 @@ class User {
      * @param int $uid
      * @return int
      */
-    function getunreadpm(int $uid): int
+    private function unreadMessagesNumber(int $uid): int
     {
         return $this->db->countRow('inbox', "touid='{$uid}' AND unread='1'");
     }
 
-    // number of private msg's
-    public function user_mail($userid) {
-        $fcheck_all = $this->getpmcount($userid);
-        $new_privat = $this->getunreadpm($userid);
+    /**
+     * Number of private msg's
+     *
+     * @param int $userid
+     * @return string
+     */
+    public function user_mail(int $userid): string
+    {
+        $fcheck_all = $this->getNumberOfMessages($userid);
+        $new_privat = $this->unreadMessagesNumber($userid);
 
         $all_mail = $new_privat . '/' . $fcheck_all;
 
         return $all_mail;
     }
 
-    public function isstarred($pmid) {
-        $strd = $this->db->selectData('inbox', 'id = :id', [':id' => $pmid], 'starred');
-
-        if ($strd['starred'] == 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function parsepm($text) {
-        // decode
+    /**
+     * Parse message
+     *
+     * @param string $text
+     * @return string
+     */
+    public function parseMessage(string $text): string
+    {
+        // Decode
         $text = base64_decode($text);
 
-        // format message
+        // Format message
         $text = $this->getbbcode($this->smiles($this->antiword($text)));
 
-        // strip slashes
+        // Strip slashes
         if (function_exists('get_magic_quotes_gpc')) {
             $text = stripslashes($text);
         }
@@ -620,10 +628,10 @@ class User {
      * 
      * @param string $msg
      * @param int $who
-     * @param int $sender_id
+     * @param int|null $sender_id
      * @return void
      */
-    public function autopm(string $msg, int $who, int $sender_id = null): void
+    public function autoMessage(string $msg, int $who, int $sender_id = null): void
     {
         $sender = !empty($sender_id) ? $sender_id : 0;
 
@@ -643,7 +651,7 @@ class User {
      * 
      * @return string
      */
-    public function show_username(): string
+    public function showUsername(): string
     {
         return isset($_SESSION['log']) && !empty($_SESSION['log']) ? $_SESSION['log'] : '';
     }
@@ -662,12 +670,12 @@ class User {
      * Get user nick from user id number
      *
      * @param bool $uid
-     * @return string|bool $unick
+     * @return string|bool
      */
     public function getNickFromId($uid): string|bool
     {
         $unick = $this->userInfo('nickname', $uid);
-        return $unick = !empty($unick) ? $unick : false;
+        return !empty($unick) ? $unick : false;
     }
 
     /**
@@ -679,9 +687,7 @@ class User {
     public function getIdFromNick(string $nick): int
     {
         $uid = $this->db->selectData('vavok_users', 'name = :name', [':name' => $nick], 'id');
-        $id = !empty($uid['id']) ? $uid['id'] : 0;
-
-        return $id;
+        return !empty($uid['id']) ? $uid['id'] : 0;
     }
 
     /**
@@ -690,16 +696,20 @@ class User {
      * @param string $email
      * @return int|bool
      */
-    public function id_from_email(string $email): int|bool
+    public function idFromEmail(string $email): int|bool
     {
         $id = $this->db->selectData('vavok_about', 'email = :email', [':email' => $email], 'uid');
-        $id = !empty($id['uid']) ? $id['uid'] : false;
-
-        return $id;
+        return !empty($id['uid']) ? $id['uid'] : false;
     }
 
-    // Calculate age
-    public function get_age($strdate) {
+    /**
+     * Calculate age
+     *
+     * @param string $strdate
+     * @return int
+     */
+    public function calculateAge(string $strdate): int
+    {
         $dob = explode(".", $strdate);
         if (count($dob) != 3) {
             return 0;
@@ -871,8 +881,13 @@ class User {
         }
     }
 
-    // User's language
-    public function getUserLanguage() {
+    /**
+     * User's language
+     *
+     * @return string
+     */
+    public function getUserLanguage(): string
+    {
         // Use language from session if exists
         if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
 
@@ -883,8 +898,13 @@ class User {
         }
     }
 
-    // Find user's IP address
-    public function find_ip() {
+    /**
+     * Find user's IP address
+     *
+     * @return string
+     */
+    public function findIpAddress(): string
+    {
         if (isset($_SERVER['HTTP_X_REAL_IP']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_REAL_IP'])) {
             $ip = $_SERVER['HTTP_X_REAL_IP'];
         } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && preg_match("/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/", $_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -903,7 +923,7 @@ class User {
      * @param string $login
      * @return string
      */
-    public function userOnline($login)
+    public function userOnline(string $login): string
     {
         $xuser = $this->getIdFromNick($login);
         $statwho = '<font color="#CCCCCC">[Off]</font>';
@@ -928,8 +948,7 @@ class User {
         $message = str_replace(103, '{@localization[access103]}}', $message);
         $message = str_replace(105, '{@localization[access105]}}', $message);
         $message = str_replace(106, '{@localization[access106]}}', $message);
-        $message = str_replace(107, '{@localization[access107]}}', $message);
-        return $message;
+        return str_replace(107, '{@localization[access107]}}', $message);
     }
 
     /**
@@ -1230,7 +1249,7 @@ class User {
         // Update user's language when page's language is different then current localization
         if (!empty($page_localization) && strtolower($page_localization) != $this->getPreferredLanguage($_SESSION['lang'], 'short')) {
             // Update $_SESSION['lang'] with new localization/language
-            $this->change_language(strtolower($page_localization));
+            $this->changeLanguage(strtolower($page_localization));
 
             // Return localization we want to use now
             return $this->getPreferredLanguage($page_localization);

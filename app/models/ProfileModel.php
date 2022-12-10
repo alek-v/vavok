@@ -239,7 +239,7 @@ class ProfileModel extends BaseModel {
         $email = htmlspecialchars(strtolower($this->postAndGet('email')));
         $site = $this->replaceNewLines($this->postAndGet('site'));
         $browser = $this->replaceNewLines($this->user->user_browser());
-        $ip = $this->replaceNewLines($this->user->find_ip());
+        $ip = $this->replaceNewLines($this->user->findIpAddress());
         $sex = $this->replaceNewLines($this->postAndGet('pol'));
         $happy = $this->replaceNewLines($this->postAndGet('happy'));
         $timezone = $this->replaceNewLines($this->postAndGet('timezone'));
@@ -301,7 +301,7 @@ class ProfileModel extends BaseModel {
              */
             $mailQueue = new Mailer;
 
-            $msg = "Hello {$this->user->show_username()}<br /><br />
+            $msg = "Hello {$this->user->showUsername()}<br /><br />
             In order to add this email to your profile at site {$this->websiteHomeAddress()}
             please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
             $msg .= '<br /><br />If you received this email by mistake please ignore it.';

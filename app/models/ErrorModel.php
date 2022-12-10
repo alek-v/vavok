@@ -24,12 +24,12 @@ class ErrorModel extends BaseModel {
         $http_referer = !empty($_SERVER['HTTP_REFERER']) ? $this->check($_SERVER['HTTP_REFERER']) : 'No referer';
         $http_referer = str_replace(':|:', '|', $http_referer);
         $request_uri = $this->check(str_replace(':|:', '|', REQUEST_URI));
-        $hostname = gethostbyaddr($this->user->find_ip());
+        $hostname = gethostbyaddr($this->user->findIpAddress());
         $hostname = str_replace(':|:', '|', $hostname);
 
-        $log = !empty($this->user->show_username()) ? $this->user->show_username() : 'Guest';
+        $log = !empty($this->user->showUsername()) ? $this->user->showUsername() : 'Guest';
 
-        $write_data = $request_uri . ':|:' . time() . ':|:' . $this->user->find_ip() . ':|:' . $hostname . ':|:' . $this->user->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+        $write_data = $request_uri . ':|:' . time() . ':|:' . $this->user->findIpAddress() . ':|:' . $hostname . ':|:' . $this->user->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
         
         $error_number_info = '';
         $additional_error_info = '';
