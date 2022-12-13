@@ -108,7 +108,7 @@ class User {
         define('MY_THEME', $config_themes);
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
-        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->findIpAddress(), $this->user_browser(), $this->detectBot(), $this->container);
+        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->findIpAddress(), $this->userBrowser(), $this->detectBot(), $this->container);
 
         // Check if user is authenticated
         // This time we check data from database, because of this we pass parameter true
@@ -228,11 +228,11 @@ class User {
             }
 
             // compare sent data and data from database
-            if (!empty($this->userInfo('password', $userx_id)) && $this->password_check($this->postAndGet('pass', true), $this->userInfo('password', $userx_id))) {
+            if (!empty($this->userInfo('password', $userx_id)) && $this->passwordCheck($this->postAndGet('pass', true), $this->userInfo('password', $userx_id))) {
                 // user want to remember login
                 if ($this->postAndGet('cookietrue') == 1) {
                     // Encrypt data to save in cookie
-                    $token = $this->leaveLatinLettersNumbers($this->password_encrypt($this->postAndGet('pass', true) . $this->generatePassword()));
+                    $token = $this->leaveLatinLettersNumbers($this->passwordEncrypt($this->postAndGet('pass', true) . $this->generatePassword()));
 
                     // Set token expire time
                     $now = new DateTime();
@@ -259,7 +259,7 @@ class User {
                 // Update data in profile
                 $this->updateUser(
                     array('ipadd', 'browsers'),
-                    array($this->findIpAddress(), $this->user_browser()),
+                    array($this->findIpAddress(), $this->userBrowser()),
                     $userx_id);
         
                 // Redirect user to confirm registration
@@ -333,10 +333,10 @@ class User {
     {
         $values = array(
             'name' => $name,
-            'pass' => $this->password_encrypt($pass),
+            'pass' => $this->passwordEncrypt($pass),
             'perm' => '107',
             'skin' => $theme,
-            'browsers' => $this->check($this->user_browser()),
+            'browsers' => $this->check($this->userBrowser()),
             'ipadd' => $this->findIpAddress(),
             'timezone' => 0,
             'banned' => 0,
@@ -588,8 +588,16 @@ class User {
         return $text;
     }
 
-    // send private message
-    public function send_pm($pmtext, $user_id, $who) {
+    /**
+     * Send private message
+     *
+     * @param string $pmtext
+     * @param int $user_id
+     * @param int $who
+     * @return void
+     */
+    public function sendMessage(string $pmtext, int $user_id, int $who): void
+    {
         $pmtext = base64_encode($pmtext);
 
         $time = time();
@@ -654,7 +662,7 @@ class User {
      * 
      * @return int
      */
-    public function user_id(): int
+    public function userIdNumber(): int
     {
         return isset($_SESSION['uid']) && !empty($_SESSION['uid']) ? $_SESSION['uid'] : 0;
     }
@@ -662,10 +670,10 @@ class User {
     /**
      * Get user nick from user id number
      *
-     * @param bool $uid
+     * @param int $uid
      * @return string|bool
      */
-    public function getNickFromId($uid): string|bool
+    public function getNickFromId(int $uid): string|bool
     {
         $unick = $this->userInfo('nickname', $uid);
         return !empty($unick) ? $unick : false;
@@ -752,7 +760,7 @@ class User {
             case 'email':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'email');
                 return isset($data['email']) && !empty($data['email']) ? $data['email'] : '';
-            
+
             case 'full_name':
                 $uinfo = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'rname, surname');
 
@@ -847,7 +855,7 @@ class User {
 
             case 'allban':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'allban');
-                return isset($data['allban']) && !empty($data['allban']) ? $data['allban'] : '';
+                return isset($data['allban']) && !empty($data['allban']) ? $data['allban'] : 0;
 
             case 'regche':
                 $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'regche');
@@ -950,7 +958,7 @@ class User {
      * @param string $needed
      * @return bool
      */
-    public function checkPermissions($permname, $needed = 'show'): bool
+    public function checkPermissions(string $permname, string $needed = 'show'): bool
     {
         // Check if user is logged in
         if (!$this->userAuthenticated()) return false;
@@ -980,17 +988,13 @@ class User {
         return false;
     }
 
-    // Current user id
-    function current_user_id($user_id = '') {
-        $user_id = $_SESSION['uid'];
-
-        if (empty($user_id)) $user_id = 0;
-
-        return $user_id;
-    }
-
-    // number of registered members
-    function regmemcount() {
+    /**
+     * Number of registered members
+     *
+     * @return int
+     */
+    function countRegisteredMembers(): int
+    {
         return $this->db->countRow('vavok_users');
     }
 
@@ -999,7 +1003,7 @@ class User {
      *
      * @return string
      */
-    function user_browser()
+    function userBrowser(): string
     {
         $detectBrowser = new BrowserDetection();
         $userBrowser = rtrim($detectBrowser->detect()->getBrowser() . ' ' . $detectBrowser->getVersion());
@@ -1015,7 +1019,7 @@ class User {
      * @param string $username
      * @return bool
      */
-    public function username_exists($username)
+    public function usernameExists(string $username): bool
     {
         return $this->db->countRow('vavok_users', "name='{$username}'") > 0 ? true : false;
     }
@@ -1026,7 +1030,7 @@ class User {
      * @param string $email
      * @return bool
      */
-    public function email_exists($email)
+    public function emailExists(string $email): bool
     {
         return $this->db->countRow('vavok_about', "email='{$email}'") > 0 ? true : false;
     }
@@ -1034,10 +1038,10 @@ class User {
     /**
      * Check if users ID exist in database
      * 
-     * @param string $id
+     * @param int $id
      * @return bool
      */
-    public function id_exists($id)
+    public function idExists(int $id): bool
     {
         return $this->db->countRow('vavok_users', "id='{$id}'") > 0 ? true : false;
     }
@@ -1047,7 +1051,7 @@ class User {
      * 
      * @return int
      */
-    public function total_admins()
+    public function totalAdmins(): int
     {
         return $this->db->countRow('vavok_users', "perm='101' OR perm='102' OR perm='103' OR perm='105'");
     }
@@ -1057,7 +1061,7 @@ class User {
      * 
      * @return int
      */
-    public function total_banned()
+    public function totalBanned(): int
     {
         return $this->db->countRow('vavok_users', "banned='1' OR banned='2'");
     }
@@ -1067,27 +1071,32 @@ class User {
      * 
      * @return int
      */
-    public function total_unconfirmed()
+    public function totalUnconfirmed(): int
     {
         return $this->db->countRow('vavok_profil', "regche='1' OR regche='2'");
     }
 
-    // username validation
-    function validate_username($username)
+    /**
+     * Username validation
+     *
+     * @param string $username
+     * @return bool
+     */
+    function validateUsername(string $username): bool
     {
-        if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) {
-            return true;
-        } else { return false; }
+        if (preg_match("/^[\p{L}_.0-9]{3,15}$/ui", $username)) return true;
+
+        return false;
     }
 
     /**
      * Check if user is moderator
      * 
-     * @param int $num
-     * @param int $id
+     * @param ?int $num
+     * @param ?int $id
      * @return bool
      */
-    function moderator($num = '', $id = '')
+    function moderator(?int $num = null, ?int $id = null): bool
     {
         // Return false if user is not logged in
         if (!$this->userAuthenticated()) return false;
@@ -1101,19 +1110,19 @@ class User {
             return true;
         } elseif (empty($num) && ($perm === 103 || $perm === 105 || $perm === 106)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Check if user is administrator
      * 
-     * @param int $num
-     * @param int $id
+     * @param ?int $num
+     * @param ?int $id
      * @return bool
      */
-    function administrator($num = '', $id = '')
+    function administrator(?int $num = null, ?int $id = null): bool
     {
         // Return false if user is not logged in
         if (!$this->userAuthenticated()) return false;
@@ -1127,47 +1136,21 @@ class User {
             return true;
         } if (empty($num) && ($perm === 101 || $perm === 102)) {
             return true;
-        } else {
-            return false;
-        } 
-    }
-
-    // is ignored
-    function isignored($tid, $uid) {
-        $ign = $this->db->countRow('blocklist', "`target`='" . $tid . "' AND `name`='" . $uid . "'");
-        if ($ign > 0) {
-            return true;
         }
+
         return false;
     }
 
-    // ignore result
-    function ignoreres($uid, $tid) {
-        // 0 user can't ignore the target
-        // 1 yes can ignore
-        // 2 already ignored
-        if ($uid == $tid) {
-            return 0;
-        }
-        /*
-        if ($vavok->go('users')->moderator($tid)) {
-        //you cant ignore staff members
-        return 0;
-        }
-        if (arebuds($tid, $uid)) {
-        //why the hell would anyone ignore his bud? o.O
-        return 0;
-        }
-        */
-        if ($this->isignored($tid, $uid)) {
-            return 2; // the target is already ignored by the user
-        }
-        return 1;
-    }
-
-    // is buddy
-    function isbuddy($tid, $uid) {
-        $ign = $this->db->countRow('buddy', "target='" . $tid . "' AND name='" . $uid . "'");
+    /**
+     * Check if user is on the block list
+     *
+     * @param int $tid
+     * @param int $uid
+     * @return bool
+     */
+    public function isUserBlocked(int $tid, int $uid): bool
+    {
+        $ign = $this->db->countRow('blocklist', "target='{$tid}' AND name='{$uid}'");
         if ($ign > 0) {
             return true;
         }
@@ -1175,21 +1158,75 @@ class User {
     }
 
     /**
-     * Other
+     * Block check result
+     *
+     * @param int $uid
+     * @param int $tid
+     * @return int
      */
+    function blockCheckResult(int $uid, int $tid): int
+    {
+        // 0 user can't ignore the target
+        // 1 yes can ignore
+        // 2 already ignored
+        if ($uid == $tid) {
+            return 0;
+        }
 
-    // user's password encription
-    function password_encrypt($password)
+        if ($this->isUserBlocked($tid, $uid)) {
+            return 2; // the target is already ignored by the user
+        }
+
+        return 1;
+    }
+
+    /**
+     * Check if use is in the contact list
+     *
+     * @param int $tid
+     * @param int $uid
+     * @return bool
+     */
+    function checkContact(int $tid, int $uid): bool
+    {
+        $ign = $this->db->countRow('buddy', "target='{$tid}' AND name='{$uid}'");
+
+        if ($ign > 0) return true;
+
+        return false;
+    }
+
+    /**
+     * Password encryption
+     *
+     * @param string $password
+     * @return string
+     */
+    function passwordEncrypt(string $password): string
     {
         return password_hash($password, PASSWORD_BCRYPT);
     }
 
-    function password_check($password, $hash)
+    /**
+     * Verify password
+     *
+     * @param string $password
+     * @param string $hash
+     * @return bool
+     */
+    function passwordCheck(string $password, string $hash): bool
     {
         return password_verify($password, $hash);
     }
 
-    public function getPreferredLanguage($language = '', $format = '')
+    /**
+     * Return user's preferred language
+     *
+     * @param string $language
+     * @param string $format
+     * @return string
+     */
+    public function getPreferredLanguage(string $language = '', string $format = ''): string
     {
         // Get browser preferred language
         $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
@@ -1202,7 +1239,7 @@ class User {
         } elseif ($language == 'sr') {
             $language = 'serbian_latin';
 
-            // If browser user serbian it is cyrillic
+            // If browser user Serbian it is cyrillic
             if ($locale == 'sr') $language = 'serbian_cyrillic';
 
             // Check if language is available
@@ -1213,7 +1250,7 @@ class User {
             elseif (file_exists(APPDIR . "include/lang/serbian_cyrillic/index.php")) { 
                 $language = 'serbian_cyrillic';
             }
-            // cyrillic script not installed, use latin
+            // Cyrillic script not installed, use latin
             else {
                 $language = 'serbian_latin'; 
             }
@@ -1232,14 +1269,14 @@ class User {
      * Detect page's language and change user's language to page's language
      * 
      * @param string $page_locale
-     * @return string|boolean
+     * @return string|bool
      */
-    public function updatePageLocalization($page_locale)
+    public function updatePageLocalization(string $page_locale): string|bool
     {
         // Localization from page's data
         $page_localization = !empty($page_locale) ? $this->getPreferredLanguage($page_locale, 'short') : '';
 
-        // Update user's language when page's language is different then current localization
+        // Update user's language when page's language is different from current localization
         if (!empty($page_localization) && strtolower($page_localization) != $this->getPreferredLanguage($_SESSION['lang'], 'short')) {
             // Update $_SESSION['lang'] with new localization/language
             $this->changeLanguage(strtolower($page_localization));

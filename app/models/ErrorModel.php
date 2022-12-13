@@ -29,7 +29,7 @@ class ErrorModel extends BaseModel {
 
         $log = !empty($this->user->showUsername()) ? $this->user->showUsername() : 'Guest';
 
-        $write_data = $request_uri . ':|:' . time() . ':|:' . $this->user->findIpAddress() . ':|:' . $hostname . ':|:' . $this->user->user_browser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
+        $write_data = $request_uri . ':|:' . time() . ':|:' . $this->user->findIpAddress() . ':|:' . $hostname . ':|:' . $this->user->userBrowser() . ':|:' . $http_referer . ':|:' . $log . ':|:';
         
         $error_number_info = '';
         $additional_error_info = '';

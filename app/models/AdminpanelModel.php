@@ -32,7 +32,7 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat', '{@localization[admin_chat]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminlist', '{@localization[modlist]}}');
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg', '{@localization[notconf]}}');
-            $data['content'] .= $this->sitelink('pages/userlist', '{@localization[userlist]}} (' . $this->user->regmemcount() . ')');
+            $data['content'] .= $this->sitelink('pages/userlist', '{@localization[userlist]}} (' . $this->user->countRegisteredMembers() . ')');
 
             // Super moderator access level or bigger
             if ($this->user->moderator(103) || $this->user->moderator(105) || $this->user->administrator()) {
@@ -919,7 +919,7 @@ class AdminpanelModel extends BaseModel {
 
         $data['content'] .= '<p><img src="../themes/images/img/user.gif" alt=""> <b>{@localization[adminlistl]}}</b></p>'; 
 
-        $num_items = $this->user->total_admins();
+        $num_items = $this->user->totalAdmins();
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
@@ -962,7 +962,7 @@ class AdminpanelModel extends BaseModel {
             " . $this->localization->string('sitemod') . " " . $this->configuration('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n
             " . $this->localization->string('youcanlog') . ".\r\n\r\n
             " . $this->localization->string('bye') . "!\r\n
-            " . $this->user->getNickFromId($this->user->user_id()) . "\r\n
+            " . $this->user->getNickFromId($this->user->userIdNumber()) . "\r\n
             " . ucfirst($this->configuration('homeBase'));
 
             $newMail = new Mailer($this->container);
@@ -972,7 +972,7 @@ class AdminpanelModel extends BaseModel {
         }
 
         if (empty($this->postAndGet('action'))) {
-            $noi = $this->user->total_unconfirmed();
+            $noi = $this->user->totalUnconfirmed();
             $num_items = $noi;
             $items_per_page = 20;
             $num_pages = ceil($num_items / $items_per_page);
@@ -1067,7 +1067,7 @@ class AdminpanelModel extends BaseModel {
 
         // change profile
         if ($this->postAndGet('action') == 'edit') {
-            if (!empty($user) && $this->user->username_exists($user) && $this->user->id_exists($users_id)) {
+            if (!empty($user) && $this->user->usernameExists($user) && $this->user->idExists($users_id)) {
                 $data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/profiles.gif" alt="Profile" /> {@localization[usrprofile]}} ' . $user . '<br>';
 
                 if ($this->user->showUsername() != $this->configuration('adminNick') && $user == $this->configuration('adminNick')) {
@@ -1262,7 +1262,7 @@ class AdminpanelModel extends BaseModel {
                             $udd6 = mktime('0', '0', '0', $umonth, $uday, $uyear);
                         }
 
-                        if (!empty($udd1)) $newpass = $this->user->password_encrypt($udd1);
+                        if (!empty($udd1)) $newpass = $this->user->passwordEncrypt($udd1);
         
                         // Update password
                         if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);

@@ -107,7 +107,7 @@ class Page extends BaseModel {
         $data['tname'] = '{@localization[userlist]}}';
         $data['content'] = '';
 
-        $num_items = $this->user->regmemcount(); // no. reg. members
+        $num_items = $this->user->countRegisteredMembers(); // no. reg. members
         $items_per_page = 10;
  
         // Start navigation

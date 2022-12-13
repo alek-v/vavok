@@ -24,7 +24,7 @@ class AdminchatModel extends BaseModel {
 
         // Add message to the administrator chat
         if ($this->postAndGet('action') == 'add_message') {
-            $brow = $this->check($this->user->user_browser());
+            $brow = $this->check($this->user->userBrowser());
             $msg = $this->check(wordwrap($this->postAndGet('msg'), 150, ' ', 1));
             $msg = substr($msg, 0, 1200);
             $msg = $this->check($msg);

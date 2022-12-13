@@ -71,7 +71,7 @@ class ContactModel extends BaseModel {
             -----------------------------------------<br />
             Sender: {$this->postAndGet('name')}<br />
             Sender's email: {$this->postAndGet('umail')}<br />
-            Browser: {$this->user->user_browser()}<br />
+            Browser: {$this->user->userBrowser()}<br />
             IP: {$this->user->findIpAddress()}<br />
             {$this->localization->string('datesent')}: " . date('d.m.Y. / H:i');
 

@@ -38,7 +38,7 @@ class PagemanagerModel extends BaseModel {
 
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); } 
 
-                if ($page_info['crtdby'] != $this->user->user_id() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
+                if ($page_info['crtdby'] != $this->user->userIdNumber() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
                 // bug when magic quotes are on and '\' sign
                 // if magic quotes are on we don't want ' to become \'
@@ -192,9 +192,9 @@ class PagemanagerModel extends BaseModel {
                 'lang' => $pagelang,
                 'created' => time(),
                 'lastupd' => time(),
-                'lstupdby' => $this->user->user_id(),
+                'lstupdby' => $this->user->userIdNumber(),
                 'file' => $newfiles,
-                'crtdby' => $this->user->user_id(),
+                'crtdby' => $this->user->userIdNumber(),
                 'published' => '1',
                 'pubdate' => '0',
                 'tname' => $page_title,
@@ -325,7 +325,7 @@ class PagemanagerModel extends BaseModel {
                 if (empty($edit_only_own_pages)) {
                     $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $page_info['file'], $filename, '<b>', '</b>');
                     // Check for permissions to edit pages
-                    if ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator() || $page_info['crtdby'] == $this->user->user_id() || ($this->user->checkPermissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
+                    if ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator() || $page_info['crtdby'] == $this->user->userIdNumber() || ($this->user->checkPermissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
                         $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                     }
 
@@ -375,7 +375,7 @@ class PagemanagerModel extends BaseModel {
                     $this->redirection(HOMEDIR . "?isset=ap_noaccess");
                 } 
 
-                if ($page_info['crtdby'] != $this->user->user_id() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) {
+                if ($page_info['crtdby'] != $this->user->userIdNumber() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) {
                     $this->redirection(HOMEDIR . "?isset=ap_noaccess");
                 } 
 
@@ -437,7 +437,7 @@ class PagemanagerModel extends BaseModel {
 
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
-                if ($page_info['crtdby'] != $this->user->user_id() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
+                if ($page_info['crtdby'] != $this->user->userIdNumber() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
                 // Page name
                 $show_up_file = str_replace('.php', '', $file);

@@ -37,7 +37,7 @@ class UsersModel extends BaseModel {
                 // Pass page to the view
                 $data['page_template'] = 'users/register/register_try';
                 return $data;
-            } elseif (!$this->user->validate_username($this->postAndGet('log'))) {
+            } elseif (!$this->user->validateUsername($this->postAndGet('log'))) {
                 $data['content'] .= $this->showDanger($this->localization->string('useletter'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
@@ -51,7 +51,7 @@ class UsersModel extends BaseModel {
                 return $data;
             }
             // Continue if email does not exist in database
-            elseif ($this->user->email_exists($this->postAndGet('meil'))) {
+            elseif ($this->user->emailExists($this->postAndGet('meil'))) {
                 $data['content'] .= $this->showDanger($this->localization->string('emailexists'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
@@ -59,7 +59,7 @@ class UsersModel extends BaseModel {
                 return $data;
             }
             // Continue if username does not exists in database
-            elseif ($this->user->username_exists($this->postAndGet('log'))) {
+            elseif ($this->user->usernameExists($this->postAndGet('log'))) {
                 $data['content'] .= $this->showDanger($this->localization->string('userexists'));
                 $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
@@ -420,7 +420,7 @@ class UsersModel extends BaseModel {
             }
 
             $newpas = $this->generatePassword();
-            $new = $this->user->password_encrypt($newpas);
+            $new = $this->user->passwordEncrypt($newpas);
 
             $subject = $this->localization->string('newpassfromsite') . ' ' . $this->configuration('title');
             $mail = $this->localization->string('hello') . " " . $this->postAndGet('logus') . "<br /><br />
@@ -493,16 +493,16 @@ class UsersModel extends BaseModel {
             $tnick = $this->user->getNickFromId($this->postAndGet('who'));
 
             if ($this->postAndGet('todo') == 'add') {
-                if ($this->user->ignoreres($this->user->user_id(), $this->postAndGet('who')) == 1) {
-                    $this->db->insert('blocklist', array('name' => $this->user->user_id(), 'target' => $this->postAndGet('who')));
+                if ($this->user->blockCheckResult($this->user->userIdNumber(), $this->postAndGet('who')) == 1) {
+                    $this->db->insert('blocklist', array('name' => $this->user->userIdNumber(), 'target' => $this->postAndGet('who')));
 
                     $data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> " . $this->localization->string('user') . " $tnick " . $this->localization->string('sucadded') . "<br>";
                 } else {
                     $data['content'] .= "<img src=\"/themes/images/img/close.gif\" alt=\"x\"/> " . $this->localization->string('cantadd') . " " . $tnick . " " . $this->localization->string('inignor') . "<br>";
                 }
             } elseif ($this->postAndGet('todo') == 'del') {
-                if ($this->user->ignoreres($this->user->user_id(), $this->postAndGet('who')) == 2) {
-                    $this->db->delete('blocklist', "name='{$this->user->user_id()}' AND target='" . $this->postAndGet('who') . "'");
+                if ($this->user->blockCheckResult($this->user->userIdNumber(), $this->postAndGet('who')) == 2) {
+                    $this->db->delete('blocklist', "name='{$this->user->userIdNumber()}' AND target='" . $this->postAndGet('who') . "'");
 
                     $data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> $tnick " . $this->localization->string('deltdfrmignor') . "<br>";
                 } else {
@@ -516,14 +516,14 @@ class UsersModel extends BaseModel {
             return $data;
         }
 
-        $num_items = $this->db->countRow('blocklist', "name='{$this->user->user_id()}'");
+        $num_items = $this->db->countRow('blocklist', "name='{$this->user->userIdNumber()}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'users/ignore/?'); // start navigation
 
         $limit_start = $navigation->start()['start'];
 
-        $sql = "SELECT target FROM blocklist WHERE name='{$this->user->user_id()}' LIMIT $limit_start, $items_per_page";
+        $sql = "SELECT target FROM blocklist WHERE name='{$this->user->userIdNumber()}' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
             foreach ($this->db->query($sql) as $item) {
@@ -557,11 +557,11 @@ class UsersModel extends BaseModel {
         // Add or remove from contacts
         if ($this->postAndGet('action') == 'contacts') {
             $tnick = $this->user->getNickFromId($this->postAndGet('who'));
-    
+
             if ($this->postAndGet('todo') == 'add') {
-                if ($this->user->ignoreres($this->user->user_id(), $this->postAndGet('who')) == 1 && !$this->user->isbuddy($this->postAndGet('who'), $this->user->user_id)) {
-                    $this->db->insert('buddy', array('name' => $this->user->user_id(), 'target' => $this->postAndGet('who')));
-    
+                if ($this->user->blockCheckResult($this->user->userIdNumber(), $this->postAndGet('who')) == 1 && !$this->user->checkContact($this->postAndGet('who'), $this->user->userIdNumber())) {
+                    $this->db->insert('buddy', array('name' => $this->user->userIdNumber(), 'target' => $this->postAndGet('who')));
+
                     header ("Location: " . HOMEDIR . "users/contacts/?isset=kontakt_add");
                     exit;
                 } else {
@@ -569,20 +569,20 @@ class UsersModel extends BaseModel {
                     exit;
                 }
             } elseif ($this->postAndGet('todo') == 'del') {
-                $this->db->delete('buddy', "name='{$this->user->user_id()}' AND target='" . $this->postAndGet('who') . "'");
+                $this->db->delete('buddy', "name='{$this->user->userIdNumber()}' AND target='" . $this->postAndGet('who') . "'");
     
                 $this->redirection(HOMEDIR . 'users/contacts/?isset=kontakt_del');
             }
         }
 
-        $num_items = $this->db->countRow('buddy', "name='{$this->user->user_id()}'");
+        $num_items = $this->db->countRow('buddy', "name='{$this->user->userIdNumber()}'");
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'users/contacts/?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
 
-        $sql = "SELECT target FROM buddy WHERE name='{$this->user->user_id()}' LIMIT $limit_start, $items_per_page";
+        $sql = "SELECT target FROM buddy WHERE name='{$this->user->userIdNumber()}' LIMIT $limit_start, $items_per_page";
 
         if ($num_items > 0) {
             foreach ($this->db->query($sql) as $item) {
@@ -655,14 +655,14 @@ class UsersModel extends BaseModel {
                 if (empty($result)) {
                     $randkey = $this->generatePassword();
                     
-                    $this->db->insert('subs', array('user_id' => $this->user->user_id(), 'user_mail' => $this->user->userInfo('email'), 'user_pass' => $randkey));
+                    $this->db->insert('subs', array('user_id' => $this->user->userIdNumber(), 'user_mail' => $this->user->userInfo('email'), 'user_pass' => $randkey));
 
                     $result = 'ok'; // sucessfully subscribed to site news!
                     $subnewss = 1;
                 } 
             }
             else {
-                $email_check = $this->db->selectData('subs', 'user_id = :user_id', [':user_id' => $this->user->user_id()], 'user_mail');
+                $email_check = $this->db->selectData('subs', 'user_id = :user_id', [':user_id' => $this->user->userIdNumber()], 'user_mail');
 
                 if (empty($email_check['user_mail'])) {
                     $result = 'error';
@@ -670,7 +670,7 @@ class UsersModel extends BaseModel {
                     $randkey = '';
                 } else {
                     // unsub
-                    $this->db->delete('subs', "user_id='{$this->user->user_id()}'");
+                    $this->db->delete('subs', "user_id='{$this->user->userIdNumber()}'");
 
                     $result = 'no';
                     $subnews = 0;
@@ -710,18 +710,18 @@ class UsersModel extends BaseModel {
             // Notification settings
             $inbox_notification = empty($inbox_notification) ? 0 : 1;
 
-            $check_inb = $this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'");
+            $check_inb = $this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'");
             if ($check_inb > 0) {
-                $this->db->update('notif', 'active', $inbox_notification, "uid='{$this->user->user_id()}' AND type='inbox'");
+                $this->db->update('notif', 'active', $inbox_notification, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
             } else {
-                $this->db->insert('notif', array('active' => $inbox_notification, 'uid' => $this->user->user_id(), 'type' => 'inbox'));
+                $this->db->insert('notif', array('active' => $inbox_notification, 'uid' => $this->user->userIdNumber(), 'type' => 'inbox'));
             }
 
             // redirect
             $this->redirection(HOMEDIR . 'users/settings/?isset=editsetting');
         }
 
-        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->user_id(), ':type' => 'inbox'], 'active');
+        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->userIdNumber(), ':type' => 'inbox'], 'active');
 
         $form = $this->container['parse_page'];
         $form->load('forms/form');
@@ -829,7 +829,7 @@ class UsersModel extends BaseModel {
             $data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
 
             // Remove session - logout user
-            $this->user->logout($this->user->user_id());            
+            $this->user->logout($this->user->userIdNumber());            
         } else {        
             $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt=""> {@localization[wasbanned]}}</p>';
 
@@ -868,7 +868,7 @@ class UsersModel extends BaseModel {
         }
 
         // Show error page if user doesn't exist
-        if (!isset($users_id) || !$this->user->id_exists($users_id)) {
+        if (!isset($users_id) || !$this->user->idExists($users_id)) {
             $this_page['tname'] = 'User does not exist';
 
             $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
@@ -968,13 +968,13 @@ class UsersModel extends BaseModel {
             $showPage->set('ip-address', $ipAddress->output());
         }
 
-        if ($uz != $this->user->getNickFromId($this->user->user_id()) && $this->user->userAuthenticated()) {
+        if ($uz != $this->user->getNickFromId($this->user->userIdNumber()) && $this->user->userAuthenticated()) {
             $userMenu = $this->container['parse_page'];
             $userMenu->load('users/user-profile/user-menu');
             $userMenu->set('add-to', $this->localization->string('addto'));
             $userMenu->set('contacts', '<a href="' . HOMEDIR . 'users/contacts/?action=contacts&todo=add&who=' . $users_id . '">' . $this->localization->string('addtocontacts') . '</a>');
 
-            if (!$this->user->isignored($users_id, $this->user->user_id())) {
+            if (!$this->user->isUserBlocked($users_id, $this->user->userIdNumber())) {
             //$userMenu->set('add-to', $this->localization->string('addto']);
             $userMenu->set('ignore', '<a href="' . HOMEDIR . 'users/ignore/?action=ignore&todo=add&who=' . $users_id . '">{@localization[ignore]}}</a>');
             $userMenu->set('sendMessage', '<br /><a href="' . HOMEDIR . 'inbox/?action=dialog&who=' . $users_id . '">{@localization[sendmsg]}}</a><br>');
@@ -987,7 +987,7 @@ class UsersModel extends BaseModel {
             if ($this->user->userAuthenticated() && $this->user->administrator(101)) $userMenu->set('updateProfile', '<a href="' . HOMEDIR . $this->configuration('mPanel') . '/users/?action=edit&users=' . $uz . '">{@localization[update]}}</a><br>');
 
             $showPage->set('userMenu', $userMenu->output());
-        } elseif ($this->user->getNickFromId($this->user->user_id()) == $uz && $this->user->userAuthenticated()) {
+        } elseif ($this->user->getNickFromId($this->user->userIdNumber()) == $uz && $this->user->userAuthenticated()) {
             $adminMenu = $this->container['parse_page'];
             $adminMenu->load('users/user-profile/admin-update-profile');
             $adminMenu->set('profileLink', '<a href="' . HOMEDIR . 'profile">{@localization[updateprofile]}}</a>');
@@ -997,7 +997,7 @@ class UsersModel extends BaseModel {
         if (!empty($this->user->userInfo('photo', $users_id))) {
             $ext = strtolower(substr($this->user->userInfo('photo', $users_id), strrpos($this->user->userInfo('photo', $users_id), '.') + 1));
 
-            if ($users_id != $this->user->user_id()) {
+            if ($users_id != $this->user->userIdNumber()) {
                 $showPage->set('userPhoto', '<img src="' . HOMEDIR . $this->user->userInfo('photo', $users_id) . '" alt="Profile picture" /><br>');
             } else {
                 $showPage->set('userPhoto', '<a href="' . HOMEDIR . 'profile/photo"><img src="' . HOMEDIR . $this->user->userInfo('photo', $users_id) . '" alt="Profile picture" /></a>');

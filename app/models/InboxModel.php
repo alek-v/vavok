@@ -20,13 +20,13 @@ class InboxModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Update notification data
-        if ($this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
+        if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
         $data['headt'] = '<meta name="robots" content="noindex">';
         $data['tname'] = '{@localization[inbox]}}';
         $data['content'] = '';
 
-        $num_items = $this->user->getNumberOfMessages($this->user->user_id());
+        $num_items = $this->user->getNumberOfMessages($this->user->userIdNumber());
         $items_per_page = 10;
 
         // navigation
@@ -35,7 +35,7 @@ class InboxModel extends BaseModel {
 
         if ($num_items > 0) {
         $sql = "SELECT * FROM inbox
-        WHERE touid='{$this->user->user_id()}' AND (deleted IS NULL OR deleted <> '{$this->user->user_id()}')
+        WHERE touid='{$this->user->userIdNumber()}' AND (deleted IS NULL OR deleted <> '{$this->user->userIdNumber()}')
         ORDER BY timesent DESC
         LIMIT $limit_start, $items_per_page";
     
@@ -79,7 +79,7 @@ class InboxModel extends BaseModel {
         $data['content'] = '';
 
         // Update notification data
-        if ($this->db->countRow('notif', "uid='{$this->user->user_id()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->user_id()}' AND type='inbox'");
+        if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
         $data['headt'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
@@ -94,7 +94,7 @@ class InboxModel extends BaseModel {
         } else {
             $data['who'] = $who;
 
-            $pms = $this->db->countRow('inbox', "(byuid='" . $this->user->user_id() . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $this->user->user_id() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
+            $pms = $this->db->countRow('inbox', "(byuid='" . $this->user->userIdNumber() . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $this->user->userIdNumber() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
     
             $num_items = $pms;
             $items_per_page = 50;
@@ -103,9 +103,9 @@ class InboxModel extends BaseModel {
 
             $data['send_readonly'] = $who == 0 ? 'readonly' : '';
 
-            $this->db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $this->user->user_id() . "'");
+            $this->db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $this->user->userIdNumber() . "'");
 
-            $pms = "SELECT * FROM inbox WHERE (byuid = '" . $this->user->user_id() . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $this->user->user_id() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
+            $pms = "SELECT * FROM inbox WHERE (byuid = '" . $this->user->userIdNumber() . "' AND touid = '" . $who . "') OR (byuid='" . $who . "' AND touid = '" . $this->user->userIdNumber() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent DESC LIMIT $limit_start, $items_per_page";
             foreach ($this->db->query($pms) as $pm) {
                 $sender_nick = $pm['byuid'] == 0 ? 'System' : $this->user->getNickFromId($pm['byuid']);
                 $bylnk = $pm['byuid'] == 0 ? 'System ' : $this->sitelink(HOMEDIR . 'users/u/' . $pm['byuid'], $sender_nick) . ' ';
@@ -159,10 +159,10 @@ class InboxModel extends BaseModel {
         // dont send message to system
         if ($who == 0 || empty($who)) exit;
 
-        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->user_id(), ':type' => 'inbox'], 'active');
+        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->userIdNumber(), ':type' => 'inbox'], 'active');
 
         $whonick = $this->user->getNickFromId($who);
-        $byuid = $this->user->user_id();
+        $byuid = $this->user->userIdNumber();
 
         $stmt = $this->db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");
         $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
@@ -171,8 +171,8 @@ class InboxModel extends BaseModel {
         $pmfl = $lastpm + 0; // 0 is $this->configuration("floodTime")
 
         if ($pmfl < time()) {
-            if (!$this->user->isignored($byuid, $who)) {
-                $this->user->send_pm($pmtext, $this->user->user_id(), $who);
+            if (!$this->user->isUserBlocked($byuid, $who)) {
+                $this->user->sendMessage($pmtext, $this->user->userIdNumber(), $who);
 
                 echo 'sent';
             } else {
@@ -194,17 +194,17 @@ class InboxModel extends BaseModel {
 
         // if there is last message id set
         if (!empty($this->postAndGet('lastid'))) {
-            $sql = "SELECT * FROM inbox WHERE id > {$this->postAndGet('lastid')} AND ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT * FROM inbox WHERE id > {$this->postAndGet('lastid')} AND ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->userIdNumber()}) or (byuid = {$this->user->userIdNumber()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
         } else {
             // no last id, load unread message
-            $sql = "SELECT * FROM inbox WHERE ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->user_id()}) or (byuid = {$this->user->user_id()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
+            $sql = "SELECT * FROM inbox WHERE ((byuid = {$this->postAndGet('who')} OR touid = {$this->user->userIdNumber()}) or (byuid = {$this->user->userIdNumber()} OR touid = {$this->postAndGet('who')})) ORDER BY id DESC LIMIT 1";
         }
 
         foreach($this->db->query($sql) as $item) {
             echo $this->user->getNickFromId($item['byuid']) . ':|:' . $this->user->parseMessage($item['text']) . ':|:' . $item['id'] . ':|:' . $item['byuid'] . ':|:' . date("d.m.y. - H:i:s", $item['timesent']);
 
             // update read status
-            if ($this->user->user_id() == $item['touid']) {
+            if ($this->user->userIdNumber() == $item['touid']) {
                 $this->db->update('inbox', 'unread', 0, "id = {$item['id']} LIMIT 1");
             }
         }

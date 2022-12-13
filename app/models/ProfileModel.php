@@ -238,7 +238,7 @@ class ProfileModel extends BaseModel {
         $infa = $this->replaceNewLines($this->postAndGet('infa'));
         $email = htmlspecialchars(strtolower($this->postAndGet('email')));
         $site = $this->replaceNewLines($this->postAndGet('site'));
-        $browser = $this->replaceNewLines($this->user->user_browser());
+        $browser = $this->replaceNewLines($this->user->userBrowser());
         $ip = $this->replaceNewLines($this->user->findIpAddress());
         $sex = $this->replaceNewLines($this->postAndGet('pol'));
         $happy = $this->replaceNewLines($this->postAndGet('happy'));
@@ -272,7 +272,7 @@ class ProfileModel extends BaseModel {
         $this->user->updateUser($fields, $values);
 
         // Send email confirmation link if it is changed and save data into database
-        if ($this->user->userInfo('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->user_id()}' AND content = '{$email}'") < 1) {
+        if ($this->user->userInfo('email') != $email && $this->db->countRow('tokens', "uid = '{$this->user->userIdNumber()}' AND content = '{$email}'") < 1) {
             // Insert data to database
             $token = $this->generatePassword();
 
@@ -281,7 +281,7 @@ class ProfileModel extends BaseModel {
             $new_time = $now->format('Y-m-d H:i:s');
 
             $data = array(
-                'uid' => $this->user->user_id(),
+                'uid' => $this->user->userIdNumber(),
                 'type' => 'email',
                 'content' => $email,
                 'token' => $token,
@@ -310,7 +310,7 @@ class ProfileModel extends BaseModel {
     public function delete()
     {
         if ($this->postAndGet('confirmed') == 'yes') {
-            $delete_id = $this->user->user_id();
+            $delete_id = $this->user->userIdNumber();
 
             $this->user->deleteUser($delete_id);
             $this->user->logout($delete_id);
@@ -343,9 +343,9 @@ class ProfileModel extends BaseModel {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->password_check($this->postAndGet('oldpar', true), $this->user->userInfo('password'))) {
+        if ($this->user->passwordCheck($this->postAndGet('oldpar', true), $this->user->userInfo('password'))) {
             // Update password
-            $this->user->updateUser('pass', $this->user->password_encrypt($this->postAndGet('newpar', true)));
+            $this->user->updateUser('pass', $this->user->passwordEncrypt($this->postAndGet('newpar', true)));
 
             $this->redirection($this->websiteHomeAddress() . "/users/login");
         } else {
@@ -434,25 +434,25 @@ class ProfileModel extends BaseModel {
                 if ($av_string == "gif" || $av_string == "jpg" || $av_string == "jpeg" || $av_string == "png") {
                     if ($av_file) {
                         // Remove old photo
-                        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg");
+                        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif");
+                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg")) {
+                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg");
                         }
 
                         // Add new photo
-                        copy($_FILES['file']['tmp_name'], STORAGEDIR . "dataphoto/" . $this->user->user_id() . "." . $av_string);
+                        copy($_FILES['file']['tmp_name'], STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string);
                         $ch = $_FILES['file']['tmp_name'];
                         chmod($ch, 0777);
-                        chmod(STORAGEDIR . "dataphoto/" . $this->user->user_id() . "." . $av_string . "", 0777);
+                        chmod(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string . "", 0777);
 
-                        $this->user->updateUser('photo', 'gallery/photo/' . $this->user->user_id());
+                        $this->user->updateUser('photo', 'gallery/photo/' . $this->user->userIdNumber());
 
-                        $data['user_id'] = $this->user->user_id();
+                        $data['user_id'] = $this->user->userIdNumber();
 
                         // Pass page to the view
                         $this->view('profile/savephoto', $data);
@@ -485,14 +485,14 @@ class ProfileModel extends BaseModel {
         $data['tname'] = 'Remove Photography';
         $data['content'] = '';
 
-        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg")) {
-            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpg");
-        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png")) {
-            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".png");
-        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif")) {
-            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".gif");
-        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg")) {
-            unlink(STORAGEDIR . "dataphoto/" . $this->user->user_id() . ".jpeg");
+        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif");
+        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg")) {
+            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg");
         }
 
         // Update database

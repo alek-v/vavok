@@ -263,7 +263,7 @@ class BanModel extends BaseModel {
         if (!$this->user->administrator() && !$this->user->moderator(103)) $this->redirection('../index.php?error');
 
         // Number of banned users
-        $noi = $this->user->total_banned();
+        $noi = $this->user->totalBanned();
         $items_per_page = 10;
 
         $navigation = new Navigation($items_per_page, $noi, 'banlist?'); // start navigation
