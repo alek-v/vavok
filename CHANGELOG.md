@@ -1,4 +1,27 @@
-# Vavok v4.5 - 14.11.2022.
+# Changelog
+
+## Vavok v4.6 - 13.12.2022.
+
+    add: File .env_sample has been added
+    add: Add method emailAccounts() to return email accounts with authentication data
+    refactor: Rename methods to camelCase, add argument type and method return type declaration
+    refactor: Remove unnecessary code
+    refactor: Rename method user_info() to camelCase userInfo()
+    refactor: Remove method isUnicode() and use mb_detect_encoding() to detect encoding
+    refactor: Use HTML template for email from the contact form
+    refactor: Rename localization keys
+    refactor: Update localization keys
+    refactor: Rename method get_navigation() to camelCase getNavigation()
+    refactor: Rename method show_all() to camelCase and set return type declaration
+    refactor: Remove unused method update()
+    style: Update default email template
+    fix: Link in navigation has been fixed
+    fix: Add Files trait to make required methods visible
+    chore: Update .gitignore file
+
+
+
+## Vavok v4.5 - 14.11.2022.
 
     refactor: Update localization
     refactor: Change code to remove too much nested if statements
@@ -7,7 +30,7 @@
 
 
 
-# Vavok v4.4 - 5.11.2022.
+## Vavok v4.4 - 5.11.2022.
 
     feat: Add option to create newsletter categories (options)
     refactor: Delete unused files
@@ -24,7 +47,7 @@
 
 
 
-# Vavok v4.2
+## Vavok v4.2
     Feature:
         - Add option to create newsletter categories (options)
     Refactor:
@@ -41,7 +64,7 @@
 
 
 
-# Vavok v4.1
+## Vavok v4.1
     Feature:
         - Use HTML templates for emails
     Refactor:
@@ -54,7 +77,7 @@
 
 
 
-# Vavok v4.0
+## Vavok v4.0
 - Use Pimple as dependency container
 - Some models moved to classes directory
 - New classes added, trying to make code follow SOLID principles
@@ -63,7 +86,7 @@
 
 
 
-# Vavok v3.1
+## Vavok v3.1
 - Composer setup moved to app root directory
 - New method selectData() in Database class
 - Removed ?> from the end of the scripts
@@ -73,7 +96,7 @@
 
 
 
-# Vavok v3.0
+## Vavok v3.0
 - Use namespaces
 - Use composer autoload
 - Updated dependencies
@@ -81,7 +104,7 @@
 
 
 
-# Vavok v2.3
+## Vavok v2.3
 - Renamed method count_row() to camelCase countRow()
 - Fixed: After file upload show the file location
 - Fixed bot detection
@@ -89,7 +112,7 @@
 
 
 
-# Vavok v2.2
+## Vavok v2.2
 - Added email queue option
 - Added sitemap generator
 - New option to manage email subscriptions
@@ -113,7 +136,7 @@
 
 
 
-# Vavok v2.1
+## Vavok v2.1
 
 - Fixed showing {@code}} in page editor
 - Removed unused files
