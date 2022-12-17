@@ -3,10 +3,10 @@
 namespace App\Classes;
 
 class BrowserDetection {
-    private $_user_agent;
-    private $_name = '';
-    private $_version = '';
-    private $_platform = '';
+    private string $_user_agent;
+    private string $_name = '';
+    private string $_version = '';
+    private string $_platform = '';
 
     private $_basic_browser = array (
         'Trident\/7.0' => 'Internet Explorer 11',
@@ -114,8 +114,10 @@ class BrowserDetection {
     {
         foreach($this->_basic_browser as $pattern => $name) {
             if (preg_match("/".$pattern."/i", $this->_user_agent, $match)) {
+                // Browser name
                 $this->_name = $name;
-                // finally get the correct version number
+
+                // Get version number
                 $known = array('Version', $pattern, 'other');
                 $pattern_version = '#(?<browser>' . join('|', $known).')[/ ]+(?<version>[0-9.|a-zA-Z.]*)#';
                 if (!preg_match_all($pattern_version, $this->_user_agent, $matches)) {
@@ -126,15 +128,15 @@ class BrowserDetection {
                 if ($i != 1) {
                     //we will have two since we are not using 'other' argument yet
                     //see if version is before or after the name
-                    if (strripos($this->_user_agent,"Version") < strripos($this->_user_agent,$pattern)){
-                        @$this->_version = $matches['version'][0];
+                    if (strripos($this->_user_agent, "Version") < strripos($this->_user_agent, $pattern)) {
+                        $this->_version = isset($matches['version'][0]) ? $matches['version'][0] : '';
                     }
                     else {
-                        @$this->_version = $matches['version'][1];
+                        $this->_version = isset($matches['version'][1]) ? $matches['version'][1] : '';
                     }
                 }
                 else {
-                    $this->_version = $matches['version'][0];
+                    $this->_version = isset($matches['version'][0]) ? $matches['version'][0] : '';
                 }
 
                 break;
