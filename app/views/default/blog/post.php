@@ -9,21 +9,19 @@
     <div class="blog-content">
         {@content}}
     </div>
-    <div class="col-sm blog-author"> <!-- Author and date -->
+    <!-- author and date -->
+    <div class="col-sm blog-author">
         {@localization[author]}}: {@author_link}}<br />
         {@localization[published]}}: {@published_date}}<br />
         {@localization[updated]}}: {@date_updated}}
     </div>
+    <!-- tags -->
     <div id="tags_area">
-        {@tags}} <!-- tags -->
+        {@tags}}
     </div>
+    <!-- comments -->
     <div id="comment_area">
-        {@comments}} <!-- Comments -->
-        {@add_comment}} <!-- Add comment -->
-    </div>
-    <div>
-        <p>
-            <a href="/blog/" class="btn btn-primary">{@localization[backtoblog]}}</a>
-        </p>
+        {@comments}}
+        {@add_comment}}
     </div>
 </div>
