@@ -6,12 +6,15 @@
 
 use App\Classes\BaseModel;
 use App\Classes\Navigation;
+use App\Traits\Notifications;
 
 class SearchModel extends BaseModel {
+    use Notifications;
+
     /**
      * Index page
      */
-    public function index($params = [])
+    public function index(array $params = []): array
     {
         $this_page['tname'] = '{@localization[search]}}';
         $this_page['headt'] = '';
@@ -73,6 +76,8 @@ class SearchModel extends BaseModel {
             // Search tags
             $prep = "SELECT id, page_id FROM tags WHERE tag_name = '{$search_item}' LIMIT {$thisPageNav->start()['start']}, 20";
             foreach ($this->db->query($prep) as $resultItem) {
+                if (empty($resultItem)) continue;
+
                 // Page data
                 $resultItem = $this->db->selectData('pages', 'id = :id', [':id' => $resultItem['page_id']]);
                 $dots = strlen($resultItem['content']) > 50 ? '...' : '';
