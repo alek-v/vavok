@@ -76,10 +76,10 @@ class SearchModel extends BaseModel {
             // Search tags
             $prep = "SELECT id, page_id FROM tags WHERE tag_name = '{$search_item}' LIMIT {$thisPageNav->start()['start']}, 20";
             foreach ($this->db->query($prep) as $resultItem) {
-                if (empty($resultItem)) continue;
-
                 // Page data
                 $resultItem = $this->db->selectData('pages', 'id = :id', [':id' => $resultItem['page_id']]);
+                if (empty($resultItem)) continue;
+
                 $dots = strlen($resultItem['content']) > 50 ? '...' : '';
 
                 $itemText = mb_substr(strip_tags($resultItem['content']), 0, 50, 'UTF-8') . $dots;
