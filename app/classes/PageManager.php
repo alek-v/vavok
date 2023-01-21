@@ -25,13 +25,25 @@ class PageManager {
         $this->db = $this->container['db'];
     }
 
-    // insert new page
-    function insert($values) {
+    /**
+     * Insert new page
+     * 
+     * @param array $values
+     * @return void
+     */
+    public function insert(array $values): void
+    {
         $this->db->insert('pages', $values);
     }
 
-    // delete page
-    function delete($id) {
+    /**
+     * Delete page
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function delete(int $id): void
+    {
         $this->db->delete('pages', "id='{$id}'");
     }
 
@@ -42,7 +54,7 @@ class PageManager {
      * @param string $tags
      * @return void
      */
-    public function updateTags($id, $tags)
+    public function updateTags(int $id, string $tags): void
     {
         // Delete current tags
         $this->db->delete('tags', "page_id = '{$id}'");
@@ -67,7 +79,7 @@ class PageManager {
      * @param string $content
      * @return bool
      */
-    function update($id, $content): bool
+    public function update(int $id, string $content): bool
     {
         $fields[] = 'content';
         $fields[] = 'lastupd';
@@ -97,7 +109,7 @@ class PageManager {
      * @param string $content
      * @return bool
      */
-    function updateCached($file, $content)
+    public function updateCached(string $file, string $content): bool
     {
         $this->writeDataFile('datamain/' . $file, $content);
         return true;
@@ -110,7 +122,7 @@ class PageManager {
       * @param integer $id
       * @return void
       */
-    function rename($newName, $id)
+    public function rename(string $newName, int $id): void
     {
         // Set page name
         $pageName = str_replace('.php', '', $newName); // page name (without extension (.php))
@@ -140,35 +152,45 @@ class PageManager {
         $this->db->update('pages', $fields, $values, "`id`='{$id}'");
     }
 
-    // page visibility. publish or unpubilsh for visitors
-    function visibility($id, $visibility) {
+    /**
+     * Page visibility. Publish or unpublish the page
+     * 
+     * @param integer $id
+     * @param integer $visibility
+     * @return void
+     */
+    public function visibility(int $id, int $visibility): void
+    {
         $values = array($visibility, time());
 
         $fields = array('published', 'pubdate');
 
-        $this->db->update('pages', $fields, $values, "id='" . $id . "'");
+        $this->db->update('pages', $fields, $values, "id='{$id}'");
     }
 
     /**
      * Update page language
      * 
-     * @param int $id
-     * @param str $lang
+     * @param integer $id
+     * @param string $lang
      * @return void
      */
-    function language($id, $lang) {
+    function language(int $id, string $lang): void
+    {
+        // Data of the page
         $pageData = $this->selectPage($id);
+
         // Update data in database
-        $this->db->update('pages', array('lang', 'file'), array($lang, $pageData['pname'] . '!.' . $lang . '!.php'), "id='{$id}'");
+        $this->db->update('pages', array('lang', 'file'), array($lang, $pageData['pname'] . '_' . $lang . '.php'), "id='{$id}'");
     }
 
     /**
      * Process content of the page and display correctly in page editor
      * 
-     * @param str @content
+     * @param string $content
      * @return string
      */
-    public function processPageContent($content = '')
+    public function processPageContent(string $content = ''): string
     {
         $content = !empty($content) ? htmlspecialchars($content) : '';
 
@@ -183,10 +205,10 @@ class PageManager {
     /**
      * Process content of the page to store in database
      * 
-     * @param str @content
+     * @param string $content
      * @return string
      */
-    private function pageContentToSave($content = '')
+    private function pageContentToSave(string $content = ''): string
     {
         // Replace {{code}} with {@code}}
         while (preg_match('/{{(.*)}}/si', $content)) {
@@ -203,23 +225,25 @@ class PageManager {
      * @param array $data
      * @return void
      */
-    function headData($id, $data)
+    function headData(int $id, array $data): void
     {
-        /**
-         * Get database fields
-         */
+        // Get database fields
         $fields = array_keys($data);
 
-        /**
-         * Get database values
-         */
+        // Get database values
         $values = array_values($data);
 
         $this->db->update('pages', $fields, $values, "id='{$id}'");
     }
 
-    // return total number of pages
-    public function totalPages($creator = '') {
+    /**
+     * Return number of pages
+     * 
+     * @param integer $creator
+     * @return integer
+     */
+    public function totalPages(int $creator = null): int
+    {
         $where = '';
 
         if (!empty($creator)) $where = " WHERE crtdby = '{$creator}'";
@@ -231,10 +255,10 @@ class PageManager {
      * Return all page data
      * 
      * @param int $id
-     * @param str $fields
+     * @param string $fields
      * @return array
      */
-    public function selectPage($id , $fields = '*'): array
+    public function selectPage(integer $id , string $fields = '*'): array
     {
         return $this->db->selectData('pages', "id = :id", ['id' => $id], $fields);
     }
@@ -242,11 +266,13 @@ class PageManager {
     /**
      * Check if page exists
      *
-     * @param $search string
-     * @param $type string
+     * @param string $search
+     * @param string $type
+     * @param array $bind
      * @return int|bool
      */
-    function pageExists($search, $type = 'file', $bind = []) {
+    public function pageExists(string $search, string $type = 'file', array $bind = []): int|bool
+    {
         if ($type == 'file' && $this->db->countRow('pages', "file='{$search}'") > 0) {
             return $this->getPageId('file = :file', [':file' => $search]);
         } elseif ($type == 'where') {
@@ -263,7 +289,7 @@ class PageManager {
      * @param array $bind
      * @return bool
      */
-    function getPageId($where, $bind)
+    public function getPageId(string $where, array $bind): bool
     {
         $page_id = $this->db->selectData('pages', $where, $bind, 'id');
         return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
@@ -271,8 +297,10 @@ class PageManager {
 
     /**
      * Load page editor program
+     * 
+     * @return string
      */
-    function loadPageEditor()
+    public function loadPageEditor(): string
     {
         // load page editor
         $pageEditor = file_get_contents(APPDIR . 'include/plugins/tinymce.vavok.php');
@@ -290,7 +318,7 @@ class PageManager {
      * @param integer $id
      * @return string
      */
-    public function pageTags($id)
+    public function pageTags(int $id): string
     {
         $tags = '';
 
@@ -305,18 +333,19 @@ class PageManager {
      * Append head tags
      *
      * @param string $tags
-     * @return void
+     * @return string
      */
-    public function appendHeadTags($tags) {
+    public function appendHeadTags(string $tags): string
+    {
         return $this->head_tags .= $tags;
     }
 
     /**
      * Editing mode we are currently using
      * 
-     * @return str $edmode
+     * @return string $edmode
      */
-    public function editMode()
+    public function editMode(): string
     {
         if (!empty($this->postAndGet('edmode'))) {
             $edmode = $this->postAndGet('edmode');
