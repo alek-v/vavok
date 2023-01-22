@@ -4,6 +4,7 @@
  */
 
 namespace App\Classes;
+use App\Exceptions\FileException;
 use App\Traits\Core;
 use App\Traits\Files;
 use Pimple\Container;
@@ -11,29 +12,24 @@ use Pimple\Container;
 class PageManager {
     use Core, Files;
 
-    protected $page_title;            // Title
-    protected $page_content;          // Content
-    protected $published;             // Visitors can see page
-    protected $page_author;           // Page author
-    protected $page_created_date;     // Page created date
-    protected $head_tags;             // Head tags
-    protected $page_published_date;   // Date when post is published
     protected object $db;
 
-    public function __construct(protected Container $container)
+    public function __construct(Container $container)
     {
-        $this->db = $this->container['db'];
+        $this->db = $container['db'];
     }
 
     /**
-     * Insert new page
+     * Insert a new page
      * 
      * @param array $values
-     * @return void
+     * @return int last inserted id
      */
-    public function insert(array $values): void
+    public function insert(array $values): int
     {
         $this->db->insert('pages', $values);
+
+        return $this->db->lastInsertId();
     }
 
     /**
@@ -74,10 +70,11 @@ class PageManager {
 
     /**
      * Update page content
-     * 
+     *
      * @param int $id
      * @param string $content
      * @return bool
+     * @throws FileException
      */
     public function update(int $id, string $content): bool
     {
@@ -89,7 +86,7 @@ class PageManager {
         $values[] = time();
         $values[] = isset($_SESSION['uid']) ? $_SESSION['uid'] : 0;
 
-        $this->db->update('pages', $fields, $values, "`id`='" . $id . "'");
+        $this->db->update('pages', $fields, $values, "id='{$id}'");
 
         // update cached index and menu pages
         // this pages must be cached other pages are not cached
@@ -108,6 +105,7 @@ class PageManager {
      * @param string $file
      * @param string $content
      * @return bool
+     * @throws FileException
      */
     public function updateCached(string $file, string $content): bool
     {
@@ -126,11 +124,6 @@ class PageManager {
     {
         // Set page name
         $pageName = str_replace('.php', '', $newName); // page name (without extension (.php))
-
-        // Remove language data from page name
-        if (stristr($pageName, '!.')) {
-            $pageName = preg_replace("/(.*)!.(.*)!/", "$1", $pageName);
-        }
 
         // Update URL tags in header data
         $header_data = $this->selectPage($id, 'headt, pname');
@@ -185,12 +178,12 @@ class PageManager {
     }
 
     /**
-     * Process content of the page and display correctly in page editor
+     * Process content of the page and display correctly in the page editor
      * 
-     * @param string $content
+     * @param ?string $content
      * @return string
      */
-    public function processPageContent(string $content = ''): string
+    public function processPageContent(?string $content = ''): string
     {
         $content = !empty($content) ? htmlspecialchars($content) : '';
 
@@ -239,10 +232,10 @@ class PageManager {
     /**
      * Return number of pages
      * 
-     * @param integer $creator
+     * @param ?integer $creator
      * @return integer
      */
-    public function totalPages(int $creator = null): int
+    public function totalPages(?int $creator = null): int
     {
         $where = '';
 
@@ -256,9 +249,9 @@ class PageManager {
      * 
      * @param int $id
      * @param string $fields
-     * @return array
+     * @return array|bool
      */
-    public function selectPage(integer $id , string $fields = '*'): array
+    public function selectPage(int $id , string $fields = '*'): array|bool
     {
         return $this->db->selectData('pages', "id = :id", ['id' => $id], $fields);
     }
@@ -292,7 +285,7 @@ class PageManager {
     public function getPageId(string $where, array $bind): bool
     {
         $page_id = $this->db->selectData('pages', $where, $bind, 'id');
-        return $page_id = !empty($page_id['id']) ? $page_id['id'] : 0;
+        return !empty($page_id['id']) ? $page_id['id'] : 0;
     }
 
     /**
@@ -327,17 +320,6 @@ class PageManager {
             $tags .= ' ' . $value['tag_name'];
         }
         return trim($tags);
-    }
-
-    /**
-     * Append head tags
-     *
-     * @param string $tags
-     * @return string
-     */
-    public function appendHeadTags(string $tags): string
-    {
-        return $this->head_tags .= $tags;
     }
 
     /**

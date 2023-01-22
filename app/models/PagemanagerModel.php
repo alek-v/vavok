@@ -14,6 +14,8 @@ class PagemanagerModel extends BaseModel {
     use Files, Notifications;
 
     /**
+     * Main page
+     *
      * @return array
      */
     public function index(): array
@@ -27,31 +29,30 @@ class PagemanagerModel extends BaseModel {
         $page_editor = new PageManager($this->container);
 
         $file = $this->check($this->postAndGet('file'));
-        $text_files = $this->postAndGet('text_files', true); // Keep data as received so html codes will be not filtered
+
+        // Keep data as received so html codes will be not filtered
+        $text_files = $this->postAndGet('text_files', true);
+
         $id = $this->check($this->postAndGet('id'));
         if (!empty($this->postAndGet('file'))) $page_id = $page_editor->getPageId('file = :file', [':file' => $file]); // Get page id we work with
-        $config_editfiles = 20; // Files per page
 
-        if ($this->postAndGet('action') == 'editfile') {
-            if (!empty($file) && !empty($text_files)) {
-                $page_info = $page_editor->selectPage($page_id, 'crtdby, published');
+        // Files per page
+        $config_editfiles = 20;
 
-                if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); } 
+        // Save page changes
+        if ($this->postAndGet('action') == 'edit_file') {
+            if (!empty($id) && !empty($text_files)) {
+                $page_info = $page_editor->selectPage($id, 'crtdby, published');
+
+                if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
                 if ($page_info['crtdby'] != $this->user->userIdNumber() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
-                // bug when magic quotes are on and '\' sign
-                // if magic quotes are on we don't want ' to become \'
-                if (function_exists('get_magic_quotes_gpc')) {
-                    // strip all slashes
-                    $text_files = stripslashes($text_files);
-                }
-
-                // update db data
-                $page_editor->update($page_id, $text_files);
+                // Update DB data
+                $page_editor->update($id, $text_files);
             }
 
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$file&isset=mp_editfiles");
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&id=$id&isset=mp_editfiles");
         }
 
         if ($this->postAndGet('action') == 'savetags') {
@@ -74,44 +75,43 @@ class PagemanagerModel extends BaseModel {
             $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=mainmeta&isset=mp_editfiles');
         }
 
-        // update head tags on specific page
-        if ($this->postAndGet('action') == 'editheadtag') {
-            // get default image link
+        // Update head tags on the page
+        if ($this->postAndGet('action') == 'save_head_tags') {
+            // Get default image link
             $image = !empty($this->postAndGet('image')) ? $this->postAndGet('image') : '';
 
-            // update header tags
-            if (!empty($file)) {
-                // who created page
-                $page_info = $page_editor->selectPage($page_id, 'crtdby');
+            // Update header tags
+            if (!empty($id)) {
+                // Who created the page
+                $page_info = $page_editor->selectPage($id, 'crtdby');
 
-                // check can user see page
+                // Check can user see page
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); }
 
-                // check can user edit page
+                // Check can user edit page
                 if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator() && $page_info['crtdby'] != $this->user->user_id) { $this->redirection(HOMEDIR . "?isset=ap_noaccess"); } 
 
-                /**
-                 * Update data in database
-                 */
+                // Update data in database
                 $data = array(
                     'headt' => $text_files,
                     'default_img' => $image
                 );
-                $page_editor->headData($page_id, $data);
+                $page_editor->headData($id, $data);
 
-                // redirect
-                $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=headtag&file=$file&isset=mp_editfiles");
-            } 
-            // fields must not be empty
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=headtag&file=$file&isset=mp_noeditfiles");
+                // Redirect
+                $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=page_head_tags&id=$id&isset=mp_editfiles");
+            }
+
+            // Fields must be filled
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=page_head_tags&id=$id&isset=mp_noeditfiles");
         }
 
         // Rename page
         if ($this->postAndGet('action') == 'save_renamed') {
-            $pg = $this->postAndGet('pg'); // new file name
+            $pg = $this->postAndGet('pg');
 
-            if (!empty($pg) && !empty($file)) {
-                $page_info = $page_editor->selectPage($page_id, 'crtdby');
+            if (!empty($id) && !empty($pg)) {
+                $page_info = $page_editor->selectPage($id, 'crtdby');
 
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) {
                     header("Location: " . HOMEDIR . "?isset=ap_noaccess");
@@ -123,18 +123,18 @@ class PagemanagerModel extends BaseModel {
                 }
 
                 // rename page
-                $page_editor->rename($pg, $page_id);
+                $page_editor->rename($pg, $id);
 
-                header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_editfiles");
+                header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&id=$id&isset=mp_editfiles");
                 exit;
             }
 
-            header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$pg&isset=mp_noedit");
+            header("Location: " . HOMEDIR . "adminpanel/pagemanager/?action=edit&id=$id&isset=mp_noedit");
             exit;
         }
 
-        // Add new page
-        if ($this->postAndGet('action') == 'addnew') {
+        // Add a new page
+        if ($this->postAndGet('action') == 'add_new_page') {
             if (!$this->user->checkPermissions('pageedit', 'insert') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
             $newfile = !empty($this->postAndGet('newfile')) ? $this->postAndGet('newfile') : '';
@@ -203,69 +203,59 @@ class PagemanagerModel extends BaseModel {
                 'default_img' => ''
                 );
 
-                // insert data
-                $page_editor->insert($values);
+                // Insert data
+                $last_id = $page_editor->insert($values);
 
-                // file successfully created
-                $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=$newfiles&isset=mp_newfiles");
+                // Page successfully created
+                $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&id=$last_id&isset=mp_newfiles");
             } else {
                 $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=new&isset=mp_noyesfiles");
             }
         }
 
-        if ($this->postAndGet('action') == 'del') {
+        if ($this->postAndGet('action') == 'confirmed_page_delete') {
             if (!$this->user->checkPermissions('pageedit', 'del') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
-            // delete page
-            $page_editor->delete($page_id);
-        
+            // Delete the page
+            $page_editor->delete($id);
+
             $this->redirection(HOMEDIR . "adminpanel/pagemanager/?isset=mp_delfiles");
         }
 
-        // publish page; page will be avaliable for visitors
+        // Publish the page. Page will be shown to visitors
         if ($this->postAndGet('action') == 'publish') {
-            if (!empty($page_id)) {
-                if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
-                    header("Location: " . HOMEDIR . "adminpanel/?isset=ap_noaccess");
-                    exit;
-                }
+            if (!empty($id) && !$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
+                $this->redirection(HOMEDIR . "adminpanel/?isset=ap_noaccess");
+            }
 
-                // update db data
-                $page_editor->visibility($page_id, 2);
-            } 
+            // Update DB data
+            $page_editor->visibility($id, 2);
 
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $file . "&isset=mp_editfiles");
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&id=" . $id . "&isset=mp_editfiles");
         }
 
-        // unpublish page
-        if ($this->postAndGet('action') == "unpublish") {
-            if (!empty($page_id)) {
+        // Unpublish page
+        if ($this->postAndGet('action') == 'unpublish') {
+            if (!empty($id) && !$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
+                $this->redirection(HOMEDIR . "adminpanel/?isset=ap_noaccess");
+            }
 
-                if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
-                    header("Location: " . HOMEDIR . "adminpanel/?isset=ap_noaccess");
-                    exit;
-                }
+            // Update DB data
+            $page_editor->visibility($id, 1);
 
-                // update db data
-                $page_editor->visibility($page_id, 1);
-            } 
-
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $file . "&isset=mp_editfiles");
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&id=" . $id . "&isset=mp_editfiles");
         }
 
-        // update page language
-        if ($this->postAndGet('action') == 'pagelang') {
-            if (!$this->user->administrator()) { $this->redirection("../?isset=ap_noaccess"); }
+        // Update page language
+        if ($this->postAndGet('action') == 'save_page_localization') {
+            if (!$this->user->administrator()) $this->redirection("../?isset=ap_noaccess");
 
-            $pageId = $this->check($this->postAndGet('id'));
             $lang = $this->postAndGet('lang');
 
-            // update database data
-            $page_editor->language($pageId, $lang);
+            // Update database data
+            $page_editor->language($id, $lang);
 
-            $pageData = $page_editor->selectPage($pageId);
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&file=" . $pageData['pname'] . "_" . $lang . ".php&isset=mp_editfiles");
-
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=show&id=" . $id . "&isset=mp_editfiles");
         }
 
         if ($page_editor->editMode() == 'visual') {
@@ -285,18 +275,14 @@ class PagemanagerModel extends BaseModel {
         $edit_only_own_pages = '';
 
         // check if user can edit only pages that are made by themself or have permissions to edit all pages
-        if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) {
-            $edit_only_own_pages = 'yes';
-        }
+        if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator()) $edit_only_own_pages = 'yes';
 
         if (empty($this->postAndGet('action'))) {
             $index_data['content'] .= '<h1>{@localization[filelist]}}</h1>';
 
             $total_pages = $page_editor->totalPages();
 
-            if ($edit_only_own_pages == 'yes') {
-                $total_pages = $page_editor->totalPages($this->user->user_id);
-            }
+            if ($edit_only_own_pages == 'yes') $total_pages = $page_editor->totalPages($this->user->user_id);
 
             // start navigation
             $navi = new Navigation($config_editfiles, $total_pages);
@@ -323,39 +309,38 @@ class PagemanagerModel extends BaseModel {
                 $filename = $filename . ' ' . strtoupper($file_lang);
 
                 if (empty($edit_only_own_pages)) {
-                    $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $page_info['file'], $filename, '<b>', '</b>');
+                    $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $page_info['id'], $filename, '<b>', '</b>');
                     // Check for permissions to edit pages
                     if ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator() || $page_info['crtdby'] == $this->user->userIdNumber() || ($this->user->checkPermissions('pageedit', 'editunpub') && $page_info['published'] == 1)) {
-                        $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
+                        $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                     }
 
                     // Check for permissions to delete pages
                     if ($this->user->checkPermissions('pageedit', 'del') || $this->user->administrator()) {
-                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=poddel&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
+                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
                     }
 
                     // Check for permissions to publish and unpublish pages
                     if ($page_info['published'] == 1 && ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator())) {
-                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
-                    } 
+                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
+                    }
 
                     if ($page_info['published'] != 1 && ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator())) {
-                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
+                        $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
                     }
 
                     // information about page
                     $index_data['content'] .= ' {@localization[created]}}: ' . $this->correctDate($page_info['created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['crtdby']) . ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['lastupd'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['lstupdby']);
                     $index_data['content'] .= '<hr />';
-
                 } else {
                     $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $page_info['file'], $filename, '<b>', '</b>');
                     $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $page_info['file'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                     $index_data['content'] .= ' {@localization[created]}}: ' . $this->correctDate($page_info['created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['crtdby']) . ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['lastupd'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['lstupdby']);
                     $index_data['content'] .= '<hr />';
-                } 
+                }
 
                 unset($page_info);
-            } 
+            }
 
             // navigation
             $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
@@ -365,11 +350,9 @@ class PagemanagerModel extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'show') {
-            if (!empty($page_id)) {
-                $base_file = $file;
-
+            if (!empty($id)) {
                 $pageData = new PageManager($this->container);
-                $page_info = $pageData->selectPage($page_id);
+                $page_info = $pageData->selectPage($id);
 
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) {
                     $this->redirection(HOMEDIR . "?isset=ap_noaccess");
@@ -390,10 +373,10 @@ class PagemanagerModel extends BaseModel {
                 $index_data['content'] .= ' | Page type: ' . $post_type;
 
                 if ($page_info['published'] == 1 && ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator())) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&file=' . $file . '">[Publish]</a>';
+                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $id . '">[Publish]</a>';
                 } 
                 if ($page_info['published'] != 1 && ($this->user->checkPermissions('pageedit', 'edit') || $this->user->administrator())) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&file=' . $file . '">[Unpublish]</a>';
+                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $id . '">[Unpublish]</a>';
                 }
                 $index_data['content'] .= '</p>';
 
@@ -416,14 +399,14 @@ class PagemanagerModel extends BaseModel {
 
                 $index_data['content'] .= '</p>';
 
-                $index_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $base_file, $this->localization->string('edit')) . '<br />';
+                $index_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
                 if ($this->user->checkPermissions('pageedit', 'del') || $this->user->administrator()) {
-                    $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=poddel&file=' . $base_file, $this->localization->string('delete')) . '<br />';
+                    $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
                 }
             }
 
             if (empty($edit_only_own_pages)) {
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&pgfile=' . $base_file, '{@localization[pagetitle]}} ' . $showname) . '<br />';
+                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}} ' . $showname) . '<br />';
             }
         }
 
@@ -431,23 +414,22 @@ class PagemanagerModel extends BaseModel {
             // Coder mode for advanced users / coders
             $edmode_name = $page_editor->editMode() == 'visual' ? 'Visual' : 'Coder';
 
-            // Check if page exists
-            if ($page_editor->pageExists($file)) {
-                $page_info = $page_editor->selectPage($page_id);
+            // Page data
+            $page_info = $page_editor->selectPage((int)$this->postAndGet('id'));
+
+            if (!empty($page_info)) {
+                $page_id = $page_info['id'];
 
                 if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . "?isset=ap_noaccess");
 
                 if ($page_info['crtdby'] != $this->user->userIdNumber() && !$this->user->checkPermissions('pageedit', 'edit') && (!$this->user->checkPermissions('pageedit', 'editunpub') || $page_info['published'] != 1) && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
-
-                // Page name
-                $show_up_file = str_replace('.php', '', $file);
 
                 $index_data['content'] .= '<p>Edit mode: ' . $edmode_name . '</p>';
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
-                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $file);
+                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id);
 
                 $select = $this->container['parse_page'];
                 $select->load('forms/select');
@@ -470,13 +452,13 @@ class PagemanagerModel extends BaseModel {
 
                 $index_data['content'] .= '<hr />';
 
-                $index_data['content'] .= '<p>Updating page ' . $show_up_file . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=renamepg&pg=' . $file, 'rename') . '</p>'; // update lang
+                $index_data['content'] .= '<p>Updating page ' . $page_info['pname'] . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=rename_page&id=' . $id, 'rename') . '</p>'; // update lang
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
                 $form->set('form_name', 'form');
-                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=editfile&file=' . $file);
+                $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=edit_file&id=' . $page_id);
 
                 $textarea = $this->container['parse_page'];
                 $textarea->load('forms/textarea');
@@ -491,12 +473,12 @@ class PagemanagerModel extends BaseModel {
                 $index_data['content'] .= $form->output();
 
                 $index_data['content'] .= '<hr>';
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $file, $show_up_file, '<p>', '</p>');
+                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $id, $page_info['pname'], '<p>', '</p>');
 
                 $index_data['content'] .= '<p>';
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&pgfile=' . $file, '{@localization[pagetitle]}}');
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=updpagelang&id=' . $page_id, 'Update page language');
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=headtag&file=' . $file, 'Head (meta) tags on this page'); // update lang
+                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}');
+                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
+                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // update lang
                 $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // update lang
                 $index_data['content'] .= '</p>';
             } else {
@@ -505,37 +487,26 @@ class PagemanagerModel extends BaseModel {
         }
 
         // Edit meta tags
-        if ($this->postAndGet('action') == 'headtag') {
+        if ($this->postAndGet('action') == 'page_head_tags') {
             if (!$this->user->checkPermissions('pageedit', 'show') && !$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
 
-            $page_info = $page_editor->selectPage($page_id);
+            $page_info = $page_editor->selectPage($id);
 
             if (!$this->user->checkPermissions('pageedit', 'edit') && !$this->user->administrator() && $page_info['crtdby'] != $this->user->user_id) {
                 header("Location: " . HOMEDIR . "?isset=ap_noaccess");
                 exit;
             }
 
-            // show page name
-            if (!stristr($file, '/')) {
-                $show_up_file = str_replace('.php', '', $file);
-            } else {
-                $show_up_file = $file;
-            }
+            $index_data['content'] .= '<legend>Updating page ' . $page_info['tname'] . '</legend>'; // update lang
 
-            $index_data['content'] .= '<legend>Updating file ' . $show_up_file . '</legend>'; // update lang 
-
-            /**
-             * Load form
-             */
+            // Load form
             $form = $this->container['parse_page'];
             $form->load('forms/form');
-            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=editheadtag&file=' . $file);
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=save_head_tags&id=' . $id);
             $form->set('form_method', 'POST');
             $form->set('form_name', 'form');
 
-            /**
-             * Textarea
-             */
+            // Textarea
             $textarea = $this->container['parse_page'];
             $textarea->load('forms/textarea');
             $textarea->set('label_for', 'text');
@@ -543,9 +514,7 @@ class PagemanagerModel extends BaseModel {
             $textarea->set('textarea_id', 'text');
             $textarea->set('textarea_value', $page_info['headt']);
 
-            /**
-             * Input field
-             */
+            // Input field
             $image_input = $this->container['parse_page'];
             $image_input->load('forms/input');
             $image_input->set('label_for', 'image');
@@ -555,21 +524,17 @@ class PagemanagerModel extends BaseModel {
             $image_input->set('input_id', 'image');
             $image_input->set('input_value', $page_info['default_img']);
 
-            /**
-             * Insert fields
-             */
+            // Insert fields
             $form->set('fields', $form->merge(array($textarea, $image_input)));
 
-            /**
-             * Show form
-             */
+            // Show form
             $index_data['content'] .= $form->output();
 
             $index_data['content'] .= '<hr />';
-        } 
+        }
 
         if ($this->postAndGet('action') == 'mainmeta') {
-            if (!$this->user->administrator(101)) { $this->redirection("../?isset=ap_noaccess"); }
+            if (!$this->user->administrator(101)) $this->redirection("../?isset=ap_noaccess");
 
             $index_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
@@ -596,13 +561,13 @@ class PagemanagerModel extends BaseModel {
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back'), '<p>', '</p>');
         } 
 
-        if ($this->postAndGet('action') == 'renamepg') {
+        if ($this->postAndGet('action') == 'rename_page') {
             if (!$this->user->administrator()) {
                 header("Location: ../?isset=ap_noaccess");
                 exit;
             }
 
-            $pg = $this->check($this->postAndGet('pg'));
+            $page_info = $page_editor->selectPage($id);
 
             $index_data['content'] .= '<h1>Rename page</h1>'; // update lang
 
@@ -618,22 +583,22 @@ class PagemanagerModel extends BaseModel {
             $input_pg->set('input_type', 'text');
             $input_pg->set('input_name', 'pg');
             $input_pg->set('input_id', '');
-            $input_pg->set('input_value', $pg);
+            $input_pg->set('input_value', $page_info['pname']);
 
             $input_file = $this->container['parse_page'];
             $input_file->load('forms/input');
             $input_file->set('label_for', '');
             $input_file->set('input_type', 'hidden');
-            $input_file->set('input_name', 'file');
+            $input_file->set('input_name', 'id');
             $input_file->set('input_id', '');
-            $input_file->set('input_value', $pg);
+            $input_file->set('input_value', $id);
 
             $form->set('fields', $form->merge(array($input_pg, $input_file)));
             $index_data['content'] .= $form->output();
 
             $index_data['content'] .= '<hr />';
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&file=' . $pg, $this->localization->string('back'), '<p>', '</p>');
+            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('back'), '<p>', '</p>');
         } 
 
         if ($this->postAndGet('action') == 'new') {
@@ -681,7 +646,7 @@ class PagemanagerModel extends BaseModel {
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
-            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=addnew');
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=add_new_page');
 
             // Page name input
             $input_new_file = $this->container['parse_page'];
@@ -739,29 +704,27 @@ class PagemanagerModel extends BaseModel {
         } 
 
         // confirm that you want to delete a page
-        if ($this->postAndGet('action') == "poddel") {
+        if ($this->postAndGet('action') == 'delete_page') {
             if (!$this->user->checkPermissions('pageedit', 'del') && !$this->user->administrator()) {
                 header("Location: " . HOMEDIR . "?isset=ap_noaccess");
                 exit;
             }
 
-            if (!empty($file)) {
-                if ($file != "index.php") {
-                    $index_data['content'] .= $this->localization->string('confdelfile') . ' <b>' . $file . '</b><br />';
-                    $index_data['content'] .= '<b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=del&file=' . $file, $this->localization->string('delete')) . '</b><br />';
-                } else {
-                    $index_data['content'] .= $this->localization->string('indexnodel') . '!<br />';
-                } 
+            // Page data
+            $page_data = $page_editor->selectPage($id);
+
+            if (!empty($id)) {
+                $index_data['content'] .= $this->localization->string('confdelfile') . ' <b>' . $page_data['tname'] . '</b><br />';
+                $index_data['content'] .= '<p></p><b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=confirmed_page_delete&id=' . $id, $this->localization->string('delete')) . '</b></p>';
             } else {
                 $index_data['content'] .= $this->localization->string('nofiletodel') . '<br />';
-            } 
+            }
+
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back')) . '<br />';
-        } 
+        }
 
-        if ($this->postAndGet('action') == 'updpagelang') {
+        if ($this->postAndGet('action') == 'update_page_localization') {
             if (!$this->user->administrator()) $this->redirection(HOMEDIR . '?isset=ap_noaccess');
-
-            $id = $this->check($this->postAndGet('id'));
 
             // get page data
             $pageData = $page_editor->selectPage($id);
@@ -769,7 +732,7 @@ class PagemanagerModel extends BaseModel {
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
-            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=pagelang&id=' . $pageData['id']);
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/?action=save_page_localization&id=' . $pageData['id']);
 
             $select_language = $this->container['parse_page'];
             $select_language->load('forms/select');
@@ -806,9 +769,7 @@ class PagemanagerModel extends BaseModel {
                 redirection("./?isset=ap_noaccess");
             }
 
-            /**
-             * Get page data
-             */
+            // Get page data
             $tag_field = $this->container['parse_page'];
             $tag_field->load('forms/input');
             $tag_field->set('label_value', 'Tags');
@@ -837,9 +798,6 @@ class PagemanagerModel extends BaseModel {
         } // update lang
         if ($this->user->administrator()) {
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', $this->localization->string('search')) . '<br />';
-        }
-        if (empty($edit_only_own_pages)) {
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', $this->localization->string('pagetitle')) . '<br />';
         }
         if (!empty($this->postAndGet('action'))) {
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('pages_management')) . '<br />';

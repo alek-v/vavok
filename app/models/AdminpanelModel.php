@@ -1782,16 +1782,16 @@ class AdminpanelModel extends BaseModel {
 
         if (!$this->user->administrator()) $this->redirection('../?error');
         
-        if ($act == 'addedit') {
-            $tfile = $this->check($this->postAndGet('tfile'));
+        if ($act == 'save_updated_title') {
+            $id = $this->check($this->postAndGet('id'));
             $msg = $this->replaceNewLines($this->postAndGet('msg'));
-        
+
             // Get page data
-            $pageData = $this->db->selectData('pages', 'file = :file', [':file' => $tfile], 'file, headt');
+            $pageData = $this->db->selectData('pages', 'id = :id', [':id' => $id], 'file, headt');
         
             $headData = $pageData['headt'];
-        
-            // remove old open graph title title and set new
+
+            // Remove old open graph tag and set new
             if (stripos($headData, 'property="og:title" content="')) {
             $start = stripos($headData, '<meta property="og:title"');
             for ($i = $start;$i < strlen($headData);$i++) {
@@ -1809,65 +1809,9 @@ class AdminpanelModel extends BaseModel {
 
             $fields = array('tname', 'headt');
             $values = array($msg, $headData);
-            $this->db->update('pages', $fields, $values, "file='{$tfile}'");
+            $this->db->update('pages', $fields, $values, "id='{$id}'");
 
-            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&file=" . $pageData['file'] . "&isset=savedok");
-        } 
-        
-        if ($act == 'savenew') {
-            $tpage = $this->check($this->postAndGet('tpage'));
-            $tpage = strtolower($tpage);
-            $tpage = str_replace(' ', '-', $tpage);
-
-            $msg = $this->replaceNewLines($this->postAndGet('msg'));
-
-            $last_notif = $this->db->selectData('pages', 'pname = :pname', [':pname' => $tpage], '`tname`, `pname`, `file`, `headt`');
-
-            $headData = $last_notif['headt'];
-
-            // remove old open graph title title and set new
-            if (stripos($headData, 'property="og:title" content="')) {
-            $start = stripos($headData, '<meta property="og:title"');
-            for ($i = $start;$i < strlen($headData);$i++) {
-                $currentChar = $headData[$i];
-                $headData[$i] = '~';
-        
-                if ($currentChar == '>')
-                break;
-                }
-            }
-
-            $inputPosition = $start;
-            $headData = str_replace('~', '', $headData);
-            $headData = trim(substr_replace($headData, '<meta property="og:title" content="' . $msg . '" />', $inputPosition, 0));
-        
-            // no data in database, insert data
-            if (empty($last_notif['tname'] && $last_notif['pname'] && $last_notif['file'])) {
-                $values = array(
-                    'pname' => $tpage,
-                    'tname' => $msg,
-                    'file' => $tpage
-                );
-                $this->db->insert('pages', $values);
-
-                $PBPage = false;
-            } else {
-                $fields = array('tname', 'headt');
-                $values = array($msg, $headData);
-                $this->db->insert('pages', $fields, $values, "pname='" . $tpage . "'");
-        
-                $PBPage = true;
-            } 
-
-            $this->redirection(HOMEDIR . "adminpanel/pagetitle/?isset=savedok");
-        }
-
-        if ($act == 'del') {
-            $tid = $this->check($this->postAndGet('tid'));
-        
-            $this->db->delete('pages', "pname = '{$tid}'");
-        
-            $this->redirection(HOMEDIR . 'adminpanel/pagetitle');
+            $this->redirection(HOMEDIR . "adminpanel/pagemanager/?action=edit&id=" . $id . "&isset=savedok");
         }
         
         if (!isset($act) || empty($act)) {
@@ -1891,32 +1835,29 @@ class AdminpanelModel extends BaseModel {
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
-                    $lnk = $item['pname'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&pgfile=' . $item['file'] . '">' . $item['tname'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=headtag&file=' . $item['file'] . '">[Edit Meta]</a> | <img src="' . HOMEDIR . 'themes/images/img/close.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=del&tid=' . $item['pname'] . '">[DEL]</a>'; 
-                    // $page_data['content'] .= " <small>joined: $jdt</small>";
+                    $lnk = $item['pname'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&id=' . $item['id'] . '">' . $item['tname'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $item['id'] . '">[Edit Meta]</a>';
                     $page_data['content'] .= "$lnk<br />";
                 }
             }
 
             $page_data['content'] .= $navigation->getNavigation();
-
-            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=addnew', 'Add new title', '<p>', '</p>'); // update lang
         }
-        
+
         if ($act == 'edit') {
-            $pgfile = $this->check($this->postAndGet('pgfile'));
-        
-            $page_title = $this->db->selectData('pages', 'file = :file', ['file' => $pgfile], 'tname, pname');
-        
+            $id = $this->check($this->postAndGet('id'));
+
+            $page_title = $this->db->selectData('pages', 'id = :id', ['id' => $id], 'tname, pname');
+
             $form = $this->container['parse_page'];
             $form->load('forms/form');
-            $form->set('form_action', HOMEDIR . 'adminpanel/pagetitle/?act=addedit');
+            $form->set('form_action', HOMEDIR . 'adminpanel/pagetitle/?act=save_updated_title');
             $form->set('form_method', 'POST');
         
             $input = $this->container['parse_page'];
             $input->load('forms/input');
             $input->set('input_type', 'hidden');
-            $input->set('input_name', 'tfile');
-            $input->set('input_value', $pgfile);
+            $input->set('input_name', 'id');
+            $input->set('input_value', $id);
         
             $input_2 = $this->container['parse_page'];
             $input_2->load('forms/input');
@@ -1931,37 +1872,7 @@ class AdminpanelModel extends BaseModel {
         
             $page_data['content'] .= '<hr>';
         
-            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
-        } 
-
-        if ($act == "addnew") {
-            $form = $this->container['parse_page'];
-            $form->load('forms/form');
-            $form->set('form_action', HOMEDIR . 'adminpanel/pagetitle/?act=savenew');
-            $form->set('form_method', 'POST');
-        
-            $input = $this->container['parse_page'];
-            $input->load('forms/input');
-            $input->set('label_for', 'tpage');
-            $input->set('label_value', 'Page:');
-            $input->set('input_type', 'text');
-            $input->set('input_name', 'tpage');
-            $input->set('input_id', 'tpage');
-        
-            $input_2 = $this->container['parse_page'];
-            $input_2->load('forms/input');
-            $input_2->set('label_for', 'msg');
-            $input_2->set('label_value', 'Page title:');
-            $input_2->set('input_type', 'text');
-            $input_2->set('input_name', 'msg');
-            $input_2->set('input_id', 'msg');
-        
-            $form->set('fields', $form->merge(array($input, $input_2)));
-            $page_data['content'] .= $form->output();
-        
-            $page_data['content'] .= '<hr />';
-        
-            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle', '{@localization[back]}}', '<p>', '</p>');
+            $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, '{@localization[back]}}', '<p>', '</p>');
         }
         
         $page_data['content'] .= '<p>';
