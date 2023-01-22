@@ -1442,6 +1442,8 @@ class AdminpanelModel extends BaseModel {
 
         if (!$this->user->administrator()) $this->redirection(HOMEDIR);
 
+        $search_for_string = $this->postAndGet('stext');
+
         if (empty($this->postAndGet('action'))) {
             $form = $this->container['parse_page'];
             $form->load('forms/form');
@@ -1470,16 +1472,16 @@ class AdminpanelModel extends BaseModel {
                 $cond = "pname";
                 $select_fields = "*";
                 $ord_fields = "pubdate DESC";
-        
-                $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $stext . "%'");
+
+                $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $search_for_string . "%'");
                 $items_per_page = 10;
-        
+
                 $navigation = new Navigation($items_per_page, $noi, HOMEDIR . 'adminpanel/pagesearch/?'); // start navigation
-        
+
                 $limit_start = $navigation->start()['start']; // starting point
         
-                $sql = "SELECT {$select_fields} FROM {$where_table} WHERE pname LIKE '%{$stext}%' OR tname LIKE '%{$stext}%' ORDER BY {$ord_fields} LIMIT $limit_start, $items_per_page";
-        
+                $sql = "SELECT {$select_fields} FROM {$where_table} WHERE pname LIKE '%{$search_for_string}%' OR tname LIKE '%{$search_for_string}%' ORDER BY {$ord_fields} LIMIT $limit_start, $items_per_page";
+
                 foreach ($this->db->query($sql) as $item) {
                     $tname = $item['tname'];
                     if (empty($tname)) {
@@ -1497,7 +1499,7 @@ class AdminpanelModel extends BaseModel {
                                 $itemLang = '';
                             }
 
-                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&file=' . $item['file'], $tname . $itemLang) . '<br />';
+                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $item['id'], $tname . $itemLang) . '<br />';
                     }
 
                     $page_data['content'] .= $tlink;
