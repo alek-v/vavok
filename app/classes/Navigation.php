@@ -157,7 +157,7 @@ class Navigation {
         }
 
         // HTML before links, using Bootstrap
-        $before = '<nav aria-label="page-navigation" class="page_navigation">';
+        $before = '<nav aria-label="page-navigation" class="page-navigation">';
         $before .= '<ul class="pagination">';
 
         // HTML after links

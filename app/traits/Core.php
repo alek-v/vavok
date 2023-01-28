@@ -535,7 +535,7 @@ trait Core {
         $online = $this->db->countRow('online');
         $registered = $this->db->countRow('online', "user > 0");
 
-        $online = '<p class="site_online_users"><a href="/pages/online">Online: ' . $registered . ' / ' . $online . '</a></p>';
+        $online = '<p class="site-online-users"><a href="/pages/online">Online: ' . $registered . ' / ' . $online . '</a></p>';
 
         return $online;
     }
@@ -566,44 +566,35 @@ trait Core {
 
             if ($counter_configuration == 4) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $total_visits . ' | ' . $total_clicks . '</a>';
 
-            return '<p class="site_counter">' . $info . '</p>';
+            return '<p class="site-counter">' . $info . '</p>';
         }
     }
 
     /**
      * Show page generation time
      * 
-     * @return str
+     * @return string
      */
-    public function showPageGenTime()
+    public function showPageGenTime(): string
     {
         if ($this->configuration('pageGenTime') == 1) {
             $end_time = microtime(true);
             $gen_time = $end_time - START_TIME;
-            $pagegen = '<p class="site_pagegen_time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
-
-            return $pagegen;
+            return '<p class="site-generate-time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
         }
-    }
 
-    /**
-     * Get group members number
-     *
-     * @param string $group_name
-     * @return int
-     */
-    public function count_group_members($group_name)
-    {
-        return $this->go('db')->countRow('group_members', "group_name = '{$group_name}'");
+        return '';
     }
 
     /**
      * Redirection
      *
      * @param string $url
-     * @return mixed
+     * @return void
+     * @throws \Exception;
      */
-    public function redirection($url) {
+    public function redirection(string $url): void
+    {
         // Cannot redirect if headers are already sent
         if (!headers_sent()) {
             header('HTTP/1.1 301 Moved Permanently');
@@ -611,7 +602,7 @@ trait Core {
             // Protects from code being executed after redirect request
             exit;
         } else {
-            throw new Exception('Cannot redirect, headers already sent');
+            throw new \Exception('Cannot redirect, headers already sent');
         }
     }
 
