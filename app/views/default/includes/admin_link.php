@@ -1,1 +1,1 @@
-<li class="nav-item"><a href="{@HOMEDIR}}adminpanel" class="btn btn-primary sitelink">{@localization[adminpanel]}}</a></li>
+<li class="nav-item"><a href="{@HOMEDIR}}adminpanel" class="btn">{@localization[adminpanel]}}</a></li>

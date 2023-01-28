@@ -1,2 +1,2 @@
-<li class="nav-item"><a class="btn btn-primary sitelink" href="{@HOMEDIR}}users/login">{@localization[login]}}</a></li>
-<li class="nav-item"><a class="btn btn-primary sitelink" href="{@HOMEDIR}}users/register">{@localization[register]}}</a></li>
+<li class="nav-item"><a class="btn" href="{@HOMEDIR}}users/login">{@localization[login]}}</a></li>
+<li class="nav-item"><a class="btn" href="{@HOMEDIR}}users/register">{@localization[register]}}</a></li>

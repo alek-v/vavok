@@ -10,9 +10,9 @@
         <title>{@title}}</title>
     </head>
     <body class="d-flex flex-column">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light top-navigation">
+        <nav class="navbar navbar-expand-lg top-navigation">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{@HOMEDIR}}"><img src="{@HOMEDIR}}themes/default/images/logo165x30.png" width="165" height="30" alt="Vavok logo" /></a>
+                <a class="navbar-brand rounded" href="{@HOMEDIR}}"><img src="{@HOMEDIR}}themes/default/images/logo-147x29.png" width="147" height="29" alt="Vavok logo" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
                 </button>
@@ -21,7 +21,7 @@
                       {@authentication}}
                   </ul>
                     <div class="dropdown">
-                        <button class="btn btn-secondary sitelink dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             {@localization[lang]}}
                         </button>
                         <ul class="dropdown-menu">
@@ -29,7 +29,7 @@
                             <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=sr" rel="nofollow"><img src="{@HOMEDIR}}themes/default/images/serbia_flag_32.png" alt="српски језик" /> Српски</a></li>
                         </ul>
                     </div>
-                    <span><a class="btn btn-primary sitelink navi-contact" href="{@HOMEDIR}}contact">{@localization[contact]}}</a></span>
+                    <span><a class="btn navi-contact" href="{@HOMEDIR}}contact">{@localization[contact]}}</a></span>
                 </div>
             </div>
         </nav>

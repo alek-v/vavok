@@ -1,17 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap");
 textarea {
   width: 90%;
 }
 
-table {
-  margin: 1px 0px 1px 0px;
-  padding: 1px 1px 1px 1px;
-  font-size: 13px;
+.top-navigation {
+  background-color: #48A9A6;
+  margin-bottom: 40px;
+  box-shadow: 0px 0px 12px 0px gray;
+}
+.top-navigation .btn {
+  color: #fff;
+}
+.top-navigation .btn:hover {
+  color: #000;
+  border: 1px solid #E4DFDA;
 }
 
-nav {
-  background: #fff;
-  margin-bottom: 40px;
+.navbar-brand {
+  background-color: #fefefe;
+  padding: 2px 8px;
 }
 
 form {
@@ -22,20 +28,16 @@ form {
   padding: 0px 10px;
 }
 
-.top-navigation {
-  box-shadow: 0px 0px 2px 0px gray;
-}
-
 /* homepage link */
 .homepage {
   margin: 5px;
 }
 
-.page_navigation {
-  margin: 50px 0px 50px 0px;
+.page-navigation {
+  margin: 50px 0px;
 }
 
-/* start of vavok customizable elements */
+/* start of the vavok customizable elements */
 .a {
   border-bottom: 1px solid #ccc;
   color: #666;
@@ -46,8 +48,6 @@ form {
 .b {
   color: #666;
   background-color: #E5E5E5;
-  padding: 3px;
-  color: #666;
   padding: 10px;
 }
 
@@ -80,62 +80,44 @@ form {
   clear: both;
 }
 
-/* content */
-.my_navigation {
-  width: 100%;
-}
-
-.nav-contact {
-  display: flex;
-}
-
-.index_container {
-  display: flex;
-  justify-content: center;
-}
-
-.container {
-  display: inline-block;
-}
-
 /* BLOG */
 .blog-page p {
   font-size: 16px;
 }
 
-.site_online_users {
+.site-online-users {
   margin: auto;
 }
 
-.site_counter {
+.site-counter {
   margin: auto;
 }
 
-.site_pagegen_time {
+.site-generate-time {
   margin: auto;
 }
 
 .footer {
+  background-color: #48A9A6;
+  color: #fff;
   padding: 25px;
   width: 100%;
-  box-shadow: 0px 0px 2px 0px gray;
+  box-shadow: 0px 0px 12px 0px gray;
+}
+.footer a {
+  color: #fff;
+  text-decoration: none;
+}
+.footer a:hover {
+  text-decoration: underline #E4DFDA 2px;
 }
 
-/* 
-  ##Device = Most of the Smartphones Mobiles (Portrait)
-  ##Screen = B/w 320px to 479px
+/*
+  Device = Smartphones Mobiles
 */
 @media (min-width: 320px) and (max-width: 480px) {
   .container {
     display: block;
-  }
-  .services_element {
-    display: block;
-    margin: 40px 0px;
-  }
-  .services_element a {
-    display: flex;
-    justify-content: center;
   }
   nav {
     margin-bottom: 10px;
