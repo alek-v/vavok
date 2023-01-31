@@ -12,9 +12,9 @@ trait Core {
      *
      * @param string $data
      * @param bool $full_configuration
-     * @return mixed
+     * @return array|bool|string
      */
-    public function configuration($data = '', $full_configuration = false)
+    public function configuration(string $data = '', bool $full_configuration = false): array|bool|string
     {
         $config = array();
 
@@ -23,20 +23,17 @@ trait Core {
         }
 
         // Additional settings
-        $config['rssIcon'] = 0; // RSS icon
         $config['timeZone'] = empty($config['timeZone']) ? $config['timeZone'] = 0 : $config['timeZone']; // check is there timezone number set
         $config['siteTime'] = time() + ($config['timeZone'] * 3600); 
         $config['homeBase'] = isset($config['homeUrl']) ? str_replace('http://', '', $config['homeUrl']) : '';
         $config['homeBase'] = str_replace('https://', '', $config['homeBase']);
 
         // Get complete configuration
-        if ($full_configuration == true) return $config;
+        if ($full_configuration) return $config;
 
-        if (!empty($data) && isset($config[$data])) {
-            return $config[$data];
-        } else {
-            return false;
-        }
+        if (!empty($data) && isset($config[$data])) return $config[$data];
+
+        return false;
     }
 
     /**
@@ -68,23 +65,34 @@ trait Core {
             $return_date = date($format, $timestamp + ($seconds)); // return date
         }
 
-        $zone_info = $show_zone_info == true ? ' UTC ' . $timezone : '';
+        $zone_info = $show_zone_info ? ' UTC ' . $timezone : '';
 
         return $return_date . $zone_info;
     }
 
-    // Make time
-    function makeTime($string) {
-        if ($string < 3600) {
-            $string = sprintf("%02d:%02d", (int)($string / 60) % 60, $string % 60);
+    /**
+     * Format and show the time
+     *
+     * @param int $time
+     * @return string
+     */
+    public function makeTime(int $time): string
+    {
+        if ($time < 3600) {
+            return sprintf("%02d:%02d", (int)($time / 60) % 60, $time % 60);
         } else {
-            $string = sprintf("%02d:%02d:%02d", (int)($string / 3600) % 24, (int)($string / 60) % 60, $string % 60);
+            return sprintf("%02d:%02d:%02d", (int)($time / 3600) % 24, (int)($time / 60) % 60, $time % 60);
         }
-        return $string;
     }
 
-    // Format time into days and minutes
-    function formatTime($file_time) {
+    /**
+     * Format time into days and minutes
+     *
+     * @param int $file_time
+     * @return string
+     */
+    public function formatTime(int $file_time): string
+    {
         if ($file_time >= 86400) {
             $file_time = round((($file_time / 60) / 60) / 24, 1) . ' {@localization[days]}}';
         } elseif ($file_time >= 3600) {
@@ -98,46 +106,15 @@ trait Core {
         return $file_time;
     }
 
-    // Multibyte ucfirst by plemieux
-    function my_mb_ucfirst($str) {
-        $fc = mb_strtoupper(mb_substr($str, 0, 1));
-        return $fc.mb_substr($str, 1);
-    }
-
-    function utf_to_win($str) {
-        if (function_exists('mb_convert_encoding')) return mb_convert_encoding($str, 'windows-1251', 'utf-8');
-        if (function_exists('iconv')) return iconv('utf-8', 'windows-1251', $str);
-
-        $utf8win1251 = array("А" => "\xC0", "Б" => "\xC1", "В" => "\xC2", "Г" => "\xC3", "Д" => "\xC4", "Е" => "\xC5", "Ё" => "\xA8", "Ж" => "\xC6", "З" => "\xC7", "И" => "\xC8", "Й" => "\xC9", "К" => "\xCA", "Л" => "\xCB", "М" => "\xCC",
-            "Н" => "\xCD", "О" => "\xCE", "П" => "\xCF", "Р" => "\xD0", "С" => "\xD1", "Т" => "\xD2", "У" => "\xD3", "Ф" => "\xD4", "Х" => "\xD5", "Ц" => "\xD6", "Ч" => "\xD7", "Ш" => "\xD8", "Щ" => "\xD9", "Ъ" => "\xDA",
-            "Ы" => "\xDB", "Ь" => "\xDC", "Э" => "\xDD", "Ю" => "\xDE", "Я" => "\xDF", "а" => "\xE0", "б" => "\xE1", "в" => "\xE2", "г" => "\xE3", "д" => "\xE4", "е" => "\xE5", "ё" => "\xB8", "ж" => "\xE6", "з" => "\xE7",
-            "и" => "\xE8", "й" => "\xE9", "к" => "\xEA", "л" => "\xEB", "м" => "\xEC", "н" => "\xED", "о" => "\xEE", "п" => "\xEF", "р" => "\xF0", "с" => "\xF1", "т" => "\xF2", "у" => "\xF3", "ф" => "\xF4", "х" => "\xF5",
-            "ц" => "\xF6", "ч" => "\xF7", "ш" => "\xF8", "щ" => "\xF9", "ъ" => "\xFA", "ы" => "\xFB", "ь" => "\xFC", "э" => "\xFD", "ю" => "\xFE", "я" => "\xFF");
-
-        return strtr($str, $utf8win1251);
-    } 
-
-    function win_to_utf($str) {
-        if (function_exists('mb_convert_encoding')) return mb_convert_encoding($str, 'utf-8', 'windows-1251');
-        if (function_exists('iconv')) return iconv('windows-1251', 'utf-8', $str);
-
-        $win1251utf8 = array("\xC0" => "А", "\xC1" => "Б", "\xC2" => "В", "\xC3" => "Г", "\xC4" => "Д", "\xC5" => "Е", "\xA8" => "Ё", "\xC6" => "Ж", "\xC7" => "З", "\xC8" => "И", "\xC9" => "Й", "\xCA" => "К", "\xCB" => "Л", "\xCC" => "М",
-            "\xCD" => "Н", "\xCE" => "О", "\xCF" => "П", "\xD0" => "Р", "\xD1" => "С", "\xD2" => "Т", "\xD3" => "У", "\xD4" => "Ф", "\xD5" => "Х", "\xD6" => "Ц", "\xD7" => "Ч", "\xD8" => "Ш", "\xD9" => "Щ", "\xDA" => "Ъ",
-            "\xDB" => "Ы", "\xDC" => "Ь", "\xDD" => "Э", "\xDE" => "Ю", "\xDF" => "Я", "\xE0" => "а", "\xE1" => "б", "\xE2" => "в", "\xE3" => "г", "\xE4" => "д", "\xE5" => "е", "\xB8" => "ё", "\xE6" => "ж", "\xE7" => "з",
-            "\xE8" => "и", "\xE9" => "й", "\xEA" => "к", "\xEB" => "л", "\xEC" => "м", "\xED" => "н", "\xEE" => "о", "\xEF" => "п", "\xF0" => "р", "\xF1" => "с", "\xF2" => "т", "\xF3" => "у", "\xF4" => "ф", "\xF5" => "х",
-            "\xF6" => "ц", "\xF7" => "ч", "\xF8" => "ш", "\xF9" => "щ", "\xFA" => "ъ", "\xFB" => "ы", "\xFC" => "ь", "\xFD" => "э", "\xFE" => "ю", "\xFF" => "я");
-
-        return strtr($str, $win1251utf8);
-    }
-
     /**
-     * Make safe url for urlrewriting - link generating
-     * convert non-latin chars to latin and remove special
+     * Make safe url for url rewriting - link generating
+     * Convert non-latin chars to latin and remove special chars
      *
      * @param string $str
      * @return string
      */
-    function trans($str) {
+    function trans(string $str): string
+    {
         $sr_latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
         $sr_cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
 
@@ -195,20 +172,22 @@ trait Core {
         return $str;
     }
 
-    // remove unwanted characters from Unicode URL-s
-    function trans_unicode($text) {
+    /**
+     * Remove unwanted characters from Unicode URL-s
+     *
+     * @param string $text
+     * @return string
+     */
+    function translateUnicode(string $text): string
+    {
+        // Special chars
         $tr = array(
-
-        // special chars
         " " => "-", "." => "-", " / " => "-", "/" => "", "," => "", ":" => "", "'" => "", "\'" => "", "’" => "", "`" => "", "„" => "", "“" => "",
         ";" => "", "—"=>"", "<"=>"", ">"=>"",
         "”" => "", "´" => "", "~" => "", "&quot;" => "", "&#147;" => ""
-
         );
 
-        $text = mb_strtolower(strtr($text, $tr)); // other languages
-
-        return $text;
+        return mb_strtolower(strtr($text, $tr));
     }
 
     /**
@@ -216,9 +195,10 @@ trait Core {
      * 
      * @param string $string
      * @param string $replace
-     * @return string $string
+     * @return string
      */
-    function replaceNewLines($string, $replace = '') {
+    function replaceNewLines(string $string, string $replace = ''): string
+    {
         // convert to unix new lines
         $string = preg_replace("/\r\n/", "\n", $string); 
         // remove extra new lines
@@ -227,8 +207,14 @@ trait Core {
         return $string;
     }
 
-    // file size
-    function formatSize($file_size) {
+    /**
+     * Format file size
+     *
+     * @param int $file_size
+     * @return string
+     */
+    function formatSize(int $file_size): string
+    {
         if ($file_size >= 1073741824) {
             $file_size = round($file_size / 1073741824 * 100) / 100 . " GB";
         } elseif ($file_size >= 1048576) {
@@ -241,8 +227,14 @@ trait Core {
         return $file_size;
     }
 
-    // badword / anti spam function
-    function antiword($string) {
+    /**
+     * Bad-word and anti-spam filter
+     *
+     * @param string $string
+     * @return string
+     */
+    function antiword(string $string): string
+    {
         $words = file_get_contents(STORAGEDIR . "antiword.dat");
         $wordlist = explode("|", $words);
 
@@ -254,8 +246,14 @@ trait Core {
         return $string;
     }
 
-    // delete image links
-    function erase_img($image) {
+    /**
+     * Remove image links from the string
+     *
+     * @param string $image
+     * @return string
+     */
+    function eraseImage(string $image): string
+    {
         $image = preg_replace('#<img src="\.\./themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
         $image = preg_replace('#<img src="\.\./themes/images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
         $image = preg_replace('#<img src="(.*?)" alt="(.*?)>#', '', $image);
@@ -266,34 +264,37 @@ trait Core {
         return $image;
     }
 
-    function no_smiles($string) {
-        $string = preg_replace('#<img src="' . HOMEDIR . '/themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', ':$1', $string);
-        return $string;
-    }
-
-    // parse bb code
-    function badlink($link, $prefix) {
+    /**
+     * Method for getbbcode()
+     *
+     * @param string $link
+     * @param string $prefix
+     * @return int|null
+     */
+    private function badlink(string $link, string $prefix): ?int
+    {
         if ($prefix == "mailto:") {
             if (strpos($link, "@") === false || strpos($link, ".", (strpos($link, "@") + 2)) === false || substr_count($link, "@") > 1 || strpos($link, "@") == 0) {
                 return 1;
             } 
-        } 
+        }
         if (strpos($link, ".") == 0 || strpos($link, ".") == strlen($link) || (strpos($link, "/") < strpos($link, ".") && strpos($link, "/") !== false)) {
             return 1;
-        } 
+        }
+
+        return null;
     }
 
-    function setlinks($r, $prefix) {
-        $target = "";
+    private function setlinks(string $r, string $prefix): string
+    {
+        $target = '';
         if (substr($r, 0, strlen($prefix)) == $prefix) {
             $r = "\n" . $r;
-        } 
+        }
         $r = str_replace("<br />" . $prefix, "<br />\n" . $prefix, $r);
         $r = str_replace(" " . $prefix, " \n" . $prefix, $r);
 
-        /**
-         * Add target to links
-         */
+        // Add target to links
         if ($prefix != 'mailto:') {
             $target = ' target="_blank"';
         } else {
@@ -335,7 +336,8 @@ trait Core {
      * @param string $r
      * @return string
      */
-    function getbbcode($r) {
+    function getbbcode(string $r): string
+    {
         $r = str_replace("\r\n", '<br />', $r);
         $r = str_replace("[br]", "<br />", $r);
         $r = preg_replace('#\[b\](.*?)\[/b\]#si', '<b>\1</b>', $r);
@@ -373,24 +375,24 @@ trait Core {
             } 
         } 
         $r = str_replace("[url\n=", "[url=", $r); 
-        // //[url]
-        // /default url link setting
+        // [url]
+        // default url link setting
         $r = $this->setlinks($r, "http://");
         $r = $this->setlinks($r, "https://");
         $r = $this->setlinks($r, "ftp://");
         $r = $this->setlinks($r, "mailto:"); 
-        // //links
+        //links
         $r = trim($r);
 
         return $r;
     }
 
     /**
-     * Current opened URL cleaned for Facebook share, Twitter share, etc to prevent duplicated URL's
+     * Current opened URL cleaned for Facebook share, Twitter share, etc, to prevent duplicated URL's
      * 
      * @return string
      */
-    public function cleanPageUrl()
+    public function cleanPageUrl(): string
     {
         // Cleanup request
         $r = preg_replace('/&page=(\d+)/', '', CLEAN_REQUEST_URI);
@@ -417,7 +419,7 @@ trait Core {
      * @param string $text
      * @return bool
      */
-    public function isTextHtml($text)
+    public function isTextHtml(string $text): bool
     {
        $processed = htmlentities($text);
        if ($processed == $text) return false;
@@ -427,10 +429,10 @@ trait Core {
     /**
      * Leave only latin letters and numbers
      * 
-     * @param $string
-     * @return $string
+     * @param string $string
+     * @return string
      */
-    public function leaveLatinLettersNumbers($string)
+    public function leaveLatinLettersNumbers(string $string): string
     {
         return preg_replace('/[^A-Za-z0-9\-]/', '', $string);
     }
@@ -464,7 +466,8 @@ trait Core {
      * 
      * @return string
      */
-    public function generatePassword() {
+    public function generatePassword(): string
+    {
         $length = rand(10, 12);
         $salt = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
         $len = strlen($salt);
@@ -530,7 +533,7 @@ trait Core {
      *
      * @return string
      */
-    public function showOnline()
+    public function showOnline(): string
     {
         $online = $this->db->countRow('online');
         $registered = $this->db->countRow('online', "user > 0");
@@ -545,15 +548,14 @@ trait Core {
      *
      * @return string
      */
-    public function showCounter()
+    public function showCounter(): string
     {
         $counts = $this->db->selectData('counter');
 
-        $current_day = $counts['day'];
         $clicks_today = $counts['clicks_today'];
         $total_clicks = $counts['clicks_total'];
-        $visits_today = $counts['visits_today']; // visits today
-        $total_visits = $counts['visits_total']; // total visits
+        $visits_today = $counts['visits_today'];
+        $total_visits = $counts['visits_total'];
 
         $counter_configuration = $this->configuration('showCounter');
 
@@ -568,6 +570,8 @@ trait Core {
 
             return '<p class="site-counter">' . $info . '</p>';
         }
+
+        return '';
     }
 
     /**
@@ -609,9 +613,9 @@ trait Core {
     /**
      * Return preferred transfer protocol from site settings (https or http)
      * 
-     * @return str https://|http://
+     * @return string https://|http://
      */
-    public function transferProtocol()
+    public function transferProtocol(): string
     {
         if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
             if (!empty($_SERVER['HTTPS'])) {
@@ -633,7 +637,7 @@ trait Core {
      * 
      * @return string
      */
-    public function currentConnection()
+    public function currentConnection(): string
     {
         return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
     }
@@ -641,15 +645,17 @@ trait Core {
     /**
      * Explode url into array
      * 
-     * @return array $url
+     * @return array
      */
-    public function paramsFromUrl()
+    public function paramsFromUrl(): array
     {
         if (isset($_GET['url'])) {
             $url = $this->check(rtrim($_GET['url'], '/'));
             $url = explode('/', $url);
             return $url;
         }
+
+        return array();
     }
 
     /**
@@ -658,7 +664,7 @@ trait Core {
      * @param string $uri
      * @return string $clean_requri
      */
-    public function cleanRequestUri($uri)
+    public function cleanRequestUri(string $uri): string
     {
         $clean_requri = explode('&fb_action_ids', $uri)[0]; // facebook
         $clean_requri = explode('?fb_action_ids', $clean_requri)[0]; // facebook
@@ -670,15 +676,21 @@ trait Core {
     /**
      * Site address with connection protocol that is used for current connection
      * 
-     * @return str
+     * @return string
      */
-    public function websiteHomeAddress()
+    public function websiteHomeAddress(): string
     {
         return $this->transferProtocol() . $_SERVER['HTTP_HOST'];
     }
 
-    // generate meta tags "description" and "keywords"
-    function create_metatags($story) {
+    /**
+     * Generate meta tags description and keywords
+     *
+     * @param string $story
+     * @return array
+     */
+    function create_metatags(string $story): array
+    {
         $keyword_count = 10;
         $newarr = array ();
         $headers = array ();
@@ -701,19 +713,19 @@ trait Core {
         $arr = explode(" ", $story);
 
         foreach ($arr as $word) {
-            if (strlen($word) > 4) $newarr [] = $word;
-        } 
+            if (strlen($word) > 4) $newarr[] = $word;
+        }
 
-        $arr = array_count_values ($newarr);
-        arsort ($arr);
+        $arr = array_count_values($newarr);
+        arsort($arr);
 
         $arr = array_keys($arr);
 
-        $total = count ($arr);
+        $total = count($arr);
 
         $offset = 0;
 
-        $arr = array_slice ($arr, $offset, $keyword_count);
+        $arr = array_slice($arr, $offset, $keyword_count);
 
         $headers['keywords'] = implode(", ", $arr);
 
@@ -725,7 +737,7 @@ trait Core {
      * 
      * @return string|bool
      */
-    function detectBot()
+    function detectBot(): string|bool
     {
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
@@ -768,7 +780,7 @@ trait Core {
      * @param string $after
      * @return string
      */
-    public function homelink($before = '', $after = '')
+    public function homelink(string $before = '', string $after = ''): string
     {
         return $before . '<a href="' . HOMEDIR . '" class="btn btn-primary homepage">{@localization[home]}}</a>' . $after;
     }
@@ -782,7 +794,7 @@ trait Core {
      * @param string $after
      * @return string
      */
-    public function sitelink($href, $link_name, $before = '', $after = '')
+    public function sitelink(string $href, string $link_name, string $before = '', string $after = ''): string
     {
         return $before . '<a href="' . $href . '" class="btn btn-primary sitelink">' . $link_name . '</a>' . $after;
     }
@@ -794,7 +806,7 @@ trait Core {
      * @param bool $unchainged
      * @return array|string
      */
-    public function postAndGet($return_key = '', $unchainged = '')
+    public function postAndGet(string $return_key = '', bool $unchainged = false): array|string
     {
         $arrays = array_merge($_POST, $_GET);
 
@@ -807,7 +819,7 @@ trait Core {
         // Return filtered (checked) requested key
         if (!empty($return_key) && isset($arrays[$return_key])) return $this->check($arrays[$return_key]);
 
-        // Check all fields with Vavok:check()
+        // Check all fields with a check() method
         $return = array();
         foreach ($arrays as $key => $value) {
             $return[$key] = $this->check($value);
@@ -824,7 +836,7 @@ trait Core {
      *
      * @return string
      */
-    public function cleanDomain()
+    public function cleanDomain(): string
     {
         return str_replace('www.', '', $_SERVER['SERVER_NAME']);
     }
@@ -845,7 +857,7 @@ trait Core {
      * @param object $user_model
      * @return void
      */
-    public function cleanRegistrations($user_model)
+    public function cleanRegistrations($user_model): void
     {
         // Hours user have to confirm registration
         $confirmationHours = 24;
@@ -860,10 +872,10 @@ trait Core {
     /**
      * Head tags for all pages
      *
-     * @param string $page_data
+     * @param array $page_data
      * @return string
      */
-    public function pageHeadMetatags($page_data)
+    public function pageHeadMetatags(array $page_data): string
     {
         // Page title
         if (isset($page_data['tname'])) $title = $page_data['tname'];
@@ -882,11 +894,11 @@ trait Core {
     }
 
     /**
-     * Return cyrillic and lating letters in array
+     * Return cyrillic and latin letters in array
      * 
      * @return array
      */
-    private function cyrillicLatinLetters()
+    private function cyrillicLatinLetters(): array
     {
         $latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
         $cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
@@ -900,10 +912,9 @@ trait Core {
      * @param string $str
      * @return string
      */
-    public function cyrillicToLatin($str)
+    public function cyrillicToLatin(string $str): string
     {
-        $str = str_replace($this->cyrillicLatinLetters()['cyrillic'], $this->cyrillicLatinLetters()['latin'], $str);
-        return $str;
+        return str_replace($this->cyrillicLatinLetters()['cyrillic'], $this->cyrillicLatinLetters()['latin'], $str);
     }
 
     /**
@@ -912,9 +923,8 @@ trait Core {
      * @param string $str
      * @return string
      */
-    public function latinToCyrillic($str)
+    public function latinToCyrillic(string $str): string
     {
-        $str = str_replace($this->cyrillicLatinLetters()['latin'], $this->cyrillicLatinLetters()['cyrillic'], $str);
-        return $str;
+        return str_replace($this->cyrillicLatinLetters()['latin'], $this->cyrillicLatinLetters()['cyrillic'], $str);
     }
 }

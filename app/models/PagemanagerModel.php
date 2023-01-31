@@ -149,7 +149,7 @@ class PagemanagerModel extends BaseModel {
                 // remove unicode chars
                 $newfile = $this->trans($newfile);
             } else {
-                $newfile = $this->trans_unicode($newfile);
+                $newfile = $this->translateUnicode($newfile);
             }
 
             // page language
