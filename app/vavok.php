@@ -5,7 +5,7 @@
  */
 
 define('START_TIME', microtime(true));
-define('VERSION', '4.7');
+const VERSION = '4.7';
 
 // Base directory
 if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
@@ -29,6 +29,9 @@ if (file_exists(BASEDIR . '.env')) {
         // Get value
         if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
 
+        // Don't create empty constants for this names
+        if (($env_data[0] == 'STATIC_UPLOAD_URL' || $env_data[0] == 'STATIC_THEMES_URL') && empty($env_data[1])) continue;
+
         // Get and define constant name
         if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
     }
@@ -38,7 +41,7 @@ if (file_exists(BASEDIR . '.env')) {
 error_reporting(E_ALL);
 
 // Don't show errors in the production
-if (SITE_STAGE == 'prod') {
+if (defined('SITE_STAGE') && SITE_STAGE == 'prod') {
     // Don't display errors
     ini_set('display_errors', 0);
 
