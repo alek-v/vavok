@@ -18,7 +18,7 @@ abstract class BaseModel {
     public function __construct(protected Container $container)
     {
         $this->db = $this->container['db'];
-        $this->user = $container['user'];
-        $this->localization = $container['localization'];
+        $this->user = $this->container['user'];
+        $this->localization = $this->container['localization'];
     }
 }
