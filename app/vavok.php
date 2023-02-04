@@ -4,6 +4,8 @@
  * Site:   https://vavok.net
  */
 
+use App\Classes\Vavok;
+
 define('START_TIME', microtime(true));
 const VERSION = '4.7';
 
@@ -54,4 +56,4 @@ date_default_timezone_set('UTC');
 
 require BASEDIR . 'vendor/autoload.php';
 
-new App\Classes\Vavok();
+new Vavok;
