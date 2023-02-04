@@ -1,5 +1,20 @@
 # Changelog
 
+## Vavok v4.7 - 4.2.2023.
+
+    feat: Add new configuration options
+    feat: Add option to show blog posts in localization from the URL parameter
+    refactor: Update localization keys
+    style: Update default site theme
+    style: Use hyphen instead of underscore for stylization
+    style: Add theme color palette
+    build: Update Bootstrap version
+    build: Update dependencies to the latest versions
+    build: Add to composer.json required ext-mbstring extension
+    fix: Handle empty search result
+
+
+
 ## Vavok v4.6 - 13.12.2022.
 
     add: File .env_sample has been added
