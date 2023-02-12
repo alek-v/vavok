@@ -927,4 +927,19 @@ trait Core {
     {
         return str_replace($this->cyrillicLatinLetters()['latin'], $this->cyrillicLatinLetters()['cyrillic'], $str);
     }
+
+    /**
+     * Return error 404
+     * 
+     * @return array
+     */
+    public function handleNoPageError(): array
+    {
+        header("HTTP/1.1 404 Not Found");
+
+        return [
+            'tname' => 'Error 404',
+            'content' => '{@localization[page_or_file_not_found]}}'
+        ];    
+    }
 }

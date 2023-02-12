@@ -56,9 +56,8 @@ class Page extends BaseModel {
         $this_page = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
 
         // Handle when page doesn't exist
-        if ($this_page == false) {
-            $this_page = [];
-            $this_page['content'] = 'Error 404';
+        if (!$this_page) {
+            return $this->handleNoPageError();
         }
 
         // Page localization

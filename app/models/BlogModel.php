@@ -43,10 +43,14 @@ class BlogModel extends BaseModel {
                 $blog_page_data = $this->blog_page_data($params);
 
                 // Merge data with existing data
-                if (!empty($blog_page_data) && is_array($blog_page_data)) $this_page = array_merge($blog_page_data, $this_page);
+                if (!empty($blog_page_data) && is_array($blog_page_data)) {
+                    $this_page = array_merge($blog_page_data, $this_page);
+                }
 
                 // Redirect to blog main page if page does not exist
-                !empty($this->page_id) or $this->redirection(HOMEDIR . 'blog/');
+                if (empty($this->page_id)) {
+                    return $this->handleNoPageError();
+                }
 
                 // Update user's localization when page's language is different from current localization
                 $this->user->updatePageLocalization($this_page['lang']);
@@ -170,8 +174,7 @@ class BlogModel extends BaseModel {
 
                 // When there is no posts
                 if ($total_posts < 1) {
-                    $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is nothing here</p>';
-                    $this_page['content'] .= $this->sitelink( HOMEDIR . 'blog/', $this->localization->string('backtoblog'), '<p>', '</p>');
+                    $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is no blog posts yet.</p>';
 
                     return $this_page;
                 }

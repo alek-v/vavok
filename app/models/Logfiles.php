@@ -139,7 +139,7 @@ class Logfiles extends BaseModel {
         }
 
         if ($list == 401) {
-            $this_page['content'] .= '<p>{@localization[err401]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_401]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
@@ -147,7 +147,7 @@ class Logfiles extends BaseModel {
             $err = 'error401';
         }
         if ($list == 402) {
-            $this_page['content'] .= '<p>{@localization[err402]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_402]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
@@ -155,7 +155,7 @@ class Logfiles extends BaseModel {
             $err = 'error402';
         }
         if ($list == 403) {
-            $this_page['content'] .= '<p>{@localization[err403]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_403]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
@@ -163,7 +163,7 @@ class Logfiles extends BaseModel {
             $err = 'error403';
         }
         if ($list == 404) {
-            $this_page['content'] .= '<p>{@localization[err404]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_404]}}</p>';
 
             $this_page['content'] .= getLogNavigation($listNames);
 
@@ -171,7 +171,7 @@ class Logfiles extends BaseModel {
             $err = 'error404';
         }
         if ($list == 406) {
-            $this_page['content'] .= '<p>{@localization[err406]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_406]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
@@ -179,7 +179,7 @@ class Logfiles extends BaseModel {
             $err = 'error406';
         }
         if ($list == 500) {
-            $this_page['content'] .= '<p>{@localization[err500]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_500]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
@@ -187,7 +187,7 @@ class Logfiles extends BaseModel {
             $err = 'error500';
         }
         if ($list == 502) {
-            $this_page['content'] .= '<p>{@localization[err502]}}</p>';
+            $this_page['content'] .= '<p>{@localization[error_502]}}</p>';
         
             $this_page['content'] .= getLogNavigation($listNames);
         
