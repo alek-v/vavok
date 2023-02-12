@@ -94,6 +94,7 @@ $lang_home['updated'] = 'Ажурирано';
 $lang_home['timezone'] = 'Временска зона';
 $lang_home['settings'] = 'Подешавања';
 $lang_home['language'] = 'Језик';
+$lang_home['page_or_file_not_found'] = "Страница или фајл нису пронађени.";
 
 // cookie consent
 $lang_home['cookies'] = 'Колачићи.'; // Title

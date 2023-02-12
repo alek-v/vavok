@@ -38,32 +38,32 @@ class ErrorModel extends BaseModel {
         if (!isset($params[0])) $params[0] = '';
 
         if ($params[0] == 'error_401') {
-            $error_number_info = $this->localization->string('err401');
+            $error_number_info = $this->localization->string('error_401');
             $logdat = "datalog/error401.dat";
             $write = ':|:Error 401:|:' . $write_data;
         } elseif ($params[0] == 'error_402') {
-            $error_number_info =  $this->localization->string('err402');
+            $error_number_info =  $this->localization->string('error_402');
             $logdat = "datalog/error402.dat";
             $write = ':|:Error 402:|:' . $write_data;
         } elseif ($params[0] == 'error_403') {
-            $error_number_info = $this->localization->string('err403');
+            $error_number_info = $this->localization->string('error_403');
             $write = ':|:Error 403:|:' . $write_data;
             $logdat = "datalog/error403.dat";
         } elseif ($params[0] == 'error_404') {
-            $error_number_info = $this->localization->string('err404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $request_uri;
+            $error_number_info = $this->localization->string('error_404youtrytoop') . ' ' . $_SERVER['HTTP_HOST'] . $request_uri;
             $additional_error_info = $this->localization->string('filenotfound');
             $write = ':|:Error 404:|:' . $write_data;
             $logdat = 'datalog/error404.dat';
         } elseif ($params[0] == 'error_406') {
-            $error_number_info = $this->localization->string('err406descr') . ' ' . $_SERVER['HTTP_HOST'] . $request_uri . ' ' . $this->localization->string('notfonserver');
+            $error_number_info = $this->localization->string('error_406descr') . ' ' . $_SERVER['HTTP_HOST'] . $request_uri . ' ' . $this->localization->string('notfonserver');
             $write = ':|:406 - Not acceptable:|:' . $write_data;
             $logdat = "datalog/error406.dat";
         } elseif ($params[0] == 'error_500') {
-            $error_number_info = $this->localization->string('err500');
+            $error_number_info = $this->localization->string('error_500');
             $logdat = "datalog/error500.dat";
             $write = ':|:500 - Internal server error:|:' . $write_data;
         } elseif ($params[0] == 'error_502') {
-            $error_number_info = $this->localization->string('err502');
+            $error_number_info = $this->localization->string('error_502');
             $logdat = "datalog/error502.dat";
             $write = ':|:Error 502:|:' . $write_data;
         } else {
@@ -111,7 +111,7 @@ class ErrorModel extends BaseModel {
     public function error_404(array $params = []): array
     {
         // Send page status code
-        header("HTTP/1.0 404 Not Found");
+        header("HTTP/1.1 404 Not Found");
 
         // Log error
         $error_info = $this->log_error($params);

@@ -94,6 +94,7 @@ $lang_home['updated'] = 'Updated';
 $lang_home['timezone'] = 'Time zone';
 $lang_home['settings'] = 'Settings';
 $lang_home['language'] = 'Language';
+$lang_home['page_or_file_not_found'] = "Page or file not found.";
 
 // cookie consent
 $lang_home['cookies'] = 'Cookies.'; // Title
