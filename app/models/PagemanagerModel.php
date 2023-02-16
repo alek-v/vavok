@@ -70,7 +70,7 @@ class PagemanagerModel extends BaseModel {
             if (!$this->user->administrator(101)) $this->redirection("../?isset=ap_noaccess");
 
             // update header data
-            $this->writeDataFile('headmeta.dat', $text_files);
+            $this->writeDataFile('header_meta_tags.dat', $text_files);
 
             $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=mainmeta&isset=mp_editfiles');
         }
@@ -538,7 +538,7 @@ class PagemanagerModel extends BaseModel {
 
             $index_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
-            $headtags = trim(file_get_contents(STORAGEDIR . 'headmeta.dat'));
+            $headtags = trim(file_get_contents(STORAGEDIR . 'header_meta_tags.dat'));
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');

@@ -153,7 +153,7 @@ class Mailer {
      */
     public function emailSubscriptionOptions(): array
     {
-        $subs = json_decode(file_get_contents(STORAGEDIR . 'subnames.dat'), true);
+        $subs = json_decode(file_get_contents(STORAGEDIR . 'subscription_names.dat'), true);
 
         return $subs = !empty($subs) ? $subs : array();
     }
@@ -168,7 +168,7 @@ class Mailer {
     {
         $options = json_encode($options);
 
-        file_put_contents(STORAGEDIR . 'subnames.dat', $options);
+        file_put_contents(STORAGEDIR . 'subscription_names.dat', $options);
 
         return true;
     }

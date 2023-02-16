@@ -34,11 +34,11 @@ class AdminchatModel extends BaseModel {
             $text = $this->replaceNewLines($text);
 
             try {
-                $this->writeDataFile('adminchat.dat', $text . PHP_EOL, 1);
+                $this->writeDataFile('admin_chat.dat', $text . PHP_EOL, 1);
             } catch (FileException) {
                 // Try to handle the exception, make file writeable
                 try {
-                    $this->makeFileWriteable('adminchat.dat');
+                    $this->makeFileWriteable('admin_chat.dat');
                 } catch (FileException $e) {
                     // Stop the script and show error message
                     echo $e->getMessage();
@@ -47,7 +47,7 @@ class AdminchatModel extends BaseModel {
             }
 
             // Limit number of messages in the file
-            $this->limitFileLines('adminchat.dat', 10);
+            $this->limitFileLines('admin_chat.dat', 10);
 
             header('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=addon');
             exit;
@@ -56,7 +56,7 @@ class AdminchatModel extends BaseModel {
         // empty admin chat
         if ($this->postAndGet('action') == 'clear_admin_chat') {
             if ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102) {
-                $this->clearFile(STORAGEDIR . 'adminchat.dat');
+                $this->clearFile(STORAGEDIR . 'admin_chat.dat');
 
                 header('Location: ' . HOMEDIR . 'adminpanel/adminchat/?isset=mp_admindelchat');
                 exit;
@@ -74,7 +74,7 @@ class AdminchatModel extends BaseModel {
         
             $data['content'] .='<input type="submit" value="{@localization[save]}}" /></form><hr>';
         
-            $file = $this->getDataFile('adminchat.dat');
+            $file = $this->getDataFile('admin_chat.dat');
             $file = array_reverse($file);
             $total = count($file);
 

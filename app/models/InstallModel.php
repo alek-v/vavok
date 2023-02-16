@@ -42,6 +42,9 @@ class InstallModel extends BaseModel {
         $this_page['tname'] = 'Install';
         $this_page['content'] = '';
 
+        // Create log files
+        $this->createLogFiles();
+
         // Import database tables into the database
         if ($this->table_exists == false) {
             // Name of the file
@@ -181,5 +184,25 @@ class InstallModel extends BaseModel {
         $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <strong><a href="../users/login">Login</a></strong></p>';
 
         return $this_page;
+    }
+
+    /**
+     * Create log files
+     */
+    private function createLogFiles()
+    {
+        touch(STORAGEDIR . 'admin_chat.dat');
+        touch(STORAGEDIR . 'bad_words.dat');
+        touch(STORAGEDIR . 'header_meta_tags.dat');
+        touch(STORAGEDIR . 'subscription_names.dat');
+        touch(STORAGEDIR . 'dataconfig/gallery.dat');
+        touch(STORAGEDIR . 'datalog/error.dat');
+        touch(STORAGEDIR . 'datalog/error401.dat');
+        touch(STORAGEDIR . 'datalog/error402.dat');
+        touch(STORAGEDIR . 'datalog/error403.dat');
+        touch(STORAGEDIR . 'datalog/error404.dat');
+        touch(STORAGEDIR . 'datalog/error406.dat');
+        touch(STORAGEDIR . 'datalog/error500.dat');
+        touch(STORAGEDIR . 'datalog/error502.dat');
     }
 }

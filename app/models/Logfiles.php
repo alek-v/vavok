@@ -29,9 +29,7 @@ class Logfiles extends BaseModel {
             $this->clearFile(STORAGEDIR . "datalog/error406.dat");
             $this->clearFile(STORAGEDIR . "datalog/error500.dat");
             $this->clearFile(STORAGEDIR . "datalog/error502.dat");
-            $this->clearFile(STORAGEDIR . "datalog/dberror.dat");
             $this->clearFile(STORAGEDIR . "datalog/error.dat");
-            $this->clearFile(STORAGEDIR . "datalog/ban.dat");
         
             $this->redirection(HOMEDIR . 'adminpanel/logfiles?isset=mp_dellogs');
         }

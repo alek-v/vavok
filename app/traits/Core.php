@@ -235,7 +235,7 @@ trait Core {
      */
     function antiword(string $string): string
     {
-        $words = file_get_contents(STORAGEDIR . "antiword.dat");
+        $words = file_get_contents(STORAGEDIR . "bad_words.dat");
         $wordlist = explode("|", $words);
 
         foreach($wordlist as $value) {
@@ -881,7 +881,7 @@ trait Core {
         if (isset($page_data['tname'])) $title = $page_data['tname'];
 
         // Tags for all pages at the website
-        $tags = file_get_contents(STORAGEDIR . 'headmeta.dat');
+        $tags = file_get_contents(STORAGEDIR . 'header_meta_tags.dat');
 
         // Tags for this page only
         if (isset($page_data['headt'])) $tags .= $page_data['headt'];

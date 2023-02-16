@@ -68,7 +68,6 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscriptions', '{@localization[subscriptions]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/email_queue', '{@localization[add_to_email_queue]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/subscription_options', '{@localization[subscription_options]}}');
-                $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban', '{@localization[ipbanp]}}' . ' (' . $this->linesInFile(STORAGEDIR . 'ban.dat') . ')');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles', '{@localization[logcheck]}}');
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/sitemap', '{@localization[sitemap_generator]}}');
             }
@@ -87,16 +86,16 @@ class AdminpanelModel extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'opttbl' && $this->user->administrator(101)) {
-            $alltables = mysqli_query("SHOW TABLES");
+            $all_tables = mysqli_query("SHOW TABLES");
 
-            while ($table = mysqli_fetch_assoc($alltables)) {
+            while ($table = mysqli_fetch_assoc($all_tables)) {
                 foreach ($table as $db => $tablename) {
-                    $sql = "OPTIMIZE TABLE `" . $tablename . "`";
+                    $sql = "OPTIMIZE TABLE `{$tablename}`";
                     $this->db->query($sql);
                 }
             }
 
-            $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // todo: update lang
+            $data['content'] .= '<p><img src="/themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // todo: update lang
         }
 
         if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', '{@localization[adminpanel]}}', '<p>', '</p>');
@@ -115,7 +114,9 @@ class AdminpanelModel extends BaseModel {
         $data['tname'] = '{@localization[settings]}}';
         $data['content'] = '';
 
-        if (!$this->user->administrator(101)) $this->redirection('../pages/error.php?error=auth');
+        if (!$this->user->administrator(101)) {
+            $this->redirection('../pages/error.php?error=auth');
+        }
 
         $site_configuration = new Config($this->container);
         
@@ -1244,15 +1245,9 @@ class AdminpanelModel extends BaseModel {
             $udd5 = !empty($this->postAndGet('udd5')) ? $this->postAndGet('udd5') : '';
             $udd6 = !empty($this->postAndGet('udd6')) ? $this->postAndGet('udd6') : '';
             $udd7 = !empty($this->postAndGet('udd7')) ? $this->postAndGet('udd7') : ''; // access level
-            $udd8 = !empty($this->postAndGet('udd8')) ? $this->postAndGet('udd8') : '';
-            $udd9 = !empty($this->postAndGet('udd9')) ? $this->postAndGet('udd9') : '';
-            $udd10 = !empty($this->postAndGet('udd10')) ? $this->postAndGet('udd10') : '';
-            $udd11 = !empty($this->postAndGet('udd11')) ? $this->postAndGet('udd11') : '';
-            $udd12 = !empty($this->postAndGet('udd12')) ? $this->postAndGet('udd12') : '';
             $udd13 = !empty($this->postAndGet('udd13')) ? $this->postAndGet('udd13') : '';
             $udd29 = !empty($this->postAndGet('udd29')) ? $this->postAndGet('udd29') : '';
             $udd40 = !empty($this->postAndGet('udd40')) ? $this->postAndGet('udd40') : '';
-            $udd43 = !empty($this->postAndGet('udd43')) ? $this->postAndGet('udd43') : '';
 
             if ($this->validateEmail($udd4)) {
                 if (empty($udd5) || $this->validateUrl($udd5) === true) {
@@ -1319,113 +1314,6 @@ class AdminpanelModel extends BaseModel {
             }
         }
         
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
-
-        return $data;
-    }
-
-    /**
-     * IP ban
-     */
-    public function ipban()
-    {
-        $data['tname'] = 'IP Ban';
-        $data['content'] = '';
-
-        if (!$this->user->administrator()) $this->redirection('../?auth_error');
-
-        if ($this->postAndGet('action') == 'zaban' && $this->user->administrator()) {
-            $ips = $this->check($this->postAndGet('ips'));
-        
-            if (!empty($ips) && substr_count($ips, '.') == 3) $this->writeDataFile('ban.dat', "|$ips|" . PHP_EOL, 1);
-        
-            $data['notification'] = $this->showSuccess('IP has been banned');
-        }
-
-        if ($this->postAndGet('action') == 'razban' && $this->user->administrator()) {
-            if (!empty($this->postAndGet('id')) || $this->postAndGet('id') == 0) $id = $this->postAndGet('id');
-        
-            if (isset($id)) {
-                $file = $this->getDataFile('ban.dat');
-                unset($file[$id]);
-        
-                $file_data = '';
-                foreach ($file as $key => $value) {
-                    $file_data .= $value;
-                }
-        
-                $this->writeDataFile('ban.dat', $file_data);
-            }
-
-            // Notification
-            // Update localization
-            $data['notification'] = $this->showSuccess('IP ban has been removed');
-        }
-
-        if ($this->postAndGet('action') == 'delallip' && ($_SESSION['permissions'] == 101 or $_SESSION['permissions'] == 102)) {
-            $this->clearFile(STORAGEDIR . 'ban.dat');
-
-            $this->redirection(HOMEDIR . 'adminpanel/ipban');
-        }
-
-        $file = $this->getDataFile('ban.dat');
-        $total = count($file);
-
-        $navigation = new Navigation(10, $total, HOMEDIR . 'adminpanel/ipban/?'); // start navigation
-
-        $limit_start = $navigation->start()['start']; // starting point
-        
-        if ($total < $limit_start + 10) {
-            $end = $total;
-        } else {
-            $end = $limit_start + 10;
-        }
-        
-        for ($i = $limit_start; $i < $end; $i++) {
-            $file = $this->getDataFile('ban.dat');
-            $file = array_reverse($file);
-            $file_data = explode("|", $file[$i]);
-            $i2 = round($i + 1);
-        
-            $num = $total - $i-1;
-        
-            $data['content'] .= $i2 . '. ' . $file_data[1] . ' <br>' . $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=razban&id=' . $num, '{@localization[delban]}}') . '<hr>';
-        } 
-
-        if ($total < 1) {
-            $data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('emptylist') . '</p>';
-        }
-
-        $data['content'] .= $navigation->getNavigation();
-
-        $data['content'] .= '<hr>';
-
-        $form = $this->container['parse_page'];
-        $form->load('forms/form');
-        $form->set('form_method', 'post');
-        $form->set('form_action', HOMEDIR . 'adminpanel/ipban/?action=zaban');
-
-        $input = $this->container['parse_page'];
-        $input->load('forms/input');
-        $input->set('label_for', 'ips');
-        $input->set('label_value', '{@localization[iptoblock]}}');
-        $input->set('input_name', 'ips');
-        $input->set('input_id', 'ips');
-
-        $form->set('localization[save]', '{@localization[confirm]}}');
-        $form->set('fields', $input->output());
-        $data['content'] .= $form->output();
-
-        $data['content'] .= '<hr>';
-
-        $data['content'] .= '<p>{@localization[ipbanexam]}}</p>';
-        $data['content'] .= '<p>{@localization[allbanips]}}: ' . $total . '</p>';
-
-        if ($total > 1) {
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/ipban/?action=delallip', '{@localization[dellist]}}', '<p>', '</p>');
-        }
-
         $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
         $data['content'] .= $this->homelink() . '</p>';
 
