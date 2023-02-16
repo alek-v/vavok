@@ -2,7 +2,7 @@
 
 $lang_user['profile'] = "Profile";
 $lang_user['online'] = "Online";
-$lang_user['lastvisit'] = "Last visit";
+$lang_user['last_visit'] = "Last visit";
 $lang_user['notconfirmedreg'] = "This user has not confirmed registration";
 $lang_user['userbanned'] = "User is banned";
 $lang_user['bantimeleft'] = "Time until ban expires";

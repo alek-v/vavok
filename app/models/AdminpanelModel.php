@@ -928,9 +928,9 @@ class AdminpanelModel extends BaseModel {
         $end = $navigation->start()['end']; // ending point
 
         if ($num_items > 0) {
-            foreach ($this->db->query("SELECT id, name, perm FROM vavok_users WHERE perm='101' OR perm='102' OR perm='103' OR perm='105' OR perm='106' ORDER BY perm LIMIT $limit_start, $items_per_page") as $item) {
-                if ($item['perm'] == 101 or $item['perm'] == 102 or $item['perm'] == 103 or $item['perm'] == 105 or $item['perm'] == 106) {
-                    $lnk = '<div class="a">' . $this->sitelink(HOMEDIR . 'users/u/' . $item['id'], $item['name']) . ' - ' . $this->user->userStatus($item['perm']) . '</div>';
+            foreach ($this->db->query("SELECT id, name, access_permission FROM vavok_users WHERE access_permission='101' OR access_permission='102' OR access_permission='103' OR access_permission='105' OR access_permission='106' ORDER BY access_permission LIMIT $limit_start, $items_per_page") as $item) {
+                if ($item['access_permission'] == 101 or $item['access_permission'] == 102 or $item['access_permission'] == 103 or $item['access_permission'] == 105 or $item['access_permission'] == 106) {
+                    $lnk = '<div class="a">' . $this->sitelink(HOMEDIR . 'users/u/' . $item['id'], $item['name']) . ' - ' . $this->user->userStatus($item['access_permission']) . '</div>';
                     $data['content'] .= $lnk . '<br>';
                 }
             }
@@ -952,7 +952,7 @@ class AdminpanelModel extends BaseModel {
         if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
 
         if ($this->postAndGet('action') == 'conf' && !empty($this->postAndGet('usr'))) {
-            $fields = array('regche', 'regkey');
+            $fields = array('registration_activated', 'registration_key');
             $values = array('', '');
             $this->user->updateUser($fields, $values, $this->postAndGet('usr'));
 
@@ -983,19 +983,19 @@ class AdminpanelModel extends BaseModel {
                 $limit_start = 0;
             }
 
-            $sql = "SELECT uid, regche, regdate, lastvst FROM vavok_profil WHERE regche='1' OR regche='2' ORDER BY regdate LIMIT $limit_start, $items_per_page";
+            $sql = "SELECT uid, registration_activated, registration_date, lastvst FROM vavok_profil WHERE registration_activated='1' OR registration_activated='2' ORDER BY registration_date LIMIT $limit_start, $items_per_page";
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
-                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->correctDate($item['regdate'], 'd.m.Y. / H:i') . ')';
-                    if ($item['regche'] == 1) {
+                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->correctDate($item['registration_date'], 'd.m.Y. / H:i') . ')';
+                    if ($item['registration_activated'] == 1) {
                         $bt = $this->localization->string('notconfirmed') . '!';
                         $bym = $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg/?action=conf&usr=' . $item['uid'], '{@localization[confirms]}}');
                     } else {
                         $bt = 'Confirmed';
                     }
 
-                    $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->userInfo('ipadd', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->userInfo('browser', $item['uid']) . ' ' . $bym . '</p>';
+                    $data['content'] .= '<p>' . $lnk . ' IP: ' . $this->user->userInfo('ip_address', $item['uid']) . ' ' . $this->localization->string('browser') . ': ' . $this->user->userInfo('browser', $item['uid']) . ' ' . $bym . '</p>';
                 }
             } else {
                 $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('no_unconfirmed_registrations') . '!</p>';
@@ -1076,7 +1076,7 @@ class AdminpanelModel extends BaseModel {
                     exit;
                 }
 
-                if (($this->user->showUsername() != $this->configuration('adminNick')) && ($this->user->userInfo('perm', $users_id) == 101 || $this->user->userInfo('perm', $users_id) == 102 || $this->user->userInfo('perm', $users_id) == 103 || $this->user->userInfo('perm', $users_id) == 105) && $this->user->showUsername() != $user) {
+                if (($this->user->showUsername() != $this->configuration('adminNick')) && ($this->user->userInfo('access_permission', $users_id) == 101 || $this->user->userInfo('access_permission', $users_id) == 102 || $this->user->userInfo('access_permission', $users_id) == 103 || $this->user->userInfo('access_permission', $users_id) == 105) && $this->user->showUsername() != $user) {
                     $data['content'] .= '<br>{@localization[noauthtoban]}!<br>';
                     return $data;
                     exit;
@@ -1088,14 +1088,14 @@ class AdminpanelModel extends BaseModel {
 
                 if ($this->user->userInfo('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
         
-                if ($this->user->userInfo('regche', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
+                if ($this->user->userInfo('registration_activated', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
         
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
                 $form->set('form_action', HOMEDIR . 'adminpanel/users/?action=upgrade&users=' . $user);
         
-                $userx_access = (int)$this->user->userInfo('perm', $users_id);
+                $userx_access = (int)$this->user->userInfo('access_permission', $users_id);
         
                 if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration('adminNick')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
@@ -1171,7 +1171,7 @@ class AdminpanelModel extends BaseModel {
                 $udd29->set('label_value', '{@localization[name]}}');
                 $udd29->set('input_id', 'udd29');
                 $udd29->set('input_name', 'udd29');
-                $udd29->set('input_value', $this->user->userInfo('firstname', $users_id));
+                $udd29->set('input_value', $this->user->userInfo('first_name', $users_id));
         
                 $udd40 = $this->container['parse_page'];
                 $udd40->load('forms/input');
@@ -1199,22 +1199,22 @@ class AdminpanelModel extends BaseModel {
                 $allban->set('label_for', 'allban');
                 $allban->set('label_value', '{@localization[numbbans]}}');
                 $allban->set('input_id', 'allban');
-                $allban->set('input_placeholder', (int)$this->user->userInfo('allban', $users_id));
-        
+                $allban->set('input_placeholder', (int)$this->user->userInfo('all_bans', $users_id));
+
                 $lastvst = $this->container['parse_page'];
                 $lastvst->load('forms/input_readonly');
                 $lastvst->set('label_for', 'lastvst');
                 $lastvst->set('label_value', '{@localization[lastvst]}}');
                 $lastvst->set('input_id', 'lastvst');
-                $lastvst->set('input_placeholder', $this->correctDate($this->user->userInfo('lastvisit', $users_id), 'j.m.Y. / H:i'));
-        
+                $lastvst->set('input_placeholder', $this->correctDate($this->user->userInfo('last_visit', $users_id), 'j.m.Y. / H:i'));
+
                 $ip = $this->container['parse_page'];
                 $ip->load('forms/input_readonly');
                 $ip->set('label_for', 'ip');
                 $ip->set('label_value', 'IP');
                 $ip->set('input_id', 'ip');
-                $ip->set('input_placeholder', $this->user->userInfo('ipaddress', $users_id));
-        
+                $ip->set('input_placeholder', $this->user->userInfo('ip_address', $users_id));
+
                 $form->set('fields', $form->merge(array($udd7, $udd1, $udd2, $udd3, $udd4, $udd5, $udd13, $udd29, $udd40, $subscribed, $allban, $lastvst, $ip)));
                 $data['content'] .= $form->output();
         
@@ -1226,7 +1226,7 @@ class AdminpanelModel extends BaseModel {
                 if (file_exists('specperm.php')) {
                     $data['content'] .= $this->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
                 }
-        
+
                 $data['content'] .= '</p>';
             } else {
                 $data['content'] .= $this->localization->string('user_does_not_exist') . '!';
@@ -1263,25 +1263,25 @@ class AdminpanelModel extends BaseModel {
                         }
 
                         if (!empty($udd1)) $newpass = $this->user->passwordEncrypt($udd1);
-        
+
                         // Update password
                         if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
-        
+
                         // Update default access permissions
-                        if ($udd7 != $this->user->userInfo('perm', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
-        
+                        if ($udd7 != $this->user->userInfo('access_permission', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
+
                         // Update data
                         $this->user->updateUser(
-                            array('city', 'about', 'email', 'site', 'rname', 'perstat', 'browsers'),
+                            array('city', 'about', 'email', 'site', 'first_name', 'personal_status', 'browsers'),
                             array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
                         );
-        
+
                         $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
-        
+
                         if (!empty($udd1)) {
                             $data['content'] .= '<font color=red>{@localization[passchanged]}}: ' . $udd1 . '</font> <br>';
                         }
-        
+
                         $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
                     } else {
                         $data['content'] .= $this->localization->string('user_does_not_exist') . '!<br>';
@@ -1307,7 +1307,7 @@ class AdminpanelModel extends BaseModel {
         // delete user
         if ($this->postAndGet('action') == 'deluser') {
             if ($user != $this->configuration('adminNick')) {
-                if ($this->user->userInfo('perm', $users_id) < 101 || $this->user->userInfo('perm', $users_id) > 105) {
+                if ($this->user->userInfo('access_permission', $users_id) < 101 || $this->user->userInfo('access_permission', $users_id) > 105) {
                     $this->user->deleteUser($user);
                     $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';
         

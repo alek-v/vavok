@@ -328,7 +328,7 @@ class UsersModel extends BaseModel {
         if (empty($recipient_id)) $recipient_id = $this->user->idFromEmail($recipient_mail);
 
         // Check if user really need to confirm registration
-        if ($this->user->userInfo('regche', $recipient_id) != 1) {
+        if ($this->user->userInfo('registration_activated', $recipient_id) != 1) {
             $data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
 
             return $data;
@@ -680,7 +680,7 @@ class UsersModel extends BaseModel {
 
             // update changes
             $fields = array();
-            $fields[] = 'ipadd';
+            $fields[] = 'ip_address';
             $fields[] = 'timezone';
 
             $values = array();
@@ -695,9 +695,9 @@ class UsersModel extends BaseModel {
 
             // update email notificatoins
             $fields = array();
-            $fields[] = 'subscri';
-            $fields[] = 'newscod';
-            $fields[] = 'lastvst';
+            $fields[] = 'subscribed';
+            $fields[] = 'subscription_code';
+            $fields[] = 'last_visit';
 
             $values = array();
             $values[] = $subnews;
@@ -814,10 +814,10 @@ class UsersModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection('../');
 
         // Ban description
-        $bandesc = $this->user->userInfo('bandesc');
+        $bandesc = $this->user->userInfo('ban_description');
 
         // Ban time
-        $time_ban = round($this->user->userInfo('bantime') - time());
+        $time_ban = round($this->user->userInfo('ban_time') - time());
 
         if ($time_ban > 0) {
             $data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
@@ -825,7 +825,7 @@ class UsersModel extends BaseModel {
 
             $data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
 
-            $data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->userInfo('allban') . '</b><br>';
+            $data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->userInfo('all_bans') . '</b><br>';
             $data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
 
             // Remove session - logout user
@@ -838,7 +838,7 @@ class UsersModel extends BaseModel {
             }
         
             $this->user->updateUser('banned', 0);
-            $this->user->updateUser(array('bantime', 'bandesc'), array('', ''));
+            $this->user->updateUser(array('ban_time', 'ban_description'), array('', ''));
         }
 
         $data['content'] .= $this->homelink('<p>', '</p>');
@@ -901,15 +901,15 @@ class UsersModel extends BaseModel {
         $showPage->set('user-online', $this->user->userOnline($uz));
 
         // Message if user need to confirm registration
-        if ($this->user->userInfo('regche', $users_id) == 1) $showPage->set('regCheck', '<b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '!</font></b><br>');
+        if ($this->user->userInfo('registration_activated', $users_id) == 1) $showPage->set('regCheck', '<b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '!</font></b><br>');
 
-        if ($this->user->userInfo('banned', $users_id) == 1 && $this->user->userInfo('bantime', $users_id) > time()) {
+        if ($this->user->userInfo('banned', $users_id) == 1 && $this->user->userInfo('ban_time', $users_id) > time()) {
             $profileBanned = $this->container['parse_page'];
             $profileBanned->load('users/user-profile/banned');
             $profileBanned->set('banned', $this->localization->string('userbanned') . '!');
-            $time_ban = round($this->user->userInfo('bantime', $users_id) - time());
+            $time_ban = round($this->user->userInfo('ban_time', $users_id) - time());
             $profileBanned->set('timeLeft', $this->localization->string('bantimeleft') . ': ' . formatTime($time_ban));
-            $profileBanned->set('reason', $this->localization->string('reason') . ': ' . $this->user->userInfo('bandesc', $users_id));
+            $profileBanned->set('reason', $this->localization->string('reason') . ': ' . $this->user->userInfo('ban_description', $users_id));
             $showPage->set('banned', $profileBanned->output());
         }
 
@@ -925,10 +925,10 @@ class UsersModel extends BaseModel {
         $showPage->set('sex', $this->localization->string('sex'));
 
         // First name
-        if (!empty($this->user->userInfo('firstname', $users_id))) $showPage->set('firstname', $this->user->userInfo('firstname', $users_id));
+        if (!empty($this->user->userInfo('first_name', $users_id))) $showPage->set('first_name', $this->user->userInfo('first_name', $users_id));
 
         // Last name
-        if (!empty($this->user->userInfo('lastname', $users_id))) $showPage->set('lastname', $this->user->userInfo('lastname', $users_id));
+        if (!empty($this->user->userInfo('last_name', $users_id))) $showPage->set('last_name', $this->user->userInfo('last_name', $users_id));
 
         // User's gender
         if ($this->user->userInfo('gender', $users_id) == 'N' or $this->user->userInfo('gender', $users_id) == 'n' || empty($this->user->userInfo('gender', $users_id))) {
@@ -955,16 +955,16 @@ class UsersModel extends BaseModel {
         if (!empty($this->user->userInfo('site', $users_id)) && $this->user->userInfo('site', $users_id) != 'http://' && $this->user->userInfo('site', $users_id) != 'https://') $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->userInfo('site', $users_id)) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a><br>');
 
         // Registration date
-        if (!empty($this->user->userInfo('regdate', $users_id))) $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('regdate', $users_id)), 'd.m.Y.') . '<br>');
+        if (!empty($this->user->userInfo('registration_date', $users_id))) $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), 'd.m.Y.') . '<br>');
 
         // Last visit
         $timezone = $this->user->userAuthenticated() ? $this->user->userInfo('timezone') : $this->configuration('timezone');
-        $showPage->set('lastVisit', $this->localization->string('lastvisit') . ': ' . $this->correctDate($this->user->userInfo('lastvisit', $users_id), 'd.m.Y. / H:i', $timezone, true));
+        $showPage->set('last_visit', $this->localization->string('last_visit') . ': ' . $this->correctDate($this->user->userInfo('last_visit', $users_id), 'd.m.Y. / H:i', $timezone, true));
 
         if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) {
             $ipAddress = $this->container['parse_page'];
             $ipAddress->load('users/user-profile/ip-address');
-            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $this->check($this->user->userInfo('ipaddress', $users_id)) . '" target="_blank">'  . $this->check($this->user->userInfo('ipaddress', $users_id)) . '</a>');
+            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $this->check($this->user->userInfo('ip_address', $users_id)) . '" target="_blank">'  . $this->check($this->user->userInfo('ip_address', $users_id)) . '</a>');
             $showPage->set('ip-address', $ipAddress->output());
         }
 

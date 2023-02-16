@@ -118,7 +118,7 @@ class Page extends BaseModel {
         if ($num_items > 0) {
             foreach ($this->db->query("SELECT id, name FROM vavok_users ORDER BY name LIMIT $limit_start, $items_per_page") as $item) {
                 $data['content'] .= '<div class="a">';
-                $data['content'] .= '<a href="' . HOMEDIR . 'users/u/' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $this->correctDate($this->user->userInfo('regdate', $item['id']), 'd.m.Y.'); // update lang
+                $data['content'] .= '<a href="' . HOMEDIR . 'users/u/' . $item['id'] . '">' . $item['name'] . '</a> - joined: ' . $this->correctDate($this->user->userInfo('registration_date', $item['id']), 'd.m.Y.'); // update lang
                 $data['content'] .= '</div>';
             }
         }

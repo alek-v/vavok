@@ -45,7 +45,7 @@ class InstallModel extends BaseModel {
         // Import database tables into the database
         if ($this->table_exists == false) {
             // Name of the file
-            $filename = APPDIR . 'include/mysql/db.sql';
+            $filename = APPDIR . 'database/sql/db.sql';
             // Temporary variable, used to store current query
             $templine = '';
             // Read in entire file
@@ -104,21 +104,25 @@ class InstallModel extends BaseModel {
 
             $validation_error = 1;
         }
+
         if ($str1 < 2 || $str2 < 7) {
             $this_page['content'] .= '<p><b>Your username or your password are too short</b></p>';
 
             $validation_error = 1;
         }
+
         if ($password !== $password2) {
             $this_page['content'] .= '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
 
             $validation_error = 1;
         }
+
         if (!$this->validateEmail($email)) {
             $this_page['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
 
             $validation_error = 1;
         }
+
         if (!$this->validateUrl($osite)) {
             $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
 
@@ -171,10 +175,10 @@ class InstallModel extends BaseModel {
         // Insert data into the database
         $this->user->register($name, $password, 0, '', 'default', $email); // register user
         $user_id = $this->user->getIdFromNick($name);
-        $this->db->update('vavok_users', 'perm', 101, "id='" . $user_id . "'");
+        $this->db->update('vavok_users', 'access_permission', 101, "id='{$user_id}'");
 
-        $this_page['content'] .= '<p>Installation has been completed successfully<br></p>';
-        $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <b><a href="../users/login">Login</a></b></p>';
+        $this_page['content'] .= '<p>Installation has been completed successfully</p>';
+        $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <strong><a href="../users/login">Login</a></strong></p>';
 
         return $this_page;
     }

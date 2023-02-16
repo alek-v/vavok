@@ -22,7 +22,7 @@ class Subscription extends BaseModel {
             $users_id = $this->check($this->postAndGet('users'));
 
             if (!empty($users_id)) {
-                $fields = array('subscri', 'newscod');
+                $fields = array('subscribed', 'subscription_code');
                 $values = array('', '');
                 $this->user->updateUser($fields, $values, $users_id);
 

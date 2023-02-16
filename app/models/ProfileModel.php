@@ -1,6 +1,7 @@
 <?php
 
 use App\Classes\BaseModel;
+use App\Classes\Mailer;
 use App\Traits\Validations;
 use App\Traits\Notifications;
 
@@ -28,31 +29,25 @@ class ProfileModel extends BaseModel {
         $form->set('form_method', 'post');
         $form->set('form_action', HOMEDIR . 'profile/save');
 
-        /**
-         * Name
-         */
+        // Name
         $my_name = $this->container['parse_page'];
         $my_name->load('forms/input');
         $my_name->set('label_for', 'my_name');
         $my_name->set('label_value', $this->localization->string('name'));
         $my_name->set('input_id', 'my_name');
         $my_name->set('input_name', 'my_name');
-        $my_name->set('input_value', $this->user->userInfo('firstname'));
+        $my_name->set('input_value', $this->user->userInfo('first_name'));
 
-        /**
-         * Last name
-         */
+        // Last name
         $surname = $this->container['parse_page'];
         $surname->load('forms/input');
         $surname->set('label_for', 'surname');
-        $surname->set('label_value', $this->localization->string('surname'));
+        $surname->set('label_value', $this->localization->string('last_name'));
         $surname->set('input_id', 'surname');
         $surname->set('input_name', 'surname');
-        $surname->set('input_value', $this->user->userInfo('lastname'));
+        $surname->set('input_value', $this->user->userInfo('last_name'));
 
-        /**
-         * City
-         */
+        // City
         $otkel = $this->container['parse_page'];
         $otkel->load('forms/input');
         $otkel->set('label_for', 'otkel');
@@ -61,9 +56,7 @@ class ProfileModel extends BaseModel {
         $otkel->set('input_name', 'otkel');
         $otkel->set('input_value', $this->user->userInfo('city'));
 
-        /**
-         * Street
-         */
+        // Street
         $street = $this->container['parse_page'];
         $street->load('forms/input');
         $street->set('label_for', 'street');
@@ -72,9 +65,7 @@ class ProfileModel extends BaseModel {
         $street->set('input_name', 'street');
         $street->set('input_value', $this->user->userInfo('address'));
 
-        /**
-         * Postal code
-         */
+        // Postal code
         $zip = $this->container['parse_page'];
         $zip->load('forms/input');
         $zip->set('label_for', 'zip');
@@ -83,9 +74,7 @@ class ProfileModel extends BaseModel {
         $zip->set('input_name', 'zip');
         $zip->set('input_value', $this->user->userInfo('zip'));
 
-        /**
-         * Timezone
-         */
+        // Timezone
         $timezone = $this->container['parse_page'];
         $timezone->load('forms/input');
         $timezone->set('label_for', 'timezone');
@@ -94,9 +83,7 @@ class ProfileModel extends BaseModel {
         $timezone->set('input_name', 'timezone');
         $timezone->set('input_value', $this->user->userInfo('timezone'));
 
-        /**
-         * About user
-         */
+         // About user
         $infa = $this->container['parse_page'];
         $infa->load('forms/input');
         $infa->set('label_for', 'infa');
@@ -105,9 +92,7 @@ class ProfileModel extends BaseModel {
         $infa->set('input_name', 'infa');
         $infa->set('input_value', $this->user->userInfo('about'));
 
-        /**
-         * Email
-         */
+        // Email
         $email = $this->container['parse_page'];
         $email->load('forms/input');
         $email->set('label_for', 'email');
@@ -116,9 +101,7 @@ class ProfileModel extends BaseModel {
         $email->set('input_name', 'email');
         $email->set('input_value', $this->user->userInfo('email'));
 
-        /**
-         * Site
-         */
+        // Site
         $site = $this->container['parse_page'];
         $site->load('forms/input');
         $site->set('label_for', 'site');
@@ -127,9 +110,7 @@ class ProfileModel extends BaseModel {
         $site->set('input_name', 'site');
         $site->set('input_value', $this->user->userInfo('site'));
 
-        /**
-         * Site
-         */
+        // Birthday
         $birthday = $this->container['parse_page'];
         $birthday->load('forms/input');
         $birthday->set('label_for', 'happy');
@@ -138,9 +119,7 @@ class ProfileModel extends BaseModel {
         $birthday->set('input_name', 'happy');
         $birthday->set('input_value', $this->user->userInfo('birthday'));
 
-        /**
-         * Gender
-         */
+        // Gender
         $gender_m = $this->container['parse_page'];
         $gender_m->load('forms/radio_inline');
         $gender_m->set('label_for', 'pol');
@@ -166,17 +145,13 @@ class ProfileModel extends BaseModel {
         $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $timezone, $infa, $email, $site, $birthday, $gender)));
         $data['profile_form'] = $form->output();
 
-        /**
-         * Change password
-         */
+        // Change password
         $form= $this->container['parse_page'];
         $form->load('forms/form');
         $form->set('form_method', 'post');
         $form->set('form_action', HOMEDIR . 'profile/newpass');
 
-        /**
-         * New pass
-         */
+        // New pass
         $newpar= $this->container['parse_page'];
         $newpar->load('forms/input');
         $newpar->set('label_for', 'newpar');
@@ -184,9 +159,7 @@ class ProfileModel extends BaseModel {
         $newpar->set('input_id', 'newpar');
         $newpar->set('input_name', 'newpar');
 
-        /**
-         * New pass again
-         */
+        // New pass again
         $newpar2= $this->container['parse_page'];
         $newpar2->load('forms/input');
         $newpar2->set('label_for', 'newpar2');
@@ -194,9 +167,7 @@ class ProfileModel extends BaseModel {
         $newpar2->set('input_id', 'newpar2');
         $newpar2->set('input_name', 'newpar2');
 
-        /**
-         * Current password
-         */
+        // Current password
         $oldpar= $this->container['parse_page'];
         $oldpar->load('forms/input');
         $oldpar->set('label_for', 'oldpar');
@@ -250,8 +221,8 @@ class ProfileModel extends BaseModel {
         $fields[] = 'site';
         $fields[] = 'sex';
         $fields[] = 'birthday';
-        $fields[] = 'rname';
-        $fields[] = 'surname';
+        $fields[] = 'first_name';
+        $fields[] = 'last_name';
         $fields[] = 'address';
         $fields[] = 'zip';
         $fields[] = 'timezone';

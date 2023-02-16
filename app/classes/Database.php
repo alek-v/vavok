@@ -5,6 +5,7 @@
  */
 
 namespace App\Classes;
+
 use PDO;
 use PDOException;
 use App\Contracts\Database as DBInterface;
@@ -39,6 +40,11 @@ class Database extends PDO implements DBInterface {
     public static function instance(): object
     {
         if (self::$connection === null) self::$connection = new self;
+
+        if (file_exists(APPDIR . 'database/sql/update_vavok_v4.8.php') && self::$connection->tableExists('vavok_users') && self::$connection->columnExists('vavok_users', 'perm')) {
+            // Upgrade the database
+            include APPDIR . 'database/sql/update_vavok_v4.8.php';
+        }
 
         return self::$connection;
     }
@@ -189,26 +195,37 @@ class Database extends PDO implements DBInterface {
 
     /**
      * Check if table exists
-     * 
+     *
      * @param string $table
      * @return boolean
      */
     public function tableExists(string $table): bool
     {
-        // Try a select statement against the table
-        // Run it in try/catch in case PDO is in ERRMODE_EXCEPTION.
-        try {
-            $result = $this->query("DESCRIBE " . $table);
-
-            if (!empty($result)) {
-                return true;
-            }
-        } catch (Exception $e) {
-            // We got an exception == table not found
-            return false;
+        $statement = $this->prepare("SHOW TABLES LIKE '{$table}'");
+        $statement->execute();
+        if ($statement->rowCount() > 0) {
+            return true;
         }
-        // Result is either boolean FALSE (no table found) or PDOStatement Object (table found)
-        return $result !== false;
+
+        return false;
+    }
+
+    /**
+     * Check if column in the table exists
+     *
+     * @param string $table
+     * @param string $column
+     * @return boolean
+     */
+    public function columnExists(string $table, string $column): bool
+    {
+        $statement = $this->prepare("SHOW COLUMNS FROM `{$table}` LIKE '{$column}'");
+        $statement->execute();
+        if ($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

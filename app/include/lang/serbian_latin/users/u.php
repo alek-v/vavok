@@ -2,7 +2,7 @@
 
 $lang_user['profile'] = "Profil";
 $lang_user['online'] = "Online";
-$lang_user['lastvisit'] = "Poslednja poseta";
+$lang_user['last_visit'] = "Poslednja poseta";
 $lang_user['notconfirmedreg'] = "Za ovaj nalog nije potvrđena registracija";
 $lang_user['userbanned'] = "Član je kažnjen";
 $lang_user['bantimeleft'] = "Do isteka kazne ostalo";

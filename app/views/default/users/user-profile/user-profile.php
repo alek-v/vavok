@@ -21,7 +21,7 @@
 </style>
 <div class="user_profile">
     <div class="b">
-        {@sex-img}} {@firstname}} {@lastname}} <i>{@nickname}}</i> {@user-online}}
+        {@sex-img}} {@first_name}} {@last_name}} <i>{@nickname}}</i> {@user-online}}
     </div>
     <div>
         <div class="prof_left">
@@ -38,7 +38,7 @@
                 {@siteSkin}}
                 {@site}}
                 {@regDate}}
-                {@lastVisit}}
+                {@last_visit}}
                 {@ip-address}}
                 {@userMenu}}
             </p>

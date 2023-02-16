@@ -1,14 +1,14 @@
 CREATE TABLE IF NOT EXISTS `vavok_users` (
   `id` int(9) NOT NULL auto_increment,               -- member id
   `name` varchar(40) NOT NULL,                       -- nick
-  `pass` varchar(120) NOT NULL,                      -- pass
-  `perm` int(4) NOT NULL default '0',                -- permissions (accessr)
+  `pass` varchar(255) NOT NULL,                      -- pass
+  `perm` int(4) NOT NULL default '0',                -- permissions
   `skin` varchar(30) NOT NULL default 'default',     -- skin
   `browsers` varchar(50) NULL,                       -- browser
   `ipadd` varchar(30) NULL,                          -- ip address
   `timezone` varchar(10) NOT NULL default '0',       -- time zone
   `banned` char(1) NOT NULL default '0',             -- is banned?
-  `newmsg` int(30) NOT NULL default '0',             -- new messages in inbox
+  `newmsg` int(5) NOT NULL default '0',              -- new messages in inbox
   `lang` varchar(30) NULL,                           -- language
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `id` int(9) NOT NULL auto_increment,
   `uid` int(9) NOT NULL default '0',                 -- user unique id from vavok_users table
-  `chat` int(9) NOT NULL default '0',              -- chat posts
-  `commadd` int(9) NOT NULL default '0',           -- comments
-  `subscri` char(1) NOT NULL default '0',            -- subscribed to site news status
+  `chat` int(9) NOT NULL default '0',                -- chat posts
+  `commadd` int(9) NOT NULL default '0',             -- comments
+  `subscri` int(1) NOT NULL default '0',             -- subscribed to site news status
   `newscod` varchar(100) NULL,                       -- unsubscription code
   `perstat` varchar(50) NULL,                        -- personal status
   `regdate` varchar(30) NULL,                        -- reg. date
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `bantime` varchar(20) NULL,                        -- ban time
   `bandesc` varchar(120) NULL,                       -- ban reason
   `lastban` varchar(20) NULL,                        -- last ban time
-  `allban` varchar(20) DEFAULT NULL,                 -- no. of bans
+  `allban` varchar(20) NULL,                         -- no. of bans
   `lastvst` varchar(30) NULL,                        -- last visit
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
   `site` varchar(50) NULL,                           -- site
   `city` varchar(100) NULL,                          -- location
   `about` tinytext NULL,                             -- about yourself
-  `rname` varchar(150) NULL,                         -- real name
-  `surname` varchar(150) NULL,                       -- surname
+  `rname` varchar(150) NULL,                         -- first name
+  `surname` varchar(150) NULL,                       -- last name
   `photo` varchar(30) NULL,                          -- photo
   `address` varchar(100) NULL,                       -- street address
   `zip` varchar(20) NULL,                            -- postal address

@@ -10,7 +10,7 @@ use App\Classes\BlogComments;
 
 class BlogModel extends BaseModel {
     private string $page_title;            // Title
-    private string $page_content;          // Content
+    private ?string $page_content;         // Content
     private int $published;                // Visitors can see page
     private string $page_author;           // Page author
     private string $page_created_date;     // Page created date
@@ -40,7 +40,7 @@ class BlogModel extends BaseModel {
         switch ($pg) {
             case isset($pg):
                 // Page data
-                $blog_page_data = $this->blog_page_data($params);
+                $blog_page_data = $this->getBlogPageData($params);
 
                 // Merge data with existing data
                 if (!empty($blog_page_data) && is_array($blog_page_data)) {
@@ -250,33 +250,31 @@ class BlogModel extends BaseModel {
                     // blog post objects
                     $all_posts[] = $page_posts;
                 }
-        
+
                 // Merge blog posts and output from object
                 $show_page->set('posts', $page_posts->merge($all_posts));
-        
+
                 // page navigation
                 $navigation = new Navigation($items_per_page, $total_posts, './?');
-                
+
                 $show_page->set('navigation', $navigation->getNavigation());
-        
+
                 $this_page['content'] .= $show_page->output();
-        
+
                 return $this_page;
         }
     }
 
     /**
-     * Blog
-     * 
-     * @param array $params
-     * @return array
+     * Save comment
      */
     public function save_comment()
     {
         // Content of the page
         $this_page['content'] = '';
 
-        $ptl = ltrim($this->check($this->postAndGet('ptl')), '/'); // Return page
+        // Return page
+        $ptl = ltrim($this->check($this->postAndGet('ptl')), '/');
 
         // In case data is missing
         if ($this->user->userAuthenticated() && (empty($this->postAndGet('comment')) || empty($this->postAndGet('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
@@ -295,7 +293,7 @@ class BlogModel extends BaseModel {
      * 
      * @param array $params
      */
-    protected function blog_page_data($params = [])
+    protected function getBlogPageData($params = [])
     {
         // Fetch page
         $page_data = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
