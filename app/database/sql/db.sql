@@ -1,15 +1,14 @@
 CREATE TABLE IF NOT EXISTS `vavok_users` (
-  `id` int(9) NOT NULL auto_increment,               -- member id
-  `name` varchar(40) NOT NULL,                       -- nick
-  `pass` varchar(255) NOT NULL,                      -- pass
-  `perm` int(4) NOT NULL default '0',                -- permissions
-  `skin` varchar(30) NOT NULL default 'default',     -- skin
-  `browsers` varchar(50) NULL,                       -- browser
-  `ipadd` varchar(30) NULL,                          -- ip address
-  `timezone` varchar(10) NOT NULL default '0',       -- time zone
-  `banned` char(1) NOT NULL default '0',             -- is banned?
-  `newmsg` int(5) NOT NULL default '0',              -- new messages in inbox
-  `lang` varchar(30) NULL,                           -- language
+  `id` int(9) NOT NULL auto_increment,
+  `name` varchar(40) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `access_permission` int(4) NOT NULL default '0',
+  `skin` varchar(30) NOT NULL default 'default',
+  `browsers` varchar(50) NULL,
+  `ip_address` varchar(30) NULL,
+  `timezone` varchar(10) NOT NULL default '0',
+  `banned` int(1) NOT NULL default '0',
+  `localization` varchar(30) NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `id` (`id`)
@@ -18,20 +17,18 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `id` int(9) NOT NULL auto_increment,
-  `uid` int(9) NOT NULL default '0',                 -- user unique id from vavok_users table
-  `chat` int(9) NOT NULL default '0',                -- chat posts
-  `commadd` int(9) NOT NULL default '0',             -- comments
-  `subscri` int(1) NOT NULL default '0',             -- subscribed to site news status
-  `newscod` varchar(100) NULL,                       -- unsubscription code
-  `perstat` varchar(50) NULL,                        -- personal status
-  `regdate` varchar(30) NULL,                        -- reg. date
-  `regche` varchar(2) NOT NULL default '0',          -- reg. activated?
-  `regkey` varchar(100) NULL,                        -- reg. key
-  `bantime` varchar(20) NULL,                        -- ban time
-  `bandesc` varchar(120) NULL,                       -- ban reason
-  `lastban` varchar(20) NULL,                        -- last ban time
-  `allban` varchar(20) NULL,                         -- no. of bans
-  `lastvst` varchar(30) NULL,                        -- last visit
+  `uid` int(9) NOT NULL default '0',
+  `subscribed` int(1) NOT NULL default '0',
+  `subscription_code` varchar(100) NULL,
+  `personal_status` varchar(50) NULL,
+  `registration_date` varchar(30) NULL,
+  `registration_activated` varchar(2) NOT NULL default '0',
+  `registration_key` varchar(100) NULL,
+  `ban_time` varchar(20) NULL,
+  `ban_description` varchar(120) NULL,
+  `last_ban` varchar(20) NULL,
+  `all_bans` varchar(20) NULL,
+  `last_visit` varchar(30) NULL,
  PRIMARY KEY  (`id`),
  UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
@@ -41,17 +38,17 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
 CREATE TABLE IF NOT EXISTS `vavok_about` (
   `id` int(9) NOT NULL auto_increment,
   `uid` int(9) NOT NULL default '0',
-  `birthday` varchar(40) NULL,                       -- birthday
-  `sex` char(1) NOT NULL default 'n',                -- sex
-  `email` varchar(80) NULL,                          -- email
-  `site` varchar(50) NULL,                           -- site
-  `city` varchar(100) NULL,                          -- location
-  `about` tinytext NULL,                             -- about yourself
-  `rname` varchar(150) NULL,                         -- first name
-  `surname` varchar(150) NULL,                       -- last name
-  `photo` varchar(30) NULL,                          -- photo
-  `address` varchar(100) NULL,                       -- street address
-  `zip` varchar(20) NULL,                            -- postal address
+  `birthday` varchar(40) NULL,
+  `sex` char(1) NOT NULL default 'n',
+  `email` varchar(80) NULL,
+  `site` varchar(50) NULL,
+  `city` varchar(100) NULL,
+  `about` tinytext NULL,
+  `first_name` varchar(150) NULL,
+  `last_name` varchar(150) NULL,
+  `photo` varchar(30) NULL,
+  `address` varchar(100) NULL,
+  `zip` varchar(20) NULL,
   `country` varchar(75) NULL,
   `phone` varchar(30) NULL,
  PRIMARY KEY  (`id`),

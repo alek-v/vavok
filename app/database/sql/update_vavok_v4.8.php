@@ -8,6 +8,8 @@ self::$connection->query("ALTER TABLE vavok_users CHANGE COLUMN `lang` `localiza
 
 self::$connection->query("ALTER TABLE vavok_users CHANGE COLUMN `pass` `password` varchar(255) NOT NULL");
 
+self::$connection->query("ALTER TABLE `vavok_users` DROP `newmsg`");
+
 self::$connection->query("ALTER TABLE `vavok_profil` DROP `chat`");
 
 self::$connection->query("ALTER TABLE `vavok_profil` DROP `commadd`");
