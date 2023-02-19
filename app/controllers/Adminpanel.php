@@ -107,17 +107,6 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * IP ban
-    */
-    public function ipban()
-    {
-        $model = $this->model('AdminpanelModel');
- 
-        // Pass page to the view
-        $this->view('adminpanel/ipban', $model->ipban());
-    }
-
-    /**
     * System check
     */
     public function systemcheck()
@@ -184,7 +173,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Data from log files
+    * Data from the log files
     */
     public function logfiles()
     {
@@ -195,7 +184,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Upload file
+    * File upload
     */
     public function file_upload()
     {
@@ -206,7 +195,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Finish upload
+    * Finish file upload
     */
     public function finish_upload()
     {
@@ -217,7 +206,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Finish upload
+    * Files that has been uploaded
     */
     public function uploaded_files()
     {
@@ -228,7 +217,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Search thrue uploaded files
+    * Search uploaded files
     */
     public function search_uploads()
     {
@@ -239,7 +228,7 @@ class Adminpanel extends Controller {
     }
 
     /**
-    * Add mail to email queue
+    * Add mail to the email queue
     */
     public function email_queue()
     {
