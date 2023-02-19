@@ -41,11 +41,6 @@ class Database extends PDO implements DBInterface {
     {
         if (self::$connection === null) self::$connection = new self;
 
-        if (file_exists(APPDIR . 'database/sql/update_vavok_v4.8.php') && self::$connection->tableExists('vavok_users') && self::$connection->columnExists('vavok_users', 'perm')) {
-            // Upgrade the database
-            include APPDIR . 'database/sql/update_vavok_v4.8.php';
-        }
-
         return self::$connection;
     }
 
