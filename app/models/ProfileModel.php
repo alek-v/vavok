@@ -13,7 +13,7 @@ class ProfileModel extends BaseModel {
      */
     public function index()
     {
-        $data['headt'] = '
+        $data['head_tags'] = '
         <style>
             .photo img {
                 max-width: 100px;
@@ -22,7 +22,7 @@ class ProfileModel extends BaseModel {
             }
         </style>
         ';
-        $data['tname'] = $this->localization->string('profsettings');
+        $data['page_title'] = $this->localization->string('profsettings');
 
         $form = $this->container['parse_page'];
         $form->load('forms/form');
@@ -290,7 +290,7 @@ class ProfileModel extends BaseModel {
         }
 
         // Page title
-        $data['tname'] = '{@localization[deleteProfile]}}';
+        $data['page_title'] = '{@localization[deleteProfile]}}';
 
         // Pass page to the view
         return $data;
@@ -301,7 +301,7 @@ class ProfileModel extends BaseModel {
      */
     public function newpass()
     {
-        $data['tname'] = '{@localization[profile]}}';
+        $data['page_title'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
         if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2'))
@@ -332,8 +332,8 @@ class ProfileModel extends BaseModel {
      */
     public function photo()
     {
-        $data['tname'] = 'Change Photo';
-        $data['headt'] = '<style>
+        $data['page_title'] = 'Change Photo';
+        $data['head_tags'] = '<style>
         .photo img {
             max-width: 320px;
             max-height: 320px;
@@ -375,8 +375,8 @@ class ProfileModel extends BaseModel {
     public function savephoto()
     {
         // Page data
-        $data['tname'] = 'Change Photography';
-        $data['headt'] = '
+        $data['page_title'] = 'Change Photography';
+        $data['head_tags'] = '
         <style>
             .photo img {
                 max-width: 100px;
@@ -453,7 +453,7 @@ class ProfileModel extends BaseModel {
     public function removephoto()
     {
         // Page data
-        $data['tname'] = 'Remove Photography';
+        $data['page_title'] = 'Remove Photography';
         $data['content'] = '';
 
         if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
@@ -485,7 +485,7 @@ class ProfileModel extends BaseModel {
         $this_page['user'] = $this->user_data;
 
         // Page data
-        $this_page['tname'] = 'Confirm email address';
+        $this_page['page_title'] = 'Confirm email address';
         $this_page['content'] = '';
 
         // Token does not exist

@@ -22,7 +22,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function index(): array
     {
-        $data['tname'] = '{@localization[adminpanel]}}';
+        $data['page_title'] = '{@localization[adminpanel]}}';
         $data['content'] = '';
 
         if (!$this->user->checkPermissions('adminpanel', 'show')) $this->redirection('../?auth_error');
@@ -111,7 +111,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function settings()
     {
-        $data['tname'] = '{@localization[settings]}}';
+        $data['page_title'] = '{@localization[settings]}}';
         $data['content'] = '';
 
         if (!$this->user->administrator(101)) {
@@ -913,7 +913,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function adminlist()
     {
-        $data['tname'] = '{@localization[modlist]}}';
+        $data['page_title'] = '{@localization[modlist]}}';
         $data['content'] = '';
 
         if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
@@ -947,7 +947,7 @@ class AdminpanelModel extends BaseModel {
 
     public function unconfirmed_reg()
     {
-        $data['tname'] = '{@localization[uncomfreg]}}';
+        $data['page_title'] = '{@localization[uncomfreg]}}';
         $data['content'] = '';
 
         if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
@@ -1020,7 +1020,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function statistics()
     {
-        $data['tname'] = '{@localization[sitestats]}}';
+        $data['page_title'] = '{@localization[sitestats]}}';
         $data['content'] = '';
 
         if (!$this->user->administrator()) $this->redirection('../?errorAuth');
@@ -1039,7 +1039,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function users()
     {
-        $data['tname'] = '{@localization[usrprofile]}}';
+        $data['page_title'] = '{@localization[usrprofile]}}';
         $data['content'] = '';
 
         if (!$this->user->administrator()) $this->redirection('./?error=noauth');
@@ -1325,7 +1325,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function pagesearch()
     {
-        $page_data['tname'] = '{@localization[search]}}';
+        $page_data['page_title'] = '{@localization[search]}}';
         $page_data['content'] = '';
 
         if (!$this->user->administrator()) $this->redirection(HOMEDIR);
@@ -1357,9 +1357,9 @@ class AdminpanelModel extends BaseModel {
             } else {
                 // begin search
                 $where_table = "pages";
-                $cond = "pname";
+                $cond = "slug";
                 $select_fields = "*";
-                $ord_fields = "pubdate DESC";
+                $ord_fields = "date_published DESC";
 
                 $noi = $this->db->countRow($where_table, "" . $cond . " LIKE '%" . $search_for_string . "%'");
                 $items_per_page = 10;
@@ -1368,26 +1368,26 @@ class AdminpanelModel extends BaseModel {
 
                 $limit_start = $navigation->start()['start']; // starting point
         
-                $sql = "SELECT {$select_fields} FROM {$where_table} WHERE pname LIKE '%{$search_for_string}%' OR tname LIKE '%{$search_for_string}%' ORDER BY {$ord_fields} LIMIT $limit_start, $items_per_page";
+                $sql = "SELECT {$select_fields} FROM {$where_table} WHERE slug LIKE '%{$search_for_string}%' OR page_title LIKE '%{$search_for_string}%' ORDER BY {$ord_fields} LIMIT $limit_start, $items_per_page";
 
                 foreach ($this->db->query($sql) as $item) {
-                    $tname = $item['tname'];
-                    if (empty($tname)) {
-                        $tname = $item['pname'];
+                    $page_title = $item['page_title'];
+                    if (empty($page_title)) {
+                        $page_title = $item['slug'];
                     } 
                     if (empty($item['file'])) {
-                        $item['file'] = $item['pname'] . '.php';
+                        $item['file'] = $item['slug'] . '.php';
                     }
-                    if (empty($tname)) {
+                    if (empty($page_title)) {
                         $tlink = 'Unreachable<br>';
                     } else {
-                        if (!empty($item['lang'])) {
-                            $itemLang = ' (' . mb_strtolower($item['lang']) . ')';
+                        if (!empty($item['localization'])) {
+                            $itemLang = ' (' . mb_strtolower($item['localization']) . ')';
                         } else {
                                 $itemLang = '';
                             }
 
-                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $item['id'], $tname . $itemLang) . '<br />';
+                        $tlink = $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $item['id'], $page_title . $itemLang) . '<br />';
                     }
 
                     $page_data['content'] .= $tlink;
@@ -1410,7 +1410,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function blogcategory()
     {
-        $page_data['tname'] = 'Blog';
+        $page_data['page_title'] = 'Blog';
         $page_data['content'] = '';
 
         if (!$this->user->administrator()) $this->redirection('../?auth_error');
@@ -1421,7 +1421,7 @@ class AdminpanelModel extends BaseModel {
                 // Save category if name is sent
                 if (!empty($this->postAndGet('category')) && !empty($this->postAndGet('value'))) {
                     // Category localization if choosen
-                    $category_localization = !empty($this->postAndGet('lang')) ? '_' . $this->postAndGet('lang') : '';
+                    $category_localization = !empty($this->postAndGet('localization')) ? '_' . $this->postAndGet('localization') : '';
 
                     // Calculate category position
                     $position = $this->db->countRow('settings', "setting_group = 'blog_category{$category_localization}'");
@@ -1458,8 +1458,8 @@ class AdminpanelModel extends BaseModel {
                 $languages = "SELECT * FROM languages ORDER BY lngeng";
 
                 $options = '<option value="">Don\'t set</option>';
-                foreach ($this->db->query($languages) as $lang) {
-                    $options .= "<option value=\"" . strtolower($lang['iso-2']) . "\">" . $lang['lngeng'] . "</option>";
+                foreach ($this->db->query($languages) as $localization) {
+                    $options .= "<option value=\"" . strtolower($localization['iso-2']) . "\">" . $localization['lngeng'] . "</option>";
                 }
 
                 $select_language = $this->container['parse_page'];
@@ -1467,7 +1467,7 @@ class AdminpanelModel extends BaseModel {
                 $select_language->set('label_for', 'language');
                 $select_language->set('label_value', '{@localization[language]}}' . ' (optional):');
                 $select_language->set('select_id', 'language');
-                $select_language->set('select_name', 'lang');
+                $select_language->set('select_name', 'localization');
                 $select_language->set('options', $options);
 
                 // All fields
@@ -1665,7 +1665,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function pagetitle()
     {
-        $page_data['tname'] = 'Page Title';
+        $page_data['page_title'] = 'Page Title';
         $page_data['content'] = '';
 
         $act = $this->postAndGet('act');
@@ -1677,9 +1677,9 @@ class AdminpanelModel extends BaseModel {
             $msg = $this->replaceNewLines($this->postAndGet('msg'));
 
             // Get page data
-            $pageData = $this->db->selectData('pages', 'id = :id', [':id' => $id], 'file, headt');
+            $pageData = $this->db->selectData('pages', 'id = :id', [':id' => $id], 'file, head_tags');
         
-            $headData = $pageData['headt'];
+            $headData = $pageData['head_tags'];
 
             // Remove old open graph tag and set new
             if (stripos($headData, 'property="og:title" content="')) {
@@ -1697,7 +1697,7 @@ class AdminpanelModel extends BaseModel {
             $headData = str_replace('~', '', $headData);
             $headData = substr_replace($headData, '<meta property="og:title" content="' . $msg . '" />', $inputPosition, 0);
 
-            $fields = array('tname', 'headt');
+            $fields = array('page_title', 'head_tags');
             $values = array($msg, $headData);
             $this->db->update('pages', $fields, $values, "id='{$id}'");
 
@@ -1712,7 +1712,7 @@ class AdminpanelModel extends BaseModel {
                 $page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
             }
 
-            $nitems = $this->db->countRow('pages', 'tname is not null');
+            $nitems = $this->db->countRow('pages', 'page_title is not null');
             $num_items = $nitems;
 
             $items_per_page = 30;
@@ -1721,11 +1721,11 @@ class AdminpanelModel extends BaseModel {
 
             $limit_start = $navigation->start()['start']; // starting point
 
-            $sql = "SELECT id, pname, tname, file FROM pages WHERE tname is not null ORDER BY pname LIMIT $limit_start, $items_per_page";
+            $sql = "SELECT id, slug, page_title, file FROM pages WHERE page_title is not null ORDER BY slug LIMIT $limit_start, $items_per_page";
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
-                    $lnk = $item['pname'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&id=' . $item['id'] . '">' . $item['tname'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $item['id'] . '">[Edit Meta]</a>';
+                    $lnk = $item['slug'] . ' <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagetitle/?act=edit&id=' . $item['id'] . '">' . $item['page_title'] . '</a> | <img src="' . HOMEDIR . 'themes/images/img/edit.gif" alt="" /> <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $item['id'] . '">[Edit Meta]</a>';
                     $page_data['content'] .= "$lnk<br />";
                 }
             }
@@ -1736,7 +1736,7 @@ class AdminpanelModel extends BaseModel {
         if ($act == 'edit') {
             $id = $this->check($this->postAndGet('id'));
 
-            $page_title = $this->db->selectData('pages', 'id = :id', ['id' => $id], 'tname, pname');
+            $page_title = $this->db->selectData('pages', 'id = :id', ['id' => $id], 'page_title, slug');
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');
@@ -1755,7 +1755,7 @@ class AdminpanelModel extends BaseModel {
             $input_2->set('label_value', 'Page title:');
             $input_2->set('input_name', 'msg');
             $input_2->set('input_id', 'msg');
-            $input_2->set('input_value', $page_title['tname']);
+            $input_2->set('input_value', $page_title['page_title']);
         
             $form->set('fields', $form->merge(array($input, $input_2)));
             $page_data['content'] .= $form->output();
@@ -1778,7 +1778,7 @@ class AdminpanelModel extends BaseModel {
      */
     public function ip_information()
     {
-        $page_data['tname'] = 'IP information';
+        $page_data['page_title'] = 'IP information';
         $page_data['content'] = '';
 
         if (!$this->user->moderator() && !$this->user->administrator()) $this->redirection('../?auth_error');

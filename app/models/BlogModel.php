@@ -53,7 +53,7 @@ class BlogModel extends BaseModel {
                 }
 
                 // Update user's localization when page's language is different from current localization
-                $this->user->updatePageLocalization($this_page['lang']);
+                $this->user->updatePageLocalization($this_page['localization']);
 
                 // Generate page
                 $post = $this->container['parse_page'];
@@ -156,7 +156,7 @@ class BlogModel extends BaseModel {
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
 
                 // Page title
-                $this_page['tname'] = 'Blog';
+                $this_page['page_title'] = 'Blog';
 
                 // Load index template
                 $show_page = $this->container['parse_page'];
@@ -170,7 +170,7 @@ class BlogModel extends BaseModel {
                 $this->user->updatePageLocalization($user_localization_short);
 
                 // Count total posts
-                $total_posts = empty($this_category) ? $this->db->countRow('pages', "type='post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='')") : $this->db->countRow('tags', "tag_name='{$this_category}'");
+                $total_posts = empty($this_category) ? $this->db->countRow('pages', "type='post' AND published_status = '2' AND (localization = '{$user_localization_short}' OR localization='')") : $this->db->countRow('tags', "tag_name='{$this_category}'");
 
                 // When there is no posts
                 if ($total_posts < 1) {
@@ -203,8 +203,8 @@ class BlogModel extends BaseModel {
                 if (isset($all_categories)) $show_page->set('category-list', $page_category->merge($all_categories));
 
                 // Get blog posts
-                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published = '2' AND (lang = '{$user_localization_short}' OR lang='') ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
-                "SELECT pages.pubdate, pages.created, pages.tname, pages.pname, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$this_category}' AND tags.page_id = pages.id AND pages.published = '2' ORDER BY pubdate DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published_status = '2' AND (localization = '{$user_localization_short}' OR localization='') ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+                "SELECT pages.date_published, pages.date_created, pages.page_title, pages.slug, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$this_category}' AND tags.page_id = pages.id AND pages.published_status = '2' ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
         
                 foreach ($this->db->query($page_sql_query) as $key) {
                     // load template
@@ -212,7 +212,7 @@ class BlogModel extends BaseModel {
                     $page_posts->load('blog/blog_post');
 
                     // Linked title
-                    $page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['pname'] . '">' . $key['tname'] . '</a>');
+                    $page_posts->set('post_name', '<a href="' . HOMEDIR . 'blog/' . $key['slug'] . '">' . $key['page_title'] . '</a>');
 
                     // Replace html headings, images and other tags from content
                     $content = !empty($key['content']) ? strip_tags($this->eraseImage(preg_replace('#<h([1-6])>(.*?)<\/h[1-6]>#si', '', $key['content']))) : '';
@@ -221,19 +221,19 @@ class BlogModel extends BaseModel {
                     if (count(explode(' ', $content)) > 45) $content = implode(' ', array_slice(explode(' ', str_replace('<br />', ' ', $content)), 0, 45)) . '...';
 
                     // Day when article is created
-                    $page_posts->set('date-created-day', date('d', $key['created']));
+                    $page_posts->set('date-created-day', date('d', $key['date_created']));
 
                     // Month when article is created
-                    $page_posts->set('date-created-month', $this->localization->showAll()['ln_all_month'][date('n', $key['created']) - 1]);
+                    $page_posts->set('date-created-month', $this->localization->showAll()['ln_all_month'][date('n', $key['date_created']) - 1]);
 
                     // Day when article is published
-                    $page_posts->set('date-published-day', date('d', $key['pubdate']));
+                    $page_posts->set('date-published-day', date('d', $key['date_published']));
 
                     // Month when article is published
-                    $page_posts->set('date-published-month', $this->localization->showAll()['ln_all_month'][date('n', $key['pubdate']) - 1]);
+                    $page_posts->set('date-published-month', $this->localization->showAll()['ln_all_month'][date('n', $key['date_published']) - 1]);
 
                     // Year when article is published
-                    $page_posts->set('date-published-year', date('Y', $key['pubdate']));
+                    $page_posts->set('date-published-year', date('Y', $key['date_published']));
 
                     // Page URL
                     $page_posts->set('page-link', $this->cleanPageUrl());
@@ -242,7 +242,7 @@ class BlogModel extends BaseModel {
                     $page_posts->set('post_text', $content);
 
                     // Read more link
-                    $page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['pname']);
+                    $page_posts->set('read_more_link', HOMEDIR . 'blog/' . $key['slug']);
 
                     // Cover image
                     $page_posts->set('page_image', $key['default_img']);
@@ -296,41 +296,41 @@ class BlogModel extends BaseModel {
     protected function getBlogPageData($params = [])
     {
         // Fetch page
-        $page_data = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
+        $page_data = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
 
         // return false if there is no data
-        if (empty($page_data['tname']) && empty($page_data['content'])) {
+        if (empty($page_data['page_title']) && empty($page_data['content'])) {
             return false;
         } else {
             // Update page title
-            $this->page_title = $page_data['tname'];
+            $this->page_title = $page_data['page_title'];
 
             // Update language
-            if (!empty($page_data['lang']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' lang="' . $page_data['lang'] . '"');
+            if (!empty($page_data['localization']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' localization="' . $page_data['localization'] . '"');
 
             // Page content
             $this->page_content = $page_data['content'];
 
             // Published status
-            $this->published = $page_data['published'];
+            $this->published = $page_data['published_status'];
 
             // Page id
             $this->page_id = $page_data['id'];
 
             // Author
-            $this->page_author = $page_data['crtdby'];
+            $this->page_author = $page_data['created_by'];
 
             // Date created
-            $this->page_created_date = $page_data['created'];
+            $this->page_created_date = $page_data['date_created'];
 
             // Head tags
-            $this->head_tags = $page_data['headt'];
+            $this->head_tags = $page_data['head_tags'];
 
             // Published date
-            $this->page_published_date = $page_data['pubdate'];
+            $this->page_published_date = $page_data['date_published'];
 
             // Published date
-            $this->page_updated_date = $page_data['lastupd'];
+            $this->page_updated_date = $page_data['date_updated'];
 
             // Page views
             $this->views = !empty($page_data['views']) ? $page_data['views'] : 0;

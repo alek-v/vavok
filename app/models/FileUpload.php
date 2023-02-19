@@ -11,7 +11,7 @@ use App\Classes\Upload;
 class FileUpload extends BaseModel {
     public function index()
     {
-        $this_page['tname'] = 'File Upload';
+        $this_page['page_title'] = 'File Upload';
         $this_page['content'] = '';
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
@@ -52,7 +52,7 @@ class FileUpload extends BaseModel {
 
     public function uploaded_files()
     {
-        $this_page['tname'] = 'Uploaded Files';
+        $this_page['page_title'] = 'Uploaded Files';
         $this_page['content'] = '';
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
@@ -114,7 +114,7 @@ class FileUpload extends BaseModel {
      */
     public function search_uploads()
     {
-        $this_page['tname'] = 'Search';
+        $this_page['page_title'] = 'Search';
         $this_page['content'] = '';
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . '?auth_error');

@@ -39,7 +39,7 @@ class InstallModel extends BaseModel {
     public function index()
     {
         // Users data
-        $this_page['tname'] = 'Install';
+        $this_page['page_title'] = 'Install';
         $this_page['content'] = '';
 
         // Create log files
@@ -78,7 +78,7 @@ class InstallModel extends BaseModel {
 
     public function register()
     {
-        $this_page['tname'] = 'Register admin';
+        $this_page['page_title'] = 'Register admin';
         $this_page['site_address'] = $this->websiteHomeAddress();
 
         return $this_page;
@@ -86,7 +86,7 @@ class InstallModel extends BaseModel {
 
     public function register_admin()
     {
-        $this_page['tname'] = 'Register admin';
+        $this_page['page_title'] = 'Register admin';
         $this_page['content'] = '';
 
         $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> Installation results</p>';

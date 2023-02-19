@@ -39,7 +39,9 @@ class Database extends PDO implements DBInterface {
      */
     public static function instance(): object
     {
-        if (self::$connection === null) self::$connection = new self;
+        if (self::$connection === null) {
+            self::$connection = new self;
+        }
 
         return self::$connection;
     }

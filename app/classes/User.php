@@ -62,13 +62,19 @@ class User {
             $this->db->update('vavok_profil', 'last_visit', time(), "uid='{$_SESSION['uid']}'");
 
              // Time zone
-            if (!empty($vavok_users['timezone'])) define('MY_TIMEZONE', $vavok_users['timezone']);
+            if (!empty($vavok_users['timezone'])) {
+                define('MY_TIMEZONE', $vavok_users['timezone']);
+            }
 
             // Update language in session if it is not language from profile
-            if (!empty($vavok_users['localization']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['localization'])) $_SESSION['lang'] = $vavok_users['localization'];
+            if (!empty($vavok_users['localization']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['localization'])) {
+                $_SESSION['lang'] = $vavok_users['localization'];
+            }
 
             // Check if user is banned
-            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) $this->redirection(HOMEDIR . 'users/ban');
+            if (isset($vavok_users['banned']) && $vavok_users['banned'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'users/ban')) {
+                $this->redirection(HOMEDIR . 'users/ban');
+            }
 
              // activate account
             if (isset($user_profil['registration_activated']) && $user_profil['registration_activated'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {

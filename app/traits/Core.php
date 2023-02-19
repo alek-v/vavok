@@ -878,13 +878,13 @@ trait Core {
     public function pageHeadMetatags(array $page_data): string
     {
         // Page title
-        if (isset($page_data['tname'])) $title = $page_data['tname'];
+        if (isset($page_data['page_title'])) $title = $page_data['page_title'];
 
         // Tags for all pages at the website
         $tags = file_get_contents(STORAGEDIR . 'header_meta_tags.dat');
 
         // Tags for this page only
-        if (isset($page_data['headt'])) $tags .= $page_data['headt'];
+        if (isset($page_data['head_tags'])) $tags .= $page_data['head_tags'];
 
         // Add missing open graph tags
         if (!strstr($tags, 'og:type')) $tags .= "\n" . '<meta property="og:type" content="website" />';
@@ -938,7 +938,7 @@ trait Core {
         header("HTTP/1.1 404 Not Found");
 
         return [
-            'tname' => 'Error 404',
+            'page_title' => 'Error 404',
             'content' => '{@localization[page_or_file_not_found]}}'
         ];    
     }

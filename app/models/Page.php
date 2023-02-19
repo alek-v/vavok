@@ -23,14 +23,14 @@ class Page extends BaseModel {
 
         // Try to get localized page
         $data = !empty($params[0])
-        ? $this->db->selectData('pages', "pname = :pname AND lang = :lang", array(
-            ':pname' => 'index',
-            ':lang' => $params[0]
+        ? $this->db->selectData('pages', "slug = :slug AND localization = :localization", array(
+            ':slug' => 'index',
+            ':localization' => $params[0]
         ))
         : '';
 
         // Page without localization
-        if (empty($data)) $data = $this->db->selectData('pages', "pname = :pname", array(':pname' => 'index'));
+        if (empty($data)) $data = $this->db->selectData('pages', "slug = :slug", array(':slug' => 'index'));
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
@@ -42,7 +42,7 @@ class Page extends BaseModel {
         // and page with users's language exists, example: www.example.com/de
         if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
 
-        return $data = isset($data['tname']) ? $data : die('error404');
+        return $data = isset($data['page_title']) ? $data : die('error404');
     }
 
     /**
@@ -53,7 +53,7 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this_page = $this->db->selectData('pages', 'pname = :param', array(':param' => $params[0]));
+        $this_page = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
 
         // Handle when page doesn't exist
         if (!$this_page) {
@@ -61,7 +61,7 @@ class Page extends BaseModel {
         }
 
         // Page localization
-        $page_localization = isset($this_page['lang']) ? $this_page['lang'] : '';
+        $page_localization = isset($this_page['localization']) ? $this_page['localization'] : '';
 
         // Update user's localization when page's language is different then current localization
         $this->user->updatePageLocalization($page_localization);
@@ -80,9 +80,9 @@ class Page extends BaseModel {
         // Check login data while logging in
         $data = $this->user->checkAuth();
 
-        $data['tname'] = '{@localization[login]}}';
-        $data['headt'] = '<meta name="robots" content="noindex">';
-        $data['headt'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/login/login.css">';
+        $data['page_title'] = '{@localization[login]}}';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/login/login.css">';
 
         return $data;
     }
@@ -103,7 +103,7 @@ class Page extends BaseModel {
      */
     public function userlist()
     {
-        $data['tname'] = '{@localization[userlist]}}';
+        $data['page_title'] = '{@localization[userlist]}}';
         $data['content'] = '';
 
         $num_items = $this->user->countRegisteredMembers(); // no. reg. members
@@ -134,7 +134,7 @@ class Page extends BaseModel {
      */
     public function statistics()
     {
-        $data['tname'] = '{@localization[statistics]}}';
+        $data['page_title'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
         if ($this->configuration('showCounter') == 6 && !$this->user->administrator()) $this->redirection(HOMEDIR);
@@ -180,7 +180,7 @@ class Page extends BaseModel {
      */
     public function online()
     {
-        $data['tname'] = 'Online';
+        $data['page_title'] = 'Online';
         $data['content'] = '';
 
         if ($this->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->redirection("../");
@@ -282,7 +282,7 @@ class Page extends BaseModel {
      */
     public function cookies_policy()
     {
-        $this_page['tname'] = 'Cookies Policy';
+        $this_page['page_title'] = 'Cookies Policy';
         $this_page['homeurl'] = $this->configuration('homeUrl');
 
         return $this_page;

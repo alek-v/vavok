@@ -16,7 +16,7 @@ class Logfiles extends BaseModel {
      */
     public function index()
     {
-        $this_page['tname'] = 'Log data';
+        $this_page['page_title'] = 'Log data';
         $this_page['content'] = '';
 
         if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->redirection("./?isset=ap_noaccess");

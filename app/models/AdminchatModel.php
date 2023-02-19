@@ -17,7 +17,7 @@ class AdminchatModel extends BaseModel {
      */
     public function index(): array
     {
-        $data['tname'] = '{@localization[admin_chat]}}';
+        $data['page_title'] = '{@localization[admin_chat]}}';
         $data['content'] = '';
 
         if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');

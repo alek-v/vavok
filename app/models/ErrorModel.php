@@ -96,7 +96,7 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['tname'] = 'Error 403';
+        $this_page['page_title'] = 'Error 403';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 
         return $this_page;
@@ -116,7 +116,7 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['tname'] = 'Error 404';
+        $this_page['page_title'] = 'Error 404';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 
         return $this_page;
@@ -133,7 +133,7 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['tname'] = 'Error 500';
+        $this_page['page_title'] = 'Error 500';
         $this_page['error_number_info'] = $error_info['error_number_info'];
 
         return $this_page;

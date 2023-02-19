@@ -16,8 +16,8 @@ class SearchModel extends BaseModel {
      */
     public function index(array $params = []): array
     {
-        $this_page['tname'] = '{@localization[search]}}';
-        $this_page['headt'] = '';
+        $this_page['page_title'] = '{@localization[search]}}';
+        $this_page['head_tags'] = '';
         $this_page['content'] = '';
 
         // String to search for
@@ -27,7 +27,7 @@ class SearchModel extends BaseModel {
         $itemLat = $this->cyrillicToLatin(htmlspecialchars_decode($search_item)); // translate to latin to search for latin post
 
         // Add meta tags
-        $this_page['headt'] .= '<meta name="robots" content="noindex, follow" />';
+        $this_page['head_tags'] .= '<meta name="robots" content="noindex, follow" />';
         
         if (empty($search_item)) {
             $indexPage = $this->container['parse_page'];
@@ -37,14 +37,14 @@ class SearchModel extends BaseModel {
             return $this_page;
         } else {
             if (!empty($ln_loc)) {
-                $orderBy = " order by lang='" . $ln_loc . "' desc, pname desc ";
+                $orderBy = " order by localization='" . $ln_loc . "' desc, slug desc ";
             } else {
                 $orderBy = ' ';
             }
 
             $clean_search_item = str_replace('_', ' ', $search_item);
 
-            $this_page['tname'] = $clean_search_item;
+            $this_page['page_title'] = $clean_search_item;
 
             $resultsPage = $this->container['parse_page'];
             $resultsPage->load('search/results');
@@ -59,7 +59,7 @@ class SearchModel extends BaseModel {
             }
 
             // Count pages by content
-            $prep = "SELECT id, pname, tname, content, type FROM pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'";
+            $prep = "SELECT id, slug, page_title, content, type FROM pages WHERE slug LIKE '%" . $itemLat . "%' OR slug LIKE '%" . $itemCyr . "%' AND published_status = '2'";
             foreach($this->db->query($prep) as $resultItem) {
                 // Add item if it is not added
                 if (!in_array($resultItem['id'], $page_ids)) array_push($page_ids, $resultItem['id']);
@@ -90,7 +90,7 @@ class SearchModel extends BaseModel {
                 if (empty($resultItem['type']) || $resultItem['type'] == 'page') $type = 'page';
                 else $type = 'blog';
 
-                $setItem->set('itemLink', '<a href="' . HOMEDIR . $type . '/' . $resultItem['pname'] . '">' . $resultItem['tname'] . '</a>');
+                $setItem->set('itemLink', '<a href="' . HOMEDIR . $type . '/' . $resultItem['slug'] . '">' . $resultItem['page_title'] . '</a>');
                 $setItem->set('itemText', $itemText);
 
                 // Add item if it is not added
@@ -101,7 +101,7 @@ class SearchModel extends BaseModel {
             }
 
             // Search pages
-            $prep = "SELECT id, pname, tname, content, type FROM pages WHERE pname LIKE '%" . $itemLat . "%' OR pname LIKE '%" . $itemCyr . "%' AND published = '2'" . $orderBy . "LIMIT {$thisPageNav->start()['start']}, 20";
+            $prep = "SELECT id, slug, page_title, content, type FROM pages WHERE slug LIKE '%" . $itemLat . "%' OR slug LIKE '%" . $itemCyr . "%' AND published_status = '2'" . $orderBy . "LIMIT {$thisPageNav->start()['start']}, 20";
             foreach ($this->db->query($prep) as $resultItem) {
                 $dots = isset($resultItem['content']) && strlen($resultItem['content']) > 50 ? '...' : '';
 
@@ -113,7 +113,7 @@ class SearchModel extends BaseModel {
                 if (empty($resultItem['type']) || $resultItem['type'] == 'page') $type = 'page';
                 else $type = 'blog';
 
-                $setItem->set('itemLink', '<a href="' . HOMEDIR . $type . '/' . $resultItem['pname'] . '">' . $resultItem['tname'] . '</a>');
+                $setItem->set('itemLink', '<a href="' . HOMEDIR . $type . '/' . $resultItem['slug'] . '">' . $resultItem['page_title'] . '</a>');
                 $setItem->set('itemText', $itemText);
         
                 // Add item if it is not added

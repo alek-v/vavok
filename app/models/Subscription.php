@@ -11,7 +11,7 @@ use App\Classes\Mailer;
 class Subscription extends BaseModel {
     public function index()
     {
-        $this_page['tname'] = '{@localization[subscriptions]}}';
+        $this_page['page_title'] = '{@localization[subscriptions]}}';
         $this_page['content'] = '';
 
         // Authentication
@@ -89,7 +89,7 @@ class Subscription extends BaseModel {
 
     public function subscription_options()
     {
-        $this_page['tname'] = '{@localization[subscription_options]}}';
+        $this_page['page_title'] = '{@localization[subscription_options]}}';
         $this_page['content'] = '';
 
         // Authentication

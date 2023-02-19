@@ -15,9 +15,9 @@ class UsersModel extends BaseModel {
     public function register(): array
     {
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@localization[registration]}}';
+        $data['page_title'] = '{@localization[registration]}}';
         $data['content'] = '';
 
         // Data has been sent, register the user
@@ -193,12 +193,12 @@ class UsersModel extends BaseModel {
         }
 
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
-        $data['headt'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/registration/register.css">';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/registration/register.css">';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['headt'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        $data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         // Page title
-        $data['tname'] = '{@localization[registration]}}';
+        $data['page_title'] = '{@localization[registration]}}';
 
         if ($this->configuration('openReg') == 1) {
             if ($this->user->userAuthenticated()) {
@@ -238,9 +238,9 @@ class UsersModel extends BaseModel {
     public function confirmkey()
     {
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@localization[confreg]}}';
+        $data['page_title'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         $recipient_id = $this->postAndGet('uid');
@@ -268,9 +268,9 @@ class UsersModel extends BaseModel {
     public function key()
     {
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@localization[confreg]}}';
+        $data['page_title'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         $recipient_id = $this->postAndGet('uid');
@@ -313,9 +313,9 @@ class UsersModel extends BaseModel {
     public function resendkey()
     {
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['tname'] = '{@localization[confreg]}}';
+        $data['page_title'] = '{@localization[confreg]}}';
         $data['content'] = '';
 
         $recipient_id = $this->postAndGet('uid');
@@ -386,12 +386,12 @@ class UsersModel extends BaseModel {
     public function lostpassword()
     {
         // Page title
-        $data['tname'] = '{@localization[lostpass]}}';
+        $data['page_title'] = '{@localization[lostpass]}}';
         // Meta tag for this page
-        $data['headt'] = '<meta name="robots" content="noindex">';
-        $data['headt'] .= '<link rel="stylesheet" href="../themes/templates/users/lost_password.css" />';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $data['head_tags'] .= '<link rel="stylesheet" href="../themes/templates/users/lost_password.css" />';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['headt'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        $data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         $data['content'] = '';
 
         // Send lost password mail when data are sent
@@ -462,7 +462,7 @@ class UsersModel extends BaseModel {
         // Page to load after changing language
         $ptl = $this->postAndGet('ptl'); 
 
-        if (!file_exists(APPDIR . "include/lang/" . $this->user->getPreferredLanguage($language) . "/index.php")) $this->redirection(HOMEDIR . '?error=no_lang');
+        if (!file_exists(APPDIR . "include/lang/" . $this->user->getPreferredLanguage($language) . "/index.php")) $this->redirection(HOMEDIR . '?error=no_localization');
 
         // Set new language
         if (!empty($language)) $this->user->changeLanguage($language);
@@ -485,7 +485,7 @@ class UsersModel extends BaseModel {
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
-        $data['tname'] = '{@localization[ignorlist]}}';
+        $data['page_title'] = '{@localization[ignorlist]}}';
         $data['content'] = '';
 
         // Add or remove user from ignore list
@@ -551,7 +551,7 @@ class UsersModel extends BaseModel {
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
-        $data['tname'] = '{@localization[contacts]}}';
+        $data['page_title'] = '{@localization[contacts]}}';
         $data['content'] = '';
 
         // Add or remove from contacts
@@ -607,7 +607,7 @@ class UsersModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Page data
-        $data['tname'] = '{@localization[mymenu]}}';
+        $data['page_title'] = '{@localization[mymenu]}}';
 
         // Pass data
         return $data;
@@ -618,7 +618,7 @@ class UsersModel extends BaseModel {
      */
     public function settings($params = [])
     {
-        $data['tname'] = '{@localization[settings]}}';
+        $data['page_title'] = '{@localization[settings]}}';
         $data['content'] = '';
 
         // Disable access for unregistered users
@@ -637,7 +637,7 @@ class UsersModel extends BaseModel {
             // New message notifications
             $inbox_notification = !empty($this->postAndGet('inbnotif')) ? $this->check($this->postAndGet('inbnotif')) : '';
 
-            if (empty($this->postAndGet('lang'))) $this->redirection(HOMEDIR . 'users/settings/?isset=incorrect');
+            if (empty($this->postAndGet('localization'))) $this->redirection(HOMEDIR . 'users/settings/?isset=incorrect');
 
             /**
              * Site newsletter
@@ -691,7 +691,7 @@ class UsersModel extends BaseModel {
             unset($fields, $values);
 
             // Update language
-            $this->user->changeLanguage($this->postAndGet('lang'));
+            $this->user->changeLanguage($this->postAndGet('localization'));
 
             // update email notificatoins
             $fields = array();
@@ -738,10 +738,10 @@ class UsersModel extends BaseModel {
 
         $choose_lang = $this->container['parse_page'];
         $choose_lang->load('forms/select');
-        $choose_lang->set('label_for', 'lang');
-        $choose_lang->set('label_value', $this->localization->string('lang'));
-        $choose_lang->set('select_id', 'lang');
-        $choose_lang->set('select_name', 'lang');
+        $choose_lang->set('label_for', 'localization');
+        $choose_lang->set('label_value', $this->localization->string('localization'));
+        $choose_lang->set('select_id', 'localization');
+        $choose_lang->set('select_name', 'localization');
         $choose_lang->set('options', $options);
 
         /**
@@ -808,7 +808,7 @@ class UsersModel extends BaseModel {
      */
     public function ban()
     {
-        $data['tname'] = '{@localization[banned]}}';
+        $data['page_title'] = '{@localization[banned]}}';
         $data['content'] = '';
 
         if (!$this->user->userAuthenticated()) $this->redirection('../');
@@ -869,7 +869,7 @@ class UsersModel extends BaseModel {
 
         // Show error page if user doesn't exist
         if (!isset($users_id) || !$this->user->idExists($users_id)) {
-            $this_page['tname'] = 'User does not exist';
+            $this_page['page_title'] = 'User does not exist';
 
             $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
 
@@ -879,7 +879,7 @@ class UsersModel extends BaseModel {
             exit;
         }
 
-        $this_page['tname'] = '{@localization[profile]}} ' . $uz;
+        $this_page['page_title'] = '{@localization[profile]}} ' . $uz;
 
         // Load page from template
         $showPage = $this->container['parse_page'];

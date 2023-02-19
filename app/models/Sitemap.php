@@ -12,7 +12,7 @@ class Sitemap extends BaseModel {
      */
     public function index()
     {
-        $this_page['tname'] = 'Sitemap Generator';
+        $this_page['page_title'] = 'Sitemap Generator';
         $this_page['content'] = '';
 
         if (!$this->user->administrator(101)) $this->redirection('./');
@@ -23,28 +23,28 @@ class Sitemap extends BaseModel {
             $sitemap = '<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
         
-            foreach ($this->db->query("SELECT pname, lastupd, headt, type FROM pages WHERE published = '2' OR published = '0'") as $page) {
+            foreach ($this->db->query("SELECT slug, date_updated, head_tags, type FROM pages WHERE published_status = '2' OR published_status = '0'") as $page) {
                 // date updated
-                $dateUpdated = $this->correctDate($page['lastupd'], 'Y-m-d');
+                $dateUpdated = $this->correctDate($page['date_updated'], 'Y-m-d');
 
                 // url
-                if (!empty($page['headt']) && stristr($page['headt'], 'og:url')) {
-                    preg_match('/<meta property="og:url" content="([^"]*)/i', $page['headt'], $matches);
+                if (!empty($page['head_tags']) && stristr($page['head_tags'], 'og:url')) {
+                    preg_match('/<meta property="og:url" content="([^"]*)/i', $page['head_tags'], $matches);
                     $loc = $matches[1];
         
                     if ($this->configuration('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
-                } elseif ($page['pname'] == 'index') {
+                } elseif ($page['slug'] == 'index') {
                     $loc = $this->websiteHomeAddress();
                 } else {
                     // check for blog posts
                     if ($page['type'] == 'post') {
-                        $loc = $this->websiteHomeAddress() . '/blog/' . $page['pname'];
+                        $loc = $this->websiteHomeAddress() . '/blog/' . $page['slug'];
                     } else { // it is regular page
-                        $loc = $this->websiteHomeAddress() . '/page/' . $page['pname'];
+                        $loc = $this->websiteHomeAddress() . '/page/' . $page['slug'];
                     }
                 }
 
-                if ($page['pname'] != 'menu_slider') {
+                if ($page['slug'] != 'menu_slider') {
                    $sitemap .= '
         <url>
             <loc>' . $loc . '</loc>

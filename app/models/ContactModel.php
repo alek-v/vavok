@@ -19,9 +19,9 @@ class ContactModel extends BaseModel {
      */
     public function index(): array
     {
-        $data['tname'] = '{@localization[contact]}}';
+        $data['page_title'] = '{@localization[contact]}}';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['headt'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        $data['head_tags'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         $data['content'] = '';
 
         if (!$this->user->userAuthenticated()) {
@@ -50,7 +50,7 @@ class ContactModel extends BaseModel {
      */
     public function send(): array
     {
-        $data['tname'] = '{@localization[contact]}}';
+        $data['page_title'] = '{@localization[contact]}}';
         $data['content'] = '';
 
         // Check name

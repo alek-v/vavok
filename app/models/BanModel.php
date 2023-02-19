@@ -18,7 +18,7 @@ class BanModel extends BaseModel {
      */
     public function addban(): array
     {
-        $data['tname'] = '{@localization[banning]}}';
+        $data['page_title'] = '{@localization[banning]}}';
         $data['content'] = '';
 
         $user = $this->postAndGet('users');
@@ -257,7 +257,7 @@ class BanModel extends BaseModel {
      */
     public function banlist()
     {
-        $data['tname'] = '{@localization[banlist]}}';
+        $data['page_title'] = '{@localization[banlist]}}';
         $data['content'] = '';
 
         if (!$this->user->administrator() && !$this->user->moderator(103)) $this->redirection('../index.php?error');

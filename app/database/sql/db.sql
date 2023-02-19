@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
+
 CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `id` int(9) NOT NULL auto_increment,
   `uid` int(9) NOT NULL default '0',
@@ -130,21 +131,21 @@ CREATE TABLE IF NOT EXISTS `online` (
 -- site pages
 CREATE TABLE IF NOT EXISTS `pages` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
-  `tname` varchar(120) NULL COMMENT 'page title',
-  `pname` varchar(120) NOT NULL COMMENT 'page name',
-  `lang` varchar(120) NULL COMMENT 'language',
-  `created` int(50) NULL COMMENT 'date created',
-  `lastupd` int(50) NULL COMMENT 'last update',
-  `lstupdby` int(50) NULL COMMENT 'last update by',
-  `file` varchar(120) NULL COMMENT 'file name',
-  `crtdby` int(50) NULL COMMENT 'created by',
-  `headt` text,
-  `published` int(11) NULL,
-  `pubdate` int(11) NULL,
+  `page_title` varchar(255) NULL,
+  `slug` varchar(255) NOT NULL,
+  `localization` varchar(120) NULL,
+  `date_created` int(11) NULL,
+  `date_updated` int(11) NULL,
+  `updated_by` int(8) NULL,
+  `file` varchar(120) NULL,
+  `created_by` int(8) NULL,
+  `head_tags` text,
+  `published_status` int(1) NULL,
+  `date_published` int(11) NULL,
   `content` longtext NULL,
   `type` varchar(20) DEFAULT NULL,
   `views` int(11) NOT NULL DEFAULT 0,
-  `default_img` varchar(120) DEFAULT NULL COMMENT 'default image to show for bot''s and article headers',
+  `default_img` varchar(120) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
@@ -477,6 +478,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 -- Reserved tokens: login, email
+
 
 
 CREATE TABLE IF NOT EXISTS `group_members` (

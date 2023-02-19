@@ -22,8 +22,8 @@ class InboxModel extends BaseModel {
         // Update notification data
         if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
-        $data['headt'] = '<meta name="robots" content="noindex">';
-        $data['tname'] = '{@localization[inbox]}}';
+        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $data['page_title'] = '{@localization[inbox]}}';
         $data['content'] = '';
 
         $num_items = $this->user->getNumberOfMessages($this->user->userIdNumber());
@@ -81,7 +81,7 @@ class InboxModel extends BaseModel {
         // Update notification data
         if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
-        $data['headt'] = '<meta name="robots" content="noindex">
+        $data['head_tags'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
         <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
 
@@ -121,7 +121,7 @@ class InboxModel extends BaseModel {
 
         $data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
         $data['content'] .= $this->homelink('<p>', '</p>');
-        $data['tname'] = '{@localization[inbox]}}';
+        $data['page_title'] = '{@localization[inbox]}}';
 
         // Pass page to the controller
         return $data;
@@ -134,7 +134,7 @@ class InboxModel extends BaseModel {
             $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getIdFromNick($this->postAndGet('who')));
         }
 
-        $data['tname'] = '{@localization[inbox]}}';
+        $data['page_title'] = '{@localization[inbox]}}';
         $data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
         $data['links'] .= $this->homelink('<p>', '</p>');
 

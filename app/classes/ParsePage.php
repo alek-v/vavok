@@ -15,7 +15,7 @@ class ParsePage {
     protected string $file;             // Template
     protected string $title;            // Page title
     protected string $content;          // Content
-    protected string $lang;             // Language
+    protected string $localization;             // Language
     protected string $head_data;        // Meta tags
     protected string $notification;     // Notification at page
     protected array  $values = array(); // Values to replace at page template
@@ -51,18 +51,18 @@ class ParsePage {
         // Set missing OG (open graph) tags when possible
         $this->head_data = $this->pageHeadMetatags($data);
 
-        $this->title = isset($data['tname']) ? $data['tname'] : '';
-        $this->page_name = isset($data['pname']) ? $data['pname'] : '';
+        $this->title = isset($data['page_title']) ? $data['page_title'] : '';
+        $this->page_name = isset($data['slug']) ? $data['slug'] : '';
         $this->content = isset($data['content']) ? $data['content'] : '';
-        $this->lang = isset($data['lang']) ? $data['lang'] : '';
+        $this->localization = isset($data['localization']) ? $data['localization'] : '';
 
         // Page views
         $this->views = !empty($data['views']) ? $data['views'] : 0;
 
         // Update page views
         // Update page with selected localization
-        $language = is_string($this->lang) && !empty($this->lang) ? " AND lang='" . $this->lang . "'" : '';
-        if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "pname = '" . $this->page_name . "'{$language}");
+        $language = is_string($this->localization) && !empty($this->localization) ? " AND localization='" . $this->localization . "'" : '';
+        if (!empty($this->page_name)) $this->db->update('pages', 'views', $this->views + 1, "slug = '" . $this->page_name . "'{$language}");
 
         $this->notification = isset($data['show_notification']) ? $data['show_notification'] : '';
         $this->values = array_merge($this->values, $data);
@@ -170,7 +170,7 @@ class ParsePage {
         $this->set('content', $this->content);
 
         // HTML Language
-        if (!empty($this->lang)) $this->set('page_language', ' lang="' . $this->lang . '"');
+        if (!empty($this->localization)) $this->set('page_language', " localization = '{$this->localization}'");
 
         // Cookie consent
         if ($this->configuration('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';

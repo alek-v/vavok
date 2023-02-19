@@ -170,7 +170,7 @@
                     </ul>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {@localization[lang]}}
+                            {@localization[localization]}}
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=en" rel="nofollow"><img src="{@HOMEDIR}}themes/default/images/flag_great_britain_32.png" alt="english language" /> English</a></li>

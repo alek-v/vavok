@@ -79,8 +79,8 @@ class PageManager {
     public function update(int $id, string $content): bool
     {
         $fields[] = 'content';
-        $fields[] = 'lastupd';
-        $fields[] = 'lstupdby';
+        $fields[] = 'date_updated';
+        $fields[] = 'updated_by';
 
         $values[] = $this->pageContentToSave($content);
         $values[] = time();
@@ -126,17 +126,17 @@ class PageManager {
         $pageName = str_replace('.php', '', $newName); // page name (without extension (.php))
 
         // Update URL tags in header data
-        $header_data = $this->selectPage($id, 'headt, pname');
+        $header_data = $this->selectPage($id, 'head_tags, slug');
 
-        $updated_links = str_replace($header_data['pname'], $pageName, $header_data['headt']);
+        $updated_links = str_replace($header_data['slug'], $pageName, $header_data['head_tags']);
 
         $new_data = array(
-            'headt' => $updated_links
+            'head_tags' => $updated_links
         );
         $this->headData($id, $new_data);
 
         // Update other data in database
-        $fields[] = 'pname';
+        $fields[] = 'slug';
         $fields[] = 'file';
 
         $values[] = $pageName;
@@ -156,25 +156,25 @@ class PageManager {
     {
         $values = array($visibility, time());
 
-        $fields = array('published', 'pubdate');
+        $fields = array('published_status', 'date_published');
 
         $this->db->update('pages', $fields, $values, "id='{$id}'");
     }
 
     /**
-     * Update page language
+     * Update page localization
      * 
      * @param integer $id
      * @param string $lang
      * @return void
      */
-    function language(int $id, string $lang): void
+    function language(int $id, string $localization): void
     {
         // Data of the page
         $pageData = $this->selectPage($id);
 
         // Update data in database
-        $this->db->update('pages', array('lang', 'file'), array($lang, $pageData['pname'] . '_' . $lang . '.php'), "id='{$id}'");
+        $this->db->update('pages', array('localization', 'file'), array($localization, $pageData['slug'] . '_' . $localization . '.php'), "id='{$id}'");
     }
 
     /**
@@ -239,7 +239,7 @@ class PageManager {
     {
         $where = '';
 
-        if (!empty($creator)) $where = " WHERE crtdby = '{$creator}'";
+        if (!empty($creator)) $where = " WHERE created_by = '{$creator}'";
 
         return $this->db->countRow('pages' . $where);
     }

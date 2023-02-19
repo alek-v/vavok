@@ -83,7 +83,7 @@ class EmailQueue extends BaseModel {
     public function email_queue()
     {
         // Page data
-        $page_data['tname'] = 'eMail queue';
+        $page_data['page_title'] = 'eMail queue';
         $page_data['content'] = '';
 
         // Checking access permissions
@@ -100,7 +100,7 @@ class EmailQueue extends BaseModel {
         $textEditor = str_replace('#selector', '#msg', $loadTextEditor);
 
         // add to page header
-        $page_data['headt'] = $textEditor;
+        $page_data['head_tags'] = $textEditor;
 
         if (empty($this->postAndGet('action'))) {
             $sub_names = $this->_mailer->emailSubscriptionOptions();
@@ -152,7 +152,7 @@ class EmailQueue extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'add') {
-            $page_data['headt'] .= '
+            $page_data['head_tags'] .= '
             <script type="text/javascript">
             function formAutoSubmit () {
             var frm = document.getElementById("sendmail");
