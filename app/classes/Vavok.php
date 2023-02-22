@@ -5,6 +5,7 @@
  */
 
 namespace App\Classes;
+
 use App\Traits\Core;
 
 class Vavok {

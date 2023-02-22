@@ -5,6 +5,7 @@
  */
 
 namespace App\Classes;
+
 use App\Traits\Core;
 use App\Traits\Validations;
 use Pimple\Container;
@@ -14,11 +15,13 @@ use PHPMailer\PHPMailer\SMTP;
 class Mailer {
     use Core, Validations;
 
-    protected object $db;
+    protected Database $db;
+    protected Config $configuration;
 
     public function __construct(protected Container $container)
     {
-        $this->db = $container['db'];
+        $this->db = $this->container['db'];
+        $this->configuration = $this->container['config'];
     }
 
     /**
@@ -44,7 +47,9 @@ class Mailer {
         }
 
         // Default name
-        if (empty($name)) $name = $this->configuration('title');
+        if (empty($name)) {
+            $name = $this->configuration->getValue('title');
+        }
 
         // Support for unicode emails
         if (mb_detect_encoding($user_mail) != 'ASCII') {

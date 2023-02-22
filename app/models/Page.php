@@ -40,7 +40,7 @@ class Page extends BaseModel {
         // Redirect if user's language is not website default language,
         // language is not in URL, example: www.example.com
         // and page with users's language exists, example: www.example.com/de
-        if ($this->configuration('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
+        if ($this->configuration->getValue('siteDefaultLang') != $this->user->getUserLanguage() && empty($params[0])) $this->redirection(HOMEDIR . $this->user->getPreferredLanguage($this->user->getUserLanguage(), 'short') . '/');
 
         return $data = isset($data['page_title']) ? $data : die('error404');
     }
@@ -137,7 +137,7 @@ class Page extends BaseModel {
         $data['page_title'] = '{@localization[statistics]}}';
         $data['content'] = '';
 
-        if ($this->configuration('showCounter') == 6 && !$this->user->administrator()) $this->redirection(HOMEDIR);
+        if ($this->configuration->getValue('showCounter') == 6 && !$this->user->administrator()) $this->redirection(HOMEDIR);
 
         $hour = (int)date("H", time());
         $hday = date("j", time())-1;
@@ -156,7 +156,7 @@ class Page extends BaseModel {
         $total_visits = $counts['visits_total']; // total visits
     
         $data['content'] .= '{@localization[temponline]}}: ';
-        if ($this->configuration('showOnline') == 1 || $this->user->administrator()) {
+        if ($this->configuration->getValue('showOnline') == 1 || $this->user->administrator()) {
             $data['content'] .= '<a href="{@HOMEDIR}}pages/online">' . (int)$pcounter_online . '</a><br />';
         } else {
             $data['content'] .= '<b>' . (int)$pcounter_online . '</b><br />';
@@ -183,7 +183,7 @@ class Page extends BaseModel {
         $data['page_title'] = 'Online';
         $data['content'] = '';
 
-        if ($this->configuration('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->redirection("../");
+        if ($this->configuration->getValue('showOnline') == 0 && (!$this->user->userAuthenticated() && !$this->user->administrator())) $this->redirection("../");
 
         // page settings
         $data_on_page = 10; // online users per page
@@ -221,19 +221,19 @@ class Page extends BaseModel {
                 if (($item['user'] == "0" || empty($item['user'])) && empty($item['bot'])) {
                     $data['content'] .= '<b>{@localization[guest]}}</b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration->getValue('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } elseif (!empty($item['bot']) && ($item['user'] == "0" || empty($item['user']))) {
                     $data['content'] .= '<b>' . $item['bot'] . '</b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration->getValue('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     } 
                     $data['content'] .= '<hr />';
                 } else {
                     $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getNickFromId($item['user']) . '</a></b> ({@localization[time]}}: ' . $time . ')<br />';
                     if ($this->user->moderator() || $this->user->administrator()) {
-                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                        $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration->getValue('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                     }
                     $data['content'] .= '<hr />';
                 }
@@ -257,7 +257,7 @@ class Page extends BaseModel {
                 $data['content'] .= '<b><a href="' . HOMEDIR . 'users/u/' . $item['user'] . '">' . $this->user->getNickFromId($item['user']) . '</a></b> ({@localization[time]}}: ' . $time . ')<br />';
 
                 if ($this->user->moderator() || $this->user->administrator()) {
-                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
+                    $data['content'] .= '<small><font color="#CC00CC">(<a href="' . HOMEDIR . $this->configuration->getValue('mPanel') . '/ip_information/?ip=' . $item['ip'] . '" target="_blank">' . $item['ip'] . '</a>)</font></small>';
                 }
 
                 $data['content'] .= '<hr />';
@@ -283,7 +283,7 @@ class Page extends BaseModel {
     public function cookies_policy()
     {
         $this_page['page_title'] = 'Cookies Policy';
-        $this_page['homeurl'] = $this->configuration('homeUrl');
+        $this_page['homeurl'] = $this->configuration->getValue('homeUrl');
 
         return $this_page;
     }

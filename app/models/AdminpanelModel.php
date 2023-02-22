@@ -320,10 +320,10 @@ class AdminpanelModel extends BaseModel {
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editone');
         
-            $options = '<option value="' . $this->configuration('siteDefaultLang') . '">' . $this->configuration('siteDefaultLang') . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('siteDefaultLang') . '">' . $this->configuration->getValue('siteDefaultLang') . '</option>';
             $dir = opendir(APPDIR . 'include/lang');
             while ($file = readdir($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
                     $options .= '<option value="' . $file . '">' . $file . '</option>';
                 }
             }
@@ -336,13 +336,13 @@ class AdminpanelModel extends BaseModel {
             $select_lang->set('select_name', 'conf_set47');
             $select_lang->set('options', $options);
 
-            $config_themes_show = str_replace('web_', '', $this->configuration('webtheme'));
+            $config_themes_show = str_replace('web_', '', $this->configuration->getValue('webtheme'));
             $config_themes_show = ucfirst($config_themes_show);
 
-            $options = '<option value="' . $this->configuration('webtheme') . '">' . $config_themes_show . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('webtheme') . '">' . $config_themes_show . '</option>';
             $dir = opendir (PUBLICDIR . 'themes');
             while ($file = readdir ($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
                     $nfile = str_replace("web_", "", $file);
                     $nfile = ucfirst($nfile);
                     $options .= '<option value="' . $file . '">' . $nfile . '</option>';
@@ -364,7 +364,7 @@ class AdminpanelModel extends BaseModel {
             $input8->set('label_value', '{@localization[adminusername]}}');
             $input8->set('input_id', 'conf_set8');
             $input8->set('input_name', 'conf_set8');
-            $input8->set('input_value', $this->configuration('adminNick'));
+            $input8->set('input_value', $this->configuration->getValue('adminNick'));
             $input8->set('input_maxlength', 20);
         
             $input9 = $this->container['parse_page'];
@@ -373,7 +373,7 @@ class AdminpanelModel extends BaseModel {
             $input9->set('label_value', '{@localization[adminemail]}}');
             $input9->set('input_id', 'conf_set9');
             $input9->set('input_name', 'conf_set9');
-            $input9->set('input_value', $this->configuration('adminEmail'));
+            $input9->set('input_value', $this->configuration->getValue('adminEmail'));
             $input9->set('input_maxlength', 50);
 
             $input10 = $this->container['parse_page'];
@@ -382,7 +382,7 @@ class AdminpanelModel extends BaseModel {
             $input10->set('label_value', '{@localization[timezone]}}');
             $input10->set('input_id', 'conf_set10');
             $input10->set('input_name', 'conf_set10');
-            $input10->set('input_value', $this->configuration('timeZone'));
+            $input10->set('input_value', $this->configuration->getValue('timeZone'));
             $input10->set('input_maxlength', 3);
         
             $input11 = $this->container['parse_page'];
@@ -391,7 +391,7 @@ class AdminpanelModel extends BaseModel {
             $input11->set('label_value', '{@localization[pagetitle]}}');
             $input11->set('input_id', 'conf_set11');
             $input11->set('input_name', 'conf_set11');
-            $input11->set('input_value', $this->configuration('title'));
+            $input11->set('input_value', $this->configuration->getValue('title'));
             $input11->set('input_maxlength', 100);
         
             $input14 = $this->container['parse_page'];
@@ -400,7 +400,7 @@ class AdminpanelModel extends BaseModel {
             $input14->set('label_value', '{@localization[siteurl]}}');
             $input14->set('input_id', 'conf_set14');
             $input14->set('input_name', 'conf_set14');
-            $input14->set('input_value', $this->configuration('homeUrl'));
+            $input14->set('input_value', $this->configuration->getValue('homeUrl'));
             $input14->set('input_maxlength', 50);
         
             // Registration opened or closed
@@ -411,7 +411,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_yes->set('input_id', 'conf_set61');
             $input_radio61_yes->set('input_name', 'conf_set61');
             $input_radio61_yes->set('input_value', 1);
-            if ($this->configuration('openReg') == 1) {
+            if ($this->configuration->getValue('openReg') == 1) {
                 $input_radio61_yes->set('input_status', 'checked');
             }
         
@@ -422,7 +422,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_no->set('input_id', 'conf_set61');
             $input_radio61_no->set('input_name', 'conf_set61');
             $input_radio61_no->set('input_value', 0);
-            if ($this->configuration('openReg') == 0) {
+            if ($this->configuration->getValue('openReg') == 0) {
                 $input_radio61_no->set('input_status', 'checked');
             }
         
@@ -439,7 +439,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_yes->set('input_id', 'conf_set62');
             $input_radio62_yes->set('input_name', 'conf_set62');
             $input_radio62_yes->set('input_value', 1);
-            if ($this->configuration('regConfirm') == 1) {
+            if ($this->configuration->getValue('regConfirm') == 1) {
                 $input_radio62_yes->set('input_status', 'checked');
             }
         
@@ -450,7 +450,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_no->set('input_id', 'conf_set62');
             $input_radio62_no->set('input_name', 'conf_set62');
             $input_radio62_no->set('input_value', 0);
-            if ($this->configuration('regConfirm') == 0) {
+            if ($this->configuration->getValue('regConfirm') == 0) {
                 $input_radio62_no->set('input_status', 'checked');
             }
         
@@ -467,7 +467,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_yes->set('input_id', 'conf_set63');
             $input_radio63_yes->set('input_name', 'conf_set63');
             $input_radio63_yes->set('input_value', 1);
-            if ($this->configuration('siteOff') == 1) {
+            if ($this->configuration->getValue('siteOff') == 1) {
                 $input_radio63_yes->set('input_status', 'checked');
             }
         
@@ -478,7 +478,7 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_no->set('input_id', 'conf_set63');
             $input_radio63_no->set('input_name', 'conf_set63');
             $input_radio63_no->set('input_value', 0);
-            if ($this->configuration('siteOff') == 0) {
+            if ($this->configuration->getValue('siteOff') == 0) {
                 $input_radio63_no->set('input_status', 'checked');
             }
         
@@ -511,7 +511,7 @@ class AdminpanelModel extends BaseModel {
             $_4_yes->set('input_id', 'conf_set4');
             $_4_yes->set('input_name', 'conf_set4');
             $_4_yes->set('input_value', 1);
-            if ($this->configuration('showtime') == 1) {
+            if ($this->configuration->getValue('showtime') == 1) {
                 $_4_yes->set('input_status', 'checked');
             }
         
@@ -522,7 +522,7 @@ class AdminpanelModel extends BaseModel {
             $_4_no->set('input_id', 'conf_set4');
             $_4_no->set('input_name', 'conf_set4');
             $_4_no->set('input_value', 0);
-            if ($this->configuration('showtime') == 0) {
+            if ($this->configuration->getValue('showtime') == 0) {
                 $_4_no->set('input_status', 'checked');
             }
         
@@ -541,7 +541,7 @@ class AdminpanelModel extends BaseModel {
             $_5_yes->set('input_id', 'conf_set5');
             $_5_yes->set('input_name', 'conf_set5');
             $_5_yes->set('input_value', 1);
-            if ($this->configuration('pageGenTime') == 1) {
+            if ($this->configuration->getValue('pageGenTime') == 1) {
                 $_5_yes->set('input_status', 'checked');
             }
         
@@ -552,7 +552,7 @@ class AdminpanelModel extends BaseModel {
             $_5_no->set('input_id', 'conf_set5');
             $_5_no->set('input_name', 'conf_set5');
             $_5_no->set('input_value', 0);
-            if ($this->configuration('pageGenTime') == 0) {
+            if ($this->configuration->getValue('pageGenTime') == 0) {
                 $_5_no->set('input_status', 'checked');
             }
         
@@ -571,7 +571,7 @@ class AdminpanelModel extends BaseModel {
             $_7_yes->set('input_id', 'conf_set7');
             $_7_yes->set('input_name', 'conf_set7');
             $_7_yes->set('input_value', 1);
-            if ($this->configuration('showOnline') == 1) {
+            if ($this->configuration->getValue('showOnline') == 1) {
                 $_7_yes->set('input_status', 'checked');
             }
         
@@ -582,7 +582,7 @@ class AdminpanelModel extends BaseModel {
             $_7_no->set('input_id', 'conf_set7');
             $_7_no->set('input_name', 'conf_set7');
             $_7_no->set('input_value', 0);
-            if ($this->configuration('showOnline') == 0) {
+            if ($this->configuration->getValue('showOnline') == 0) {
                 $_7_no->set('input_status', 'checked');
             }
         
@@ -601,7 +601,7 @@ class AdminpanelModel extends BaseModel {
             $_32_yes->set('input_id', 'conf_set32');
             $_32_yes->set('input_name', 'conf_set32');
             $_32_yes->set('input_value', 1);
-            if ($this->configuration('cookieConsent') == 1) {
+            if ($this->configuration->getValue('cookieConsent') == 1) {
                 $_32_yes->set('input_status', 'checked');
             }
         
@@ -612,7 +612,7 @@ class AdminpanelModel extends BaseModel {
             $_32_no->set('input_id', 'conf_set32');
             $_32_no->set('input_name', 'conf_set32');
             $_32_no->set('input_value', 0);
-            if ($this->configuration('cookieConsent') == 0) {
+            if ($this->configuration->getValue('cookieConsent') == 0) {
                 $_32_no->set('input_status', 'checked');
             }
         
@@ -626,9 +626,9 @@ class AdminpanelModel extends BaseModel {
              */
             $incounters = array(6 => "{@localization[dontshow]}}", 1 => "{@localization[vsttotalvst]}}", 2 => "{@localization[clicktotalclick]}}", 3 => "{@localization[clickvisits]}}", 4 => "{@localization[totclicktotvst]}}");
         
-            $options = '<option value="' . $this->configuration('showCounter') . '">' . $incounters[$this->configuration('showCounter')] . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('showCounter') . '">' . $incounters[$this->configuration->getValue('showCounter')] . '</option>';
             foreach($incounters as $k => $v) {
-                if ($k != $this->configuration('showCounter')) {
+                if ($k != $this->configuration->getValue('showCounter')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
@@ -664,7 +664,7 @@ class AdminpanelModel extends BaseModel {
             $input22->set('label_value', '{@localization[maxinchat]}}');
             $input22->set('input_id', 'conf_set22');
             $input22->set('input_name', 'conf_set22');
-            $input22->set('input_value', $this->configuration('maxPostChat'));
+            $input22->set('input_value', $this->configuration->getValue('maxPostChat'));
             $input22->set('input_maxlength', 4);
 
             /**
@@ -676,7 +676,7 @@ class AdminpanelModel extends BaseModel {
             $input56->set('label_value', '{@localization[onepassmail]}}');
             $input56->set('input_id', 'conf_set56');
             $input56->set('input_name', 'conf_set56');
-            $input56->set('input_value', $this->configuration('subMailPacket'));
+            $input56->set('input_value', $this->configuration->getValue('subMailPacket'));
             $input56->set('input_maxlength', 3);
         
             $form->set('fields', $form->merge(array($input22, $input56)));
@@ -702,7 +702,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set51->set('label_value', '{@localization[maxrefererdata]}}');
             $conf_set51->set('input_id', 'referals');
             $conf_set51->set('input_name', 'conf_set51');
-            $conf_set51->set('input_value', $this->configuration('refererLog'));
+            $conf_set51->set('input_value', $this->configuration->getValue('refererLog'));
             $conf_set51->set('input_maxlength', 3);
         
             /**
@@ -715,7 +715,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set70yes->set('input_id', 'referal-yes');
             $conf_set70yes->set('input_name', 'conf_set70');
             $conf_set70yes->set('input_value', 1);
-            if ($this->configuration('showRefPage') == 1) {
+            if ($this->configuration->getValue('showRefPage') == 1) {
                 $conf_set70yes->set('input_status', 'checked');
             }
         
@@ -726,7 +726,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set70no->set('input_id', 'referal-no');
             $conf_set70no->set('input_name', 'conf_set70');
             $conf_set70no->set('input_value', 0);
-            if ($this->configuration('showRefPage') == 0) {
+            if ($this->configuration->getValue('showRefPage') == 0) {
                 $conf_set70no->set('input_status', 'checked');
             }
         
@@ -745,7 +745,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6yes->set('input_id', 'fb_comm_yes');
             $conf_set6yes->set('input_name', 'conf_set6');
             $conf_set6yes->set('input_value', 1);
-            if ($this->configuration('pgFbComm') == 1) {
+            if ($this->configuration->getValue('pgFbComm') == 1) {
                 $conf_set6yes->set('input_status', 'checked');
             }
 
@@ -756,7 +756,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6no->set('input_id', 'fb_comm_no');
             $conf_set6no->set('input_name', 'conf_set6');
             $conf_set6no->set('input_value', 0);
-            if ($this->configuration('pgFbComm') == 0) {
+            if ($this->configuration->getValue('pgFbComm') == 0) {
                 $conf_set6no->set('input_status', 'checked');
             }
 
@@ -788,7 +788,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set58->set('label_value', '{@localization[maxlogfile]}}');
             $conf_set58->set('input_id', 'conf_set58');
             $conf_set58->set('input_name', 'conf_set58');
-            $conf_set58->set('input_value', $this->configuration('maxLogData'));
+            $conf_set58->set('input_value', $this->configuration->getValue('maxLogData'));
             $conf_set58->set('input_maxlength', 3);
 
             /**
@@ -800,7 +800,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set76->set('label_value', '{@localization[maxbantime]}}');
             $conf_set76->set('input_id', 'conf_set76');
             $conf_set76->set('input_name', 'conf_set76');
-            $conf_set76->set('input_value', round($this->configuration('maxBanTime') / 1440));
+            $conf_set76->set('input_value', round($this->configuration->getValue('maxBanTime') / 1440));
             $conf_set76->set('input_maxlength', 3);
         
             $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
@@ -823,7 +823,7 @@ class AdminpanelModel extends BaseModel {
             $input29->set('label_value', '{@localization[floodtime]}}');
             $input29->set('input_id', 'conf_set29');
             $input29->set('input_name', 'conf_set29');
-            $input29->set('input_value', $this->configuration('floodTime'));
+            $input29->set('input_value', $this->configuration->getValue('floodTime'));
             $input29->set('input_maxlength', 3);
         
             $input1 = $this->container['parse_page'];
@@ -832,15 +832,15 @@ class AdminpanelModel extends BaseModel {
             $input1->set('label_value', '{@localization[passkey]}}');
             $input1->set('input_id', 'conf_set1');
             $input1->set('input_name', 'conf_set1');
-            $input1->set('input_value', $this->configuration('keypass'));
+            $input1->set('input_value', $this->configuration->getValue('keypass'));
             $input1->set('input_maxlength', 25);
         
             // quarantine time
             $quarantine = array(0 => "{@localization[disabled]}}", 21600 => "6 {@localization[hours]}}", 43200 => "12 {@localization[hours]}}", 86400 => "24 {@localization[hours]}}", 129600 => "36 {@localization[hours]}}", 172800 => "48 {@localization[hours]}}");
         
-            $options = '<option value="' . $this->configuration('quarantine') . '">' . $quarantine[$this->configuration('quarantine')] . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('quarantine') . '">' . $quarantine[$this->configuration->getValue('quarantine')] . '</option>';
             foreach($quarantine as $k => $v) {
-                if ($k != $this->configuration('quarantine')) {
+                if ($k != $this->configuration->getValue('quarantine')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
@@ -856,8 +856,8 @@ class AdminpanelModel extends BaseModel {
             // transfer protocol
             $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
         
-            $transfer_protocol = $this->configuration('transferProtocol');
-            if (empty($this->configuration('transferProtocol'))) $transfer_protocol = 'auto';
+            $transfer_protocol = $this->configuration->getValue('transferProtocol');
+            if (empty($this->configuration->getValue('transferProtocol'))) $transfer_protocol = 'auto';
             
             $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
         
@@ -882,7 +882,7 @@ class AdminpanelModel extends BaseModel {
             $captcha_sitekey->set('label_value', 'reCAPTCHA site key');
             $captcha_sitekey->set('input_id', 'recaptcha_sitekey');
             $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
-            $captcha_sitekey->set('input_value', $this->configuration('recaptcha_sitekey'));
+            $captcha_sitekey->set('input_value', $this->configuration->getValue('recaptcha_sitekey'));
             $captcha_sitekey->set('input_maxlength', 50);
 
             // reCAPTCHA secret key
@@ -892,7 +892,7 @@ class AdminpanelModel extends BaseModel {
             $captcha_secret->set('label_value', 'reCAPTCHA secret key');
             $captcha_secret->set('input_id', 'recaptcha_secretkey');
             $captcha_secret->set('input_name', 'recaptcha_secretkey');
-            $captcha_secret->set('input_value', $this->configuration('recaptcha_secretkey'));
+            $captcha_secret->set('input_value', $this->configuration->getValue('recaptcha_secretkey'));
             $captcha_secret->set('input_maxlength', 50);
 
             $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
@@ -960,14 +960,14 @@ class AdminpanelModel extends BaseModel {
             $vav_name = $this->user->getNickFromId($this->postAndGet('usr'));
 
             $message = $this->localization->string('hello') . " " . $vav_name . "!\r\n
-            " . $this->localization->string('sitemod') . " " . $this->configuration('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n
+            " . $this->localization->string('sitemod') . " " . $this->configuration->getValue('homeBase') . " " . $this->localization->string('confirmedreg') . ".\r\n
             " . $this->localization->string('youcanlog') . ".\r\n\r\n
             " . $this->localization->string('bye') . "!\r\n
             " . $this->user->getNickFromId($this->user->userIdNumber()) . "\r\n
-            " . ucfirst($this->configuration('homeBase'));
+            " . ucfirst($this->configuration->getValue('homeBase'));
 
             $newMail = new Mailer($this->container);
-            $newMail->queueEmail($this->user->userInfo('email', $this->postAndGet('usr')), $this->localization->string('message_from_site') . " " . $this->configuration('title'), $message, '', '', 'high');
+            $newMail->queueEmail($this->user->userInfo('email', $this->postAndGet('usr')), $this->localization->string('message_from_site') . " " . $this->configuration->getValue('title'), $message, '', '', 'high');
 
             $this->redirection(HOMEDIR . 'adminpanel/unconfirmed_reg/?isset=mp_ydelconf');
         }
@@ -1042,7 +1042,9 @@ class AdminpanelModel extends BaseModel {
         $data['page_title'] = '{@localization[usrprofile]}}';
         $data['content'] = '';
 
-        if (!$this->user->administrator()) $this->redirection('./?error=noauth');
+        if (!$this->user->administrator()) {
+            $this->redirection('./?error=noauth');
+        }
 
         $user = $this->check($this->postAndGet('users'));
         $users_id = $this->user->getIdFromNick($user);
@@ -1069,27 +1071,33 @@ class AdminpanelModel extends BaseModel {
         // change profile
         if ($this->postAndGet('action') == 'edit') {
             if (!empty($user) && $this->user->usernameExists($user) && $this->user->idExists($users_id)) {
-                $data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/profiles.gif" alt="Profile" /> {@localization[usrprofile]}} ' . $user . '<br>';
+                $data['content'] .= '<h1>{@localization[usrprofile]}} ' . $user . '</h1>';
 
-                if ($this->user->showUsername() != $this->configuration('adminNick') && $user == $this->configuration('adminNick')) {
-                    $data['content'] .= '<br>{@localization[noauthtoedit]}!<br>';
+                if ($this->user->showUsername() != $this->configuration->getValue('adminNick') && $user == $this->configuration->getValue('adminNick')) {
+                    $data['content'] .= '<p>{@localization[noauthtoedit]}!</p>';
+
                     return $data;
-                    exit;
                 }
 
-                if (($this->user->showUsername() != $this->configuration('adminNick')) && ($this->user->userInfo('access_permission', $users_id) == 101 || $this->user->userInfo('access_permission', $users_id) == 102 || $this->user->userInfo('access_permission', $users_id) == 103 || $this->user->userInfo('access_permission', $users_id) == 105) && $this->user->showUsername() != $user) {
-                    $data['content'] .= '<br>{@localization[noauthtoban]}!<br>';
+                if (($this->user->showUsername() != $this->configuration->getValue('adminNick')) && ($this->user->userInfo('access_permission', $users_id) == 101 || $this->user->userInfo('access_permission', $users_id) == 102 || $this->user->userInfo('access_permission', $users_id) == 103 || $this->user->userInfo('access_permission', $users_id) == 105) && $this->user->showUsername() != $user) {
+                    $data['content'] .= '<p>{@localization[noauthtoban]}!</p>>';
+
                     return $data;
-                    exit;
                 }
 
                 $casenick = strcasecmp($user, $this->user->showUsername());
 
-                if ($casenick == 0) $data['content'] .= '<p><b><font color="red">{@localization[myprofile]}!</font></b></p>';
+                if ($casenick == 0) {
+                    $data['content'] .= '<p><b><font color="red">{@localization[you_are_changing_your_profile]}}</font></b></p>';
+                }
 
-                if ($this->user->userInfo('banned', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
+                if ($this->user->userInfo('banned', $users_id) == 1) {
+                    $data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
+                }
         
-                if ($this->user->userInfo('registration_activated', $users_id) == 1) $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
+                if ($this->user->userInfo('registration_activated', $users_id) == 1) {
+                    $data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
+                }
         
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
@@ -1098,10 +1106,12 @@ class AdminpanelModel extends BaseModel {
         
                 $userx_access = (int)$this->user->userInfo('access_permission', $users_id);
         
-                if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration('adminNick')) {
+                if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration->getValue('adminNick')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
         
-                    if ($userx_access == 0 || empty($userx_access)) $userx_access = 107;
+                    if ($userx_access == 0 || empty($userx_access)) {
+                        $userx_access = 107;
+                    }
         
                     $options = '<option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
                     foreach($array_dostup as $k => $v) {
@@ -1223,10 +1233,6 @@ class AdminpanelModel extends BaseModel {
                 if ($userx_access > 106) {
                     $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/?action=poddel&users=' . $user, '{@localization[deluser]}}', '<b>', '</b>') . '<br />';
                 }
-                // Website permissions for various sections
-                if (file_exists('specperm.php')) {
-                    $data['content'] .= $this->sitelink('specperm.php?users=' . $users_id, 'Change access permissions') . '<br />';
-                }
 
                 $data['content'] .= '</p>';
             } else {
@@ -1243,54 +1249,56 @@ class AdminpanelModel extends BaseModel {
             $udd3 = !empty($this->postAndGet('udd3')) ? $this->postAndGet('udd3') : '';
             $udd4 = !empty($this->postAndGet('udd4')) ? $this->postAndGet('udd4') : '';
             $udd5 = !empty($this->postAndGet('udd5')) ? $this->postAndGet('udd5') : '';
-            $udd6 = !empty($this->postAndGet('udd6')) ? $this->postAndGet('udd6') : '';
             $udd7 = !empty($this->postAndGet('udd7')) ? $this->postAndGet('udd7') : ''; // access level
             $udd13 = !empty($this->postAndGet('udd13')) ? $this->postAndGet('udd13') : '';
             $udd29 = !empty($this->postAndGet('udd29')) ? $this->postAndGet('udd29') : '';
             $udd40 = !empty($this->postAndGet('udd40')) ? $this->postAndGet('udd40') : '';
 
-            if ($this->validateEmail($udd4)) {
-                if (empty($udd5) || $this->validateUrl($udd5) === true) {
-                    if (!empty($users_id)) {
-                        if (!empty($udd6)) {
-                            list($uday, $umonth, $uyear) = explode(".", $udd6);
-                            $udd6 = mktime('0', '0', '0', $umonth, $uday, $uyear);
-                        }
+            if (!$this->validateEmail($udd4)) {
+                $data['content'] .= '<p>' . $this->localization->string('emailnotok') . '</p>';
+                $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}') . '</p>';
 
-                        if (!empty($udd1)) $newpass = $this->user->passwordEncrypt($udd1);
-
-                        // Update password
-                        if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
-
-                        // Update default access permissions
-                        if ($udd7 != $this->user->userInfo('access_permission', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
-
-                        // Update data
-                        $this->user->updateUser(
-                            array('city', 'about', 'email', 'site', 'first_name', 'personal_status', 'browsers'),
-                            array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
-                        );
-
-                        $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
-
-                        if (!empty($udd1)) {
-                            $data['content'] .= '<font color=red>{@localization[passchanged]}}: ' . $udd1 . '</font> <br>';
-                        }
-
-                        $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
-                    } else {
-                        $data['content'] .= $this->localization->string('user_does_not_exist') . '!<br>';
-                    }
-                } else {
-                    $data['content'] .= $this->localization->string('urlnotok') . '!<br>';
-                } 
-            } else {
-                $data['content'] .= $this->localization->string('emailnotok') . '<br>';
+                return $data;
             }
 
+            if (!empty($udd5) && !$this->validateUrl($udd5)) {
+                $data['content'] .= '<p>' . $this->localization->string('urlnotok') . '!</p>';
+                $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}') . '</p>';
+
+                return $data;
+            }
+
+            if (!empty($users_id)) {
+                $data['content'] .= '<p>' . $this->localization->string('user_does_not_exist') . '!</p>';
+                $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}') . '</p>';
+
+                return $data;
+            }
+
+            if (!empty($udd1)) $newpass = $this->user->passwordEncrypt($udd1);
+
+            // Update password
+            if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
+
+            // Update default access permissions
+            if ($udd7 != $this->user->userInfo('access_permission', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
+
+            // Update data
+            $this->user->updateUser(
+                array('city', 'about', 'email', 'site', 'first_name', 'personal_status', 'browsers'),
+                array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
+            );
+
+            $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
+
+            if (!empty($udd1)) {
+                $data['content'] .= '<font color=red>{@localization[passchanged]}}: ' . $udd1 . '</font> <br>';
+            }
+
+            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users/', '{@localization[changeotheruser]}}') . '<br>';
             $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
         }
-        
+
         // confirm delete
         if ($this->postAndGet('action') == 'poddel') {
             $data['content'] .= $this->localization->string('confusrdel') . ' <b>' . $user . '</b>?<br><br>';
@@ -1299,9 +1307,9 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
         } 
         
-        // delete user
+        // Delete user
         if ($this->postAndGet('action') == 'deluser') {
-            if ($user != $this->configuration('adminNick')) {
+            if ($user != $this->configuration->getValue('adminNick')) {
                 if ($this->user->userInfo('access_permission', $users_id) < 101 || $this->user->userInfo('access_permission', $users_id) > 105) {
                     $this->user->deleteUser($user);
                     $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';

@@ -168,7 +168,7 @@ class InboxModel extends BaseModel {
         $lastpm = (integer) $stmt->fetch(PDO::FETCH_COLUMN);
         $stmt->closeCursor();
 
-        $pmfl = $lastpm + 0; // 0 is $this->configuration("floodTime")
+        $pmfl = $lastpm + 0; // 0 is $this->configuration->getValue("floodTime")
 
         if ($pmfl < time()) {
             if (!$this->user->isUserBlocked($byuid, $who)) {

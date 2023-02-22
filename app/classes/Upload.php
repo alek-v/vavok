@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Classes;
+
 use App\Traits\Core;
 use Pimple\Container;
 

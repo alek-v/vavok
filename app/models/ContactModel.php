@@ -35,7 +35,7 @@ class ContactModel extends BaseModel {
         }
 
         // Show reCAPTCHA
-        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration('recaptcha_sitekey') . '"></div>';
+        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_sitekey') . '"></div>';
 
         // Page data
         $data['usernameAndMail'] = $usernameAndMail->output();
@@ -78,14 +78,14 @@ class ContactModel extends BaseModel {
             // Insert email text into the email template
             $template = $this->container['parse_page'];
             $template->load('email_templates/default');
-            $template->set('subject', $this->localization->string('message_from_site') . ' ' . $this->configuration('title'));
+            $template->set('subject', $this->localization->string('message_from_site') . ' ' . $this->configuration->getValue('title'));
             $template->set('body', $email_content);
             $email_body = $template->output();
 
             $mail = new Mailer($this->container);
             $mail->queueEmail(
-                $this->configuration('adminEmail'),
-                $this->localization->string('message_from_site') . ' ' . $this->configuration('title'),
+                $this->configuration->getValue('adminEmail'),
+                $this->localization->string('message_from_site') . ' ' . $this->configuration->getValue('title'),
                 $email_body,
                 '',
                 '',

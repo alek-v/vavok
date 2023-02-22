@@ -4,6 +4,7 @@
  */
 
 namespace App\Classes;
+
 use Pimple\Container;
 
 class Counter {

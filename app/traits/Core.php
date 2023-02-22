@@ -8,35 +8,6 @@ namespace App\Traits;
 
 trait Core {
     /**
-     * Get website configuration
-     *
-     * @param string $data
-     * @param bool $full_configuration
-     * @return array|bool|string
-     */
-    public function configuration(string $data = '', bool $full_configuration = false): array|bool|string
-    {
-        $config = array();
-
-        foreach ($this->db->query("SELECT * FROM settings WHERE setting_group = 'system'") as $item) {
-            $config[$item['setting_name']] = $item['value'];
-        }
-
-        // Additional settings
-        $config['timeZone'] = empty($config['timeZone']) ? $config['timeZone'] = 0 : $config['timeZone']; // check is there timezone number set
-        $config['siteTime'] = time() + ($config['timeZone'] * 3600); 
-        $config['homeBase'] = isset($config['homeUrl']) ? str_replace('http://', '', $config['homeUrl']) : '';
-        $config['homeBase'] = str_replace('https://', '', $config['homeBase']);
-
-        // Get complete configuration
-        if ($full_configuration) return $config;
-
-        if (!empty($data) && isset($config[$data])) return $config[$data];
-
-        return false;
-    }
-
-    /**
      * Return correct date
      *
      * @param int $timestamp
@@ -47,7 +18,7 @@ trait Core {
      */
     public function correctDate(int $timestamp = 0, string $format = 'd.m.Y.', string $my_zone = '', bool $show_zone_info = false): string
     {
-        $timezone = $this->configuration('timeZone');
+        $timezone = $this->configuration->getValue('timeZone');
 
         if ($timestamp == 0) $timestamp = time();
         if (empty($format)) $format = 'd.m.y. / H:i';
@@ -489,10 +460,10 @@ trait Core {
     public function recaptchaResponse(string $captcha): array
     {
         // Return success if there is no secret key or disabled reCAPTCHA
-        if (empty($this->configuration('recaptcha_secretkey'))) return array('success' => true);
+        if (empty($this->configuration->getValue('recaptcha_secretkey'))) return array('success' => true);
 
         // Post request to Google, check captcha code
-        $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
+        $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration->getValue('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
         $response = file_get_contents($url);
 
         return $responseKeys = json_decode($response, true);
@@ -557,7 +528,7 @@ trait Core {
         $visits_today = $counts['visits_today'];
         $total_visits = $counts['visits_total'];
 
-        $counter_configuration = $this->configuration('showCounter');
+        $counter_configuration = $this->configuration->getValue('showCounter');
 
         if (!empty($counter_configuration) && $counter_configuration != 6) {
             if ($counter_configuration == 1) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $visits_today . ' | ' . $total_visits . '</a>';
@@ -581,7 +552,7 @@ trait Core {
      */
     public function showPageGenTime(): string
     {
-        if ($this->configuration('pageGenTime') == 1) {
+        if ($this->configuration->getValue('pageGenTime') == 1) {
             $end_time = microtime(true);
             $gen_time = $end_time - START_TIME;
             return '<p class="site-generate-time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
@@ -617,13 +588,13 @@ trait Core {
      */
     public function transferProtocol(): string
     {
-        if (empty($this->configuration('transferProtocol')) || $this->configuration('transferProtocol') == 'auto') {
+        if (empty($this->configuration->getValue('transferProtocol')) || $this->configuration->getValue('transferProtocol') == 'auto') {
             if (!empty($_SERVER['HTTPS'])) {
                 $connectionProtocol = 'https://';
             } else {
                 $connectionProtocol = 'http://';
             }
-        } elseif ($this->configuration('transferProtocol') == 'HTTPS') {
+        } elseif ($this->configuration->getValue('transferProtocol') == 'HTTPS') {
             $connectionProtocol = 'https://';
         } else {
             $connectionProtocol = 'http://';
@@ -888,7 +859,7 @@ trait Core {
 
         // Add missing open graph tags
         if (!strstr($tags, 'og:type')) $tags .= "\n" . '<meta property="og:type" content="website" />';
-        if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
+        if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration->getValue('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
 
         return $tags;
     }

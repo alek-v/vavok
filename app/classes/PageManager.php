@@ -4,6 +4,7 @@
  */
 
 namespace App\Classes;
+
 use App\Exceptions\FileException;
 use App\Traits\Core;
 use App\Traits\Files;

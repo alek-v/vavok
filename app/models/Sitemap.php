@@ -32,7 +32,7 @@ class Sitemap extends BaseModel {
                     preg_match('/<meta property="og:url" content="([^"]*)/i', $page['head_tags'], $matches);
                     $loc = $matches[1];
         
-                    if ($this->configuration('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
+                    if ($this->configuration->getValue('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
                 } elseif ($page['slug'] == 'index') {
                     $loc = $this->websiteHomeAddress();
                 } else {

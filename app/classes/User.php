@@ -5,6 +5,7 @@
  */
 
 namespace App\Classes;
+
 use App\Traits\Core;
 use App\Traits\Validations;
 use Pimple\Container;
@@ -15,6 +16,7 @@ class User {
     use Core, Validations;
 
     protected Database $db;
+    protected Config $configuration;
     public array $user_data = [
         'authenticated' => false,
         'admin_status' => 'user',
@@ -24,7 +26,8 @@ class User {
     public function __construct(protected Container $container)
     {
         // Database connection
-        $this->db = $container['db'];
+        $this->db = $this->container['db'];
+        $this->configuration = $this->container['config'];
 
         // Session from cookie
         if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
@@ -102,10 +105,10 @@ class User {
         // User settings
 
         // If timezone is not defined use default
-        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration('timeZone'));
+        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration->getValue('timeZone'));
 
         // Site theme
-        $config_themes = $this->configuration('webtheme');
+        $config_themes = $this->configuration->getValue('webtheme');
 
         // If theme does not exist use default theme
         // For admin panel use default theme
@@ -346,7 +349,7 @@ class User {
             'ip_address' => $this->findIpAddress(),
             'timezone' => 0,
             'banned' => 0,
-            'localization' => $this->configuration('siteDefaultLang')
+            'localization' => $this->configuration->getValue('siteDefaultLang')
         );
         $this->db->insert('vavok_users', $values);
 
@@ -628,7 +631,7 @@ class User {
             $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
             $send_mail = new Mailer($this->container);
-            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration('homeUrl'), '', '', 'normal'); // update lang
+            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('homeUrl'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -909,7 +912,7 @@ class User {
         if ($this->userAuthenticated()) {
             return $this->userInfo('language', $_SESSION['uid']);
         } else {
-            return $this->configuration('siteDefaultLang');
+            return $this->configuration->getValue('siteDefaultLang');
         }
     }
 
@@ -1247,7 +1250,7 @@ class User {
         $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
         // Use default language
-        if (empty($language)) $language = $this->configuration('siteDefaultLang');
+        if (empty($language)) $language = $this->configuration->getValue('siteDefaultLang');
 
         if ($language == 'en') {
             $language = 'english';
