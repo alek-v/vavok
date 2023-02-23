@@ -170,7 +170,7 @@ class ParsePage {
         $this->set('content', $this->content);
 
         // HTML Language
-        if (!empty($this->localization)) $this->set('page_language', " localization = '{$this->localization}'");
+        if (!empty($this->localization)) $this->set('page_language', " lang=\"{$this->localization}\"");
 
         // Cookie consent
         if ($this->configuration->getValue('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';

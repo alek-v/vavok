@@ -306,7 +306,7 @@ class BlogModel extends BaseModel {
             $this->page_title = $page_data['page_title'];
 
             // Update language
-            if (!empty($page_data['localization']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', ' localization="' . $page_data['localization'] . '"');
+            if (!empty($page_data['localization']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', " lang=\"{$page_data['localization']}\"");
 
             // Page content
             $this->page_content = $page_data['content'];
