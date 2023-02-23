@@ -25,8 +25,8 @@
                             {@localization[localization]}}
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=en" rel="nofollow"><img src="{@HOMEDIR}}themes/default/images/flag_great_britain_32.png" alt="english language" /> English</a></li>
-                            <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=sr" rel="nofollow"><img src="{@HOMEDIR}}themes/default/images/serbia_flag_32.png" alt="српски језик" /> Српски</a></li>
+                            <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=en" rel="nofollow">English</a></li>
+                            <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=sr" rel="nofollow">Српски</a></li>
                         </ul>
                     </div>
                     <span><a class="btn navi-contact" href="{@HOMEDIR}}contact">{@localization[contact]}}</a></span>
