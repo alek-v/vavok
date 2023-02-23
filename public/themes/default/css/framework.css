@@ -49,31 +49,18 @@ h6 {
 }
 
 /* INPUTS AND TEXTAREA */
-label {
-  display: inline-block;
-  margin-right: 10px;
-  min-width: 170px;
-}
-
 textarea {
   width: 100%;
   min-height: 100px;
 }
 
 /* LINKS */
-/* homepage link */
 .homepage {
   margin: 5px;
 }
 
-/* site link */
 .sitelink {
   margin: 5px;
-}
-
-/* site navigation */
-.my_navigation {
-  width: 100%;
 }
 
 /* BLOG */
@@ -197,14 +184,14 @@ textarea {
   display: block;
   padding: 20px;
 }
-.blog-category .category_text {
+.blog-category .category-text {
   font-size: 1.4em;
   text-align: center;
   vertical-align: middle;
 }
 
 /* blog comments */
-#comment_area {
+#comment-area {
   margin: 60px 0px;
 }
 
