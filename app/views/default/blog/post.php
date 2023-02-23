@@ -16,11 +16,11 @@
         {@localization[updated]}}: {@date_updated}}
     </div>
     <!-- tags -->
-    <div id="tags_area">
+    <div id="tags-area">
         {@tags}}
     </div>
     <!-- comments -->
-    <div id="comment_area">
+    <div id="comment-area">
         {@comments}}
         {@add_comment}}
     </div>
