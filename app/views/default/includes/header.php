@@ -22,7 +22,7 @@
                   </ul>
                     <div class="dropdown">
                         <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {@localization[localization]}}
+                            {@localization[lang]}}
                         </button>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{@HOMEDIR}}users/changelang/?lang=en" rel="nofollow">English</a></li>
