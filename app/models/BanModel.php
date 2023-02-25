@@ -146,7 +146,7 @@ class BanModel extends BaseModel {
 
                 $data['content'] .= '<hr>';
 
-                $data['content'] .= '<p>' . $this->localization->string('maxbantime') . ' ' . $this->formatTime(round($this->configuration->getValue('maxBanTime') * 60)) . '</p>';
+                $data['content'] .= '<p>' . $this->localization->string('maxbantime') . ' ' . $this->formatTime(round($this->configuration->getValue('max_ban_time') * 60)) . '</p>';
                 $data['content'] .= '<p>' . $this->localization->string('please_state_ban_description') . '</p>';
             } else {
                 $data['content'] .= '<p><b><font color="#FF0000">{@localization[user_is_banned]}}</font></b></p>';
@@ -181,8 +181,8 @@ class BanModel extends BaseModel {
                 return $data;
             }
 
-            if ($ban_time <= $this->configuration->getValue('maxBanTime')) {
-                $data['content'] .= '<p>' . $this->localization->string('maxbantimeare') . ' ' . round($this->configuration->getValue('maxBanTime') / 1440) . ' {@localization[days]}}</p>';
+            if ($ban_time <= $this->configuration->getValue('max_ban_time')) {
+                $data['content'] .= '<p>' . $this->localization->string('maxbantimeare') . ' ' . round($this->configuration->getValue('max_ban_time') / 1440) . ' {@localization[days]}}</p>';
             }
 
             if (empty($udd39)) {

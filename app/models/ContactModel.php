@@ -35,7 +35,7 @@ class ContactModel extends BaseModel {
         }
 
         // Show reCAPTCHA
-        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_sitekey') . '"></div>';
+        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
 
         // Page data
         $data['usernameAndMail'] = $usernameAndMail->output();
@@ -84,7 +84,7 @@ class ContactModel extends BaseModel {
 
             $mail = new Mailer($this->container);
             $mail->queueEmail(
-                $this->configuration->getValue('adminEmail'),
+                $this->configuration->getValue('admin_email'),
                 $this->localization->string('message_from_site') . ' ' . $this->configuration->getValue('title'),
                 $email_body,
                 '',

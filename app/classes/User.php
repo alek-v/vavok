@@ -105,10 +105,10 @@ class User {
         // User settings
 
         // If timezone is not defined use default
-        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration->getValue('timeZone'));
+        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration->getValue('timezone'));
 
         // Site theme
-        $config_themes = $this->configuration->getValue('webtheme');
+        $config_themes = $this->configuration->getValue('site_theme');
 
         // If theme does not exist use default theme
         // For admin panel use default theme
@@ -349,7 +349,7 @@ class User {
             'ip_address' => $this->findIpAddress(),
             'timezone' => 0,
             'banned' => 0,
-            'localization' => $this->configuration->getValue('siteDefaultLang')
+            'localization' => $this->configuration->getValue('default_localization')
         );
         $this->db->insert('vavok_users', $values);
 
@@ -631,7 +631,7 @@ class User {
             $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
             $send_mail = new Mailer($this->container);
-            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('homeUrl'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('homeUrl'), '', '', 'normal'); // update lang
+            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('home_address'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('home_address'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -912,7 +912,7 @@ class User {
         if ($this->userAuthenticated()) {
             return $this->userInfo('language', $_SESSION['uid']);
         } else {
-            return $this->configuration->getValue('siteDefaultLang');
+            return $this->configuration->getValue('default_localization');
         }
     }
 
@@ -1250,7 +1250,7 @@ class User {
         $locale = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) : '';
 
         // Use default language
-        if (empty($language)) $language = $this->configuration->getValue('siteDefaultLang');
+        if (empty($language)) $language = $this->configuration->getValue('default_localization');
 
         if ($language == 'en') {
             $language = 'english';

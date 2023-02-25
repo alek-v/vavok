@@ -119,12 +119,9 @@ class AdminpanelModel extends BaseModel {
         }
 
         $site_configuration = new Config($this->container);
-        
-        /**
-         * Мain settings update
-         */
+
         if ($this->postAndGet('action') == 'editone') {
-            $fields = array('webtheme', 'adminNick', 'adminEmail', 'timeZone', 'title', 'homeUrl', 'siteDefaultLang', 'openReg', 'regConfirm', 'siteOff');
+            $fields = array('site_theme', 'admin_username', 'admin_email', 'timezone', 'title', 'home_address', 'default_localization', 'registration_opened', 'confirm_registration', 'site_maintenance');
 
             $values = array(
                 $this->postAndGet('conf_set2'),
@@ -138,24 +135,22 @@ class AdminpanelModel extends BaseModel {
                 (int)$this->postAndGet('conf_set62'),
                 (int)$this->postAndGet('conf_set63')
             );
-        
-            /**
-             * Update settings
-             */
+
+            // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
             $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
-        
+
         if ($this->postAndGet('action') == 'edittwo') {
             $fields = array(
-                'showtime',
-                'pageGenTime',
-                'showOnline',
-                'cookieConsent',
-                'showCounter'
+                'show_time',
+                'page_generation_time',
+                'show_online',
+                'cookie_consent',
+                'show_counter'
             );
-        
+
             $values = array(
                 (int)$this->postAndGet('conf_set4'),
                 (int)$this->postAndGet('conf_set5'),
@@ -163,57 +158,36 @@ class AdminpanelModel extends BaseModel {
                 (int)$this->postAndGet('conf_set32'), // cookie consent
                 (int)$this->postAndGet('conf_set74')
             );
-        
-            /**
-             * Update settings
-             */
+
+            // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
             $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         } 
-        
+
         if ($this->postAndGet('action') == 'editthree') {
             $fields = array(
-                'bookGuestAdd',
-                'maxPostChat',
-                'maxPostNews',
-                'subMailPacket'
+                'chat_max_posts',
+                'mail_subscription_package'
             );
-        
+
             $values = array(
-                (int)$this->postAndGet('conf_set20'),
                 (int)$this->postAndGet('conf_set22'),
-                (int)$this->postAndGet('conf_set24'),
                 (int)$this->postAndGet('conf_set56')
             );
-        
-            /**
-             * Update settings
-             */
+
+            // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
             $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
-        
         }
-        
+
         if ($this->postAndGet('action') == 'editfour') {
             // Update main config
-            $fields = array(
-                'photoFileSize',
-                'maxPhotoPixels',
-                'forumAccess',
-                'forumChLang'
-            );
-        
-            $values = array(
-                (int)$this->postAndGet('conf_set38') * 1024,
-                (int)$this->postAndGet('conf_set39'),
-                (int)$this->postAndGet('conf_set49'),
-                (int)$this->postAndGet('conf_set68')
-            );
-        
-            /**
-             * Update settings
-             */
+            $fields = array('photo_file_size_limit');
+
+            $values = array((int)$this->postAndGet('conf_set38') * 1024);
+
+            // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
         
             // update gallery settings
@@ -228,48 +202,40 @@ class AdminpanelModel extends BaseModel {
             $gallery_data[7] = (int)$this->postAndGet('media_buttons');
         
             $gallery_text = '';
+
             for ($u = 0; $u < 10; $u++) {
                 $gallery_text .= $gallery_data[$u] . '|';
             }
-        
+
             if (isset($gallery_text)) {
                 $this->writeDataFile('dataconfig/gallery.dat', $gallery_text);
             }
-        
+
             $this->redirection(HOMEDIR . "adminpanel/settings/?isset=mp_yesset");
         }
-        
+
         if ($this->postAndGet('action') == 'editfive') {
-            /**
-             * Update settings
-             */
-            $site_configuration->updateConfigData(array_combine(array('pvtLimit'), array((int)$this->postAndGet('conf_set30'))));
-        
+            // Update settings
+            $site_configuration->updateConfigData(array_combine(array('private_messages_limit'), array((int)$this->postAndGet('conf_set30'))));
+
             $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
-        
-        if ($this->postAndGet('action') == 'editseven') {
-            $fields = array(
-                'pgFbComm',
-                'refererLog',
-                'showRefPage'
-            );
 
-            $values = array(
-                $this->postAndGet('conf_set6'),
-                (int)$this->postAndGet('conf_set51'),
-                $this->postAndGet('conf_set70')
-            );
+        if ($this->postAndGet('action') == 'editseven') {
+            $fields = array('page_facebook_comments');
+
+            $values = array($this->postAndGet('conf_set6'));
 
             // Update settings
             $site_configuration->updateConfigData(array_combine($fields, $values));
+
             $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
 
         if ($this->postAndGet('action') == 'editeight') {
             $fields = array(
-                'maxLogData',
-                'maxBanTime'
+                'limit_log_entries',
+                'max_ban_time'
             );
 
             $values = array(
@@ -285,15 +251,15 @@ class AdminpanelModel extends BaseModel {
 
         // Site security options
         if ($this->postAndGet('action') == 'editsecurity') {
-            $fields = array('keypass', 'quarantine', 'transferProtocol', 'floodTime', 'recaptcha_sitekey', 'recaptcha_secretkey');
+            $fields = array('key_password', 'quarantine', 'transfer_protocol', 'flood_time', 'recaptcha_site_key', 'recaptcha_secret_key');
 
             $values = array(
                 $this->postAndGet('conf_set1'),
                 $this->postAndGet('conf_set3'),
                 $this->postAndGet('conf_set21'),
                 (int)$this->postAndGet('conf_set29'),
-                $this->postAndGet('recaptcha_sitekey'),
-                $this->postAndGet('recaptcha_secretkey')
+                $this->postAndGet('recaptcha_site_key'),
+                $this->postAndGet('recaptcha_secret_key')
             );
 
             // Update settings
@@ -319,11 +285,11 @@ class AdminpanelModel extends BaseModel {
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editone');
-        
-            $options = '<option value="' . $this->configuration->getValue('siteDefaultLang') . '">' . $this->configuration->getValue('siteDefaultLang') . '</option>';
+
+            $options = '<option value="' . $this->configuration->getValue('default_localization') . '">' . $this->configuration->getValue('default_localization') . '</option>';
             $dir = opendir(APPDIR . 'include/lang');
             while ($file = readdir($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('siteDefaultLang') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('default_localization') && $file != '..' && $file != '.' && $file != "index.php" && $file != ".htaccess" && strlen($file) > 2) {
                     $options .= '<option value="' . $file . '">' . $file . '</option>';
                 }
             }
@@ -336,13 +302,13 @@ class AdminpanelModel extends BaseModel {
             $select_lang->set('select_name', 'conf_set47');
             $select_lang->set('options', $options);
 
-            $config_themes_show = str_replace('web_', '', $this->configuration->getValue('webtheme'));
+            $config_themes_show = str_replace('web_', '', $this->configuration->getValue('site_theme'));
             $config_themes_show = ucfirst($config_themes_show);
 
-            $options = '<option value="' . $this->configuration->getValue('webtheme') . '">' . $config_themes_show . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('site_theme') . '">' . $config_themes_show . '</option>';
             $dir = opendir (PUBLICDIR . 'themes');
             while ($file = readdir ($dir)) {
-                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('webtheme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
+                if (!preg_match('/[^0-9A-Za-z.\_\-]/', $file) && $file != $this->configuration->getValue('site_theme') && $file != '..' && $file != '.' && $file != 'index.php' && $file != '.htaccess' && $file != 'templates' && $file != 'images') {
                     $nfile = str_replace("web_", "", $file);
                     $nfile = ucfirst($nfile);
                     $options .= '<option value="' . $file . '">' . $nfile . '</option>';
@@ -364,7 +330,7 @@ class AdminpanelModel extends BaseModel {
             $input8->set('label_value', '{@localization[adminusername]}}');
             $input8->set('input_id', 'conf_set8');
             $input8->set('input_name', 'conf_set8');
-            $input8->set('input_value', $this->configuration->getValue('adminNick'));
+            $input8->set('input_value', $this->configuration->getValue('admin_username'));
             $input8->set('input_maxlength', 20);
         
             $input9 = $this->container['parse_page'];
@@ -373,7 +339,7 @@ class AdminpanelModel extends BaseModel {
             $input9->set('label_value', '{@localization[adminemail]}}');
             $input9->set('input_id', 'conf_set9');
             $input9->set('input_name', 'conf_set9');
-            $input9->set('input_value', $this->configuration->getValue('adminEmail'));
+            $input9->set('input_value', $this->configuration->getValue('admin_email'));
             $input9->set('input_maxlength', 50);
 
             $input10 = $this->container['parse_page'];
@@ -382,7 +348,7 @@ class AdminpanelModel extends BaseModel {
             $input10->set('label_value', '{@localization[timezone]}}');
             $input10->set('input_id', 'conf_set10');
             $input10->set('input_name', 'conf_set10');
-            $input10->set('input_value', $this->configuration->getValue('timeZone'));
+            $input10->set('input_value', $this->configuration->getValue('timezone'));
             $input10->set('input_maxlength', 3);
         
             $input11 = $this->container['parse_page'];
@@ -400,9 +366,9 @@ class AdminpanelModel extends BaseModel {
             $input14->set('label_value', '{@localization[siteurl]}}');
             $input14->set('input_id', 'conf_set14');
             $input14->set('input_name', 'conf_set14');
-            $input14->set('input_value', $this->configuration->getValue('homeUrl'));
+            $input14->set('input_value', $this->configuration->getValue('home_address'));
             $input14->set('input_maxlength', 50);
-        
+
             // Registration opened or closed
             $input_radio61_yes = $this->container['parse_page'];
             $input_radio61_yes->load('forms/radio_inline');
@@ -411,10 +377,10 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_yes->set('input_id', 'conf_set61');
             $input_radio61_yes->set('input_name', 'conf_set61');
             $input_radio61_yes->set('input_value', 1);
-            if ($this->configuration->getValue('openReg') == 1) {
+            if ($this->configuration->getValue('registration_opened') == 1) {
                 $input_radio61_yes->set('input_status', 'checked');
             }
-        
+
             $input_radio61_no = $this->container['parse_page'];
             $input_radio61_no->load('forms/radio_inline');
             $input_radio61_no->set('label_for', 'conf_set61');
@@ -422,15 +388,15 @@ class AdminpanelModel extends BaseModel {
             $input_radio61_no->set('input_id', 'conf_set61');
             $input_radio61_no->set('input_name', 'conf_set61');
             $input_radio61_no->set('input_value', 0);
-            if ($this->configuration->getValue('openReg') == 0) {
+            if ($this->configuration->getValue('registration_opened') == 0) {
                 $input_radio61_no->set('input_status', 'checked');
             }
-        
+
             $radio_group_one = $this->container['parse_page'];
             $radio_group_one->load('forms/radio_group');
             $radio_group_one->set('description', '{@localization[openreg]}}');
             $radio_group_one->set('radio_group', $radio_group_one->merge(array($input_radio61_yes, $input_radio61_no)));
-        
+
             // Does user need to confirm registration
             $input_radio62_yes = $this->container['parse_page'];
             $input_radio62_yes->load('forms/radio_inline');
@@ -439,10 +405,10 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_yes->set('input_id', 'conf_set62');
             $input_radio62_yes->set('input_name', 'conf_set62');
             $input_radio62_yes->set('input_value', 1);
-            if ($this->configuration->getValue('regConfirm') == 1) {
+            if ($this->configuration->getValue('confirm_registration') == 1) {
                 $input_radio62_yes->set('input_status', 'checked');
             }
-        
+
             $input_radio62_no = $this->container['parse_page'];
             $input_radio62_no->load('forms/radio_inline');
             $input_radio62_no->set('label_for', 'conf_set62');
@@ -450,15 +416,15 @@ class AdminpanelModel extends BaseModel {
             $input_radio62_no->set('input_id', 'conf_set62');
             $input_radio62_no->set('input_name', 'conf_set62');
             $input_radio62_no->set('input_value', 0);
-            if ($this->configuration->getValue('regConfirm') == 0) {
+            if ($this->configuration->getValue('confirm_registration') == 0) {
                 $input_radio62_no->set('input_status', 'checked');
             }
-        
+
             $radio_group_two = $this->container['parse_page'];
             $radio_group_two->load('forms/radio_group');
             $radio_group_two->set('description', '{@localization[confregs]}}');
             $radio_group_two->set('radio_group', $radio_group_two->merge(array($input_radio62_yes, $input_radio62_no)));
-        
+
             // Maintenance mode
             $input_radio63_yes = $this->container['parse_page'];
             $input_radio63_yes->load('forms/radio_inline');
@@ -467,10 +433,10 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_yes->set('input_id', 'conf_set63');
             $input_radio63_yes->set('input_name', 'conf_set63');
             $input_radio63_yes->set('input_value', 1);
-            if ($this->configuration->getValue('siteOff') == 1) {
+            if ($this->configuration->getValue('site_maintenance') == 1) {
                 $input_radio63_yes->set('input_status', 'checked');
             }
-        
+
             $input_radio63_no = $this->container['parse_page'];
             $input_radio63_no->load('forms/radio_inline');
             $input_radio63_no->set('label_for', 'conf_set63');
@@ -478,21 +444,21 @@ class AdminpanelModel extends BaseModel {
             $input_radio63_no->set('input_id', 'conf_set63');
             $input_radio63_no->set('input_name', 'conf_set63');
             $input_radio63_no->set('input_value', 0);
-            if ($this->configuration->getValue('siteOff') == 0) {
+            if ($this->configuration->getValue('site_maintenance') == 0) {
                 $input_radio63_no->set('input_status', 'checked');
             }
-        
+
             $radio_group_three = $this->container['parse_page'];
             $radio_group_three->load('forms/radio_group');
             $radio_group_three->set('description', 'Maintenance');
             $radio_group_three->set('radio_group', $radio_group_three->merge(array($input_radio63_yes, $input_radio63_no)));
-        
+
             $form->set('fields', $form->merge(array($select_lang, $select_theme, $input8, $input9, $input10, $input11, $input14, $radio_group_one, $radio_group_two, $radio_group_three)));
             $data['content'] .= $form->output();
-        
+
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
-        
+
         if ($this->postAndGet('action') == "settwo") {
             $data['content'] .= '<h1>{@localization[shwinfo]}}</h1>';
         
@@ -511,7 +477,7 @@ class AdminpanelModel extends BaseModel {
             $_4_yes->set('input_id', 'conf_set4');
             $_4_yes->set('input_name', 'conf_set4');
             $_4_yes->set('input_value', 1);
-            if ($this->configuration->getValue('showtime') == 1) {
+            if ($this->configuration->getValue('show_time') == 1) {
                 $_4_yes->set('input_status', 'checked');
             }
         
@@ -522,18 +488,16 @@ class AdminpanelModel extends BaseModel {
             $_4_no->set('input_id', 'conf_set4');
             $_4_no->set('input_name', 'conf_set4');
             $_4_no->set('input_value', 0);
-            if ($this->configuration->getValue('showtime') == 0) {
+            if ($this->configuration->getValue('show_time') == 0) {
                 $_4_no->set('input_status', 'checked');
             }
-        
+
             $show_clock = $this->container['parse_page'];
             $show_clock->load('forms/radio_group');
             $show_clock->set('description', '{@localization[showclock]}}');
             $show_clock->set('radio_group', $show_clock->merge(array($_4_yes, $_4_no)));
-        
-            /**
-             * Show page generatioin time
-             */
+
+            // Show page generation time
             $_5_yes = $this->container['parse_page'];
             $_5_yes->load('forms/radio_inline');
             $_5_yes->set('label_for', 'conf_set5');
@@ -541,7 +505,7 @@ class AdminpanelModel extends BaseModel {
             $_5_yes->set('input_id', 'conf_set5');
             $_5_yes->set('input_name', 'conf_set5');
             $_5_yes->set('input_value', 1);
-            if ($this->configuration->getValue('pageGenTime') == 1) {
+            if ($this->configuration->getValue('page_generation_time') == 1) {
                 $_5_yes->set('input_status', 'checked');
             }
         
@@ -552,18 +516,16 @@ class AdminpanelModel extends BaseModel {
             $_5_no->set('input_id', 'conf_set5');
             $_5_no->set('input_name', 'conf_set5');
             $_5_no->set('input_value', 0);
-            if ($this->configuration->getValue('pageGenTime') == 0) {
+            if ($this->configuration->getValue('page_generation_time') == 0) {
                 $_5_no->set('input_status', 'checked');
             }
-        
+
             $page_gen = $this->container['parse_page'];
             $page_gen->load('forms/radio_group');
             $page_gen->set('description', '{@localization[pagegen]}}');
             $page_gen->set('radio_group', $page_gen->merge(array($_5_yes, $_5_no)));
-        
-            /**
-             * Show online
-             */
+
+            // Show online
             $_7_yes = $this->container['parse_page'];
             $_7_yes->load('forms/radio_inline');
             $_7_yes->set('label_for', 'conf_set7');
@@ -571,7 +533,7 @@ class AdminpanelModel extends BaseModel {
             $_7_yes->set('input_id', 'conf_set7');
             $_7_yes->set('input_name', 'conf_set7');
             $_7_yes->set('input_value', 1);
-            if ($this->configuration->getValue('showOnline') == 1) {
+            if ($this->configuration->getValue('show_online') == 1) {
                 $_7_yes->set('input_status', 'checked');
             }
         
@@ -582,7 +544,7 @@ class AdminpanelModel extends BaseModel {
             $_7_no->set('input_id', 'conf_set7');
             $_7_no->set('input_name', 'conf_set7');
             $_7_no->set('input_value', 0);
-            if ($this->configuration->getValue('showOnline') == 0) {
+            if ($this->configuration->getValue('show_online') == 0) {
                 $_7_no->set('input_status', 'checked');
             }
         
@@ -590,10 +552,8 @@ class AdminpanelModel extends BaseModel {
             $show_online->load('forms/radio_group');
             $show_online->set('description', '{@localization[showonline]}}');
             $show_online->set('radio_group', $show_online->merge(array($_7_yes, $_7_no)));
-        
-            /**
-             * Show cookie consent
-             */
+
+            // Show cookie consent
             $_32_yes = $this->container['parse_page'];
             $_32_yes->load('forms/radio_inline');
             $_32_yes->set('label_for', 'conf_set32');
@@ -601,7 +561,7 @@ class AdminpanelModel extends BaseModel {
             $_32_yes->set('input_id', 'conf_set32');
             $_32_yes->set('input_name', 'conf_set32');
             $_32_yes->set('input_value', 1);
-            if ($this->configuration->getValue('cookieConsent') == 1) {
+            if ($this->configuration->getValue('cookie_consent') == 1) {
                 $_32_yes->set('input_status', 'checked');
             }
         
@@ -612,7 +572,7 @@ class AdminpanelModel extends BaseModel {
             $_32_no->set('input_id', 'conf_set32');
             $_32_no->set('input_name', 'conf_set32');
             $_32_no->set('input_value', 0);
-            if ($this->configuration->getValue('cookieConsent') == 0) {
+            if ($this->configuration->getValue('cookie_consent') == 0) {
                 $_32_no->set('input_status', 'checked');
             }
         
@@ -620,15 +580,13 @@ class AdminpanelModel extends BaseModel {
             $cookie_consent->load('forms/radio_group');
             $cookie_consent->set('description', 'Cookie consent');
             $cookie_consent->set('radio_group', $cookie_consent->merge(array($_32_yes, $_32_no)));
-        
-            /**
-             * Show counter
-             */
+
+            // Show counter
             $incounters = array(6 => "{@localization[dontshow]}}", 1 => "{@localization[vsttotalvst]}}", 2 => "{@localization[clicktotalclick]}}", 3 => "{@localization[clickvisits]}}", 4 => "{@localization[totclicktotvst]}}");
         
-            $options = '<option value="' . $this->configuration->getValue('showCounter') . '">' . $incounters[$this->configuration->getValue('showCounter')] . '</option>';
+            $options = '<option value="' . $this->configuration->getValue('show_counter') . '">' . $incounters[$this->configuration->getValue('show_counter')] . '</option>';
             foreach($incounters as $k => $v) {
-                if ($k != $this->configuration->getValue('showCounter')) {
+                if ($k != $this->configuration->getValue('show_counter')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
@@ -654,31 +612,27 @@ class AdminpanelModel extends BaseModel {
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editthree');
-        
-            /**
-             * Max chat posts
-             */
+
+            // Limit number of chat messages
             $input22 = $this->container['parse_page'];
             $input22->load('forms/input');
             $input22->set('label_for', 'conf_set22');
             $input22->set('label_value', '{@localization[maxinchat]}}');
             $input22->set('input_id', 'conf_set22');
             $input22->set('input_name', 'conf_set22');
-            $input22->set('input_value', $this->configuration->getValue('maxPostChat'));
+            $input22->set('input_value', $this->configuration->getValue('chat_max_posts'));
             $input22->set('input_maxlength', 4);
 
-            /**
-             * Mails in one package
-             */
+            // Mails in one package
             $input56 = $this->container['parse_page'];
             $input56->load('forms/input');
             $input56->set('label_for', 'conf_set56');
             $input56->set('label_value', '{@localization[onepassmail]}}');
             $input56->set('input_id', 'conf_set56');
             $input56->set('input_name', 'conf_set56');
-            $input56->set('input_value', $this->configuration->getValue('subMailPacket'));
+            $input56->set('input_value', $this->configuration->getValue('mail_subscription_package'));
             $input56->set('input_maxlength', 3);
-        
+
             $form->set('fields', $form->merge(array($input22, $input56)));
             $data['content'] .= $form->output();
         
@@ -692,52 +646,8 @@ class AdminpanelModel extends BaseModel {
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editseven');
-        
-            /**
-             * Max referer data
-             */
-            $conf_set51 = $this->container['parse_page'];
-            $conf_set51->load('forms/input');
-            $conf_set51->set('label_for', 'referals');
-            $conf_set51->set('label_value', '{@localization[maxrefererdata]}}');
-            $conf_set51->set('input_id', 'referals');
-            $conf_set51->set('input_name', 'conf_set51');
-            $conf_set51->set('input_value', $this->configuration->getValue('refererLog'));
-            $conf_set51->set('input_maxlength', 3);
-        
-            /**
-             * Show referal page
-             */
-            $conf_set70yes = $this->container['parse_page'];
-            $conf_set70yes->load('forms/radio_inline');
-            $conf_set70yes->set('label_for', 'referal-yes');
-            $conf_set70yes->set('label_value', '{@localization[yes]}}');
-            $conf_set70yes->set('input_id', 'referal-yes');
-            $conf_set70yes->set('input_name', 'conf_set70');
-            $conf_set70yes->set('input_value', 1);
-            if ($this->configuration->getValue('showRefPage') == 1) {
-                $conf_set70yes->set('input_status', 'checked');
-            }
-        
-            $conf_set70no = $this->container['parse_page'];
-            $conf_set70no->load('forms/radio_inline');
-            $conf_set70no->set('label_for', 'referal-no');
-            $conf_set70no->set('label_value', '{@localization[no]}}');
-            $conf_set70no->set('input_id', 'referal-no');
-            $conf_set70no->set('input_name', 'conf_set70');
-            $conf_set70no->set('input_value', 0);
-            if ($this->configuration->getValue('showRefPage') == 0) {
-                $conf_set70no->set('input_status', 'checked');
-            }
-        
-            $show_refpage = $this->container['parse_page'];
-            $show_refpage->load('forms/radio_group');
-            $show_refpage->set('description', '{@localization[showrefpage]}}');
-            $show_refpage->set('radio_group', $show_refpage->merge(array($conf_set70yes, $conf_set70no)));
-        
-            /**
-             * Allow Facebook comments on pages
-             */
+
+            // Allow Facebook comments on pages
             $conf_set6yes = $this->container['parse_page'];
             $conf_set6yes->load('forms/radio_inline');
             $conf_set6yes->set('label_for', 'fb_comm_yes');
@@ -745,7 +655,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6yes->set('input_id', 'fb_comm_yes');
             $conf_set6yes->set('input_name', 'conf_set6');
             $conf_set6yes->set('input_value', 1);
-            if ($this->configuration->getValue('pgFbComm') == 1) {
+            if ($this->configuration->getValue('page_facebook_comments') == 1) {
                 $conf_set6yes->set('input_status', 'checked');
             }
 
@@ -756,7 +666,7 @@ class AdminpanelModel extends BaseModel {
             $conf_set6no->set('input_id', 'fb_comm_no');
             $conf_set6no->set('input_name', 'conf_set6');
             $conf_set6no->set('input_value', 0);
-            if ($this->configuration->getValue('pgFbComm') == 0) {
+            if ($this->configuration->getValue('page_facebook_comments') == 0) {
                 $conf_set6no->set('input_status', 'checked');
             }
 
@@ -764,10 +674,10 @@ class AdminpanelModel extends BaseModel {
             $fb_comm->load('forms/radio_group');
             $fb_comm->set('description', 'Facebook comments on pages');
             $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
-        
-            $form->set('fields', $form->merge(array($conf_set51, $show_refpage, $fb_comm)));
+
+            $form->set('fields', $form->merge(array($fb_comm)));
             $data['content'] .= $form->output();
-        
+
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
 
@@ -779,72 +689,68 @@ class AdminpanelModel extends BaseModel {
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editeight');
 
-            /**
-             * Max error logs in file
-             */
+            // Limit log entries
             $conf_set58 = $this->container['parse_page'];
             $conf_set58->load('forms/input');
             $conf_set58->set('label_for', 'conf_set58');
             $conf_set58->set('label_value', '{@localization[maxlogfile]}}');
             $conf_set58->set('input_id', 'conf_set58');
             $conf_set58->set('input_name', 'conf_set58');
-            $conf_set58->set('input_value', $this->configuration->getValue('maxLogData'));
+            $conf_set58->set('input_value', $this->configuration->getValue('limit_log_entries'));
             $conf_set58->set('input_maxlength', 3);
 
-            /**
-             * Max ban time
-             */
+            // Max ban time
             $conf_set76 = $this->container['parse_page'];
             $conf_set76->load('forms/input');
             $conf_set76->set('label_for', 'conf_set76');
             $conf_set76->set('label_value', '{@localization[maxbantime]}}');
             $conf_set76->set('input_id', 'conf_set76');
             $conf_set76->set('input_name', 'conf_set76');
-            $conf_set76->set('input_value', round($this->configuration->getValue('maxBanTime') / 1440));
+            $conf_set76->set('input_value', round($this->configuration->getValue('max_ban_time') / 1440));
             $conf_set76->set('input_maxlength', 3);
-        
+
             $form->set('fields', $form->merge(array($conf_set58, $conf_set76)));
             $data['content'] .= $form->output();
-        
+
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
-        
+
         if ($this->postAndGet('action') == 'security') {
             $data['content'] .= '<h1>{@localization[security]}}</h1>';
-        
+
             $form = $this->container['parse_page'];
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editsecurity');
-        
+
             $input29 = $this->container['parse_page'];
             $input29->load('forms/input');
             $input29->set('label_for', 'conf_set29');
             $input29->set('label_value', '{@localization[floodtime]}}');
             $input29->set('input_id', 'conf_set29');
             $input29->set('input_name', 'conf_set29');
-            $input29->set('input_value', $this->configuration->getValue('floodTime'));
+            $input29->set('input_value', $this->configuration->getValue('flood_time'));
             $input29->set('input_maxlength', 3);
-        
+
             $input1 = $this->container['parse_page'];
             $input1->load('forms/input');
             $input1->set('label_for', 'conf_set1');
             $input1->set('label_value', '{@localization[passkey]}}');
             $input1->set('input_id', 'conf_set1');
             $input1->set('input_name', 'conf_set1');
-            $input1->set('input_value', $this->configuration->getValue('keypass'));
+            $input1->set('input_value', $this->configuration->getValue('key_password'));
             $input1->set('input_maxlength', 25);
-        
-            // quarantine time
+
+            // Quarantine time
             $quarantine = array(0 => "{@localization[disabled]}}", 21600 => "6 {@localization[hours]}}", 43200 => "12 {@localization[hours]}}", 86400 => "24 {@localization[hours]}}", 129600 => "36 {@localization[hours]}}", 172800 => "48 {@localization[hours]}}");
-        
+
             $options = '<option value="' . $this->configuration->getValue('quarantine') . '">' . $quarantine[$this->configuration->getValue('quarantine')] . '</option>';
             foreach($quarantine as $k => $v) {
                 if ($k != $this->configuration->getValue('quarantine')) {
                     $options .= '<option value="' . $k . '">' . $v . '</option>';
                 }
             }
-        
+
             $select_set3 = $this->container['parse_page'];
             $select_set3->load('forms/select');
             $select_set3->set('label_for', 'conf_set3');
@@ -856,9 +762,9 @@ class AdminpanelModel extends BaseModel {
             // transfer protocol
             $tProtocol = array('HTTPS' => 'HTTPS', 'HTTP' => 'HTTP', 'auto' => 'auto');
         
-            $transfer_protocol = $this->configuration->getValue('transferProtocol');
-            if (empty($this->configuration->getValue('transferProtocol'))) $transfer_protocol = 'auto';
-            
+            $transfer_protocol = $this->configuration->getValue('transfer_protocol');
+            if (empty($this->configuration->getValue('transfer_protocol'))) $transfer_protocol = 'auto';
+
             $options = '<option value="' . $transfer_protocol . '">' . $tProtocol[$transfer_protocol] . '</option>';
         
             foreach($tProtocol as $k => $v) {
@@ -878,21 +784,21 @@ class AdminpanelModel extends BaseModel {
             // reCAPTCHA site key
             $captcha_sitekey = $this->container['parse_page'];
             $captcha_sitekey->load('forms/input');
-            $captcha_sitekey->set('label_for', 'recaptcha_sitekey');
+            $captcha_sitekey->set('label_for', 'recaptcha_site_key');
             $captcha_sitekey->set('label_value', 'reCAPTCHA site key');
-            $captcha_sitekey->set('input_id', 'recaptcha_sitekey');
-            $captcha_sitekey->set('input_name', 'recaptcha_sitekey');
-            $captcha_sitekey->set('input_value', $this->configuration->getValue('recaptcha_sitekey'));
+            $captcha_sitekey->set('input_id', 'recaptcha_site_key');
+            $captcha_sitekey->set('input_name', 'recaptcha_site_key');
+            $captcha_sitekey->set('input_value', $this->configuration->getValue('recaptcha_site_key'));
             $captcha_sitekey->set('input_maxlength', 50);
 
             // reCAPTCHA secret key
             $captcha_secret = $this->container['parse_page'];
             $captcha_secret->load('forms/input');
-            $captcha_secret->set('label_for', 'recaptcha_secretkey');
+            $captcha_secret->set('label_for', 'recaptcha_secret_key');
             $captcha_secret->set('label_value', 'reCAPTCHA secret key');
-            $captcha_secret->set('input_id', 'recaptcha_secretkey');
-            $captcha_secret->set('input_name', 'recaptcha_secretkey');
-            $captcha_secret->set('input_value', $this->configuration->getValue('recaptcha_secretkey'));
+            $captcha_secret->set('input_id', 'recaptcha_secret_key');
+            $captcha_secret->set('input_name', 'recaptcha_secret_key');
+            $captcha_secret->set('input_value', $this->configuration->getValue('recaptcha_secret_key'));
             $captcha_secret->set('input_maxlength', 50);
 
             $form->set('fields', $form->merge(array($input29, $input1, $select_set3, $select_set21, $captcha_sitekey, $captcha_secret)));
@@ -1068,18 +974,18 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $form->output();
         }
 
-        // change profile
+        // Change profile
         if ($this->postAndGet('action') == 'edit') {
             if (!empty($user) && $this->user->usernameExists($user) && $this->user->idExists($users_id)) {
                 $data['content'] .= '<h1>{@localization[usrprofile]}} ' . $user . '</h1>';
 
-                if ($this->user->showUsername() != $this->configuration->getValue('adminNick') && $user == $this->configuration->getValue('adminNick')) {
+                if ($this->user->showUsername() != $this->configuration->getValue('admin_username') && $user == $this->configuration->getValue('admin_username')) {
                     $data['content'] .= '<p>{@localization[noauthtoedit]}!</p>';
 
                     return $data;
                 }
 
-                if (($this->user->showUsername() != $this->configuration->getValue('adminNick')) && ($this->user->userInfo('access_permission', $users_id) == 101 || $this->user->userInfo('access_permission', $users_id) == 102 || $this->user->userInfo('access_permission', $users_id) == 103 || $this->user->userInfo('access_permission', $users_id) == 105) && $this->user->showUsername() != $user) {
+                if (($this->user->showUsername() != $this->configuration->getValue('admin_username')) && ($this->user->userInfo('access_permission', $users_id) == 101 || $this->user->userInfo('access_permission', $users_id) == 102 || $this->user->userInfo('access_permission', $users_id) == 103 || $this->user->userInfo('access_permission', $users_id) == 105) && $this->user->showUsername() != $user) {
                     $data['content'] .= '<p>{@localization[noauthtoban]}!</p>>';
 
                     return $data;
@@ -1106,7 +1012,7 @@ class AdminpanelModel extends BaseModel {
         
                 $userx_access = (int)$this->user->userInfo('access_permission', $users_id);
         
-                if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration->getValue('adminNick')) {
+                if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration->getValue('admin_username')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
         
                     if ($userx_access == 0 || empty($userx_access)) {
@@ -1306,10 +1212,10 @@ class AdminpanelModel extends BaseModel {
         
             $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}');
         } 
-        
-        // Delete user
+
+        // Delete the user
         if ($this->postAndGet('action') == 'deluser') {
-            if ($user != $this->configuration->getValue('adminNick')) {
+            if ($user != $this->configuration->getValue('admin_username')) {
                 if ($this->user->userInfo('access_permission', $users_id) < 101 || $this->user->userInfo('access_permission', $users_id) > 105) {
                     $this->user->deleteUser($user);
                     $data['content'] .= $this->localization->string('usrdeleted') . '!<br>';

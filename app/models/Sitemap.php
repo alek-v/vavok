@@ -31,8 +31,8 @@ class Sitemap extends BaseModel {
                 if (!empty($page['head_tags']) && stristr($page['head_tags'], 'og:url')) {
                     preg_match('/<meta property="og:url" content="([^"]*)/i', $page['head_tags'], $matches);
                     $loc = $matches[1];
-        
-                    if ($this->configuration->getValue('transferProtocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
+
+                    if ($this->configuration->getValue('transfer_protocol') == 'HTTPS') $loc = str_replace('http://', 'https://', $loc);
                 } elseif ($page['slug'] == 'index') {
                     $loc = $this->websiteHomeAddress();
                 } else {

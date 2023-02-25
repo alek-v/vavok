@@ -41,7 +41,7 @@ class ParsePage {
         $this->load($file);
 
         // Check if we use SSL
-        if ($this->configuration->getValue('transferProtocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
+        if ($this->configuration->getValue('transfer_protocol') == 'HTTPS' && $this->currentConnection() == 'http://') {
             // Redirect to secure connection (HTTPS)
             $redirect = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             $this->redirection($redirect);
@@ -173,7 +173,7 @@ class ParsePage {
         if (!empty($this->localization)) $this->set('page_language', " lang=\"{$this->localization}\"");
 
         // Cookie consent
-        if ($this->configuration->getValue('cookieConsent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        if ($this->configuration->getValue('cookie_consent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
 
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);
@@ -184,9 +184,9 @@ class ParsePage {
         // Notification
         if (!empty($this->notification)) $this->set('show_notification', $this->showDanger($this->notification));
 
-        if ($this->configuration->getValue('showOnline') == 1) $this->set('show_online', $this->showOnline());
-        if ($this->configuration->getValue('showCounter') != 6) $this->set('show_counter', $this->showCounter());
-        if ($this->configuration->getValue('pageGenTime') == 1) $this->set('show_generation_time', $this->showPageGenTime());
+        if ($this->configuration->getValue('show_online') == 1) $this->set('show_online', $this->showOnline());
+        if ($this->configuration->getValue('show_counter') != 6) $this->set('show_counter', $this->showCounter());
+        if ($this->configuration->getValue('page_generation_time') == 1) $this->set('show_generation_time', $this->showPageGenTime());
 
         // Show database queries while debugging
         if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->showDbQueries());

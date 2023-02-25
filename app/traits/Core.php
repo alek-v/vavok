@@ -18,7 +18,7 @@ trait Core {
      */
     public function correctDate(int $timestamp = 0, string $format = 'd.m.Y.', string $my_zone = '', bool $show_zone_info = false): string
     {
-        $timezone = $this->configuration->getValue('timeZone');
+        $timezone = $this->configuration->getValue('timezone');
 
         if ($timestamp == 0) $timestamp = time();
         if (empty($format)) $format = 'd.m.y. / H:i';
@@ -460,10 +460,10 @@ trait Core {
     public function recaptchaResponse(string $captcha): array
     {
         // Return success if there is no secret key or disabled reCAPTCHA
-        if (empty($this->configuration->getValue('recaptcha_secretkey'))) return array('success' => true);
+        if (empty($this->configuration->getValue('recaptcha_secret_key'))) return array('success' => true);
 
         // Post request to Google, check captcha code
-        $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration->getValue('recaptcha_secretkey')) .  '&response=' . urlencode($captcha);
+        $url =  'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($this->configuration->getValue('recaptcha_secret_key')) .  '&response=' . urlencode($captcha);
         $response = file_get_contents($url);
 
         return $responseKeys = json_decode($response, true);
@@ -528,7 +528,7 @@ trait Core {
         $visits_today = $counts['visits_today'];
         $total_visits = $counts['visits_total'];
 
-        $counter_configuration = $this->configuration->getValue('showCounter');
+        $counter_configuration = $this->configuration->getValue('show_counter');
 
         if (!empty($counter_configuration) && $counter_configuration != 6) {
             if ($counter_configuration == 1) $info = '<a href="' . HOMEDIR . 'pages/statistics">' . $visits_today . ' | ' . $total_visits . '</a>';
@@ -552,7 +552,7 @@ trait Core {
      */
     public function showPageGenTime(): string
     {
-        if ($this->configuration->getValue('pageGenTime') == 1) {
+        if ($this->configuration->getValue('page_generation_time') == 1) {
             $end_time = microtime(true);
             $gen_time = $end_time - START_TIME;
             return '<p class="site-generate-time">{@localization[pggen]}}' . ' ' . round($gen_time, 4) . ' s.</p>';
@@ -588,13 +588,13 @@ trait Core {
      */
     public function transferProtocol(): string
     {
-        if (empty($this->configuration->getValue('transferProtocol')) || $this->configuration->getValue('transferProtocol') == 'auto') {
+        if (empty($this->configuration->getValue('transfer_protocol')) || $this->configuration->getValue('transfer_protocol') == 'auto') {
             if (!empty($_SERVER['HTTPS'])) {
                 $connectionProtocol = 'https://';
             } else {
                 $connectionProtocol = 'http://';
             }
-        } elseif ($this->configuration->getValue('transferProtocol') == 'HTTPS') {
+        } elseif ($this->configuration->getValue('transfer_protocol') == 'HTTPS') {
             $connectionProtocol = 'https://';
         } else {
             $connectionProtocol = 'http://';

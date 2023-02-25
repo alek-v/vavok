@@ -11,9 +11,8 @@ use PDOException;
 use App\Contracts\Database as DBInterface;
 
 class Database extends PDO implements DBInterface {
-    protected static $connection = null;
-    private $error;
-    private $sql;
+    protected static ?Database $connection = null;
+    private string $error;
 
     public function __construct()
     {
@@ -28,7 +27,8 @@ class Database extends PDO implements DBInterface {
         try {
             self::$connection = parent::__construct('mysql:host=' . DB_HOST . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD, $options);
         } catch (PDOException $e) {
-            echo 'Database error: ' . $this->error = $e->getMessage(); exit;
+            echo 'Database error: ' . $this->error = $e->getMessage();
+            exit;
         }
     }
 

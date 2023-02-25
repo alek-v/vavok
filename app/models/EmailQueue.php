@@ -45,7 +45,7 @@ class EmailQueue extends BaseModel {
         $sql = "SELECT * FROM email_queue WHERE sent = 0 ORDER BY FIELD(priority,
                 'high',
                 'normal',
-                'low') LIMIT 0, " . $this->configuration->getValue('subMailPacket');
+                'low') LIMIT 0, " . $this->configuration->getValue('mail_subscription_package');
 
         $i = 0;
         foreach ($this->db->query($sql) as $email) {

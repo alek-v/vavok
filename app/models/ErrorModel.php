@@ -76,7 +76,7 @@ class ErrorModel extends BaseModel {
             $this->writeDataFile($logdat, $write . PHP_EOL, 1);
         
             // Limit number of records to save
-            $this->limitFileLines($logdat, $this->configuration->getValue('maxLogData'));
+            $this->limitFileLines($logdat, $this->configuration->getValue('limit_log_entries'));
         }
 
         $this_page['error_number_info'] = $error_number_info;

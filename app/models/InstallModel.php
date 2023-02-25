@@ -145,32 +145,27 @@ class InstallModel extends BaseModel {
         $myconfig = new Config($this->container);
 
         $values = array(
-        'keypass' => $this->generatePassword(),
-        'webtheme' => 'default',
+        'key_password' => $this->generatePassword(),
+        'site_theme' => 'default',
         'quarantine' => 0,
-        'showtime' => 0,
-        'pageGenTime' => 0,
-        'pgFbComm' => 0,
-        'showOnline' => 0,
-        'adminNick' => $name,
-        'adminEmail' => $email,
-        'timeZone' => 0, // time zone
+        'show_time' => 0,
+        'page_generation_time' => 0,
+        'page_facebook_comments' => 0,
+        'show_online' => 0,
+        'admin_username' => $name,
+        'admin_email' => $email,
+        'timezone' => 0,
         'title' => $osite_name,
-        'homeUrl' => $osite,
-        'bookGuestAdd' => 0,
-        'transferProtocol' => 'auto',
-        'maxPostChat' => 2000,
-        'maxPostNews' => 10000,
-        'floodTime' => 10,
-        'photoList' => 5,
-        'photoFileSize' => 40000,
-        'maxPhotoPixels' => 640,
-        'siteDefaultLang' => 'english',
-        'mPanel' => 'adminpanel',
-        'subMailPacket' => 50,
-        'dosLimit' => 480,
-        'showCounter' => 6,
-        'maxBanTime' => 43200
+        'home_address' => $osite,
+        'transfer_protocol' => 'auto',
+        'chat_max_posts' => 2000,
+        'flood_time' => 10,
+        'photo_file_size_limit' => 40000,
+        'default_localization' => 'english',
+        'admin_panel' => 'adminpanel',
+        'mail_subscription_package' => 50,
+        'show_counter' => 6,
+        'max_ban_time' => 43200
         );
 
         $myconfig->updateConfigData($values);
