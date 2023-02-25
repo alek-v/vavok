@@ -79,7 +79,7 @@ class InstallModel extends BaseModel {
     public function register()
     {
         $this_page['page_title'] = 'Register admin';
-        $this_page['site_address'] = $this->websiteHomeAddress();
+        $this_page['site_address'] = $this->currentConnection() . $_SERVER['HTTP_HOST'];
 
         return $this_page;
     }
