@@ -890,7 +890,7 @@ class AdminpanelModel extends BaseModel {
                 $limit_start = 0;
             }
 
-            $sql = "SELECT uid, registration_activated, registration_date, lastvst FROM vavok_profil WHERE registration_activated='1' OR registration_activated='2' ORDER BY registration_date LIMIT $limit_start, $items_per_page";
+            $sql = "SELECT uid, registration_activated, registration_date, lastvst FROM vavok_profile WHERE registration_activated='1' OR registration_activated='2' ORDER BY registration_date LIMIT $limit_start, $items_per_page";
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {

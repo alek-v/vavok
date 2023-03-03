@@ -834,7 +834,7 @@ trait Core {
         $confirmationHours = 24;
         $confirmationTime = $confirmationHours * 3600;
 
-        foreach ($this->db->query("SELECT registration_date, uid FROM vavok_profil WHERE registration_activated = '1'") as $userCheck) {
+        foreach ($this->db->query("SELECT registration_date, uid FROM vavok_profile WHERE registration_activated = '1'") as $userCheck) {
             // Delete user if registration is not confirmed within $confirmationHours
             if (($userCheck['registration_date'] + $confirmationTime) < time()) $user_model->deleteUser($userCheck['uid']);
         }

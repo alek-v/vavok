@@ -57,49 +57,49 @@ class Logfiles extends BaseModel {
         );
 
         if (!empty(file_get_contents($errorFile['401']))) {
-            $time401 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['401']));
+            $time401 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['401']));
         } else {
             $time401 = '';
         }
 
         if (!empty(file_get_contents($errorFile['402']))) {
-            $time402 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['402']));
+            $time402 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['402']));
         } else {
             $time402 = '';
         }
 
         if (!empty(file_get_contents($errorFile['403']))) {
-            $time403 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['403']));
+            $time403 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['403']));
         } else {
             $time403 = '';
         }
 
         if (!empty(file_get_contents($errorFile['404']))) {
-            $time404 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['404']));
+            $time404 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['404']));
         } else {
             $time404 = '';
         }
 
         if (!empty(file_get_contents($errorFile['406']))) {
-            $time406 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['406']));
+            $time406 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['406']));
         } else {
             $time406 = '';
         }
 
         if (!empty(file_get_contents($errorFile['500']))) {
-            $time500 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['500']));
+            $time500 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['500']));
         } else {
             $time500 = '';
         }
 
         if (!empty(file_get_contents($errorFile['502']))) {
-            $time502 =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['502']));
+            $time502 =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['502']));
         } else {
             $time502 = '';
         }
 
         if (!empty(file_get_contents($errorFile['other']))) {
-            $timeother =  ' - ' . date($this->localization->showAll()['ln_datefmt'], filemtime($errorFile['other']));
+            $timeother =  ' - ' . date($this->localization->showAll()['date_format'], filemtime($errorFile['other']));
         } else {
             $timeother = '';
         }

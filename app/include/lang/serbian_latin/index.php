@@ -9,16 +9,16 @@ $ln_loc = 'sr';
 $ln_charset = 'UTF-8';
 $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
 
-// shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
+// Shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bajtova', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
 $ln_day_of_week = array('Ponedeljak', 'Utorak', 'Sreda', 'Četvrtak', 'Petak', 'Subota', 'Nedelja');
 $ln_all_month = array('januar', 'februar', 'mart', 'april', 'maj', 'jun', 'jul', 'avgust', 'septembar', 'oktobar', 'novembar', 'decembar');
 
-$ln_datefmt = 'd.m.Y.';
-$ln_timefmt = 'H:M';
+// Date formats
+$ln_date_format = 'd.m.Y.';
+$ln_time_format = 'H:M';
 
-// glavno
 $lang_home['home'] = 'Na glavnu';
 $lang_home['login'] = 'Prijavite se';
 $lang_home['register'] = 'Registracija';
@@ -95,14 +95,13 @@ $lang_home['timezone'] = 'Vremenska zona';
 $lang_home['settings'] = 'Podešavanja';
 $lang_home['language'] = 'Jezik';
 $lang_home['page_or_file_not_found'] = "Stranica ili fajl nisu pronađeni.";
+$lang_home['localization'] = 'Lokalizacija';
 
-// cookie consent
+// Cookie consent
 $lang_home['cookies'] = 'Kolačići.'; // Title
 $lang_home['purecookieDesc'] = 'Korišćenjem ovog sajta prihvatate da koristite kolačiće.'; // Description
-$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">Zbog čega?</a>'; // Cookiepolicy link
+$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">Zbog čega?</a>'; // Cookie policy link
 $lang_home['purecookieButton'] = 'Prihvatam'; // Button text
-
-// ob_start("cyr_to_lat_skiptags");
 
 $language_data = array(
     'language' => $language,
@@ -112,6 +111,6 @@ $language_data = array(
     'ln_byteUnits' => $ln_byteUnits,
     'ln_day_of_week' => $ln_day_of_week,
     'ln_all_month' => $ln_all_month,
-    'ln_datefmt' => $ln_datefmt,
-    'ln_timefmt' => $ln_timefmt
+    'date_format' => $ln_date_format,
+    'time_format' => $ln_time_format
 );

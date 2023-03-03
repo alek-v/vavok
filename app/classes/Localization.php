@@ -62,7 +62,7 @@ class Localization {
      */
     public function string(string $string): string
     {
-        return $this->all[$string];
+        return $this->all[$string] ?? '';
     }
 
     /**

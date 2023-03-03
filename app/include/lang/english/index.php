@@ -9,16 +9,16 @@ $ln_loc = 'en';
 $ln_charset = 'UTF-8';
 $ln_text_dir = 'ltr'; // ('ltr' for left to right, 'rtl' for right to left)
 
-// shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
+// Shortcuts for Byte, Kilo, Mega, Giga, Tera, Peta, Exa
 $ln_byteUnits = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB');
 
 $ln_day_of_week = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 $ln_all_month = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
 
-$ln_datefmt = 'd.m.Y.';
-$ln_timefmt = 'H:M';
+// Date formats
+$ln_date_format = 'm-d-Y';
+$ln_time_format = 'g:i a';
 
-// main
 $lang_home['home'] = 'Main page';
 $lang_home['login'] = 'Login';
 $lang_home['register'] = 'Registration';
@@ -95,11 +95,12 @@ $lang_home['timezone'] = 'Time zone';
 $lang_home['settings'] = 'Settings';
 $lang_home['language'] = 'Language';
 $lang_home['page_or_file_not_found'] = "Page or file not found.";
+$lang_home['localization'] = 'Localization';
 
-// cookie consent
+// Cookie consent
 $lang_home['cookies'] = 'Cookies.'; // Title
 $lang_home['purecookieDesc'] = 'By using this website, you automatically accept that we use cookies.'; // Description
-$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">What for?</a>'; // Cookiepolicy link
+$lang_home['purecookieLink'] = '<a href="/pages/cookies_policy" target="_blank">What for?</a>'; // Cookie policy link
 $lang_home['purecookieButton'] = 'Understood'; // Button text
 
 $language_data = array(
@@ -110,6 +111,6 @@ $language_data = array(
     'ln_byteUnits' => $ln_byteUnits,
     'ln_day_of_week' => $ln_day_of_week,
     'ln_all_month' => $ln_all_month,
-    'ln_datefmt' => $ln_datefmt,
-    'ln_timefmt' => $ln_timefmt
+    'date_format' => $ln_date_format,
+    'time_format' => $ln_time_format
 );
