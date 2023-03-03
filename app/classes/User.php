@@ -59,10 +59,10 @@ class User {
         // Get user data
         if (!empty($_SESSION['uid'])) {
             $vavok_users = $this->db->selectData('vavok_users', 'id = :id', [':id' => $_SESSION['uid']]);
-            $user_profil = $this->db->selectData('vavok_profil', 'uid = :uid', [':uid' => $_SESSION['uid']], 'registration_activated');
+            $user_profil = $this->db->selectData('vavok_profile', 'uid = :uid', [':uid' => $_SESSION['uid']], 'registration_activated');
 
             // Update last visit
-            $this->db->update('vavok_profil', 'last_visit', time(), "uid='{$_SESSION['uid']}'");
+            $this->db->update('vavok_profile', 'last_visit', time(), "uid='{$_SESSION['uid']}'");
 
              // Time zone
             if (!empty($vavok_users['timezone'])) {
@@ -355,7 +355,7 @@ class User {
 
         $user_id = $this->db->selectData('vavok_users', 'name = :name', [':name' => $name], 'id')['id'];
 
-        $this->db->insert('vavok_profil', array('uid' => $user_id, 'subscribed' => 0, 'registration_date' => time(), 'registration_activated' => $regkeys, 'registration_key' => $rkey, 'last_visit' => time()));
+        $this->db->insert('vavok_profile', array('uid' => $user_id, 'subscribed' => 0, 'registration_date' => time(), 'registration_activated' => $regkeys, 'registration_key' => $rkey, 'last_visit' => time()));
         $this->db->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
         $this->db->insert('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
@@ -406,7 +406,7 @@ class User {
         }
 
         $this->db->delete('vavok_users', "id = '{$users_id}'");
-        $this->db->delete('vavok_profil', "uid = '{$users_id}'");
+        $this->db->delete('vavok_profile', "uid = '{$users_id}'");
         $this->db->delete('vavok_about', "uid = '{$users_id}'");
         $this->db->delete('inbox', "byuid = '{$users_id}' OR touid = '{$users_id}'");
         $this->db->delete('blocklist', "target = '{$users_id}' OR name = '{$users_id}'");
@@ -436,15 +436,15 @@ class User {
         // vavok_users table fields
         $vavok_users_valid_fields = array('name', 'pass', 'access_permission', 'skin', 'browsers', 'ip_address', 'timezone', 'banned', 'localization');
 
-        // vavok_profil table fields
-        $vavok_profil_valid_fields = array('subscribed', 'subscription_code', 'personal_status', 'registration_date', 'registration_activated', 'registration_key', 'ban_time', 'ban_description', 'last_ban', 'all_bans', 'last_visit');
+        // vavok_profile table fields
+        $vavok_profile_valid_fields = array('subscribed', 'subscription_code', 'personal_status', 'registration_date', 'registration_activated', 'registration_key', 'ban_time', 'ban_description', 'last_ban', 'all_bans', 'last_visit');
 
         // vavok_about table fields
         $vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'first_name', 'last_name', 'photo', 'address', 'zip', 'country', 'phone');
 
         // First check if there are fields to update for selected table, then update data
         if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) $this->db->update('vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
-        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields'))) $this->db->update('vavok_profil', array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profil_valid_fields, 'values')), "uid='{$user_id}'");
+        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields'))) $this->db->update('vavok_profile', array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'values')), "uid='{$user_id}'");
         if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->db->update('vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
     }
 
@@ -524,7 +524,7 @@ class User {
      */
     public function confirmRegistration(string $key): bool
     {
-        if (!$this->db->update('vavok_profil', array('registration_activated', 'registration_key'), array('', ''), "registration_key='{$key}'")) {
+        if (!$this->db->update('vavok_profile', array('registration_activated', 'registration_key'), array('', ''), "registration_key='{$key}'")) {
             return false;
         }
 
@@ -617,7 +617,7 @@ class User {
 
         $this->db->insert('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
-        $user_profile = $this->db->selectData('vavok_profil', 'uid = :uid', [':uid' => $who], 'last_visit');
+        $user_profile = $this->db->selectData('vavok_profile', 'uid = :uid', [':uid' => $who], 'last_visit');
         $last_notif = $this->db->selectData('notif', 'uid = :uid AND :type', [':uid' => $who, ':type' => 'inbox'], 'lstinb, type'); 
 
         // no data in database, insert data
@@ -859,39 +859,39 @@ class User {
                 return isset($data['timezone']) && !empty($data['timezone']) ? $data['timezone'] : '';
 
             case 'ban_time':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'ban_time');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'ban_time');
                 return isset($data['ban_time']) && !empty($data['ban_time']) ? $data['ban_time'] : 0;
 
             case 'ban_description':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'ban_description');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'ban_description');
                 return isset($data['ban_description']) && !empty($data['ban_description']) ? $data['ban_description'] : '';
 
             case 'all_bans':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'all_bans');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'all_bans');
                 return isset($data['all_bans']) && !empty($data['all_bans']) ? $data['all_bans'] : 0;
 
             case 'registration_activated':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'registration_activated');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'registration_activated');
                 return isset($data['registration_activated']) && !empty($data['registration_activated']) ? $data['registration_activated'] : '';
 
             case 'status':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'personal_status');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'personal_status');
                 return isset($data['personal_status']) && !empty($data['personal_status']) ? $data['personal_status'] : '';
 
             case 'registration_date':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'registration_date');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'registration_date');
                 return isset($data['registration_date']) && !empty($data['registration_date']) ? $data['registration_date'] : '';
 
             case 'last_visit':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'last_visit');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'last_visit');
                 return isset($data['last_visit']) && !empty($data['last_visit']) ? $data['last_visit'] : '';
 
             case 'subscribed':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'subscribed');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'subscribed');
                 return isset($data['subscribed']) && !empty($data['subscribed']) ? $data['subscribed'] : '';
 
             case 'last_ban':
-                $data = $this->db->selectData('vavok_profil', 'uid = :id', [':id' => $users_id], 'last_ban');
+                $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'last_ban');
                 return isset($data['last_ban']) && !empty($data['last_ban']) ? $data['last_ban'] : '';
 
             default:
@@ -1091,7 +1091,7 @@ class User {
      */
     public function totalUnconfirmed(): int
     {
-        return $this->db->countRow('vavok_profil', "registration_activated='1' OR registration_activated='2'");
+        return $this->db->countRow('vavok_profile', "registration_activated='1' OR registration_activated='2'");
     }
 
     /**

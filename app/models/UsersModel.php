@@ -744,9 +744,7 @@ class UsersModel extends BaseModel {
         $choose_lang->set('select_name', 'localization');
         $choose_lang->set('options', $options);
 
-        /**
-         * Subscribe to site newsletter
-         */
+        // Subscribe to site newsletter
         $subnews_yes = $this->container['parse_page'];
         $subnews_yes->load('forms/radio_inline');
         $subnews_yes->set('label_for', 'subnews');
@@ -770,9 +768,7 @@ class UsersModel extends BaseModel {
         $subnews->set('description', $this->localization->string('subscribetonews'));
         $subnews->set('radio_group', $subnews->merge(array($subnews_yes, $subnews_no)));
 
-        /**
-         * Receive new message notification
-         */
+        // Receive new message notification
         $msgnotif_yes = $this->container['parse_page'];
         $msgnotif_yes->load('forms/radio_inline');
         $msgnotif_yes->set('label_for', 'inbnotif');

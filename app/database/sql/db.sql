@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `vavok_users` (
-  `id` int(9) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(40) NOT NULL,
   `password` varchar(255) NOT NULL,
   `access_permission` int(4) NOT NULL default '0',
@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS `vavok_users` (
 
 
 
-CREATE TABLE IF NOT EXISTS `vavok_profil` (
-  `id` int(9) NOT NULL auto_increment,
-  `uid` int(9) NOT NULL default '0',
+CREATE TABLE IF NOT EXISTS `vavok_profile` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `uid` bigint(20) NOT NULL default '0',
   `subscribed` int(1) NOT NULL default '0',
   `subscription_code` varchar(100) NULL,
   `personal_status` varchar(50) NULL,
@@ -30,15 +30,18 @@ CREATE TABLE IF NOT EXISTS `vavok_profil` (
   `last_ban` varchar(20) NULL,
   `all_bans` varchar(20) NULL,
   `last_visit` varchar(30) NULL,
- PRIMARY KEY  (`id`),
- UNIQUE KEY `uid` (`uid`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
+
+-- Constraints for table `vavok_profile`
+ALTER TABLE `vavok_profile` ADD CONSTRAINT `vavok_profile_fk_1` FOREIGN KEY (`uid`) REFERENCES `vavok_users` (`id`) ON DELETE CASCADE;
 
 
 
 CREATE TABLE IF NOT EXISTS `vavok_about` (
-  `id` int(9) NOT NULL auto_increment,
-  `uid` int(9) NOT NULL default '0',
+  `id` bigint(20) NOT NULL auto_increment,
+  `uid` bigint(20) NOT NULL default '0',
   `birthday` varchar(40) NULL,
   `sex` char(1) NOT NULL default 'n',
   `email` varchar(80) NULL,
@@ -56,11 +59,14 @@ CREATE TABLE IF NOT EXISTS `vavok_about` (
  UNIQUE KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
+-- Constraints for table `vavok_about`
+ALTER TABLE `vavok_about` ADD CONSTRAINT `vavok_about_fk_1` FOREIGN KEY (`uid`) REFERENCES `vavok_users` (`id`) ON DELETE CASCADE;
 
 
--- inbox
+
+-- Inbox
 CREATE TABLE IF NOT EXISTS `inbox` (
-  `id` int(9) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `text` MEDIUMTEXT NOT NULL,
   `byuid` int(9) NOT NULL default '0',
   `touid` int(9) NOT NULL default '0',
@@ -75,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `inbox` (
 
 
 CREATE TABLE IF NOT EXISTS `blocklist` (
-  `id` int(10) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -84,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `blocklist` (
 
 
 CREATE TABLE IF NOT EXISTS `buddy` (
-  `id` int(10) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `name` int(99) NOT NULL default '0',
   `target` int(99) NOT NULL default '0',
   PRIMARY KEY  (`id`)
@@ -94,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `buddy` (
 
 -- Moder log
 CREATE TABLE IF NOT EXISTS `mlog` (
-  `id` int(9) NOT NULL auto_increment,
+  `id` bigint(20) NOT NULL auto_increment,
   `action` varchar(10) NULL,
   `details` TEXT NOT NULL,
   `actdt` int(9) NOT NULL default '0',
@@ -104,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `mlog` (
 
 
 CREATE TABLE IF NOT EXISTS `subs` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
   `user_mail` varchar(80) DEFAULT NULL,
   `user_pass` varchar(80) DEFAULT NULL,
@@ -136,9 +142,9 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `localization` varchar(120) NULL,
   `date_created` int(11) NULL,
   `date_updated` int(11) NULL,
-  `updated_by` int(8) NULL,
+  `updated_by` bigint(20) NULL,
   `file` varchar(120) NULL,
-  `created_by` int(8) NULL,
+  `created_by` bigint(20) NULL,
   `head_tags` text,
   `published_status` int(1) NULL,
   `date_published` int(11) NULL,
@@ -157,8 +163,8 @@ INSERT INTO `pages` (`id`, `page_title`, `slug`, `localization`, `date_created`,
 
 -- notifications
 CREATE TABLE IF NOT EXISTS `notif` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `uid` int(9) NOT NULL DEFAULT '0',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) NOT NULL DEFAULT '0',
   `type` varchar(20) NOT NULL COMMENT 'notification department',
   `active` int(2) NULL,
   `lstinb` varchar(120) NOT NULL DEFAULT '' COMMENT 'last notification of received message',
@@ -181,8 +187,8 @@ CREATE TABLE IF NOT EXISTS `splist` (
 
 -- special permissions
 CREATE TABLE IF NOT EXISTS `specperm` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `uid` int(9) NOT NULL default '0',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) NOT NULL default '0',
   `permname` varchar(120) NOT NULL COMMENT 'permission name',
   `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
   PRIMARY KEY (`id`),
@@ -365,7 +371,7 @@ INSERT INTO `counter` (`day`, `month`, `visits_today`, `visits_total`, `clicks_t
 
 
 CREATE TABLE IF NOT EXISTS `login_attempts` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `address` varchar(45) DEFAULT NULL,
   `datetime` datetime DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
@@ -376,7 +382,7 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 
 CREATE TABLE IF NOT EXISTS `email_queue` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `uad` mediumint(9) NOT NULL COMMENT 'user added email to queue',
+  `uad` bigint(20) NOT NULL COMMENT 'user added email to queue',
   `sender` varchar(255) NOT NULL,
   `sender_mail` varchar(255) DEFAULT NULL,
   `recipient` varchar(255) NOT NULL,
@@ -392,8 +398,8 @@ CREATE TABLE IF NOT EXISTS `email_queue` (
 
 
 CREATE TABLE IF NOT EXISTS `comments` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `uid` int(9) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) NOT NULL,
   `comment` text NOT NULL,
   `date` datetime NOT NULL,
   `pid` int(9) NOT NULL COMMENT 'page id where comment will be shown',
@@ -460,8 +466,8 @@ CREATE TABLE IF NOT EXISTS `tags` (
 
 
 CREATE TABLE IF NOT EXISTS `tokens` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `uid` int(9) NOT NULL COMMENT 'user id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) NOT NULL COMMENT 'user id',
   `type` varchar(255) NOT NULL COMMENT 'token type',
   `content` text DEFAULT NULL,
   `token` varchar(255) NOT NULL,
@@ -473,8 +479,8 @@ CREATE TABLE IF NOT EXISTS `tokens` (
 
 
 CREATE TABLE IF NOT EXISTS `group_members` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `uid` int(9) NOT NULL COMMENT 'user id',
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `uid` bigint(20) NOT NULL COMMENT 'user id',
   `group_name` varchar(500) NOT NULL,
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`)
