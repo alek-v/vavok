@@ -14,13 +14,16 @@ class AdminchatModel extends BaseModel {
 
     /**
      * @return array
+     * @throws Exception
      */
     public function index(): array
     {
         $data['page_title'] = '{@localization[admin_chat]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator()) {
+            $this->redirection('../?auth_error');
+        }
 
         // Add message to the administrator chat
         if ($this->postAndGet('action') == 'add_message') {

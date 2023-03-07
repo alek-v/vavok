@@ -25,7 +25,9 @@ class AdminpanelModel extends BaseModel {
         $data['page_title'] = '{@localization[adminpanel]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions('adminpanel', 'show')) $this->redirection('../?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator()) {
+            $this->redirection('../?auth_error');
+        }
 
         if (empty($this->postAndGet('action'))) {
             // Moderator access level or bigger
@@ -822,7 +824,9 @@ class AdminpanelModel extends BaseModel {
         $data['page_title'] = '{@localization[modlist]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator()) {
+            $this->redirection('../?auth_error');
+        }
 
         $data['content'] .= '<p><img src="../themes/images/img/user.gif" alt=""> <b>{@localization[adminlistl]}}</b></p>'; 
 
@@ -856,7 +860,9 @@ class AdminpanelModel extends BaseModel {
         $data['page_title'] = '{@localization[uncomfreg]}}';
         $data['content'] = '';
 
-        if (!$this->user->checkPermissions(basename(__FILE__))) $this->redirection('../?auth_error');
+        if (!$this->user->administrator() && !$this->user->moderator()) {
+            $this->redirection('../?auth_error');
+        }
 
         if ($this->postAndGet('action') == 'conf' && !empty($this->postAndGet('usr'))) {
             $fields = array('registration_activated', 'registration_key');
@@ -1168,26 +1174,32 @@ class AdminpanelModel extends BaseModel {
             }
 
             if (!empty($udd5) && !$this->validateUrl($udd5)) {
-                $data['content'] .= '<p>' . $this->localization->string('urlnotok') . '!</p>';
+                $data['content'] .= '<p>' . $this->localization->string('urlnotok') . '</p>';
                 $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}') . '</p>';
 
                 return $data;
             }
 
-            if (!empty($users_id)) {
-                $data['content'] .= '<p>' . $this->localization->string('user_does_not_exist') . '!</p>';
+            if (empty($users_id)) {
+                $data['content'] .= '<p>' . $this->localization->string('user_does_not_exist') . '</p>';
                 $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/users/?action=edit&users=' . $user, '{@localization[back]}}') . '</p>';
 
                 return $data;
             }
 
-            if (!empty($udd1)) $newpass = $this->user->passwordEncrypt($udd1);
+            if (!empty($udd1)) {
+                $newpass = $this->user->passwordEncrypt($udd1);
+            }
 
             // Update password
-            if (!empty($newpass)) $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
+            if (!empty($newpass)) {
+                $this->user->updateUser('pass', $this->replaceNewLines($newpass), $users_id);
+            }
 
             // Update default access permissions
-            if ($udd7 != $this->user->userInfo('access_permission', $users_id)) $this->user->updateDefaultPermissions($users_id, $udd7);
+            if ($udd7 != $this->user->userInfo('access_permission', $users_id)) {
+                $this->user->updateDefaultPermissions($users_id, $udd7);
+            }
 
             // Update data
             $this->user->updateUser(
@@ -1195,7 +1207,7 @@ class AdminpanelModel extends BaseModel {
                 array($this->replaceNewLines($this->check($udd2)), $this->check($udd3), $this->replaceNewLines(htmlspecialchars(stripslashes(strtolower($udd4)))), $this->replaceNewLines($this->check($udd5)), $this->replaceNewLines($this->check($udd29)), $this->replaceNewLines($this->check($udd40)), $this->replaceNewLines($this->check($udd13))), $users_id
             );
 
-            $data['content'] .= $this->localization->string('usrdataupd') . '!<br>';
+            $data['content'] .= $this->localization->string('usrdataupd') . '<br>';
 
             if (!empty($udd1)) {
                 $data['content'] .= '<font color=red>{@localization[passchanged]}}: ' . $udd1 . '</font> <br>';

@@ -29,49 +29,63 @@ class User {
         $this->db = $this->container['db'];
         $this->configuration = $this->container['config'];
 
-        // Session from cookie
+        // Try to authenticate user using data from the cookie
         if (empty($_SESSION['log']) && !empty($_COOKIE['cookie_login'])) {
-            // Search for token in database and get tokend data if exists
-            $cookie_data = $this->db->selectData('tokens', 'token = :token', [':token' => $this->check($_COOKIE['cookie_login'])], 'uid, token');
-            $cookie_id = isset($cookie_data['uid']) ? $cookie_data['uid'] : ''; // User's id
-            $token_value = isset($cookie_data['token']) ? $cookie_data['token'] : '';
+            $cookie_token_value = $_COOKIE['cookie_login'] ?? '';
+
+            // Search for the token and get token data
+            $cookie_data = $this->db->selectData('tokens', 'token = :token', [':token' => $this->check($cookie_token_value)], 'uid, token');
+            $cookie_id = $cookie_data['uid'] ?? ''; // User's id
 
             // Get user's data
-            $cookie_check = $this->db->selectData('vavok_users', 'id = :id', [':id' => $cookie_id], 'name, access_permission, localization');
+            $users_data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $cookie_id]);
 
-            // If user exists write session data
-            if (isset($cookie_check['name']) && !empty($cookie_check['name']) && ($_COOKIE['cookie_login'] === $token_value)) {
-                    // Write current session data
-                    $_SESSION['log'] = $cookie_check['name'];
-                    $_SESSION['permissions'] = $cookie_check['access_permission'];
-                    $_SESSION['uid'] = $cookie_id;
-                    $_SESSION['lang'] = $cookie_check['localization'];
-
-                    // Update ip address
-                    $this->db->update('vavok_users', 'ip_address', $this->findIpAddress(), "id = '{$cookie_id}'");
-            } else {
+            // Validate data from the cookie
+            if (isset($users_data['name']) && !empty($users_data['name']) && ($_COOKIE['cookie_login'] === $cookie_token_value)) {
+                // Update session with a fresh data
+                $this->updateSession([
+                    'log' => $users_data['name'],
+                    'permissions' => $users_data['access_permission'],
+                    'uid' => $users_data['id'],
+                    'lang' => $users_data['localization']
+                ]);
+            }
+            // Data from the cookie failed to validate
+            else {
                 // Token from cookie is not valid or it is expired, delete cookie
                 setcookie('cookie_login', '', time() - 3600);
                 setcookie('cookie_login', '', 1, '/', $this->cleanDomain());
             }
         }
 
-        // Get user data
+        // Validate data from the session
         if (!empty($_SESSION['uid'])) {
-            $vavok_users = $this->db->selectData('vavok_users', 'id = :id', [':id' => $_SESSION['uid']]);
+            $vavok_users = empty($users_data) || !isset($cookie_id) || ($_SESSION['uid'] !== $cookie_id)  ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $_SESSION['uid']]) : $users_data;
             $user_profil = $this->db->selectData('vavok_profile', 'uid = :uid', [':uid' => $_SESSION['uid']], 'registration_activated');
 
+            // Write current session data
+            $this->updateSession([
+                'log' => $vavok_users['name'],
+                'permissions' => $vavok_users['access_permission'],
+                'uid' => $vavok_users['id'],
+                'lang' => $vavok_users['localization']
+            ]);
+
+            // Set users data
+            $this->setCurrentUser($vavok_users);
+            $this->user_data['authenticated'] = true;
+
             // Update last visit
-            $this->db->update('vavok_profile', 'last_visit', time(), "uid='{$_SESSION['uid']}'");
+            $this->db->update('vavok_profile', 'last_visit', time(), "uid='{$this->user_data['id']}'");
+
+            // Update IP address if changed
+            if ($this->userInfo('ip_address') != $this->findIpAddress()) {
+                $this->db->update('vavok_users', 'ip_address', $this->findIpAddress(), "id = '{$this->user_data['id']}'");
+            }
 
              // Time zone
             if (!empty($vavok_users['timezone'])) {
                 define('MY_TIMEZONE', $vavok_users['timezone']);
-            }
-
-            // Update language in session if it is not language from profile
-            if (!empty($vavok_users['localization']) && (empty($_SESSION['lang']) || $_SESSION['lang'] != $vavok_users['localization'])) {
-                $_SESSION['lang'] = $vavok_users['localization'];
             }
 
             // Check if user is banned
@@ -79,21 +93,28 @@ class User {
                 $this->redirection(HOMEDIR . 'users/ban');
             }
 
-             // activate account
+             // User need to activate the account
             if (isset($user_profil['registration_activated']) && $user_profil['registration_activated'] == 1 && !strstr($_SERVER['QUERY_STRING'], 'pages/key')) {
-                setcookie('cookpass', '');
-                setcookie('cooklog', '');
+                setcookie('cookie_login', '');
                 setcookie(session_name(), '');
                 unset($_SESSION['log']);
                 session_destroy();
             }
-        } else {
-            if (empty($_SESSION['lang'])) $this->changeLanguage();
+        }
+
+        // Localization for the new visitor
+        if ((empty($_SESSION['uid'])) && empty($_SESSION['lang'])) {
+            $this->changeLanguage();
         }
 
         // Count visited pages and time on site
-        if (empty($_SESSION['currs'])) $_SESSION['currs'] = time();
-        if (empty($_SESSION['counton'])) $_SESSION['counton'] = 0;
+        if (empty($_SESSION['currs'])) {
+            $_SESSION['currs'] = time();
+        }
+        if (empty($_SESSION['counton'])) {
+            $_SESSION['counton'] = 0;
+        }
+
         $_SESSION['counton']++;
 
         // Pages visited at this session
@@ -102,31 +123,34 @@ class User {
         // Visitor's time on the site
         $this->time_on_site = $this->makeTime(round(time() - $_SESSION['currs']));
 
-        // User settings
-
         // If timezone is not defined use default
-        if (!defined('MY_TIMEZONE')) define('MY_TIMEZONE', $this->configuration->getValue('timezone'));
+        if (!defined('MY_TIMEZONE')) {
+            define('MY_TIMEZONE', $this->configuration->getValue('timezone'));
+        }
 
         // Site theme
         $config_themes = $this->configuration->getValue('site_theme');
 
         // If theme does not exist use default theme
         // For admin panel use default theme
-        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) $config_themes = 'default';
+        if (!file_exists(APPDIR . 'views/' . $config_themes) || strpos($this->websiteHomeAddress() . $_SERVER['PHP_SELF'], $_SERVER['HTTP_HOST'] . '/adminpanel') !== false) {
+            $config_themes = 'default';
+        }
 
         define('MY_THEME', $config_themes);
 
         // Instantiate visit counter and online status if current request is not cronjob or ajax request
-        if (!defined('DYNAMIC_REQUEST')) new Counter($this->userAuthenticated(), $this->findIpAddress(), $this->userBrowser(), $this->detectBot(), $this->container);
-
-        // Check if user is authenticated
-        // This time we check data from database, because of this we pass parameter true
-        // Next time when you use method userAuthenticated don't use parameter true and data will be used from session, no new database request
-        if ($this->userAuthenticated(true)) $this->user_data['authenticated'] = true;
+        if (!defined('DYNAMIC_REQUEST')) {
+            new Counter($this->userAuthenticated(), $this->findIpAddress(), $this->userBrowser(), $this->detectBot(), $this->container);
+        }
 
         // Admin status
-        if ($this->administrator()) $this->user_data['admin_status'] = 'administrator';
-        if ($this->moderator()) $this->user_data['admin_status'] = 'moderator';
+        if ($this->userAuthenticated() && $this->administrator()) {
+            $this->user_data['admin_status'] = 'administrator';
+        }
+        if ($this->userAuthenticated() && $this->moderator()) {
+            $this->user_data['admin_status'] = 'moderator';
+        }
 
         // Users language
         $this->user_data['language'] = $this->getUserLanguage();
@@ -134,36 +158,13 @@ class User {
 
     /**
      * Check if user is logged in
-     * When $start == true then make database request and check data from database
      *
-     * @param boolean
      * @return bool
      */
-    public function userAuthenticated(bool $start = false): bool
+    public function userAuthenticated(): bool
     {
-        if (!empty($_SESSION['uid']) && !empty($_SESSION['permissions'])) {
-            // Check data from database when parameter $start is true
-            // Logout user if data from session and data from database doesn't match
-            if ($start == true && $_SESSION['permissions'] == 107 && $this->userInfo('access_permission') != 107) {
-                $this->logout($_SESSION['uid']);
-
-                return false;
-            }
-
-            // Regular authenticated user
-            if ($_SESSION['permissions'] == 107) return true;
-
-            // Administrator, check if access permissions are changed
-            if ($this->check($_SESSION['log']) == $this->userInfo('nickname') && $_SESSION['permissions'] == $this->userInfo('access_permission')) {
-                // Everything is ok
-                return true;
-            } else {
-                // Permissions are changed, logout user
-                // When user login again new permissions will be set in session
-                $this->logout($_SESSION['uid']);
-
-                return false;
-            }
+        if ($this->user_data['authenticated']) {
+            return true;
         }
 
         return false;
@@ -172,14 +173,16 @@ class User {
     /**
      * Logout
      *
-     * @param integer $user_id
+     * @param ?int $user_id
      * @return void
      */
-    public function logout(int $user_id = null): void
+    public function logout(?int $user_id = null): void
     {
-        if (empty($user_id)) $user_id = $_SESSION['uid'];
+        if (empty($user_id)) {
+            $user_id = $_SESSION['uid'];
+        }
 
-        // Remove user from online list
+        // Remove user from the online list
         $this->db->delete('online', "user = '{$user_id}'");
 
         // Remove login token from database if token exists
@@ -208,7 +211,7 @@ class User {
 
     /**
      * User authentication
-     * 
+     *
      * @return array with response data
      */
     public function checkAuth(): array
@@ -251,7 +254,7 @@ class User {
                     // Save token in database
                     $this->db->insert('tokens', array('uid' => $userx_id, 'type' => 'login', 'token' => $token, 'expiration_time' => $new_time));
 
-                    // Save cookie with token in users's device
+                    // Save cookie with token in user's device
                     SetCookie('cookie_login', $token, time() + 3600 * 24 * 365, '/', '.' . $this->cleanDomain()); // one year
                 }
 
@@ -268,8 +271,8 @@ class User {
                 // Update data in profile
                 $this->updateUser(
                     array('ip_address', 'browsers'),
-                    array($this->findIpAddress(), $this->userBrowser()),
-                    $userx_id);
+                    array($this->findIpAddress(), $this->userBrowser()), $userx_id
+                );
         
                 // Redirect user to confirm registration
                 if ($this->userInfo('registration_activated', $userx_id) == 1) $this->redirection(HOMEDIR . 'users/key/?log=' . $this->postAndGet('log'));
@@ -372,7 +375,7 @@ class User {
     public function changeLanguage(string $language = ''): void
     {
         $language = $this->getPreferredLanguage($language);
-        $current_session = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
+        $current_session = $_SESSION['lang'] ?? '';
 
         // Update language if it is changed and if language is installed
         if ($current_session != $language && file_exists(APPDIR . 'include/lang/' . $language . '/index.php')) {
@@ -631,7 +634,7 @@ class User {
             $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
             $send_mail = new Mailer($this->container);
-            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('home_address'), "Hello " . $vavok->go('users')->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('home_address'), '', '', 'normal'); // update lang
+            $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('home_address'), "Hello " . $this->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('home_address'), '', '', 'normal'); // update lang
 
             $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
@@ -759,15 +762,19 @@ class User {
 
     /**
      * Get information about user
-     * 
+     *
      * @param string $info data that method need to return
-     * @param int|null $users_id ID of user
+     * @param int|null $user_id ID of the user
      * @return string|bool
      */
-    public function userInfo(string $info, ?int $users_id = null): string|bool
+    public function userInfo(string $info, ?int $user_id = null): string|bool
     {
-        // If $users_id is not set use user if of logged-in user
-        $users_id = empty($users_id) && isset($_SESSION['uid']) ? $_SESSION['uid'] : $users_id;
+        // If $user_id is not set use user id of logged-in user
+        $users_id = empty($user_id) && isset($_SESSION['uid']) ? $_SESSION['uid'] : $user_id;
+
+        if (empty($user_id) && !$this->userAuthenticated()) {
+            return false;
+        }
 
         switch ($info) {
             case 'email':
@@ -777,8 +784,8 @@ class User {
             case 'full_name':
                 $uinfo = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'first_name, last_name');
 
-                $first_name = isset($uinfo['first_name']) ? $uinfo['first_name'] : '';
-                $last_name = isset($uinfo['last_name']) ? $uinfo['last_name'] : '';
+                $first_name = $uinfo['first_name'] ?? '';
+                $last_name = $uinfo['last_name'] ?? '';
                 $full_name = $first_name . ' ' . $last_name;
 
                 // Return false when there is no first and last name
@@ -827,36 +834,44 @@ class User {
                 return isset($data['photo']) && !empty($data['photo']) ? $data['photo'] : '';
 
             case 'nickname':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'name');
-                return isset($data['name']) && !empty($data['name']) ? $data['name'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'name') : '';
+
+                return isset($data['name']) && !empty($data['name']) ? $data['name'] : $this->user_data['name'];
 
             case 'language':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'localization');
-                return isset($data['localization']) && !empty($data['localization']) ? $data['localization'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'localization') : '';
+
+                return isset($data['localization']) && !empty($data['localization']) ? $data['localization'] : $this->user_data['localization'];
 
             case 'banned':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'banned');
-                return isset($data['banned']) && !empty($data['banned']) ? $data['banned'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'banned') : '';
+
+                return isset($data['banned']) && !empty($data['banned']) ? (int)$data['banned'] : (int)$this->user_data['banned'];
 
             case 'password':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'password');
-                return isset($data['password']) && !empty($data['password']) ? $data['password'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'password') : '';
+
+                return isset($data['password']) && !empty($data['password']) ? $data['password'] : $this->user_data['password'];
 
             case 'access_permission':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'access_permission');
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'access_permission') : '';
+
                 return isset($data['access_permission']) && !empty($data['access_permission']) ? $data['access_permission'] : '';
 
             case 'browser':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'browsers');
-                return isset($data['browsers']) && !empty($data['browsers']) ? $data['browsers'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'browsers') : '';
+
+                return isset($data['browsers']) && !empty($data['browsers']) ? $data['browsers'] : $this->user_data['browser'];
 
             case 'ip_address':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'ip_address');
-                return isset($data['ip_address']) && !empty($data['ip_address']) ? $data['ip_address'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'ip_address') : '';
+
+                return isset($data['ip_address']) && !empty($data['ip_address']) ? $data['ip_address'] : $this->user_data['ip_address'];
 
             case 'timezone':
-                $data = $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'timezone');
-                return isset($data['timezone']) && !empty($data['timezone']) ? $data['timezone'] : '';
+                $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'timezone') : '';
+
+                return isset($data['timezone']) && !empty($data['timezone']) ? $data['timezone'] : $this->user_data['timezone'];
 
             case 'ban_time':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'ban_time');
@@ -979,14 +994,20 @@ class User {
     public function checkPermissions(string $permname, string $needed = 'show'): bool
     {
         // Check if user is logged in
-        if (!$this->userAuthenticated()) return false;
+        if (!$this->userAuthenticated()) {
+            return false;
+        }
 
         $permname = str_replace('.php', '', $permname);
 
         // Administrator have access to all site functions
-        if ($this->administrator(101)) return true;
+        if ($this->administrator(101)) {
+            return true;
+        }
 
-        if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") == 0) return false;
+        if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") == 0) {
+            return false;
+        }
 
         $check_data = $this->db->selectData('specperm', 'uid = :uid AND permname = :permname', [':uid' => $_SESSION['uid'], ':permname' => $permname], 'permacc');
         $perms = explode(',', $check_data['permacc']);
@@ -1110,23 +1131,25 @@ class User {
     /**
      * Check if user is moderator
      * 
-     * @param ?int $num
-     * @param ?int $id
+     * @param ?int $permission_id
+     * @param ?int $user_id
      * @return bool
      */
-    function moderator(?int $num = null, ?int $id = null): bool
+    function moderator(?int $permission_id = null, ?int $user_id = null): bool
     {
-        // Return false if user is not logged in
-        if (!$this->userAuthenticated()) return false;
+        if (empty($permission_id) && (!empty($_SESSION['permissions']) && $_SESSION['permissions'] > 0)) {
+            $session_permission = $_SESSION['permissions'];
+        }
 
-        if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
+        $user_id = empty($user_id) && (!empty($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $user_id;
 
-        $permission = $this->userInfo('access_permission', $id);
-        $perm = !empty($permission) ? intval($permission) : 0;
-        
-        if (!empty($num) && $perm === $num && ($perm === 103 || $perm === 105 || $perm === 106)) {
+        $permission = $session_permission ?? $this->userInfo('access_permission', $user_id);
+
+        $permission = !empty($permission) ? intval($permission) : 0;
+
+        if (!empty($permission_id) && $permission === $permission_id && ($permission === 103 || $permission === 105 || $permission === 106)) {
             return true;
-        } elseif (empty($num) && ($perm === 103 || $perm === 105 || $perm === 106)) {
+        } elseif (empty($permission_id) && ($permission === 103 || $permission === 105 || $permission === 106)) {
             return true;
         }
 
@@ -1136,23 +1159,25 @@ class User {
     /**
      * Check if user is administrator
      * 
-     * @param ?int $num
-     * @param ?int $id
+     * @param ?int $permission_id
+     * @param ?int $user_id
      * @return bool
      */
-    function administrator(?int $num = null, ?int $id = null): bool
+    function administrator(?int $permission_id = null, ?int $user_id = null): bool
     {
-        // Return false if user is not logged in
-        if (!$this->userAuthenticated()) return false;
+        if (empty($permission_id) && (!empty($_SESSION['permissions']) && $_SESSION['permissions'] > 0)) {
+            $session_permission = $_SESSION['permissions'];
+        }
 
-        if (empty($id) && !empty($_SESSION['uid'])) $id = $_SESSION['uid'];
+        $user_id = empty($user_id) && (!empty($_SESSION['uid']) && $_SESSION['uid'] > 0) ? $_SESSION['uid'] : $user_id;
 
-        $permission = $this->userInfo('access_permission', $id);
-        $perm = !empty($permission) ? intval($permission) : 0;
+        $permission = $session_permission ?? $this->userInfo('access_permission', $user_id);
 
-        if (!empty($num) && $perm === $num && ($perm === 101 || $perm === 102)) {
+        $permission = !empty($permission) ? intval($permission) : 0;
+
+        if (!empty($permission_id) && $permission === $permission_id && ($permission === 101 || $permission === 102)) {
             return true;
-        } if (empty($num) && ($perm === 101 || $perm === 102)) {
+        } elseif (empty($permission_id) && ($permission === 101 || $permission === 102)) {
             return true;
         }
 
@@ -1304,5 +1329,40 @@ class User {
         }
 
         return false;
+    }
+
+    /**
+     * Set users data
+     *
+     * @param array $data
+     * @return void
+     */
+    private function setCurrentUser(array $data): void
+    {
+        foreach ($data as $property => $value) {
+            $this->user_data[$property] = $value;
+        }
+    }
+
+    /**
+     * Update data in the session
+     *
+     * @param array $data
+     * @return bool
+     */
+    private function updateSession(array $data): bool
+    {
+        $return_value = false;
+
+        foreach ($data as $key => $value) {
+            // Update if value has been changed
+            if ($_SESSION[$key] !== $value) {
+                $_SESSION[$key] = $value;
+
+                $return_value = true;
+            }
+        }
+
+        return $return_value;
     }
 }
