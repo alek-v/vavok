@@ -1356,7 +1356,7 @@ class User {
 
         foreach ($data as $key => $value) {
             // Update if value has been changed
-            if ($_SESSION[$key] !== $value) {
+            if (!isset($_SESSION[$key]) || $_SESSION[$key] !== $value) {
                 $_SESSION[$key] = $value;
 
                 $return_value = true;
