@@ -284,7 +284,6 @@ class ProfileModel extends BaseModel {
             $delete_id = $this->user->userIdNumber();
 
             $this->user->deleteUser($delete_id);
-            $this->user->logout($delete_id);
 
             $this->redirection(HOMEDIR);
         }

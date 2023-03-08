@@ -20,7 +20,8 @@ class User {
     public array $user_data = [
         'authenticated' => false,
         'admin_status' => 'user',
-        'language' => 'english'
+        'language' => 'english',
+        'banned' => 0
     ];
 
     public function __construct(protected Container $container)
@@ -163,7 +164,7 @@ class User {
      */
     public function userAuthenticated(): bool
     {
-        if ($this->user_data['authenticated']) {
+        if ($this->user_data['authenticated'] && isset($this->user_data['id'])) {
             return true;
         }
 
@@ -173,20 +174,17 @@ class User {
     /**
      * Logout
      *
-     * @param ?int $user_id
      * @return void
      */
-    public function logout(?int $user_id = null): void
+    public function logout(): void
     {
-        if (empty($user_id)) {
-            $user_id = $_SESSION['uid'];
-        }
-
         // Remove user from the online list
-        $this->db->delete('online', "user = '{$user_id}'");
+        $this->db->delete('online', "user = '{$this->user_data['id']}'");
 
         // Remove login token from database if token exists
-        if (isset($_COOKIE['cookie_login']) && $this->db->countRow('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) $this->db->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
+        if (isset($_COOKIE['cookie_login']) && $this->db->countRow('tokens', "token = '{$_COOKIE['cookie_login']}'") == 1) {
+            $this->db->delete('tokens', "token = '{$_COOKIE['cookie_login']}'");
+        }
 
         // Root domain, with dot '.' session is accessible from all subdomains
         $rootDomain = '.' . $this->cleanDomain();
@@ -199,7 +197,7 @@ class User {
         setcookie('cookie_login', '', 1, '/', $rootDomain);
         setcookie(session_name(), '', time() - 3600, $rootDomain);
 
-        // Destoy session
+        // Destroy session
         $this->destroyCurrentSession();
 
         // Start new session
@@ -925,7 +923,7 @@ class User {
         if (isset($_SESSION['lang']) && !empty($_SESSION['lang'])) return $_SESSION['lang'];
 
         if ($this->userAuthenticated()) {
-            return $this->userInfo('language', $_SESSION['uid']);
+            return $this->userInfo('language', $this->user_data['id']);
         } else {
             return $this->configuration->getValue('default_localization');
         }

@@ -825,7 +825,7 @@ class UsersModel extends BaseModel {
             $data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
 
             // Remove session - logout user
-            $this->user->logout($this->user->userIdNumber());            
+            $this->user->logout();
         } else {        
             $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt=""> {@localization[wasbanned]}}</p>';
 
