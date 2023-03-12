@@ -936,22 +936,34 @@ class UsersModel extends BaseModel {
         }
 
         // City
-        if (!empty($this->user->userInfo('city', $users_id))) $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->userInfo('city', $users_id)) . '<br>');
+        if (!empty($this->user->userInfo('city', $users_id))) {
+            $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->userInfo('city', $users_id)));
+        }
 
         // About user
-        if (!empty($this->user->userInfo('about', $users_id))) $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->userInfo('about', $users_id)) . ' <br>');
+        if (!empty($this->user->userInfo('about', $users_id))) {
+            $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->userInfo('about', $users_id)));
+        }
 
         // User's birthday
-        if (!empty($this->user->userInfo('birthday', $users_id)) && $this->user->userInfo('birthday', $users_id) != "..") $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->userInfo('birthday', $users_id)) . '<br>');
+        if (!empty($this->user->userInfo('birthday', $users_id)) && $this->user->userInfo('birthday', $users_id) != "..") {
+            $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->userInfo('birthday', $users_id)));
+        }
 
         // User's browser
-        if (!empty($this->user->userInfo('browser', $users_id))) $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->userInfo('browser', $users_id)) . ' <br>');
+        if (!empty($this->user->userInfo('browser', $users_id))) {
+            $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->userInfo('browser', $users_id)));
+        }
 
         // Website
-        if (!empty($this->user->userInfo('site', $users_id)) && $this->user->userInfo('site', $users_id) != 'http://' && $this->user->userInfo('site', $users_id) != 'https://') $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->userInfo('site', $users_id)) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a><br>');
+        if (!empty($this->user->userInfo('site', $users_id)) && $this->user->userInfo('site', $users_id) != 'http://' && $this->user->userInfo('site', $users_id) != 'https://') {
+            $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->userInfo('site', $users_id)) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a>');
+        }
 
         // Registration date
-        if (!empty($this->user->userInfo('registration_date', $users_id))) $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), 'd.m.Y.') . '<br>');
+        if (!empty($this->user->userInfo('registration_date', $users_id))) {
+            $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), 'd.m.Y.'));
+        }
 
         // Last visit
         $timezone = $this->user->userAuthenticated() ? $this->user->userInfo('timezone') : $this->configuration->getValue('timezone');
@@ -971,9 +983,8 @@ class UsersModel extends BaseModel {
             $userMenu->set('contacts', '<a href="' . HOMEDIR . 'users/contacts/?action=contacts&todo=add&who=' . $users_id . '">' . $this->localization->string('addtocontacts') . '</a>');
 
             if (!$this->user->isUserBlocked($users_id, $this->user->userIdNumber())) {
-            //$userMenu->set('add-to', $this->localization->string('addto']);
-            $userMenu->set('ignore', '<a href="' . HOMEDIR . 'users/ignore/?action=ignore&todo=add&who=' . $users_id . '">{@localization[ignore]}}</a>');
-            $userMenu->set('sendMessage', '<br /><a href="' . HOMEDIR . 'inbox/?action=dialog&who=' . $users_id . '">{@localization[sendmsg]}}</a><br>');
+                $userMenu->set('ignore', '<a href="' . HOMEDIR . 'users/ignore/?action=ignore&todo=add&who=' . $users_id . '">{@localization[ignore]}}</a>');
+                $userMenu->set('sendMessage', '<br /><a href="' . HOMEDIR . 'inbox/?action=dialog&who=' . $users_id . '">{@localization[sendmsg]}}</a><br>');
             } else {
                 $userMenu->set('ignore', '{@localization[ignore]}}<br />');
             }

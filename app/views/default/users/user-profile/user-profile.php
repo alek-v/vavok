@@ -1,53 +1,41 @@
 <style>
-    .user_profile {
-    overflow: hidden;
-    margin-bottom: 15px;
+    .user-profile {
+        margin-bottom: 15px;
     }
-    .prof_left {
-    float: left;
-    height: 100%;
-    margin-right: 15px;
-    margin-left: 5px;
-    }
-    .prof_right {
-    position: relative;
-    height: 100%;
+    .user-profile p:empty {
+        display: inline;
     }
     .photo img {
-    max-width: 100px;
-    max-height: 100px;
-    overflow: hidden;
+        max-width: 130px;
+        max-height: 130px;
     }
 </style>
-<div class="user_profile">
-    <div class="b">
-        {@sex-img}} {@first_name}} {@last_name}} <i>{@nickname}}</i> {@user-online}}
+<div class="user-profile">
+    <div class="d-block b rounded">
+        {@sex-img}} {@first_name}} {@last_name}} <em>{@nickname}}</em> {@user-online}}
     </div>
-    <div>
-        <div class="prof_left">
-            <p>
-                {@regCheck}}
-                {@banned}}
-                {@personalStatus}}
-                {@sex}}: {@usersSex}}<br />
-                {@city}}
-                {@about}}
-                {@birthday}}
-                {@forumPosts}}
-                {@browser}}
-                {@siteSkin}}
-                {@site}}
-                {@regDate}}
-                {@last_visit}}
-                {@ip-address}}
-                {@userMenu}}
-            </p>
+    <div class="row mt-5">
+        <div class="col">
+            <p>{@regCheck}}</p>
+            <p>{@banned}}</p>
+            <p>{@personalStatus}}</p>
+            <p>{@sex}}: {@usersSex}}</p>
+            <p>{@city}}</p>
+            <p>{@about}}</p>
+            <p>{@birthday}}</p>
+            <p>{@browser}}</p>
+            <p>{@siteSkin}}</p>
+            <p>{@site}}</p>
+            <p>{@regDate}}</p>
+            <p>{@last_visit}}</p>
+            <p>{@ip-address}}</p>
+            <p>{@userMenu}}</p>
         </div>
-        <div class="prof_right">
+        <div class="col">
             <div class="photo">
                 {@userPhoto}}
-            </div> <!-- photo -->
-        </div> <!-- prof_right -->
+            </div>
+        </div>
     </div>
-</div> <!-- user profile -->
+</div>
 {@homepage}}
