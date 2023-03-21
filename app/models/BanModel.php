@@ -23,7 +23,9 @@ class BanModel extends BaseModel {
 
         $user = $this->postAndGet('users');
 
-        if (!$this->user->administrator(101) && !$this->user->administrator(102) && !$this->user->moderator(103)) $this->redirection('../?auth_error');
+        if (!$this->user->administrator(101) && !$this->user->administrator(102) && !$this->user->moderator(103)) {
+            $this->redirection('../?auth_error');
+        }
         
         $data['content'] .= '<h1><img src="../themes/images/img/partners.gif" alt=""> <b>{@localization[banunban]}}</b></h1>';
         

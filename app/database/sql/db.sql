@@ -174,17 +174,6 @@ CREATE TABLE IF NOT EXISTS `notif` (
 
 
 
--- special permissions list
-CREATE TABLE IF NOT EXISTS `splist` (
-  `id` int(9) NOT NULL AUTO_INCREMENT,
-  `permid` varchar(120) NOT NULL COMMENT 'permission id',
-  `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
-
-
-
 -- special permissions
 CREATE TABLE IF NOT EXISTS `specperm` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

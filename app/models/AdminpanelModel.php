@@ -58,7 +58,7 @@ class AdminpanelModel extends BaseModel {
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/users', '{@localization[profile_management]}}');
             }
 
-            if ($this->user->administrator() || $this->user->checkPermissions('pageedit')) {
+            if ($this->user->administrator()) {
                 $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', '{@localization[pages_management]}}');
             }
 

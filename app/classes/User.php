@@ -983,49 +983,6 @@ class User {
     }
 
     /**
-     * Check if user have a permission to see, edit, delete, etc selected part of the website
-     *
-     * @param string $permname
-     * @param string $needed
-     * @return bool
-     */
-    public function checkPermissions(string $permname, string $needed = 'show'): bool
-    {
-        // Check if user is logged in
-        if (!$this->userAuthenticated()) {
-            return false;
-        }
-
-        $permname = str_replace('.php', '', $permname);
-
-        // Administrator have access to all site functions
-        if ($this->administrator(101)) {
-            return true;
-        }
-
-        if ($this->db->countRow('specperm', "uid='{$_SESSION['uid']}' AND permname='{$permname}'") == 0) {
-            return false;
-        }
-
-        $check_data = $this->db->selectData('specperm', 'uid = :uid AND permname = :permname', [':uid' => $_SESSION['uid'], ':permname' => $permname], 'permacc');
-        $perms = explode(',', $check_data['permacc']);
-
-        if ($needed == 'show' && (in_array(1, $perms) || in_array('show', $perms))) {
-            return true;
-        } elseif ($needed == 'edit' && (in_array(2, $perms) || in_array('edit', $perms))) {
-            return true;
-        } elseif ($needed == 'del' && (in_array(3, $perms) || in_array('del', $perms))) {
-            return true;
-        } elseif ($needed == 'insert' && (in_array(4, $perms) || in_array('insert', $perms))) {
-            return true;
-        } elseif ($needed == 'editunpub' && (in_array(5, $perms) || in_array('editunpub', $perms))) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Number of registered members
      *
      * @return int
