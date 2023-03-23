@@ -275,11 +275,7 @@ class PagemanagerModel extends BaseModel {
                 $filename = $filename . ' ' . strtoupper($file_localization);
 
                 $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $page_info['id'], $filename, '<b>', '</b>');
-
-                if ($page_info['published_status'] == 1) {
-                    $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
-                }
-
+                $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
                 $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
 
                 // Check for permissions to publish and unpublish pages
@@ -306,59 +302,55 @@ class PagemanagerModel extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'show') {
-            if (!empty($id)) {
-                $pageData = new PageManager($this->container);
-                $page_info = $pageData->selectPage($id);
-
-                $showname = $page_info['slug'];
-
-                $index_data['content'] .= '<p>' . $this->localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
-                $index_data['content'] .= '<p>{@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']);
-                $index_data['content'] .= ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
-                
-                // post type
-                $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
-                $index_data['content'] .= ' | Page type: ' . $post_type;
-
-                if ($page_info['published_status']) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $id . '">[Publish]</a>';
-                }
-
-                if ($page_info['published_status'] != 1) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $id . '">[Unpublish]</a>';
-                }
-
-                $index_data['content'] .= '</p>';
-
-                $index_data['content'] .= '<p>';
-                $index_data['content'] .= $this->localization->string('pgaddress') . ': ';
-
-                // Homepage (index page)
-                if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
-                    if (!empty($page_info['localization'])) {
-                        $url_localization = strtolower($page_info['localization']) . '/';
-                    } else {
-                        $url_localization = '';
-                    }
-
-                    $index_data['content'] .= '<a href="' . $this->websiteHomeAddress() . '/' . $url_localization . '" target="_blank">' . $this->websiteHomeAddress() . '/' . $url_localization . '</a>';
-                }
-                // Blog post
-                elseif ($post_type == 'post') {
-                    $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/blog/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/blog/' . $showname . '</a><br />';
-                }
-                // Page
-                elseif ($post_type == 'page' || empty($post_type)) {
-                    $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/page/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/page/' . $showname . '</a><br />';
-                }
-
-                $index_data['content'] .= '</p>';
-
-                $index_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
-
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
+            if (empty($id)) {
+                $this->redirection(HOMEDIR);
             }
 
+            $pageData = new PageManager($this->container);
+            $page_info = $pageData->selectPage($id);
+
+            $showname = $page_info['slug'];
+
+            $index_data['content'] .= '<p>' . $this->localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
+            $index_data['content'] .= '<p>{@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']);
+            $index_data['content'] .= ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
+            
+            // Post type
+            $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
+            $index_data['content'] .= ' | Page type: ' . $post_type;
+
+            if ($page_info['published_status'] == 1) {
+                $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $id . '">[Publish]</a>';
+            } else {
+                $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $id . '">[Unpublish]</a>';
+            }
+
+            $index_data['content'] .= '</p>';
+            $index_data['content'] .= '<p>';
+            $index_data['content'] .= $this->localization->string('pgaddress') . ': ';
+
+            // Homepage (index page)
+            if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
+                if (!empty($page_info['localization'])) {
+                    $url_localization = strtolower($page_info['localization']) . '/';
+                } else {
+                    $url_localization = '';
+                }
+
+                $index_data['content'] .= '<a href="' . $this->websiteHomeAddress() . '/' . $url_localization . '" target="_blank">' . $this->websiteHomeAddress() . '/' . $url_localization . '</a>';
+            }
+            // Blog post
+            elseif ($post_type == 'post') {
+                $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/blog/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/blog/' . $showname . '</a><br />';
+            }
+            // Page
+            elseif ($post_type == 'page' || empty($post_type)) {
+                $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/page/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/page/' . $showname . '</a><br />';
+            }
+
+            $index_data['content'] .= '</p>';
+            $index_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
+            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
             $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}} ' . $showname) . '<br />';
         }
 
