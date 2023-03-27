@@ -67,18 +67,18 @@ class BlogModel extends BaseModel {
                 $post->set('author_link', $author_link);
 
                 // Time created
-                $post->set('created_date', $this->correctDate($this->page_created_date, 'd.m.Y.'));
+                $post->set('created_date', $this->correctDate($this->page_created_date, $this->localization->showAll()['date_format']));
 
                 // Time published
                 // If article is not published and page is viewed by administrator use current time
                 if (!empty($this->page_published_date)) {
-                    $post->set('published_date', $this->correctDate($this->page_published_date, 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate($this->page_published_date, $this->localization->showAll()['date_format']));
                 } else {
-                    $post->set('published_date', $this->correctDate(time(), 'd.m.Y.'));
+                    $post->set('published_date', $this->correctDate(time(), $this->localization->showAll()['date_format']));
                 }
 
                 // Date updated
-                $post->set('date_updated', $this->correctDate($this->page_updated_date, 'd.m.Y.'));
+                $post->set('date_updated', $this->correctDate($this->page_updated_date, $this->localization->showAll()['date_format']));
 
                 // Content
                 $post->set('content', $this->page_content);
