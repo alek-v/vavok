@@ -166,13 +166,12 @@ class EmailQueue extends BaseModel {
             window.onload = startSendingDelayed;
             </script>';
 
-            $dates = $this->correctDate(time(), 'd.m.Y. / H:i');
             $theme = $this->check($_POST['theme']); // subject
-            $sub_name = isset($_POST['subname']) == true ? $this->check($_POST['subname']) : ''; // subscription name
+            $sub_name = isset($_POST['subname']) ? $this->check($_POST['subname']) : ''; // subscription name
             $sender = $this->check($_POST['sender']); // sender name
             $email = $this->check($_POST['email']); // sender email
             $type = $this->check($_POST['type']); // sender email
-            $last = isset($_GET['last']) == true ? $this->check($_GET['last']) : 0;
+            $last = isset($_GET['last']) ? $this->check($_GET['last']) : 0;
             $msg = $_POST['msg'];
 
             // Strip tags in case we are sending plain text mail

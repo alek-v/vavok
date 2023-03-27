@@ -73,7 +73,7 @@ class ContactModel extends BaseModel {
             Sender's email: {$this->postAndGet('umail')}<br />
             Browser: {$this->user->userBrowser()}<br />
             IP: {$this->user->findIpAddress()}<br />
-            {$this->localization->string('datesent')}: " . date('d.m.Y. / H:i');
+            {$this->localization->string('datesent')}: " . date($this->localization->showAll()['date_format'] . ' / ' . $this->localization->showAll()['time_format']);
 
             // Insert email text into the email template
             $template = $this->container['parse_page'];

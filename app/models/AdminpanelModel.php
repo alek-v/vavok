@@ -900,7 +900,7 @@ class AdminpanelModel extends BaseModel {
 
             if ($num_items > 0) {
                 foreach ($this->db->query($sql) as $item) {
-                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->correctDate($item['registration_date'], 'd.m.Y. / H:i') . ')';
+                    $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['uid'], $this->user->getNickFromId($item['uid'])) . ' (' . $this->correctDate($item['registration_date'], $this->localization->showAll()['date_format'] . ' / ' . $this->localization->showAll()['time_format']) . ')';
                     if ($item['registration_activated'] == 1) {
                         $bt = $this->localization->string('notconfirmed') . '!';
                         $bym = $this->sitelink(HOMEDIR . 'adminpanel/unconfirmed_reg/?action=conf&usr=' . $item['uid'], '{@localization[confirms]}}');

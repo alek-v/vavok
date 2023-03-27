@@ -962,12 +962,12 @@ class UsersModel extends BaseModel {
 
         // Registration date
         if (!empty($this->user->userInfo('registration_date', $users_id))) {
-            $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), 'd.m.Y.'));
+            $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), $this->localization->showAll()['date_format']));
         }
 
         // Last visit
         $timezone = $this->user->userAuthenticated() ? $this->user->userInfo('timezone') : $this->configuration->getValue('timezone');
-        $showPage->set('last_visit', $this->localization->string('last_visit') . ': ' . $this->correctDate($this->user->userInfo('last_visit', $users_id), 'd.m.Y. / H:i', $timezone, true));
+        $showPage->set('last_visit', $this->localization->string('last_visit') . ': ' . $this->correctDate($this->user->userInfo('last_visit', $users_id), $this->localization->showAll()['date_format'] . ' / ' . $this->localization->showAll()['time_format'], $timezone, true));
 
         if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) {
             $ipAddress = $this->container['parse_page'];
