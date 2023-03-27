@@ -17,7 +17,7 @@ $ln_all_month = array('јануар', 'фебруар', 'март', 'април'
 
 // Date formats
 $ln_date_format = 'd.m.Y.';
-$ln_time_format = 'H:M';
+$ln_time_format = 'H:i';
 
 $lang_home['home'] = 'На главну';
 $lang_home['login'] = 'Пријави се';

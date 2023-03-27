@@ -17,7 +17,7 @@ $ln_all_month = array('januar', 'februar', 'mart', 'april', 'maj', 'jun', 'jul',
 
 // Date formats
 $ln_date_format = 'd.m.Y.';
-$ln_time_format = 'H:M';
+$ln_time_format = 'H:i';
 
 $lang_home['home'] = 'Na glavnu';
 $lang_home['login'] = 'Prijavite se';
