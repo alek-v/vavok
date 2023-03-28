@@ -10,11 +10,13 @@ class Upload {
 
     protected Database $db;
     protected Localization $localization;
+    protected Config $configuration;
 
     public function __construct(protected Container $container)
     {
-        $this->db = $container['db'];
-        $this->localization = $container['localization'];
+        $this->db = $this->container['db'];
+        $this->localization = $this->container['localization'];
+        $this->configuration = $this->container['config'];
     }
 
     /**
@@ -23,7 +25,7 @@ class Upload {
      * @param string $directory
      * @return array
      */
-    public function upload($directory = '')
+    public function upload(string $directory = ''): array
     {
         if (isset($_POST['width']) && !empty($_POST['width'])) {
             $width = $this->check($_POST['width']);
