@@ -100,10 +100,6 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '<p><img src="/themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // todo: update lang
         }
 
-        if (!empty($this->postAndGet('action'))) $data['content'] .= $this->sitelink('./', '{@localization[adminpanel]}}', '<p>', '</p>');
-
-        $data['content'] .= $this->homelink('<p>', '</p>');
-
         // Pass data to the view
         return $data;
     }
@@ -223,17 +219,6 @@ class AdminpanelModel extends BaseModel {
             $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
         }
 
-        if ($this->postAndGet('action') == 'editseven') {
-            $fields = array('page_facebook_comments');
-
-            $values = array($this->postAndGet('conf_set6'));
-
-            // Update settings
-            $site_configuration->updateConfigData(array_combine($fields, $values));
-
-            $this->redirection(HOMEDIR . 'adminpanel/settings/?isset=mp_yesset');
-        }
-
         if ($this->postAndGet('action') == 'editeight') {
             $fields = array(
                 'limit_log_entries',
@@ -274,7 +259,6 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setone', '{@localization[mainset]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=settwo', '{@localization[shwinfo]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setthree', 'Chat log and email settings');
-            $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=setseven', '{@localization[pagemanage]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=security', '{@localization[security]}}');
             $data['content'] .=  $this->sitelink(HOMEDIR . 'adminpanel/settings/?action=seteight', '{@localization[other]}}');
         }
@@ -468,10 +452,8 @@ class AdminpanelModel extends BaseModel {
             $form->load('forms/form');
             $form->set('form_method', 'post');
             $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=edittwo');
-        
-            /**
-             * Show clock
-             */
+
+            // Show clock
             $_4_yes = $this->container['parse_page'];
             $_4_yes->load('forms/radio_inline');
             $_4_yes->set('label_for', 'conf_set4');
@@ -641,48 +623,6 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
 
-        if ($this->postAndGet('action') == 'setseven') {
-            $data['content'] .= '<h1>{@localization[pagessets]}}</h1>';
-        
-            $form = $this->container['parse_page'];
-            $form->load('forms/form');
-            $form->set('form_method', 'post');
-            $form->set('form_action', HOMEDIR . 'adminpanel/settings/?action=editseven');
-
-            // Allow Facebook comments on pages
-            $conf_set6yes = $this->container['parse_page'];
-            $conf_set6yes->load('forms/radio_inline');
-            $conf_set6yes->set('label_for', 'fb_comm_yes');
-            $conf_set6yes->set('label_value', '{@localization[yes]}}');
-            $conf_set6yes->set('input_id', 'fb_comm_yes');
-            $conf_set6yes->set('input_name', 'conf_set6');
-            $conf_set6yes->set('input_value', 1);
-            if ($this->configuration->getValue('page_facebook_comments') == 1) {
-                $conf_set6yes->set('input_status', 'checked');
-            }
-
-            $conf_set6no = $this->container['parse_page'];
-            $conf_set6no->load('forms/radio_inline');
-            $conf_set6no->set('label_for', 'fb_comm_no');
-            $conf_set6no->set('label_value', '{@localization[no]}}');
-            $conf_set6no->set('input_id', 'fb_comm_no');
-            $conf_set6no->set('input_name', 'conf_set6');
-            $conf_set6no->set('input_value', 0);
-            if ($this->configuration->getValue('page_facebook_comments') == 0) {
-                $conf_set6no->set('input_status', 'checked');
-            }
-
-            $fb_comm = $this->container['parse_page'];
-            $fb_comm->load('forms/radio_group');
-            $fb_comm->set('description', 'Facebook comments on pages');
-            $fb_comm->set('radio_group', $fb_comm->merge(array($conf_set6yes, $conf_set6no)));
-
-            $form->set('fields', $form->merge(array($fb_comm)));
-            $data['content'] .= $form->output();
-
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
-        }
-
         if ($this->postAndGet('action') == "seteight") {
             $data['content'] .= '<h1>{@localization[other]}}</h1>';
         
@@ -809,9 +749,6 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/settings/', '{@localization[back]}}', '<p>', '</p>');
         }
 
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $data['content'] .= $this->homelink() . '</p>';
-
         // Pass data to the view
         return $data;
     }
@@ -836,7 +773,6 @@ class AdminpanelModel extends BaseModel {
         $navigation = new Navigation($items_per_page, $num_items, HOMEDIR . 'adminpanel/adminlist/?'); // start navigation
 
         $limit_start = $navigation->start()['start']; // starting point
-        $end = $navigation->start()['end']; // ending point
 
         if ($num_items > 0) {
             foreach ($this->db->query("SELECT id, name, access_permission FROM vavok_users WHERE access_permission='101' OR access_permission='102' OR access_permission='103' OR access_permission='105' OR access_permission='106' ORDER BY access_permission LIMIT $limit_start, $items_per_page") as $item) {
@@ -848,9 +784,6 @@ class AdminpanelModel extends BaseModel {
         }
 
         $data['content'] .= $navigation->getNavigation();
-
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -921,9 +854,6 @@ class AdminpanelModel extends BaseModel {
             $data['content'] .= '</div>';
         }
 
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br />';
-        $data['content'] .= $this->homelink() . '</p>';
-
         return $data;
     }
 
@@ -939,9 +869,6 @@ class AdminpanelModel extends BaseModel {
   
         $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'pages/statistics', '{@localization[visitor_statistics]}}') . '<br />';
         $data['content'] .= $this->sitelink('../pages/online', '{@localization[users_online]}}') . '</p>';
-        
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1239,9 +1166,6 @@ class AdminpanelModel extends BaseModel {
                 }
             }
         }
-        
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
 
         return $data;
     }
@@ -1324,9 +1248,6 @@ class AdminpanelModel extends BaseModel {
 
             $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', '{@localization[back]}}', '<p>', '<br />');
         }
-
-        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}', '', '<br />');
-        $page_data['content'] .= $this->homelink('', '</p>');
 
         return $page_data;
     }
@@ -1579,8 +1500,6 @@ class AdminpanelModel extends BaseModel {
         $page_data['content'] .= '<p class="mt-5">';
         if ($this->postAndGet('action') !== 'add-category') $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory/?action=add-category', 'Add category') . '<br />';
         if (!empty($this->postAndGet('action'))) $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog categories') . '<br />';
-        $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;
@@ -1693,7 +1612,6 @@ class AdminpanelModel extends BaseModel {
         
         $page_data['content'] .= '<p>';
         $page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->homelink();
         $page_data['content'] .= '</p>';
 
         return $page_data;
@@ -1742,8 +1660,7 @@ class AdminpanelModel extends BaseModel {
             $page_data['ip_information'] .= $this->showDanger('No data available');
         }
 
-        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $page_data['content'] .= $this->homelink() . '</p>';
+        $page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '</p>';
 
         return $page_data;
     }    
