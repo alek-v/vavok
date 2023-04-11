@@ -29,7 +29,4 @@
             </div>
         </div>
     </div>
-    <div>
-        <p><a href="../" class="btn btn-primary homepage">{@localization[home]}}</a></p>
-    </div>
 {@footer}}
