@@ -238,7 +238,7 @@ class BanModel extends BaseModel {
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban/?action=edit&users=' . $user, $this->localization->string('back'), '<p>', '</p>');
         }
 
-        // delete user
+        // Delete the user
         if ($this->postAndGet('action') == 'deluser') {
             $user = $this->check($user);
             $this->user->deleteUser($user);
@@ -246,16 +246,13 @@ class BanModel extends BaseModel {
             $data['content'] .= '<p>{@localization[usrdeleted]}}!</p>';
 
             $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/addban', $this->localization->string('back'), '<p>', '</p>');
-        } 
-
-        $data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
-        $data['content'] .= $this->homelink() . '</p>';
+        }
 
         return $data;
     }
 
     /**
-     * List of banned users
+     * List of the banned users
      */
     public function banlist()
     {
@@ -282,9 +279,6 @@ class BanModel extends BaseModel {
         }
 
         $data['navigation'] = $navigation->getNavigation();
-
-        $data['bottom_links'] = $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $data['bottom_links'] .= $this->homelink();
 
         return $data;
     }

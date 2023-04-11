@@ -124,7 +124,6 @@ class Page extends BaseModel {
         }
 
         $data['content'] .= $navigation->getNavigation();
-        $data['content'] .= $this->homelink();
 
         return $data;
     }

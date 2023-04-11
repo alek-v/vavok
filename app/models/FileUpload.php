@@ -16,12 +16,7 @@ class FileUpload extends BaseModel {
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
 
-        if (empty($this->postAndGet('action'))) {
-            $this_page['content'] .= '<p>' . $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-            $this_page['content'] .= $this->homelink() . '</p>';
-
-            return $this_page;
-        }
+        return $this_page;
     }
 
     /**
@@ -101,11 +96,6 @@ class FileUpload extends BaseModel {
             }
         }
 
-        $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->homelink();
-        $this_page['content'] .= '</p>';
-
         return $this_page;
     }
 
@@ -163,9 +153,7 @@ class FileUpload extends BaseModel {
         }
 
         $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back')) . '<br />';
-        $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->homelink();
+        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back'));
         $this_page['content'] .= '</p>';
 
         return $this_page;

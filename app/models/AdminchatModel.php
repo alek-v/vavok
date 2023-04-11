@@ -129,9 +129,6 @@ class AdminchatModel extends BaseModel {
             $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=confirm_to_clear_chat', '{@localization[cleanchat]}}');
         }
 
-        $data['content'] .= '<p>' . $this->sitelink('./', '{@localization[adminpanel]}}') . '<br>';
-        $data['content'] .= $this->homelink() . '</p>';
-
         return $data;
     }    
 }

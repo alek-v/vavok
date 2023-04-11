@@ -79,11 +79,6 @@ class Subscription extends BaseModel {
             }
         }
 
-        $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $this_page['content'] .= $this->homelink();
-        $this_page['content'] .= '</p>';
-
         return $this_page;
     }
 
@@ -121,9 +116,6 @@ class Subscription extends BaseModel {
             $this_page['all_options'] .= '<div class="col-2 m-2"><a href="./subscription_options?delete=' . $key . '" class="btn btn-danger">{@localization[delete]}}</a></div>';
             $this_page['all_options'] .= '</div>';
         }
-
-        $this_page['bottom_links'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '<br />';
-        $this_page['bottom_links'] .= $this->homelink() . '</p>';
 
         return $this_page;
     }

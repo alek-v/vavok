@@ -226,11 +226,6 @@ class EmailQueue extends BaseModel {
             $page_data['content'] .= '<p><img src="../themes/images/img/back.gif" alt="" /> <a href="./email_queue">{@localization[back]}}</a></p>'; // update lang
         }
 
-        $page_data['content'] .= '<p>';
-        $page_data['content'] .= $this->sitelink('./', $this->localization->string('adminpanel')) . '<br />';
-        $page_data['content'] .= $this->homelink();
-        $page_data['content'] .= '</p>';
-
         return $page_data;
     }
 }

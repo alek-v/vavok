@@ -723,11 +723,6 @@ class PagemanagerModel extends BaseModel {
 
         $index_data['content'] .= '</p>';
 
-        $index_data['content'] .= '<p>';
-        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel', $this->localization->string('adminpanel')) . '<br />';
-        $index_data['content'] .= $this->homelink();
-        $index_data['content'] .= '</p>';
-
         return $index_data;
     }
 }
