@@ -19,10 +19,9 @@ class ContactModel extends BaseModel {
      */
     public function index(): array
     {
-        $data['page_title'] = '{@localization[contact]}}';
+        $this->page_data['page_title'] = '{@localization[contact]}}';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['head_tags'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-        $data['content'] = '';
+        $this->page_data['head_tags'] = '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
 
         if (!$this->user->userAuthenticated()) {
             $usernameAndMail = $this->container['parse_page'];
@@ -35,12 +34,12 @@ class ContactModel extends BaseModel {
         }
 
         // Show reCAPTCHA
-        $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
+        $this->page_data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
 
         // Page data
-        $data['usernameAndMail'] = $usernameAndMail->output();
+        $this->page_data['usernameAndMail'] = $usernameAndMail->output();
 
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -50,23 +49,30 @@ class ContactModel extends BaseModel {
      */
     public function send(): array
     {
-        $data['page_title'] = '{@localization[contact]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[contact]}}';
 
         // Check name
-        if (empty($this->postAndGet('name'))) $data['content'] .= $this->showDanger('{@localization[noname]}}');
+        if (empty($this->postAndGet('name'))) {
+            $this->page_data['content'] .= $this->showDanger('{@localization[noname]}}');
+        }
 
         // Check email body
-        if (empty($this->postAndGet('body'))) $data['content'] .= $this->showDanger('{@localization[nobody]}}');
+        if (empty($this->postAndGet('body'))) {
+            $this->page_data['content'] .= $this->showDanger('{@localization[nobody]}}');
+        }
 
         // Validate email address
-        if (!$this->validateEmail($this->postAndGet('umail'))) $data['content'] .= $this->showDanger('{@localization[noemail]}}');
+        if (!$this->validateEmail($this->postAndGet('umail'))) {
+            $this->page_data['content'] .= $this->showDanger('{@localization[noemail]}}');
+        }
 
         // Redirect if response is false
-        if ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] == false) $data['content'] .= $this->showDanger('{@localization[wrongcode]}}');
+        if ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] == false) {
+            $this->page_data['content'] .= $this->showDanger('{@localization[wrongcode]}}');
+        }
 
         // Send email if there is no error
-        if (empty($data['content'])) {
+        if (empty($this->page_data['content'])) {
             $email_content = $this->postAndGet('body') . "<br /><br /><br />
             -----------------------------------------<br />
             Sender: {$this->postAndGet('name')}<br />
@@ -93,12 +99,12 @@ class ContactModel extends BaseModel {
             );
 
             // Email sent
-            $data['content'] .= $this->showSuccess('{@localization[emailsent]}}');
+            $this->page_data['content'] .= $this->showSuccess('{@localization[emailsent]}}');
         }
 
         // Back link
-        $data['content'] .= $this->sitelink(HOMEDIR . 'contact', '{@localization[back]}}', '<p>', '</p>');
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'contact', '{@localization[back]}}', '<p>', '</p>');
 
-        return $data;
+        return $this->page_data;
     }
 }

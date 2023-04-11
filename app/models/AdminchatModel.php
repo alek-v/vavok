@@ -18,8 +18,7 @@ class AdminchatModel extends BaseModel {
      */
     public function index(): array
     {
-        $data['page_title'] = '{@localization[admin_chat]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[admin_chat]}}';
 
         if (!$this->user->administrator() && !$this->user->moderator()) {
             $this->redirection('../?auth_error');
@@ -66,23 +65,23 @@ class AdminchatModel extends BaseModel {
             }
         }
 
-        $data['content'] .= '<h1>{@localization[admin_chat]}}</h1>';
+        $this->page_data['content'] .= '<h1>{@localization[admin_chat]}}</h1>';
 
         if (empty($this->postAndGet('action'))) {
-            $data['content'] .= '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';
-            $data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?r=' . rand(100, 999), '{@localization[refresh]}}') . '<br>';
+            $this->page_data['content'] .= '<a href="#down"><img src="../themes/images/img/downs.gif" alt=""></a> ';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?r=' . rand(100, 999), '{@localization[refresh]}}') . '<br>';
         
-            $data['content'] .='<hr><form action="adminchat/?action=add_message" method="post"><b>{@localization[message]}}</b><br>';
-            $data['content'] .='<textarea cols="80" rows="5" name="msg"></textarea><br>';
+            $this->page_data['content'] .='<hr><form action="adminchat/?action=add_message" method="post"><b>{@localization[message]}}</b><br>';
+            $this->page_data['content'] .='<textarea cols="80" rows="5" name="msg"></textarea><br>';
         
-            $data['content'] .='<input type="submit" value="{@localization[save]}}" /></form><hr>';
+            $this->page_data['content'] .='<input type="submit" value="{@localization[save]}}" /></form><hr>';
         
             $file = $this->getDataFile('admin_chat.dat');
             $file = array_reverse($file);
             $total = count($file);
 
             if ($total < 1) {
-                $data['content'] .='<p><img src="../themes/images/img/reload.gif" alt=""> <b>{@localization[no_messages]}}</b></p>';
+                $this->page_data['content'] .='<p><img src="../themes/images/img/reload.gif" alt=""> <b>{@localization[no_messages]}}</b></p>';
             }
 
             $navigation = new Navigation(10, $total, HOMEDIR . 'adminpanel/adminchat/?'); // start navigation
@@ -104,31 +103,31 @@ class AdminchatModel extends BaseModel {
                 // Message
                 $data_text = $this->antiword($this->smiles($this->getbbcode($chat_data[0])));
         
-                $data['content'] .= '<div class=b><b>' . $this->sitelink(HOMEDIR . 'users/u/' . $chat_data[1], $chat_data[1]) . '</b> ' . $online_status;
+                $this->page_data['content'] .= '<div class=b><b>' . $this->sitelink(HOMEDIR . 'users/u/' . $chat_data[1], $chat_data[1]) . '</b> ' . $online_status;
         
                 if (date('d.m.y') == $chat_data[2]) {
                     $chat_data[2] = '<font color="#FF0000">{@localization[today]}}</font>';
                 }
 
-                $data['content'] .='<small> (' . $chat_data[2] . ' / ' . $chat_data[3] . ')</small></div>';
-                $data['content'] .='<div><p>' . $data_text . '<br><small><font color="#CC00CC">[' . $chat_data[4] . ', ' . $chat_data[5] . ']</font></small></p></div>';
+                $this->page_data['content'] .='<small> (' . $chat_data[2] . ' / ' . $chat_data[3] . ')</small></div>';
+                $this->page_data['content'] .='<div><p>' . $data_text . '<br><small><font color="#CC00CC">[' . $chat_data[4] . ', ' . $chat_data[5] . ']</font></small></p></div>';
             }
 
-            $data['content'] .= '<hr>';
-            $data['content'] .= $navigation->getNavigation();
+            $this->page_data['content'] .= '<hr>';
+            $this->page_data['content'] .= $navigation->getNavigation();
         }
 
         if ($this->postAndGet('action') == 'confirm_to_clear_chat') {
-            $data['content'] .= '<br>{@localization[delacmsgs]}}?<br>';
-            $data['content'] .= '<b>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=clear_admin_chat', '{@localization[yessure]}}' . '!') . '</b><br>';
+            $this->page_data['content'] .= '<br>{@localization[delacmsgs]}}?<br>';
+            $this->page_data['content'] .= '<b>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=clear_admin_chat', '{@localization[yessure]}}' . '!') . '</b><br>';
 
-            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/', '{@localization[back]}}');
+            $this->page_data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/', '{@localization[back]}}');
         } 
 
         if (isset($total) && $total > 0 && ($_SESSION['permissions'] == 101 || $_SESSION['permissions'] == 102)) {
-            $data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=confirm_to_clear_chat', '{@localization[cleanchat]}}');
+            $this->page_data['content'] .= '<br>' . $this->sitelink(HOMEDIR . 'adminpanel/adminchat/?action=confirm_to_clear_chat', '{@localization[cleanchat]}}');
         }
 
-        return $data;
+        return $this->page_data;
     }    
 }

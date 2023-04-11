@@ -13,7 +13,7 @@ class ProfileModel extends BaseModel {
      */
     public function index()
     {
-        $data['head_tags'] = '
+        $this->page_data['head_tags'] = '
         <style>
             .photo img {
                 max-width: 100px;
@@ -22,7 +22,7 @@ class ProfileModel extends BaseModel {
             }
         </style>
         ';
-        $data['page_title'] = $this->localization->string('profsettings');
+        $this->page_data['page_title'] = $this->localization->string('profsettings');
 
         $form = $this->container['parse_page'];
         $form->load('forms/form');
@@ -143,7 +143,7 @@ class ProfileModel extends BaseModel {
         $gender->set('radio_group', $gender->merge(array($gender_m, $gender_f)));
 
         $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $timezone, $infa, $email, $site, $birthday, $gender)));
-        $data['profile_form'] = $form->output();
+        $this->page_data['profile_form'] = $form->output();
 
         // Change password
         $form= $this->container['parse_page'];
@@ -176,19 +176,19 @@ class ProfileModel extends BaseModel {
         $oldpar->set('input_name', 'oldpar');
 
         $form->set('fields', $form->merge(array($newpar, $newpar2, $oldpar)));
-        $data['change_password'] = $form->output();
+        $this->page_data['change_password'] = $form->output();
 
         if (!empty($this->user->userInfo('photo'))) {
-            $data['profile_photo'] = '<img src="../' . $this->user->userInfo('photo') . '" alt="User\'s photo" /><br /> ';
-            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photo') . '<br />';
-            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/removephoto', 'Remove photo'); // update lang
+            $this->page_data['profile_photo'] = '<img src="../' . $this->user->userInfo('photo') . '" alt="User\'s photo" /><br /> ';
+            $this->page_data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photo') . '<br />';
+            $this->page_data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/removephoto', 'Remove photo'); // update lang
         } else {
-            $data['profile_photo'] = '<img src="../themes/images/img/no_picture.jpg" alt="No profile picture" /><br /> ';
-            $data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photography');
+            $this->page_data['profile_photo'] = '<img src="../themes/images/img/no_picture.jpg" alt="No profile picture" /><br /> ';
+            $this->page_data['profile_photo'] .= $this->sitelink(HOMEDIR . 'profile/photo', 'Change photography');
         }
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -289,10 +289,10 @@ class ProfileModel extends BaseModel {
         }
 
         // Page title
-        $data['page_title'] = '{@localization[deleteProfile]}}';
+        $this->page_data['page_title'] = '{@localization[deleteProfile]}}';
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -300,15 +300,15 @@ class ProfileModel extends BaseModel {
      */
     public function newpass()
     {
-        $data['page_title'] = '{@localization[profile]}}';
+        $this->page_data['page_title'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
         if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2'))
         {
-            $data['content'] = $this->showDanger('{@localization[nonewpass]}}');
+            $this->page_data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
             // Pass page to the view
-            $this->view('profile/newpassword', $data);
+            $this->view('profile/newpassword', $this->page_data);
             exit;
         }
 
@@ -319,11 +319,11 @@ class ProfileModel extends BaseModel {
 
             $this->redirection($this->websiteHomeAddress() . "/users/login");
         } else {
-            $data['content'] = $this->showDanger('{@localization[nopass]}}');
+            $this->page_data['content'] = $this->showDanger('{@localization[nopass]}}');
         }
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -331,20 +331,19 @@ class ProfileModel extends BaseModel {
      */
     public function photo()
     {
-        $data['page_title'] = 'Change Photo';
-        $data['head_tags'] = '<style>
+        $this->page_data['page_title'] = 'Change Photo';
+        $this->page_data['head_tags'] = '<style>
         .photo img {
             max-width: 320px;
             max-height: 320px;
             overflow: hidden;
         }
         </style>';
-        $data['content'] = '';
 
         if (!empty($this->user->userInfo('photo'))) {
-            $data['photo'] = '<div class="photo">';
-            $data['photo'] .= '<h1>Your photo</h1><br /><img src="../' . $this->user->userInfo('photo') . '" alt="Users photo" />';
-            $data['photo'] .= '</div>';
+            $this->page_data['photo'] = '<div class="photo">';
+            $this->page_data['photo'] .= '<h1>Your photo</h1><br /><img src="../' . $this->user->userInfo('photo') . '" alt="Users photo" />';
+            $this->page_data['photo'] .= '</div>';
         }
 
         $form = $this->container['parse_page'];
@@ -362,10 +361,10 @@ class ProfileModel extends BaseModel {
 
         $form->set('fields', $input->output());
 
-        $data['content'] .= $form->output();
+        $this->page_data['content'] .= $form->output();
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -374,8 +373,8 @@ class ProfileModel extends BaseModel {
     public function savephoto()
     {
         // Page data
-        $data['page_title'] = 'Change Photography';
-        $data['head_tags'] = '
+        $this->page_data['page_title'] = 'Change Photography';
+        $this->page_data['head_tags'] = '
         <style>
             .photo img {
                 max-width: 100px;
@@ -384,7 +383,6 @@ class ProfileModel extends BaseModel {
             }
         </style>
         ';
-        $data['content'] = '';
 
         // File path cannot be empty
         if (empty($_FILES['file']['tmp_name'])) $this->redirection(HOMEDIR . 'profile/photo');
@@ -422,28 +420,28 @@ class ProfileModel extends BaseModel {
 
                         $this->user->updateUser('photo', 'gallery/photo/' . $this->user->userIdNumber());
 
-                        $data['user_id'] = $this->user->userIdNumber();
+                        $this->page_data['user_id'] = $this->user->userIdNumber();
 
                         // Pass page to the view
-                        $this->view('profile/savephoto', $data);
+                        $this->view('profile/savephoto', $this->page_data);
                         exit;
                     } else {
-                        $data['content'] .= $this->showDanger('Error uploading photography');
+                        $this->page_data['content'] .= $this->showDanger('Error uploading photography');
                     }
                 } else {
-                    $data['content'] .= $this->showDanger($this->localization->string('badfileext'));
+                    $this->page_data['content'] .= $this->showDanger($this->localization->string('badfileext'));
                 }
             } else {
-                $data['content'] .= $this->showDanger('Photography must be under 1024px');
+                $this->page_data['content'] .= $this->showDanger('Photography must be under 1024px');
             }
         } else {
-            $data['content'] .= $this->showDanger($this->localization->string('filemustb') . ' under 5 MB');
+            $this->page_data['content'] .= $this->showDanger($this->localization->string('filemustb') . ' under 5 MB');
         }
 
-        $data['content'] .= $this->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -452,8 +450,7 @@ class ProfileModel extends BaseModel {
     public function removephoto()
     {
         // Page data
-        $data['page_title'] = 'Remove Photography';
-        $data['content'] = '';
+        $this->page_data['page_title'] = 'Remove Photography';
 
         if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
             unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg");
@@ -468,11 +465,11 @@ class ProfileModel extends BaseModel {
         // Update database
         $this->user->updateUser('photo', '');
 
-        $data['content'] .= $this->showSuccess('Your photography has been successfully deleted!'); // update lang
-        $data['content'] .= $this->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
+        $this->page_data['content'] .= $this->showSuccess('Your photography has been successfully deleted!'); // update lang
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'profile', $this->localization->string('back'), '<p>', '</p>');
 
         // Pass page to the view
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -481,17 +478,16 @@ class ProfileModel extends BaseModel {
     public function confirm_email()
     {
         // Users data
-        $this_page['user'] = $this->user_data;
+        $this->page_data['user'] = $this->user_data;
 
         // Page data
-        $this_page['page_title'] = 'Confirm email address';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Confirm email address';
 
         // Token does not exist
         if ($this->db->countRow('tokens', "type = 'email' AND token = '{$this->postAndGet('token')}'") < 1) {
-            $this_page['content'] .= $this->showDanger('{@localization[notoken]}}');
+            $this->page_data['content'] .= $this->showDanger('{@localization[notoken]}}');
 
-            return $this_page;
+            return $this->page_data;
         }
 
         // Get token data

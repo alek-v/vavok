@@ -39,8 +39,7 @@ class InstallModel extends BaseModel {
     public function index()
     {
         // Users data
-        $this_page['page_title'] = 'Install';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Install';
 
         // Create log files
         $this->createLogFiles();
@@ -70,26 +69,24 @@ class InstallModel extends BaseModel {
             }
         }
 
-        $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
-        $this_page['content'] .= '<p><a href="{@HOMEDIR}}install/register" class="btn btn-outline-primary sitelink">Next step</a></p>';
+        $this->page_data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt="" /> Database successfully created!<br /></p>';
+        $this->page_data['content'] .= '<p><a href="{@HOMEDIR}}install/register" class="btn btn-outline-primary sitelink">Next step</a></p>';
 
-        return $this_page;
+        return $this->page_data;
     }
 
     public function register()
     {
-        $this_page['page_title'] = 'Register admin';
-        $this_page['site_address'] = $this->currentConnection() . $_SERVER['HTTP_HOST'];
+        $this->page_data['page_title'] = 'Register admin';
+        $this->page_data['site_address'] = $this->currentConnection() . $_SERVER['HTTP_HOST'];
 
-        return $this_page;
+        return $this->page_data;
     }
 
     public function register_admin()
     {
-        $this_page['page_title'] = 'Register admin';
-        $this_page['content'] = '';
-
-        $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> Installation results</p>';
+        $this->page_data['page_title'] = 'Register site administrator';
+        $this->page_data['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> Installation results</p>';
 
         $str1 = strlen($_POST['name']);
         $str2 = strlen($_POST['password']);
@@ -103,39 +100,39 @@ class InstallModel extends BaseModel {
         $validation_error = '';
 
         if (empty($name) || empty($password) || empty($email) || empty($osite)) {
-            $this_page['content'] .= '<p><b>You didn\'t write all of the required information! Please complete all the empty fields</b></p>';
+            $this->page_data['content'] .= '<p><b>You didn\'t write all of the required information! Please complete all the empty fields</b></p>';
 
             $validation_error = 1;
         }
 
         if ($str1 < 2 || $str2 < 7) {
-            $this_page['content'] .= '<p><b>Your username or your password are too short</b></p>';
+            $this->page_data['content'] .= '<p><b>Your username or your password are too short</b></p>';
 
             $validation_error = 1;
         }
 
         if ($password !== $password2) {
-            $this_page['content'] .= '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
+            $this->page_data['content'] .= '<p><b>Passwords don\'t match! It is required to repeat the same password</b></p>';
 
             $validation_error = 1;
         }
 
         if (!$this->validateEmail($email)) {
-            $this_page['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
+            $this->page_data['content'] .= '<p><b>Incorrect email address! (example name@name.domain)</b></p>';
 
             $validation_error = 1;
         }
 
         if (!$this->validateUrl($osite)) {
-            $this_page['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
+            $this->page_data['content'] .= '<p><b>Incorrect site address! (example http://sitename.domen)</b></p>';
 
             $validation_error = 1;
         }
 
         if ($validation_error == 1) {
-            $this_page['content'] .= '<p><a href="register">Back</a></p>';
+            $this->page_data['content'] .= '<p><a href="register">Back</a></p>';
 
-            return $this_page;
+            return $this->page_data;
         }
 
         $osite_name = ucfirst(str_replace("http://", "", $osite));
@@ -175,10 +172,10 @@ class InstallModel extends BaseModel {
         $user_id = $this->user->getIdFromNick($name);
         $this->db->update('vavok_users', 'access_permission', 101, "id='{$user_id}'");
 
-        $this_page['content'] .= '<p>Installation has been completed successfully</p>';
-        $this_page['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <strong><a href="../users/login">Login</a></strong></p>';
+        $this->page_data['content'] .= '<p>Installation has been completed successfully</p>';
+        $this->page_data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt="" /> <strong><a href="../users/login">Login</a></strong></p>';
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**

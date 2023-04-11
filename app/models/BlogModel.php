@@ -25,9 +25,6 @@ class BlogModel extends BaseModel {
      */
     public function index(array $params = []): array
     {
-        // Content of the page
-        $this_page['content'] = '';
-
         // Blog page
         $pg = isset($params[0]) && $params[0] !== 'category' && strlen($params[0]) != 2 ? $params[0] : '';
 
@@ -44,7 +41,7 @@ class BlogModel extends BaseModel {
 
                 // Merge data with existing data
                 if (!empty($blog_page_data) && is_array($blog_page_data)) {
-                    $this_page = array_merge($blog_page_data, $this_page);
+                    $this->page_data = array_merge($blog_page_data, $this->page_data);
                 }
 
                 // Redirect to blog main page if page does not exist
@@ -53,7 +50,7 @@ class BlogModel extends BaseModel {
                 }
 
                 // Update user's localization when page's language is different from current localization
-                $this->user->updatePageLocalization($this_page['localization']);
+                $this->user->updatePageLocalization($this->page_data['localization']);
 
                 // Generate page
                 $post = $this->container['parse_page'];
@@ -148,15 +145,15 @@ class BlogModel extends BaseModel {
                 $post->set('tags', $tags);
 
                 // Page content
-                $this_page['content'] .= $post->output();
+                $this->page_data['content'] .= $post->output();
 
-                return $this_page;
+                return $this->page_data;
 
             default:
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
 
                 // Page title
-                $this_page['page_title'] = 'Blog';
+                $this->page_data['page_title'] = 'Blog';
 
                 // Load index template
                 $show_page = $this->container['parse_page'];
@@ -174,9 +171,9 @@ class BlogModel extends BaseModel {
 
                 // When there is no posts
                 if ($total_posts < 1) {
-                    $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is no blog posts yet.</p>';
+                    $this->page_data['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="Nothing here" /> There is no blog posts yet.</p>';
 
-                    return $this_page;
+                    return $this->page_data;
                 }
 
                 // start navigation
@@ -259,9 +256,9 @@ class BlogModel extends BaseModel {
 
                 $show_page->set('navigation', $navigation->getNavigation());
 
-                $this_page['content'] .= $show_page->output();
+                $this->page_data['content'] .= $show_page->output();
 
-                return $this_page;
+                return $this->page_data;
         }
     }
 
@@ -270,14 +267,13 @@ class BlogModel extends BaseModel {
      */
     public function save_comment()
     {
-        // Content of the page
-        $this_page['content'] = '';
-
         // Return page
         $ptl = ltrim($this->check($this->postAndGet('ptl')), '/');
 
         // In case data is missing
-        if ($this->user->userAuthenticated() && (empty($this->postAndGet('comment')) || empty($this->postAndGet('pid')))) { $this->redirection(HOMEDIR . $ptl . '?isset=msgshort'); }
+        if ($this->user->userAuthenticated() && (empty($this->postAndGet('comment')) || empty($this->postAndGet('pid')))) {
+            $this->redirection(HOMEDIR . $ptl . '?isset=msgshort');
+        }
 
         $comments = new BlogComments($this->container);
 

@@ -79,10 +79,10 @@ class ErrorModel extends BaseModel {
             $this->limitFileLines($logdat, $this->configuration->getValue('limit_log_entries'));
         }
 
-        $this_page['error_number_info'] = $error_number_info;
-        $this_page['additional_error_info'] = $additional_error_info;
+        $this->page_data['error_number_info'] = $error_number_info;
+        $this->page_data['additional_error_info'] = $additional_error_info;
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**
@@ -96,10 +96,10 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['page_title'] = 'Error 403';
-        $this_page['error_number_info'] = $error_info['error_number_info'];
+        $this->page_data['page_title'] = 'Error 403';
+        $this->page_data['error_number_info'] = $error_info['error_number_info'];
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**
@@ -116,10 +116,10 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['page_title'] = 'Error 404';
-        $this_page['error_number_info'] = $error_info['error_number_info'];
+        $this->page_data['page_title'] = 'Error 404';
+        $this->page_data['error_number_info'] = $error_info['error_number_info'];
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**
@@ -133,9 +133,9 @@ class ErrorModel extends BaseModel {
         // Log error
         $error_info = $this->log_error($params);
 
-        $this_page['page_title'] = 'Error 500';
-        $this_page['error_number_info'] = $error_info['error_number_info'];
+        $this->page_data['page_title'] = 'Error 500';
+        $this->page_data['error_number_info'] = $error_info['error_number_info'];
 
-        return $this_page;
+        return $this->page_data;
     }
 }

@@ -11,12 +11,11 @@ use App\Classes\Upload;
 class FileUpload extends BaseModel {
     public function index()
     {
-        $this_page['page_title'] = 'File Upload';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'File Upload';
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**
@@ -26,8 +25,6 @@ class FileUpload extends BaseModel {
      */
     public function finish_upload()
     {
-        $this_page['content'] = '';
-
         // Instantiate Upload class
         $file_upload = new Upload($this->container, $this->localization);
 
@@ -35,22 +32,23 @@ class FileUpload extends BaseModel {
         $upload_data = $file_upload->upload();
 
         if (!empty($upload_data['file_address'])) {
-            $this_page['content'] .= '<p>' . $this->localization->string('filesadded') . '</p>';
-            $this_page['content'] .= '<p>' . $this->localization->string('fileaddress') . ': ' . $upload_data['file_address'] . '</p>';
+            $this->page_data['content'] .= '<p>' . $this->localization->string('filesadded') . '</p>';
+            $this->page_data['content'] .= '<p>' . $this->localization->string('fileaddress') . ': ' . $upload_data['file_address'] . '</p>';
         } else {
-            $this_page['content'] .= $upload_data['error'];
+            $this->page_data['content'] .= $upload_data['error'];
         }
 
         // Return data with file location or error
-        echo $this_page['content'];
+        echo $this->page_data['content'];
     }
 
     public function uploaded_files()
     {
-        $this_page['page_title'] = 'Uploaded Files';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Uploaded Files';
 
-        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . 'users/login');
+        if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
 
         if ($this->postAndGet('action') == 'del') {
             $file_data = $this->db->selectData('uplfiles', 'id = :id', [':id' => $this->postAndGet('id')]);
@@ -72,7 +70,7 @@ class FileUpload extends BaseModel {
         }
 
         if (empty($this->postAndGet('action'))) {
-            $this_page['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> List of uploaded files</p>'; 
+            $this->page_data['content'] .= '<p><img src="../themes/images/img/partners.gif" alt="" /> List of uploaded files</p>'; 
 
             $num_items = $this->db->countRow('uplfiles');
 
@@ -86,17 +84,17 @@ class FileUpload extends BaseModel {
                 if ($num_items > 0) {
                     foreach ($this->db->query("SELECT * FROM uplfiles ORDER BY id LIMIT $limit_start, $items_per_page") as $item) {
                         $lnk = '<div class="a"><a href="' . $item['fulldir'] . '">' . $item['name'] . '</a> | <a href="?action=del&id=' . $item['id'] . '">[DEL]</a></div>';
-                        $this_page['content'] .= $lnk . "<br />";
+                        $this->page_data['content'] .= $lnk . '<br />';
                     }
                 }
-        
-                $this_page['content'] .= $navigation->getNavigation();
+
+                $this->page_data['content'] .= $navigation->getNavigation();
             } else {
-                $this_page['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> No uploaded files!</p>';
+                $this->page_data['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> No uploaded files!</p>';
             }
         }
 
-        return $this_page;
+        return $this->page_data;
     }
 
     /**
@@ -104,24 +102,23 @@ class FileUpload extends BaseModel {
      */
     public function search_uploads()
     {
-        $this_page['page_title'] = 'Search';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Search';
 
         if (!$this->user->administrator() && !$this->user->moderator(103) && !$this->user->moderator(105)) $this->redirection(HOMEDIR . '?auth_error');
         
         if (empty($this->postAndGet('action'))) {
-            $this_page['content'] .= '<form action="' . HOMEDIR . 'adminpanel/search_uploads?action=stpc" method="POST">';
-            $this_page['content'] .= 'Text:<br><input name="stext" maxlength="30" /><br>';
-            $this_page['content'] .= '<br>';
-            $this_page['content'] .= '<input type="submit" value="Search"></form><br><br>';
+            $this->page_data['content'] .= '<form action="' . HOMEDIR . 'adminpanel/search_uploads?action=stpc" method="POST">';
+            $this->page_data['content'] .= 'Text:<br><input name="stext" maxlength="30" /><br>';
+            $this->page_data['content'] .= '<br>';
+            $this->page_data['content'] .= '<input type="submit" value="Search"></form><br><br>';
         } else if ($this->postAndGet('action') == 'stpc') {
             $stext = $this->check($_POST["stext"]);
 
             if (empty($stext)) {
-                $this_page['content'] .= "<br />Please fill all fields<br />";
+                $this->page_data['content'] .= "<br />Please fill all fields<br />";
             } else {
-                $this_page['content'] .= 'Searching for: ' . $stext . '<br />';
-                $this_page['content'] .= '<div class="break"></div>'; 
+                $this->page_data['content'] .= 'Searching for: ' . $stext . '<br />';
+                $this->page_data['content'] .= '<div class="break"></div>'; 
                 // begin search
 
                 $where_table = "uplfiles";
@@ -140,22 +137,22 @@ class FileUpload extends BaseModel {
                 $sql = "SELECT " . $select_fields . " FROM " . $where_table . " WHERE name LIKE '%" . $stext . "%' ORDER BY " . $ord_fields . " LIMIT $limit_start, $items_per_page";
 
                 foreach ($this->db->query($sql) as $item) {
-                    $this_page['content'] .= '<div class="a"><a href="' . $item['fulldir'] . '">' . $item['name'] . '</a> | <a href="' . HOMEDIR . 'adminpanel/uploaded_files?action=del&id=' . $item['id'] . '">[DEL]</a></div>';
-                    $this_page['content'] .= '<div class="break"></div>';
+                    $this->page_data['content'] .= '<div class="a"><a href="' . $item['fulldir'] . '">' . $item['name'] . '</a> | <a href="' . HOMEDIR . 'adminpanel/uploaded_files?action=del&id=' . $item['id'] . '">[DEL]</a></div>';
+                    $this->page_data['content'] .= '<div class="break"></div>';
                 }
 
-                $this_page['content'] .= '<p>';
-                $this_page['content'] .= 'Items: ' . $noi;
-                $this_page['content'] .= '</p>';
+                $this->page_data['content'] .= '<p>';
+                $this->page_data['content'] .= 'Items: ' . $noi;
+                $this->page_data['content'] .= '</p>';
 
-                $this_page['content'] .= $navigation->getNavigation();
+                $this->page_data['content'] .= $navigation->getNavigation();
             }
         }
 
-        $this_page['content'] .= '<p>';
-        $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back'));
-        $this_page['content'] .= '</p>';
+        $this->page_data['content'] .= '<p>';
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/search_uploads', $this->localization->string('back'));
+        $this->page_data['content'] .= '</p>';
 
-        return $this_page;
+        return $this->page_data;
     }
 }

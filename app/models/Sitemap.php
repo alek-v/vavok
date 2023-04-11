@@ -12,8 +12,7 @@ class Sitemap extends BaseModel {
      */
     public function index()
     {
-        $this_page['page_title'] = 'Sitemap Generator';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Sitemap Generator';
 
         if (!$this->user->administrator(101)) $this->redirection('./');
         
@@ -72,8 +71,8 @@ class Sitemap extends BaseModel {
             exit;
         }
 
-        $this_page['homelink'] = $this->homelink('<p>', '</p>');
+        $this->page_data['homelink'] = $this->homelink('<p>', '</p>');
 
-        return $this_page;
+        return $this->page_data;
     }
 }

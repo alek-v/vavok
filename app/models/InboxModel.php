@@ -22,9 +22,8 @@ class InboxModel extends BaseModel {
         // Update notification data
         if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
-        $data['page_title'] = '{@localization[inbox]}}';
-        $data['content'] = '';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['page_title'] = '{@localization[inbox]}}';
 
         $num_items = $this->user->getNumberOfMessages($this->user->userIdNumber());
         $items_per_page = 10;
@@ -57,42 +56,40 @@ class InboxModel extends BaseModel {
                 } else { $iml = ''; }
     
                 $lnk = $this->sitelink(HOMEDIR . 'inbox/dialog?who=' . $item['byuid'], $iml . ' ' . $item['name']);
-                $data['content'] .= '<p>' . $lnk . '</p>';
+                $this->page_data['content'] .= '<p>' . $lnk . '</p>';
             }
         }
 
         // navigation    
-        $data['content'] .= $navigation->getNavigation();
+        $this->page_data['content'] .= $navigation->getNavigation();
 
         } else {
-            $data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt=""> No messages</p>';
+            $this->page_data['content'] .= '<p><img src="../themes/images/img/reload.gif" alt=""> No messages</p>';
         }
 
-        $data['content'] .= $this->sitelink(HOMEDIR. 'inbox/sendto', 'Send message') . '<br />';
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR. 'inbox/sendto', 'Send message') . '<br />';
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     public function dialog()
     {
-        $data['content'] = '';
-
         // Update notification data
         if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
-        $data['head_tags'] = '<meta name="robots" content="noindex">
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
         <script src="' . HOMEDIR . 'include/js/ajax.js"></script>';
 
         $who = !empty($this->postAndGet('who')) ? $this->postAndGet('who') : 0;
 
         if (!isset($who) || ($who > 0 && empty($this->user->getNickFromId($who)))) {
-            $data['content'] = $this->showDanger('User does not exist');
+            $this->page_data['content'] = $this->showDanger('User does not exist');
 
-            return $data;
+            return $this->page_data;
         } else {
-            $data['who'] = $who;
+            $this->page_data['who'] = $who;
 
             $pms = $this->db->countRow('inbox', "(byuid='" . $this->user->userIdNumber() . "' AND touid='" . $who . "') OR (byuid='" . $who . "' AND touid='" . $this->user->userIdNumber() . "') AND (deleted IS NULL OR deleted = '" . $who . "') ORDER BY timesent");
     
@@ -101,7 +98,7 @@ class InboxModel extends BaseModel {
             $limit_start = $num_items - $items_per_page;
             if ($limit_start < 0) $limit_start = 0;
 
-            $data['send_readonly'] = $who == 0 ? 'readonly' : '';
+            $this->page_data['send_readonly'] = $who == 0 ? 'readonly' : '';
 
             $this->db->update('inbox', 'unread', 0, "byuid='" . $who . "' AND touid='" . $this->user->userIdNumber() . "'");
 
@@ -109,22 +106,22 @@ class InboxModel extends BaseModel {
             foreach ($this->db->query($pms) as $pm) {
                 $sender_nick = $pm['byuid'] == 0 ? 'System' : $this->user->getNickFromId($pm['byuid']);
                 $bylnk = $pm['byuid'] == 0 ? 'System ' : $this->sitelink(HOMEDIR . 'users/u/' . $pm['byuid'], $sender_nick) . ' ';
-                $data['content'] .= $bylnk;
+                $this->page_data['content'] .= $bylnk;
                 $tmopm = date("d m y - h:i:s", $pm['timesent']);
-                $data['content'] .= "$tmopm<br />";
+                $this->page_data['content'] .= "$tmopm<br />";
         
-                $data['content'] .= $this->user->parseMessage($pm['text']);
+                $this->page_data['content'] .= $this->user->parseMessage($pm['text']);
         
-                $data['content'] .= '<hr />';
+                $this->page_data['content'] .= '<hr />';
             }
         }
 
-        $data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
-        $data['content'] .= $this->homelink('<p>', '</p>');
-        $data['page_title'] = '{@localization[inbox]}}';
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
+        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
+        $this->page_data['page_title'] = '{@localization[inbox]}}';
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     public function sendto()
@@ -134,12 +131,12 @@ class InboxModel extends BaseModel {
             $this->redirection(HOMEDIR . 'inbox/dialog?who=' . $this->user->getIdFromNick($this->postAndGet('who')));
         }
 
-        $data['page_title'] = '{@localization[inbox]}}';
-        $data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
-        $data['links'] .= $this->homelink('<p>', '</p>');
+        $this->page_data['page_title'] = '{@localization[inbox]}}';
+        $this->page_data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
+        $this->page_data['links'] .= $this->homelink('<p>', '</p>');
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**

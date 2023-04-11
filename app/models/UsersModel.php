@@ -15,10 +15,9 @@ class UsersModel extends BaseModel {
     public function register(): array
     {
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['page_title'] = '{@localization[registration]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[registration]}}';
 
         // Data has been sent, register the user
         if (!empty($this->postAndGet('log')) && !empty($this->postAndGet('par'))) {
@@ -26,61 +25,61 @@ class UsersModel extends BaseModel {
             $password_length = mb_strlen($this->postAndGet('par'));
 
             if ($username_length > 20) {
-                $data['content'] .= $this->showDanger($this->localization->string('biginfo'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('biginfo'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             } elseif ($username_length < 3 || $password_length < 3) {
-                $data['content'] .= $this->showDanger($this->localization->string('smallinfo'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('smallinfo'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             } elseif (!$this->user->validateUsername($this->postAndGet('log'))) {
-                $data['content'] .= $this->showDanger($this->localization->string('useletter'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('useletter'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             } elseif ($this->postAndGet('par') !== $this->postAndGet('pars')) {
-                $data['content'] .= $this->showDanger($this->localization->string('nonewpass'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('nonewpass'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             }
             // Continue if email does not exist in database
             elseif ($this->user->emailExists($this->postAndGet('meil'))) {
-                $data['content'] .= $this->showDanger($this->localization->string('emailexists'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('emailexists'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             }
             // Continue if username does not exists in database
             elseif ($this->user->usernameExists($this->postAndGet('log'))) {
-                $data['content'] .= $this->showDanger($this->localization->string('userexists'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('userexists'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             }
             // Continue if email is valid
             elseif (!$this->validateEmail($this->postAndGet('meil'))) {
-                $data['content'] .= $this->showDanger($this->localization->string('badmail'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('badmail'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             }
             // Check reCAPTCHA
             elseif ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] == false) {
-                $data['content'] .= $this->showDanger($this->localization->string('badcaptcha'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('badcaptcha'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
-                $data['page_template'] = 'users/register/register_try';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register_try';
+                return $this->page_data;
             }
 
             $password = $this->postAndGet('par', true);
@@ -138,7 +137,7 @@ class UsersModel extends BaseModel {
             $completed = 'successfully';
 
             // registration successfully, show info
-            $data['content'] .= '<p>' . $this->localization->string('regoknick') . ': <b>' . $this->postAndGet('log') . '</b> <br /><br /></p>';
+            $this->page_data['content'] .= '<p>' . $this->localization->string('regoknick') . ': <b>' . $this->postAndGet('log') . '</b> <br /><br /></p>';
 
             if ($this->configuration->getValue('confirm_registration') == 1) {
                 // Confirm registration
@@ -158,7 +157,7 @@ class UsersModel extends BaseModel {
 
                 $form->set('localization[save]', $this->localization->string('confirm'));
                 $form->set('fields', $input->output());
-                $data['content'] .= $form->output();
+                $this->page_data['content'] .= $form->output();
 
                 // Resend email
                 $form = $this->container['parse_page'];
@@ -175,60 +174,70 @@ class UsersModel extends BaseModel {
 
                 $form->set('localization[save]', $this->localization->string('resend'));
                 $form->set('fields', $input->output());
-                $data['content'] .= $form->output();
+                $this->page_data['content'] .= $form->output();
 
-                $data['content'] .= $this->showNotification($this->localization->string('enterkeymessage'));
+                $this->page_data['content'] .= $this->showNotification($this->localization->string('enterkeymessage'));
             } else {
-                $data['content'] .= $this->showSuccess($this->localization->string('loginnow'));
+                $this->page_data['content'] .= $this->showSuccess($this->localization->string('loginnow'));
             }
 
             // Show back link if registration is not completed
-            if (!isset($completed)) $data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
-        
-            $data['content'] .= $this->homelink('<p>', '</p>');
-        
+            if (!isset($completed)) {
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+            }
+
+            $this->page_data['content'] .= $this->homelink('<p>', '</p>');
+
             // Pass page to the view
-            $data['page_template'] = 'users/register/register_try';
-            return $data;
+            $this->page_data['page_template'] = 'users/register/register_try';
+            return $this->page_data;
         }
 
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
-        $data['head_tags'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/registration/register.css">';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] .= '<link rel="stylesheet" href="' . HOMEDIR . 'themes/templates/users/registration/register.css">';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
+        $this->page_data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
         // Page title
-        $data['page_title'] = '{@localization[registration]}}';
+        $this->page_data['page_title'] = '{@localization[registration]}}';
 
         if ($this->configuration->getValue('registration_opened') == 1) {
             if ($this->user->userAuthenticated()) {
-                $data['content'] = $this->showDanger($this->user->showUsername() . ', {@localization[againreg]}}');
+                $this->page_data['content'] = $this->showDanger($this->user->showUsername() . ', {@localization[againreg]}}');
 
                 // Load the view
-                $data['page_template'] = 'users/register/already_registered';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/already_registered';
+                return $this->page_data;
             } else {
-                if (!empty($this->postAndGet('ptl'))) $data['page_to_load'] = $this->check($this->postAndGet('ptl'));
+                if (!empty($this->postAndGet('ptl'))) {
+                    $this->page_data['page_to_load'] = $this->check($this->postAndGet('ptl'));
+                }
 
                 // information about registration confirmation
-                if ($this->configuration->getValue('confirm_registration') == 1) $data['registration_key_info'] = '{@localization[keyinfo]}}';
+                if ($this->configuration->getValue('confirm_registration') == 1) {
+                    $this->page_data['registration_key_info'] = '{@localization[keyinfo]}}';
+                }
 
                 // information about quarantine
-                if ($this->configuration->getValue('quarantine') > 0) $data['quarantine_info'] = '{@localization[quarantine1]}} ' . round($this->configuration->getValue('quarantine') / 3600) . ' {@localization[quarantine2]}}';
+                if ($this->configuration->getValue('quarantine') > 0) {
+                    $this->page_data['quarantine_info'] = '{@localization[quarantine1]}} ' . round($this->configuration->getValue('quarantine') / 3600) . ' {@localization[quarantine2]}}';
+                }
 
                 // Show reCAPTCHA
-                if (!empty($this->configuration->getValue('recaptcha_site_key'))) $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
+                if (!empty($this->configuration->getValue('recaptcha_site_key'))) {
+                    $this->page_data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
+                }
 
                 // Load the view
-                $data['page_template'] = 'users/register/register';
-                return $data;
+                $this->page_data['page_template'] = 'users/register/register';
+                return $this->page_data;
             }
         } else {
-            $data['content'] = $this->showNotification('{@localization[regstoped]}}');
+            $this->page_data['content'] = $this->showNotification('{@localization[regstoped]}}');
 
             // Pass page to the view
-            $data['page_template'] = 'users/register/registration_stopped';
-            return $data;
+            $this->page_data['page_template'] = 'users/register/registration_stopped';
+            return $this->page_data;
         }
     }
 
@@ -238,28 +247,27 @@ class UsersModel extends BaseModel {
     public function confirmkey()
     {
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['page_title'] = '{@localization[confreg]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[confreg]}}';
 
         $recipient_id = $this->postAndGet('uid');
 
         if (!empty($this->postAndGet('key'))) {
             if (!$this->user->confirmRegistration($this->postAndGet('key'))) {
-                $data['content'] .= $this->showDanger($this->localization->string('keynotok'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back')) . '</p>';
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('keynotok'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back')) . '</p>';
             } else {
-                $data['content'] .= $this->showSuccess($this->localization->string('keyok'));
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/login', $this->localization->string('login'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showSuccess($this->localization->string('keyok'));
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/login', $this->localization->string('login'), '<p>', '</p>');
             }
         } else {
-            $data['content'] .= $this->showDanger($this->localization->string('nokey'));
-            $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->showDanger($this->localization->string('nokey'));
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
         }
 
         // Pass data to controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -268,10 +276,9 @@ class UsersModel extends BaseModel {
     public function key()
     {
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['page_title'] = '{@localization[confreg]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[confreg]}}';
 
         $recipient_id = $this->postAndGet('uid');
 
@@ -291,7 +298,7 @@ class UsersModel extends BaseModel {
 
         $form->set('localization[save]', $this->localization->string('confirm'));
         $form->set('fields', $input->output());
-        $data['content'] .= $form->output();
+        $this->page_data['content'] .= $form->output();
 
         // Resend code
         $form = $this->container['parse_page'];
@@ -299,12 +306,12 @@ class UsersModel extends BaseModel {
         $form->set('form_method', 'post');
         $form->set('form_action', '{@HOMEDIR}}users/resendkey/?uid=' . $recipient_id);
         $form->set('localization[save]', $this->localization->string('resend'));
-        $data['content'] .= $form->output();
+        $this->page_data['content'] .= $form->output();
     
-        $data['content'] .= '<p>' . $this->localization->string('actinfodel') . '</p>';
+        $this->page_data['content'] .= '<p>' . $this->localization->string('actinfodel') . '</p>';
 
         // Pass data to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -313,25 +320,24 @@ class UsersModel extends BaseModel {
     public function resendkey()
     {
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
         // Page title
-        $data['page_title'] = '{@localization[confreg]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[confreg]}}';
 
         $recipient_id = $this->postAndGet('uid');
         $recipient_mail = $this->postAndGet('recipient');
 
         // Page template
-        $data['page_template'] = 'users/register/resend_key';
+        $this->page_data['page_template'] = 'users/register/resend_key';
 
         // if user id is not in url, get it from submited email
         if (empty($recipient_id)) $recipient_id = $this->user->idFromEmail($recipient_mail);
 
         // Check if user really need to confirm registration
         if ($this->user->userInfo('registration_activated', $recipient_id) != 1) {
-            $data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
+            $this->page_data['content'] .= $this->showNotification('{@localization[registration_already_confirmed]}}');
 
-            return $data;
+            return $this->page_data;
         }
 
         // Get users email if it is not submited
@@ -350,10 +356,10 @@ class UsersModel extends BaseModel {
         // Show notification if it is too early to resend email
         // User can resend message every 10 minutes
         if ((int)$interval->format('%i') < 10) {
-            $data['content'] .= $this->showNotification('{@localization[too_early_to_resend]}}');
-            $data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->showNotification('{@localization[too_early_to_resend]}}');
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
 
-            return $data;
+            return $this->page_data;
         }
 
         // Resend confirmation email
@@ -368,16 +374,16 @@ class UsersModel extends BaseModel {
         if ($result == true) $this->db->update('email_queue', $fields, $values, 'id = ' . $email['id']);
 
         if ($result == true) {
-            $data['content'] .= $this->showSuccess('{@localization[confmailsent]}}');
+            $this->page_data['content'] .= $this->showSuccess('{@localization[confmailsent]}}');
         } else {
-            $data['content'] .= $this->showNotification('{@localization[confmailwillbesent]}}');
+            $this->page_data['content'] .= $this->showNotification('{@localization[confmailwillbesent]}}');
         }
 
         // Back link
-        $data['back_link'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
+        $this->page_data['back_link'] .= $this->sitelink(HOMEDIR . 'users/key/?uid=' . $recipient_id, $this->localization->string('back'), '<p>', '</p>');
 
         // Pass data to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -386,13 +392,12 @@ class UsersModel extends BaseModel {
     public function lostpassword()
     {
         // Page title
-        $data['page_title'] = '{@localization[lostpass]}}';
+        $this->page_data['page_title'] = '{@localization[lostpass]}}';
         // Meta tag for this page
-        $data['head_tags'] = '<meta name="robots" content="noindex">';
-        $data['head_tags'] .= '<link rel="stylesheet" href="../themes/templates/users/lost_password.css" />';
+        $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
+        $this->page_data['head_tags'] .= '<link rel="stylesheet" href="../themes/templates/users/lost_password.css" />';
         // Add data to page <head> to show Google reCAPTCHA
-        $data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
-        $data['content'] = '';
+        $this->page_data['head_tags'] .= '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
 
         // Send lost password mail when data are sent
         if (!empty($this->postAndGet('logus')) && !empty($this->postAndGet('mailsus'))) {
@@ -402,21 +407,21 @@ class UsersModel extends BaseModel {
 
             // Username and email does not match
             if ($this->postAndGet('mailsus') != $checkmail) {
-                $data['content'] .= $this->showDanger($this->localization->string('wrongmail'));
-                $data['content'] .= $this->sitelink('lostpassword', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('wrongmail'));
+                $this->page_data['content'] .= $this->sitelink('lostpassword', $this->localization->string('back'), '<p>', '</p>');
 
                 // Pass page data to the view
-                $data['page_template'] = 'notifications';
-                return $data;
+                $this->page_data['page_template'] = 'notifications';
+                return $this->page_data;
             }
 
             if ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] != true) {
-                $data['content'] .= $this->showDanger($this->localization->string('wrongcaptcha'));
-                $data['content'] .= $this->sitelink('lostpassword', $this->localization->string('back'), '<p>', '</p>');
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('wrongcaptcha'));
+                $this->page_data['content'] .= $this->sitelink('lostpassword', $this->localization->string('back'), '<p>', '</p>');
 
                 // Pass page data to the view
-                $data['page_template'] = 'notifications';
-                return $data;
+                $this->page_data['page_template'] = 'notifications';
+                return $this->page_data;
             }
 
             $newpas = $this->generatePassword();
@@ -436,19 +441,21 @@ class UsersModel extends BaseModel {
             $this->user->updateUser('pass', $new, $userx_id);
 
             // New password has been generated
-            $data['content'] .= $this->showNotification($this->localization->string('passgen'));
-            $data['content'] .= $this->homelink('<p>', '</p>');
+            $this->page_data['content'] .= $this->showNotification($this->localization->string('passgen'));
+            $this->page_data['content'] .= $this->homelink('<p>', '</p>');
 
             // Pass page data to the view
-            $data['page_template'] = 'notifications';
-            return $data;
+            $this->page_data['page_template'] = 'notifications';
+            return $this->page_data;
         }
 
         // Show reCAPTCHA
-        if (!empty($this->configuration->getValue('recaptcha_site_key'))) $data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
+        if (!empty($this->configuration->getValue('recaptcha_site_key'))) {
+            $this->page_data['security_code'] = '<div class="g-recaptcha" data-sitekey="' . $this->configuration->getValue('recaptcha_site_key') . '"></div>';
+        }
 
         // Pass page data to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -485,8 +492,7 @@ class UsersModel extends BaseModel {
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
-        $data['page_title'] = '{@localization[ignorlist]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[ignorlist]}}';
 
         // Add or remove user from ignore list
         if ($this->postAndGet('action') == 'ignore') {
@@ -496,24 +502,24 @@ class UsersModel extends BaseModel {
                 if ($this->user->blockCheckResult($this->user->userIdNumber(), $this->postAndGet('who')) == 1) {
                     $this->db->insert('blocklist', array('name' => $this->user->userIdNumber(), 'target' => $this->postAndGet('who')));
 
-                    $data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> " . $this->localization->string('user') . " $tnick " . $this->localization->string('sucadded') . "<br>";
+                    $this->page_data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> " . $this->localization->string('user') . " $tnick " . $this->localization->string('sucadded') . "<br>";
                 } else {
-                    $data['content'] .= "<img src=\"/themes/images/img/close.gif\" alt=\"x\"/> " . $this->localization->string('cantadd') . " " . $tnick . " " . $this->localization->string('inignor') . "<br>";
+                    $this->page_data['content'] .= "<img src=\"/themes/images/img/close.gif\" alt=\"x\"/> " . $this->localization->string('cantadd') . " " . $tnick . " " . $this->localization->string('inignor') . "<br>";
                 }
             } elseif ($this->postAndGet('todo') == 'del') {
                 if ($this->user->blockCheckResult($this->user->userIdNumber(), $this->postAndGet('who')) == 2) {
                     $this->db->delete('blocklist', "name='{$this->user->userIdNumber()}' AND target='" . $this->postAndGet('who') . "'");
 
-                    $data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> $tnick " . $this->localization->string('deltdfrmignor') . "<br>";
+                    $this->page_data['content'] .= "<img src=\"/themes/images/img/open.gif\" alt=\"o\"/> $tnick " . $this->localization->string('deltdfrmignor') . "<br>";
                 } else {
-                    $data['content'] .= "<img src=\"/themes/images/img/close.gif\" alt=\"x\"/> $tnick " . $this->localization->string('notinignor') . "<br>";
+                    $this->page_data['content'] .= "<img src=\"/themes/images/img/close.gif\" alt=\"x\"/> $tnick " . $this->localization->string('notinignor') . "<br>";
                 }
             }
 
-            $data['content'] .= $this->sitelink(HOMEDIR . 'users/ignore', $this->localization->string('ignorlist'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/ignore', $this->localization->string('ignorlist'), '<p>', '</p>');
 
             // Pass page to the view
-            return $data;
+            return $this->page_data;
         }
 
         $num_items = $this->db->countRow('blocklist', "name='{$this->user->userIdNumber()}'");
@@ -528,19 +534,19 @@ class UsersModel extends BaseModel {
         if ($num_items > 0) {
             foreach ($this->db->query($sql) as $item) {
                 $tnick = $this->user->getNickFromId($item['target']);
-
                 $lnk = $this->sitelink(HOMEDIR . 'users/' . $item['target'], $tnick);
-                $data['content'] .= "$lnk: ";
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/ignore/?action=ignore&who=' . $item['target'] . '&todo=del', '<img src="../themes/images/img/close.gif" alt=""> ' . $this->localization->string('delete')) . '<br>';
+
+                $this->page_data['content'] .= "$lnk: ";
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/ignore/?action=ignore&who=' . $item['target'] . '&todo=del', '<img src="../themes/images/img/close.gif" alt=""> ' . $this->localization->string('delete')) . '<br>';
             }
         } else {
-            $data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('ignorempty') . '<br><br>';
+            $this->page_data['content'] .= '<img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt="" /> ' . $this->localization->string('ignorempty') . '<br><br>';
         }
 
-        $data['content'] .= $navigation->getNavigation();
+        $this->page_data['content'] .= $navigation->getNavigation();
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -551,8 +557,7 @@ class UsersModel extends BaseModel {
         // Redirect unauthenticated users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
-        $data['page_title'] = '{@localization[contacts]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[contacts]}}';
 
         // Add or remove from contacts
         if ($this->postAndGet('action') == 'contacts') {
@@ -588,29 +593,31 @@ class UsersModel extends BaseModel {
             foreach ($this->db->query($sql) as $item) {
                 $tnick = $this->user->getNickFromId($item['target']);
                 $lnk = $this->sitelink(HOMEDIR . 'users/u/' . $item['target'], $tnick);
-                $data['content'] .= $this->user->userOnline($tnick) . " " . $lnk . ": ";
-                $data['content'] .= $this->sitelink(HOMEDIR . 'users/contacts/?action=contacts&who=' . $item['target'] . '&todo=del', '<img src="' . HOMEDIR . 'themes/images/img/close.gif" alt=""> ' . $this->localization->string('delete')) . '<br />';
+                $this->page_data['content'] .= $this->user->userOnline($tnick) . " " . $lnk . ": ";
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/contacts/?action=contacts&who=' . $item['target'] . '&todo=del', '<img src="' . HOMEDIR . 'themes/images/img/close.gif" alt=""> ' . $this->localization->string('delete')) . '<br />';
             }
         } else {
-            $data['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> {@localization[nobuddy]}}</p>';
+            $this->page_data['content'] .= '<p><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> {@localization[nobuddy]}}</p>';
         }
 
-        $data['content'] .= $navigation->getNavigation();
+        $this->page_data['content'] .= $navigation->getNavigation();
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     public function mymenu()
     {
         // Disable access for unregistered users
-        if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR);
+        }
 
         // Page data
-        $data['page_title'] = '{@localization[mymenu]}}';
+        $this->page_data['page_title'] = '{@localization[mymenu]}}';
 
         // Pass data
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -618,8 +625,7 @@ class UsersModel extends BaseModel {
      */
     public function settings($params = [])
     {
-        $data['page_title'] = '{@localization[settings]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[settings]}}';
 
         // Disable access for unregistered users
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
@@ -793,10 +799,10 @@ class UsersModel extends BaseModel {
         $msgnotif->set('radio_group', $msgnotif->merge(array($msgnotif_yes, $msgnotif_no)));
 
         $form->set('fields', $form->merge(array($choose_lang, $subnews, $msgnotif)));
-        $data['content'] .= $form->output();
+        $this->page_data['content'] .= $form->output();
 
         // Pass page to the controller
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -804,8 +810,7 @@ class UsersModel extends BaseModel {
      */
     public function ban()
     {
-        $data['page_title'] = '{@localization[banned]}}';
-        $data['content'] = '';
+        $this->page_data['page_title'] = '{@localization[banned]}}';
 
         if (!$this->user->userAuthenticated()) $this->redirection('../');
 
@@ -816,30 +821,30 @@ class UsersModel extends BaseModel {
         $time_ban = round($this->user->userInfo('ban_time') - time());
 
         if ($time_ban > 0) {
-            $data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
-            $data['content'] .= '<b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b>';
+            $this->page_data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
+            $this->page_data['content'] .= '<b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b>';
 
-            $data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
+            $this->page_data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
 
-            $data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->userInfo('all_bans') . '</b><br>';
-            $data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
+            $this->page_data['content'] .= '<br><br>{@localization[banno]}}: <b>' . (int)$this->user->userInfo('all_bans') . '</b><br>';
+            $this->page_data['content'] .= $this->localization->string('becarefnr') . '<br /><br />';
 
             // Remove session - logout user
             $this->user->logout();
         } else {        
-            $data['content'] .= '<p><img src="../themes/images/img/open.gif" alt=""> {@localization[wasbanned]}}</p>';
+            $this->page_data['content'] .= '<p><img src="../themes/images/img/open.gif" alt=""> {@localization[wasbanned]}}</p>';
 
             if (!empty($bandesc)) {
-                $data['content'] .= '<p><b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b></p>';
+                $this->page_data['content'] .= '<p><b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b></p>';
             }
         
             $this->user->updateUser('banned', 0);
             $this->user->updateUser(array('ban_time', 'ban_description'), array('', ''));
         }
 
-        $data['content'] .= $this->homelink('<p>', '</p>');
+        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
 
-        return $data;
+        return $this->page_data;
     }
 
     /**
@@ -847,8 +852,6 @@ class UsersModel extends BaseModel {
      */
     public function users_profile($params)
     {
-        $this_page['content'] = '';
-
         $requested_user = isset($params[0]) ? $this->check($params[0]) : '';
 
         // Get users nick and users id number

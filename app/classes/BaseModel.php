@@ -16,6 +16,7 @@ abstract class BaseModel {
     protected User $user;
     protected Localization $localization;
     protected Config $configuration;
+    protected array $page_data;
 
     public function __construct(protected Container $container)
     {
@@ -23,5 +24,9 @@ abstract class BaseModel {
         $this->user = $this->container['user'];
         $this->localization = $this->container['localization'];
         $this->configuration = $this->container['config'];
+
+        // Set default values for the content of the page, this values can be extended or changed dynamicly
+        $this->page_data['content'] = '';
+        $this->page_data['head_tags'] = '';
     }
 }

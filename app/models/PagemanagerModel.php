@@ -25,8 +25,7 @@ class PagemanagerModel extends BaseModel {
             $this->redirection('../?auth_error');
         }
 
-        $index_data['page_title'] = 'Page Manager';
-        $index_data['content'] = '';
+        $this->page_data['page_title'] = 'Page Manager';
 
         $page_editor = new PageManager($this->container);
 
@@ -250,11 +249,11 @@ class PagemanagerModel extends BaseModel {
             $textEditor = str_replace('#selector', '#text_files', $loadTextEditor);
 
             // Add data to page header
-            $index_data['head_tags'] = $textEditor;
+            $this->page_data['head_tags'] = $textEditor;
         }
 
         if (empty($this->postAndGet('action'))) {
-            $index_data['content'] .= '<h1>{@localization[filelist]}}</h1>';
+            $this->page_data['content'] .= '<h1>{@localization[filelist]}}</h1>';
 
             $total_pages = $page_editor->totalPages();
 
@@ -274,31 +273,31 @@ class PagemanagerModel extends BaseModel {
                 $filename = $page_info['slug'];
                 $filename = $filename . ' ' . strtoupper($file_localization);
 
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $page_info['id'], $filename, '<b>', '</b>');
-                $index_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
-                $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $page_info['id'], $filename, '<b>', '</b>');
+                $this->page_data['content'] .= '<a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Edit]</a>';
+                $this->page_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Del]</a>';
 
                 // Check for permissions to publish and unpublish pages
                 if ($page_info['published_status'] == 1) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
+                    $this->page_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Publish]</a>';
                 }
 
                 if ($page_info['published_status'] != 1) {
-                    $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
+                    $this->page_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $page_info['id'] . '" class="btn btn-outline-primary btn-sm">[Unpublish]</a>';
                 }
 
                 // Information about the page
-                $index_data['content'] .= ' {@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']) . ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
-                $index_data['content'] .= '<hr />';
+                $this->page_data['content'] .= ' {@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']) . ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
+                $this->page_data['content'] .= '<hr />';
 
                 unset($page_info);
             }
 
             // Navigation
             $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
-            $index_data['content'] .= $navigation->getNavigation();
+            $this->page_data['content'] .= $navigation->getNavigation();
 
-            $index_data['content'] .= '<p>{@localization[totpages]}}: <b>' . (int)$total_pages . '</b></p>';
+            $this->page_data['content'] .= '<p>{@localization[totpages]}}: <b>' . (int)$total_pages . '</b></p>';
         }
 
         if ($this->postAndGet('action') == 'show') {
@@ -311,23 +310,23 @@ class PagemanagerModel extends BaseModel {
 
             $showname = $page_info['slug'];
 
-            $index_data['content'] .= '<p>' . $this->localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
-            $index_data['content'] .= '<p>{@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']);
-            $index_data['content'] .= ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
+            $this->page_data['content'] .= '<p>' . $this->localization->string('shwingpage') . ' <b>' . $showname . '</b></p>';
+            $this->page_data['content'] .= '<p>{@localization[created]}}: ' . $this->correctDate($page_info['date_created'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['created_by']);
+            $this->page_data['content'] .= ' | {@localization[lastupdate]}} ' . $this->correctDate($page_info['date_updated'], 'd.m.y.') . ' {@localization[by]}} ' . $this->user->getNickFromId($page_info['updated_by']);
             
             // Post type
             $post_type = !empty($page_info['type']) ? $page_info['type'] : 'page';
-            $index_data['content'] .= ' | Page type: ' . $post_type;
+            $this->page_data['content'] .= ' | Page type: ' . $post_type;
 
             if ($page_info['published_status'] == 1) {
-                $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $id . '">[Publish]</a>';
+                $this->page_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=publish&id=' . $id . '">[Publish]</a>';
             } else {
-                $index_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $id . '">[Unpublish]</a>';
+                $this->page_data['content'] .= ' | <a href="' . HOMEDIR . 'adminpanel/pagemanager/?action=unpublish&id=' . $id . '">[Unpublish]</a>';
             }
 
-            $index_data['content'] .= '</p>';
-            $index_data['content'] .= '<p>';
-            $index_data['content'] .= $this->localization->string('pgaddress') . ': ';
+            $this->page_data['content'] .= '</p>';
+            $this->page_data['content'] .= '<p>';
+            $this->page_data['content'] .= $this->localization->string('pgaddress') . ': ';
 
             // Homepage (index page)
             if (preg_match('/^index(?:!\.[a-zA-Z]{2}!)?\.php$/', $file)) {
@@ -337,21 +336,21 @@ class PagemanagerModel extends BaseModel {
                     $url_localization = '';
                 }
 
-                $index_data['content'] .= '<a href="' . $this->websiteHomeAddress() . '/' . $url_localization . '" target="_blank">' . $this->websiteHomeAddress() . '/' . $url_localization . '</a>';
+                $this->page_data['content'] .= '<a href="' . $this->websiteHomeAddress() . '/' . $url_localization . '" target="_blank">' . $this->websiteHomeAddress() . '/' . $url_localization . '</a>';
             }
             // Blog post
             elseif ($post_type == 'post') {
-                $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/blog/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/blog/' . $showname . '</a><br />';
+                $this->page_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/blog/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/blog/' . $showname . '</a><br />';
             }
             // Page
             elseif ($post_type == 'page' || empty($post_type)) {
-                $index_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/page/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/page/' . $showname . '</a><br />';
+                $this->page_data['content'] .= '<br /><a href="' . $this->websiteHomeAddress() . '/page/' . $showname . '" target="_blank">' . $this->websiteHomeAddress() . '/page/' . $showname . '</a><br />';
             }
 
-            $index_data['content'] .= '</p>';
-            $index_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}} ' . $showname) . '<br />';
+            $this->page_data['content'] .= '</p>';
+            $this->page_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}} ' . $showname) . '<br />';
         }
 
         if ($this->postAndGet('action') == 'edit') {
@@ -364,7 +363,7 @@ class PagemanagerModel extends BaseModel {
             if (!empty($page_info)) {
                 $page_id = $page_info['id'];
 
-                $index_data['content'] .= '<p>Edit mode: ' . $edmode_name . '</p>';
+                $this->page_data['content'] .= '<p>Edit mode: ' . $edmode_name . '</p>';
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
@@ -388,12 +387,12 @@ class PagemanagerModel extends BaseModel {
                 $select->set('options', $options);
 
                 $form->set('fields', $select->output());
-                $index_data['content'] .= $form->output();
+                $this->page_data['content'] .= $form->output();
 
-                $index_data['content'] .= '<hr />';
+                $this->page_data['content'] .= '<hr />';
 
                 // Todo: Update localization
-                $index_data['content'] .= '<p>Updating page ' . $page_info['slug'] . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=rename_page&id=' . $id, 'rename') . '</p>'; // update lang
+                $this->page_data['content'] .= '<p>Updating page ' . $page_info['slug'] . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=rename_page&id=' . $id, 'rename') . '</p>'; // update lang
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
@@ -411,19 +410,19 @@ class PagemanagerModel extends BaseModel {
 
                 $form->set('fields', $textarea->output());
 
-                $index_data['content'] .= $form->output();
+                $this->page_data['content'] .= $form->output();
 
-                $index_data['content'] .= '<hr>';
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $id, $page_info['slug'], '<p>', '</p>');
+                $this->page_data['content'] .= '<hr>';
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=show&id=' . $id, $page_info['slug'], '<p>', '</p>');
 
-                $index_data['content'] .= '<p>';
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}');
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // update lang
-                $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // update lang
-                $index_data['content'] .= '</p>';
+                $this->page_data['content'] .= '<p>';
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}');
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // update lang
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // update lang
+                $this->page_data['content'] .= '</p>';
             } else {
-                $index_data['content'] .= $this->showDanger($this->localization->string('file') . ' ' . $file . ' ' . $this->localization->string('noexist'));
+                $this->page_data['content'] .= $this->showDanger($this->localization->string('file') . ' ' . $file . ' ' . $this->localization->string('noexist'));
             }
         }
 
@@ -431,7 +430,7 @@ class PagemanagerModel extends BaseModel {
         if ($this->postAndGet('action') == 'page_head_tags') {
             $page_info = $page_editor->selectPage($id);
 
-            $index_data['content'] .= '<legend>Updating page ' . $page_info['page_title'] . '</legend>'; // update lang
+            $this->page_data['content'] .= '<legend>Updating page ' . $page_info['page_title'] . '</legend>'; // update lang
 
             // Load form
             $form = $this->container['parse_page'];
@@ -462,13 +461,13 @@ class PagemanagerModel extends BaseModel {
             $form->set('fields', $form->merge(array($textarea, $image_input)));
 
             // Show form
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
 
-            $index_data['content'] .= '<hr />';
+            $this->page_data['content'] .= '<hr />';
         }
 
         if ($this->postAndGet('action') == 'mainmeta') {
-            $index_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
+            $this->page_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
 
             $headtags = trim(file_get_contents(STORAGEDIR . 'header_meta_tags.dat'));
 
@@ -486,17 +485,17 @@ class PagemanagerModel extends BaseModel {
             $textarea->set('textarea_id', '');
 
             $form->set('fields', $textarea->output());
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
 
-            $index_data['content'] .= '<hr>';
+            $this->page_data['content'] .= '<hr>';
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back'), '<p>', '</p>');
         } 
 
         if ($this->postAndGet('action') == 'rename_page') {
             $page_info = $page_editor->selectPage($id);
 
-            $index_data['content'] .= '<h1>Rename page</h1>'; // update lang
+            $this->page_data['content'] .= '<h1>Rename page</h1>'; // update lang
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');
@@ -521,15 +520,15 @@ class PagemanagerModel extends BaseModel {
             $input_file->set('input_value', $id);
 
             $form->set('fields', $form->merge(array($input_pg, $input_file)));
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
 
-            $index_data['content'] .= '<hr />';
+            $this->page_data['content'] .= '<hr />';
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('back'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('back'), '<p>', '</p>');
         } 
 
         if ($this->postAndGet('action') == 'new') {
-            $index_data['head_tags'] = '
+            $this->page_data['head_tags'] = '
             <style>
                 .tooltip {
                     border-bottom: 1px dotted #000000; color: #000000; outline: none;
@@ -566,7 +565,7 @@ class PagemanagerModel extends BaseModel {
             </style>
             ';
 
-            $index_data['content'] .= '<h1>{@localization[newfile]}}</h1>';
+            $this->page_data['content'] .= '<h1>{@localization[newfile]}}</h1>';
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');
@@ -625,7 +624,7 @@ class PagemanagerModel extends BaseModel {
 
             // Show form
             $form->set('localization[save]', $this->localization->string('newpage'));
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
         } 
 
         // Confirm that you want to delete the page
@@ -634,13 +633,13 @@ class PagemanagerModel extends BaseModel {
             $page_data = $page_editor->selectPage($id);
 
             if (!empty($id)) {
-                $index_data['content'] .= $this->localization->string('confdelfile') . ' <b>' . $page_data['page_title'] . '</b><br />';
-                $index_data['content'] .= '<p></p><b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=confirmed_page_delete&id=' . $id, $this->localization->string('delete')) . '</b></p>';
+                $this->page_data['content'] .= $this->localization->string('confdelfile') . ' <b>' . $page_data['page_title'] . '</b><br />';
+                $this->page_data['content'] .= '<p></p><b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=confirmed_page_delete&id=' . $id, $this->localization->string('delete')) . '</b></p>';
             } else {
-                $index_data['content'] .= $this->localization->string('nofiletodel') . '<br />';
+                $this->page_data['content'] .= $this->localization->string('nofiletodel') . '<br />';
             }
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back')) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back')) . '<br />';
         }
 
         if ($this->postAndGet('action') == 'update_page_localization') {
@@ -678,9 +677,9 @@ class PagemanagerModel extends BaseModel {
 
             $form->set('fields', $select_language->output());
 
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
 
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back'), '<p>', '</p>');
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back'), '<p>', '</p>');
         }
 
         if ($this->postAndGet('action') == 'tags') {
@@ -700,29 +699,30 @@ class PagemanagerModel extends BaseModel {
             $form->set('form_method', 'post');
             $form->set('fields', $tag_field->output());
 
-            $index_data['content'] .= $form->output();
+            $this->page_data['content'] .= $form->output();
         }
 
-        $index_data['content'] .= '<p>';
+        $this->page_data['content'] .= '<p>';
 
         if ($this->postAndGet('action') != 'new') {
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=new', $this->localization->string('newpage')) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=new', $this->localization->string('newpage')) . '<br />';
         }
 
-        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog category management') . '<br />';
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog category management') . '<br />';
 
+        // Todo: Update localization
         if ($this->user->administrator(101)) {
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=mainmeta', 'Head tags (meta tags) on all pages') . '<br />';
-        } // Todo: Update localization
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=mainmeta', 'Head tags (meta tags) on all pages') . '<br />';
+        }
 
-        $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', $this->localization->string('search')) . '<br />';
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagesearch', $this->localization->string('search')) . '<br />';
 
         if (!empty($this->postAndGet('action'))) {
-            $index_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('pages_management')) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager', $this->localization->string('pages_management')) . '<br />';
         }
 
-        $index_data['content'] .= '</p>';
+        $this->page_data['content'] .= '</p>';
 
-        return $index_data;
+        return $this->page_data;
     }
 }

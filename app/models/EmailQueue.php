@@ -83,8 +83,7 @@ class EmailQueue extends BaseModel {
     public function email_queue()
     {
         // Page data
-        $page_data['page_title'] = 'eMail queue';
-        $page_data['content'] = '';
+        $this->page_data['page_title'] = 'eMail queue';
 
         // Checking access permissions
         if (!$this->user->administrator(101)) $this->redirection('../');
@@ -100,50 +99,50 @@ class EmailQueue extends BaseModel {
         $textEditor = str_replace('#selector', '#msg', $loadTextEditor);
 
         // add to page header
-        $page_data['head_tags'] = $textEditor;
+        $this->page_data['head_tags'] = $textEditor;
 
         if (empty($this->postAndGet('action'))) {
             $sub_names = $this->_mailer->emailSubscriptionOptions();
 
-            $page_data['content'] .= '<h1>Add emails to the queue</h1>';
+            $this->page_data['content'] .= '<h1>Add emails to the queue</h1>';
 
-            $page_data['content'] .= '<form action="./email_queue?action=add" method="post" />';
-            $page_data['content'] .= '<div class="form-group">
+            $this->page_data['content'] .= '<form action="./email_queue?action=add" method="post" />';
+            $this->page_data['content'] .= '<div class="form-group">
             <label for="sender">Sender name:</label>
             <input class="form-control" id="sender" type="text" name="sender" value="">
             </div>';
-            $page_data['content'] .= '<div class="form-group">
+            $this->page_data['content'] .= '<div class="form-group">
             <label for="email">Sender\'s email:</label>
             <input class="form-control" id="email" type="text" name="email" value="">
             </div>';
-            $page_data['content'] .= '<div class="form-group">
+            $this->page_data['content'] .= '<div class="form-group">
             <label for="theme">Subject:</label>
             <input class="form-control" id="theme" type="text" name="theme" value="">
             </div>';
-            $page_data['content'] .= '<div class="form-group">
+            $this->page_data['content'] .= '<div class="form-group">
             <label for="msg">Email content:</label>';
-            $page_data['content'] .= '<textarea class="form-control" rows="15" id="msg" name="msg"></textarea>
+            $this->page_data['content'] .= '<textarea class="form-control" rows="15" id="msg" name="msg"></textarea>
             </div>';
-            $page_data['content'] .= '<div class="form-group">
+            $this->page_data['content'] .= '<div class="form-group">
             <label for="subname">Subscription name:</label>
             <select class="form-control" id="subname" name="subname">
                 <option value="">Send to all</option>';
                 foreach ($sub_names as $option) {
-                    $page_data['content'] .= '<option value="' . $option . '">' . $option . '</option>';
+                    $this->page_data['content'] .= '<option value="' . $option . '">' . $option . '</option>';
                 }
-            $page_data['content'] .= '</select>
+            $this->page_data['content'] .= '</select>
             </div>';
-            $page_data['content'] .= '<div class="form-group">';
-            $page_data['content'] .= '<label for="type">Email Type:</label>';
-            $page_data['content'] .= '<select class="form-control" id="type" name="type">';
-            $page_data['content'] .= '<option value="html">HTML</option>';
-            $page_data['content'] .= '<option value="plain">Plain text</option>';
-            $page_data['content'] .= '</select>';
-            $page_data['content'] .= '</div>';
-            $page_data['content'] .= '<button type="submit" class="btn btn-primary">Add to the email queue</button>';
-            $page_data['content'] .= '</form>';
+            $this->page_data['content'] .= '<div class="form-group">';
+            $this->page_data['content'] .= '<label for="type">Email Type:</label>';
+            $this->page_data['content'] .= '<select class="form-control" id="type" name="type">';
+            $this->page_data['content'] .= '<option value="html">HTML</option>';
+            $this->page_data['content'] .= '<option value="plain">Plain text</option>';
+            $this->page_data['content'] .= '</select>';
+            $this->page_data['content'] .= '</div>';
+            $this->page_data['content'] .= '<button type="submit" class="btn btn-primary">Add to the email queue</button>';
+            $this->page_data['content'] .= '</form>';
 
-            $page_data['content'] .= '<hr>
+            $this->page_data['content'] .= '<hr>
             <div>
                 <p>*optional</p>
                 <p><strong>{unsubscribe-link}</strong> - use this code to place for link to unsubscribe<br />
@@ -152,7 +151,7 @@ class EmailQueue extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'add') {
-            $page_data['head_tags'] .= '
+            $this->page_data['head_tags'] .= '
             <script type="text/javascript">
             function formAutoSubmit () {
             var frm = document.getElementById("sendmail");
@@ -208,24 +207,24 @@ class EmailQueue extends BaseModel {
             if ($last < $send_count) {
                 $per = round(100 * $last / $send_count);
 
-                $page_data['content'] .= '<p>Adding to the queue, please wait... <img src="../themes/images/img/loading.gif" alt="" /><br>Successfully added: ' . (int)$per . '%</p>';
+                $this->page_data['content'] .= '<p>Adding to the queue, please wait... <img src="../themes/images/img/loading.gif" alt="" /><br>Successfully added: ' . (int)$per . '%</p>';
 
-                $page_data['content'] .= '<form name="sendmail" class="sendmail" id="sendmail" action="./email_queue?action=add&last=' . $last . '" method="post" />';
-                $page_data['content'] .= '<input type="hidden" name="sender" value="' . $sender . '">';
-                $page_data['content'] .= '<input type="hidden" name="email" value="' . $email . '">';
-                $page_data['content'] .= '<input type="hidden" name="theme" value="' . $theme . '">';
-                $page_data['content'] .= '<input type="hidden" name="msg" value="' . $msg . '">';
-                $page_data['content'] .= '<input type="hidden" name="subname" value="' . $sub_name . '">';
-                $page_data['content'] .= '<input type="hidden" name="type" value="' . $type . '">';
-                $page_data['content'] .= '<input type="submit" value="Continue adding to queue"></form><hr>';
+                $this->page_data['content'] .= '<form name="sendmail" class="sendmail" id="sendmail" action="./email_queue?action=add&last=' . $last . '" method="post" />';
+                $this->page_data['content'] .= '<input type="hidden" name="sender" value="' . $sender . '">';
+                $this->page_data['content'] .= '<input type="hidden" name="email" value="' . $email . '">';
+                $this->page_data['content'] .= '<input type="hidden" name="theme" value="' . $theme . '">';
+                $this->page_data['content'] .= '<input type="hidden" name="msg" value="' . $msg . '">';
+                $this->page_data['content'] .= '<input type="hidden" name="subname" value="' . $sub_name . '">';
+                $this->page_data['content'] .= '<input type="hidden" name="type" value="' . $type . '">';
+                $this->page_data['content'] .= '<input type="submit" value="Continue adding to queue"></form><hr>';
             } else {
-                $page_data['content'] .= '<img src="../themes/images/img/reload.gif" alt="" /> Email added to the queue for all subscribers!<br>';
+                $this->page_data['content'] .= '<img src="../themes/images/img/reload.gif" alt="" /> Email added to the queue for all subscribers!<br>';
             }
 
-            $page_data['content'] .= '<p>Users subscribed to news: ' . (int)$send_count . '</p>';
-            $page_data['content'] .= '<p><img src="../themes/images/img/back.gif" alt="" /> <a href="./email_queue">{@localization[back]}}</a></p>'; // update lang
+            $this->page_data['content'] .= '<p>Users subscribed to news: ' . (int)$send_count . '</p>';
+            $this->page_data['content'] .= '<p><img src="../themes/images/img/back.gif" alt="" /> <a href="./email_queue">{@localization[back]}}</a></p>'; // update lang
         }
 
-        return $page_data;
+        return $this->page_data;
     }
 }

@@ -16,9 +16,7 @@ class SearchModel extends BaseModel {
      */
     public function index(array $params = []): array
     {
-        $this_page['page_title'] = '{@localization[search]}}';
-        $this_page['head_tags'] = '';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = '{@localization[search]}}';
 
         // String to search for
         $search_item = isset($params[0]) ? $params[0] : $this->postAndGet('item');
@@ -27,14 +25,14 @@ class SearchModel extends BaseModel {
         $itemLat = $this->cyrillicToLatin(htmlspecialchars_decode($search_item)); // translate to latin to search for latin post
 
         // Add meta tags
-        $this_page['head_tags'] .= '<meta name="robots" content="noindex, follow" />';
+        $this->page_data['head_tags'] .= '<meta name="robots" content="noindex, follow" />';
         
         if (empty($search_item)) {
             $indexPage = $this->container['parse_page'];
             $indexPage->load("search/index");
-            $this_page['content'] .= $indexPage->output();
+            $this->page_data['content'] .= $indexPage->output();
 
-            return $this_page;
+            return $this->page_data;
         } else {
             if (!empty($ln_loc)) {
                 $orderBy = " order by localization='" . $ln_loc . "' desc, slug desc ";
@@ -44,7 +42,7 @@ class SearchModel extends BaseModel {
 
             $clean_search_item = str_replace('_', ' ', $search_item);
 
-            $this_page['page_title'] = $clean_search_item;
+            $this->page_data['page_title'] = $clean_search_item;
 
             $resultsPage = $this->container['parse_page'];
             $resultsPage->load('search/results');
@@ -123,19 +121,19 @@ class SearchModel extends BaseModel {
             }
 
             if ($items < 1) {
-                $this_page['content'] .= $resultsPage->output();
-                $this_page['content'] .= $this->showNotification('No search results, try another phrase');
+                $this->page_data['content'] .= $resultsPage->output();
+                $this->page_data['content'] .= $this->showNotification('No search results, try another phrase');
 
-                return $this_page;
+                return $this->page_data;
             }
 
             $resultsPage->set('allResults', $resultsPage->merge($searchItems));
-            $this_page['content'] .= $resultsPage->output();
+            $this->page_data['content'] .= $resultsPage->output();
 
             $navigation = new Navigation(20, $items, "./");
-            $this_page['content'] .= $navigation->getNavigation();
+            $this->page_data['content'] .= $navigation->getNavigation();
         }
 
-        return $this_page;
+        return $this->page_data;
     }
 }

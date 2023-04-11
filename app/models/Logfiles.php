@@ -16,8 +16,7 @@ class Logfiles extends BaseModel {
      */
     public function index()
     {
-        $this_page['page_title'] = 'Log data';
-        $this_page['content'] = '';
+        $this->page_data['page_title'] = 'Log data';
 
         if (!$this->user->userAuthenticated() || !$this->user->administrator(101)) $this->redirection("./?isset=ap_noaccess");
 
@@ -137,65 +136,68 @@ class Logfiles extends BaseModel {
         }
 
         if ($list == 401) {
-            $this_page['content'] .= '<p>{@localization[error_401]}}</p>';
+            $this->page_data['content'] .= '<p>{@localization[error_401]}}</p>';
         
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error401.dat');
             $err = 'error401';
         }
+
         if ($list == 402) {
-            $this_page['content'] .= '<p>{@localization[error_402]}}</p>';
-        
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= '<p>{@localization[error_402]}}</p>';
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error402.dat');
             $err = 'error402';
         }
+
         if ($list == 403) {
-            $this_page['content'] .= '<p>{@localization[error_403]}}</p>';
-        
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= '<p>{@localization[error_403]}}</p>';
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error403.dat');
             $err = 'error403';
         }
-        if ($list == 404) {
-            $this_page['content'] .= '<p>{@localization[error_404]}}</p>';
 
-            $this_page['content'] .= getLogNavigation($listNames);
+        if ($list == 404) {
+            $this->page_data['content'] .= '<p>{@localization[error_404]}}</p>';
+            $this->page_data['content'] .= getLogNavigation($listNames);
 
             $opis = $this->getDataFile('datalog/error404.dat');
             $err = 'error404';
         }
+
         if ($list == 406) {
-            $this_page['content'] .= '<p>{@localization[error_406]}}</p>';
+            $this->page_data['content'] .= '<p>{@localization[error_406]}}</p>';
         
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error406.dat');
             $err = 'error406';
         }
+
         if ($list == 500) {
-            $this_page['content'] .= '<p>{@localization[error_500]}}</p>';
-        
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= '<p>{@localization[error_500]}}</p>';
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error500.dat');
             $err = 'error500';
         }
+
         if ($list == 502) {
-            $this_page['content'] .= '<p>{@localization[error_502]}}</p>';
+            $this->page_data['content'] .= '<p>{@localization[error_502]}}</p>';
         
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error502.dat');
             $err = 'error502';
         }
+
         if ($list == 'other') {
-            $this_page['content'] .= '<p>{@localization[other]}}</p>';
+            $this->page_data['content'] .= '<p>{@localization[other]}}</p>';
         
-            $this_page['content'] .= getLogNavigation($listNames);
+            $this->page_data['content'] .= getLogNavigation($listNames);
         
             $opis = $this->getDataFile('datalog/error.dat');
             $err = 'error';
@@ -205,7 +207,7 @@ class Logfiles extends BaseModel {
         $total = count($opis);
 
         if ($total < 1) {
-            $this_page['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt=""> <b>{@localization[noentry]}}</b></p>';
+            $this->page_data['content'] .= '<p><img src="{@HOMEDIR}}themes/images/img/reload.gif" alt=""> <b>{@localization[noentry]}}</b></p>';
         }
 
         $navigation = new Navigation($config_loglist, $total, HOMEDIR . 'adminpanel/logfiles?list=' . $list. '&'); // start navigation
@@ -216,23 +218,23 @@ class Logfiles extends BaseModel {
         for ($i = $start; $i < $end; $i++) {
             $dtlog = explode(":|:", $opis[$i]);
         
-            $this_page['content'] .= '<img src="{@HOMEDIR}}themes/images/img/files.gif" alt=""> <b><font color="#FF0000">Fajl: ' . $dtlog[2] . '</font></b><br />';
-            $this_page['content'] .= $this->localization->string('time') . ': ' . $this->correctDate((int)$dtlog[3], $this->localization->showAll()['date_format'] . ' / ' . $this->localization->showAll()['time_format']) . '<br />';
-            $this_page['content'] .= 'Referer: ' . $dtlog[7] . '<br>';
-            $this_page['content'] .= 'Host: ' . $dtlog[5] . '<br>';
-            $this_page['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_information?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';
+            $this->page_data['content'] .= '<img src="{@HOMEDIR}}themes/images/img/files.gif" alt=""> <b><font color="#FF0000">Fajl: ' . $dtlog[2] . '</font></b><br />';
+            $this->page_data['content'] .= $this->localization->string('time') . ': ' . $this->correctDate((int)$dtlog[3], $this->localization->showAll()['date_format'] . ' / ' . $this->localization->showAll()['time_format']) . '<br />';
+            $this->page_data['content'] .= 'Referer: ' . $dtlog[7] . '<br>';
+            $this->page_data['content'] .= 'Host: ' . $dtlog[5] . '<br>';
+            $this->page_data['content'] .= $this->localization->string('user') . ': ' . $dtlog[8] . ' (IP: <a href="{@HOMEDIR}}adminpanel/ip_information?ip=' . $dtlog[4] . '" target="_blank">' . $dtlog[4] . '</a> / Browser: ' . $dtlog[6] . ')<hr>';
         }
 
-        $this_page['content'] .= $navigation->getNavigation();
+        $this->page_data['content'] .= $navigation->getNavigation();
 
         if ($this->user->administrator()) {
             if (isset($err)) {
-                $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerid&err=' . $err, $this->localization->string('delaboerr') . ' ' . $err) . '<br>';
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerid&err=' . $err, $this->localization->string('delaboerr') . ' ' . $err) . '<br>';
             }
 
-            $this_page['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerlog', $this->localization->string('delallerdata')) . '<br>';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/logfiles?action=delerlog', $this->localization->string('delallerdata')) . '<br>';
         }
 
-        return $this_page;
+        return $this->page_data;
     }
 }
