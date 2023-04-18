@@ -51,6 +51,9 @@ if (defined('SITE_STAGE') && SITE_STAGE == 'prod') {
     ini_set('log_errors', 1);
 }
 
+// Where to save error log
+ini_set('error_log', STORAGEDIR . 'error_log.dat');
+
 // Default time zone
 date_default_timezone_set('UTC');
 

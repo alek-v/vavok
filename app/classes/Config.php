@@ -24,9 +24,6 @@ class Config {
         $this->settings['timezone'] = empty($config['timezone']) ? $config['timezone'] = 0 : $config['timezone']; // check is there timezone number set
         $this->settings['siteTime'] = time() + ($config['timezone'] * 3600);
         $this->settings['homeBase'] = str_replace('https://', '', isset($config['home_address']) ? str_replace('http://', '', $config['home_address']) : '');
-
-        // Where to save error log
-        ini_set("error_log", STORAGEDIR . "error_log.dat");
     }
 
     /**
