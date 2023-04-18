@@ -29,10 +29,13 @@ class Page extends BaseModel {
         ))
         : '';
 
-        // Page without localization
-        if (empty($page_data)) {
-            $page_data = $this->db->selectData('pages', "slug = :slug", array(':slug' => 'index'));
+        // When we are trying to open localization that doesn't exist
+        if (isset($params[0]) && empty($page_data)) {
+            return $this->handleNoPageError();
         }
+
+        // Page without localization
+        $page_data = $this->db->selectData('pages', "slug = :slug", array(':slug' => 'index'));
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
@@ -57,10 +60,10 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this->page_data = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
+        $this->page_data ??= $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
 
         // Handle when page doesn't exist
-        if (!$this->page_data) {
+        if (!isset($this->page_data['page_title']) || empty($this->page_data['content'])) {
             return $this->handleNoPageError();
         }
 
