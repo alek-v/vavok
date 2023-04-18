@@ -62,10 +62,13 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $this->page_data ??= $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
+        $page_data = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
 
+        if (!empty($page_data) && isset($page_data['content'])) {
+            $this->page_data = $page_data;
+        }
         // Handle when page doesn't exist
-        if (!isset($this->page_data['page_title']) || empty($this->page_data['content'])) {
+        else {
             return $this->handleNoPageError();
         }
 
