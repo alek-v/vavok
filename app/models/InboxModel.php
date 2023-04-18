@@ -117,7 +117,6 @@ class InboxModel extends BaseModel {
         }
 
         $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
-        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
         $this->page_data['page_title'] = '{@localization[inbox]}}';
 
         // Pass page to the controller
@@ -133,7 +132,6 @@ class InboxModel extends BaseModel {
 
         $this->page_data['page_title'] = '{@localization[inbox]}}';
         $this->page_data['links'] = $this->sitelink(HOMEDIR. 'inbox', '{@localization[inbox]}}', '<p>', '</p>');
-        $this->page_data['links'] .= $this->homelink('<p>', '</p>');
 
         // Pass page to the controller
         return $this->page_data;

@@ -162,15 +162,13 @@ class Page extends BaseModel {
             $this->page_data['content'] .= '<b>' . (int)$pcounter_online . '</b><br />';
         }
 
-        $this->page_data['content'] .= '{@localization[registered]}}: <b>' . (int)$pcounter_reg . '</b><br />';
-        $this->page_data['content'] .= '{@localization[guests]}}: <b>' . (int)$pcounter_guest . '</b><br /><br />';
+        $this->page_data['content'] .= '<p>{@localization[registered]}}: <b>' . (int)$pcounter_reg . '</b><br />';
+        $this->page_data['content'] .= '{@localization[guests]}}: <b>' . (int)$pcounter_guest . '</b></p>';
     
-        $this->page_data['content'] .= '{@localization[vststoday]}}: <b>' . (int)$visits_today . '</b><br />';
+        $this->page_data['content'] .= '<p>{@localization[vststoday]}}: <b>' . (int)$visits_today . '</b><br />';
         $this->page_data['content'] .= '{@localization[vstpagestoday]}}: <b>' . (int)$clicks_today . '</b><br />';
         $this->page_data['content'] .= '{@localization[totvisits]}}: <b>' . (int)$total_visits . '</b><br />';
-        $this->page_data['content'] .= '{@localization[totopenpages]}}: <b>' . (int)$total_clicks . '</b><br /><br />';
-        
-        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
+        $this->page_data['content'] .= '{@localization[totopenpages]}}: <b>' . (int)$total_clicks . '</b></p>';
 
         return $this->page_data;
     }
@@ -270,8 +268,6 @@ class Page extends BaseModel {
         } else {
             $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'pages/online/?list=reg', $this->localization->string('hideguest'), '<p>', '</p>');
         }
-
-        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
 
         return $this->page_data;
     }

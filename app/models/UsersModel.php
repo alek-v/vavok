@@ -186,8 +186,6 @@ class UsersModel extends BaseModel {
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
             }
 
-            $this->page_data['content'] .= $this->homelink('<p>', '</p>');
-
             // Pass page to the view
             $this->page_data['page_template'] = 'users/register/register_try';
             return $this->page_data;
@@ -442,7 +440,6 @@ class UsersModel extends BaseModel {
 
             // New password has been generated
             $this->page_data['content'] .= $this->showNotification($this->localization->string('passgen'));
-            $this->page_data['content'] .= $this->homelink('<p>', '</p>');
 
             // Pass page data to the view
             $this->page_data['page_template'] = 'notifications';
@@ -842,8 +839,6 @@ class UsersModel extends BaseModel {
             $this->user->updateUser(array('ban_time', 'ban_description'), array('', ''));
         }
 
-        $this->page_data['content'] .= $this->homelink('<p>', '</p>');
-
         return $this->page_data;
     }
 
@@ -871,8 +866,6 @@ class UsersModel extends BaseModel {
             $this_page['page_title'] = 'User does not exist';
 
             $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
-
-            $this_page['content'] .= $this->homelink('<p>', '</p>');
 
             return $this_page;
             exit;
