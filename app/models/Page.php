@@ -35,7 +35,9 @@ class Page extends BaseModel {
         }
 
         // Page without localization
-        $page_data = $this->db->selectData('pages', "slug = :slug", array(':slug' => 'index'));
+        if (empty($this->page_localization)) {
+            $page_data = $this->db->selectData('pages', "slug = :slug", array(':slug' => 'index'));
+        }
 
         // Update user's language when language is set in URL and it is different then current localization
         if (!empty($this->page_localization) && strtolower($this->page_localization) != $this->user->getPreferredLanguage($_SESSION['lang'], 'short')) {
