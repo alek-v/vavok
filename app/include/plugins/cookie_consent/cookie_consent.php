@@ -21,7 +21,7 @@ $this->head_data .= str_replace('  ', '', $this->replaceNewLines('
         line-height: 20px;
         display: block;
     }
-    .cookieConsentContainer .cookieTitle a {
+    .cookieConsentContainer .cookieTitle button {
         font-family: OpenSans, arial, "sans-serif";
         color: #FFFFFF;
         font-size: 22px;
@@ -37,12 +37,12 @@ $this->head_data .= str_replace('  ', '', $this->replaceNewLines('
         line-height: 20px;
         display: block;
         margin-top: 10px;
-    } .cookieConsentContainer .cookieDesc a {
+    } .cookieConsentContainer .cookieDesc button {
         font-family: OpenSans, arial, "sans-serif";
         color: #FFFFFF;
         text-decoration: underline;
     }
-    .cookieConsentContainer .cookieButton a {
+    .cookieConsentContainer .cookieButton button {
         display: inline-block;
         font-family: OpenSans, arial, "sans-serif";
         color: #FFFFFF;
@@ -55,7 +55,7 @@ $this->head_data .= str_replace('  ', '', $this->replaceNewLines('
         text-align: center;
         transition: background 0.3s;
     }
-    .cookieConsentContainer .cookieButton a:hover { 
+    .cookieConsentContainer .cookieButton button:hover { 
         cursor: pointer;
         background: #3E9B67;
     }
