@@ -863,15 +863,15 @@ class UsersModel extends BaseModel {
 
         // Show error page if user doesn't exist
         if (!isset($users_id) || !$this->user->idExists($users_id)) {
-            $this_page['page_title'] = 'User does not exist';
+            $this->page_data['page_title'] = 'User does not exist';
 
-            $this_page['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
+            $this->page_data['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
 
-            return $this_page;
+            return $this->page_data;
             exit;
         }
 
-        $this_page['page_title'] = '{@localization[profile]}} ' . $uz;
+        $this->page_data['page_title'] = '{@localization[profile]}} ' . $uz;
 
         // Load page from template
         $showPage = $this->container['parse_page'];
@@ -1011,8 +1011,8 @@ class UsersModel extends BaseModel {
         $showPage->set('homepage', $this->homelink());
 
         // Show page
-        $this_page['content'] .= $showPage->output(); 
+        $this->page_data['content'] .= $showPage->output(); 
 
-        return $this_page;
+        return $this->page_data;
     }
 }
