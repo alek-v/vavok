@@ -1,6 +1,6 @@
 <?php
 
-$lang_profil['profsettings'] = "Подешавања профила";
+$lang_profil['profile_settings'] = "Подешавања профила";
 $lang_profil['city'] = "Град";
 $lang_profil['aboutyou'] = "О себи";
 $lang_profil['site'] = "Сајт";
@@ -24,7 +24,7 @@ $lang_profil['passagain'] = "Поновите шифру";
 $lang_profil['oldpass'] = "Стара шифра";
 $lang_profil['street'] = "Улица и број";
 $lang_profil['postal'] = "Поштански број";
-$lang_profil['deleteProfile'] = "Обриши профил";
+$lang_profil['delete_profile'] = "Обриши профил";
 $lang_profil['deleteConfirm'] = "Да ли сте сигурни да желите обрисати профил?";
 $lang_profil['nopass'] = 'Стара шифра нетачна';
 $lang_profil['nonewpass'] = 'Лозинке се не поклапају! У оба поља морате усписати исте.';

@@ -22,7 +22,7 @@ class ProfileModel extends BaseModel {
             }
         </style>
         ';
-        $this->page_data['page_title'] = $this->localization->string('profsettings');
+        $this->page_data['page_title'] = $this->localization->string('profile_settings');
 
         $form = $this->container['parse_page'];
         $form->load('forms/form');
@@ -96,7 +96,7 @@ class ProfileModel extends BaseModel {
         $email = $this->container['parse_page'];
         $email->load('forms/input');
         $email->set('label_for', 'email');
-        $email->set('label_value', $this->localization->string('yemail'));
+        $email->set('label_value', $this->localization->string('email'));
         $email->set('input_id', 'email');
         $email->set('input_name', 'email');
         $email->set('input_value', $this->user->userInfo('email'));
@@ -289,7 +289,7 @@ class ProfileModel extends BaseModel {
         }
 
         // Page title
-        $this->page_data['page_title'] = '{@localization[deleteProfile]}}';
+        $this->page_data['page_title'] = '{@localization[delete_profile]}}';
 
         // Pass page to the view
         return $this->page_data;

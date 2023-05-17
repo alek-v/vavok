@@ -1,6 +1,6 @@
 {@header}}
     <div class="row photo">
-        <p>Photo saved!</p>
+        <p>Photography has been saved!</p>
         Current photo: <img src="../gallery/photo/{@user_id}}" alt="" /><br>
     </div>
     <div class="row">

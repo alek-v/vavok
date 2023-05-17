@@ -3,22 +3,22 @@
         <h1>{@localization[registration]}}</h1>
         <form class="login active" method="post" action="{@HOMEDIR}}users/register">
             <div>
-                <label>{@localization[username]}}:</label>
+                <label>{@localization[username]}}</label>
                 <input type="text" name="log" maxlength="40" />
                 <span class="error">This is an error</span>
             </div>
             <div>
-                <label>{@localization[pass]}}:</label>
+                <label>{@localization[pass]}}</label>
                 <input name="par" type="password" maxlength="20" />
                 <span class="error">This is an error</span>
             </div>
             <div>
-                <label>{@localization[passagain]}}:</label>
+                <label>{@localization[passagain]}}</label>
                 <input name="pars" type="password" maxlength="20" />
                 <span class="error">This is an error</span>
             </div>
             <div>
-                <label>{@localization[yemail]}}:</label>
+                <label>{@localization[email]}}</label>
                 <input type="text" name="meil" maxlength="40" />
                 <span class="error">This is an error</span>
             </div>

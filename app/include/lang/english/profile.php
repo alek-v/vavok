@@ -1,6 +1,6 @@
 <?php
 
-$lang_profil['profsettings'] = "Profile settings";
+$lang_profil['profile_settings'] = "Profile settings";
 $lang_profil['city'] = "City";
 $lang_profil['aboutyou'] = "About you";
 $lang_profil['site'] = "Site";
@@ -24,7 +24,7 @@ $lang_profil['passagain'] = "Repeat password";
 $lang_profil['oldpass'] = "Old password";
 $lang_profil['street'] = "Street address";
 $lang_profil['postal'] = "Postal code (ZIP)";
-$lang_profil['deleteProfile'] = "Delete profile";
+$lang_profil['delete_profile'] = "Delete profile";
 $lang_profil['deleteConfirm'] = "Are you sure you want to delete profile?";
 $lang_profil['nopass'] = 'Old password incorrect';
 $lang_profil['nonewpass'] = 'Passwords does not match! In both fields passwords must be the same.';

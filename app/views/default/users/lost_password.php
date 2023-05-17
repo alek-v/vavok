@@ -9,7 +9,7 @@
                 <span class="error">This is an error</span>
             </div>
             <div>
-                <label>{@localization[yemail]}}:</label>
+                <label>{@localization[email]}}:</label>
                 <input  type="text" value="" name="mailsus" maxlength="50" />
                 <span class="error">This is an error</span>
             </div>

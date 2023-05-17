@@ -988,7 +988,7 @@ class AdminpanelModel extends BaseModel {
                 $udd4 = $this->container['parse_page'];
                 $udd4->load('forms/input');
                 $udd4->set('label_for', 'udd4');
-                $udd4->set('label_value', '{@localization[yemail]}}');
+                $udd4->set('label_value', '{@localization[email]}}');
                 $udd4->set('input_id', 'udd4');
                 $udd4->set('input_name', 'udd4');
                 $udd4->set('input_value', $this->user->userInfo('email', $users_id));
