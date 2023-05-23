@@ -414,22 +414,22 @@ trait Core {
      * @param string $str
      * @return string
      */
+    public function securityCheck(string $str): string
+    {
+        return htmlspecialchars($str);
+    }
+
+    /**
+     * Deprecated method 23.5.2023.
+     * 
+     * Check input fields
+     *
+     * @param string $str
+     * @return string
+     */
     public function check(string $str): string
     {
-        $str = str_replace("|", "&#124;", $str);
-        $str = htmlspecialchars($str);
-        $str = str_replace("'", "&#39;", $str);
-        $str = str_replace("\"", "&#34;", $str);
-        $str = str_replace("/\\\$/", "&#36;", $str);
-        $str = str_replace('\\', "&#92;", $str);
-        $str = str_replace("`", "", $str);
-        $str = str_replace("^", "&#94;", $str);
-        $str = str_replace("%", "&#37;", $str);
-        $str = str_replace("”", "&#8221;", $str);
-        $str = str_replace("“", "&#8220;", $str);
-        $str = preg_replace("/&#58;/", ":", $str, 3);
-        $str = str_replace("\\r\\n", "\r\n", $str); // we want new lines
-        return $str;
+        return $this->securityCheck($str);
     }
 
     /**
@@ -782,18 +782,24 @@ trait Core {
         $arrays = array_merge($_POST, $_GET);
 
         // Handle page number
-        if (!isset($arrays['page']) || empty($arrays['page']) || $arrays['page'] < 1) $arrays['page'] = 1;
+        if (!isset($arrays['page']) || empty($arrays['page']) || $arrays['page'] < 1) {
+            $arrays['page'] = 1;
+        }
 
         // Return unfiltered data when requested
-        if (!empty($return_key) && $unchainged == true && isset($arrays[$return_key])) return $arrays[$return_key];
+        if (!empty($return_key) && $unchainged == true && isset($arrays[$return_key])) {
+            return $arrays[$return_key];
+        }
 
         // Return filtered (checked) requested key
-        if (!empty($return_key) && isset($arrays[$return_key])) return $this->check($arrays[$return_key]);
+        if (!empty($return_key) && isset($arrays[$return_key])) {
+            return $arrays[$return_key];
+        }
 
         // Check all fields with a check() method
         $return = array();
         foreach ($arrays as $key => $value) {
-            $return[$key] = $this->check($value);
+            $return[$key] = $value;
         }
 
         // Handle case when return key is not set

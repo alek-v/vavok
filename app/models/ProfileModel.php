@@ -13,6 +13,10 @@ class ProfileModel extends BaseModel {
      */
     public function index()
     {
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
         $this->page_data['head_tags'] = '
         <style>
             .photo img {
@@ -48,13 +52,13 @@ class ProfileModel extends BaseModel {
         $surname->set('input_value', $this->user->userInfo('last_name'));
 
         // City
-        $otkel = $this->container['parse_page'];
-        $otkel->load('forms/input');
-        $otkel->set('label_for', 'otkel');
-        $otkel->set('label_value', $this->localization->string('city'));
-        $otkel->set('input_id', 'otkel');
-        $otkel->set('input_name', 'otkel');
-        $otkel->set('input_value', $this->user->userInfo('city'));
+        $city = $this->container['parse_page'];
+        $city->load('forms/input');
+        $city->set('label_for', 'city');
+        $city->set('label_value', $this->localization->string('city'));
+        $city->set('input_id', 'city');
+        $city->set('input_name', 'city');
+        $city->set('input_value', $this->user->userInfo('city'));
 
         // Street
         $street = $this->container['parse_page'];
@@ -84,13 +88,13 @@ class ProfileModel extends BaseModel {
         $timezone->set('input_value', $this->user->userInfo('timezone'));
 
          // About user
-        $infa = $this->container['parse_page'];
-        $infa->load('forms/input');
-        $infa->set('label_for', 'infa');
-        $infa->set('label_value', $this->localization->string('aboutyou'));
-        $infa->set('input_id', 'infa');
-        $infa->set('input_name', 'infa');
-        $infa->set('input_value', $this->user->userInfo('about'));
+        $about_user = $this->container['parse_page'];
+        $about_user->load('forms/input');
+        $about_user->set('label_for', 'about_user');
+        $about_user->set('label_value', $this->localization->string('aboutyou'));
+        $about_user->set('input_id', 'about_user');
+        $about_user->set('input_name', 'about_user');
+        $about_user->set('input_value', $this->user->userInfo('about'));
 
         // Email
         $email = $this->container['parse_page'];
@@ -122,19 +126,19 @@ class ProfileModel extends BaseModel {
         // Gender
         $gender_m = $this->container['parse_page'];
         $gender_m->load('forms/radio_inline');
-        $gender_m->set('label_for', 'pol');
+        $gender_m->set('label_for', 'gender');
         $gender_m->set('label_value', $this->localization->string('sex') . ': ' . $this->localization->string('male'));
-        $gender_m->set('input_id', 'pol');
-        $gender_m->set('input_name', 'pol');
+        $gender_m->set('input_id', 'gender');
+        $gender_m->set('input_name', 'gender');
         $gender_m->set('input_value', 'm');
         if ($this->user->userInfo('gender') == 'm') $gender_m->set('input_status', 'checked');
 
         $gender_f = $this->container['parse_page'];
         $gender_f->load('forms/radio_inline');
-        $gender_f->set('label_for', 'pol');
+        $gender_f->set('label_for', 'gender');
         $gender_f->set('label_value',  $this->localization->string('sex') . ': ' . $this->localization->string('female'));
-        $gender_f->set('input_id', 'pol');
-        $gender_f->set('input_name', 'pol');
+        $gender_f->set('input_id', 'gender');
+        $gender_f->set('input_name', 'gender');
         $gender_f->set('input_value', 'z');
         if ($this->user->userInfo('gender') == 'z') $gender_f->set('input_status', 'checked');
 
@@ -142,11 +146,11 @@ class ProfileModel extends BaseModel {
         $gender->load('forms/radio_group');
         $gender->set('radio_group', $gender->merge(array($gender_m, $gender_f)));
 
-        $form->set('fields', $form->merge(array($my_name, $surname, $otkel, $street, $zip, $timezone, $infa, $email, $site, $birthday, $gender)));
+        $form->set('fields', $form->merge(array($my_name, $surname, $city, $street, $zip, $timezone, $about_user, $email, $site, $birthday, $gender)));
         $this->page_data['profile_form'] = $form->output();
 
         // Change password
-        $form= $this->container['parse_page'];
+        $form = $this->container['parse_page'];
         $form->load('forms/form');
         $form->set('form_method', 'post');
         $form->set('form_action', HOMEDIR . 'profile/newpass');
@@ -168,7 +172,7 @@ class ProfileModel extends BaseModel {
         $newpar2->set('input_name', 'newpar2');
 
         // Current password
-        $oldpar= $this->container['parse_page'];
+        $oldpar = $this->container['parse_page'];
         $oldpar->load('forms/input');
         $oldpar->set('label_for', 'oldpar');
         $oldpar->set('label_value', $this->localization->string('oldpass'));
@@ -196,24 +200,20 @@ class ProfileModel extends BaseModel {
      */
     public function save()
     {
-        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) $this->redirection(HOMEDIR. 'profile/?isset=insite');
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
+        if (!empty($this->postAndGet('site')) && !$this->validateUrl($this->postAndGet('site'))) {
+            $this->redirection(HOMEDIR. 'profile/?isset=insite');
+        }
 
         // check email
-        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) $this->redirection(HOMEDIR . 'profile/?isset=noemail');
+        if (!empty($this->postAndGet('email')) && !$this->validateEmail($this->postAndGet('email'))) {
+            $this->redirection(HOMEDIR . 'profile/?isset=noemail');
+        }
 
-        $my_name = $this->replaceNewLines($this->postAndGet('my_name'));
-        $surname = $this->replaceNewLines($this->postAndGet('surname'));
-        $city = $this->replaceNewLines($this->postAndGet('otkel'));
-        $street = $this->replaceNewLines($this->postAndGet('street'));
-        $zip = $this->replaceNewLines($this->postAndGet('zip'));
-        $infa = $this->replaceNewLines($this->postAndGet('infa'));
-        $email = htmlspecialchars(strtolower($this->postAndGet('email')));
-        $site = $this->replaceNewLines($this->postAndGet('site'));
-        $browser = $this->replaceNewLines($this->user->userBrowser());
-        $ip = $this->replaceNewLines($this->user->findIpAddress());
-        $sex = $this->replaceNewLines($this->postAndGet('pol'));
-        $happy = $this->replaceNewLines($this->postAndGet('happy'));
-        $timezone = $this->replaceNewLines($this->postAndGet('timezone'));
+        $email = strtolower($this->postAndGet('email'));
 
         $fields = array();
         $fields[] = 'city';
@@ -228,16 +228,16 @@ class ProfileModel extends BaseModel {
         $fields[] = 'timezone';
 
         $values = array();
-        $values[] = $city;
-        $values[] = $infa;
-        $values[] = $site;
-        $values[] = $sex;
-        $values[] = $happy;
-        $values[] = $my_name;
-        $values[] = $surname;
-        $values[] = $street;
-        $values[] = $zip;
-        $values[] = $timezone;
+        $values[] = $this->postAndGet('city');
+        $values[] = $this->postAndGet('about_user');
+        $values[] = $this->postAndGet('site');
+        $values[] = $this->postAndGet('gender');
+        $values[] = $this->postAndGet('happy');
+        $values[] = $this->postAndGet('my_name');
+        $values[] = $this->postAndGet('surname');
+        $values[] = $this->postAndGet('street');
+        $values[] = $this->postAndGet('zip');
+        $values[] = $this->postAndGet('timezone');
 
         // Update profile data
         $this->user->updateUser($fields, $values);
@@ -280,6 +280,10 @@ class ProfileModel extends BaseModel {
      */
     public function delete()
     {
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
         if ($this->postAndGet('confirmed') == 'yes') {
             $delete_id = $this->user->userIdNumber();
 
@@ -331,6 +335,10 @@ class ProfileModel extends BaseModel {
      */
     public function photo()
     {
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
         $this->page_data['page_title'] = 'Change Photo';
         $this->page_data['head_tags'] = '<style>
         .photo img {
@@ -372,6 +380,10 @@ class ProfileModel extends BaseModel {
      */
     public function savephoto()
     {
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
         // Page data
         $this->page_data['page_title'] = 'Change Photography';
         $this->page_data['head_tags'] = '
@@ -385,7 +397,9 @@ class ProfileModel extends BaseModel {
         ';
 
         // File path cannot be empty
-        if (empty($_FILES['file']['tmp_name'])) $this->redirection(HOMEDIR . 'profile/photo');
+        if (empty($_FILES['file']['tmp_name'])) {
+            $this->redirection(HOMEDIR . 'profile/photo');
+        }
 
         // Uploading
         $avat_size = $_FILES['file']['size'];
@@ -449,6 +463,10 @@ class ProfileModel extends BaseModel {
      */
     public function removephoto()
     {
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'users/login');
+        }
+
         // Page data
         $this->page_data['page_title'] = 'Remove Photography';
 

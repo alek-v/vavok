@@ -208,7 +208,7 @@ class UsersModel extends BaseModel {
                 return $this->page_data;
             } else {
                 if (!empty($this->postAndGet('ptl'))) {
-                    $this->page_data['page_to_load'] = $this->check($this->postAndGet('ptl'));
+                    $this->page_data['page_to_load'] = $this->securityCheck($this->postAndGet('ptl'));
                 }
 
                 // information about registration confirmation
@@ -630,15 +630,15 @@ class UsersModel extends BaseModel {
         // Save settings
         if (isset($params[0]) && $params[0] == 'save') {
             // Users timezone
-            $user_timezone = !empty($this->postAndGet('timezone')) ? $this->check($this->postAndGet('timezone')) : 0;
+            $user_timezone = !empty($this->postAndGet('timezone')) ? $this->postAndGet('timezone') : 0;
             // Redirect if timezone is incorrect
             if (preg_match("/[^0-9+-]/", $user_timezone)) $this->redirection(HOMEDIR . 'users/settings/?isset=incorrect');
 
             // Subscription to site news
-            $subnews = !empty($this->postAndGet('subnews')) ? $this->check($this->postAndGet('subnews')) : '';
+            $subnews = !empty($this->postAndGet('subnews')) ? $this->postAndGet('subnews') : '';
 
             // New message notifications
-            $inbox_notification = !empty($this->postAndGet('inbnotif')) ? $this->check($this->postAndGet('inbnotif')) : '';
+            $inbox_notification = !empty($this->postAndGet('inbnotif')) ? $this->postAndGet('inbnotif') : '';
 
             if (empty($this->postAndGet('localization'))) $this->redirection(HOMEDIR . 'users/settings/?isset=incorrect');
 
@@ -847,7 +847,7 @@ class UsersModel extends BaseModel {
      */
     public function users_profile($params)
     {
-        $requested_user = isset($params[0]) ? $this->check($params[0]) : '';
+        $requested_user = isset($params[0]) ? $params[0] : '';
 
         // Get users nick and users id number
         if (!empty($requested_user)) {
@@ -910,17 +910,21 @@ class UsersModel extends BaseModel {
             $personalStatus = $this->container['parse_page'];
             $personalStatus->load('users/user-profile/status');
             $personalStatus->set('status', $this->localization->string('status') . ':');
-            $personalStatus->set('personalStatus', $this->check($this->user->userInfo('status', $users_id)));
+            $personalStatus->set('personalStatus', $this->user->userInfo('status', $users_id));
             $showPage->set('personalStatus', $personalStatus->output());
         }
 
         $showPage->set('sex', $this->localization->string('sex'));
 
         // First name
-        if (!empty($this->user->userInfo('first_name', $users_id))) $showPage->set('first_name', $this->user->userInfo('first_name', $users_id));
+        if (!empty($this->user->userInfo('first_name', $users_id))) {
+            $showPage->set('first_name', $this->user->userInfo('first_name', $users_id));
+        }
 
         // Last name
-        if (!empty($this->user->userInfo('last_name', $users_id))) $showPage->set('last_name', $this->user->userInfo('last_name', $users_id));
+        if (!empty($this->user->userInfo('last_name', $users_id))) {
+            $showPage->set('last_name', $this->user->userInfo('last_name', $users_id));
+        }
 
         // User's gender
         if ($this->user->userInfo('gender', $users_id) == 'N' or $this->user->userInfo('gender', $users_id) == 'n' || empty($this->user->userInfo('gender', $users_id))) {
@@ -933,32 +937,32 @@ class UsersModel extends BaseModel {
 
         // City
         if (!empty($this->user->userInfo('city', $users_id))) {
-            $showPage->set('city', $this->localization->string('city') . ': ' . $this->check($this->user->userInfo('city', $users_id)));
+            $showPage->set('city', $this->localization->string('city') . ': ' . $this->user->userInfo('city', $users_id));
         }
 
         // About user
         if (!empty($this->user->userInfo('about', $users_id))) {
-            $showPage->set('about', $this->localization->string('about') . ': ' . $this->check($this->user->userInfo('about', $users_id)));
+            $showPage->set('about', $this->localization->string('about') . ': ' . $this->user->userInfo('about', $users_id));
         }
 
         // User's birthday
         if (!empty($this->user->userInfo('birthday', $users_id)) && $this->user->userInfo('birthday', $users_id) != "..") {
-            $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->check($this->user->userInfo('birthday', $users_id)));
+            $showPage->set('birthday', $this->localization->string('birthday') . ': ' . $this->user->userInfo('birthday', $users_id));
         }
 
         // User's browser
         if (!empty($this->user->userInfo('browser', $users_id))) {
-            $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->check($this->user->userInfo('browser', $users_id)));
+            $showPage->set('browser', $this->localization->string('browser') . ': ' . $this->user->userInfo('browser', $users_id));
         }
 
         // Website
         if (!empty($this->user->userInfo('site', $users_id)) && $this->user->userInfo('site', $users_id) != 'http://' && $this->user->userInfo('site', $users_id) != 'https://') {
-            $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->check($this->user->userInfo('site', $users_id)) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a>');
+            $showPage->set('site', $this->localization->string('site') . ': <a href="' . $this->user->userInfo('site', $users_id) . '" target="_blank">' . $this->user->userInfo('site', $users_id) . '</a>');
         }
 
         // Registration date
         if (!empty($this->user->userInfo('registration_date', $users_id))) {
-            $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->check($this->user->userInfo('registration_date', $users_id)), $this->localization->showAll()['date_format']));
+            $showPage->set('regDate', $this->localization->string('regdate') . ': ' . $this->correctDate($this->user->userInfo('registration_date', $users_id), $this->localization->showAll()['date_format']));
         }
 
         // Last visit
@@ -968,7 +972,7 @@ class UsersModel extends BaseModel {
         if ($this->user->userAuthenticated() && ($this->user->moderator() || $this->user->administrator())) {
             $ipAddress = $this->container['parse_page'];
             $ipAddress->load('users/user-profile/ip-address');
-            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration->getValue('admin_panel') . '/ip_information/?ip=' . $this->check($this->user->userInfo('ip_address', $users_id)) . '" target="_blank">'  . $this->check($this->user->userInfo('ip_address', $users_id)) . '</a>');
+            $ipAddress->set('ip-address', 'IP address: <a href="' . HOMEDIR . $this->configuration->getValue('admin_panel') . '/ip_information/?ip=' . $this->user->userInfo('ip_address', $users_id) . '" target="_blank">'  . $this->user->userInfo('ip_address', $users_id) . '</a>');
             $showPage->set('ip-address', $ipAddress->output());
         }
 

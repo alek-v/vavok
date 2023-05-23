@@ -431,8 +431,13 @@ class User {
         $user_id = empty($user_id) ? $_SESSION['uid'] : $user_id;
 
         // Fields and values must be an array, we are using array_values to sort keys when any is removed while filtering
-        if (!is_array($fields)) $fields = array($fields);
-        if (!is_array($values)) $values = array($values);
+        if (!is_array($fields)) {
+            $fields = array($fields);
+        }
+
+        if (!is_array($values)) {
+            $values = array($values);
+        }
 
         // vavok_users table fields
         $vavok_users_valid_fields = array('name', 'pass', 'access_permission', 'skin', 'browsers', 'ip_address', 'timezone', 'banned', 'localization');
@@ -444,9 +449,17 @@ class User {
         $vavok_about_valid_fields = array('birthday', 'sex', 'email', 'site', 'city', 'about', 'first_name', 'last_name', 'photo', 'address', 'zip', 'country', 'phone');
 
         // First check if there are fields to update for selected table, then update data
-        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) $this->db->update('vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
-        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields'))) $this->db->update('vavok_profile', array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'values')), "uid='{$user_id}'");
-        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) $this->db->update('vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
+        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields'))) {
+            $this->db->update('vavok_users', array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_users_valid_fields, 'values')), "id='{$user_id}'");
+        }
+
+        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields'))) {
+            $this->db->update('vavok_profile', array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_profile_valid_fields, 'values')), "uid='{$user_id}'");
+        }
+
+        if (!empty($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields'))) {
+            $this->db->update('vavok_about', array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'fields')), array_values($this->filter_user_fields_values($fields, $values, $vavok_about_valid_fields, 'values')), "uid='{$user_id}'");
+        }
     }
 
     /**
@@ -475,7 +488,9 @@ class User {
             }
         }
 
-        if ($data == 'fields') return $fields;
+        if ($data == 'fields') {
+            return $fields;
+        }
 
         return $values;
     }
@@ -793,53 +808,53 @@ class User {
 
             case 'first_name':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'first_name');
-                return isset($data['first_name']) && !empty($data['first_name']) ? $data['first_name'] : '';
+                return isset($data['first_name']) && !empty($data['first_name']) ? $this->securityCheck($data['first_name']) : '';
 
             case 'last_name':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'last_name');
-                return isset($data['last_name']) && !empty($data['last_name']) ? $data['last_name'] : '';
+                return isset($data['last_name']) && !empty($data['last_name']) ? $this->securityCheck($data['last_name']) : '';
 
             case 'city':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'city');
-                return isset($data['city']) && !empty($data['city']) ? $data['city'] : '';
+                return isset($data['city']) && !empty($data['city']) ? $this->securityCheck($data['city']) : '';
 
             case 'address':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'address');
-                return isset($data['address']) && !empty($data['address']) ? $data['address'] : '';
+                return isset($data['address']) && !empty($data['address']) ? $this->securityCheck($data['address']) : '';
 
             case 'zip':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'zip');
-                return isset($data['zip']) && !empty($data['zip']) ? $data['zip'] : '';
+                return isset($data['zip']) && !empty($data['zip']) ? $this->securityCheck($data['zip']) : '';
 
             case 'about':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'about');
-                return isset($data['about']) && !empty($data['about']) ? $data['about'] : '';
+                return isset($data['about']) && !empty($data['about']) ? $this->securityCheck($data['about']) : '';
 
             case 'site':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'site');
-                return isset($data['site']) && !empty($data['site']) ? $data['site'] : '';
+                return isset($data['site']) && !empty($data['site']) ? $this->securityCheck($data['site']) : '';
 
             case 'birthday':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'birthday');
-                return isset($data['birthday']) && !empty($data['birthday']) ? $data['birthday'] : '';
+                return isset($data['birthday']) && !empty($data['birthday']) ? $this->securityCheck($data['birthday']) : '';
 
             case 'gender':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'sex');
-                return isset($data['sex']) && !empty($data['sex']) ? $data['sex'] : '';
+                return isset($data['sex']) && !empty($data['sex']) ? $this->securityCheck($data['sex']) : '';
 
             case 'photo':
                 $data = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $users_id], 'photo');
-                return isset($data['photo']) && !empty($data['photo']) ? $data['photo'] : '';
+                return isset($data['photo']) && !empty($data['photo']) ? $this->securityCheck($data['photo']) : '';
 
             case 'nickname':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'name') : '';
 
-                return isset($data['name']) && !empty($data['name']) ? $data['name'] : $this->user_data['name'];
+                return isset($data['name']) && !empty($data['name']) ? $this->securityCheck($data['name']) : $this->securityCheck($this->user_data['name']);
 
             case 'language':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'localization') : '';
 
-                return isset($data['localization']) && !empty($data['localization']) ? $data['localization'] : $this->user_data['localization'];
+                return isset($data['localization']) && !empty($data['localization']) ? $this->securityCheck($data['localization']) : $this->securityCheck($this->user_data['localization']);
 
             case 'banned':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'banned') : '';
@@ -859,17 +874,17 @@ class User {
             case 'browser':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'browsers') : '';
 
-                return isset($data['browsers']) && !empty($data['browsers']) ? $data['browsers'] : $this->user_data['browser'];
+                return isset($data['browsers']) && !empty($data['browsers']) ? $this->securityCheck($data['browsers']) : $this->securityCheck($this->user_data['browser']);
 
             case 'ip_address':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'ip_address') : '';
 
-                return isset($data['ip_address']) && !empty($data['ip_address']) ? $data['ip_address'] : $this->user_data['ip_address'];
+                return isset($data['ip_address']) && !empty($data['ip_address']) ? $this->securityCheck($data['ip_address']) : $this->securityCheck($this->user_data['ip_address']);
 
             case 'timezone':
                 $data = isset($user_id) ? $this->db->selectData('vavok_users', 'id = :id', [':id' => $users_id], 'timezone') : '';
 
-                return isset($data['timezone']) && !empty($data['timezone']) ? $data['timezone'] : $this->user_data['timezone'];
+                return isset($data['timezone']) && !empty($data['timezone']) ? $this->securityCheck($data['timezone']) : $this->securityCheck($this->user_data['timezone']);
 
             case 'ban_time':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'ban_time');
@@ -877,7 +892,7 @@ class User {
 
             case 'ban_description':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'ban_description');
-                return isset($data['ban_description']) && !empty($data['ban_description']) ? $data['ban_description'] : '';
+                return isset($data['ban_description']) && !empty($data['ban_description']) ? $this->securityCheck($data['ban_description']) : '';
 
             case 'all_bans':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'all_bans');
@@ -889,7 +904,7 @@ class User {
 
             case 'status':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'personal_status');
-                return isset($data['personal_status']) && !empty($data['personal_status']) ? $data['personal_status'] : '';
+                return isset($data['personal_status']) && !empty($data['personal_status']) ? $this->securityCheck($data['personal_status']) : '';
 
             case 'registration_date':
                 $data = $this->db->selectData('vavok_profile', 'uid = :id', [':id' => $users_id], 'registration_date');
