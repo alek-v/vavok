@@ -89,12 +89,12 @@ class ProfileModel extends BaseModel {
 
          // About user
         $about_user = $this->container['parse_page'];
-        $about_user->load('forms/input');
+        $about_user->load('forms/textarea');
         $about_user->set('label_for', 'about_user');
         $about_user->set('label_value', $this->localization->string('aboutyou'));
-        $about_user->set('input_id', 'about_user');
-        $about_user->set('input_name', 'about_user');
-        $about_user->set('input_value', $this->user->userInfo('about'));
+        $about_user->set('textarea_id', 'about_user');
+        $about_user->set('textarea_name', 'about_user');
+        $about_user->set('textarea_value', $this->user->userInfo('about'));
 
         // Email
         $email = $this->container['parse_page'];
@@ -156,7 +156,7 @@ class ProfileModel extends BaseModel {
         $form->set('form_action', HOMEDIR . 'profile/newpass');
 
         // New pass
-        $newpar= $this->container['parse_page'];
+        $newpar = $this->container['parse_page'];
         $newpar->load('forms/input');
         $newpar->set('label_for', 'newpar');
         $newpar->set('label_value', $this->localization->string('newpass'));
@@ -164,7 +164,7 @@ class ProfileModel extends BaseModel {
         $newpar->set('input_name', 'newpar');
 
         // New pass again
-        $newpar2= $this->container['parse_page'];
+        $newpar2 = $this->container['parse_page'];
         $newpar2->load('forms/input');
         $newpar2->set('label_for', 'newpar2');
         $newpar2->set('label_value', $this->localization->string('passagain'));
