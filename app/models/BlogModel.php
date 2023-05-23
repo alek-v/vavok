@@ -104,7 +104,9 @@ class BlogModel extends BaseModel {
                 $total_comments = $comments->countComments($this->page_id);
 
                 // Show all comments
-                if ($comments_per_page == 0) $comments_per_page = $total_comments;
+                if ($comments_per_page == 0) {
+                    $comments_per_page = $total_comments;
+                }
 
                 // Start navigation
                 $navi = new Navigation($items_per_page, $total_comments);
@@ -153,7 +155,7 @@ class BlogModel extends BaseModel {
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
 
                 // Page title
-                $this->page_data['page_title'] = 'Blog';
+                $this->page_data['page_title'] = !empty($this_category) ? '{@localization[category]}}: ' . $this_category : 'Blog';
 
                 // Load index template
                 $show_page = $this->container['parse_page'];
