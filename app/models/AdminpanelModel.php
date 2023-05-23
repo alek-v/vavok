@@ -927,25 +927,25 @@ class AdminpanelModel extends BaseModel {
                 if ($this->user->userInfo('banned', $users_id) == 1) {
                     $this->page_data['content'] .= '<p><font color="#FF0000"><b>{@localization[user_is_banned]}}</b></font></p>';
                 }
-        
+
                 if ($this->user->userInfo('registration_activated', $users_id) == 1) {
                     $this->page_data['content'] .= '<p><font color="#FF0000"><b>{@localization[notactivated]}}</b></font></p>';
                 }
-        
+
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
                 $form->set('form_method', 'post');
                 $form->set('form_action', HOMEDIR . 'adminpanel/users/?action=upgrade&users=' . $user);
-        
+
                 $userx_access = (int)$this->user->userInfo('access_permission', $users_id);
-        
+
                 if ($_SESSION['permissions'] == 101 && $this->user->showUsername() == $this->configuration->getValue('admin_username')) {
                     $array_dostup = array(101 => $this->localization->string('access101'), 102 => $this->localization->string('access102'), 103 => $this->localization->string('access103'), 105 => $this->localization->string('access105'), 106 => $this->localization->string('access106'), 107 => $this->localization->string('access107'));
         
                     if ($userx_access == 0 || empty($userx_access)) {
                         $userx_access = 107;
                     }
-        
+
                     $options = '<option value="' . $userx_access . '">' . $array_dostup[$userx_access] . '</option>';
                     foreach($array_dostup as $k => $v) {
                         if ($k != $userx_access) {
@@ -953,7 +953,7 @@ class AdminpanelModel extends BaseModel {
                         }
                     }
                 }
-        
+
                 $udd7 = $this->container['parse_page'];
                 $udd7->load('forms/select');
                 $udd7->set('label_for', 'udd7');
@@ -961,14 +961,14 @@ class AdminpanelModel extends BaseModel {
                 $udd7->set('select_id', 'udd7');
                 $udd7->set('select_name', 'udd7');
                 $udd7->set('options', $options);
-        
+
                 $udd1 = $this->container['parse_page'];
                 $udd1->load('forms/input');
                 $udd1->set('label_for', 'udd1');
                 $udd1->set('label_value', '{@localization[newpassinfo]}}');
                 $udd1->set('input_id', 'udd1');
                 $udd1->set('input_name', 'udd1');
-        
+
                 $udd2 = $this->container['parse_page'];
                 $udd2->load('forms/input');
                 $udd2->set('label_for', 'udd2');
@@ -976,7 +976,7 @@ class AdminpanelModel extends BaseModel {
                 $udd2->set('input_id', 'udd2');
                 $udd2->set('input_name', 'udd2');
                 $udd2->set('input_value', $this->user->userInfo('city', $users_id));
-        
+
                 $udd3 = $this->container['parse_page'];
                 $udd3->load('forms/input');
                 $udd3->set('label_for', 'udd3');
@@ -984,7 +984,7 @@ class AdminpanelModel extends BaseModel {
                 $udd3->set('input_id', 'udd3');
                 $udd3->set('input_name', 'udd3');
                 $udd3->set('input_value', $this->user->userInfo('about', $users_id));
-        
+
                 $udd4 = $this->container['parse_page'];
                 $udd4->load('forms/input');
                 $udd4->set('label_for', 'udd4');
@@ -992,7 +992,7 @@ class AdminpanelModel extends BaseModel {
                 $udd4->set('input_id', 'udd4');
                 $udd4->set('input_name', 'udd4');
                 $udd4->set('input_value', $this->user->userInfo('email', $users_id));
-        
+
                 $udd5 = $this->container['parse_page'];
                 $udd5->load('forms/input');
                 $udd5->set('label_for', 'udd5');
@@ -1000,7 +1000,7 @@ class AdminpanelModel extends BaseModel {
                 $udd5->set('input_id', 'udd5');
                 $udd5->set('input_name', 'udd5');
                 $udd5->set('input_value', $this->user->userInfo('site', $users_id));
-        
+
                 $udd13 = $this->container['parse_page'];
                 $udd13->load('forms/input');
                 $udd13->set('label_for', 'udd13');
@@ -1618,11 +1618,15 @@ class AdminpanelModel extends BaseModel {
     {
         $this->page_data['page_title'] = 'IP information';
 
-        if (!$this->user->moderator() && !$this->user->administrator()) $this->redirection('../?auth_error');
+        if (!$this->user->moderator() && !$this->user->administrator()) {
+            $this->redirection('../?auth_error');
+        }
 
         $ip = $this->postAndGet('ip');
 
-        if (empty($ip)) exit('please set ip address');
+        if (empty($ip)) {
+            exit('please set ip address');
+        }
 
         // Get an array with geoip-infodata
         function geo_check_ip($ip) {
@@ -1652,8 +1656,6 @@ class AdminpanelModel extends BaseModel {
         } else {
             $this->page_data['ip_information'] .= $this->showDanger('No data available');
         }
-
-        $this->page_data['content'] = '<p>' . $this->sitelink(HOMEDIR . 'adminpanel', '{@localization[adminpanel]}}') . '</p>';
 
         return $this->page_data;
     }    

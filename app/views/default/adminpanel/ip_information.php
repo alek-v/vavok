@@ -3,5 +3,4 @@
     <div class="b">
         {@ip_information}}
     </div>
-    {@content}}
 {@footer}}
