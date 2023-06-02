@@ -80,6 +80,9 @@ class BlogModel extends BaseModel {
                 // Content
                 $post->set('content', $this->page_content);
 
+                // Thumbnail
+                $post->set('thumbnail', $this->thumbnail);
+
                 // Day and month when post is created
                 $post->set('date-created-day', date('d', $this->page_created_date));
                 $post->set('date-created-month', mb_substr($this->localization->showAll()['ln_all_month'][date('n', $this->page_created_date) - 1], 0, 3));
@@ -196,14 +199,18 @@ class BlogModel extends BaseModel {
                 }
 
                 // Hide <div> with categories if there is no category
-                if (empty($all_categories)) $show_page->set('bc_style_options', ' display-none');
+                if (empty($all_categories)) {
+                    $show_page->set('bc_style_options', ' display-none');
+                }
 
                 // Merge categories and output from object
-                if (isset($all_categories)) $show_page->set('category-list', $page_category->merge($all_categories));
+                if (isset($all_categories)) {
+                    $show_page->set('category-list', $page_category->merge($all_categories));
+                }
 
                 // Get blog posts
-                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published_status = '2' AND (localization = '{$user_localization_short}' OR localization='') ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
-                "SELECT pages.date_published, pages.date_created, pages.page_title, pages.slug, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name='{$this_category}' AND tags.page_id = pages.id AND pages.published_status = '2' ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
+                $page_sql_query = empty($this_category) ? "SELECT * FROM pages WHERE type = 'post' AND published_status = '2' AND (localization = '{$user_localization_short}' OR localization = '') ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}" : 
+                "SELECT pages.date_published, pages.date_created, pages.page_title, pages.slug, pages.content, pages.default_img FROM pages INNER JOIN tags ON tags.tag_name = '{$this_category}' AND tags.page_id = pages.id AND pages.published_status = '2' ORDER BY date_published DESC LIMIT {$navi->start()['start']}, {$items_per_page}";
         
                 foreach ($this->db->query($page_sql_query) as $key) {
                     // load template
@@ -245,6 +252,9 @@ class BlogModel extends BaseModel {
 
                     // Cover image
                     $page_posts->set('page_image', $key['default_img']);
+
+                    // Thumbnail
+                    $page_posts->set('thumbnail', $key['thumbnail']);
 
                     // blog post objects
                     $all_posts[] = $page_posts;
@@ -299,41 +309,44 @@ class BlogModel extends BaseModel {
         // return false if there is no data
         if (empty($page_data['page_title']) && empty($page_data['content'])) {
             return false;
-        } else {
-            // Update page title
-            $this->page_title = $page_data['page_title'];
-
-            // Update language
-            if (!empty($page_data['localization']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', " lang=\"{$page_data['localization']}\"");
-
-            // Page content
-            $this->page_content = $page_data['content'];
-
-            // Published status
-            $this->published = $page_data['published_status'];
-
-            // Page id
-            $this->page_id = $page_data['id'];
-
-            // Author
-            $this->page_author = $page_data['created_by'];
-
-            // Date created
-            $this->page_created_date = $page_data['date_created'];
-
-            // Head tags
-            $this->head_tags = $page_data['head_tags'];
-
-            // Published date
-            $this->page_published_date = $page_data['date_published'];
-
-            // Published date
-            $this->page_updated_date = $page_data['date_updated'];
-
-            // Page views
-            $this->views = !empty($page_data['views']) ? $page_data['views'] : 0;
-
-            return $page_data;
         }
+
+        // Update page title
+        $this->page_title = $page_data['page_title'];
+
+        // Update language
+        if (!empty($page_data['localization']) && !defined('PAGE_LANGUAGE')) define('PAGE_LANGUAGE', " lang=\"{$page_data['localization']}\"");
+
+        // Page content
+        $this->page_content = $page_data['content'];
+
+        // Published status
+        $this->published = $page_data['published_status'];
+
+        // Page id
+        $this->page_id = $page_data['id'];
+
+        // Author
+        $this->page_author = $page_data['created_by'];
+
+        // Date created
+        $this->page_created_date = $page_data['date_created'];
+
+        // Head tags
+        $this->head_tags = $page_data['head_tags'];
+
+        // Published date
+        $this->page_published_date = $page_data['date_published'];
+
+        // Published date
+        $this->page_updated_date = $page_data['date_updated'];
+
+        // Page views
+        $this->views = !empty($page_data['views']) ? $page_data['views'] : 0;
+
+        $this->thumbnail = $page_data['thumbnail'];
+
+        return $page_data;
+        
     }
 }
