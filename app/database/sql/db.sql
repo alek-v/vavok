@@ -134,7 +134,6 @@ CREATE TABLE IF NOT EXISTS `online` (
 
 
 
--- site pages
 CREATE TABLE IF NOT EXISTS `pages` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
   `page_title` varchar(255) NULL,
@@ -151,7 +150,8 @@ CREATE TABLE IF NOT EXISTS `pages` (
   `content` longtext NULL,
   `type` varchar(20) DEFAULT NULL,
   `views` int(11) NOT NULL DEFAULT 0,
-  `default_img` varchar(120) DEFAULT NULL,
+  `default_img` varchar(255) DEFAULT NULL,
+  `thumbnail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;

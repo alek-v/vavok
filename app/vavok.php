@@ -10,16 +10,24 @@ define('START_TIME', microtime(true));
 const VERSION = '4.10';
 
 // Base directory
-if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
+if (!defined('BASEDIR')) {
+    define('BASEDIR', rtrim(__DIR__, 'app'));
+}
 
 // Application directory
-if (!defined('APPDIR')) define('APPDIR', __DIR__ . '/');
+if (!defined('APPDIR')) {
+    define('APPDIR', __DIR__ . '/');
+}
 
 // Storage directory
-if (!defined('STORAGEDIR')) define('STORAGEDIR', BASEDIR . 'storage/');
+if (!defined('STORAGEDIR')) {
+    define('STORAGEDIR', BASEDIR . 'storage/');
+}
 
 // Public directory
-if (!defined('PUBLICDIR')) define('PUBLICDIR', rtrim($_SERVER['SCRIPT_FILENAME'], 'index.php'));
+if (!defined('PUBLICDIR')) {
+    define('PUBLICDIR', rtrim($_SERVER['SCRIPT_FILENAME'], 'index.php'));
+}
 
 // Define configuration constants from .env file
 if (file_exists(BASEDIR . '.env')) {
