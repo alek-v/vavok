@@ -7,7 +7,7 @@
 use App\Classes\Vavok;
 
 define('START_TIME', microtime(true));
-const VERSION = '4.9';
+const VERSION = '4.10';
 
 // Base directory
 if (!defined('BASEDIR')) define('BASEDIR', rtrim(__DIR__, 'app'));
@@ -59,4 +59,4 @@ date_default_timezone_set('UTC');
 
 require BASEDIR . 'vendor/autoload.php';
 
-new Vavok;
+new Vavok();
