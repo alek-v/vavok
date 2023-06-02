@@ -1,5 +1,52 @@
 # Changelog
 
+## Vavok v4.9 - 2.6.2023.
+
+    feat: Show category title
+    style: Replace link with a button in the cookie consent notification
+    style: Update users profile
+    style: Remove flags from the localization link
+    style: Update HTML tags with hyphen
+    style: Update site CSS
+    refactor: Update localization keys and values
+    refactor: Handle when page doesn't exist
+    refactor: Set default file for the error logs
+    refactor: Set default values for the content of the page
+    refactor: Remove links to the home page
+    refactor: Remove homepage link from the page templates
+    refactor: Remove duplicated code
+    refactor: Remove default link to the homepage
+    refactor: Remove setting for Facebook comments on the page
+    refactor: Rename JS filename of the cookie consent
+    refactor: Cookie consent update, SEO improvements
+    refactor: Update time format
+    refactor: Use date format from the localization file
+    refactor: Show edit button to edit the page
+    refactor: Remove option for additional administrator permissions
+    refactor: Solved undefined array key
+    refactor: Create session key if it is not already created
+    refactor: Rename table name
+    refactor: Update localization keys and date formats
+    refactor: Rename setting keys
+    refactor: Show current hostname while installation
+    refactor: Update localization key
+    refactor: Update insert query for default page
+    refactor: Rename database columns
+    refactor: Remove route for IP ban option
+    refactor: Remove update for renaming database columns
+    refactor: Create log files on install
+    refactor: Remove log files
+    refactor: Update localization
+    refactor: Remove newmsg column from the database
+    refactor: Rename database columns
+    refactor: Handle 404 page, send correct header status code
+    refactor: Update default site stage
+    fix: Set configuration property
+    fix: Show lang attribute
+    perf: Reduce number of database requests
+
+
+
 ## Vavok v4.7 - 4.2.2023.
 
     feat: Add new configuration options
