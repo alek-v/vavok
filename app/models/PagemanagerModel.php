@@ -119,65 +119,65 @@ class PagemanagerModel extends BaseModel {
 
         // Add a new page
         if ($this->postAndGet('action') == 'add_new_page') {
-            $newfile = !empty($this->postAndGet('newfile')) ? $this->postAndGet('newfile') : '';
+            $new_file = !empty($this->postAndGet('newfile')) ? $this->postAndGet('newfile') : '';
             $type = !empty($this->postAndGet('type')) ? $this->postAndGet('type') : '';
             $allow_unicode = $this->postAndGet('allow_unicode') == 'on' ? true : false;
 
             // page title
-            $page_title = $newfile;
+            $page_title = $new_file;
 
             // page name in url
             if ($allow_unicode === false) {
                 // remove unicode chars
-                $newfile = $this->trans($newfile);
+                $new_file = $this->trans($new_file);
             } else {
-                $newfile = $this->translateUnicode($newfile);
+                $new_file = $this->translateUnicode($new_file);
             }
 
             // page language
             if (!empty($this->postAndGet('localization'))) {
-                $pagelocalization = $this->postAndGet('localization');
+                $page_localization = $this->postAndGet('localization');
 
-                $pagelocalization_file = '_' . $pagelocalization;
+                $page_localization_file = '_' . $page_localization;
             } else {
-                $pagelocalization = '';
-                $pagelocalization_file = '';
+                $page_localization = '';
+                $page_localization_file = '';
             }
 
-            if (!empty($newfile)) {
+            if (!empty($new_file)) {
                 // Check if page exists
-                $include_where = !empty($pagelocalization) ? ' AND localization = :localization' : '';
-                $include_bind = !empty($pagelocalization) ? [':localization' => $pagelocalization] : '';
+                $include_where = !empty($page_localization) ? ' AND localization = :localization' : '';
+                $include_bind = !empty($page_localization) ? [':localization' => $page_localization] : '';
 
-                $page_bind = [':slug' => $newfile];
+                $page_bind = [':slug' => $new_file];
                 if (!empty($include_bind)) $page_bind = array_merge($page_bind, $include_bind);
                 if ($page_editor->pageExists('slug = :slug' . $include_where, 'where', $page_bind)) {
                     $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=new&isset=mp_pageexists');
                 }
 
                 // Full page address used for meta and open graph tags
-                if ($newfile == 'index') {
+                if ($new_file == 'index') {
                     // Index page
-                    $page_url = $this->websiteHomeAddress() . '/' . $pagelocalization;
+                    $page_url = $this->websiteHomeAddress() . '/' . $page_localization;
                 } elseif ($type == 'post') {
                     // Blog post
-                    $page_url = $this->websiteHomeAddress() . '/blog/' . $newfile;
-                } elseif ($newfile != 'index') {
+                    $page_url = $this->websiteHomeAddress() . '/blog/' . $new_file;
+                } elseif ($new_file != 'index') {
                     // Page
-                    $page_url = $this->websiteHomeAddress() . '/page/' . $newfile;
+                    $page_url = $this->websiteHomeAddress() . '/page/' . $new_file;
                 }
 
                 // page filename
-                $newfiles = $newfile . $pagelocalization_file . '.php';
+                $new_files = $new_file . $page_localization_file . '.php';
 
                 // insert db data
                 $values = array(
-                'slug' => $newfile,
-                'localization' => $pagelocalization,
+                'slug' => $new_file,
+                'localization' => $page_localization,
                 'date_created' => time(),
                 'date_updated' => time(),
                 'updated_by' => $this->user->userIdNumber(),
-                'file' => $newfiles,
+                'file' => $new_files,
                 'created_by' => $this->user->userIdNumber(),
                 'published_status' => '1',
                 'date_published' => '0',
@@ -350,7 +350,7 @@ class PagemanagerModel extends BaseModel {
             $this->page_data['content'] .= '</p>';
             $this->page_data['content'] .= '<br />' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $id, $this->localization->string('edit')) . '<br />';
             $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=delete_page&id=' . $id, $this->localization->string('delete')) . '<br />';
-            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}} ' . $showname) . '<br />';
+            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}') . '<br />';
         }
 
         if ($this->postAndGet('action') == 'edit') {
@@ -418,8 +418,9 @@ class PagemanagerModel extends BaseModel {
                 $this->page_data['content'] .= '<p>';
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}');
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
-                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // update lang
-                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // update lang
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // TODO: Update lang
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // TODO: Update lang
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/thumbnail/' . $page_id, 'Thumbnail');
                 $this->page_data['content'] .= '</p>';
             } else {
                 $this->page_data['content'] .= $this->showDanger($this->localization->string('file') . ' ' . $file . ' ' . $this->localization->string('noexist'));
@@ -623,7 +624,7 @@ class PagemanagerModel extends BaseModel {
             $form->set('fields', $form->merge($fields));
 
             // Show form
-            $form->set('localization[save]', $this->localization->string('newpage'));
+            $form->set('localization[save]', $this->localization->string('save'));
             $this->page_data['content'] .= $form->output();
         } 
 
@@ -704,10 +705,7 @@ class PagemanagerModel extends BaseModel {
 
         $this->page_data['content'] .= '<p>';
 
-        if ($this->postAndGet('action') != 'new') {
-            $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=new', $this->localization->string('newpage')) . '<br />';
-        }
-
+        $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=new', $this->localization->string('newpage')) . '<br />';
         $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/blogcategory', 'Blog category management') . '<br />';
 
         // Todo: Update localization
@@ -724,5 +722,68 @@ class PagemanagerModel extends BaseModel {
         $this->page_data['content'] .= '</p>';
 
         return $this->page_data;
+    }
+
+    public function thumbnail(array $params)
+    {
+        // Check access permissions
+        if (!$this->user->administrator()) {
+            $this->redirection('../?auth_error');
+        }
+
+        $page_id = $params[1] ?? 0;
+
+        $this->page_data['page_title'] = 'Thumbnail';
+
+        $page_editor = new PageManager($this->container);
+
+        $page_details = $page_editor->selectPage($page_id);
+
+        if (empty($page_details)) {
+            return $this->handleNoPageError();
+        }
+
+        // Create form
+        $thumbnail_field = $this->container['parse_page'];
+        $thumbnail_field->load('forms/input');
+        $thumbnail_field->set('label_value', 'Thumbnail');
+        $thumbnail_field->set('label_for', 'thumbnail');
+        $thumbnail_field->set('input_name', 'thumbnail');
+        $thumbnail_field->set('input_id', 'thumbnail');
+        $thumbnail_field->set('input_placeholder', 'Address of the thumbnail');
+        $thumbnail_field->set('input_type', 'text');
+        $thumbnail_field->set('input_value', $page_details['thumbnail']);
+
+        $form = $this->container['parse_page'];
+        $form->load('forms/form');
+        $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/update_thumbnail/' . $page_id);
+        $form->set('form_method', 'post');
+        $form->set('fields', $thumbnail_field->output());
+
+        $this->page_data['content'] .= $form->output();
+
+        return $this->page_data;
+    }
+
+    public function update_thumbnail(array $params)
+    {
+        // Check access permissions
+        if (!$this->user->administrator()) {
+            $this->redirection('../?auth_error');
+        }
+
+        $page_id = $params[1] ?? 0;
+
+        $page_editor = new PageManager($this->container);
+
+        $page_details = $page_editor->selectPage($page_id);
+
+        if (empty($page_details)) {
+            return $this->handleNoPageError();
+        }
+
+        $page_editor->updateThumbnail($page_id, $this->postAndGet('thumbnail'));
+
+        $this->redirection(HOMEDIR . 'adminpanel/pagemanager/thumbnail/' . $page_id);
     }
 }

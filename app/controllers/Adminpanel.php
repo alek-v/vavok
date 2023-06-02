@@ -120,12 +120,14 @@ class Adminpanel extends Controller {
     /**
     * Page manager
     */
-    public function pagemanager()
+    public function pagemanager($params = [])
     {
         $model = $this->model('PagemanagerModel');
- 
+
+        $page = $this->handlePage($params);
+
         // Pass page to the view
-        $this->view('adminpanel/pagemanager', $model->index());
+        $this->view('adminpanel/pagemanager', $model->$page($params));
     }
 
     /**

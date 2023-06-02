@@ -57,14 +57,19 @@ class PageManager {
         $this->db->delete('tags', "page_id = '{$id}'");
 
         // Insert new tags
-        if (substr_count($tags, ' ') == 0) $tags = array($tags); 
-        else { $tags = explode(' ', $tags); }
+        if (substr_count($tags, ' ') == 0) {
+            $tags = array($tags);
+        }
+        else {
+            $tags = explode(' ', $tags);
+        }
 
         foreach ($tags as $key => $value) {
             $values = array(
                 'page_id' => $id,
                 'tag_name' => $value
             );
+
             $this->db->insert('tags', $values);
         }
     }
@@ -320,6 +325,7 @@ class PageManager {
         foreach ($sql as $key => $value) {
             $tags .= ' ' . $value['tag_name'];
         }
+
         return trim($tags);
     }
 
@@ -343,5 +349,17 @@ class PageManager {
         }
 
         return $edmode;
+    }
+
+    /**
+     * Update thumbnail
+     * 
+     * @param integer $id
+     * @param string $thumbnail
+     * @return void
+     */
+    public function updateThumbnail(int $id, string $thumbnail): void
+    {
+        $this->db->update('pages', 'thumbnail', $thumbnail, "id='{$id}'");
     }
 }

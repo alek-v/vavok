@@ -868,7 +868,6 @@ class UsersModel extends BaseModel {
             $this->page_data['content'] .= $this->showDanger('<img src="' . STATIC_THEMES_URL . '/images/img/error.gif" alt="Error"> ' . $this->localization->string('user_does_not_exist'));
 
             return $this->page_data;
-            exit;
         }
 
         $this->page_data['page_title'] = '{@localization[profile]}} ' . $uz;

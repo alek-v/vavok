@@ -13,15 +13,12 @@ abstract class Controller {
     public function __construct()
     {
         // Instantiate dependency injection container
-        $container = new Container();
-
-        $container['db'] = fn() => Database::instance();
-        $container['config'] = fn($c) => new Config($c);
-        $container['user'] = fn($c) => new User($c);
-        $container['parse_page'] = $container->factory(fn($c) => new ParsePage($c));
-        $container['localization'] = new Localization();
-
-        $this->container = $container;
+        $this->container = new Container();
+        $this->container['db'] = fn() => Database::instance();
+        $this->container['config'] = fn($c) => new Config($c);
+        $this->container['user'] = fn($c) => new User($c);
+        $this->container['parse_page'] = $this->container->factory(fn($c) => new ParsePage($c));
+        $this->container['localization'] = new Localization();
     }
 
     /**
@@ -95,5 +92,17 @@ abstract class Controller {
 
         // Pass localization data to method and show the page
         echo $page->show($this->container['localization']->getStrings());
+    }
+
+    /**
+     * Get page name from the params
+     * 
+     * @param array $params
+     * @return string
+     */
+    protected function handlePage($params = [])
+    {
+        $params[0] ??= 'index';
+        return $params[0];
     }
 }

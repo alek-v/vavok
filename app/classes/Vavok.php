@@ -50,10 +50,14 @@ class Vavok {
         }
 
         // Cookie-free domain for uploaded files
-        if (!defined('STATIC_UPLOAD_URL')) define('STATIC_UPLOAD_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/fls');
+        if (!defined('STATIC_UPLOAD_URL')) {
+            define('STATIC_UPLOAD_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/fls');
+        }
 
         // Cookie-free domain for themes
-        if (!defined('STATIC_THEMES_URL')) define('STATIC_THEMES_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/themes');
+        if (!defined('STATIC_THEMES_URL')) {
+            define('STATIC_THEMES_URL', $this->currentConnection() . $_SERVER['HTTP_HOST'] . '/themes');
+        }
 
         // Parameters from the URL
         $url = $this->paramsFromUrl();
@@ -102,7 +106,7 @@ class Vavok {
         }
 
         // Get params
-        $this->params = $url ? array_values($url) : [];
+        $this->params = array_values($url);
 
         // Method of the controller to call
         $method_to_call = $this->currentMethod;
