@@ -9,13 +9,15 @@ use App\Classes\Navigation;
 use App\Classes\BlogComments;
 
 class BlogModel extends BaseModel {
-    private string $page_title;            // Title
-    private ?string $page_content;         // Content
-    private int $published;                // Visitors can see page
-    private string $page_author;           // Page author
-    private string $page_created_date;     // Page created date
-    private string $head_tags;             // Head tags
-    private string $page_published_date;   // Date when post is published
+    private int $page_id;
+    private string $page_title;
+    private ?string $page_content;
+    private int $published;
+    private string $page_author;
+    private string $page_created_date;
+    private string $head_tags;
+    private string $page_published_date;
+    private ?string $thumbnail;
 
     /**
      * Blog
@@ -67,7 +69,7 @@ class BlogModel extends BaseModel {
                 $post->set('created_date', $this->correctDate($this->page_created_date, $this->localization->showAll()['date_format']));
 
                 // Time published
-                // If article is not published and page is viewed by administrator use current time
+                // Use current time if article is not published, and page is viewed by administrator
                 if (!empty($this->page_published_date)) {
                     $post->set('published_date', $this->correctDate($this->page_published_date, $this->localization->showAll()['date_format']));
                 } else {
@@ -263,8 +265,15 @@ class BlogModel extends BaseModel {
                 // Merge blog posts and output from object
                 $show_page->set('posts', $page_posts->merge($all_posts));
 
-                // page navigation
-                $navigation = new Navigation($items_per_page, $total_posts, './?');
+                $navigation_link = './?';
+
+                // Handle case when URI doesn't end with '/' sign
+                if (!str_ends_with($_SERVER['REQUEST_URI'], '/') && !isset($_GET['page'])) {
+                    $navigation_link = $_SERVER['REQUEST_URI'] . '/?';
+                }
+
+                // Navigation
+                $navigation = new Navigation($items_per_page, $total_posts, $navigation_link);
 
                 $show_page->set('navigation', $navigation->getNavigation());
 
