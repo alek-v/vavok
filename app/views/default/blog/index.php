@@ -7,15 +7,12 @@
         {@category-list}}
         </ul>
     </div>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row d-flex justify-content-around">
         {@posts}}
     </div>
     <div class="row blog-navigation">
-        <div class="col-8 mt-5">
+        <div class="col-8">
             {@navigation}}
-        </div>
-        <div class="col-4 text-right">
-            <!--<p>Page 1 of 1</p>-->
         </div>
     </div>
 </div>
