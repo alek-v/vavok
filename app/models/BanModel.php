@@ -157,7 +157,7 @@ class BanModel extends BaseModel {
                 }
 
                 $this->page_data['content'] .= '<p>' . $this->localization->string('banend') . ' ' . $this->formatTime($ost_time) . '</p>';
-                $this->page_data['content'] .= '<p>' . $this->localization->string('ban_reason') . ': ' . $this->check($this->user->userInfo('ban_description', $userx_id)) . '</p>';
+                $this->page_data['content'] .= '<p>' . $this->localization->string('ban_reason:') . ': ' . $this->check($this->user->userInfo('ban_description', $userx_id)) . '</p>';
                 $this->page_data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/addban/?action=deleteban&users=' . $user, $this->localization->string('delban')) . '</p><hr>';
             }
         }
