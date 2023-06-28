@@ -1,10 +1,9 @@
 <?php
-// modified: 05.06.2020. 20:01:42
 // (c) vavok.net
 
 $lang_ban['banned'] = "Ban";
 $lang_ban['banned1'] = "You have been banned";
-$lang_ban['bandesc'] = "Ban reason";
+$lang_ban['ban_reason'] = "Ban reason";
 $lang_ban['timetoend'] = "Time left before ban expires";
 $lang_ban['banno'] = "Number of bans";
 $lang_ban['becarefnr'] = "Be careful, take care not to violate the rules";

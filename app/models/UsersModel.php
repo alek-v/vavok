@@ -821,7 +821,7 @@ class UsersModel extends BaseModel {
 
         if ($time_ban > 0) {
             $this->page_data['content'] .= '<img src="../themes/images/img/error.gif" alt=""> <b>{@localization[banned1]}}</b><br /><br />';
-            $this->page_data['content'] .= '<b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b>';
+            $this->page_data['content'] .= '<b><font color="#FF0000">{@localization[ban_reason]}}: ' . $bandesc . '</font></b>';
 
             $this->page_data['content'] .= '<br>{@localization[timetoend]}} ' . $this->formatTime($time_ban);
 
@@ -834,7 +834,7 @@ class UsersModel extends BaseModel {
             $this->page_data['content'] .= '<p><img src="../themes/images/img/open.gif" alt=""> {@localization[wasbanned]}}</p>';
 
             if (!empty($bandesc)) {
-                $this->page_data['content'] .= '<p><b><font color="#FF0000">{@localization[bandesc]}}: ' . $bandesc . '</font></b></p>';
+                $this->page_data['content'] .= '<p><b><font color="#FF0000">{@localization[ban_reason]}}: ' . $bandesc . '</font></b></p>';
             }
         
             $this->user->updateUser('banned', 0);

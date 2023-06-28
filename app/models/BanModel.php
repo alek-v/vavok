@@ -137,7 +137,7 @@ class BanModel extends BaseModel {
                 $input_textarea = $this->container['parse_page'];
                 $input_textarea->load('forms/textarea');
                 $input_textarea->set('label_for', 'udd39');
-                $input_textarea->set('label_value', $this->localization->string('bandesc'));
+                $input_textarea->set('label_value', $this->localization->string('ban_reason'));
                 $input_textarea->set('textarea_id', 'udd39');
                 $input_textarea->set('textarea_name', 'udd39');
 
@@ -157,7 +157,7 @@ class BanModel extends BaseModel {
                 }
 
                 $this->page_data['content'] .= '<p>' . $this->localization->string('banend') . ' ' . $this->formatTime($ost_time) . '</p>';
-                $this->page_data['content'] .= '<p>' . $this->localization->string('bandesc') . ': ' . $this->check($this->user->userInfo('ban_description', $userx_id)) . '</p>';
+                $this->page_data['content'] .= '<p>' . $this->localization->string('ban_reason') . ': ' . $this->check($this->user->userInfo('ban_description', $userx_id)) . '</p>';
                 $this->page_data['content'] .= '<p>' . $this->sitelink(HOMEDIR . 'adminpanel/addban/?action=deleteban&users=' . $user, $this->localization->string('delban')) . '</p><hr>';
             }
         }
@@ -271,7 +271,7 @@ class BanModel extends BaseModel {
         if ($noi > 0) {
             foreach ($this->db->query($sql) as $item) {
                 if ($item['banned'] == 1) {
-                    $this->page_data['content'] .= '<div class="a"><p>' . $this->sitelink(HOMEDIR . 'users/u/' . $item['name'], $item['name']) . ' <small>{@localization[banduration]}}: ' . $this->correctDate($this->user->userInfo('ban_time', $item['id']), 'd.m.y.') . ' | {@localization[bandesc]}}: ' . $this->user->userInfo('ban_description', $item['id']) . '</small></p></div>';
+                    $this->page_data['content'] .= '<div class="a"><p>' . $this->sitelink(HOMEDIR . 'users/u/' . $item['name'], $item['name']) . ' <small>{@localization[banduration]}}: ' . $this->correctDate($this->user->userInfo('ban_time', $item['id']), 'd.m.y.') . ' | {@localization[ban_reason]}}: ' . $this->user->userInfo('ban_description', $item['id']) . '</small></p></div>';
                 }
             }
         } else {

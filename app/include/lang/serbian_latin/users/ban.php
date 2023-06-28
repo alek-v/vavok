@@ -1,9 +1,8 @@
 <?php
-// modified: 05.06.2020. 20:14:42
 
 $lang_ban['banned'] = "Kazna";
 $lang_ban['banned1'] = "Kažnjeni ste";
-$lang_ban['bandesc'] = "Razlog kazne";
+$lang_ban['ban_reason'] = "Razlog kazne:";
 $lang_ban['timetoend'] = "Do kraja kazne ostalo je";
 $lang_ban['banno'] = "Broj kazni";
 $lang_ban['becarefnr'] = "Budite pažljivi, trudite se da ne narušavate pravila";
