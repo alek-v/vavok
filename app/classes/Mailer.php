@@ -228,4 +228,30 @@ class Mailer {
 
         return $available_mails;
     }
+
+    /**
+     * Use email template, and insert email in the queue
+     * 
+     * @param string $email
+     * @param string $subject
+     * @param string $message
+     * @param array $options
+     * @return void
+     */
+    public function queueHtmlEmail(string $email, string $subject, string $message, array $options = []): void
+    {
+        $options['email_template'] ??= 'default';
+        $options['sender_email'] ??= '';
+        $options['sender_name'] ??= '';
+        $options['priority'] ??= 'normal';
+
+        // Insert email text into the email template
+        $template = $this->container['parse_page'];
+        $template->load('email_templates/' . $options['email_template']);
+        $template->set('subject', $subject);
+        $template->set('body', $message);
+        $email_body = $template->output();
+
+        $this->queueEmail($email, $subject, $email_body, $options['sender_email'], $options['sender_name'], $options['priority']);
+    }
 }

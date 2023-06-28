@@ -21,6 +21,7 @@ abstract class BaseModel {
         'content' => '',
         'head_tags' => ''
     ];
+    protected $user_data;
 
     public function __construct(protected Container $container)
     {

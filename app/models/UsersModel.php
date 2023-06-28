@@ -50,7 +50,7 @@ class UsersModel extends BaseModel {
                 return $this->page_data;
             }
             // Continue if email does not exist in database
-            elseif ($this->user->emailExists($this->postAndGet('meil'))) {
+            elseif ($this->user->emailExists($this->postAndGet('email'))) {
                 $this->page_data['content'] .= $this->showDanger($this->localization->string('emailexists'));
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
@@ -66,7 +66,7 @@ class UsersModel extends BaseModel {
                 return $this->page_data;
             }
             // Continue if email is valid
-            elseif (!$this->validateEmail($this->postAndGet('meil'))) {
+            elseif (!$this->validateEmail($this->postAndGet('email'))) {
                 $this->page_data['content'] .= $this->showDanger($this->localization->string('badmail'));
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
                 // Pass page to the view
@@ -77,13 +77,14 @@ class UsersModel extends BaseModel {
             elseif ($this->recaptchaResponse($this->postAndGet('g-recaptcha-response'))['success'] == false) {
                 $this->page_data['content'] .= $this->showDanger($this->localization->string('badcaptcha'));
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'users/register', $this->localization->string('back'), '<p>', '</p>');
+
                 // Pass page to the view
                 $this->page_data['page_template'] = 'users/register/register_try';
                 return $this->page_data;
             }
 
             $password = $this->postAndGet('par', true);
-            $mail = htmlspecialchars(stripslashes(strtolower($this->postAndGet('meil'))));
+            $mail = strtolower($this->postAndGet('email'));
 
             if ($this->configuration->getValue('confirm_registration') == 1) {
                 $registration_key = time() + 24 * 60 * 60;
@@ -110,7 +111,7 @@ class UsersModel extends BaseModel {
             }
 
             // Email text
-            $regmail = "<p>" . $this->localization->string('hello') . " " . $this->postAndGet('log') . "!</p>
+            $email_content = "<p>" . $this->localization->string('hello') . " " . $this->postAndGet('log') . "!</p>
             <p>" . $this->localization->string('emailpart1') . " " . $this->configuration->getValue('home_address') . "</p>
             <p>" . $this->localization->string('emailpart2') . ":</p>
             <p>" . $this->localization->string('username') . ": " . $this->postAndGet('log') . "</p>
@@ -120,18 +121,11 @@ class UsersModel extends BaseModel {
             // Email subject
             $subject = $this->localization->string('regonsite') . ' ' . $this->configuration->getValue('title');
 
-            // Insert email text into the email template
-            $template = $this->container['parse_page'];
-            $template->load('email_templates/default');
-            $template->set('subject', $subject);
-            $template->set('body', $regmail);
-            $email_body = $template->output();
-
             // Send confirmation email
             $newMail = new Mailer($this->container);
 
             // Add to the email queue
-            $newMail->queueEmail($mail, $subject, $email_body, '', '', $priority = 'high');
+            $newMail->queueHtmlEmail($mail, $subject, $email_content, ['priority' => 'high']);
 
             // Registration completed successfully
             $completed = 'successfully';

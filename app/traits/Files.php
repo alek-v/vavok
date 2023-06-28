@@ -16,7 +16,9 @@ trait Files {
     {
         $result = file_put_contents($filename, '');
 
-        if ($result === false) throw new FileException('File ' . $filename . ' is not writeable.');
+        if ($result === false) {
+            throw new FileException('File ' . $filename . ' is not writeable.');
+        }
 
         return true;
     }
@@ -31,8 +33,13 @@ trait Files {
     public function linesInFile(string $filename): int
     {
         $count_lines = 0;
-        if (file_exists($filename)) $count_lines = count(file($filename));
-        else throw new FileException('File ' . $filename . ' does not exist.');
+
+        if (file_exists($filename)) {
+            $count_lines = count(file($filename));
+        }
+        else {
+            throw new FileException('File ' . $filename . ' does not exist.');
+        }
 
         return $count_lines;
     }
@@ -84,7 +91,9 @@ trait Files {
             $result = file_put_contents(STORAGEDIR . $filename, $data, LOCK_EX);
         }
 
-        if (!$result) throw new FileException('File ' . STORAGEDIR . $filename . ' is not writeable.');
+        if (!$result) {
+            throw new FileException('File ' . STORAGEDIR . $filename . ' is not writeable.');
+        }
     }
 
     /**
@@ -96,6 +105,9 @@ trait Files {
     public function makeFileWriteable(string $filename): void
     {
         $result = chmod(STORAGEDIR . $filename, 0777);
-        if (!$result) throw new FileException('Cannot change CHMOD permissions of the file ' . STORAGEDIR . $filename);
+        
+        if (!$result) {
+            throw new FileException('Cannot change CHMOD permissions of the file ' . STORAGEDIR . $filename);
+        }
     }
 }

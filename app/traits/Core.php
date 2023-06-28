@@ -803,7 +803,9 @@ trait Core {
         }
 
         // Handle case when return key is not set
-        if (!empty($return_key) && !isset($arrays[$return_key])) return '';
+        if (!empty($return_key) && !isset($arrays[$return_key])) {
+            return '';
+        }
 
         return $return;
     }

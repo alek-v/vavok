@@ -19,7 +19,7 @@
             </div>
             <div>
                 <label>{@localization[email]}}</label>
-                <input type="text" name="meil" maxlength="40" />
+                <input type="text" name="email" maxlength="40" />
                 <span class="error">This is an error</span>
             </div>
             <div>

@@ -264,12 +264,12 @@ class ProfileModel extends BaseModel {
             // Add email to the queue
             $mailQueue = new Mailer($this->container);
 
-            $msg = "Hello {$this->user->showUsername()}<br /><br />
-            In order to add this email to your profile at site {$this->websiteHomeAddress()}
-            please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a>';
-            $msg .= '<br /><br />If you received this email by mistake please ignore it.';
+            $message = "<p>Hello {$this->user->showUsername()}!</p>
+            <p>In order to add this email to your profile at site {$this->websiteHomeAddress()}
+            please follow link to confirm email address " . '<a href="' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '">' . $this->websiteHomeAddress() . '/profile/confirm_email/?token=' . $token . '</a></p>';
+            $message .= '<p>If you received this email by mistake please ignore it.</p>';
 
-            $mailQueue->queueEmail($email, 'Confirm new email address', $msg);
+            $mailQueue->queueHtmlEmail($email, 'Confirm new email address', $message);
         }
 
         $this->redirection(HOMEDIR . 'profile');
@@ -285,9 +285,8 @@ class ProfileModel extends BaseModel {
         }
 
         if ($this->postAndGet('confirmed') == 'yes') {
-            $delete_id = $this->user->userIdNumber();
-
-            $this->user->deleteUser($delete_id);
+            $this->user->deleteUser($this->user->userIdNumber());
+            $this->user->logout();
 
             $this->redirection(HOMEDIR);
         }
