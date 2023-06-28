@@ -440,7 +440,7 @@ class User {
         }
 
         // vavok_users table fields
-        $vavok_users_valid_fields = array('name', 'pass', 'access_permission', 'skin', 'browsers', 'ip_address', 'timezone', 'banned', 'localization');
+        $vavok_users_valid_fields = array('name', 'password', 'access_permission', 'skin', 'browsers', 'ip_address', 'timezone', 'banned', 'localization');
 
         // vavok_profile table fields
         $vavok_profile_valid_fields = array('subscribed', 'subscription_code', 'personal_status', 'registration_date', 'registration_activated', 'registration_key', 'ban_time', 'ban_description', 'last_ban', 'all_bans', 'last_visit');

@@ -153,30 +153,33 @@ class ProfileModel extends BaseModel {
         $form->set('form_action', HOMEDIR . 'profile/newpass');
 
         // New pass
-        $newpar = $this->container['parse_page'];
-        $newpar->load('forms/input');
-        $newpar->set('label_for', 'newpar');
-        $newpar->set('label_value', $this->localization->string('newpass'));
-        $newpar->set('input_id', 'newpar');
-        $newpar->set('input_name', 'newpar');
+        $new_password = $this->container['parse_page'];
+        $new_password->load('forms/input');
+        $new_password->set('label_for', 'new_password');
+        $new_password->set('label_value', $this->localization->string('newpass'));
+        $new_password->set('input_id', 'new_password');
+        $new_password->set('input_name', 'new_password');
+        $new_password->set('input_type', 'password');
 
         // New pass again
-        $newpar2 = $this->container['parse_page'];
-        $newpar2->load('forms/input');
-        $newpar2->set('label_for', 'newpar2');
-        $newpar2->set('label_value', $this->localization->string('passagain'));
-        $newpar2->set('input_id', 'newpar2');
-        $newpar2->set('input_name', 'newpar2');
+        $new_password2 = $this->container['parse_page'];
+        $new_password2->load('forms/input');
+        $new_password2->set('label_for', 'new_password2');
+        $new_password2->set('label_value', $this->localization->string('passagain'));
+        $new_password2->set('input_id', 'new_password2');
+        $new_password2->set('input_name', 'new_password2');
+        $new_password2->set('input_type', 'password');
 
         // Current password
-        $oldpar = $this->container['parse_page'];
-        $oldpar->load('forms/input');
-        $oldpar->set('label_for', 'oldpar');
-        $oldpar->set('label_value', $this->localization->string('oldpass'));
-        $oldpar->set('input_id', 'oldpar');
-        $oldpar->set('input_name', 'oldpar');
+        $old_password = $this->container['parse_page'];
+        $old_password->load('forms/input');
+        $old_password->set('label_for', 'old_password');
+        $old_password->set('label_value', $this->localization->string('oldpass'));
+        $old_password->set('input_id', 'old_password');
+        $old_password->set('input_name', 'old_password');
+        $old_password->set('input_type', 'password');
 
-        $form->set('fields', $form->merge(array($newpar, $newpar2, $oldpar)));
+        $form->set('fields', $form->merge(array($new_password, $new_password2, $old_password)));
         $this->page_data['change_password'] = $form->output();
 
         if (!empty($this->user->userInfo('photo'))) {
@@ -304,7 +307,7 @@ class ProfileModel extends BaseModel {
         $this->page_data['page_title'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
-        if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2')) {
+        if ($this->postAndGet('new_password', true) !== $this->postAndGet('new_password2', true)) {
             $this->page_data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
             // Pass page to the view
@@ -312,11 +315,11 @@ class ProfileModel extends BaseModel {
         }
 
         // Check if old password is correct and update users password with new password
-        if ($this->user->passwordCheck($this->postAndGet('oldpar', true), $this->user->userInfo('password'))) {
+        if ($this->user->passwordCheck($this->postAndGet('old_password', true), $this->user->userInfo('password'))) {
             // Update password
-            $this->user->updateUser('pass', $this->user->passwordEncrypt($this->postAndGet('newpar', true)));
+            $this->user->updateUser('password', $this->user->passwordEncrypt($this->postAndGet('new_password', true)));
 
-            $this->redirection($this->websiteHomeAddress() . "/users/login");
+            $this->page_data['content'] = $this->showNotification('Password has been updated.');
         } else {
             $this->page_data['content'] = $this->showDanger('{@localization[nopass]}}');
         }
