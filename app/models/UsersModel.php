@@ -809,7 +809,9 @@ class UsersModel extends BaseModel {
     {
         $this->page_data['page_title'] = '{@localization[banned]}}';
 
-        if (!$this->user->userAuthenticated()) $this->redirection('../');
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection('../');
+        }
 
         // Ban description
         $bandesc = $this->user->userInfo('ban_description');
@@ -870,6 +872,16 @@ class UsersModel extends BaseModel {
             return $this->page_data;
         }
 
+        $this->page_data['head_tags'] .= '<style>
+            .user-profile p:empty {
+                display: inline;
+            }
+            .photo img {
+                max-width: 130px;
+                max-height: 130px;
+            }
+        </style>';
+
         $this->page_data['page_title'] = '{@localization[profile]}} ' . $uz;
 
         // Load page from template
@@ -892,14 +904,16 @@ class UsersModel extends BaseModel {
         $showPage->set('user-online', $this->user->userOnline($uz));
 
         // Message if user need to confirm registration
-        if ($this->user->userInfo('registration_activated', $users_id) == 1) $showPage->set('regCheck', '<b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '!</font></b><br>');
+        if ($this->user->userInfo('registration_activated', $users_id) == 1) {
+            $showPage->set('regCheck', '<p><b><font color="#FF0000">' . $this->localization->string('notconfirmedreg') . '</font></b></p>');
+        }
 
         if ($this->user->userInfo('banned', $users_id) == 1 && $this->user->userInfo('ban_time', $users_id) > time()) {
             $profileBanned = $this->container['parse_page'];
             $profileBanned->load('users/user-profile/banned');
-            $profileBanned->set('banned', $this->localization->string('userbanned') . '!');
+            $profileBanned->set('banned', $this->localization->string('userbanned'));
             $time_ban = round($this->user->userInfo('ban_time', $users_id) - time());
-            $profileBanned->set('timeLeft', $this->localization->string('bantimeleft') . ': ' . formatTime($time_ban));
+            $profileBanned->set('timeLeft', $this->localization->string('bantimeleft') . ': ' . $this->formatTime($time_ban));
             $profileBanned->set('reason', $this->localization->string('reason') . ': ' . $this->user->userInfo('ban_description', $users_id));
             $showPage->set('banned', $profileBanned->output());
         }

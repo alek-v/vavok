@@ -17,15 +17,12 @@ class ProfileModel extends BaseModel {
             $this->redirection(HOMEDIR . 'users/login');
         }
 
-        $this->page_data['head_tags'] = '
-        <style>
+        $this->page_data['head_tags'] = '<style>
             .photo img {
-                max-width: 100px;
-                max-height: 100px;
-                overflow: hidden;
+                max-width: 130px;
+                max-height: 130px;
             }
-        </style>
-        ';
+        </style>';
         $this->page_data['page_title'] = $this->localization->string('profile_settings');
 
         $form = $this->container['parse_page'];
@@ -262,7 +259,7 @@ class ProfileModel extends BaseModel {
             $this->db->insert('tokens', $data);
 
             // Add email to the queue
-            $mailQueue = new Mailer;
+            $mailQueue = new Mailer();
 
             $msg = "Hello {$this->user->showUsername()}<br /><br />
             In order to add this email to your profile at site {$this->websiteHomeAddress()}
@@ -307,13 +304,11 @@ class ProfileModel extends BaseModel {
         $this->page_data['page_title'] = '{@localization[profile]}}';
 
         // Passwords from both password fields should match
-        if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2'))
-        {
+        if ($this->postAndGet('newpar') !== $this->postAndGet('newpar2')) {
             $this->page_data['content'] = $this->showDanger('{@localization[nonewpass]}}');
 
             // Pass page to the view
-            $this->view('profile/newpassword', $this->page_data);
-            exit;
+            return $this->page_data;
         }
 
         // Check if old password is correct and update users password with new password
@@ -363,7 +358,7 @@ class ProfileModel extends BaseModel {
         $input = $this->container['parse_page'];
         $input->load('forms/input');
         $input->set('label_for', 'file');
-        $input->set('label_value', 'Change your profile photography:');
+        $input->set('label_value', 'Change your profile photography');
         $input->set('input_type', 'file');
         $input->set('input_name', 'file');
 
@@ -386,15 +381,13 @@ class ProfileModel extends BaseModel {
 
         // Page data
         $this->page_data['page_title'] = 'Change Photography';
-        $this->page_data['head_tags'] = '
-        <style>
+        $this->page_data['head_tags'] = '<style>
             .photo img {
                 max-width: 100px;
                 max-height: 100px;
                 overflow: hidden;
             }
-        </style>
-        ';
+        </style>';
 
         // File path cannot be empty
         if (empty($_FILES['file']['tmp_name'])) {
@@ -410,51 +403,58 @@ class ProfileModel extends BaseModel {
         $av_file = file($_FILES['file']['tmp_name']);
         $av_string = substr($avat_name, strrpos($avat_name, '.') + 1);
         $av_string = strtolower($av_string);
+        $upload_error = null;
 
-        if ($avat_size < 5242880) {
-            if ($width < 1024 && $height < 1024) {
-                if ($av_string == "gif" || $av_string == "jpg" || $av_string == "jpeg" || $av_string == "png") {
-                    if ($av_file) {
-                        // Remove old photo
-                        if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif");
-                        } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg")) {
-                            unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg");
-                        }
-
-                        // Add new photo
-                        copy($_FILES['file']['tmp_name'], STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string);
-                        $ch = $_FILES['file']['tmp_name'];
-                        chmod($ch, 0777);
-                        chmod(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string . "", 0777);
-
-                        $this->user->updateUser('photo', 'gallery/photo/' . $this->user->userIdNumber());
-
-                        $this->page_data['user_id'] = $this->user->userIdNumber();
-
-                        // Pass page to the view
-                        $this->view('profile/savephoto', $this->page_data);
-                        exit;
-                    } else {
-                        $this->page_data['content'] .= $this->showDanger('Error uploading photography');
-                    }
-                } else {
-                    $this->page_data['content'] .= $this->showDanger($this->localization->string('badfileext'));
-                }
-            } else {
-                $this->page_data['content'] .= $this->showDanger('Photography must be under 1024px');
-            }
-        } else {
+        // Check file size
+        if ($avat_size > 5242880) {
             $this->page_data['content'] .= $this->showDanger($this->localization->string('filemustb') . ' under 5 MB');
+
+            $upload_error = 1;
+        }
+
+        // Check image size in pixels
+        if ($width > 1024 || $height > 1024) {
+            $this->page_data['content'] .= $this->showDanger('Photography must be 1024px or smaller.');
+
+            $upload_error = 1;
+        }
+
+        // Allowed image formats
+        if ($av_string != "gif" && $av_string != "jpg" && $av_string != "jpeg" && $av_string != "png") {
+            $this->page_data['content'] .= $this->showDanger($this->localization->string('badfileext'));
+
+            $upload_error = 1;
+        }
+
+        if ($upload_error == null) {
+            // Remove old photo
+            if (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg")) {
+                unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpg");
+            } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png")) {
+                unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".png");
+            } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif")) {
+                unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".gif");
+            } elseif (file_exists(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg")) {
+                unlink(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . ".jpeg");
+            }
+
+            // Add new photo
+            copy($_FILES['file']['tmp_name'], STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string);
+            $ch = $_FILES['file']['tmp_name'];
+            chmod($ch, 0777);
+            chmod(STORAGEDIR . "dataphoto/" . $this->user->userIdNumber() . "." . $av_string . "", 0777);
+
+            $this->user->updateUser('photo', 'gallery/photo/' . $this->user->userIdNumber());
+
+            $this->page_data['user_id'] = $this->user->userIdNumber();
+
+            // Pass page to the view
+            $this->page_data['content'] .= $this->showNotification('Photography has been updated.');
         }
 
         $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'profile/photo', $this->localization->string('back'), '<p>', '</p>');
 
-        // Pass page to the view
+        // Pass page content to the view
         return $this->page_data;
     }
 

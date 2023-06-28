@@ -1,16 +1,4 @@
-<style>
-    .user-profile {
-        margin-bottom: 15px;
-    }
-    .user-profile p:empty {
-        display: inline;
-    }
-    .photo img {
-        max-width: 130px;
-        max-height: 130px;
-    }
-</style>
-<div class="user-profile">
+<div class="user-profile mb-5">
     <div class="d-block b rounded">
         {@sex-img}} {@first_name}} {@last_name}} <em>{@nickname}}</em> {@user-online}}
     </div>
@@ -38,4 +26,3 @@
         </div>
     </div>
 </div>
-{@homepage}}
