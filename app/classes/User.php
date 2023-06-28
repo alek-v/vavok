@@ -414,7 +414,6 @@ class User {
         $this->db->delete('buddy', "target = '{$users_id}' OR name = '{$users_id}'");
         $this->db->delete('subs', "user_id = '{$users_id}'");
         $this->db->delete('notif', "uid = '{$users_id}'");
-        $this->db->delete('specperm', "uid = '{$users_id}'");
         if ($this->db->tableExists('group_members')) $this->db->delete('group_members', "uid = '{$users_id}'");
     }
 
@@ -506,30 +505,6 @@ class User {
     {
         // Access level
         $this->updateUser('access_permission', $permission_id, $user_id);
-
-        $default_permissions = array(
-            101 => array(),
-            102 => array(),
-            103 => array(),
-            104 => array(),
-            105 => array(),
-            106 => array('adminpanel' => 'show', 'adminchat' => 'show,insert', 'adminlist' => 'show', 'reglist' => 'show'),
-            107 => array()
-        );
-
-        foreach ($default_permissions[$permission_id] as $key => $value) {
-            // Insert data to database if data does not exsist
-            if ($this->db->countRow('specperm', "permname='{$key}' AND uid='{$user_id}'") == 0) {
-                $values = array(
-                    'permname' => $key,
-                    'permacc' => $value,
-                    'uid' => $user_id
-                );
-
-                // Insert data to database
-                $this->db->insert('specperm', $values);
-            }
-        }
     }
 
     /**

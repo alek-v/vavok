@@ -68,8 +68,8 @@ ALTER TABLE `vavok_about` ADD CONSTRAINT `vavok_about_fk_1` FOREIGN KEY (`uid`) 
 CREATE TABLE IF NOT EXISTS `inbox` (
   `id` bigint(20) NOT NULL auto_increment,
   `text` MEDIUMTEXT NOT NULL,
-  `byuid` int(9) NOT NULL default '0',
-  `touid` int(9) NOT NULL default '0',
+  `byuid` bigint(20) NOT NULL default '0',
+  `touid` bigint(20) NOT NULL default '0',
   `unread` char(1) NOT NULL default '1',
   `timesent` int(10) NOT NULL default '0',
   `starred` char(1) NOT NULL default '0',
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS `inbox` (
 
 CREATE TABLE IF NOT EXISTS `blocklist` (
   `id` bigint(20) NOT NULL auto_increment,
-  `name` int(99) NOT NULL default '0',
-  `target` int(99) NOT NULL default '0',
+  `name` bigint(20) NOT NULL default '0',
+  `target` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
@@ -91,8 +91,8 @@ CREATE TABLE IF NOT EXISTS `blocklist` (
 
 CREATE TABLE IF NOT EXISTS `buddy` (
   `id` bigint(20) NOT NULL auto_increment,
-  `name` int(99) NOT NULL default '0',
-  `target` int(99) NOT NULL default '0',
+  `name` bigint(20) NOT NULL default '0',
+  `target` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
@@ -112,10 +112,10 @@ CREATE TABLE IF NOT EXISTS `mlog` (
 CREATE TABLE IF NOT EXISTS `subs` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
-  `user_mail` varchar(80) DEFAULT NULL,
-  `user_pass` varchar(80) DEFAULT NULL,
+  `user_mail` varchar(255) DEFAULT NULL,
+  `user_pass` varchar(255) DEFAULT NULL,
   `date_subscribed` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `subscription_name` varchar(50) DEFAULT NULL,
+  `subscription_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -171,18 +171,6 @@ CREATE TABLE IF NOT EXISTS `notif` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 ;
-
-
-
--- special permissions
-CREATE TABLE IF NOT EXISTS `specperm` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `uid` bigint(20) NOT NULL default '0',
-  `permname` varchar(120) NOT NULL COMMENT 'permission name',
-  `permacc` varchar(120) NOT NULL COMMENT 'defined permissions (view, edit, delete)',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 
 

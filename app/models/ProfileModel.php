@@ -262,7 +262,7 @@ class ProfileModel extends BaseModel {
             $this->db->insert('tokens', $data);
 
             // Add email to the queue
-            $mailQueue = new Mailer();
+            $mailQueue = new Mailer($this->container);
 
             $msg = "Hello {$this->user->showUsername()}<br /><br />
             In order to add this email to your profile at site {$this->websiteHomeAddress()}
