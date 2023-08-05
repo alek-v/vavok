@@ -60,6 +60,9 @@ class BlogModel extends BaseModel {
                 $post = $this->container['parse_page'];
                 $post->load('blog/post');
 
+                // Page meta tags
+                $this->page_data['head_tags'] = $this->head_tags;
+
                 // Author link
                 $author_full_name = $this->user->userInfo('full_name', $this->page_author);
                 $author_name = !empty($author_full_name) ? $author_full_name : $this->user->getNickFromId($this->page_author);

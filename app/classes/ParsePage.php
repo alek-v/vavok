@@ -18,8 +18,11 @@ class ParsePage {
     protected string $localization;     // Localization
     protected string $head_data;        // Meta tags
     protected string $notification;     // Notification on the page
+    protected string $page_name;
+    protected int $views;
     protected array  $values = array(); // Values to replace on the page template
-    protected object $db;
+    protected Database $db;
+    protected Config $configuration;
 
     public function __construct(protected Container $container)
     {
@@ -170,10 +173,14 @@ class ParsePage {
         $this->set('content', $this->content);
 
         // HTML Language
-        if (!empty($this->localization)) $this->set('page_language', " lang=\"{$this->localization}\"");
+        if (!empty($this->localization)) {
+            $this->set('page_language', " lang=\"{$this->localization}\"");
+        }
 
         // Cookie consent
-        if ($this->configuration->getValue('cookie_consent') == 1) require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        if ($this->configuration->getValue('cookie_consent') == 1) {
+            require APPDIR . 'include/plugins/cookie_consent/cookie_consent.php';
+        }
 
         // Data in <head> tag
         $this->set('head_metadata', $this->head_data);
@@ -182,14 +189,24 @@ class ParsePage {
         $this->set('title', $this->title);
 
         // Notification
-        if (!empty($this->notification)) $this->set('show_notification', $this->showDanger($this->notification));
+        if (!empty($this->notification)) {
+            $this->set('show_notification', $this->showDanger($this->notification));
+        }
 
-        if ($this->configuration->getValue('show_online') == 1) $this->set('show_online', $this->showOnline());
-        if ($this->configuration->getValue('show_counter') != 6) $this->set('show_counter', $this->showCounter());
-        if ($this->configuration->getValue('page_generation_time') == 1) $this->set('show_generation_time', $this->showPageGenTime());
+        if ($this->configuration->getValue('show_online') == 1) {
+            $this->set('show_online', $this->showOnline());
+        }
+        if ($this->configuration->getValue('show_counter') != 6) {
+            $this->set('show_counter', $this->showCounter());
+        }
+        if ($this->configuration->getValue('page_generation_time') == 1) {
+            $this->set('show_generation_time', $this->showPageGenTime());
+        }
 
         // Show database queries while debugging
-        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') $this->set('show_debug', $this->db->showDbQueries());
+        if (defined('SITE_STAGE') && SITE_STAGE == 'debug') {
+            $this->set('show_debug', $this->db->showDbQueries());
+        }
 
         // Remove empty keys, parse language keys and return page content
         return preg_replace('/{@(.*?)}}/' , '', $this->parseLanguage($this->output(), $localization));

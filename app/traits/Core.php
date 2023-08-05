@@ -857,17 +857,25 @@ trait Core {
     public function pageHeadMetatags(array $page_data): string
     {
         // Page title
-        if (isset($page_data['page_title'])) $title = $page_data['page_title'];
+        if (isset($page_data['page_title'])) {
+            $title = $page_data['page_title'];
+        }
 
         // Tags for all pages at the website
         $tags = file_get_contents(STORAGEDIR . 'header_meta_tags.dat');
 
         // Tags for this page only
-        if (isset($page_data['head_tags'])) $tags .= $page_data['head_tags'];
+        if (isset($page_data['head_tags'])) {
+            $tags .= $page_data['head_tags'];
+        }
 
         // Add missing open graph tags
-        if (!strstr($tags, 'og:type')) $tags .= "\n" . '<meta property="og:type" content="website" />';
-        if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration->getValue('title')) $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
+        if (!strstr($tags, 'og:type')) {
+            $tags .= "\n" . '<meta property="og:type" content="website" />';
+        }
+        if (!strstr($tags, 'og:title') && isset($title) && !empty($title) && $title != $this->configuration->getValue('title')) {
+            $tags .= "\n" . '<meta property="og:title" content="' . $title . '" />';
+        }
 
         return $tags;
     }
