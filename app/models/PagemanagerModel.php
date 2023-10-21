@@ -292,7 +292,7 @@ class PagemanagerModel extends BaseModel {
             $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
             $this->page_data['content'] .= $navigation->getNavigation();
 
-            $this->page_data['content'] .= '<p>Total pages: <b>{@localization[total_pages]}}</b></p>';
+            $this->page_data['content'] .= '<p>{@localization[total_pages]}}: <b>' . (int)$total_pages . '</b></p>';
         }
 
         if ($this->postAndGet('action') == 'show') {
