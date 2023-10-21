@@ -1,10 +1,8 @@
 <?php
 // (c) vavok.net
-// modified: 21.06.2020. 20:18:07
 
 $lang_home['rows'] = "Redova";
 $lang_home['filelist'] = "Spisak fajlova";
-$lang_home['totpages'] = "Ukupno fajlova";
 $lang_home['shwingpage'] = "Prikaz stranice";
 $lang_home['edit'] = "Izmeni";
 $lang_home['newfile'] = "Novi fajl";
@@ -27,3 +25,4 @@ $lang_home['pgaddress'] = "Adresa strane";
 $lang_home['with'] = 'sa';
 $lang_home['or'] = 'ili';
 $lang_home['pagetitle'] = 'Naslov stranice';
+$lang_home['total_pages'] = 'Ukupno stranica';

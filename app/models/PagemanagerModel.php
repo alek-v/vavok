@@ -44,10 +44,6 @@ class PagemanagerModel extends BaseModel {
             if (!empty($id) && !empty($text_files)) {
                 $page_info = $page_editor->selectPage($id, 'created_by, published_status');
 
-                if ($page_info['created_by'] != $this->user->userIdNumber() && $page_info['published_status'] != 1 && !$this->user->administrator()) {
-                    $this->redirection(HOMEDIR . '?isset=ap_noaccess');
-                }
-
                 // Update DB data
                 $page_editor->update($id, $text_files);
             }
@@ -56,7 +52,6 @@ class PagemanagerModel extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'savetags') {
-
             $tags = !empty($this->postAndGet('tags')) ? $this->postAndGet('tags') : '';
 
             if (isset($tags)) {
@@ -253,7 +248,7 @@ class PagemanagerModel extends BaseModel {
         }
 
         if (empty($this->postAndGet('action'))) {
-            $this->page_data['content'] .= '<h1>{@localization[filelist]}}</h1>';
+            $this->page_data['content'] .= '<h1>Pages</h1>'; // todo: update localization
 
             $total_pages = $page_editor->totalPages();
 
@@ -297,7 +292,7 @@ class PagemanagerModel extends BaseModel {
             $navigation = new Navigation($config_editfiles, $total_pages, HOMEDIR . 'adminpanel/pagemanager/?');
             $this->page_data['content'] .= $navigation->getNavigation();
 
-            $this->page_data['content'] .= '<p>{@localization[totpages]}}: <b>' . (int)$total_pages . '</b></p>';
+            $this->page_data['content'] .= '<p>Total pages: <b>{@localization[total_pages]}}</b></p>';
         }
 
         if ($this->postAndGet('action') == 'show') {
@@ -566,7 +561,7 @@ class PagemanagerModel extends BaseModel {
             </style>
             ';
 
-            $this->page_data['content'] .= '<h1>{@localization[newfile]}}</h1>';
+            $this->page_data['content'] .= '<h1>New page</h1>'; // todo: update localization
 
             $form = $this->container['parse_page'];
             $form->load('forms/form');
@@ -634,10 +629,10 @@ class PagemanagerModel extends BaseModel {
             $page_data = $page_editor->selectPage($id);
 
             if (!empty($id)) {
-                $this->page_data['content'] .= $this->localization->string('confdelfile') . ' <b>' . $page_data['page_title'] . '</b><br />';
-                $this->page_data['content'] .= '<p></p><b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=confirmed_page_delete&id=' . $id, $this->localization->string('delete')) . '</b></p>';
+                $this->page_data['content'] .= '<p>' . $this->localization->string('confdelfile') . ' <b>' . $page_data['page_title'] . '</b></p>';
+                $this->page_data['content'] .= '<p><b>' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=confirmed_page_delete&id=' . $id, $this->localization->string('delete')) . '</b></p>';
             } else {
-                $this->page_data['content'] .= $this->localization->string('nofiletodel') . '<br />';
+                $this->page_data['content'] .= '<p>' . $this->localization->string('nofiletodel') . '</p>';
             }
 
             $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/', $this->localization->string('back')) . '<br />';

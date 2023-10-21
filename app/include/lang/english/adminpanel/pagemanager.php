@@ -3,7 +3,6 @@
 
 $lang_home['rows'] = "Rows";
 $lang_home['filelist'] = "File list";
-$lang_home['totpages'] = "Total files";
 $lang_home['shwingpage'] = "Showing page";
 $lang_home['edit'] = "Edit";
 $lang_home['newfile'] = "New file";
@@ -26,3 +25,4 @@ $lang_home['pgaddress'] = "Page address";
 $lang_home['with'] = 'with';
 $lang_home['or'] = 'or';
 $lang_home['pagetitle'] = 'Page title';
+$lang_home['total_pages'] = 'Total pages';

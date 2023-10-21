@@ -1,10 +1,8 @@
 <?php
 // (c) vavok.net
-// modified: 21.06.2020. 20:18:04
 
 $lang_home['rows'] = "Редова";
 $lang_home['filelist'] = "Списак фајлова";
-$lang_home['totpages'] = "Укупно фајлова";
 $lang_home['shwingpage'] = "Приказ странице";
 $lang_home['edit'] = "Измени";
 $lang_home['newfile'] = "Нови фајл";
@@ -27,3 +25,4 @@ $lang_home['pgaddress'] = "Адреса стране";
 $lang_home['with'] = 'са';
 $lang_home['or'] = 'или';
 $lang_home['pagetitle'] = 'Наслов странице';
+$lang_home['total_pages'] = 'Укупно страница';
