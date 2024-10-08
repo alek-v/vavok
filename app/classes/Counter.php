@@ -9,6 +9,7 @@ use Pimple\Container;
 
 class Counter {
     protected object $db;
+    protected $bot;
 
     public function __construct($is_reg, $users_ip, $users_browser, $bot, protected Container $container)
     {

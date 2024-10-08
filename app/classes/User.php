@@ -23,6 +23,8 @@ class User {
         'language' => 'english',
         'banned' => 0
     ];
+    protected $visited_pages;
+    protected $time_on_site;
 
     public function __construct(protected Container $container)
     {
