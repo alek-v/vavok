@@ -7,6 +7,8 @@
 use App\Classes\Vavok;
 
 define('START_TIME', microtime(true));
+
+// App version 
 const VERSION = '4.10';
 
 // Base directory
@@ -34,16 +36,24 @@ if (file_exists(BASEDIR . '.env')) {
     $enviroment = file(BASEDIR . '.env');
 
     for ($i=0; $i < count($enviroment); $i++) {
-        if (!empty($enviroment[$i])) $env_data = explode('=', trim($enviroment[$i]));
+        if (!empty($enviroment[$i])) {
+            $env_data = explode('=', trim($enviroment[$i]));
+        }
 
         // Get value
-        if (isset($env_data[1]) && $env_data[1] == 'null') $env_data[1] = '';
+        if (isset($env_data[1]) && $env_data[1] == 'null') {
+            $env_data[1] = '';
+        }
 
         // Don't create empty constants for this names
-        if (($env_data[0] == 'STATIC_UPLOAD_URL' || $env_data[0] == 'STATIC_THEMES_URL') && empty($env_data[1])) continue;
+        if (($env_data[0] == 'STATIC_UPLOAD_URL' || $env_data[0] == 'STATIC_THEMES_URL') && empty($env_data[1])) {
+            continue;
+        }
 
         // Get and define constant name
-        if (!empty($env_data[0])) define($env_data[0], $env_data[1]);
+        if (!empty($env_data[0])) {
+            define($env_data[0], $env_data[1]);
+        }
     }
 }
 
