@@ -707,18 +707,18 @@ class UsersModel extends BaseModel {
             // Notification settings
             $inbox_notification = empty($inbox_notification) ? 0 : 1;
 
-            $check_inb = $this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'");
+            $check_inb = $this->db->countRow('notifications', "uid='{$this->user->userIdNumber()}' AND type='inbox'");
             if ($check_inb > 0) {
-                $this->db->update('notif', 'active', $inbox_notification, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
+                $this->db->update('notifications', 'active', $inbox_notification, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
             } else {
-                $this->db->insert('notif', array('active' => $inbox_notification, 'uid' => $this->user->userIdNumber(), 'type' => 'inbox'));
+                $this->db->insert('nonotificationstif', array('active' => $inbox_notification, 'uid' => $this->user->userIdNumber(), 'type' => 'inbox'));
             }
 
             // redirect
             $this->redirection(HOMEDIR . 'users/settings/?isset=editsetting');
         }
 
-        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->userIdNumber(), ':type' => 'inbox'], 'active');
+        $inbox_notif = $this->db->selectData('notifications', 'uid = :uid AND type = :type', [':uid' => $this->user->userIdNumber(), ':type' => 'inbox'], 'active');
 
         $form = $this->container['parse_page'];
         $form->load('forms/form');

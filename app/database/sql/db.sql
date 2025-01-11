@@ -162,7 +162,7 @@ INSERT INTO `pages` (`id`, `page_title`, `slug`, `localization`, `date_created`,
 
 
 -- notifications
-CREATE TABLE IF NOT EXISTS `notif` (
+CREATE TABLE IF NOT EXISTS `notifications` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `uid` bigint(20) NOT NULL DEFAULT '0',
   `type` varchar(20) NOT NULL COMMENT 'notification department',

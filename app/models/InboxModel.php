@@ -20,7 +20,7 @@ class InboxModel extends BaseModel {
         if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR);
 
         // Update notification data
-        if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
+        if ($this->db->countRow('notifications', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notifications', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
         $this->page_data['head_tags'] = '<meta name="robots" content="noindex">';
         $this->page_data['page_title'] = '{@localization[inbox]}}';
@@ -76,7 +76,7 @@ class InboxModel extends BaseModel {
     public function dialog()
     {
         // Update notification data
-        if ($this->db->countRow('notif', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notif', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
+        if ($this->db->countRow('notifications', "uid='{$this->user->userIdNumber()}' AND type='inbox'") > 0) $this->db->update('notifications', 'lstinb', 0, "uid='{$this->user->userIdNumber()}' AND type='inbox'");
 
         $this->page_data['head_tags'] = '<meta name="robots" content="noindex">
         <script src="' . HOMEDIR . 'include/js/inbox.js"></script>
@@ -142,11 +142,15 @@ class InboxModel extends BaseModel {
      */
     public function send_message()
     {
-        if (!$this->user->userAuthenticated()) $this->redirection(HOMEDIR . 'pages/login');
+        if (!$this->user->userAuthenticated()) {
+            $this->redirection(HOMEDIR . 'pages/login');
+        }
 
         // This is ajax request
-        // Counter will not threat this as new click/visit
-        if (!defined('DYNAMIC_REQUEST')) define('DYNAMIC_REQUEST', true);
+        // Assign constant DYNAMIC_REQUEST so counter will not threat this as new click/visit
+        if (!defined('DYNAMIC_REQUEST')) {
+            define('DYNAMIC_REQUEST', true);
+        }
 
         $pmtext = !empty($this->postAndGet('pmtext')) ? $this->postAndGet('pmtext') : '';
         $who = !empty($this->postAndGet('who')) ? $this->postAndGet('who') : '';
@@ -154,9 +158,6 @@ class InboxModel extends BaseModel {
         // dont send message to system
         if ($who == 0 || empty($who)) exit;
 
-        $inbox_notif = $this->db->selectData('notif', 'uid = :uid AND type = :type', [':uid' => $this->user->userIdNumber(), ':type' => 'inbox'], 'active');
-
-        $whonick = $this->user->getNickFromId($who);
         $byuid = $this->user->userIdNumber();
 
         $stmt = $this->db->query("SELECT MAX(timesent) FROM inbox WHERE byuid='{$byuid}'");

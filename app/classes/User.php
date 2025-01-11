@@ -360,7 +360,7 @@ class User {
 
         $this->db->insert('vavok_profile', array('uid' => $user_id, 'subscribed' => 0, 'registration_date' => time(), 'registration_activated' => $regkeys, 'registration_key' => $rkey, 'last_visit' => time()));
         $this->db->insert('vavok_about', array('uid' => $user_id, 'sex' => 'N', 'email' => $mail));
-        $this->db->insert('notif', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
+        $this->db->insert('notifications', array('uid' => $user_id, 'lstinb' => 0, 'type' => 'inbox'));
 
         // Send private message
         if (!empty($auto_message)) $this->autoMessage($auto_message, $user_id);
@@ -415,7 +415,7 @@ class User {
         $this->db->delete('blocklist', "target = '{$users_id}' OR name = '{$users_id}'");
         $this->db->delete('buddy', "target = '{$users_id}' OR name = '{$users_id}'");
         $this->db->delete('subs', "user_id = '{$users_id}'");
-        $this->db->delete('notif', "uid = '{$users_id}'");
+        $this->db->delete('notifications', "uid = '{$users_id}'");
         if ($this->db->tableExists('group_members')) $this->db->delete('group_members', "uid = '{$users_id}'");
     }
 
@@ -611,22 +611,22 @@ class User {
         $this->db->insert('inbox', array('text' => $pmtext, 'byuid' => $user_id, 'touid' => $who, 'timesent' => time()));
 
         $user_profile = $this->db->selectData('vavok_profile', 'uid = :uid', [':uid' => $who], 'last_visit');
-        $last_notif = $this->db->selectData('notif', 'uid = :uid AND :type', [':uid' => $who, ':type' => 'inbox'], 'lstinb, type'); 
+        $last_notif = $this->db->selectData('notifications', 'uid = :uid AND :type', [':uid' => $who, ':type' => 'inbox'], 'lstinb, type'); 
 
         // no data in database, insert data
         if (empty($last_notif['lstinb']) && empty($last_notif['type'])) {
-            $this->db->insert('notif', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
+            $this->db->insert('notifications', array('uid' => $who, 'lstinb' => $time, 'type' => 'inbox'));
         }
 
         $notif_expired = $last_notif['lstinb'] + 864000;
 
-        if (($user_profile['last_visit'] + 3600) < $time && $time > $notif_expired && ($inbox_notif['active'] == 1 || empty($inbox_notif['active']))) {
+        if (($user_profile['last_visit'] + 3600) < $time && $time > $notif_expired && ($last_notif['active'] == 1 || empty($last_notif['active']))) {
             $user_mail = $this->db->selectData('vavok_about', 'uid = :uid', [':uid' => $who], 'email');
 
             $send_mail = new Mailer($this->container);
             $send_mail->queueEmail($user_mail['email'], "Message on " . $this->configuration->getValue('home_address'), "Hello " . $this->getNickFromId($who) . "\r\n\r\nYou have new message on site " . $this->configuration->getValue('home_address'), '', '', 'normal'); // update lang
 
-            $this->db->update('notif', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
+            $this->db->update('notifications', 'lstinb', $time, "uid='" . $who . "' AND type='inbox'");
         }
     }
 
