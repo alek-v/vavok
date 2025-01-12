@@ -21,9 +21,9 @@ class Config {
         }
 
         // Additional settings
-        $this->settings['timezone'] = empty($config['timezone']) ? $config['timezone'] = 0 : $config['timezone']; // check is there timezone number set
-        $this->settings['siteTime'] = time() + ($config['timezone'] * 3600);
-        $this->settings['homeBase'] = str_replace('https://', '', isset($config['home_address']) ? str_replace('http://', '', $config['home_address']) : '');
+        $this->settings['timezone'] = empty($this->settings['timezone']) ? $this->settings['timezone'] = 0 : $this->settings['timezone']; // check is there timezone number set
+        $this->settings['siteTime'] = time() + ($this->settings['timezone'] * 3600);
+        $this->settings['homeBase'] = str_replace('https://', '', isset($this->settings['home_address']) ? str_replace('http://', '', $this->settings['home_address']) : '');
     }
 
     /**
