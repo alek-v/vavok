@@ -41,6 +41,12 @@ class Database extends PDO implements DBInterface {
     {
         if (self::$connection === null) {
             self::$connection = new self;
+
+            // Redirect to installation page if database is empty
+            if (!self::$connection->tableExists(DB_PREFIX . 'settings') && !strpos($_SERVER['REQUEST_URI'], 'install')) {
+                header("Location: /install");
+                exit;
+            }
         }
 
         return self::$connection;
