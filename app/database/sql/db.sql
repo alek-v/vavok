@@ -136,28 +136,28 @@ CREATE TABLE IF NOT EXISTS `online` (
 
 CREATE TABLE IF NOT EXISTS `pages` (
   `id` int(9) NOT NULL AUTO_INCREMENT,
-  `page_title` varchar(255) NULL,
+  `page_title` varchar(255),
   `slug` varchar(255) NOT NULL,
-  `localization` varchar(120) NULL,
-  `date_created` int(11) NULL,
-  `date_updated` int(11) NULL,
-  `updated_by` bigint(20) NULL,
-  `file` varchar(120) NULL,
-  `created_by` bigint(20) NULL,
+  `slug_group` varchar(255),
+  `localization` varchar(120),
+  `date_created` int(11),
+  `date_updated` int(11),
+  `updated_by` bigint(20),
+  `created_by` bigint(20),
   `head_tags` text,
-  `published_status` int(1) NULL,
-  `date_published` int(11) NULL,
-  `content` longtext NULL,
-  `type` varchar(20) DEFAULT NULL,
+  `published_status` int(1),
+  `date_published` int(11),
+  `content` longtext,
+  `type` varchar(20),
   `views` int(11) NOT NULL DEFAULT 0,
-  `default_img` varchar(255) DEFAULT NULL,
-  `thumbnail` varchar(255) DEFAULT NULL,
+  `default_img` varchar(255),
+  `thumbnail` varchar(255),
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
-INSERT INTO `pages` (`id`, `page_title`, `slug`, `localization`, `date_created`, `date_updated`, `updated_by`, `file`, `created_by`, `head_tags`, `published_status`, `date_published`, `content`, `type`, `views`, `default_img`) VALUES
-(1, 'Hello World', 'index', '', 0, 0, 2, 'index.php', 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/themes/images/img/hello-world.png\" alt=\"Hello World\" width=\"320\" height=\"320\" /></p>\r\n<p>&nbsp;</p>', NULL, 0, NULL);
+INSERT INTO `pages` (`id`, `page_title`, `slug`, `localization`, `date_created`, `date_updated`, `updated_by`, `created_by`, `head_tags`, `published_status`, `date_published`, `content`, `type`, `views`, `default_img`) VALUES
+(1, 'Hello World', 'index', '', 0, 0, 2, 0, NULL, 2, 0, '<h1 style=\"text-align: center;\">Hello World!</h1>\r\n<h2 style=\"text-align: center;\">This is my first page</h2>\r\n<p>&nbsp;</p>\r\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"/themes/images/img/hello-world.png\" alt=\"Hello World\" width=\"320\" height=\"320\" /></p>\r\n<p>&nbsp;</p>', NULL, 0, NULL);
 
 
 

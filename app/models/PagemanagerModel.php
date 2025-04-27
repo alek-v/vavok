@@ -84,10 +84,10 @@ class PagemanagerModel extends BaseModel {
                 $page_info = $page_editor->selectPage($id, 'created_by');
 
                 // Update data in database
-                $data = array(
+                $data = [
                     'head_tags' => $text_files,
                     'default_img' => $image
-                );
+                ];
                 $page_editor->headData($id, $data);
 
                 // Redirect
@@ -162,17 +162,14 @@ class PagemanagerModel extends BaseModel {
                     $page_url = $this->websiteHomeAddress() . '/page/' . $new_file;
                 }
 
-                // page filename
-                $new_files = $new_file . $page_localization_file . '.php';
-
                 // insert db data
                 $values = array(
                 'slug' => $new_file,
+                'slug_group' => $new_file,
                 'localization' => $page_localization,
                 'date_created' => time(),
                 'date_updated' => time(),
                 'updated_by' => $this->user->userIdNumber(),
-                'file' => $new_files,
                 'created_by' => $this->user->userIdNumber(),
                 'published_status' => '1',
                 'date_published' => '0',
@@ -358,7 +355,7 @@ class PagemanagerModel extends BaseModel {
             if (!empty($page_info)) {
                 $page_id = $page_info['id'];
 
-                $this->page_data['content'] .= '<p>Edit mode: ' . $edmode_name . '</p>';
+                $this->page_data['content'] .= "<p>Edit mode: $edmode_name</p>";
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
@@ -387,7 +384,8 @@ class PagemanagerModel extends BaseModel {
                 $this->page_data['content'] .= '<hr />';
 
                 // Todo: Update localization
-                $this->page_data['content'] .= '<p>Updating page ' . $page_info['slug'] . ' ' . $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=rename_page&id=' . $id, 'rename') . '</p>'; // update lang
+                $this->page_data['content'] .= "<p>Updating page: <strong>{$page_info['page_title']}</strong></p>";
+                $this->page_data['content'] .= "<p>Slug group: <strong>{$page_info['slug_group']}</strong></p>";
 
                 $form = $this->container['parse_page'];
                 $form->load('forms/form');
@@ -412,10 +410,12 @@ class PagemanagerModel extends BaseModel {
 
                 $this->page_data['content'] .= '<p>';
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagetitle?act=edit&id=' . $id, '{@localization[pagetitle]}}');
-                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=page_head_tags&id=' . $id, 'Head (meta) tags on this page'); // TODO: Update lang
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=rename_page&id=' . $id, 'Rename (change slug)');
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=update_page_localization&id=' . $id, 'Update page language');
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/?action=tags&id=' . $page_id, 'Tags'); // TODO: Update lang
                 $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/thumbnail/' . $page_id, 'Thumbnail');
+                $this->page_data['content'] .= $this->sitelink(HOMEDIR . 'adminpanel/pagemanager/change_slug_group/' . $page_id, 'Change slug group');
                 $this->page_data['content'] .= '</p>';
             } else {
                 $this->page_data['content'] .= $this->showDanger($this->localization->string('file') . ' ' . $file . ' ' . $this->localization->string('noexist'));
@@ -463,7 +463,7 @@ class PagemanagerModel extends BaseModel {
         }
 
         if ($this->postAndGet('action') == 'mainmeta') {
-            $this->page_data['content'] .= '<img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /><br />'; // update lang
+            $this->page_data['content'] .= '<p><img src="/themes/images/img/panel.gif" alt="" /> Edit tags in &lt;head&gt;&lt;/head&gt; on all pages<br /></p>'; // update lang
 
             $headtags = trim(file_get_contents(STORAGEDIR . 'header_meta_tags.dat'));
 
@@ -779,6 +779,72 @@ class PagemanagerModel extends BaseModel {
 
         $page_editor->updateThumbnail($page_id, $this->postAndGet('thumbnail'));
 
-        $this->redirection(HOMEDIR . 'adminpanel/pagemanager/thumbnail/' . $page_id);
+        $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_id);
+    }
+
+    // Change slug group
+    // This is used for multilingual pages
+    public function change_slug_group(array $params)
+    {
+        // Check access permissions
+        if (!$this->user->administrator()) {
+            $this->redirection('../?auth_error');
+        }
+
+        $page_id = $params[1] ?? 0;
+
+        $this->page_data['page_title'] = 'Change slug group';
+
+        $page_editor = new PageManager($this->container);
+
+        $page_details = $page_editor->selectPage($page_id);
+
+        if (empty($page_details)) {
+            return $this->handleNoPageError();
+        }
+
+        // Create form
+        $slug_group = $this->container['parse_page'];
+        $slug_group->load('forms/input');
+        $slug_group->set('label_value', 'Slug group');
+        $slug_group->set('label_for', 'slug_group');
+        $slug_group->set('input_name', 'slug_group');
+        $slug_group->set('input_id', 'slug_group');
+        $slug_group->set('input_placeholder', 'Slug group');
+        $slug_group->set('input_type', 'text');
+        $slug_group->set('input_value', $page_details['slug_group']);
+
+        $form = $this->container['parse_page'];
+        $form->load('forms/form');
+        $form->set('form_action', HOMEDIR . 'adminpanel/pagemanager/update_slug_group/' . $page_id);
+        $form->set('form_method', 'post');
+        $form->set('fields', $slug_group->output());
+
+        $this->page_data['content'] .= $form->output();
+
+        return $this->page_data;
+    }
+
+    // Update value of the slug group
+    public function update_slug_group(array $params)
+    {
+        // Check access permissions
+        if (!$this->user->administrator()) {
+            $this->redirection('../?auth_error');
+        }
+
+        $page_id = $params[1] ?? 0;
+
+        $page_editor = new PageManager($this->container);
+
+        $page_details = $page_editor->selectPage($page_id);
+
+        if (empty($page_details)) {
+            return $this->handleNoPageError();
+        }
+
+        $page_editor->updateSlugGroup($page_id, $this->postAndGet('slug_group'));
+
+        $this->redirection(HOMEDIR . 'adminpanel/pagemanager/?action=edit&id=' . $page_id);
     }
 }

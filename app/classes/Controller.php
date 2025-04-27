@@ -71,11 +71,12 @@ abstract class Controller {
         // Authentications
         $auth = $this->container['parse_page'];
 
-        // Load file for authenticated user
-        //if ($data['user']['authenticated']) $auth->load('includes/authenticated');
-        if ($this->container['user']->user_data['authenticated']) $auth->load('includes/authenticated');
-        // Load file for user that is not authenticated
-        if (!$this->container['user']->user_data['authenticated']) $auth->load('includes/not_authenticated');
+        // Load the file for an authenticated user, or default to loading for an unauthenticated user
+        if ($this->container['user']->user_data['authenticated']) {
+            $auth->load('includes/authenticated');
+        } else {
+            $auth->load('includes/not_authenticated');
+        }
 
         // Administrators
         if ($this->container['user']->user_data['admin_status'] == 'administrator' || $this->container['user']->user_data['admin_status'] == 'moderator') {

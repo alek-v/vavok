@@ -16,7 +16,7 @@ abstract class BaseModel {
     protected User $user;
     protected Localization $localization;
     protected Config $configuration;
-    // Set default values for the content of the page, this values can be extended or changed
+    // Set default values for the content of the page; these values can be extended or modified
     protected array $page_data = [
         'content' => '',
         'head_tags' => ''

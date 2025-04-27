@@ -1520,7 +1520,7 @@ class AdminpanelModel extends BaseModel {
             $msg = $this->replaceNewLines($this->postAndGet('msg'));
 
             // Get page data
-            $pageData = $this->db->selectData('pages', 'id = :id', [':id' => $id], 'file, head_tags');
+            $pageData = $this->db->selectData('pages', 'id = :id', [':id' => $id], 'head_tags');
         
             $headData = $pageData['head_tags'];
 
@@ -1552,7 +1552,7 @@ class AdminpanelModel extends BaseModel {
             $total = $nitems;
 
             if ($total < 1) {
-                $this->page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page titles not found!</b><br />';
+                $this->page_data['content'] .= '<br /><img src="' . HOMEDIR . 'themes/images/img/reload.gif" alt=""> <b>Page title not found!</b><br />';
             }
 
             $nitems = $this->db->countRow('pages', 'page_title is not null');

@@ -94,28 +94,6 @@ class PageManager {
 
         $this->db->update('pages', $fields, $values, "id='{$id}'");
 
-        // update cached index and menu pages
-        // this pages must be cached other pages are not cached
-        $file = $this->db->selectData('pages', "id = :id", [':id' => $id], 'file')['file'];
-
-        if (preg_match('/^index(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^menu_slider(?:!\.[a-z]{2}!)?\.php$/', $file) || preg_match('/^site-menu(?:!\.[a-z]{2}!)?\.php$/', $file)) {
-            $this->updateCached($file, $content);
-        }
-
-        return true;
-    }
-
-    /**
-     * Update cached file
-     *
-     * @param string $file
-     * @param string $content
-     * @return bool
-     * @throws FileException
-     */
-    public function updateCached(string $file, string $content): bool
-    {
-        $this->writeDataFile('datamain/' . $file, $content);
         return true;
     }
 
@@ -361,5 +339,17 @@ class PageManager {
     public function updateThumbnail(int $id, string $thumbnail): void
     {
         $this->db->update('pages', 'thumbnail', $thumbnail, "id='{$id}'");
+    }
+
+    /**
+     * Update slug grup
+     * 
+     * @param integer $id
+     * @param string $slug_group
+     * @return void
+     */
+    public function updateSlugGroup(int $id, string $slug_group): void
+    {
+        $this->db->update('pages', 'slug_group', $slug_group, "id='{$id}'");
     }
 }

@@ -53,7 +53,7 @@ class BlogModel extends BaseModel {
                     return $this->handleNoPageError();
                 }
 
-                // Update user's localization when page's language is different from current localization
+                // Update the user's localization when the page language differs from the current localization
                 $this->user->updatePageLocalization($this->page_data['localization']);
 
                 // Generate page

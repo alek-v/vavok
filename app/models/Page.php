@@ -62,20 +62,24 @@ class Page extends BaseModel {
     public function dynamic($params = [])
     {
         // Page data
-        $page_data = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
+        $full_data = $this->db->getMultilangPage($params[0]);
+
+        // Requested page wil always be in the first row
+        $page_data = $full_data[0];
 
         if (!empty($page_data) && isset($page_data['content'])) {
             $this->page_data = $page_data;
         }
+
         // Handle when page doesn't exist
         else {
             return $this->handleNoPageError();
         }
 
         // Page localization
-        $page_localization = isset($this->page_data['localization']) ? $this->page_data['localization'] : '';
+        $page_localization = $this->page_data['localization'] ?? '';
 
-        // Update user's localization when page's language is different then current localization
+        // Update the user's localization when the page language differs from the current localization
         $this->user->updatePageLocalization($page_localization);
 
         return $this->page_data;

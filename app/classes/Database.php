@@ -91,12 +91,17 @@ class Database extends PDO implements DBInterface {
     public function selectData(string $table, string $where = '', array $bind = array(), string $fields = '*'): array|bool
     {
         $sql = 'SELECT ' . $fields . ' FROM ' . DB_PREFIX . $table;
-        if (!empty($where))
+
+        if (!empty($where)) {
             $sql .= ' WHERE ' . $where;
+        }
+        
         $sql .= ';';
 
         // Count number of db queries while debugging
-        $this->dbQueries();
+        if (SITE_STAGE == 'development') {
+            $this->dbQueries();  
+        }
 
         $statement = $this->prepare($sql);
         $statement->execute($bind);
@@ -257,5 +262,53 @@ class Database extends PDO implements DBInterface {
         unset($_SESSION['db_queries']);
 
         return '<p class="site_db_queries">DB queries: ' . $queries . '</p>';
+    }
+
+    /**
+     * Select page with multilingual options
+     * First row will be our page, other row(s) will be localization options
+     * 
+     * @param string $slug
+     * @return array|bool
+     */
+    public function getMultilangPage($slug)
+    {
+        // SQL query with placeholders to prevent SQL injection
+        $sql = "
+            (
+                SELECT p1.id, p1.page_title, p1.slug_group, p1.localization, p1.slug, p1.content, p1.head_tags, p1.date_created, p1.date_updated, p1.created_by, p1.updated_by, p1.head_tags, p1.published_status, p1.date_published, p1.type, p1.views, p1.default_img, p1.thumbnail, 0 AS order_priority
+                FROM pages p1
+                WHERE p1.slug = :slug
+            )
+            UNION ALL
+            (
+                SELECT NULL AS id, NULL AS page_title, NULL AS slug_group, p2.localization, p2.slug, NULL AS content, NULL AS head_tags, NULL AS date_created, NULL AS date_updated, NULL AS created_by, NULL AS updated_by, NULL AS head_tags, NULL AS published_status, NULL AS date_published, NULL AS type,NULL AS views, NULL AS default_img, NULL AS thumbnail, 1 AS order_priority
+                FROM pages p2
+                WHERE p2.slug_group = (SELECT slug_group FROM pages WHERE slug = :slug)
+                AND p2.slug != :slug
+            )
+            ORDER BY order_priority, slug;
+        ";
+    
+        try {
+            // Prepare the SQL statement
+            $stmt = $this->prepare($sql);
+    
+            // Bind the parameter to the placeholder
+            $stmt->bindParam(':slug', $slug, PDO::PARAM_STR);
+    
+            // Execute the query
+            $stmt->execute();
+    
+            // Fetch all results
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Return fetched data
+            return $result;
+        } catch (PDOException $e) {
+            // Handle and log the error
+            error_log("Error in getMultilangPage: " . $e->getMessage());
+            return false; // Return false in case of failure
+        }
     }
 }

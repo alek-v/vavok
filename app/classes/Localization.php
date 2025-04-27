@@ -10,7 +10,7 @@ class Localization {
     public function __construct()
     {
         // Use language from session
-        $language = isset($_SESSION['lang']) ? $_SESSION['lang'] : '';
+        $language = $_SESSION['lang'] ?? '';
 
         // Check if language exist and set english if requested language doesn't exist
         if (!file_exists(APPDIR . 'include/lang/' . $language . '/index.php')) {
@@ -66,7 +66,7 @@ class Localization {
     }
 
     /**
-     * Return array with astrings only, no nested arrays
+     * Return array with a strings only, no nested arrays
      * 
      * @return array
      */
@@ -86,7 +86,7 @@ class Localization {
     }
 
     /**
-     * Current used localization
+     * Currently used localization
      *
      * @return string
      */
