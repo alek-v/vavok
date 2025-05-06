@@ -86,19 +86,6 @@ class AdminpanelModel extends BaseModel {
             $this->page_data['content'] .= '<p><img src="../themes/images/img/open.gif" alt="" /> {@localization[mlogcleaned]}}</p>';
         }
 
-        if ($this->postAndGet('action') == 'opttbl' && $this->user->administrator(101)) {
-            $all_tables = mysqli_query("SHOW TABLES");
-
-            while ($table = mysqli_fetch_assoc($all_tables)) {
-                foreach ($table as $db => $tablename) {
-                    $sql = "OPTIMIZE TABLE `{$tablename}`";
-                    $this->db->query($sql);
-                }
-            }
-
-            $this->page_data['content'] .= '<p><img src="/themes/images/img/reload.gif" alt="" /> Optimized successfully!</p>'; // todo: update lang
-        }
-
         // Pass data to the view
         return $this->page_data;
     }

@@ -67,7 +67,7 @@ class Page extends BaseModel {
         // Requested page wil always be in the first row
         $page_data = $full_data[0];
 
-        if (!empty($page_data) && isset($page_data['content'])) {
+        if (!empty($page_data) && ($page_data['published_status'] == 2 || $this->container['user']->administrator() || $this->container['user']->moderator())) {
             $this->page_data = $page_data;
         }
 
@@ -82,7 +82,7 @@ class Page extends BaseModel {
         // Update the user's localization when the page language differs from the current localization
         $this->user->updatePageLocalization($page_localization);
 
-        return $this->page_data;
+        return $full_data;
     }
 
     /**

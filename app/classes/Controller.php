@@ -52,15 +52,45 @@ abstract class Controller {
         }
 
         // Instantiate page parsing class
-        $page = $this->container['parse_page'];
+        $page = $this->container['parse_page'];        
+
+        // Verify whether we have details on multilingual pages or if it's a single-page setup.
+        $page_count = $page->countNestedArrays($data);
+        $page_data = $page_count > 0 ? $data[0] : $data;
+
         // Load the file from the view
-        $page->loadPage($view, $data);
+        $page->loadPage($view, $page_data);
 
         // Header
         $header = $this->container['parse_page'];
         $header->load('includes/header');
         // Set header for current page
         $page->set('header', $page->merge(array($header)));
+
+        // Show localization options
+        if ($page_count > 1) {
+            $localization_options = $this->container['parse_page'];
+            $localization_options->load('includes/header_page_localization');
+
+            // All localization options
+            $create_localization_option = '';
+            foreach ($data as $all_locale_options) {
+                if (is_array($all_locale_options)) {
+                    $option = $this->container['parse_page'];
+                    $option->load('includes/header_page_localization_option');
+                    $option->set('page_slug', $all_locale_options['slug']);
+                    $option->set('page_localization', $option->getLocalizationName($all_locale_options['localization']));
+                }
+                
+                $create_localization_option .= $page->merge(array($option));
+            }
+
+            // Load links into the page
+            $localization_options->set('localization_options', $create_localization_option);
+
+            // Set localization options for current page
+            $page->set('page_localization', $page->merge([$localization_options]));
+        }
 
         // Footer
         $footer = $this->container['parse_page'];

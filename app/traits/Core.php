@@ -929,4 +929,20 @@ trait Core {
             'content' => '{@localization[page_or_file_not_found]}}'
         ];    
     }
+
+    /**
+     * Count nested arrays
+     * @param array $array
+     * @return int
+     */
+    public function countNestedArrays(array $array) 
+    {
+        $count = 0;
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $count++;
+            }
+        }
+        return $count;
+    }
 }

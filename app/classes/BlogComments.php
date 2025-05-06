@@ -53,7 +53,6 @@ class BlogComments {
      */
     public function loadComments(int $pid, int $start, int $items_per_page): array
     {
-        $this->user = $this->container['user'];
         $all_posts = array();
 
         $sql = "SELECT * FROM comments WHERE pid = {$pid} ORDER BY id DESC LIMIT {$start}, {$items_per_page}";
@@ -63,7 +62,7 @@ class BlogComments {
             $page_posts->load('blog/comment');
 
             // Link to the user's profile
-            $page_posts->set('user', '<a href="' . HOMEDIR . 'users/u/' . $key['uid'] . '">' . $this->user->getNickFromId($key['uid']) . '</a>');
+            $page_posts->set('user', '<a href="' . HOMEDIR . 'users/u/' . $key['uid'] . '">' . $this->container['user']->getNickFromId($key['uid']) . '</a>');
 
             // User's comment
             $content = $key['comment'];

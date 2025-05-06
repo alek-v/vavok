@@ -20,6 +20,7 @@ class BlogModel extends BaseModel {
     private string $page_published_date;
     private ?string $page_content;
     private ?string $thumbnail;
+    private ?string $page_localization;
 
     /**
      * Blog
@@ -49,12 +50,12 @@ class BlogModel extends BaseModel {
                 }
 
                 // Redirect to blog main page if page does not exist
-                if (empty($this->page_id)) {
+                if (empty($this->page_id) || ($this->page_data[0]['published_status'] == 1 && !$this->container['user']->administrator() && !$this->container['user']->moderator())) {
                     return $this->handleNoPageError();
                 }
 
                 // Update the user's localization when the page language differs from the current localization
-                $this->user->updatePageLocalization($this->page_data['localization']);
+                $this->user->updatePageLocalization($this->page_localization);
 
                 // Generate page
                 $post = $this->container['parse_page'];
@@ -159,7 +160,7 @@ class BlogModel extends BaseModel {
                 // Page content
                 $this->page_data['content'] .= $post->output();
 
-                return $this->page_data;
+                return $blog_page_data;
 
             default:
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
@@ -321,7 +322,9 @@ class BlogModel extends BaseModel {
     protected function getBlogPageData($params = []): bool|array
     {
         // Fetch page
-        $page_data = $this->db->selectData('pages', 'slug = :param', array(':param' => $params[0]));
+        $full_page_data = $this->db->getMultilangPage($params[0]);
+
+        $page_data = $full_page_data != false ? $full_page_data[0] : false;
 
         // Return false if there is no data
         if (empty($page_data['page_title']) && empty($page_data['content'])) {
@@ -344,7 +347,8 @@ class BlogModel extends BaseModel {
         $this->page_updated_date = $page_data['date_updated'];
         $this->views = !empty($page_data['views']) ? $page_data['views'] : 0;
         $this->thumbnail = $page_data['thumbnail'];
+        $this->page_localization = $page_data['localization'];
 
-        return $page_data;
+        return $full_page_data;
     }
 }

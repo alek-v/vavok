@@ -211,4 +211,19 @@ class ParsePage {
         // Remove empty keys, parse language keys and return page content
         return preg_replace('/{@(.*?)}}/' , '', $this->parseLanguage($this->output(), $localization));
     }
+
+    /**
+     * Get language name from the short code
+     * @param string $language
+     * @return string
+     */
+    public function getLocalizationName(string $language): string
+    {
+        $locale = [
+            'en' => 'English',
+            'sr' => 'Српски'
+        ];
+
+        return $locale[$language] ??= $language;
+    }
 }

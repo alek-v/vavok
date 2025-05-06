@@ -302,7 +302,6 @@ class Database extends PDO implements DBInterface {
     
             // Fetch all results
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
             // Return fetched data
             return $result;
         } catch (PDOException $e) {
