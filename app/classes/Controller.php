@@ -73,8 +73,11 @@ abstract class Controller {
             $localization_options->load('includes/header_page_localization');
 
             // All localization options
+            $data_locale = $data;
+            unset($data_locale['content']);
+            unset($data_locale['head_tags']);
             $create_localization_option = '';
-            foreach ($data as $all_locale_options) {
+            foreach ($data_locale as $all_locale_options) {
                 if (is_array($all_locale_options)) {
                     $option = $this->container['parse_page'];
                     $option->load('includes/header_page_localization_option');
@@ -135,7 +138,7 @@ abstract class Controller {
      * @param array $params
      * @return string
      */
-    protected function handlePage($params = [])
+    protected function handlePage(array $params = []): string
     {
         $params[0] ??= 'index';
         return $params[0];

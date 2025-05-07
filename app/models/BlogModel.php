@@ -62,7 +62,7 @@ class BlogModel extends BaseModel {
                 $post->load('blog/post');
 
                 // Page meta tags
-                $this->page_data['head_tags'] = $this->head_tags;
+                $this->page_data[0]['head_tags'] = $this->head_tags;
 
                 // Author link
                 $author_full_name = $this->user->userInfo('full_name', $this->page_author);
@@ -158,9 +158,9 @@ class BlogModel extends BaseModel {
                 $post->set('tags', $tags);
 
                 // Page content
-                $this->page_data['content'] .= $post->output();
+                $this->page_data[0]['content'] = $post->output();
 
-                return $blog_page_data;
+                return $this->page_data;
 
             default:
                 $this_category = isset($params[0]) && isset($params[1]) && $params[0] == 'category' ? $params[1] : '';
