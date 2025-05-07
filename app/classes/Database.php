@@ -282,7 +282,7 @@ class Database extends PDO implements DBInterface {
             )
             UNION ALL
             (
-                SELECT NULL AS id, NULL AS page_title, NULL AS slug_group, p2.localization, p2.slug, NULL AS content, NULL AS head_tags, NULL AS date_created, NULL AS date_updated, NULL AS created_by, NULL AS updated_by, NULL AS head_tags, NULL AS published_status, NULL AS date_published, NULL AS type,NULL AS views, NULL AS default_img, NULL AS thumbnail, 1 AS order_priority
+                SELECT NULL AS id, NULL AS page_title, NULL AS slug_group, p2.localization, p2.slug, NULL AS content, NULL AS head_tags, NULL AS date_created, NULL AS date_updated, NULL AS created_by, NULL AS updated_by, NULL AS head_tags, NULL AS published_status, NULL AS date_published, p2.type,NULL AS views, NULL AS default_img, NULL AS thumbnail, 1 AS order_priority
                 FROM pages p2
                 WHERE p2.slug_group = (SELECT slug_group FROM pages WHERE slug = :slug)
                 AND p2.slug != :slug
