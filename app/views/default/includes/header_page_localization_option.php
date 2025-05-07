@@ -1,1 +1,1 @@
-<li><a class="dropdown-item" href="{@HOMEDIR}}page/{@page_slug}}" rel="nofollow">{@page_localization}}</a></li>
+<li><a class="dropdown-item" href="{@HOMEDIR}}{@page_type}}/{@page_slug}}" rel="nofollow">{@page_localization}}</a></li>

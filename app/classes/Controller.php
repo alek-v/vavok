@@ -80,6 +80,10 @@ abstract class Controller {
                     $option->load('includes/header_page_localization_option');
                     $option->set('page_slug', $all_locale_options['slug']);
                     $option->set('page_localization', $option->getLocalizationName($all_locale_options['localization']));
+
+                    // Page or blog post
+                    $page_type = $all_locale_options['type'] == 'page' ? 'page' : 'blog';
+                    $option->set('page_type', $page_type);
                 }
                 
                 $create_localization_option .= $page->merge(array($option));
