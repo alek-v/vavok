@@ -441,6 +441,7 @@ class PagemanagerModel extends BaseModel {
             $textarea->set('label_for', 'text');
             $textarea->set('textarea_name', 'text_files');
             $textarea->set('textarea_id', 'text');
+            $textarea->set('textarea_rows', '20');
             $textarea->set('textarea_value', $page_info['head_tags']);
 
             // Input field
