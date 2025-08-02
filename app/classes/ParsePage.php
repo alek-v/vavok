@@ -221,7 +221,11 @@ class ParsePage {
     {
         $locale = [
             'en' => 'English',
-            'sr' => 'Српски'
+            'sr' => 'Српски',
+            'ru' => 'Русский',
+            'de' => 'Deutsch',
+            'hr' => 'Hrvatski',
+            'es' => 'Español'
         ];
 
         return $locale[$language] ??= $language;
