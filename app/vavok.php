@@ -9,7 +9,7 @@ use App\Classes\Vavok;
 define('START_TIME', microtime(true));
 
 // App version 
-const VERSION = '5.0.3';
+const VERSION = '5.0.4';
 
 // Base directory
 if (!defined('BASEDIR')) {
