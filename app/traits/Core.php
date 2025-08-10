@@ -84,7 +84,7 @@ trait Core {
      * @param string $str
      * @return string
      */
-    function trans(string $str): string
+    public function trans(string $str): string
     {
         $sr_latin = array("Đ", "Lj", "LJ", "Nj", "NJ", "DŽ", "Dž", "đ", "lj", "nj", "dž", "dz", "a", "b", "v", "g", "d", "e", "ž", "z", "i", "j", "k", "l", "m", "n", "o", "p", "r", "s", "t", "ć", "u", "f", "h", "c", "č", "š", "A", "B", "V", "G", "D", "E", "Ž", "Z", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "Ć", "U", "F", "H", "C", "Č", "Š");
         $sr_cyrillic = array("Ђ", "Љ", "Љ", "Њ", "Њ", "Џ", "Џ", "ђ", "љ", "њ", "џ", "џ", "а", "б", "в", "г", "д", "е", "ж", "з", "и", "ј", "к", "л", "м", "н", "о", "п", "р", "с", "т", "ћ", "у", "ф", "х", "ц", "ч", "ш", "А", "Б", "В", "Г", "Д", "Е", "Ж", "З", "И", "Ј", "К", "Л", "М", "Н", "О", "П", "Р", "С", "Т", "Ћ", "У", "Ф", "Х", "Ц", "Ч", "Ш");
@@ -149,7 +149,7 @@ trait Core {
      * @param string $text
      * @return string
      */
-    function translateUnicode(string $text): string
+    public function translateUnicode(string $text): string
     {
         // Special chars
         $tr = array(
@@ -168,7 +168,7 @@ trait Core {
      * @param string $replace
      * @return string
      */
-    function replaceNewLines(string $string, string $replace = ''): string
+    public function replaceNewLines(string $string, string $replace = ''): string
     {
         // convert to unix new lines
         $string = preg_replace("/\r\n/", "\n", $string); 
@@ -184,7 +184,7 @@ trait Core {
      * @param int $file_size
      * @return string
      */
-    function formatSize(int $file_size): string
+    public function formatSize(int $file_size): string
     {
         if ($file_size >= 1073741824) {
             $file_size = round($file_size / 1073741824 * 100) / 100 . " GB";
@@ -204,7 +204,7 @@ trait Core {
      * @param string $string
      * @return string
      */
-    function antiword(string $string): string
+    public function antiword(string $string): string
     {
         $words = file_get_contents(STORAGEDIR . "bad_words.dat");
         $wordlist = explode("|", $words);
@@ -223,7 +223,7 @@ trait Core {
      * @param string $image
      * @return string
      */
-    function eraseImage(string $image): string
+    public function eraseImage(string $image): string
     {
         $image = preg_replace('#<img src="\.\./themes/images/smiles/(.*?)\.gif" alt="(.*?)>#', '', $image);
         $image = preg_replace('#<img src="\.\./themes/images/smiles2/(.*?)\.gif" alt="(.*?)>#', '', $image);
@@ -307,7 +307,7 @@ trait Core {
      * @param string $r
      * @return string
      */
-    function getbbcode(string $r): string
+    public function getbbcode(string $r): string
     {
         $r = str_replace("\r\n", '<br />', $r);
         $r = str_replace("[br]", "<br />", $r);
@@ -475,7 +475,7 @@ trait Core {
      * @param string $string
      * @return string
      */
-    function smiles(string $string): string
+    public function smiles(string $string): string
     {
         $dir = opendir(PUBLICDIR . "themes/images/smiles");
         while ($file = readdir($dir)) {
@@ -660,7 +660,7 @@ trait Core {
      * @param string $story
      * @return array
      */
-    function create_metatags(string $story): array
+    public function create_metatags(string $story): array
     {
         $keyword_count = 10;
         $newarr = array ();
@@ -708,7 +708,7 @@ trait Core {
      * 
      * @return string|bool
      */
-    function detectBot(): string|bool
+    public function detectBot(): string|bool
     {
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 

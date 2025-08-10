@@ -843,7 +843,7 @@ class UsersModel extends BaseModel {
      */
     public function users_profile($params)
     {
-        $requested_user = isset($params[0]) ? $params[0] : '';
+        $requested_user = $params[0] ?? '';
 
         // Get users nick and users id number
         if (!empty($requested_user)) {
@@ -949,7 +949,7 @@ class UsersModel extends BaseModel {
 
         // About user
         if (!empty($this->user->userInfo('about', $users_id))) {
-            $showPage->set('about', $this->localization->string('about') . ': ' . $this->user->userInfo('about', $users_id));
+            $showPage->set('about', $this->localization->string('about_you') . ':<br />' . $this->replaceNewLines($this->user->userInfo('about', $users_id), '<br />'));
         }
 
         // User's birthday
