@@ -448,7 +448,7 @@ class PagemanagerModel extends BaseModel {
             $image_input = $this->container['parse_page'];
             $image_input->load('forms/input');
             $image_input->set('label_for', 'image');
-            $image_input->set('label_value', 'Default image:');
+            $image_input->set('label_value', 'Default image (recommended 1200x630px):');
             $image_input->set('input_type', 'text');
             $image_input->set('input_name', 'image');
             $image_input->set('input_id', 'image');
