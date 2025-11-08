@@ -30,11 +30,11 @@ class Mailer {
      * @param string $user_mail
      * @param string $subject
      * @param string $msg
-     * @param string $mail_from
-     * @param string $name
+     * @param string|null $mail_from
+     * @param string|null $name
      * @return bool
      */
-    function send(string $user_mail, string $subject, string $msg, string $mail_from = '', string $name = ''): bool
+    function send(string $user_mail, string $subject, string $msg, string|null $mail_from = '', string|null $name = ''): bool
     {
         // Generate default email
         if (empty($mail_from)) {
